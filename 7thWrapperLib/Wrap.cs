@@ -409,13 +409,18 @@ namespace _7thWrapperLib {
 
         private bool HCloseHandle(IntPtr hObject) {
             VArchiveData va;
+
             if (_varchives.TryGetValue(hObject, out va)) {
                 _varchives.Remove(hObject);
                 System.Diagnostics.Debug.WriteLine("Closing dummy handle {0}", hObject);
             }
+
             if (_streamFiles.ContainsKey(hObject))
                 _streamFiles.Remove(hObject);
-            _saveFiles.Remove(hObject);
+
+            if (_saveFiles.ContainsKey(hObject))
+                _saveFiles.Remove(hObject);
+
             return Win32.CloseHandle(hObject);
         }
 
