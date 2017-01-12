@@ -37,10 +37,6 @@
       <HintPath>..\packages\SharpCompress.0.14.1\lib\net45\SharpCompress.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SharpCompressU, Version=0.12.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\SharpCompressU.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
