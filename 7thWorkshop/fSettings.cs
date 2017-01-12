@@ -50,7 +50,7 @@ namespace Iros._7th.Workshop {
                     if (!String.IsNullOrEmpty(ff7)) {
                         Sys.Settings.AaliFolder = ff7 + @"mods\Textures";
                         Sys.Settings.FF7Exe = ff7 + @"FF7.exe";
-                        Sys.Settings.LibraryLocation = ff7 + @"7th Heaven";
+                        Sys.Settings.LibraryLocation = ff7 + @"mods/7th Heaven";
 
                     }
                 }
