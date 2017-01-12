@@ -118,9 +118,8 @@ namespace Iros._7th.Workshop {
         }
 
         static Sys() {
-            string appPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             SysFolder = System.IO.Path.Combine(
-                appPath,
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "7thWorkshop"
                 );
 
