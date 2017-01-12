@@ -24,7 +24,7 @@ namespace Updater {
                     MessageLaunchAndExit("Couldn't find update file."); return;
                 }
                 byte[] buffer = new byte[0x10000];
-                using (SharpCompress.Archive.Zip.ZipArchive zip = SharpCompress.Archive.Zip.ZipArchive.Open(ufile)) {
+                using (SharpCompress.Archives.Zip.ZipArchive zip = SharpCompress.Archives.Zip.ZipArchive.Open(ufile)) {
                     foreach (var entry in zip.Entries.Where(e => !e.IsDirectory)) {
                         using (var s = entry.OpenEntryStream()) {
                             Status("Updating " + entry.Key);

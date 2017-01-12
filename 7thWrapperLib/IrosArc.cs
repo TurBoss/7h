@@ -181,7 +181,7 @@ namespace _7thWrapperLib {
             var cdata = new System.IO.MemoryStream();
             //Lzs.Encode(new System.IO.MemoryStream(input), cdata);
             byte[] lprops;
-            using (var lzma = new SharpCompress.Compressor.LZMA.LzmaStream(new SharpCompress.Compressor.LZMA.LzmaEncoderProperties(), false, cdata)) {
+            using (var lzma = new SharpCompress.Compressors.LZMA.LzmaStream(new SharpCompress.Compressors.LZMA.LzmaEncoderProperties(), false, cdata)) {
                 lzma.Write(input, 0, input.Length);
                 lprops = lzma.Properties;
             }

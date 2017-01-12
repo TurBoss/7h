@@ -3,7 +3,7 @@
   The original developer is Iros <irosff@outlook.com>
 */
 
-using SharpCompress.Archive;
+using SharpCompress.Archives;
 using System;
 using System.Collections.Generic;
 using System.Linq;

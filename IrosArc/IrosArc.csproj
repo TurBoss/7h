@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>IrosArc</RootNamespace>
     <AssemblyName>IrosArc</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -34,8 +35,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SharpCompress, Version=0.12.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpCompress.0.12.4\lib\net45\SharpCompress.dll</HintPath>
+    <Reference Include="SharpCompress, Version=0.14.1.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpCompress.0.14.1\lib\net45\SharpCompress.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
