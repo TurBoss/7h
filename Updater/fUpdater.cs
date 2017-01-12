@@ -82,12 +82,15 @@ namespace Updater {
         }
 
         private void fUpdater_Load(object sender, EventArgs e) {
+
+            string appPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+
             _sys = System.IO.Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                appPath,
                 "7thWorkshop"
                 );
 
-            _7h = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            _7h = appPath;
 
             System.Threading.ThreadPool.QueueUserWorkItem(Process);
         }

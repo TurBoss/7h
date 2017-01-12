@@ -13,7 +13,8 @@ namespace Iros._7th.Workshop {
         private static System.IO.StreamWriter _sw;
 
         static Log() {
-            string file = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "7thWorkshop", "applog.txt");
+            string appPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string file = System.IO.Path.Combine(appPath, "7thWorkshop", "applog.txt");
             if (System.IO.File.Exists(file)) {
                 try {
                     System.IO.File.Delete(file);
