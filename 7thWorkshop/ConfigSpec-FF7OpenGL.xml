@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ConfigSpec xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Setting xsi:type="TextEntry">
+    <Group>Resolution</Group>
+    <Name>Window Size X</Name>
+    <Description>What resolution to run the game at (in windowed mode, the size of the window)</Description>
+    <Option>window_size_x</Option>  
+	<Suggest>0</Suggest>
+  </Setting>
+  <Setting xsi:type="TextEntry">
+    <Group>Resolution</Group>
+    <Name>Window Size Y</Name>
+    <Description></Description>
+    <Option>window_size_y</Option> 
+	<Suggest>0</Suggest>
+  </Setting>
+   <Setting xsi:type="TextEntry">
+    <Group>Resolution</Group>
+    <Name>Internal Size X</Name>
+    <Description>Should be 2X*320</Description>
+    <Option>internal_size_x</Option> 
+	<Suggest>0</Suggest>
+  </Setting>
+  <Setting xsi:type="TextEntry">
+    <Group>Resolution</Group>
+    <Name>Internal Size Y</Name>
+    <Description>Should be 4X*240</Description>
+    <Option>internal_size_y</Option> 
+	<Suggest>0</Suggest>
+  </Setting>
+  <Setting xsi:type="Checkbox">
+    <Group>Resolution</Group>
+    <Name>Full screen mode</Name>
+    <Description>Whether to run the game in full-screen mode or in a window</Description>
+    <TrueSetting>fullscreen=on</TrueSetting>
+    <FalseSetting>fullscreen=off</FalseSetting>
+  </Setting>
+  
+  
+  <Setting xsi:type="Checkbox">
+    <Group>Graphics</Group>    
+    <Name>Preserve aspect ratio</Name>
+    <Description>If you turn this off, graphics are stretched to fill. When on, black bars are added.</Description>
+    <TrueSetting>preserve_aspect=on</TrueSetting>
+    <FalseSetting>preserve_aspect=off</FalseSetting>
+  </Setting>
+  <Setting xsi:type="Checkbox">
+    <Group>Graphics</Group>    
+    <Name>Dialog Boxes</Name>
+    <Description>Make all dialog boxes transparent.</Description>
+    <TrueSetting>transparent_dialogs=on</TrueSetting>
+    <FalseSetting>transparent_dialogs=off</FalseSetting>
+  </Setting>
+  <Setting xsi:type="Checkbox">
+    <Group>Graphics</Group>    
+    <Name>Linear Filter</Name>
+    <Description>Allow FF7 to use linear filtering for its textures.</Description>
+    <TrueSetting>linear_filter=on</TrueSetting>
+    <FalseSetting>linear_filter=off</FalseSetting>
+  </Setting>
+  <Setting xsi:type="Checkbox">
+    <Group>Graphics</Group>    
+    <Name>Postprocessing</Name>
+    <Description>Used to apply fullscreen effects.</Description>
+    <TrueSetting>enable_postprocessing=yes</TrueSetting>
+    <FalseSetting>enable_postprocessing=no</FalseSetting>
+  </Setting>
+  <Setting xsi:type="TextEntry">
+    <Group>Graphics</Group>
+    <Name>Postprocess Shader</Name>
+    <Description>Which postprocessing shader to use</Description>
+    <Option>post_source</Option>
+    <Suggest>shaders/bloom2.post</Suggest>
+    <Suggest>shaders/someOtherFile.post</Suggest>
+  </Setting>
+  
+  
+  <Setting xsi:type="Checkbox">
+    <Group>Rendering</Group>
+    <Name>V-Sync</Name>
+	<Description>Check your Nvidia/ATI/Intel control panel settings if this option doesn't seem to work.</Description>
+    <TrueSetting>enable_vsync=on</TrueSetting>
+    <FalseSetting>enable_vsync=off</FalseSetting>
+  </Setting>
+  <Setting xsi:type="Checkbox">
+    <Group>Rendering</Group>
+    <Name>New Timer</Name>
+	<Description>Replace FF7's default framelimiter timer source.</Description>
+    <TrueSetting>use_new_timer=yes</TrueSetting>
+    <FalseSetting>use_new_timer=no</FalseSetting>
+  </Setting>
+  <Setting xsi:type="Checkbox">
+    <Group>Rendering</Group>
+    <Name>Textures Cache</Name>
+	<Description>Store external textures in a compressed cache for increased performance. Compression is not lossless. Texture cache does NOT update automatically. </Description>
+    <TrueSetting>compress_textures=yes</TrueSetting>
+    <FalseSetting>compress_textures=no</FalseSetting>
+  </Setting>
+  <Setting xsi:type="DropDown">
+    <Group>Rendering</Group>
+    <Name>Texture Memory</Name>
+    <Description>Prevent the game to crash due to it loading too many textures at once. Use only higher values if you get graphic problems!</Description>
+    <Option>
+      <Text>256</Text>
+      <Settings>texture_cache_size=256</Settings>
+    </Option>
+    <Option>
+      <Text>512</Text>
+      <Settings>texture_cache_size=512</Settings>
+    </Option>
+    <Option>
+      <Text>768</Text>
+      <Settings>texture_cache_size=768</Settings>
+    </Option>
+	 <Option>
+      <Text>1024 (untested)</Text>
+      <Settings>texture_cache_size=1024</Settings>
+    </Option>
+  </Setting>
+  <Setting xsi:type="Checkbox">
+    <Group>Rendering</Group>
+    <Name>Pixel Buffer</Name>
+	<Description>Use pixel buffer objects to speed up texture loading. Might crash horribly on ATI cards but should work for NVIDIA users.</Description>
+    <TrueSetting>use_pbo=yes</TrueSetting>
+    <FalseSetting>use_pbo=no</FalseSetting>
+  </Setting>
+  
+  
+  <Setting xsi:type="DropDown">
+    <Group>Audio</Group>
+    <Name>Music Plugin</Name>
+    <Description>Choose a plugin to load for special music output</Description>
+    <Option>
+      <Text>None</Text>
+      <Settings>music_plugin=</Settings>
+    </Option>
+    <Option>
+      <Text>VGMStream</Text>
+      <Settings>music_plugin=plugins/vgmstream_music.fgp</Settings>
+    </Option>
+    <Option>
+      <Text>FF7Music</Text>
+      <Settings>music_plugin=plugins/ff7music.fgp</Settings>
+    </Option>
+  </Setting>
+</ConfigSpec>
