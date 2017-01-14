@@ -581,7 +581,9 @@ namespace _7thWrapperLib {
             IntPtr handle = CreateFileA(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
             //System.Diagnostics.Debug.WriteLine("Hooked CreateFileA for {0} under {1}", lpFileName, handle.ToInt32());
 
-            if (System.IO.Path.GetExtension(lpFileName).Equals(".ff7", StringComparison.InvariantCultureIgnoreCase)) {
+            if (System.IO.Path.GetExtension(lpFileName).Equals(".ff7", StringComparison.InvariantCultureIgnoreCase))
+            {
+                System.Diagnostics.Debug.WriteLine("Found FF7 Save");
                 _saveFiles.Add(handle, lpFileName);
             }
 
