@@ -1164,8 +1164,6 @@ They will be automatically turned off.";
         }
 
         private void Launch(bool varDump, bool debug) {
-            debug = true;
-            varDump = true;
 
             if (!SanityCheckCompat()) return;
             if (!SanityCheckSettings()) return;
