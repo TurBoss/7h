@@ -37,7 +37,7 @@ namespace Iros._7th.Workshop {
     }
 
     public static class Sys {
-        public const decimal Version = 1.55m;
+        public const decimal Version = 1.56m;
 
         private static Dictionary<Type, object> _single = new Dictionary<Type, object>();
 
