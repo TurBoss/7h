@@ -249,7 +249,7 @@ namespace Iros._7th.Workshop {
             }
         }
 
-        private const string _updateUrl = @"http://www.ficedula.co.uk/7thHeaven/version.txt";
+        private const string _updateUrl = @"http://ovaremake.mooo.com/7thHeaven/version.txt";
 
         private void UpdateCheck(object link) {
             //Sys.Downloads.Download()
