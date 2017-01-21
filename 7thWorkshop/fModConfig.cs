@@ -192,7 +192,7 @@ namespace Iros._7th.Workshop {
             {
                 if (!String.IsNullOrEmpty(filter) && (file.IndexOf(filter) < 0)) continue;
                 byte[] data = iro.GetBytes(file);
-                fn = System.IO.Path.Combine(@"c:\tmp\iro", file);
+                fn = System.IO.Path.Combine(System.IO.Path.GetTempPath(), file);
                 System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(fn));
                 System.IO.File.WriteAllBytes(fn, data);
             }
