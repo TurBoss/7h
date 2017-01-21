@@ -966,7 +966,7 @@ They will be automatically turned off.";
                         if (info.Options.Count == 0) {
                             MessageBox.Show("No options for this mod");
                         } else {
-                            form.Init(info, imageReader, audioReader, pi, GetConstraints().Where(c => c.ModID.Equals(pm.ModID)));
+                            form.Init(info, imageReader, audioReader, pi, GetConstraints().Where(c => c.ModID.Equals(pm.ModID)), mfile);
                             if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
                                 pi.Settings = form.GetSettings();
                                 SanityCheckSettings();

@@ -15,6 +15,10 @@ using System.Windows.Forms;
 namespace Iros._7th.Workshop {
     public partial class fModConfig : Form {
 
+        private string _fileName;
+        private string _iroPath;
+        private string _audioPath;
+        private System.IO.Stream _audioFile;
         private _7thWrapperLib.ModInfo _info;
         private Func<string, System.Drawing.Bitmap> _imageReader;
         private Func<string, System.IO.Stream> _audioReader;
@@ -31,7 +35,8 @@ namespace Iros._7th.Workshop {
             InitializeComponent();
         }
 
-        internal void Init(_7thWrapperLib.ModInfo info, Func<string, System.Drawing.Bitmap> imageReader, Func<string, System.IO.Stream> audioReader, ProfileItem profile, IEnumerable<fLibrary.Constraint> constraints) {
+        internal void Init(_7thWrapperLib.ModInfo info, Func<string, System.Drawing.Bitmap> imageReader, Func<string, System.IO.Stream> audioReader, ProfileItem profile, IEnumerable<fLibrary.Constraint> constraints, string iroPath) {
+            _iroPath = iroPath;
             _info = info;
             _imageReader = imageReader;
             _audioReader = audioReader;
@@ -130,29 +135,70 @@ namespace Iros._7th.Workshop {
         private void ddOption_SelectedIndexChanged(object sender, EventArgs e) {
             if (_opt == null) return;
             var o = (_7thWrapperLib.OptionValue)ddOption.SelectedItem;
-            if (o != null)
+            if (o != null) {
                 PB.Image = _imageReader(o.PreviewFile);
+            }
             else
                 PB.Image = null;
             SetupAudioPreview(o);
+
+            if (o.PreviewAudio != "")
+            {
+
+                Console.WriteLine("AUDIO = " + o.PreviewAudio);
+                _fileName = System.IO.Path.GetFileName(o.PreviewAudio);
+                if (_iroPath.EndsWith(".iro"))
+                {
+                    string mod = _iroPath;
+                    _audioPath = extractIros(mod, o.PreviewAudio);
+                }
+                else _audioFile = _audioReader(o.PreviewAudio);
+            }
             _values[_opt.ID] = o.Value;
         }
 
         private void bPreview_Click(object sender, EventArgs e) {
             if (_audio == null) {
                 _audio = new NAudio.Wave.WaveOut();
-                string file = bPreview.Tag.ToString();
-                if (file.EndsWith(".ogg", StringComparison.InvariantCultureIgnoreCase)) {
-                    _audio.Init(new NAudio.Vorbis.VorbisWaveReader(_audioReader(file)));
-                } else if (file.EndsWith(".mp3", StringComparison.InvariantCultureIgnoreCase)) {
-                    _audio.Init(new NAudio.Wave.Mp3FileReader(_audioReader(file)));
-                } else return;
+
+                if (_fileName.EndsWith(".ogg", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    if (_audioPath != null) _audio.Init(new NAudio.Vorbis.VorbisWaveReader(_audioPath));
+                    else if (_audioFile != null) _audio.Init(new NAudio.Vorbis.VorbisWaveReader(_audioFile));
+                }
+                else if (_fileName.EndsWith(".mp3", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    if (_audioPath != null) _audio.Init(new NAudio.Wave.Mp3FileReader(_audioPath));
+                    else if (_audioFile != null) _audio.Init(new NAudio.Wave.Mp3FileReader(_audioFile));
+                }
+                else return;
                 _audio.Play();
             } else StopAudio();
         }
 
         private void fModConfig_FormClosed(object sender, FormClosedEventArgs e) {
             StopAudio();
+        }
+
+        private string extractIros(string iroFile, string path)
+        {
+            bPreview.Enabled = false;
+            _7thWrapperLib.IrosArc iro = new _7thWrapperLib.IrosArc(iroFile);
+            var sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+            string filter = path;
+            string fn = "";
+            foreach (string file in iro.AllFileNames())
+            {
+                if (!String.IsNullOrEmpty(filter) && (file.IndexOf(filter) < 0)) continue;
+                byte[] data = iro.GetBytes(file);
+                fn = System.IO.Path.Combine(@"c:\tmp\iro", file);
+                System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(fn));
+                System.IO.File.WriteAllBytes(fn, data);
+            }
+            sw.Stop();
+            bPreview.Enabled = true;
+            return fn;
         }
     }
 }
