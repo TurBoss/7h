@@ -65,13 +65,14 @@
     <TrueSetting>enable_postprocessing=yes</TrueSetting>
     <FalseSetting>enable_postprocessing=no</FalseSetting>
   </Setting>
-  <Setting xsi:type="TextEntry">
+  <Setting xsi:type="DropDown">
     <Group>Graphics</Group>
     <Name>Postprocess Shader</Name>
     <Description>Which postprocessing shader to use</Description>
-    <Option>post_source</Option>
-    <Suggest>shaders/bloom2.post</Suggest>
-    <Suggest>shaders/someOtherFile.post</Suggest>
+    <Option>
+      <Text>Bloom2</Text>
+      <Settings>post_source=shaders/bloom2.post</Settings>
+    </Option>
   </Setting>
   
   
