@@ -71,7 +71,17 @@
     <Description>Which postprocessing shader to use</Description>
     <Option>
       <Text>Bloom2</Text>
-      <Settings>post_source=shaders/bloom2.post</Settings>
+      <Settings>post_source=shaders/Bloom2/bloom2.post</Settings>
+      <Frag>frag_source=shaders/Bloom2/main.frag</Frag>
+      <Vert>vert_source=shaders/Bloom2/main.vert</Vert>
+      <Yuv>yuv_source=shaders/Bloom2/yuv.frag</Yuv>
+    </Option>
+    <Option>
+      <Text>SunWalker</Text>
+      <Settings>post_source=shaders/Sunwalker/SmartShaderPost.fx</Settings>
+      <Frag>frag_source=shaders/Sunwalker/frag.fx</Frag>
+      <Vert>vert_source=shaders/Sunwalker/vert.fx</Vert>
+      <Yuv>yuv_source=shaders/Sunwalker/yuv.fx</Yuv>
     </Option>
   </Setting>
   

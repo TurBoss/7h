@@ -47,6 +47,7 @@ namespace Iros._7th.Workshop {
             foreach (var item in _spec.Settings) item.Save(_settings);
             try {
                 System.IO.File.WriteAllLines(_file, _settings.GetOutput());
+                MessageBox.Show("OpenGL settings saved.");
             } catch(System.UnauthorizedAccessException) {
                 MessageBox.Show("Could not write the ff7_opengl.cfg file. Check that it is not set to read only, and that FF7 is installed in a folder you have full write access to.");
             }
