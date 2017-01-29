@@ -104,6 +104,8 @@ namespace _7thWrapperLib {
             VarType type;
             int size = 0;
 
+            System.Diagnostics.Debug.WriteLine(String.Format("SPEC = {0} Value = {1}", spec, value));
+
             string[] parts = spec.Split(':');
             Enum.TryParse<VarType>(parts[0], true, out type);
             if (parts.Length > 2) size = (int)Parse(parts[2]);
@@ -134,7 +136,7 @@ namespace _7thWrapperLib {
                 case VarType.Random:
                     return CompareInt(() => _r.Next(size), value, spec);
             }
-
+            
             if (type == VarType.FFString) {
                 byte[] data = new byte[size];
                 HashSet<string> values = new HashSet<string>(value.Split('|'), StringComparer.InvariantCultureIgnoreCase);
@@ -150,8 +152,14 @@ namespace _7thWrapperLib {
                     return values.Contains(s.Trim());
                 };
             } else {
-                IntPtr address;
-                address = new IntPtr(Parse(parts[1]));
+
+                IntPtr address ;
+
+                if (parts.Length.Equals(1)) address = new IntPtr(0);
+                else address = new IntPtr(Parse(parts[1]));
+
+                System.Diagnostics.Debug.WriteLine("BYTE ==  {0} - {1} - {2}", size, value, spec);
+
                 if (size == 0) size = -1;
                 switch (type) {
                     case VarType.Int:
