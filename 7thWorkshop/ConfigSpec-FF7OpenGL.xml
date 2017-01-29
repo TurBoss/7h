@@ -72,11 +72,11 @@
     <Option>
       <Text>All - Bloom2</Text>
       <Settings>post_source=shaders/All_Bloom2/bloom2.post,frag_source=shaders/All_Bloom2/main.frag,vert_source=shaders/All_Bloom2/main.vert,yuv_source=shaders/All_Bloom2/yuv.frag</Settings>    
-  </Option>
+    </Option>
     <Option>
       <Text>All - Bloom2Dark</Text>
       <Settings>post_source=shaders/All_Bloom2Dark/Bloom2Dark.post,frag_source=shaders/All_Bloom2Dark/main.frag,vert_source=shaders/All_Bloom2Dark/main.vert,yuv_source=shaders/All_Bloom2Dark/yuv.frag</Settings>    
-  </Option>
+    </Option>
     <Option>
       <Text>All - Sunwalker</Text>
       <Settings>post_source=shaders/All_Sunwalker/SmartShaderPost.fx,frag_source=shaders/All_Sunwalker/frag.fx,vert_source=shaders/All_Sunwalker/vert.fx,yuv_source=shaders/All_Sunwalker/yuv.fx</Settings>
