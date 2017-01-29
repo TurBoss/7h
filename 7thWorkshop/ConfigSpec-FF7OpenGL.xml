@@ -70,18 +70,32 @@
     <Name>Postprocess Shader</Name>
     <Description>Which postprocessing shader to use</Description>
     <Option>
-      <Text>Bloom2</Text>
-      <Settings>post_source=shaders/Bloom2/bloom2.post</Settings>
-      <Frag>frag_source=shaders/Bloom2/main.frag</Frag>
-      <Vert>vert_source=shaders/Bloom2/main.vert</Vert>
-      <Yuv>yuv_source=shaders/Bloom2/yuv.frag</Yuv>
+      <Text>All - Bloom2</Text>
+      <Settings>post_source=shaders/All_Bloom2/bloom2.post,frag_source=shaders/All_Bloom2/main.frag,vert_source=shaders/All_Bloom2/main.vert,yuv_source=shaders/All_Bloom2/yuv.frag</Settings>    
+  </Option>
+    <Option>
+      <Text>All - Bloom2Dark</Text>
+      <Settings>post_source=shaders/All_Bloom2Dark/Bloom2Dark.post,frag_source=shaders/All_Bloom2Dark/main.frag,vert_source=shaders/All_Bloom2Dark/main.vert,yuv_source=shaders/All_Bloom2Dark/yuv.frag</Settings>    
+  </Option>
+    <Option>
+      <Text>All - Sunwalker</Text>
+      <Settings>post_source=shaders/All_Sunwalker/SmartShaderPost.fx,frag_source=shaders/All_Sunwalker/frag.fx,vert_source=shaders/All_Sunwalker/vert.fx,yuv_source=shaders/All_Sunwalker/yuv.fx</Settings>
     </Option>
     <Option>
-      <Text>SunWalker</Text>
-      <Settings>post_source=shaders/Sunwalker/SmartShaderPost.fx</Settings>
-      <Frag>frag_source=shaders/Sunwalker/frag.fx</Frag>
-      <Vert>vert_source=shaders/Sunwalker/vert.fx</Vert>
-      <Yuv>yuv_source=shaders/Sunwalker/yuv.fx</Yuv>
+      <Text>ATI - ComplexMultiShader</Text>
+      <Settings>post_source=shaders/ATI_ComplexMultiShader/ComplexMultiShader.post,frag_source=shaders/ATI_ComplexMultiShader/main.frag,vert_source=shaders/ATI_ComplexMultiShader/main.vert,yuv_source=shaders/ATI_ComplexMultiShader/yuv.frag</Settings>
+    </Option>
+    <Option>
+      <Text>ATI - SmartBloomAdvanced</Text>
+      <Settings>post_source=shaders/ATI_SmartBloomAdvanced/SmartBloomAdvanced.post,frag_source=shaders/ATI_SmartBloomAdvanced/mainAdvanced.frag,vert_source=shaders/ATI_SmartBloomAdvanced/mainAdvanced.vert,yuv_source=shaders/ATI_SmartBloomAdvanced/yuvAdvanced.frag</Settings>
+    </Option>
+    <Option>
+      <Text>ATI - SmartBloomHDR</Text>
+      <Settings>post_source=shaders/ATI_SmartBloomHDR/SmartBloomHDR.post,frag_source=shaders/ATI_SmartBloomHDR/mainHDR.frag,vert_source=shaders/ATI_SmartBloomHDR/mainHDR.vert,yuv_source=shaders/ATI_SmartBloomHDR/yuvHDR.frag</Settings>
+    </Option>
+    <Option>
+      <Text>Nvidia - ComplexMultiShader</Text>
+      <Settings>post_source=shaders/Nvidia_ComplexMultiShader/ComplexMultiShader.post,frag_source=shaders/Nvidia_ComplexMultiShader/main.frag,vert_source=shaders/Nvidia_ComplexMultiShader/main.vert,yuv_source=shaders/Nvidia_ComplexMultiShader/yuv.frag</Settings>
     </Option>
   </Setting>
   

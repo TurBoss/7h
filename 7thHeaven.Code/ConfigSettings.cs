@@ -123,9 +123,6 @@ namespace Iros._7th.Workshop.ConfigSettings {
     public class DDOption {
         public string Text { get; set; }
         public string Settings { get; set; }
-        public string Frag { get; set; }
-        public string Vert { get; set; }
-        public string Yuv { get; set; }
 
         public override string ToString() {
             return Text;
@@ -141,6 +138,7 @@ namespace Iros._7th.Workshop.ConfigSettings {
             base.Load(container, settings);
             _cb = new System.Windows.Forms.ComboBox() { DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList };
             _cb.Width = 150;
+            _cb.Name = Name;
             foreach (var ddo in Options) {
                 _cb.Items.Add(ddo);
                 if (settings.IsMatched(ddo.Settings))
@@ -155,9 +153,6 @@ namespace Iros._7th.Workshop.ConfigSettings {
             if (_cb.SelectedIndex >= 0) {
                 DDOption ddo = _cb.SelectedItem as DDOption;
                 settings.Apply(ddo.Settings);
-                if (ddo.Frag != null) settings.Apply(ddo.Frag);
-                if (ddo.Vert != null) settings.Apply(ddo.Vert);
-                if (ddo.Yuv != null) settings.Apply(ddo.Yuv);
             }
         }
     }
