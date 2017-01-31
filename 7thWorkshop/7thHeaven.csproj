@@ -264,6 +264,7 @@
     <EmbeddedResource Include="pTags.resx">
       <DependentUpon>pTags.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="7thHeaven.var" />
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
