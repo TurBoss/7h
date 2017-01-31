@@ -149,6 +149,13 @@
     <TrueSetting>use_pbo=yes</TrueSetting>
     <FalseSetting>use_pbo=no</FalseSetting>
   </Setting>
+  <Setting xsi:type="Checkbox">
+    <Group>Rendering</Group>
+    <Name>Direct Mode</Name>
+    <Description>Read files directly instead of using LGP archives</Description>
+    <TrueSetting>direct_mode=on</TrueSetting>
+    <FalseSetting>direct_mode=off</FalseSetting>
+  </Setting>
   
   
   <Setting xsi:type="DropDown">
