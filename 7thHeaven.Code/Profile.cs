@@ -30,7 +30,7 @@ namespace Iros._7th.Workshop {
                         yield return String.Format("\tModID {0}", mod.ModID.ToString());
 
                     foreach (var config in item.Settings) {
-                        yield return String.Format("\t {0} = {1}", config.ID, config.Value.ToString());
+                        yield return String.Format("\t{0} = {1}", config.ID, config.Value.ToString());
                     }
                 }
             }
