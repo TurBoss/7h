@@ -1337,7 +1337,9 @@ They will be automatically turned off.";
 
         private void bProfileDetails_Click(object sender, EventArgs e) {
             string details = String.Join("\r\n", Sys.ActiveProfile.GetDetails());
-            fReadme.Display(details, "Profile Details");
+            var result = CommonMark.CommonMarkConverter.Convert(details);
+
+            fReadme.Display(result, "Profile Details");
         }
 
     }
