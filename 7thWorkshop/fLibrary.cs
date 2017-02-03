@@ -910,11 +910,13 @@ They will be automatically turned off.";
                         using (var s = inst.GetData("readme.md"))
                         {
                             if (s != null)
+                            {
                                 using (var sr = new System.IO.StreamReader(s, true))
                                 {
                                     var result = CommonMark.CommonMarkConverter.Convert(sr.ReadToEnd());
                                     fReadme.Display(result);
                                 }
+                            }
                         }
                     }
                     break;
