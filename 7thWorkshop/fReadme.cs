@@ -4,6 +4,7 @@
 */
 
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -20,7 +21,7 @@ namespace Iros._7th.Workshop {
 
         public static void Display(string text, string caption = null) {
             fReadme form = new fReadme();
-            form.txtText.Text = text;
+            form.webBrowser1.DocumentText = text.ToString();
             if (!String.IsNullOrWhiteSpace(caption)) form.Text = caption;
             form.ShowDialog();
         }

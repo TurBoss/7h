@@ -907,10 +907,13 @@ They will be automatically turned off.";
                 case ModBarAction.Readme:
                     var inst = Sys.Library.GetItem(pm.ModID).LatestInstalled;
                     if (inst != null) {
-                        using (var s = inst.GetData("readme.txt")) {
+                        using (var s = inst.GetData("readme.md"))
+                        {
                             if (s != null)
-                                using (var sr = new System.IO.StreamReader(s, true)) {
-                                    fReadme.Display(sr.ReadToEnd());
+                                using (var sr = new System.IO.StreamReader(s, true))
+                                {
+                                    var result = CommonMark.CommonMarkConverter.Convert(sr.ReadToEnd());
+                                    fReadme.Display(result);
                                 }
                         }
                     }
