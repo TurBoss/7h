@@ -23,14 +23,14 @@ namespace Iros._7th.Workshop {
                 if (mod != null) {
                     var details = mod.CachedDetails;
                     if (details != null) {
-                        yield return details.Name;
-                        yield return "\tID: " + details.ID.ToString();
-                        yield return "\tVersion: " + mod.LatestInstalled.VersionDetails.Version.ToString();
+                        yield return String.Format("# {0}", details.Name);
+                        yield return String.Format("\tID: {0}", details.ID.ToString());
+                        yield return String.Format("\tVersion: {0}", mod.LatestInstalled.VersionDetails.Version.ToString());
                     } else
-                        yield return "\t Mod " + mod.ModID.ToString();
+                        yield return String.Format("\tModID {0}", mod.ModID.ToString());
 
                     foreach (var config in item.Settings) {
-                        yield return "\t" + config.ID + " = " + config.Value.ToString();
+                        yield return String.Format("\t{0} = {1}", config.ID, config.Value.ToString());
                     }
                 }
             }

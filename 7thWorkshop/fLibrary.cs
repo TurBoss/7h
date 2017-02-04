@@ -907,11 +907,16 @@ They will be automatically turned off.";
                 case ModBarAction.Readme:
                     var inst = Sys.Library.GetItem(pm.ModID).LatestInstalled;
                     if (inst != null) {
-                        using (var s = inst.GetData("readme.txt")) {
+                        using (var s = inst.GetData("readme.md"))
+                        {
                             if (s != null)
-                                using (var sr = new System.IO.StreamReader(s, true)) {
-                                    fReadme.Display(sr.ReadToEnd());
+                            {
+                                using (var sr = new System.IO.StreamReader(s, true))
+                                {
+                                    var result = CommonMark.CommonMarkConverter.Convert(sr.ReadToEnd());
+                                    fReadme.Display(result);
                                 }
+                            }
                         }
                     }
                     break;
@@ -1332,7 +1337,9 @@ They will be automatically turned off.";
 
         private void bProfileDetails_Click(object sender, EventArgs e) {
             string details = String.Join("\r\n", Sys.ActiveProfile.GetDetails());
-            fReadme.Display(details, "Profile Details");
+            var result = CommonMark.CommonMarkConverter.Convert(details);
+
+            fReadme.Display(result, "Profile Details");
         }
 
     }

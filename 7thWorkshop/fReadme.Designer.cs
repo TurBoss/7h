@@ -29,38 +29,36 @@ namespace Iros._7th.Workshop {
         /// </summary>
         private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fReadme));
-            this.txtText = new System.Windows.Forms.TextBox();
+            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             this.SuspendLayout();
             // 
-            // txtText
+            // webBrowser1
             // 
-            this.txtText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtText.Location = new System.Drawing.Point(0, 0);
-            this.txtText.Multiline = true;
-            this.txtText.Name = "txtText";
-            this.txtText.ReadOnly = true;
-            this.txtText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtText.Size = new System.Drawing.Size(627, 351);
-            this.txtText.TabIndex = 0;
+            this.webBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.webBrowser1.IsWebBrowserContextMenuEnabled = false;
+            this.webBrowser1.Location = new System.Drawing.Point(0, 0);
+            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser1.Name = "webBrowser1";
+            this.webBrowser1.Size = new System.Drawing.Size(584, 461);
+            this.webBrowser1.TabIndex = 0;
+            this.webBrowser1.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.webBrowser1_Navigating);
             // 
             // fReadme
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(627, 351);
-            this.Controls.Add(this.txtText);
+            this.ClientSize = new System.Drawing.Size(584, 461);
+            this.Controls.Add(this.webBrowser1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "fReadme";
             this.ShowInTaskbar = false;
             this.Text = "Readme";
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TextBox txtText;
+        private System.Windows.Forms.WebBrowser webBrowser1;
     }
 }
