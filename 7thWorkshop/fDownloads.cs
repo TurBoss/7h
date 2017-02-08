@@ -123,6 +123,10 @@ namespace Iros._7th.Workshop {
                                     Sys.Message(new WMessage() { Text = "Error downloading " + lvi.Text });
                                     if (onCancel != null) onCancel();
                                     break;
+                                case Mega.MegaIros.TransferState.Canceled:
+                                    lvDownloads.Items.Remove(lvi);
+                                    Sys.Message(new WMessage() { Text = String.Format("{0} was canceled", lvi.Text) });
+                                    break;
                                 default:
                                     DoDownloadProgress(item, (int)(100 * tfr.Complete / tfr.Size), tfr.Complete);
                                     break;

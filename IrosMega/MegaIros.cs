@@ -270,6 +270,7 @@ namespace Iros.Mega {
             Transferring,
             Complete,
             Failed,
+            Canceled,
         }
 
         public class Transfer {
@@ -510,7 +511,7 @@ namespace Iros.Mega {
         public void CancelDownload(Transfer tfr) {
             if (tfr.TD >= 0) {
                 IrosCancelDownload(_cli, tfr.TD);
-                tfr.State = TransferState.Failed;
+                tfr.State = TransferState.Canceled;
                 tfr.Notify();
             }
         }
