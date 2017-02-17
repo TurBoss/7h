@@ -998,8 +998,18 @@ They will be automatically turned off.";
             DoSearch(pSearchResultsC, Sys.Catalog.Mods, txtSearchC.Text, new HashSet<string>(pTagsC.Selected), lSearchC, ref _cMods, null, pMod.ModBarState.None, false, true);
         }
 
+        private void bRefreshC_Click(object sender, EventArgs e)
+        {
+            DoSearch(pSearchResultsC, Sys.Catalog.Mods, "", new HashSet<string>(pTagsC.Selected), lSearchC, ref _cMods, null, pMod.ModBarState.None, false, true);
+        }
+
         private void bSearchL_Click(object sender, EventArgs e) {
             DoSearch(pSearchResultsL, Sys.Library.Items.Select(i => i.CachedDetails), txtSearchL.Text, new HashSet<string>(pTagsL.Selected), lSearchL, ref _lMods, mMod, pMod.ModBarState.Activate, true, false);
+        }
+
+        private void bRefreshL_Click(object sender, EventArgs e)
+        {
+            DoSearch(pSearchResultsL, Sys.Library.Items.Select(i => i.CachedDetails), "", new HashSet<string>(pTagsL.Selected), lSearchL, ref _lMods, mMod, pMod.ModBarState.Activate, true, false);
         }
 
         private void uninstallToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -1327,10 +1337,12 @@ They will be automatically turned off.";
                     break;
                 case 1:
                     pSearchResultsL.Focus();
+                    bRefreshL_Click(sender, e);
                     break;
 
                 case 2:
                     pSearchResultsC.Focus();
+                    bRefreshC_Click(sender, e);
                     break;
             }
         }
