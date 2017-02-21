@@ -25,6 +25,7 @@ namespace Iros._7th.Workshop {
         private string _catFile;
         private Dictionary<Guid, pMod> _lMods, _cMods;
         private _7thWrapperLib.LoaderContext _context;
+        private fDownloads dl;
 
         private void fLibrary_Load(object sender, EventArgs e) {
             System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US", false);
@@ -51,9 +52,10 @@ namespace Iros._7th.Workshop {
             Log.Write("7thHeaven started: " + Sys.Version.ToString());
             
             Mega.MegaIros.Logger = Log.Write;
-            var dl = new fDownloads();
-            Sys.Downloads = dl; 
-            dl.Show();
+
+            this.dl = new fDownloads();
+            Sys.Downloads = this.dl;
+            this.dl.Show();
 
             try {
                 string src = System.IO.Path.Combine(Sys._7HFolder, "SharpCompressU.cpy");
@@ -1098,7 +1100,8 @@ They will be automatically turned off.";
         }
 
         private void showDownloadsWindowToolStripMenuItem_Click(object sender, EventArgs e) {
-            Sys.Downloads.BringToFront();
+            this.dl.Show();
+            this.dl.BringToFront();
         }
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e) {
