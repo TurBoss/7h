@@ -39,7 +39,7 @@ namespace Iros._7th.Workshop {
             // 
             this.tcSettings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tcSettings.Location = new System.Drawing.Point(0, 0);
-            this.tcSettings.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tcSettings.Margin = new System.Windows.Forms.Padding(2);
             this.tcSettings.Name = "tcSettings";
             this.tcSettings.SelectedIndex = 0;
             this.tcSettings.Size = new System.Drawing.Size(611, 405);
@@ -51,7 +51,7 @@ namespace Iros._7th.Workshop {
             this.panel2.Controls.Add(this.bCancel);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel2.Location = new System.Drawing.Point(0, 405);
-            this.panel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(611, 52);
             this.panel2.TabIndex = 1;
@@ -89,11 +89,11 @@ namespace Iros._7th.Workshop {
             this.Controls.Add(this.tcSettings);
             this.Controls.Add(this.panel2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "fConfigSettings";
-            this.Text = "Config Settings";
+            this.Text = "Aali Driver Settings";
             this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
 

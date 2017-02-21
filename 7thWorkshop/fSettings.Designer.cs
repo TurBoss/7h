@@ -60,20 +60,18 @@ namespace Iros._7th.Workshop {
             this.panel1.Controls.Add(this.bOK);
             this.panel1.Controls.Add(this.bCancel);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 629);
-            this.panel1.Margin = new System.Windows.Forms.Padding(6);
+            this.panel1.Location = new System.Drawing.Point(0, 327);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1600, 96);
+            this.panel1.Size = new System.Drawing.Size(798, 50);
             this.panel1.TabIndex = 0;
             // 
             // bOK
             // 
             this.bOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.bOK.Location = new System.Drawing.Point(1264, 25);
-            this.bOK.Margin = new System.Windows.Forms.Padding(6);
+            this.bOK.Location = new System.Drawing.Point(630, 13);
             this.bOK.Name = "bOK";
-            this.bOK.Size = new System.Drawing.Size(150, 44);
+            this.bOK.Size = new System.Drawing.Size(75, 23);
             this.bOK.TabIndex = 1;
             this.bOK.Text = "OK";
             this.bOK.UseVisualStyleBackColor = true;
@@ -83,20 +81,18 @@ namespace Iros._7th.Workshop {
             // 
             this.bCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.bCancel.Location = new System.Drawing.Point(1426, 25);
-            this.bCancel.Margin = new System.Windows.Forms.Padding(6);
+            this.bCancel.Location = new System.Drawing.Point(711, 13);
             this.bCancel.Name = "bCancel";
-            this.bCancel.Size = new System.Drawing.Size(150, 44);
+            this.bCancel.Size = new System.Drawing.Size(75, 23);
             this.bCancel.TabIndex = 0;
             this.bCancel.Text = "Cancel";
             this.bCancel.UseVisualStyleBackColor = true;
             // 
             // bLibrary
             // 
-            this.bLibrary.Location = new System.Drawing.Point(720, 12);
-            this.bLibrary.Margin = new System.Windows.Forms.Padding(6);
+            this.bLibrary.Location = new System.Drawing.Point(360, 6);
             this.bLibrary.Name = "bLibrary";
-            this.bLibrary.Size = new System.Drawing.Size(52, 38);
+            this.bLibrary.Size = new System.Drawing.Size(26, 20);
             this.bLibrary.TabIndex = 3;
             this.bLibrary.Text = "...";
             this.bLibrary.UseVisualStyleBackColor = true;
@@ -106,19 +102,17 @@ namespace Iros._7th.Workshop {
             // 
             this.txtLibrary.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.txtLibrary.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
-            this.txtLibrary.Location = new System.Drawing.Point(206, 12);
-            this.txtLibrary.Margin = new System.Windows.Forms.Padding(6);
+            this.txtLibrary.Location = new System.Drawing.Point(103, 6);
             this.txtLibrary.Name = "txtLibrary";
-            this.txtLibrary.Size = new System.Drawing.Size(488, 31);
+            this.txtLibrary.Size = new System.Drawing.Size(246, 20);
             this.txtLibrary.TabIndex = 5;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(24, 17);
-            this.label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label2.Location = new System.Drawing.Point(12, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(172, 25);
+            this.label2.Size = new System.Drawing.Size(85, 13);
             this.label2.TabIndex = 4;
             this.label2.Text = "Library Location:";
             // 
@@ -131,38 +125,34 @@ namespace Iros._7th.Workshop {
             "Automatically import mods in library folder",
             "Check for updates to 7thHeaven automatically",
             "Bypass compatibility"});
-            this.clOptions.Location = new System.Drawing.Point(206, 219);
-            this.clOptions.Margin = new System.Windows.Forms.Padding(6);
+            this.clOptions.Location = new System.Drawing.Point(103, 114);
             this.clOptions.Name = "clOptions";
-            this.clOptions.Size = new System.Drawing.Size(566, 160);
+            this.clOptions.Size = new System.Drawing.Size(285, 79);
             this.clOptions.TabIndex = 6;
             // 
             // txtFF7
             // 
             this.txtFF7.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.txtFF7.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
-            this.txtFF7.Location = new System.Drawing.Point(206, 62);
-            this.txtFF7.Margin = new System.Windows.Forms.Padding(6);
+            this.txtFF7.Location = new System.Drawing.Point(103, 32);
             this.txtFF7.Name = "txtFF7";
-            this.txtFF7.Size = new System.Drawing.Size(488, 31);
+            this.txtFF7.Size = new System.Drawing.Size(246, 20);
             this.txtFF7.TabIndex = 9;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(24, 67);
-            this.label3.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label3.Location = new System.Drawing.Point(12, 35);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(99, 25);
+            this.label3.Size = new System.Drawing.Size(49, 13);
             this.label3.TabIndex = 8;
             this.label3.Text = "FF7 Exe:";
             // 
             // bFF7
             // 
-            this.bFF7.Location = new System.Drawing.Point(720, 62);
-            this.bFF7.Margin = new System.Windows.Forms.Padding(6);
+            this.bFF7.Location = new System.Drawing.Point(360, 32);
             this.bFF7.Name = "bFF7";
-            this.bFF7.Size = new System.Drawing.Size(52, 38);
+            this.bFF7.Size = new System.Drawing.Size(26, 20);
             this.bFF7.TabIndex = 7;
             this.bFF7.Text = "...";
             this.bFF7.UseVisualStyleBackColor = true;
@@ -172,28 +162,25 @@ namespace Iros._7th.Workshop {
             // 
             this.txtAali.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.txtAali.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
-            this.txtAali.Location = new System.Drawing.Point(206, 112);
-            this.txtAali.Margin = new System.Windows.Forms.Padding(6);
+            this.txtAali.Location = new System.Drawing.Point(103, 58);
             this.txtAali.Name = "txtAali";
-            this.txtAali.Size = new System.Drawing.Size(488, 31);
+            this.txtAali.Size = new System.Drawing.Size(246, 20);
             this.txtAali.TabIndex = 12;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(24, 117);
-            this.label4.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label4.Location = new System.Drawing.Point(12, 61);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(144, 25);
+            this.label4.Size = new System.Drawing.Size(72, 13);
             this.label4.TabIndex = 11;
             this.label4.Text = "Aali Modpath:";
             // 
             // bAali
             // 
-            this.bAali.Location = new System.Drawing.Point(720, 112);
-            this.bAali.Margin = new System.Windows.Forms.Padding(6);
+            this.bAali.Location = new System.Drawing.Point(360, 58);
             this.bAali.Name = "bAali";
-            this.bAali.Size = new System.Drawing.Size(52, 38);
+            this.bAali.Size = new System.Drawing.Size(26, 20);
             this.bAali.TabIndex = 10;
             this.bAali.Text = "...";
             this.bAali.UseVisualStyleBackColor = true;
@@ -204,22 +191,20 @@ namespace Iros._7th.Workshop {
             this.txtAlsoLaunch.AcceptsReturn = true;
             this.txtAlsoLaunch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.txtAlsoLaunch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
-            this.txtAlsoLaunch.Location = new System.Drawing.Point(1016, 435);
-            this.txtAlsoLaunch.Margin = new System.Windows.Forms.Padding(6);
+            this.txtAlsoLaunch.Location = new System.Drawing.Point(508, 226);
             this.txtAlsoLaunch.Multiline = true;
             this.txtAlsoLaunch.Name = "txtAlsoLaunch";
             this.txtAlsoLaunch.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtAlsoLaunch.Size = new System.Drawing.Size(560, 170);
+            this.txtAlsoLaunch.Size = new System.Drawing.Size(282, 90);
             this.txtAlsoLaunch.TabIndex = 15;
             this.txtAlsoLaunch.WordWrap = false;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(843, 438);
-            this.label5.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label5.Location = new System.Drawing.Point(422, 228);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(137, 25);
+            this.label5.Size = new System.Drawing.Size(69, 13);
             this.label5.TabIndex = 14;
             this.label5.Text = "Also Launch:";
             // 
@@ -232,22 +217,20 @@ namespace Iros._7th.Workshop {
             this.txtSubscriptions.AcceptsReturn = true;
             this.txtSubscriptions.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.txtSubscriptions.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
-            this.txtSubscriptions.Location = new System.Drawing.Point(1016, 12);
-            this.txtSubscriptions.Margin = new System.Windows.Forms.Padding(6);
+            this.txtSubscriptions.Location = new System.Drawing.Point(508, 6);
             this.txtSubscriptions.Multiline = true;
             this.txtSubscriptions.Name = "txtSubscriptions";
             this.txtSubscriptions.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtSubscriptions.Size = new System.Drawing.Size(562, 195);
+            this.txtSubscriptions.Size = new System.Drawing.Size(283, 103);
             this.txtSubscriptions.TabIndex = 17;
             this.txtSubscriptions.WordWrap = false;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(832, 25);
-            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label1.Location = new System.Drawing.Point(416, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(148, 25);
+            this.label1.Size = new System.Drawing.Size(73, 13);
             this.label1.TabIndex = 16;
             this.label1.Text = "Subscriptions:";
             // 
@@ -255,28 +238,25 @@ namespace Iros._7th.Workshop {
             // 
             this.txtMovie.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.txtMovie.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
-            this.txtMovie.Location = new System.Drawing.Point(206, 163);
-            this.txtMovie.Margin = new System.Windows.Forms.Padding(6);
+            this.txtMovie.Location = new System.Drawing.Point(103, 85);
             this.txtMovie.Name = "txtMovie";
-            this.txtMovie.Size = new System.Drawing.Size(488, 31);
+            this.txtMovie.Size = new System.Drawing.Size(246, 20);
             this.txtMovie.TabIndex = 20;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(24, 169);
-            this.label6.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label6.Location = new System.Drawing.Point(12, 88);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(126, 25);
+            this.label6.Size = new System.Drawing.Size(64, 13);
             this.label6.TabIndex = 19;
             this.label6.Text = "Movie Path:";
             // 
             // bMovie
             // 
-            this.bMovie.Location = new System.Drawing.Point(720, 163);
-            this.bMovie.Margin = new System.Windows.Forms.Padding(6);
+            this.bMovie.Location = new System.Drawing.Point(360, 85);
             this.bMovie.Name = "bMovie";
-            this.bMovie.Size = new System.Drawing.Size(52, 38);
+            this.bMovie.Size = new System.Drawing.Size(26, 20);
             this.bMovie.TabIndex = 18;
             this.bMovie.Text = "...";
             this.bMovie.UseVisualStyleBackColor = true;
@@ -287,32 +267,30 @@ namespace Iros._7th.Workshop {
             this.txtExtraFolders.AcceptsReturn = true;
             this.txtExtraFolders.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.txtExtraFolders.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
-            this.txtExtraFolders.Location = new System.Drawing.Point(1016, 219);
-            this.txtExtraFolders.Margin = new System.Windows.Forms.Padding(6);
+            this.txtExtraFolders.Location = new System.Drawing.Point(508, 114);
             this.txtExtraFolders.Multiline = true;
             this.txtExtraFolders.Name = "txtExtraFolders";
             this.txtExtraFolders.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtExtraFolders.Size = new System.Drawing.Size(562, 204);
+            this.txtExtraFolders.Size = new System.Drawing.Size(283, 108);
             this.txtExtraFolders.TabIndex = 22;
             this.txtExtraFolders.WordWrap = false;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(834, 225);
-            this.label7.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
+            this.label7.Location = new System.Drawing.Point(417, 117);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(146, 25);
+            this.label7.Size = new System.Drawing.Size(71, 13);
             this.label7.TabIndex = 21;
             this.label7.Text = "Extra Folders:";
             // 
             // fSettings
             // 
             this.AcceptButton = this.bOK;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.bCancel;
-            this.ClientSize = new System.Drawing.Size(1600, 725);
+            this.ClientSize = new System.Drawing.Size(798, 377);
             this.Controls.Add(this.txtExtraFolders);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.txtMovie);
@@ -334,12 +312,11 @@ namespace Iros._7th.Workshop {
             this.Controls.Add(this.bLibrary);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(6);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "fSettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Settings";
+            this.Text = "General Settings";
             this.Load += new System.EventHandler(this.fSettings_Load);
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);

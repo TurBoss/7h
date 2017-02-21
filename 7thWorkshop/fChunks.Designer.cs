@@ -45,24 +45,27 @@ namespace Iros._7th.Workshop {
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(28, 23);
+            this.label1.Location = new System.Drawing.Point(14, 12);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(163, 25);
+            this.label1.Size = new System.Drawing.Size(82, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Select FLEVEL:";
             // 
             // txtFLevel
             // 
-            this.txtFLevel.Location = new System.Drawing.Point(197, 20);
+            this.txtFLevel.Location = new System.Drawing.Point(98, 10);
+            this.txtFLevel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtFLevel.Name = "txtFLevel";
-            this.txtFLevel.Size = new System.Drawing.Size(277, 31);
+            this.txtFLevel.Size = new System.Drawing.Size(140, 20);
             this.txtFLevel.TabIndex = 1;
             // 
             // bFLevel
             // 
-            this.bFLevel.Location = new System.Drawing.Point(491, 20);
+            this.bFLevel.Location = new System.Drawing.Point(246, 10);
+            this.bFLevel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.bFLevel.Name = "bFLevel";
-            this.bFLevel.Size = new System.Drawing.Size(51, 31);
+            this.bFLevel.Size = new System.Drawing.Size(26, 16);
             this.bFLevel.TabIndex = 2;
             this.bFLevel.Text = "...";
             this.bFLevel.UseVisualStyleBackColor = true;
@@ -70,9 +73,10 @@ namespace Iros._7th.Workshop {
             // 
             // bGo
             // 
-            this.bGo.Location = new System.Drawing.Point(197, 194);
+            this.bGo.Location = new System.Drawing.Point(98, 101);
+            this.bGo.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.bGo.Name = "bGo";
-            this.bGo.Size = new System.Drawing.Size(277, 43);
+            this.bGo.Size = new System.Drawing.Size(138, 22);
             this.bGo.TabIndex = 3;
             this.bGo.Text = "Extract";
             this.bGo.UseVisualStyleBackColor = true;
@@ -80,9 +84,10 @@ namespace Iros._7th.Workshop {
             // 
             // bOutput
             // 
-            this.bOutput.Location = new System.Drawing.Point(491, 68);
+            this.bOutput.Location = new System.Drawing.Point(246, 35);
+            this.bOutput.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.bOutput.Name = "bOutput";
-            this.bOutput.Size = new System.Drawing.Size(51, 31);
+            this.bOutput.Size = new System.Drawing.Size(26, 16);
             this.bOutput.TabIndex = 6;
             this.bOutput.Text = "...";
             this.bOutput.UseVisualStyleBackColor = true;
@@ -90,43 +95,48 @@ namespace Iros._7th.Workshop {
             // 
             // txtOutput
             // 
-            this.txtOutput.Location = new System.Drawing.Point(197, 68);
+            this.txtOutput.Location = new System.Drawing.Point(98, 35);
+            this.txtOutput.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtOutput.Name = "txtOutput";
-            this.txtOutput.Size = new System.Drawing.Size(277, 31);
+            this.txtOutput.Size = new System.Drawing.Size(140, 20);
             this.txtOutput.TabIndex = 5;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(28, 71);
+            this.label2.Location = new System.Drawing.Point(14, 37);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(149, 25);
+            this.label2.Size = new System.Drawing.Size(74, 13);
             this.label2.TabIndex = 4;
             this.label2.Text = "Output Folder:";
             // 
             // txtChunks
             // 
-            this.txtChunks.Location = new System.Drawing.Point(197, 118);
+            this.txtChunks.Location = new System.Drawing.Point(98, 61);
+            this.txtChunks.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtChunks.Name = "txtChunks";
-            this.txtChunks.Size = new System.Drawing.Size(277, 31);
+            this.txtChunks.Size = new System.Drawing.Size(140, 20);
             this.txtChunks.TabIndex = 8;
             this.txtChunks.Text = "1";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(28, 121);
+            this.label3.Location = new System.Drawing.Point(14, 63);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(109, 25);
+            this.label3.Size = new System.Drawing.Size(56, 13);
             this.label3.TabIndex = 7;
             this.label3.Text = "Chunk #s:";
             // 
             // pbChunk
             // 
             this.pbChunk.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pbChunk.Location = new System.Drawing.Point(0, 290);
+            this.pbChunk.Location = new System.Drawing.Point(0, 151);
+            this.pbChunk.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.pbChunk.Name = "pbChunk";
-            this.pbChunk.Size = new System.Drawing.Size(580, 23);
+            this.pbChunk.Size = new System.Drawing.Size(290, 12);
             this.pbChunk.TabIndex = 9;
             // 
             // ofFLevel
@@ -135,9 +145,9 @@ namespace Iros._7th.Workshop {
             // 
             // fChunks
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(580, 313);
+            this.ClientSize = new System.Drawing.Size(290, 163);
             this.Controls.Add(this.pbChunk);
             this.Controls.Add(this.txtChunks);
             this.Controls.Add(this.label3);
@@ -149,10 +159,11 @@ namespace Iros._7th.Workshop {
             this.Controls.Add(this.txtFLevel);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "fChunks";
-            this.Text = "Chunker";
+            this.Text = "Chunk Tool";
             this.ResumeLayout(false);
             this.PerformLayout();
 

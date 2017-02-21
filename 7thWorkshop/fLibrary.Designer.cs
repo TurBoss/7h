@@ -47,6 +47,7 @@ namespace Iros._7th.Workshop {
             this.bNewProfile = new System.Windows.Forms.Button();
             this.lProfile = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.pTagsL = new Iros._7th.Workshop.pTags();
             this.pSearchResultsL = new System.Windows.Forms.Panel();
             this.lSearchL = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -56,6 +57,7 @@ namespace Iros._7th.Workshop {
             this.bSearchL = new System.Windows.Forms.Button();
             this.txtSearchL = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.pTagsC = new Iros._7th.Workshop.pTags();
             this.pSearchResultsC = new System.Windows.Forms.Panel();
             this.lSearchC = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -74,20 +76,18 @@ namespace Iros._7th.Workshop {
             this.mUpdateIgnore = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.workshopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showDownloadsWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkSubscriptionsNowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.openGLDriverConfigurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.checkSubscriptionsNowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.modGeneratorAssistantToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.packUnpackiroArchivesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chunkToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.showDownloadsWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pTagsL = new Iros._7th.Workshop.pTags();
-            this.pTagsC = new Iros._7th.Workshop.pTags();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.TC.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.pProfileOuter.SuspendLayout();
@@ -305,6 +305,16 @@ namespace Iros._7th.Workshop {
             this.tabPage2.Text = "Library";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // pTagsL
+            // 
+            this.pTagsL.Location = new System.Drawing.Point(489, 63);
+            this.pTagsL.Margin = new System.Windows.Forms.Padding(9, 7, 9, 7);
+            this.pTagsL.Name = "pTagsL";
+            this.pTagsL.Size = new System.Drawing.Size(242, 243);
+            this.pTagsL.TabIndex = 7;
+            this.pTagsL.Visible = false;
+            this.pTagsL.SelectionChanged += new System.EventHandler(this.pTagsL_SelectionChanged);
+            // 
             // pSearchResultsL
             // 
             this.pSearchResultsL.AutoScroll = true;
@@ -410,6 +420,16 @@ namespace Iros._7th.Workshop {
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Catalog";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // pTagsC
+            // 
+            this.pTagsC.Location = new System.Drawing.Point(484, 62);
+            this.pTagsC.Margin = new System.Windows.Forms.Padding(11, 8, 11, 8);
+            this.pTagsC.Name = "pTagsC";
+            this.pTagsC.Size = new System.Drawing.Size(251, 241);
+            this.pTagsC.TabIndex = 8;
+            this.pTagsC.Visible = false;
+            this.pTagsC.SelectionChanged += new System.EventHandler(this.pTagsC_SelectionChanged);
             // 
             // pSearchResultsC
             // 
@@ -594,9 +614,9 @@ namespace Iros._7th.Workshop {
             this.toolStripSeparator1,
             this.checkSubscriptionsNowToolStripMenuItem,
             this.toolStripSeparator2,
-            this.modGeneratorAssistantToolStripMenuItem,
             this.packUnpackiroArchivesToolStripMenuItem,
             this.chunkToolToolStripMenuItem,
+            this.modGeneratorAssistantToolStripMenuItem,
             this.toolStripMenuItem2,
             this.showDownloadsWindowToolStripMenuItem,
             this.toolStripMenuItem1,
@@ -605,19 +625,24 @@ namespace Iros._7th.Workshop {
             this.workshopToolStripMenuItem.Size = new System.Drawing.Size(73, 20);
             this.workshopToolStripMenuItem.Text = "&Workshop";
             // 
-            // showDownloadsWindowToolStripMenuItem
-            // 
-            this.showDownloadsWindowToolStripMenuItem.Name = "showDownloadsWindowToolStripMenuItem";
-            this.showDownloadsWindowToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
-            this.showDownloadsWindowToolStripMenuItem.Text = "Toggle Downloads Window";
-            this.showDownloadsWindowToolStripMenuItem.Click += new System.EventHandler(this.showDownloadsWindowToolStripMenuItem_Click);
-            // 
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
             this.settingsToolStripMenuItem.Text = "General Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            // 
+            // openGLDriverConfigurationToolStripMenuItem
+            // 
+            this.openGLDriverConfigurationToolStripMenuItem.Name = "openGLDriverConfigurationToolStripMenuItem";
+            this.openGLDriverConfigurationToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.openGLDriverConfigurationToolStripMenuItem.Text = "Aali Driver Settings";
+            this.openGLDriverConfigurationToolStripMenuItem.Click += new System.EventHandler(this.openGLDriverConfigurationToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(216, 6);
             // 
             // checkSubscriptionsNowToolStripMenuItem
             // 
@@ -626,17 +651,10 @@ namespace Iros._7th.Workshop {
             this.checkSubscriptionsNowToolStripMenuItem.Text = "Update Catalog";
             this.checkSubscriptionsNowToolStripMenuItem.Click += new System.EventHandler(this.checkSubscriptionsNowToolStripMenuItem_Click);
             // 
-            // toolStripMenuItem2
+            // toolStripSeparator2
             // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(216, 6);
-            // 
-            // openGLDriverConfigurationToolStripMenuItem
-            // 
-            this.openGLDriverConfigurationToolStripMenuItem.Name = "openGLDriverConfigurationToolStripMenuItem";
-            this.openGLDriverConfigurationToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
-            this.openGLDriverConfigurationToolStripMenuItem.Text = "Aali Driver Settings";
-            this.openGLDriverConfigurationToolStripMenuItem.Click += new System.EventHandler(this.openGLDriverConfigurationToolStripMenuItem_Click);
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(216, 6);
             // 
             // modGeneratorAssistantToolStripMenuItem
             // 
@@ -659,6 +677,18 @@ namespace Iros._7th.Workshop {
             this.chunkToolToolStripMenuItem.Text = "Chunk Tool";
             this.chunkToolToolStripMenuItem.Click += new System.EventHandler(this.chunkToolToolStripMenuItem_Click);
             // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(216, 6);
+            // 
+            // showDownloadsWindowToolStripMenuItem
+            // 
+            this.showDownloadsWindowToolStripMenuItem.Name = "showDownloadsWindowToolStripMenuItem";
+            this.showDownloadsWindowToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.showDownloadsWindowToolStripMenuItem.Text = "Toggle Downloads Window";
+            this.showDownloadsWindowToolStripMenuItem.Click += new System.EventHandler(this.showDownloadsWindowToolStripMenuItem_Click);
+            // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
@@ -670,36 +700,6 @@ namespace Iros._7th.Workshop {
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // pTagsL
-            // 
-            this.pTagsL.Location = new System.Drawing.Point(489, 63);
-            this.pTagsL.Margin = new System.Windows.Forms.Padding(9, 7, 9, 7);
-            this.pTagsL.Name = "pTagsL";
-            this.pTagsL.Size = new System.Drawing.Size(242, 243);
-            this.pTagsL.TabIndex = 7;
-            this.pTagsL.Visible = false;
-            this.pTagsL.SelectionChanged += new System.EventHandler(this.pTagsL_SelectionChanged);
-            // 
-            // pTagsC
-            // 
-            this.pTagsC.Location = new System.Drawing.Point(484, 62);
-            this.pTagsC.Margin = new System.Windows.Forms.Padding(11, 8, 11, 8);
-            this.pTagsC.Name = "pTagsC";
-            this.pTagsC.Size = new System.Drawing.Size(251, 241);
-            this.pTagsC.TabIndex = 8;
-            this.pTagsC.Visible = false;
-            this.pTagsC.SelectionChanged += new System.EventHandler(this.pTagsC_SelectionChanged);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(216, 6);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(216, 6);
             // 
             // fLibrary
             // 
