@@ -112,10 +112,10 @@ namespace Iros._7th.Workshop {
             this.tabPage1.Controls.Add(this.bSourceF);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(548, 175);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Pack to .iro";
+            this.tabPage1.Text = "Pack IRO";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // cbCompress
@@ -123,7 +123,7 @@ namespace Iros._7th.Workshop {
             this.cbCompress.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbCompress.FormattingEnabled = true;
             this.cbCompress.Location = new System.Drawing.Point(107, 74);
-            this.cbCompress.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbCompress.Margin = new System.Windows.Forms.Padding(2);
             this.cbCompress.Name = "cbCompress";
             this.cbCompress.Size = new System.Drawing.Size(142, 21);
             this.cbCompress.TabIndex = 14;
@@ -214,10 +214,10 @@ namespace Iros._7th.Workshop {
             this.tabPage2.Controls.Add(this.bSourceIro);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(548, 175);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Unpack .iro";
+            this.tabPage2.Text = "Unpack IRO";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // bUnpack
@@ -301,12 +301,12 @@ namespace Iros._7th.Workshop {
             this.tabPage3.Controls.Add(this.label8);
             this.tabPage3.Controls.Add(this.bPatchOrig);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage3.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(2);
             this.tabPage3.Size = new System.Drawing.Size(548, 175);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Create patch";
+            this.tabPage3.Text = "Patch IRO";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // txtPatchSave
@@ -342,7 +342,7 @@ namespace Iros._7th.Workshop {
             this.cbPatchCompress.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPatchCompress.FormattingEnabled = true;
             this.cbPatchCompress.Location = new System.Drawing.Point(116, 106);
-            this.cbPatchCompress.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbPatchCompress.Margin = new System.Windows.Forms.Padding(2);
             this.cbPatchCompress.Name = "cbPatchCompress";
             this.cbPatchCompress.Size = new System.Drawing.Size(142, 21);
             this.cbPatchCompress.TabIndex = 23;
@@ -436,18 +436,18 @@ namespace Iros._7th.Workshop {
             this.tabPage4.Controls.Add(this.cbPatchACompress);
             this.tabPage4.Controls.Add(this.bGoPatchA);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage4.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(2);
             this.tabPage4.Size = new System.Drawing.Size(548, 175);
             this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Create patch (adv.)";
+            this.tabPage4.Text = "Patch IRO (Advanced)";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // txtPatchDelete
             // 
             this.txtPatchDelete.Location = new System.Drawing.Point(282, 30);
-            this.txtPatchDelete.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtPatchDelete.Margin = new System.Windows.Forms.Padding(2);
             this.txtPatchDelete.Multiline = true;
             this.txtPatchDelete.Name = "txtPatchDelete";
             this.txtPatchDelete.ScrollBars = System.Windows.Forms.ScrollBars.Both;
@@ -533,7 +533,7 @@ namespace Iros._7th.Workshop {
             this.cbPatchACompress.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPatchACompress.FormattingEnabled = true;
             this.cbPatchACompress.Location = new System.Drawing.Point(84, 113);
-            this.cbPatchACompress.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbPatchACompress.Margin = new System.Windows.Forms.Padding(2);
             this.cbPatchACompress.Name = "cbPatchACompress";
             this.cbPatchACompress.Size = new System.Drawing.Size(134, 21);
             this.cbPatchACompress.TabIndex = 28;
