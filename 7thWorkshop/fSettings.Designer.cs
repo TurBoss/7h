@@ -62,14 +62,14 @@ namespace Iros._7th.Workshop {
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 327);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(798, 50);
+            this.panel1.Size = new System.Drawing.Size(714, 50);
             this.panel1.TabIndex = 0;
             // 
             // bOK
             // 
             this.bOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.bOK.Location = new System.Drawing.Point(630, 13);
+            this.bOK.Location = new System.Drawing.Point(546, 13);
             this.bOK.Name = "bOK";
             this.bOK.Size = new System.Drawing.Size(75, 23);
             this.bOK.TabIndex = 1;
@@ -81,7 +81,7 @@ namespace Iros._7th.Workshop {
             // 
             this.bCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.bCancel.Location = new System.Drawing.Point(711, 13);
+            this.bCancel.Location = new System.Drawing.Point(627, 13);
             this.bCancel.Name = "bCancel";
             this.bCancel.Size = new System.Drawing.Size(75, 23);
             this.bCancel.TabIndex = 0;
@@ -90,7 +90,7 @@ namespace Iros._7th.Workshop {
             // 
             // bLibrary
             // 
-            this.bLibrary.Location = new System.Drawing.Point(360, 6);
+            this.bLibrary.Location = new System.Drawing.Point(360, 88);
             this.bLibrary.Name = "bLibrary";
             this.bLibrary.Size = new System.Drawing.Size(26, 20);
             this.bLibrary.TabIndex = 3;
@@ -102,7 +102,7 @@ namespace Iros._7th.Workshop {
             // 
             this.txtLibrary.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.txtLibrary.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
-            this.txtLibrary.Location = new System.Drawing.Point(103, 6);
+            this.txtLibrary.Location = new System.Drawing.Point(103, 88);
             this.txtLibrary.Name = "txtLibrary";
             this.txtLibrary.Size = new System.Drawing.Size(246, 20);
             this.txtLibrary.TabIndex = 5;
@@ -110,11 +110,11 @@ namespace Iros._7th.Workshop {
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 9);
+            this.label2.Location = new System.Drawing.Point(12, 91);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(85, 13);
+            this.label2.Size = new System.Drawing.Size(66, 13);
             this.label2.TabIndex = 4;
-            this.label2.Text = "Library Location:";
+            this.label2.Text = "Library Path:";
             // 
             // clOptions
             // 
@@ -125,7 +125,7 @@ namespace Iros._7th.Workshop {
             "Automatically import mods in library folder",
             "Check for updates to 7thHeaven automatically",
             "Bypass compatibility"});
-            this.clOptions.Location = new System.Drawing.Point(103, 114);
+            this.clOptions.Location = new System.Drawing.Point(101, 157);
             this.clOptions.Name = "clOptions";
             this.clOptions.Size = new System.Drawing.Size(285, 79);
             this.clOptions.TabIndex = 6;
@@ -134,15 +134,15 @@ namespace Iros._7th.Workshop {
             // 
             this.txtFF7.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.txtFF7.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
-            this.txtFF7.Location = new System.Drawing.Point(103, 32);
+            this.txtFF7.Location = new System.Drawing.Point(103, 10);
             this.txtFF7.Name = "txtFF7";
             this.txtFF7.Size = new System.Drawing.Size(246, 20);
-            this.txtFF7.TabIndex = 9;
+            this.txtFF7.TabIndex = 1;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 35);
+            this.label3.Location = new System.Drawing.Point(12, 13);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(49, 13);
             this.label3.TabIndex = 8;
@@ -150,10 +150,10 @@ namespace Iros._7th.Workshop {
             // 
             // bFF7
             // 
-            this.bFF7.Location = new System.Drawing.Point(360, 32);
+            this.bFF7.Location = new System.Drawing.Point(360, 10);
             this.bFF7.Name = "bFF7";
             this.bFF7.Size = new System.Drawing.Size(26, 20);
-            this.bFF7.TabIndex = 7;
+            this.bFF7.TabIndex = 2;
             this.bFF7.Text = "...";
             this.bFF7.UseVisualStyleBackColor = true;
             this.bFF7.Click += new System.EventHandler(this.bFF7_Click);
@@ -162,7 +162,7 @@ namespace Iros._7th.Workshop {
             // 
             this.txtAali.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.txtAali.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
-            this.txtAali.Location = new System.Drawing.Point(103, 58);
+            this.txtAali.Location = new System.Drawing.Point(103, 62);
             this.txtAali.Name = "txtAali";
             this.txtAali.Size = new System.Drawing.Size(246, 20);
             this.txtAali.TabIndex = 12;
@@ -170,15 +170,15 @@ namespace Iros._7th.Workshop {
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 61);
+            this.label4.Location = new System.Drawing.Point(12, 65);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(72, 13);
+            this.label4.Size = new System.Drawing.Size(76, 13);
             this.label4.TabIndex = 11;
-            this.label4.Text = "Aali Modpath:";
+            this.label4.Text = "Textures Path:";
             // 
             // bAali
             // 
-            this.bAali.Location = new System.Drawing.Point(360, 58);
+            this.bAali.Location = new System.Drawing.Point(360, 62);
             this.bAali.Name = "bAali";
             this.bAali.Size = new System.Drawing.Size(26, 20);
             this.bAali.TabIndex = 10;
@@ -191,18 +191,18 @@ namespace Iros._7th.Workshop {
             this.txtAlsoLaunch.AcceptsReturn = true;
             this.txtAlsoLaunch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.txtAlsoLaunch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
-            this.txtAlsoLaunch.Location = new System.Drawing.Point(508, 226);
+            this.txtAlsoLaunch.Location = new System.Drawing.Point(411, 251);
             this.txtAlsoLaunch.Multiline = true;
             this.txtAlsoLaunch.Name = "txtAlsoLaunch";
             this.txtAlsoLaunch.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtAlsoLaunch.Size = new System.Drawing.Size(282, 90);
+            this.txtAlsoLaunch.Size = new System.Drawing.Size(282, 70);
             this.txtAlsoLaunch.TabIndex = 15;
             this.txtAlsoLaunch.WordWrap = false;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(422, 228);
+            this.label5.Location = new System.Drawing.Point(518, 235);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(69, 13);
             this.label5.TabIndex = 14;
@@ -217,18 +217,18 @@ namespace Iros._7th.Workshop {
             this.txtSubscriptions.AcceptsReturn = true;
             this.txtSubscriptions.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.txtSubscriptions.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
-            this.txtSubscriptions.Location = new System.Drawing.Point(508, 6);
+            this.txtSubscriptions.Location = new System.Drawing.Point(411, 29);
             this.txtSubscriptions.Multiline = true;
             this.txtSubscriptions.Name = "txtSubscriptions";
             this.txtSubscriptions.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtSubscriptions.Size = new System.Drawing.Size(283, 103);
+            this.txtSubscriptions.Size = new System.Drawing.Size(283, 85);
             this.txtSubscriptions.TabIndex = 17;
             this.txtSubscriptions.WordWrap = false;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(416, 13);
+            this.label1.Location = new System.Drawing.Point(518, 13);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(73, 13);
             this.label1.TabIndex = 16;
@@ -238,7 +238,7 @@ namespace Iros._7th.Workshop {
             // 
             this.txtMovie.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.txtMovie.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
-            this.txtMovie.Location = new System.Drawing.Point(103, 85);
+            this.txtMovie.Location = new System.Drawing.Point(103, 36);
             this.txtMovie.Name = "txtMovie";
             this.txtMovie.Size = new System.Drawing.Size(246, 20);
             this.txtMovie.TabIndex = 20;
@@ -246,15 +246,15 @@ namespace Iros._7th.Workshop {
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 88);
+            this.label6.Location = new System.Drawing.Point(12, 39);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(64, 13);
+            this.label6.Size = new System.Drawing.Size(69, 13);
             this.label6.TabIndex = 19;
-            this.label6.Text = "Movie Path:";
+            this.label6.Text = "Movies Path:";
             // 
             // bMovie
             // 
-            this.bMovie.Location = new System.Drawing.Point(360, 85);
+            this.bMovie.Location = new System.Drawing.Point(360, 36);
             this.bMovie.Name = "bMovie";
             this.bMovie.Size = new System.Drawing.Size(26, 20);
             this.bMovie.TabIndex = 18;
@@ -267,18 +267,18 @@ namespace Iros._7th.Workshop {
             this.txtExtraFolders.AcceptsReturn = true;
             this.txtExtraFolders.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.txtExtraFolders.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
-            this.txtExtraFolders.Location = new System.Drawing.Point(508, 114);
+            this.txtExtraFolders.Location = new System.Drawing.Point(411, 141);
             this.txtExtraFolders.Multiline = true;
             this.txtExtraFolders.Name = "txtExtraFolders";
             this.txtExtraFolders.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtExtraFolders.Size = new System.Drawing.Size(283, 108);
+            this.txtExtraFolders.Size = new System.Drawing.Size(283, 86);
             this.txtExtraFolders.TabIndex = 22;
             this.txtExtraFolders.WordWrap = false;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(417, 117);
+            this.label7.Location = new System.Drawing.Point(520, 125);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(71, 13);
             this.label7.TabIndex = 21;
@@ -290,7 +290,7 @@ namespace Iros._7th.Workshop {
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.bCancel;
-            this.ClientSize = new System.Drawing.Size(798, 377);
+            this.ClientSize = new System.Drawing.Size(714, 377);
             this.Controls.Add(this.txtExtraFolders);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.txtMovie);
