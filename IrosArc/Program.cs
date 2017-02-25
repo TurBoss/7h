@@ -15,7 +15,7 @@ namespace IrosArc {
 
 IrosArc Create [ArchiveFile] [BaseFolder] [CompressionType]
     BaseFolder = folder to pack
-    CompressionType = Never|Always|ByExtension|ByContent
+    CompressionType = Nothing|Everything|ByExtension|ByContent
 
 IrosArc Extract [ArchiveFile] [DestinationFolder] [filter]
     DestinationFolder = folder to extract into. 

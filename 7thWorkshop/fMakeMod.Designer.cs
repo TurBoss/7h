@@ -76,7 +76,7 @@ namespace Iros._7th.Workshop {
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(678, 450);
@@ -87,12 +87,12 @@ namespace Iros._7th.Workshop {
             this.tabPage1.Controls.Add(this.groupBox2);
             this.tabPage1.Controls.Add(this.groupBox1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
             this.tabPage1.Size = new System.Drawing.Size(670, 424);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Mod file";
+            this.tabPage1.Text = "Mod File";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // groupBox2
@@ -254,9 +254,9 @@ namespace Iros._7th.Workshop {
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(11, 186);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(56, 13);
+            this.label7.Size = new System.Drawing.Size(67, 13);
             this.label7.TabIndex = 11;
-            this.label7.Text = "Link Data:";
+            this.label7.Text = "Link Source:";
             // 
             // label6
             // 
@@ -363,18 +363,18 @@ namespace Iros._7th.Workshop {
             this.tabPage2.Controls.Add(this.txtMegaFolder);
             this.tabPage2.Controls.Add(this.bMegaGo);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.tabPage2.Size = new System.Drawing.Size(670, 455);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(2);
+            this.tabPage2.Size = new System.Drawing.Size(670, 424);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Mega link generator";
+            this.tabPage2.Text = "Mega Link Generator";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // txtMegaLinks
             // 
             this.txtMegaLinks.Location = new System.Drawing.Point(20, 54);
-            this.txtMegaLinks.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtMegaLinks.Margin = new System.Windows.Forms.Padding(2);
             this.txtMegaLinks.Multiline = true;
             this.txtMegaLinks.Name = "txtMegaLinks";
             this.txtMegaLinks.ReadOnly = true;
@@ -395,7 +395,7 @@ namespace Iros._7th.Workshop {
             // txtMegaFolder
             // 
             this.txtMegaFolder.Location = new System.Drawing.Point(104, 18);
-            this.txtMegaFolder.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtMegaFolder.Margin = new System.Windows.Forms.Padding(2);
             this.txtMegaFolder.Name = "txtMegaFolder";
             this.txtMegaFolder.Size = new System.Drawing.Size(189, 20);
             this.txtMegaFolder.TabIndex = 1;
@@ -403,7 +403,7 @@ namespace Iros._7th.Workshop {
             // bMegaGo
             // 
             this.bMegaGo.Location = new System.Drawing.Point(306, 16);
-            this.bMegaGo.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.bMegaGo.Margin = new System.Windows.Forms.Padding(2);
             this.bMegaGo.Name = "bMegaGo";
             this.bMegaGo.Size = new System.Drawing.Size(62, 24);
             this.bMegaGo.TabIndex = 0;

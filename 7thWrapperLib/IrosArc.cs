@@ -37,8 +37,8 @@ namespace _7thWrapperLib {
     }
 
     public enum CompressType {
-        Never = 0,
-        Always,
+        Nothing = 0,
+        Everything,
         ByExtension,
         ByContent,
     }
@@ -171,7 +171,7 @@ namespace _7thWrapperLib {
             public bool Compressed;
         }
         private static DataRecord GetData(byte[] input, string filename, CompressType compress) {
-            if (compress == CompressType.Never) {
+            if (compress == CompressType.Nothing) {
                     return new DataRecord() { Data = input };
             }
             if (compress == CompressType.ByExtension && _noCompressExt.Contains(System.IO.Path.GetExtension(filename))) {

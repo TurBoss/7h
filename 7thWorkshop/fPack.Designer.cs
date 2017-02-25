@@ -161,9 +161,9 @@ namespace Iros._7th.Workshop {
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(16, 46);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(64, 13);
+            this.label1.Size = new System.Drawing.Size(71, 13);
             this.label1.TabIndex = 10;
-            this.label1.Text = "Save to .iro:";
+            this.label1.Text = "Save as IRO:";
             // 
             // bIroDest
             // 
@@ -189,9 +189,9 @@ namespace Iros._7th.Workshop {
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(16, 20);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(73, 13);
+            this.label2.Size = new System.Drawing.Size(76, 13);
             this.label2.TabIndex = 7;
-            this.label2.Text = "Source folder:";
+            this.label2.Text = "Source Folder:";
             // 
             // bSourceF
             // 
@@ -244,9 +244,9 @@ namespace Iros._7th.Workshop {
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(23, 43);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(92, 13);
+            this.label3.Size = new System.Drawing.Size(77, 13);
             this.label3.TabIndex = 17;
-            this.label3.Text = "Destination folder:";
+            this.label3.Text = "Output  Folder:";
             // 
             // bDestF
             // 
@@ -272,9 +272,9 @@ namespace Iros._7th.Workshop {
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(23, 17);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(61, 13);
+            this.label4.Size = new System.Drawing.Size(66, 13);
             this.label4.TabIndex = 14;
-            this.label4.Text = "Source .iro:";
+            this.label4.Text = "Source IRO:";
             // 
             // bSourceIro
             // 
@@ -323,9 +323,9 @@ namespace Iros._7th.Workshop {
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(26, 76);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(65, 13);
+            this.label9.Size = new System.Drawing.Size(78, 13);
             this.label9.TabIndex = 25;
-            this.label9.Text = "Save patch:";
+            this.label9.Text = "Save as IROP:";
             // 
             // bPatchSave
             // 
@@ -475,11 +475,11 @@ namespace Iros._7th.Workshop {
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(6, 48);
+            this.label12.Location = new System.Drawing.Point(6, 49);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(73, 13);
+            this.label12.Size = new System.Drawing.Size(76, 13);
             this.label12.TabIndex = 34;
-            this.label12.Text = "Source folder:";
+            this.label12.Text = "Source Folder:";
             // 
             // bPatchASrc
             // 
@@ -494,7 +494,7 @@ namespace Iros._7th.Workshop {
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(6, 115);
+            this.label11.Location = new System.Drawing.Point(6, 116);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(56, 13);
             this.label11.TabIndex = 32;
@@ -512,11 +512,11 @@ namespace Iros._7th.Workshop {
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 82);
+            this.label10.Location = new System.Drawing.Point(4, 84);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(65, 13);
+            this.label10.Size = new System.Drawing.Size(78, 13);
             this.label10.TabIndex = 30;
-            this.label10.Text = "Save patch:";
+            this.label10.Text = "Save as IROP:";
             // 
             // bPatchASave
             // 
