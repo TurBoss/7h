@@ -86,13 +86,16 @@ namespace Iros._7th.Workshop {
         }
 
         private void bOK_Click(object sender, EventArgs e) {
+
             Sys.Settings.SubscribedUrls = txtSubscriptions.Lines.ToList();
             Sys.Settings.ExtraFolders = txtExtraFolders.Lines.ToList();
-            Sys.Settings.LibraryLocation = txtLibrary.Text;
-            Sys.Settings.AaliFolder = txtAali.Text;
             Sys.Settings.AlsoLaunch = txtAlsoLaunch.Lines.ToList();
+
             Sys.Settings.FF7Exe = txtFF7.Text;
+            Sys.Settings.AaliFolder = txtAali.Text;
+            Sys.Settings.LibraryLocation = txtLibrary.Text;
             Sys.Settings.MovieFolder = txtMovie.Text;
+
             int opts = 0;
             for (int i = 0; i < clOptions.Items.Count; i++)
                 if (clOptions.GetItemChecked(i)) opts |= (1 << i);
