@@ -120,12 +120,12 @@ namespace Iros._7th.Workshop {
             // 
             this.clOptions.FormattingEnabled = true;
             this.clOptions.Items.AddRange(new object[] {
-            "Keep old mod versions after updating",
-            "Automatically activate new mods",
-            "Automatically import mods in library folder",
-            "Check for updates to 7thHeaven automatically",
-            "Bypass compatibility"});
-            this.clOptions.Location = new System.Drawing.Point(101, 157);
+            "Keep Older Mod Versions After Updating",
+            "Activate Newly Installed Mods Automatically",
+            "Import Library Folder Mods Automatically",
+            "Check For 7th Heaven Updates Automatically",
+            "Bypass Compatibility Locks"});
+            this.clOptions.Location = new System.Drawing.Point(101, 141);
             this.clOptions.Name = "clOptions";
             this.clOptions.Size = new System.Drawing.Size(285, 79);
             this.clOptions.TabIndex = 6;
