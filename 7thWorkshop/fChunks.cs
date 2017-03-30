@@ -18,6 +18,8 @@ namespace Iros._7th.Workshop {
             InitializeComponent();
         }
 
+        private List<int> SectionsList = new List<int>();
+
         private void bFLevel_Click(object sender, EventArgs e) {
             if (ofFLevel.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 txtFLevel.Text = ofFLevel.FileName;
@@ -41,8 +43,8 @@ namespace Iros._7th.Workshop {
             bw.RunWorkerAsync(new ExtractArgs() {
                 Input = txtFLevel.Text,
                 Output = txtOutput.Text,
-                Chunks = txtChunks.Text.Split(',').Select(s => int.Parse(s.Trim())).ToArray()
-            });
+                Chunks = SectionsList.ToArray()
+        });
         }
 
         void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
@@ -71,6 +73,118 @@ namespace Iros._7th.Workshop {
                                 System.IO.File.WriteAllBytes(fn, chunks[i - 1]);
                             }
                     }
+                }
+            }
+        }
+        void cb_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox c = (CheckBox)sender;
+            if (c.Name.ToString() == "section1")
+            {
+                bool result = c.Checked;
+                if (result)
+                {
+                    SectionsList.Add(1);
+                }
+                else
+                {
+                    SectionsList.Remove(1);
+                }
+            }
+            else if (c.Name.ToString() == "section2")
+            {
+                bool result = c.Checked;
+                if (result)
+                {
+                    SectionsList.Add(2);
+                }
+                else
+                {
+                    SectionsList.Remove(2);
+                }
+            }
+            else if (c.Name.ToString() == "section3")
+            {
+                bool result = c.Checked;
+                if (result)
+                {
+                    SectionsList.Add(3);
+                }
+                else
+                {
+                    SectionsList.Remove(3);
+                }
+            }
+            else if (c.Name.ToString() == "section4")
+            {
+                bool result = c.Checked;
+                if (result)
+                {
+                    SectionsList.Add(4);
+                }
+                else
+                {
+                    SectionsList.Remove(4);
+                }
+            }
+            else if (c.Name.ToString() == "section5")
+            {
+                bool result = c.Checked;
+                if (result)
+                {
+                    SectionsList.Add(5);
+                }
+                else
+                {
+                    SectionsList.Remove(5);
+                }
+            }
+            else if (c.Name.ToString() == "section6")
+            {
+                bool result = c.Checked;
+                if (result)
+                {
+                    SectionsList.Add(6);
+                }
+                else
+                {
+                    SectionsList.Remove(6);
+                }
+            }
+            else if (c.Name.ToString() == "section7")
+            {
+                bool result = c.Checked;
+                if (result)
+                {
+                    SectionsList.Add(7);
+                }
+                else
+                {
+                    SectionsList.Remove(7);
+                }
+            }
+            else if (c.Name.ToString() == "section8")
+            {
+                bool result = c.Checked;
+                if (result)
+                {
+                    SectionsList.Add(8);
+                }
+                else
+                {
+                    SectionsList.Remove(8);
+                }
+            }
+            else if (c.Name.ToString() == "section9")
+            {
+                bool result = c.Checked;
+                if (result)
+                {
+                    SectionsList.Add(9);
+                }
+                else
+                {
+                    SectionsList.Remove(9);
                 }
             }
         }
