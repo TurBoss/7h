@@ -1,5 +1,5 @@
-set SLN="C:\cygwin64\home\Jauria\Proyectos\Final\7H\Git\7H\7thWrapperSln.sln"
-set BUILD="C:\cygwin64\home\Jauria\Proyectos\Final\7H\Git\Build"
+set SLN="7thWrapperSln.sln"
+set BUILD="..\Build"
 
 
 devenv /clean Debug %SLN%
