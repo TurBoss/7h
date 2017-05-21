@@ -81,9 +81,9 @@ namespace Iros._7th.Workshop {
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.checkSubscriptionsNowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.modGeneratorAssistantToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.packUnpackiroArchivesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chunkToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.modGeneratorAssistantToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.showDownloadsWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
@@ -656,13 +656,6 @@ namespace Iros._7th.Workshop {
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(216, 6);
             // 
-            // modGeneratorAssistantToolStripMenuItem
-            // 
-            this.modGeneratorAssistantToolStripMenuItem.Name = "modGeneratorAssistantToolStripMenuItem";
-            this.modGeneratorAssistantToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
-            this.modGeneratorAssistantToolStripMenuItem.Text = "Catalog Creation Tool";
-            this.modGeneratorAssistantToolStripMenuItem.Click += new System.EventHandler(this.modGeneratorAssistantToolStripMenuItem_Click);
-            // 
             // packUnpackiroArchivesToolStripMenuItem
             // 
             this.packUnpackiroArchivesToolStripMenuItem.Name = "packUnpackiroArchivesToolStripMenuItem";
@@ -676,6 +669,13 @@ namespace Iros._7th.Workshop {
             this.chunkToolToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
             this.chunkToolToolStripMenuItem.Text = "Chunk Tool";
             this.chunkToolToolStripMenuItem.Click += new System.EventHandler(this.chunkToolToolStripMenuItem_Click);
+            // 
+            // modGeneratorAssistantToolStripMenuItem
+            // 
+            this.modGeneratorAssistantToolStripMenuItem.Name = "modGeneratorAssistantToolStripMenuItem";
+            this.modGeneratorAssistantToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.modGeneratorAssistantToolStripMenuItem.Text = "Catalog Creation Tool";
+            this.modGeneratorAssistantToolStripMenuItem.Click += new System.EventHandler(this.modGeneratorAssistantToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 

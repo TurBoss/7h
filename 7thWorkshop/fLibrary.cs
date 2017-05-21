@@ -13,6 +13,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Globalization;
+using System.Diagnostics;
 //using SharpCompress.Archive;
 //using SharpCompress.Reader;
 
@@ -20,6 +21,12 @@ namespace Iros._7th.Workshop {
     public partial class fLibrary : Form {
         public fLibrary() {
             InitializeComponent();
+
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+            string version = fvi.FileVersion;
+
+            this.Text = String.Format("7thHeaven Version {0}", version);
         }
 
         private string _catFile;
