@@ -118,12 +118,11 @@ namespace Iros._7th.Workshop {
         }
 
         static Sys() {
-            SysFolder = System.IO.Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "7thWorkshop"
-                );
 
-            _7HFolder = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            string appPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location); 
+
+            SysFolder = System.IO.Path.Combine(appPath, "7thWorkshop");
+            _7HFolder = appPath;
 
             string sfile = System.IO.Path.Combine(SysFolder, "settings.xml");
             if (System.IO.File.Exists(sfile)) {

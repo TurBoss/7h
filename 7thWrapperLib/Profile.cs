@@ -194,11 +194,8 @@ namespace _7thWrapperLib {
             if (_archive == null) {
                 return dlls.Select(s => System.IO.Path.Combine(BaseFolder, s));
             } else {
-                string libpath = System.IO.Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    "7thWorkshop",
-                    "LoadLibTemp"
-                    );
+                string appPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+                string libpath = System.IO.Path.Combine(appPath, "7thWorkshop", "LoadLibTemp");
                 System.IO.Directory.CreateDirectory(libpath);
                 List<string> saved = new List<string>();
                 if (loadaside) {
