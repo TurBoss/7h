@@ -94,7 +94,6 @@ namespace Iros._7th.Workshop {
                         bAction.Text = "Installed"; //???
                         bAction.Enabled = false;
                         bAction.Tag = 3;
-                        bAction.Hide();
                     }
                     break;
                 case ModStatus.Updating:

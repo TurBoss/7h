@@ -3,9 +3,6 @@
   The original developer is Iros <irosff@outlook.com>
 */
 
-
-
-
 namespace Iros._7th.Workshop {
     partial class fLibrary {
         /// <summary>
@@ -50,6 +47,7 @@ namespace Iros._7th.Workshop {
             this.bNewProfile = new System.Windows.Forms.Button();
             this.lProfile = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.pTagsL = new Iros._7th.Workshop.pTags();
             this.pSearchResultsL = new System.Windows.Forms.Panel();
             this.lSearchL = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -59,6 +57,7 @@ namespace Iros._7th.Workshop {
             this.bSearchL = new System.Windows.Forms.Button();
             this.txtSearchL = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.pTagsC = new Iros._7th.Workshop.pTags();
             this.pSearchResultsC = new System.Windows.Forms.Panel();
             this.lSearchC = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -89,8 +88,6 @@ namespace Iros._7th.Workshop {
             this.showDownloadsWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pTagsL = new Iros._7th.Workshop.pTags();
-            this.pTagsC = new Iros._7th.Workshop.pTags();
             this.TC.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.pProfileOuter.SuspendLayout();
@@ -138,14 +135,13 @@ namespace Iros._7th.Workshop {
             // bGLConfig
             // 
             this.bGLConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.bGLConfig.Location = new System.Drawing.Point(8, 6);
+            this.bGLConfig.Location = new System.Drawing.Point(376, 5);
             this.bGLConfig.Name = "bGLConfig";
             this.bGLConfig.Size = new System.Drawing.Size(126, 26);
             this.bGLConfig.TabIndex = 12;
             this.bGLConfig.Text = "Custom GL Config";
             this.bGLConfig.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.bGLConfig.UseVisualStyleBackColor = true;
-            this.bGLConfig.Visible = false;
             this.bGLConfig.Click += new System.EventHandler(this.bGLConfig_Click);
             // 
             // cbCompact
@@ -154,7 +150,7 @@ namespace Iros._7th.Workshop {
             this.cbCompact.AutoSize = true;
             this.cbCompact.BackColor = System.Drawing.Color.DimGray;
             this.cbCompact.ForeColor = System.Drawing.Color.White;
-            this.cbCompact.Location = new System.Drawing.Point(454, 10);
+            this.cbCompact.Location = new System.Drawing.Point(118, 8);
             this.cbCompact.Name = "cbCompact";
             this.cbCompact.Size = new System.Drawing.Size(100, 20);
             this.cbCompact.TabIndex = 11;
@@ -165,7 +161,7 @@ namespace Iros._7th.Workshop {
             // bActivateAll
             // 
             this.bActivateAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.bActivateAll.Location = new System.Drawing.Point(560, 6);
+            this.bActivateAll.Location = new System.Drawing.Point(237, 5);
             this.bActivateAll.Name = "bActivateAll";
             this.bActivateAll.Size = new System.Drawing.Size(126, 26);
             this.bActivateAll.TabIndex = 10;
@@ -309,6 +305,16 @@ namespace Iros._7th.Workshop {
             this.tabPage2.Text = "Library";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // pTagsL
+            // 
+            this.pTagsL.Location = new System.Drawing.Point(489, 63);
+            this.pTagsL.Margin = new System.Windows.Forms.Padding(9, 7, 9, 7);
+            this.pTagsL.Name = "pTagsL";
+            this.pTagsL.Size = new System.Drawing.Size(242, 243);
+            this.pTagsL.TabIndex = 7;
+            this.pTagsL.Visible = false;
+            this.pTagsL.SelectionChanged += new System.EventHandler(this.pTagsL_SelectionChanged);
+            // 
             // pSearchResultsL
             // 
             this.pSearchResultsL.AutoScroll = true;
@@ -415,6 +421,16 @@ namespace Iros._7th.Workshop {
             this.tabPage3.Text = "Catalog";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // pTagsC
+            // 
+            this.pTagsC.Location = new System.Drawing.Point(484, 62);
+            this.pTagsC.Margin = new System.Windows.Forms.Padding(11, 8, 11, 8);
+            this.pTagsC.Name = "pTagsC";
+            this.pTagsC.Size = new System.Drawing.Size(251, 241);
+            this.pTagsC.TabIndex = 8;
+            this.pTagsC.Visible = false;
+            this.pTagsC.SelectionChanged += new System.EventHandler(this.pTagsC_SelectionChanged);
+            // 
             // pSearchResultsC
             // 
             this.pSearchResultsC.AutoScroll = true;
@@ -503,9 +519,6 @@ namespace Iros._7th.Workshop {
             this.pMessages.Name = "pMessages";
             this.pMessages.Size = new System.Drawing.Size(136, 377);
             this.pMessages.TabIndex = 1;
-#if !DEBUG
-            this.pMessages.Hide();
-#endif
             // 
             // bClearAllMsg
             // 
@@ -688,26 +701,6 @@ namespace Iros._7th.Workshop {
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // pTagsL
-            // 
-            this.pTagsL.Location = new System.Drawing.Point(489, 63);
-            this.pTagsL.Margin = new System.Windows.Forms.Padding(9, 7, 9, 7);
-            this.pTagsL.Name = "pTagsL";
-            this.pTagsL.Size = new System.Drawing.Size(242, 243);
-            this.pTagsL.TabIndex = 7;
-            this.pTagsL.Visible = false;
-            this.pTagsL.SelectionChanged += new System.EventHandler(this.pTagsL_SelectionChanged);
-            // 
-            // pTagsC
-            // 
-            this.pTagsC.Location = new System.Drawing.Point(484, 62);
-            this.pTagsC.Margin = new System.Windows.Forms.Padding(11, 8, 11, 8);
-            this.pTagsC.Name = "pTagsC";
-            this.pTagsC.Size = new System.Drawing.Size(251, 241);
-            this.pTagsC.TabIndex = 8;
-            this.pTagsC.Visible = false;
-            this.pTagsC.SelectionChanged += new System.EventHandler(this.pTagsC_SelectionChanged);
-            // 
             // fLibrary
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -744,7 +737,7 @@ namespace Iros._7th.Workshop {
 
         }
 
-#endregion
+        #endregion
 
         private System.Windows.Forms.TabControl TC;
         private System.Windows.Forms.TabPage tabPage1;
