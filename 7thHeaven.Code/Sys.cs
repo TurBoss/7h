@@ -137,7 +137,8 @@ namespace Iros._7th.Workshop {
                 //Settings.UpdateUrl = System.Configuration.ConfigurationManager.AppSettings["UpdateUrl"];
                 Settings.Options = GeneralOptions.AutoImportMods;
             }
-            if (Settings.ExtraFolders == null) Settings.ExtraFolders = new List<string>() { "music" };
+
+            // if (Settings.ExtraFolders == null) Settings.ExtraFolders = new List<string>() { "music" };
 
             string lfile = System.IO.Path.Combine(SysFolder, "library.xml");
             if (System.IO.File.Exists(lfile)) {
