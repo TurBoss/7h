@@ -77,8 +77,8 @@ namespace Iros._7th.Workshop {
                         MessageBox.Show("Unable to register links: " + ex.ToString());
                     }
                 }
-                if (Sys.Settings.VersionUpgradeCompleted < 1.21m) Sys.Settings.ExtraFolders.Add("music");
-                if (Sys.Settings.VersionUpgradeCompleted < 1.29m) Sys.Settings.Options |= GeneralOptions.CheckForUpdates;
+                // if (Sys.Settings.VersionUpgradeCompleted < 1.21m) Sys.Settings.ExtraFolders.Add("music");
+                // if (Sys.Settings.VersionUpgradeCompleted < 1.29m) Sys.Settings.Options |= GeneralOptions.CheckForUpdates;
             }
             txtExtraFolders.Lines = Sys.Settings.ExtraFolders.ToArray();
             txtMovie.Text = Sys.Settings.MovieFolder;
