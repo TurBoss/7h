@@ -48,9 +48,9 @@ namespace Iros._7th.Workshop {
                 if (MessageBox.Show("No settings configured. Try to autodetect sensible settings?", "Setup", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes) {
                     string ff7 = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Square Soft, Inc.\Final Fantasy VII", "AppPath", null);
                     if (!String.IsNullOrEmpty(ff7)) {
-                        Sys.Settings.AaliFolder = ff7 + @"mods\Textures";
+                        Sys.Settings.AaliFolder = ff7 + @"mods\Textures\";
                         Sys.Settings.FF7Exe = ff7 + @"FF7.exe";
-                        Sys.Settings.LibraryLocation = ff7 + @"mods\7th Heaven";
+                        Sys.Settings.LibraryLocation = ff7 + @"mods\7th Heaven\";
 
                     }
                 }
