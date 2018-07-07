@@ -63,8 +63,8 @@ namespace Iros._7th.Workshop {
             this.dl = new fDownloads();
             Sys.Downloads = this.dl;
             this.dl.Show();
-
             try {
+                
                 string src = System.IO.Path.Combine(Sys._7HFolder, "SharpCompressU.cpy");
                 string dst = System.IO.Path.Combine(Sys._7HFolder, "SharpCompressU.dll");
                 if (System.IO.File.Exists(dst)) System.IO.File.Delete(dst);
@@ -237,7 +237,7 @@ namespace Iros._7th.Workshop {
             string local = System.IO.Path.Combine(Sys.SysFolder, "AutoUpdate.zip");
             try {
                 new System.Net.WebClient().DownloadFile(state.ToString(), local);
-                System.Diagnostics.Process.Start(System.IO.Path.Combine(Sys._7HFolder, "Updater.exe"));
+                Process.Start(System.IO.Path.Combine(Sys._7HFolder, "Updater.exe"));
                 Application.Exit();
             } catch(Exception e) {
                 Sys.Message(new WMessage { Text = "Download of update failed - " + e.ToString() });

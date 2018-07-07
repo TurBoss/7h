@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7thWrapperLib", "7thWrapperLib\7thWrapperLib.csproj", "{F80DB232-4102-4249-8B31-2DDD5C7FA404}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7thHeaven", "7thWorkshop\7thHeaven.csproj", "{BB011F22-7E15-4DDE-87C0-40A0A47480AD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{52F54C68-15C8-4900-A620-AF5A4F6E7F87} = {52F54C68-15C8-4900-A620-AF5A4F6E7F87}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IrosMega", "IrosMega\IrosMega.csproj", "{37F83EE9-4D31-4CD5-9190-1BB31886BA5C}"
 EndProject
@@ -144,6 +147,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {66297384-F82C-4EBB-805F-50F4221F2808}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		version = 1.56

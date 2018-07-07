@@ -38,7 +38,7 @@ namespace Updater {
                                     break;
                                 } catch (System.IO.IOException) {
                                     if (i < 4) {
-                                        Status("...file in use; waiting.");
+                                        Status( entry.Key + " ...file in use; waiting.");
                                         System.Threading.Thread.Sleep(1000);
                                         continue;
                                     }
