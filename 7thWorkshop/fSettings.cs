@@ -80,7 +80,13 @@ namespace Iros._7th.Workshop {
                 // if (Sys.Settings.VersionUpgradeCompleted < 1.21m) Sys.Settings.ExtraFolders.Add("music");
                 // if (Sys.Settings.VersionUpgradeCompleted < 1.29m) Sys.Settings.Options |= GeneralOptions.CheckForUpdates;
             }
-            txtExtraFolders.Lines = Sys.Settings.ExtraFolders.ToArray();
+            try
+            {
+                txtExtraFolders.Lines = Sys.Settings.ExtraFolders.ToArray();
+            } catch(Exception ex)
+            {
+
+            }
             txtMovie.Text = Sys.Settings.MovieFolder;
             Sys.Settings.VersionUpgradeCompleted = Sys.Version;
         }
