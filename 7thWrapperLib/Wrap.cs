@@ -558,12 +558,12 @@ namespace _7thWrapperLib {
             [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition,
             [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes,
             IntPtr hTemplateFile) {
-
+            
             lpFileName = lpFileName.Replace("\\/", "\\").Replace("/", "\\").Replace("\\\\", "\\");
             RuntimeLog.Write("CreateFile for {0}...", lpFileName, 0);
             if (lpFileName.IndexOf('\\') < 0) {
                 //System.Diagnostics.Debug.WriteLine("No path: curdir is {0}", System.IO.Directory.GetCurrentDirectory(), 0);
-                lpFileName = System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), lpFileName);
+                lpFileName = Path.Combine(Directory.GetCurrentDirectory(), lpFileName);
             }
 
             foreach (string path in _profile.MonitorPaths) {

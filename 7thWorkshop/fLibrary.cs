@@ -67,13 +67,19 @@ namespace Iros._7th.Workshop {
                 
                 string src = System.IO.Path.Combine(Sys._7HFolder, "SharpCompressU.cpy");
                 string dst = System.IO.Path.Combine(Sys._7HFolder, "SharpCompressU.dll");
-                if (System.IO.File.Exists(dst)) System.IO.File.Delete(dst);
-                System.IO.File.Copy(src, dst);
+                if (System.IO.File.Exists(dst))
+                {
+                    System.IO.File.Delete(dst);
+                    System.IO.File.Copy(src, dst);
+                }
 
                 src = System.IO.Path.Combine(Sys._7HFolder, "Updater.cpy");
                 dst = System.IO.Path.Combine(Sys._7HFolder, "Updater.exe");
-                if (System.IO.File.Exists(dst)) System.IO.File.Delete(dst);
-                System.IO.File.Copy(src, dst);
+                if (System.IO.File.Exists(dst))
+                {
+                    System.IO.File.Delete(dst);
+                    System.IO.File.Copy(src, dst);
+                }
             } catch (System.IO.IOException) {
 
             } catch (System.UnauthorizedAccessException) {
@@ -1200,7 +1206,7 @@ They will be automatically turned off.";
             }
             if (Sys.ActiveProfile.Items.Count == 0) {
                 MessageBox.Show("No mods have been activated.");
-                return;
+                //return;
             }
             if (!System.IO.File.Exists(Sys.Settings.FF7Exe)) {
                 MessageBox.Show("FF7.exe not found. You may need to configure 7H using the Workshop/Settings menu.");
