@@ -1232,9 +1232,9 @@ They will be automatically turned off.";
             foreach (string al in Sys.Settings.AlsoLaunch.Where(s => !String.IsNullOrWhiteSpace(s))) {
                 if (!_also.ContainsKey(al)) {
                     string lal = al;
-                    var psi = new System.Diagnostics.ProcessStartInfo(lal);
+                    var psi = new ProcessStartInfo(lal);
                     psi.WorkingDirectory = System.IO.Path.GetDirectoryName(lal);
-                    var aproc = System.Diagnostics.Process.Start(psi);
+                    var aproc = Process.Start(psi);
                     _also.Add(lal, aproc);
                     aproc.EnableRaisingEvents = true;
                     aproc.Exited += (_o, _e) => _also.Remove(lal);

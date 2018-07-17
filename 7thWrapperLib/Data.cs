@@ -87,7 +87,7 @@ namespace ProcMonParser {
                 throw new Exception(file + " - not a valid LGP archive");
             byte[] header = new byte[10];
             fs.Read(header, 0, 10);
-            if (!System.Text.Encoding.ASCII.GetString(header).Equals("SQUARESOFT"))
+            if (!Encoding.ASCII.GetString(header).Equals("SQUARESOFT"))
                 throw new Exception(file + " - not a valid LGP archive");
             int count = fs.ReadInt();
             byte[] fname = new byte[20];
@@ -97,7 +97,7 @@ namespace ProcMonParser {
                 uint offset = fs.ReadUInt();
                 fs.ReadByte();
                 ushort dupe = fs.ReadUShort();
-                string lgpFile = System.Text.Encoding.ASCII.GetString(fname);
+                string lgpFile = Encoding.ASCII.GetString(fname);
                 int nPos = lgpFile.IndexOf('\0');
                 if (nPos >= 0) lgpFile = lgpFile.Substring(0, nPos);
                 files.Add(new Tuple<string, uint, ushort, int>(lgpFile, offset, dupe, i));
@@ -110,7 +110,7 @@ namespace ProcMonParser {
                     foreach (int j in Enumerable.Range(0, fs.ReadUShort())) {
                         fs.Read(pname, 0, 128);
                         ushort toc = fs.ReadUShort();
-                        string ppname = System.Text.Encoding.ASCII.GetString(pname);
+                        string ppname = Encoding.ASCII.GetString(pname);
                         ppname = ppname.Substring(0, ppname.IndexOf('\0'));
                         files[toc] = new Tuple<string, uint, ushort, int>(
                             ppname.Replace("/", "\\") + "\\" + files[toc].Item1,
