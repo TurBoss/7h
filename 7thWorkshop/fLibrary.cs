@@ -940,7 +940,7 @@ They will be automatically turned off.";
                     ProfileItem pi = pm.Tag as ProfileItem;
                     var form = new fModConfig();
                     _7thWrapperLib.ModInfo info = null;
-                    Func<string, System.Drawing.Bitmap> imageReader;
+                    Func<string, Bitmap> imageReader;
                     Func<string, System.IO.Stream> audioReader;
 
                     string mfile = System.IO.Path.Combine(Sys.Settings.LibraryLocation, inst.InstalledLocation);
@@ -954,7 +954,7 @@ They will be automatically turned off.";
                         }
                         imageReader = s => {
                             if (arc.HasFile(s))
-                                return new System.Drawing.Bitmap(arc.GetData(s));
+                                return new Bitmap(arc.GetData(s));
                             return null;
                         };
                         audioReader = s => {
@@ -970,7 +970,7 @@ They will be automatically turned off.";
                         imageReader = s => {
                             string ifile = System.IO.Path.Combine(mfile, s);
                             if (System.IO.File.Exists(ifile))
-                                return new System.Drawing.Bitmap(ifile);
+                                return new Bitmap(ifile);
                             return null;
                         };
                         audioReader = s => {
@@ -987,7 +987,7 @@ They will be automatically turned off.";
                             MessageBox.Show("No options for this mod");
                         } else {
                             form.Init(info, imageReader, audioReader, pi, GetConstraints().Where(c => c.ModID.Equals(pm.ModID)), mfile);
-                            if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK) {
+                            if (form.ShowDialog() == DialogResult.OK) {
                                 pi.Settings = form.GetSettings();
                                 SanityCheckSettings();
                             }
@@ -1036,7 +1036,7 @@ They will be automatically turned off.";
                 Transitions.Transition.run(mod, "Left", -mod.Width, new Transitions.TransitionType_Linear(200));
                 _lMods.Remove(mod.ModID);
                 foreach (pMod other in mod.Parent.Controls.OfType<pMod>().Where(m => m.Top > mod.Top)) {
-                    System.Diagnostics.Debug.WriteLine("Moving mod from {0} to {1}", other.Top, other.Top - mod.Height);
+                    Debug.WriteLine("Moving mod from {0} to {1}", other.Top, other.Top - mod.Height);
                     Transitions.Transition.run(other, "Top", other.Top - mod.Height, new Transitions.TransitionType_Linear(200));
                 }
             }
@@ -1139,7 +1139,7 @@ They will be automatically turned off.";
 
         private void bOpenProfile_Click(object sender, EventArgs e) {
             fProfiles form = new fProfiles();
-            if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (form.ShowDialog() == DialogResult.OK)
                 if (!String.IsNullOrWhiteSpace(form.SelectedProfile)) {
                     SaveProfile();
                     Sys.Settings.CurrentProfile = form.SelectedProfile;
@@ -1148,7 +1148,7 @@ They will be automatically turned off.";
                 }
         }
 
-        private Dictionary<string, System.Diagnostics.Process> _also = new Dictionary<string, System.Diagnostics.Process>(StringComparer.InvariantCultureIgnoreCase);
+        private Dictionary<string, Process> _also = new Dictionary<string, Process>(StringComparer.InvariantCultureIgnoreCase);
         private Dictionary<string, _7HPlugin> _plugins = new Dictionary<string, _7HPlugin>(StringComparer.InvariantCultureIgnoreCase);
 
         private void bLaunch_Click(object sender, EventArgs e) {

@@ -52,7 +52,7 @@ namespace Iros._7th.Workshop {
                     if (!String.IsNullOrEmpty(ff7)) {
                         Sys.Settings.AaliFolder = ff7 + @"mods\Textures\";
                         Sys.Settings.FF7Exe = ff7 + @"FF7.exe";
-                        Sys.Settings.LibraryLocation = ff7 + @"mods\7th Heaven\";
+                        Sys.Settings.LibraryLocation = ff7 + @"mods\7H\";
 
                     }
                 }
@@ -72,7 +72,7 @@ namespace Iros._7th.Workshop {
                     Sys.Settings.MovieFolder = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Square Soft, Inc.\Final Fantasy VII", "MoviePath", null);
                 }
 
-                if (MessageBox.Show("Would you like to set up subscription links with Windows?", "Link setup", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes) {
+                if (MessageBox.Show("Would you like to set up subscription links with Windows?", "Link setup", MessageBoxButtons.YesNo) == DialogResult.Yes) {
                     try {
                         if (!WriteLinkReg()) throw new Exception("Could not create keys");
                     } catch (Exception ex) {
@@ -113,27 +113,27 @@ namespace Iros._7th.Workshop {
         }
 
         private void bLibrary_Click(object sender, EventArgs e) {
-            if (flBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (flBrowser.ShowDialog() == DialogResult.OK)
                 txtLibrary.Text = flBrowser.SelectedPath;
         }
 
         private void bAali_Click(object sender, EventArgs e) {
-            if (flBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (flBrowser.ShowDialog() == DialogResult.OK)
                 txtAali.Text = flBrowser.SelectedPath;
         }
 
         private void bFF7_Click(object sender, EventArgs e) {
-            if (ofExe.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (ofExe.ShowDialog() == .DialogResult.OK)
                 txtFF7.Text = ofExe.FileName;
         }
 
         private void bAlsoLaunch_Click(object sender, EventArgs e) {
-            if (ofExe.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (ofExe.ShowDialog() == DialogResult.OK)
                 txtAlsoLaunch.Text = ofExe.FileName;
         }
 
         private void bMovie_Click(object sender, EventArgs e) {
-            if (flBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (flBrowser.ShowDialog() == DialogResult.OK)
                 txtMovie.Text = flBrowser.SelectedPath;
         }
     }
