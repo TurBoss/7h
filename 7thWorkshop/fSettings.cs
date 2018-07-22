@@ -123,7 +123,7 @@ namespace Iros._7th.Workshop {
         }
 
         private void bFF7_Click(object sender, EventArgs e) {
-            if (ofExe.ShowDialog() == .DialogResult.OK)
+            if (ofExe.ShowDialog() == DialogResult.OK)
                 txtFF7.Text = ofExe.FileName;
         }
 

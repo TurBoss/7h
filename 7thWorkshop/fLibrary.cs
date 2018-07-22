@@ -1214,10 +1214,8 @@ They will be automatically turned off.";
             }
             string ff7folder = System.IO.Path.GetDirectoryName(Sys.Settings.FF7Exe);
             string data = System.IO.Path.Combine(ff7folder, "data");
-            string direct = System.IO.Path.Combine(ff7folder, "direct");
-            string music = System.IO.Path.Combine(ff7folder, "music");
             _7thWrapperLib.RuntimeProfile rp = new _7thWrapperLib.RuntimeProfile() {
-                MonitorPaths = new List<string>() { data, Sys.Settings.AaliFolder, Sys.Settings.MovieFolder, direct, music },
+                MonitorPaths = new List<string>() { data, Sys.Settings.AaliFolder, Sys.Settings.MovieFolder,},
                 ModPath = Sys.Settings.LibraryLocation,
                 OpenGLConfig = Sys.ActiveProfile.OpenGLConfig,
                 Mods = Sys.ActiveProfile.Items
@@ -1225,7 +1223,11 @@ They will be automatically turned off.";
                     .Where(i => i != null)
                     .ToList()
             };
+
             rp.MonitorPaths.AddRange(Sys.Settings.ExtraFolders.Select(s => System.IO.Path.Combine(ff7folder, s)));
+
+            Sys.Settings.ExtraFolders.Add("direct");
+            Sys.Settings.ExtraFolders.Add("music");
 
             if (varDump) rp.MonitorVars = _context.VarAliases.Select(kv => new Tuple<string, string>(kv.Key, kv.Value)).ToList();
 
