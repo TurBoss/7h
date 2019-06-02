@@ -48,17 +48,27 @@ namespace Iros._7th.Workshop {
             if (String.IsNullOrEmpty(Sys.Settings.FF7Exe)) {
                 if (MessageBox.Show("No settings configured. Try to autodetect sensible settings?", "Setup", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes) {
                     string ff7 = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Square Soft, Inc.\Final Fantasy VII", "AppPath", null);
-                    ff7 = Regex.Escape(ff7);
-                    if (!String.IsNullOrEmpty(ff7)) {
+
+                    if (!String.IsNullOrEmpty(ff7))
+                    {
+                        ff7 = Regex.Escape(ff7);
                         Sys.Settings.AaliFolder = ff7 + @"mods\Textures\";
                         Sys.Settings.FF7Exe = ff7 + @"FF7.exe";
                         Sys.Settings.LibraryLocation = ff7 + @"mods\7H\";
 
+                        Sys.Settings.ExtraFolders.Add("direct");
+                        Sys.Settings.ExtraFolders.Add("music");
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("could no determine ff7.exe path, is the game installed?", "Error");
                     }
                 }
             }
             
             txtSubscriptions.Lines = Sys.Settings.SubscribedUrls.ToArray();
+            txtExtraFolders.Lines = Sys.Settings.ExtraFolders.ToArray();
             txtLibrary.Text = Sys.Settings.LibraryLocation;
             txtFF7.Text = Sys.Settings.FF7Exe;
             txtAlsoLaunch.Lines = Sys.Settings.AlsoLaunch.ToArray();
@@ -79,16 +89,8 @@ namespace Iros._7th.Workshop {
                         MessageBox.Show("Unable to register links: " + ex.ToString());
                     }
                 }
-                // if (Sys.Settings.VersionUpgradeCompleted < 1.21m) Sys.Settings.ExtraFolders.Add("music");
-                // if (Sys.Settings.VersionUpgradeCompleted < 1.29m) Sys.Settings.Options |= GeneralOptions.CheckForUpdates;
             }
-            try
-            {
-                txtExtraFolders.Lines = Sys.Settings.ExtraFolders.ToArray();
-            } catch(Exception ex)
-            {
 
-            }
             txtMovie.Text = Sys.Settings.MovieFolder;
             Sys.Settings.VersionUpgradeCompleted = Sys.Version;
         }
@@ -109,7 +111,30 @@ namespace Iros._7th.Workshop {
                 if (clOptions.GetItemChecked(i)) opts |= (1 << i);
             Sys.Settings.Options = (GeneralOptions)opts;
 
-            System.IO.Directory.CreateDirectory(Sys.Settings.LibraryLocation);
+            if (!Sys.Settings.FF7Exe.Any())
+            {
+                MessageBox.Show("Missing exe path");
+            }
+
+            if (!Sys.Settings.AaliFolder.Any())
+            {
+                MessageBox.Show("Missing Aali OpenGL");
+            }
+
+            if (!Sys.Settings.MovieFolder.Any())
+            {
+                MessageBox.Show("Missing Movie path");
+            }
+
+            if (!Sys.Settings.LibraryLocation.Any())
+            {
+                MessageBox.Show("Missing Library path");
+            }
+            else
+            {
+                System.IO.Directory.CreateDirectory(Sys.Settings.LibraryLocation);
+            }
+
         }
 
         private void bLibrary_Click(object sender, EventArgs e) {

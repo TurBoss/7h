@@ -82,6 +82,7 @@ namespace Iros._7th.Workshop {
 
         public Settings() {
             SubscribedUrls = new List<string>();
+            ExtraFolders = new List<string>();
             AlsoLaunch = new List<string>();
             Subscriptions = new List<Subscription>();
             AutoUpdateSource = "#F!yBlHTYiJ!SFpmT2xII7iXcgXAmNYLJg";
