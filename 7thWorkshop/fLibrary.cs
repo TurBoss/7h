@@ -1225,9 +1225,7 @@ They will be automatically turned off.";
             };
 
             rp.MonitorPaths.AddRange(Sys.Settings.ExtraFolders.Select(s => System.IO.Path.Combine(ff7folder, s)));
-
-            Sys.Settings.ExtraFolders.Add("direct");
-            Sys.Settings.ExtraFolders.Add("music");
+            
 
             if (varDump) rp.MonitorVars = _context.VarAliases.Select(kv => new Tuple<string, string>(kv.Key, kv.Value)).ToList();
 
