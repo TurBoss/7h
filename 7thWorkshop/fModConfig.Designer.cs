@@ -53,7 +53,7 @@ namespace Iros._7th.Workshop {
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(8);
-            this.groupBox1.Size = new System.Drawing.Size(148, 412);
+            this.groupBox1.Size = new System.Drawing.Size(148, 511);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Options";
@@ -64,7 +64,7 @@ namespace Iros._7th.Workshop {
             this.lbOptions.FormattingEnabled = true;
             this.lbOptions.Location = new System.Drawing.Point(8, 21);
             this.lbOptions.Name = "lbOptions";
-            this.lbOptions.Size = new System.Drawing.Size(132, 383);
+            this.lbOptions.Size = new System.Drawing.Size(132, 482);
             this.lbOptions.TabIndex = 0;
             this.lbOptions.SelectedIndexChanged += new System.EventHandler(this.lbOptions_SelectedIndexChanged);
             // 
@@ -80,7 +80,7 @@ namespace Iros._7th.Workshop {
             this.pOption.Location = new System.Drawing.Point(148, 0);
             this.pOption.Name = "pOption";
             this.pOption.Padding = new System.Windows.Forms.Padding(5);
-            this.pOption.Size = new System.Drawing.Size(484, 412);
+            this.pOption.Size = new System.Drawing.Size(636, 511);
             this.pOption.TabIndex = 1;
             // 
             // bPreview
@@ -129,18 +129,18 @@ namespace Iros._7th.Workshop {
             // PB
             // 
             this.PB.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.PB.Location = new System.Drawing.Point(5, 127);
+            this.PB.Location = new System.Drawing.Point(5, 226);
             this.PB.Name = "PB";
-            this.PB.Size = new System.Drawing.Size(474, 225);
+            this.PB.Size = new System.Drawing.Size(626, 225);
             this.PB.TabIndex = 0;
             this.PB.TabStop = false;
             // 
             // lCompat
             // 
             this.lCompat.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lCompat.Location = new System.Drawing.Point(5, 352);
+            this.lCompat.Location = new System.Drawing.Point(5, 451);
             this.lCompat.Name = "lCompat";
-            this.lCompat.Size = new System.Drawing.Size(474, 55);
+            this.lCompat.Size = new System.Drawing.Size(626, 55);
             this.lCompat.TabIndex = 4;
             this.lCompat.Text = "lCompat";
             // 
@@ -149,16 +149,16 @@ namespace Iros._7th.Workshop {
             this.panel1.Controls.Add(this.bOK);
             this.panel1.Controls.Add(this.bCancel);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 412);
+            this.panel1.Location = new System.Drawing.Point(0, 511);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(632, 50);
+            this.panel1.Size = new System.Drawing.Size(784, 50);
             this.panel1.TabIndex = 2;
             // 
             // bOK
             // 
             this.bOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.bOK.Location = new System.Drawing.Point(464, 13);
+            this.bOK.Location = new System.Drawing.Point(616, 13);
             this.bOK.Name = "bOK";
             this.bOK.Size = new System.Drawing.Size(75, 23);
             this.bOK.TabIndex = 1;
@@ -169,7 +169,7 @@ namespace Iros._7th.Workshop {
             // 
             this.bCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.bCancel.Location = new System.Drawing.Point(545, 13);
+            this.bCancel.Location = new System.Drawing.Point(697, 13);
             this.bCancel.Name = "bCancel";
             this.bCancel.Size = new System.Drawing.Size(75, 23);
             this.bCancel.TabIndex = 0;
@@ -180,15 +180,12 @@ namespace Iros._7th.Workshop {
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(632, 462);
+            this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.pOption);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "fModConfig";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Configure Mod";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.fModConfig_FormClosed);
             this.groupBox1.ResumeLayout(false);

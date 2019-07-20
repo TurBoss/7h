@@ -42,7 +42,7 @@ namespace Iros._7th.Workshop {
             this.tcSettings.Margin = new System.Windows.Forms.Padding(2);
             this.tcSettings.Name = "tcSettings";
             this.tcSettings.SelectedIndex = 0;
-            this.tcSettings.Size = new System.Drawing.Size(611, 405);
+            this.tcSettings.Size = new System.Drawing.Size(784, 509);
             this.tcSettings.TabIndex = 0;
             // 
             // panel2
@@ -50,17 +50,17 @@ namespace Iros._7th.Workshop {
             this.panel2.Controls.Add(this.bOK);
             this.panel2.Controls.Add(this.bCancel);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 405);
+            this.panel2.Location = new System.Drawing.Point(0, 509);
             this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(611, 52);
+            this.panel2.Size = new System.Drawing.Size(784, 52);
             this.panel2.TabIndex = 1;
             // 
             // bOK
             // 
             this.bOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.bOK.Location = new System.Drawing.Point(442, 16);
+            this.bOK.Location = new System.Drawing.Point(615, 16);
             this.bOK.Name = "bOK";
             this.bOK.Size = new System.Drawing.Size(75, 23);
             this.bOK.TabIndex = 3;
@@ -72,7 +72,7 @@ namespace Iros._7th.Workshop {
             // 
             this.bCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.bCancel.Location = new System.Drawing.Point(523, 16);
+            this.bCancel.Location = new System.Drawing.Point(696, 16);
             this.bCancel.Name = "bCancel";
             this.bCancel.Size = new System.Drawing.Size(75, 23);
             this.bCancel.TabIndex = 2;
@@ -85,13 +85,11 @@ namespace Iros._7th.Workshop {
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.bCancel;
-            this.ClientSize = new System.Drawing.Size(611, 457);
+            this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.tcSettings);
             this.Controls.Add(this.panel2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "fConfigSettings";
             this.Text = "Aali Driver Settings";
             this.panel2.ResumeLayout(false);
