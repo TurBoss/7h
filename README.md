@@ -15,8 +15,8 @@ unzip
 
 ## Building from sources
 
-with Visual Studio 2017
-open the solution and build
+with Visual Studio 2017 or 2019
+open the solution get the nuggets and build
 
 
 ## Authors
@@ -31,6 +31,5 @@ This project is licensed under the MPT License
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* Thanks to EQ2Aliza for the forum support
+
