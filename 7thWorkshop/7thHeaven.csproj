@@ -369,6 +369,10 @@
       <Project>{37F83EE9-4D31-4CD5-9190-1BB31886BA5C}</Project>
       <Name>IrosMega</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TurBoLog\TurBoLog.csproj">
+      <Project>{03eede27-0abb-4cda-a7f2-f746e2083202}</Project>
+      <Name>TurBoLog</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="7H.ico" />

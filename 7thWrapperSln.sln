@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26020.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7thWrapperLib", "7thWrapperLib\7thWrapperLib.csproj", "{F80DB232-4102-4249-8B31-2DDD5C7FA404}"
 EndProject
@@ -19,6 +19,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPlugin", "TestPlugin\TestPlugin.csproj", "{A64400A1-1E22-4F22-884E-568A776141C5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7thHeaven.Code", "7thHeaven.Code\7thHeaven.Code.csproj", "{CD2F4CCB-4735-4DEE-8867-B0ED2CA04303}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TurBoLog", "TurBoLog\TurBoLog.csproj", "{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -174,6 +176,26 @@ Global
 		{CD2F4CCB-4735-4DEE-8867-B0ED2CA04303}.Release|x64.Build.0 = Release|Any CPU
 		{CD2F4CCB-4735-4DEE-8867-B0ED2CA04303}.Release|x86.ActiveCfg = Release|Any CPU
 		{CD2F4CCB-4735-4DEE-8867-B0ED2CA04303}.Release|x86.Build.0 = Release|Any CPU
+		{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}.Debug|Win32.Build.0 = Debug|Any CPU
+		{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}.Debug|x64.Build.0 = Debug|Any CPU
+		{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}.Debug|x86.Build.0 = Debug|Any CPU
+		{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}.Release|Win32.ActiveCfg = Release|Any CPU
+		{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}.Release|Win32.Build.0 = Release|Any CPU
+		{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}.Release|x64.ActiveCfg = Release|Any CPU
+		{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}.Release|x64.Build.0 = Release|Any CPU
+		{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}.Release|x86.ActiveCfg = Release|Any CPU
+		{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

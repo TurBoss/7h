@@ -16,6 +16,7 @@ using System.Globalization;
 using System.Diagnostics;
 //using SharpCompress.Archive;
 //using SharpCompress.Reader;
+using TurBoLog.UI;
 
 namespace Iros._7th.Workshop {
     public partial class fLibrary : Form {
@@ -1191,7 +1192,9 @@ They will be automatically turned off.";
         }
 
         private void launchWithVariableDumpToolStripMenuItem_Click(object sender, EventArgs e) {
+
             Launch(true, false);
+            new FMonitor().ShowDialog(this);
         }
 
         private void Launch(bool varDump, bool debug) {
