@@ -45,9 +45,9 @@ namespace TurBoLog.UI
 			Debug.WriteLine(System.Runtime.InteropServices.Marshal.SizeOf(typeof(int)));
 
 			if (Debugger.IsAttached) {
-				AppendText(-1, "You are currently debugging DbMon.NET so you won't get any 'Debug.WriteLine's from it.");
+				AppendText(-1, "You are currently debugging TurBoLog so you won't get any 'Debug.WriteLine's from it.");
 			} else {
-				Debug.WriteLine("DbMon.NET loaded.");
+				Debug.WriteLine("TurBoLog loaded.");
 				Debug.WriteLine("Press 'F1' to open a window where you can send a 'Debug.WriteLine' message.");
 				Debug.WriteLine("Press 'F2' to clear this window.");
 			}

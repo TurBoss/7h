@@ -3,11 +3,12 @@ namespace TurBoLog {
 	using System;
 	using System.Threading;
 	using System.Runtime.InteropServices;
+    using System.Windows.Forms;
 
-	/// <summary>
-	/// Delegate used when firing DebugMonitor.OnOutputDebug event
-	/// </summary>
-	public delegate void OnOutputDebugStringHandler(int pid, string text);
+    /// <summary>
+    /// Delegate used when firing DebugMonitor.OnOutputDebug event
+    /// </summary>
+    public delegate void OnOutputDebugStringHandler(int pid, string text);
 
 	/// <summary>
 	/// This class captures all strings passed to <c>OutputDebugString</c> when
@@ -32,16 +33,8 @@ namespace TurBoLog {
 	///			}
 	///		</code>
 	/// </remarks>
-	public sealed class DebugMonitor {
-
-		/// <summary>
-		/// Private constructor so no one can create a instance
-		/// of this static class
-		/// </summary>
-		private DebugMonitor() {
-			;
-		}
-
+	public class DebugMonitor {
+        
 		#region Win32 API Imports
 
 		[StructLayout(LayoutKind.Sequential)]
@@ -164,6 +157,8 @@ namespace TurBoLog {
 		/// <summary>
 		/// Starts this debug monitor
 		/// </summary>
+        /// 
+        [STAThread]
 		public static void Start() {
 			lock (m_SyncRoot) {
 				if (m_Capturer != null)
@@ -259,7 +254,9 @@ namespace TurBoLog {
 					}
 				}	
 
-			} catch {
+			} catch (Exception e) {
+                
+                MessageBox.Show(e.ToString(), "Error starting debug view");
 				throw;
 
 			// Cleanup

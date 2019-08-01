@@ -17,6 +17,7 @@ using System.Diagnostics;
 //using SharpCompress.Archive;
 //using SharpCompress.Reader;
 using TurBoLog.UI;
+using System.Threading;
 
 namespace Iros._7th.Workshop {
     public partial class fLibrary : Form {
@@ -1194,7 +1195,7 @@ They will be automatically turned off.";
         private void launchWithVariableDumpToolStripMenuItem_Click(object sender, EventArgs e) {
 
             Launch(true, false);
-            new FMonitor().ShowDialog(this);
+
         }
 
         private void Launch(bool varDump, bool debug) {
@@ -1228,10 +1229,20 @@ They will be automatically turned off.";
             };
 
             rp.MonitorPaths.AddRange(Sys.Settings.ExtraFolders.Select(s => System.IO.Path.Combine(ff7folder, s)));
-            
 
-            if (varDump) rp.MonitorVars = _context.VarAliases.Select(kv => new Tuple<string, string>(kv.Key, kv.Value)).ToList();
 
+            if (varDump) {
+                rp.MonitorVars = _context.VarAliases.Select(kv => new Tuple<string, string>(kv.Key, kv.Value)).ToList();
+
+                string tbl = "TurBoLog.exe";
+                var psi = new ProcessStartInfo(tbl);
+                psi.WorkingDirectory = System.IO.Path.GetDirectoryName(tbl);
+                var aproc = Process.Start(psi);
+                _also.Add(tbl, aproc);
+                aproc.EnableRaisingEvents = true;
+                aproc.Exited += (_o, _e) => _also.Remove(tbl);
+
+            }
             foreach (string al in Sys.Settings.AlsoLaunch.Where(s => !String.IsNullOrWhiteSpace(s))) {
                 if (!_also.ContainsKey(al)) {
                     string lal = al;
@@ -1309,6 +1320,7 @@ They will be automatically turned off.";
                         plugin.Stop();
                 };
             } catch (Exception e) {
+                
                 MessageBox.Show(e.ToString(), "Error starting FF7");
                 return;
             }

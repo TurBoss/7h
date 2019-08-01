@@ -34,12 +34,6 @@
             	</code>
             </remarks>
         </member>
-        <member name="M:TurBoLog.DebugMonitor.#ctor">
-            <summary>
-            Private constructor so no one can create a instance
-            of this static class
-            </summary>
-        </member>
         <member name="E:TurBoLog.DebugMonitor.OnOutputDebugString">
             <summary>
             Fired if an application calls <c>OutputDebugString</c>
@@ -84,6 +78,7 @@
             <summary>
             Starts this debug monitor
             </summary>
+            
         </member>
         <member name="M:TurBoLog.DebugMonitor.Capture">
             <summary>
