@@ -45,15 +45,21 @@ namespace Iros._7th.Workshop {
         }
 
         private void fSettings_Load(object sender, EventArgs e) {
+
+            String registry_path = @"HKEY_LOCAL_MACHINE\SOFTWARE\Square Soft, Inc.\Final Fantasy VII";
+
             if (String.IsNullOrEmpty(Sys.Settings.FF7Exe)) {
                 if (MessageBox.Show("No settings configured. Try to autodetect sensible settings?", "Setup", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes) {
-                    string ff7 = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Square Soft, Inc.\Final Fantasy VII", "AppPath", null);
+                    string ff7 = (string)Microsoft.Win32.Registry.GetValue(registry_path, "AppPath", null);
 
                     if (!String.IsNullOrEmpty(ff7))
                     {
-                        ff7 = Regex.Escape(ff7);
+                        // ff7 = Regex.Escape(ff7);
                         Sys.Settings.AaliFolder = ff7 + @"mods\Textures\";
                         Sys.Settings.FF7Exe = ff7 + @"FF7.exe";
+
+                        Sys.Settings.MovieFolder = (string)Microsoft.Win32.Registry.GetValue(registry_path, "MoviePath", null);
+                   
                         Sys.Settings.LibraryLocation = ff7 + @"mods\7H\";
 
                         Sys.Settings.ExtraFolders.Add("direct");
@@ -71,6 +77,7 @@ namespace Iros._7th.Workshop {
             txtExtraFolders.Lines = Sys.Settings.ExtraFolders.ToArray();
             txtLibrary.Text = Sys.Settings.LibraryLocation;
             txtFF7.Text = Sys.Settings.FF7Exe;
+            txtMovie.Text = Sys.Settings.MovieFolder;
             txtAlsoLaunch.Lines = Sys.Settings.AlsoLaunch.ToArray();
             txtAali.Text = Sys.Settings.AaliFolder;
 
