@@ -64,7 +64,7 @@ namespace Iros._7th.Workshop {
 
             this.dl = new fDownloads();
             Sys.Downloads = this.dl;
-            this.dl.Show();
+            //this.dl.Show();
             try {
                 
                 string src = System.IO.Path.Combine(Sys._7HFolder, "SharpCompressU.cpy");
