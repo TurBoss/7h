@@ -105,7 +105,7 @@ namespace Iros._7th.Workshop {
         private void bOK_Click(object sender, EventArgs e) {
 
             Sys.Settings.SubscribedUrls = txtSubscriptions.Lines.ToList();
-            // Sys.Settings.ExtraFolders = txtExtraFolders.Lines.ToList();
+            if (txtExtraFolders.Lines.ToList().Count > 0 ) Sys.Settings.ExtraFolders = txtExtraFolders.Lines.ToList();
             Sys.Settings.AlsoLaunch = txtAlsoLaunch.Lines.ToList();
 
             Sys.Settings.FF7Exe = txtFF7.Text;
