@@ -1,5 +1,5 @@
 set SLN="7thWrapperSln.sln"
-set BUILD="..\Build"
+set BUILD=".dist\Build"
 
 
 devenv /clean Debug %SLN%
