@@ -62,6 +62,6 @@ deploy:
     release: 7thHeaven-v${appveyor_build_version}
     artifact: 7thHeaven-v${appveyor_build_version}_debug,7thHeaven-v${appveyor_build_version}
     auth_token:
-      secure: EQV5fVmJb7YrL7MG34/iTjaEe7K+UKhF1io4nljqwdpq0+pwLX461kH5Ha2xsw7r
+      secure: 4ScukgjAJzd48IigEBR9tafJFnT54rJpX7SiorTGHddYZj6766HQrbUSHsTsterI
     on:
       appveyor_repo_tag: true
