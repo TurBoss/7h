@@ -3,6 +3,7 @@
   The original developer is Iros <irosff@outlook.com>
 */
 
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -1286,6 +1287,10 @@ They will be automatically turned off.";
                 };
                 using (var fs = new System.IO.FileStream(parms.ProfileFile, System.IO.FileMode.Create))
                     Util.SerializeBinary(rp, fs);
+
+                // Add 640x480 compatibility flag
+                RegistryKey ff7COmpatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
+                if ( ff7COmpatKey.GetValue(Sys.Settings.FF7Exe) == null ) ff7COmpatKey.SetValue(Sys.Settings.FF7Exe, "~ 640x480");
 
                 EasyHook.RemoteHooking.CreateAndInject(Sys.Settings.FF7Exe, String.Empty, 0, lib, null, out pid, parms);
 
