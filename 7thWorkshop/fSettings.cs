@@ -60,7 +60,7 @@ namespace Iros._7th.Workshop {
 
                         Sys.Settings.MovieFolder = (string)Microsoft.Win32.Registry.GetValue(registry_path, "MoviePath", null);
                    
-                        Sys.Settings.LibraryLocation = ff7 + @"mods\7H\";
+                        Sys.Settings.LibraryLocation = ff7 + @"mods\7th Heaven\";
 
                         Sys.Settings.ExtraFolders.Add("direct");
                         Sys.Settings.ExtraFolders.Add("music");
