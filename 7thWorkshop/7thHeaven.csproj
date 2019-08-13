@@ -89,26 +89,7 @@
     <StartupObject>Iros._7th.Workshop.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CommonMark, Version=0.1.0.0, Culture=neutral, PublicKeyToken=001ef8810438905d, processorArchitecture=MSIL">
-      <HintPath>..\packages\CommonMark.NET.0.15.1\lib\net45\CommonMark.dll</HintPath>
-    </Reference>
-    <Reference Include="EasyHook, Version=2.7.7097.0, Culture=neutral, PublicKeyToken=4b580fca19d0b0c5, processorArchitecture=MSIL">
-      <HintPath>..\packages\EasyHook.2.7.7097\lib\net40\EasyHook.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="NAudio, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.1.9.0\lib\net35\NAudio.dll</HintPath>
-    </Reference>
-    <Reference Include="NAudio.Vorbis, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NAudio.Vorbis.1.0.0.0\lib\net35\NAudio.Vorbis.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="NVorbis, Version=0.8.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NVorbis.0.8.6\lib\net35\NVorbis.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpCompress, Version=0.23.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpCompress.0.23.0\lib\net45\SharpCompress.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -305,29 +286,10 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <Content Include="EasyHook32.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EasyHook32Svc.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EasyHook64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EasyHook64Svc.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EasyLoad32.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EasyLoad64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="SharpCompress.cpy">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="app.manifest" />
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -419,6 +381,29 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommonMark.NET">
+      <Version>0.15.1</Version>
+    </PackageReference>
+    <PackageReference Include="dot-net-transitions">
+      <Version>1.2.1</Version>
+    </PackageReference>
+    <PackageReference Include="EasyHook">
+      <Version>2.7.7097</Version>
+    </PackageReference>
+    <PackageReference Include="NAudio">
+      <Version>1.9.0</Version>
+    </PackageReference>
+    <PackageReference Include="NAudio.Vorbis">
+      <Version>1.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="NVorbis">
+      <Version>0.8.6</Version>
+    </PackageReference>
+    <PackageReference Include="SharpCompress">
+      <Version>0.23.0</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
