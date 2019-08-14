@@ -1,0 +1,3 @@
+[submodule "SharpCompress"]
+	path = SharpCompress
+	url = https://github.com/adamhathcock/sharpcompress.git

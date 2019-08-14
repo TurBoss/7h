@@ -70,6 +70,10 @@
       <Project>{f80db232-4102-4249-8b31-2ddd5c7fa404}</Project>
       <Name>7thWrapperLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SharpCompress\src\SharpCompress\SharpCompress.csproj">
+      <Project>{8c6b794e-f8b2-45b2-a8d2-7ac73e967d80}</Project>
+      <Name>SharpCompress</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Workshop.resx">
@@ -79,11 +83,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Loader.gif" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="SharpCompress">
-      <Version>0.23.0</Version>
-    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

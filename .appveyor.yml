@@ -37,6 +37,7 @@ assembly_info:
 # Run these scripts before starting build
 before_build:
   # Ensure project dependencies are fetched
+  - git submodule update --init --recursive
   - nuget restore
 
 # Build configuration
