@@ -340,6 +340,10 @@
       <Project>{37F83EE9-4D31-4CD5-9190-1BB31886BA5C}</Project>
       <Name>IrosMega</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SharpCompress\src\SharpCompress\SharpCompress.csproj">
+      <Project>{8c6b794e-f8b2-45b2-a8d2-7ac73e967d80}</Project>
+      <Name>SharpCompress</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TurBoLog\TurBoLog.csproj">
       <Project>{03eede27-0abb-4cda-a7f2-f746e2083202}</Project>
       <Name>TurBoLog</Name>
@@ -400,9 +404,6 @@
     </PackageReference>
     <PackageReference Include="NVorbis">
       <Version>0.8.6</Version>
-    </PackageReference>
-    <PackageReference Include="SharpCompress">
-      <Version>0.23.0</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
