@@ -468,18 +468,16 @@ namespace _7thWrapperLib {
                             byte[] cdata = new byte[e.Length - propSize - 8];
                             _data.Read(cdata, 0, cdata.Length);
                             data = new byte[decSize];
-                            /*
-                            var lzma = new SharpCompress.Compressor.LZMA.LzmaStream(props, new System.IO.MemoryStream(cdata));
+                            var lzma = new SharpCompress.Compressors.LZMA.LzmaStream(props, new System.IO.MemoryStream(cdata));
                             lzma.Read(data, 0, data.Length);
-                             */
-                            int srcSize = cdata.Length;
+                            /*int srcSize = cdata.Length;
                             switch (LzmaUncompress(data, ref decSize, cdata, ref srcSize, props, props.Length)) {
                                 case SZ_OK:
                                     //Woohoo!
                                     break;
                                 default:
                                     throw new IrosArcException("Error decompressing " + e.Filename);
-                            }
+                            }*/
                             ce.Data = data;
                             break;
                         default:
