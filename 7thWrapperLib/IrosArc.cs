@@ -57,24 +57,6 @@ namespace _7thWrapperLib {
         internal const int SZ_ERROR_INPUT_EOF =6;
         internal const int SZ_ERROR_OUTPUT_EOF =7;
 
-
-        [DllImport("Lzma.dll", SetLastError = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        internal static extern int LzmaCompress(
-            byte[] dest, ref int destLen, byte[] src, int srcLen,
-            byte[] outProps, ref int outPropsSize,
-            int level,
-            uint dictSize,
-            int lc,
-            int lp,
-            int pb,
-            int fb,
-            int numThreads);
-        [DllImport("Lzma.dll", SetLastError = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        internal static extern int LzmaUncompress(
-            byte[] dest, ref int destLen,
-            byte[] src, ref int srcLen,
-            byte[] props, int propsSize);
-
         private static HashSet<string> _noCompressExt = new HashSet<string>(new[] { 
             ".jpg", ".png", ".mp3", ".ogg"
         }, StringComparer.InvariantCultureIgnoreCase);
