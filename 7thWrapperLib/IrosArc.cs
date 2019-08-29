@@ -57,24 +57,6 @@ namespace _7thWrapperLib {
         internal const int SZ_ERROR_INPUT_EOF =6;
         internal const int SZ_ERROR_OUTPUT_EOF =7;
 
-
-        [DllImport("Lzma.dll", SetLastError = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        internal static extern int LzmaCompress(
-            byte[] dest, ref int destLen, byte[] src, int srcLen,
-            byte[] outProps, ref int outPropsSize,
-            int level,
-            uint dictSize,
-            int lc,
-            int lp,
-            int pb,
-            int fb,
-            int numThreads);
-        [DllImport("Lzma.dll", SetLastError = true, CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
-        internal static extern int LzmaUncompress(
-            byte[] dest, ref int destLen,
-            byte[] src, ref int srcLen,
-            byte[] props, int propsSize);
-
         private static HashSet<string> _noCompressExt = new HashSet<string>(new[] { 
             ".jpg", ".png", ".mp3", ".ogg"
         }, StringComparer.InvariantCultureIgnoreCase);
@@ -486,18 +468,16 @@ namespace _7thWrapperLib {
                             byte[] cdata = new byte[e.Length - propSize - 8];
                             _data.Read(cdata, 0, cdata.Length);
                             data = new byte[decSize];
-                            /*
-                            var lzma = new SharpCompress.Compressor.LZMA.LzmaStream(props, new System.IO.MemoryStream(cdata));
+                            var lzma = new SharpCompress.Compressors.LZMA.LzmaStream(props, new System.IO.MemoryStream(cdata));
                             lzma.Read(data, 0, data.Length);
-                             */
-                            int srcSize = cdata.Length;
+                            /*int srcSize = cdata.Length;
                             switch (LzmaUncompress(data, ref decSize, cdata, ref srcSize, props, props.Length)) {
                                 case SZ_OK:
                                     //Woohoo!
                                     break;
                                 default:
                                     throw new IrosArcException("Error decompressing " + e.Filename);
-                            }
+                            }*/
                             ce.Data = data;
                             break;
                         default:
