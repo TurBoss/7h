@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Text;
+using System.IO;
 
 namespace TurBoLog.UI
 {
@@ -22,6 +24,8 @@ namespace TurBoLog.UI
 		private System.Windows.Forms.ColumnHeader colProcessName;
 		private System.Windows.Forms.MenuItem mnuDebug;
 		private System.Windows.Forms.MenuItem mnuDebugCapture;
+        private MenuItem mnuFileExport;
+        private MenuItem menuItem2;
         private IContainer components;
 
         public FMonitor()
@@ -93,6 +97,7 @@ namespace TurBoLog.UI
 			}
 		}
 
+        [STAThread]
 		public static void Main(string[] args) {
 			Application.Run(new FMonitor());
 		}
@@ -130,6 +135,8 @@ namespace TurBoLog.UI
             this.colText = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.mnuMain = new System.Windows.Forms.MainMenu(this.components);
             this.mnuFile = new System.Windows.Forms.MenuItem();
+            this.mnuFileExport = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.mnuFileExit = new System.Windows.Forms.MenuItem();
             this.mnuDebug = new System.Windows.Forms.MenuItem();
             this.mnuDebugCapture = new System.Windows.Forms.MenuItem();
@@ -147,6 +154,7 @@ namespace TurBoLog.UI
             this.lsvOutput.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lsvOutput.FullRowSelect = true;
             this.lsvOutput.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lsvOutput.HideSelection = false;
             this.lsvOutput.HoverSelection = true;
             this.lsvOutput.Location = new System.Drawing.Point(0, 0);
             this.lsvOutput.Name = "lsvOutput";
@@ -186,12 +194,25 @@ namespace TurBoLog.UI
             // 
             this.mnuFile.Index = 0;
             this.mnuFile.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.mnuFileExport,
+            this.menuItem2,
             this.mnuFileExit});
             this.mnuFile.Text = "&File";
             // 
+            // mnuFileExport
+            // 
+            this.mnuFileExport.Index = 0;
+            this.mnuFileExport.Text = "Export";
+            this.mnuFileExport.Click += new System.EventHandler(this.mnuFileExport_Click);
+            // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 1;
+            this.menuItem2.Text = "-";
+            // 
             // mnuFileExit
             // 
-            this.mnuFileExit.Index = 0;
+            this.mnuFileExit.Index = 2;
             this.mnuFileExit.Text = "&Exit";
             this.mnuFileExit.Click += new System.EventHandler(this.mnuFileExit_Click);
             // 
@@ -269,5 +290,33 @@ namespace TurBoLog.UI
 			mnuDebugCapture.Checked = !mnuDebugCapture.Checked;
 		}
 
-	}
+        private void mnuFileExport_Click(object sender, EventArgs e) {
+            SaveFileDialog save = new SaveFileDialog();
+
+            save.FileName = "TurboLog Export.txt";
+            save.Filter = "Text File | *.txt";
+
+            if (save.ShowDialog() == DialogResult.OK) {
+                StreamWriter sw = new StreamWriter(save.OpenFile());
+                StringBuilder sb;
+
+                if (lsvOutput.Items.Count > 0) {
+                    foreach (ListViewItem lvi in lsvOutput.Items) {
+                        sb = new StringBuilder();
+
+                        foreach (ListViewItem.ListViewSubItem listViewSubItem in lvi.SubItems) {
+                            sb.Append(string.Format("{0}\t", listViewSubItem.Text));
+                        }
+
+                        sw.WriteLine(sb.ToString());
+                    }
+
+                    sw.WriteLine();
+                }
+
+                sw.Dispose();
+                sw.Close();
+            }
+        }
+    }
 }
