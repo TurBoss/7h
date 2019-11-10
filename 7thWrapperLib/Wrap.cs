@@ -14,24 +14,25 @@ using System.IO;
 
 namespace _7thWrapperLib {
     public class Wrap : IEntryPoint {
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        internal static extern IntPtr CreateFile(
-            string lpFileName,
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern IntPtr CreateFileW(
+            [MarshalAs(UnmanagedType.LPWStr)] string lpFileName,
             [MarshalAs(UnmanagedType.U4)] FileAccess dwDesiredAccess,
             [MarshalAs(UnmanagedType.U4)] FileShare dwShareMode,
             IntPtr lpSecurityAttributes,
             [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition,
             [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes,
             IntPtr hTemplateFile);
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Ansi)]
-        private static extern IntPtr CreateFileA(
-            string lpFileName,
-            [MarshalAs(UnmanagedType.U4)] FileAccess dwDesiredAccess,
-            [MarshalAs(UnmanagedType.U4)] FileShare dwShareMode,
-            IntPtr lpSecurityAttributes,
-            [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition,
-            [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes,
-            IntPtr hTemplateFile);
+
+        //[DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Ansi)]
+        //private static extern IntPtr CreateFileA(
+        //    string lpFileName,
+        //    [MarshalAs(UnmanagedType.U4)] FileAccess dwDesiredAccess,
+        //    [MarshalAs(UnmanagedType.U4)] FileShare dwShareMode,
+        //    IntPtr lpSecurityAttributes,
+        //    [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition,
+        //    [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes,
+        //    IntPtr hTemplateFile);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr FindFirstFileW(string lpFileName, out WIN32_FIND_DATA lpFindFileData);
@@ -158,23 +159,23 @@ namespace _7thWrapperLib {
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         private delegate IntPtr DCreateFile(
-            string lpFileName,
-            [MarshalAs(UnmanagedType.U4)] FileAccess dwDesiredAccess,
-            [MarshalAs(UnmanagedType.U4)] FileShare dwShareMode,
-            IntPtr lpSecurityAttributes,
-            [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition,
-            [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes,
-            IntPtr hTemplateFile);
+            [MarshalAs(UnmanagedType.LPWStr)] string filename,
+            [MarshalAs(UnmanagedType.U4)] FileAccess access,
+            [MarshalAs(UnmanagedType.U4)] FileShare share,
+            IntPtr securityAttributes,
+            [MarshalAs(UnmanagedType.U4)] FileMode creationDisposition,
+            [MarshalAs(UnmanagedType.U4)] FileAttributes flagsAndAttributes,
+            IntPtr templateFile);
 
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet=CharSet.Ansi)]
-        private delegate IntPtr DCreateFileA(
-            string lpFileName,
-            [MarshalAs(UnmanagedType.U4)] FileAccess dwDesiredAccess,
-            [MarshalAs(UnmanagedType.U4)] FileShare dwShareMode,
-            IntPtr lpSecurityAttributes,
-            [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition,
-            [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes,
-            IntPtr hTemplateFile);
+        //[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet=CharSet.Ansi)]
+        //private delegate IntPtr DCreateFileA(
+        //    string lpFileName,
+        //    [MarshalAs(UnmanagedType.U4)] FileAccess dwDesiredAccess,
+        //    [MarshalAs(UnmanagedType.U4)] FileShare dwShareMode,
+        //    IntPtr lpSecurityAttributes,
+        //    [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition,
+        //    [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes,
+        //    IntPtr hTemplateFile);
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate int DReadFile(IntPtr handle, IntPtr bytes, uint numBytesToRead, ref uint numBytesRead, IntPtr overlapped);
@@ -194,21 +195,27 @@ namespace _7thWrapperLib {
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         private delegate IntPtr DFindFirstFileW(string lpFileName, out WIN32_FIND_DATA lpFindFileData);
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
-        private delegate IntPtr DFindFirstFileA(string lpFileName, out WIN32_FIND_DATA lpFindFileData);
+        
+        //[UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi)]
+        //private delegate IntPtr DFindFirstFileA(string lpFileName, out WIN32_FIND_DATA lpFindFileData);
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate int DSetFilePointer(IntPtr handle, int lDistanceTomove, IntPtr lpDistanceToMoveHigh, EMoveMethod dwMoveMethod);
+
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate bool DSetFilePointerEx(IntPtr hFile, long liDistanceToMove, IntPtr lpNewFilePointer, uint dwMoveMethod);
+
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate bool DDuplicateHandle(IntPtr hSourceProcessHandle,
            IntPtr hSourceHandle, IntPtr hTargetProcessHandle, out IntPtr lpTargetHandle,
            uint dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, uint dwOptions);
+
         [DllImport("kernel32.dll")]
         static extern uint GetFileSize(IntPtr hFile, IntPtr lpFileSizeHigh);
+
         [DllImport("kernel32.dll")]
         static extern bool GetFileSizeEx(IntPtr hFile, ref long lpFileSize);
+
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         private delegate bool DCreateProcessW(string lpApplicationName,
            string lpCommandLine, ref SECURITY_ATTRIBUTES lpProcessAttributes,
@@ -216,10 +223,13 @@ namespace _7thWrapperLib {
            uint dwCreationFlags, IntPtr lpEnvironment, string lpCurrentDirectory,
            [In] ref STARTUPINFO lpStartupInfo,
            out PROCESS_INFORMATION lpProcessInformation);
+
         [DllImport("kernel32", SetLastError = true, CharSet = CharSet.Auto)]
         static extern IntPtr LoadLibrary(string lpFileName);
+
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate bool DGetFileInformationByHandle(IntPtr hFile, out BY_HANDLE_FILE_INFORMATION lpFileInformation);
+
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate bool DReadFileEx(IntPtr hFile, [Out] byte[] lpBuffer,
            uint nNumberOfBytesToRead, [In] ref System.Threading.NativeOverlapped lpOverlapped,
@@ -227,8 +237,10 @@ namespace _7thWrapperLib {
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate uint DGetFileSize(IntPtr hFile, IntPtr lpFileSizeHigh);
+
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         private delegate bool DGetFileSizeEx(IntPtr hFile, ref long lpFileSize);
+
         //private Dictionary<IntPtr, ProcMonParser.DataFile> _hMap = new Dictionary<IntPtr, ProcMonParser.DataFile>();
         private Dictionary<IntPtr, LGPWrapper> _hMap = new Dictionary<IntPtr, LGPWrapper>();
         private Dictionary<IntPtr, string> _hNames = new Dictionary<IntPtr, string>();
@@ -237,7 +249,7 @@ namespace _7thWrapperLib {
         //private Overrides _overrides;
         private RuntimeProfile _profile;
 
-        LocalHook _hCreateFile, _hCreateFileA, _hReadFile, _hFindFirstFile, _hFindFirstFileA, _hSetFilePointer, _hCloseHandle,
+        LocalHook _hCreateFileW, _hCreateFileA, _hReadFile, _hFindFirstFile, _hFindFirstFileA, _hSetFilePointer, _hCloseHandle,
             _hGetFileType, _hCreateProcessW, _hGetFileInformationByHandle, _hDuplicateHandle,
             _hGetFileSize, _hGetFileSizeEx, _hSetFilePointerEx, _hWriteFile;
 
@@ -280,13 +292,15 @@ namespace _7thWrapperLib {
                     item.Startup();
                 }
 
-                _hCreateFile = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "CreateFileW"), new DCreateFile(HCreateFile), this);
-                _hCreateFile.ThreadACL.SetExclusiveACL(new[] { 0 });
-                _hCreateFileA = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "CreateFileA"), new DCreateFileA(HCreateFileA), this);
-                _hCreateFileA.ThreadACL.SetExclusiveACL(new[] { 0 });
-                _hReadFile = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "ReadFile"), new DReadFile(HReadFile), this);
+                _hCreateFileW = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "CreateFileW"), new DCreateFile(HCreateFileW), this);
+                _hCreateFileW.ThreadACL.SetExclusiveACL(new[] { 0 });
+
+                //_hCreateFileA = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "CreateFileA"), new DCreateFileA(HCreateFileA), this);
+                //_hCreateFileA.ThreadACL.SetExclusiveACL(new[] { 0 });
+
                 //int init = Init7W();
                 //_hReadFile = LocalHook.CreateUnmanaged(LocalHook.GetProcAddress("kernel32.dll", "ReadFile"), LocalHook.GetProcAddress("7thWrapperNLib.dll", "ReadFile7W"), IntPtr.Zero);
+                _hReadFile = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "ReadFile"), new DReadFile(HReadFile), this);
                 _hReadFile.ThreadACL.SetExclusiveACL(new[] { 0 });
 
                 _hWriteFile = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "WriteFile"), new DWriteFile(HWriteFile), this);
@@ -294,28 +308,37 @@ namespace _7thWrapperLib {
 
                 _hFindFirstFile = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "FindFirstFileW"), new DFindFirstFileW(HFindFirstFile), this);
                 _hFindFirstFile.ThreadACL.SetExclusiveACL(new[] { 0 });
-                _hFindFirstFileA = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "FindFirstFileA"), new DFindFirstFileA(HFindFirstFileA), this);
-                _hFindFirstFile.ThreadACL.SetExclusiveACL(new[] { 0 });
+
+                //_hFindFirstFileA = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "FindFirstFileA"), new DFindFirstFileA(HFindFirstFileA), this);
+                //_hFindFirstFile.ThreadACL.SetExclusiveACL(new[] { 0 });
 
                 _hSetFilePointer = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "SetFilePointer"), new DSetFilePointer(HSetFilePointer), this);
                 _hSetFilePointer.ThreadACL.SetExclusiveACL(new[] { 0 });
+                
                 _hSetFilePointerEx = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "SetFilePointerEx"), new DSetFilePointerEx(HSetFilePointerEx), this);
                 _hSetFilePointerEx.ThreadACL.SetExclusiveACL(new[] { 0 });
+                
                 _hCloseHandle = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "CloseHandle"), new DCloseHandle(HCloseHandle), this);
                 _hCloseHandle.ThreadACL.SetExclusiveACL(new[] { 0 });
+                
                 _hGetFileType = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "GetFileType"), new DGetFileType(HGetFileType), this);
                 _hGetFileType.ThreadACL.SetExclusiveACL(new[] { 0 });
+                
                 _hGetFileInformationByHandle = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "GetFileInformationByHandle"), new DGetFileInformationByHandle(HGetFileInformationByHandle), this);
                 _hGetFileInformationByHandle.ThreadACL.SetExclusiveACL(new[] { 0 });
+                
                 //_hReadFileEx = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "ReadFileEx"), new DReadFileEx(HReadFileEx), this);
                 //_hReadFileEx.ThreadACL.SetExclusiveACL(new[] { 0 });
+                
                 _hDuplicateHandle = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "DuplicateHandle"), new DDuplicateHandle(HDuplicateHandle), this);
                 _hDuplicateHandle.ThreadACL.SetExclusiveACL(new[] { 0 });
+                
                 _hCreateProcessW = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "CreateProcessW"), new DCreateProcessW(HCreateProcessW), this);
                 _hCreateProcessW.ThreadACL.SetExclusiveACL(new[] { 0 });
 
                 _hGetFileSize = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "GetFileSize"), new DGetFileSize(HGetFileSize), this);
                 _hGetFileSize.ThreadACL.SetExclusiveACL(new[] { 0 });
+                
                 _hGetFileSizeEx = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "GetFileSizeEx"), new DGetFileSizeEx(HGetFileSizeEx), this);
                 _hGetFileSizeEx.ThreadACL.SetExclusiveACL(new[] { 0 });
 
@@ -528,18 +551,18 @@ namespace _7thWrapperLib {
             return Win32.ReadFile(handle, bytes, numBytesToRead, ref numBytesRead, overlapped);
         }
 
-        private IntPtr HCreateFile(
-            string lpFileName,
-            [MarshalAs(UnmanagedType.U4)] FileAccess dwDesiredAccess,
-            [MarshalAs(UnmanagedType.U4)] FileShare dwShareMode,
-            IntPtr lpSecurityAttributes,
-            [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition,
-            [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes,
-            IntPtr hTemplateFile) {
-                //System.Diagnostics.Debug.WriteLine("Hooked CreateFileW: " + lpFileName);
+        //private IntPtr HCreateFile(
+        //    string lpFileName,
+        //    [MarshalAs(UnmanagedType.U4)] FileAccess dwDesiredAccess,
+        //    [MarshalAs(UnmanagedType.U4)] FileShare dwShareMode,
+        //    IntPtr lpSecurityAttributes,
+        //    [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition,
+        //    [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes,
+        //    IntPtr hTemplateFile) {
+        //        //System.Diagnostics.Debug.WriteLine("Hooked CreateFileW: " + lpFileName);
 
-                return CreateFile(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
-        }
+        //        return CreateFile(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+        //}
 
         private IntPtr CreateVA(OverrideFile of) {
             //VArchiveFile va = new VArchiveFile(of.Archive, of.File);
@@ -550,8 +573,8 @@ namespace _7thWrapperLib {
             return dummy;
         }
 
-        private IntPtr HCreateFileA(
-            string lpFileName,
+        private IntPtr HCreateFileW(
+            [MarshalAs(UnmanagedType.LPWStr)] string lpFileName,
             [MarshalAs(UnmanagedType.U4)] FileAccess dwDesiredAccess,
             [MarshalAs(UnmanagedType.U4)] FileShare dwShareMode,
             IntPtr lpSecurityAttributes,
@@ -578,7 +601,7 @@ namespace _7thWrapperLib {
                 }
             }
 
-			IntPtr handle = CreateFileA(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+			IntPtr handle = CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
 			//System.Diagnostics.Debug.WriteLine("Hooked CreateFileA for {0} under {1}", lpFileName, handle.ToInt32());
 
 			if (handle.ToInt32() == -1)
@@ -593,7 +616,7 @@ namespace _7thWrapperLib {
 
             if (System.IO.Path.GetExtension(lpFileName).Equals(".lgp", StringComparison.InvariantCultureIgnoreCase)) {
                 try {
-                    System.Diagnostics.Debug.WriteLine("Hooked CreateFileA for {0} under {1}", lpFileName, handle.ToInt32());
+                    System.Diagnostics.Debug.WriteLine("Hooked CreateFileW for {0} under {1}", lpFileName, handle.ToInt32());
                     //var fs = new System.IO.FileStream(handle, FileAccess.Read, false);
                     //_hMap[handle] = ProcMonParser.FF7Files.LoadLGP(fs, lpFileName);
                     //_hNames[handle] = System.IO.Path.GetFileName(lpFileName);
@@ -623,10 +646,10 @@ namespace _7thWrapperLib {
             System.Diagnostics.Debug.WriteLine("FindFirstFile for " + lpFileName);
             return FindFirstFileW(lpFileName, out lpFindFileData);
         }
-        private IntPtr HFindFirstFileA(string lpFileName, out WIN32_FIND_DATA lpFindFileData) {
-            System.Diagnostics.Debug.WriteLine("FindFirstFileA for " + lpFileName);
-            return FindFirstFileA(lpFileName, out lpFindFileData);
-        }
+        //private IntPtr HFindFirstFileA(string lpFileName, out WIN32_FIND_DATA lpFindFileData) {
+        //    System.Diagnostics.Debug.WriteLine("FindFirstFileA for " + lpFileName);
+        //    return FindFirstFileA(lpFileName, out lpFindFileData);
+        //}
 
         private bool HCreateProcessW(string lpApplicationName,
             string lpCommandLine, ref SECURITY_ATTRIBUTES lpProcessAttributes,

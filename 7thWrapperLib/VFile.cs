@@ -287,7 +287,7 @@ namespace _7thWrapperLib {
                 _lastInit = init;
             }
             if (_current != null && _handle.Equals(IntPtr.Zero) && _current.Archive == null) {
-                _handle = Wrap.CreateFile(_current.File, System.IO.FileAccess.Read, System.IO.FileShare.Read, IntPtr.Zero, System.IO.FileMode.Open, System.IO.FileAttributes.Normal, IntPtr.Zero);
+                _handle = Wrap.CreateFileW(_current.File, System.IO.FileAccess.Read, System.IO.FileShare.Read, IntPtr.Zero, System.IO.FileMode.Open, System.IO.FileAttributes.Normal, IntPtr.Zero);
             }
             _lastHeader = header;
             _access = DateTime.Now;
@@ -350,7 +350,7 @@ namespace _7thWrapperLib {
         private DateTime _access;
 
         public override void Read(uint offset, uint length, IntPtr dest, ref uint bytesRead) {
-            if (_handle == IntPtr.Zero) _handle = Wrap.CreateFile(Filename, System.IO.FileAccess.Read, System.IO.FileShare.Read, IntPtr.Zero, System.IO.FileMode.Open, System.IO.FileAttributes.Normal, IntPtr.Zero);
+            if (_handle == IntPtr.Zero) _handle = Wrap.CreateFileW(Filename, System.IO.FileAccess.Read, System.IO.FileShare.Read, IntPtr.Zero, System.IO.FileMode.Open, System.IO.FileAttributes.Normal, IntPtr.Zero);
             _access = DateTime.Now;
             Wrap.SetFilePointer(_handle, (int)offset, IntPtr.Zero, Wrap.EMoveMethod.Begin);
             Win32.ReadFile(_handle, dest, length, ref bytesRead, IntPtr.Zero);
