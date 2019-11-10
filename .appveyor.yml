@@ -42,6 +42,7 @@ before_build:
 
 # Build configuration
 build:
+  project: 7thWrapperSln.sln
   verbosity: minimal
 
 # Do not run unit tests
