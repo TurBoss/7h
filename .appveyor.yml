@@ -7,7 +7,7 @@ version: '1.5.6.{build}'
 image: Visual Studio 2019
 
 # fetch repository as zip archive
-shallow_clone: true
+shallow_clone: false
 
 # PRs do not increment the build number
 pull_requests:
