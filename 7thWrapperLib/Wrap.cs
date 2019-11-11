@@ -36,6 +36,7 @@ namespace _7thWrapperLib {
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr FindFirstFileW(string lpFileName, out WIN32_FIND_DATA lpFindFileData);
+
         [DllImport("kernel32.dll", CharSet = CharSet.Ansi)]
         public static extern IntPtr FindFirstFileA(string lpFileName, out WIN32_FIND_DATA lpFindFileData);
 
@@ -154,6 +155,7 @@ namespace _7thWrapperLib {
             [In] int lDistanceToMove,
             [In] IntPtr lpDistanceToMoveHigh,
             [In] EMoveMethod dwMoveMethod);
+
         [DllImport("kernel32.dll")]
         static extern bool SetFilePointerEx(IntPtr hFile, long liDistanceToMove, IntPtr lpNewFilePointer, uint dwMoveMethod);
 
