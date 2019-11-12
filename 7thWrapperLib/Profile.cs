@@ -97,6 +97,7 @@ namespace _7thWrapperLib {
         public string OpenGLConfig { get; set; }
         public RuntimeOptions Options { get; set; }
         public string ModPath { get; set; }
+        public string FF7Path { get; set; }
         public List<string> MonitorPaths { get; set; }
 
         public List<RuntimeMod> Mods { get; set; }

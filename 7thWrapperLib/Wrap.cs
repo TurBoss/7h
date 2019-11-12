@@ -583,6 +583,9 @@ namespace _7thWrapperLib {
             [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition,
             [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes,
             IntPtr hTemplateFile) {
+
+            // Patch only FF7 Game files
+            if (!lpFileName.StartsWith(_profile.FF7Path)) return CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
             
             lpFileName = lpFileName.Replace("\\/", "\\").Replace("/", "\\").Replace("\\\\", "\\");
             RuntimeLog.Write("CreateFile for {0}...", lpFileName, 0);
@@ -604,7 +607,7 @@ namespace _7thWrapperLib {
             }
 
 			IntPtr handle = CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
-			//System.Diagnostics.Debug.WriteLine("Hooked CreateFileA for {0} under {1}", lpFileName, handle.ToInt32());
+			//System.Diagnostics.Debug.WriteLine("Hooked CreateFileW for {0} under {1}", lpFileName, handle.ToInt32());//
 
 			if (handle.ToInt32() == -1)
 			{

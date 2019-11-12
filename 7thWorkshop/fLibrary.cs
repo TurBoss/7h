@@ -1223,6 +1223,7 @@ They will be automatically turned off.";
                 MonitorPaths = new List<string>() { data, Sys.Settings.AaliFolder, Sys.Settings.MovieFolder,},
                 ModPath = Sys.Settings.LibraryLocation,
                 OpenGLConfig = Sys.ActiveProfile.OpenGLConfig,
+                FF7Path = ff7folder,
                 Mods = Sys.ActiveProfile.Items
                     .Select(i => i.GetRuntime(_context))
                     .Where(i => i != null)
