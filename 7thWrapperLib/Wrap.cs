@@ -584,65 +584,79 @@ namespace _7thWrapperLib {
             [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes,
             IntPtr hTemplateFile) {
 
-            // Patch only FF7 Game files
-            if (!lpFileName.StartsWith(_profile.FF7Path)) return CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
-            
-            lpFileName = lpFileName.Replace("\\/", "\\").Replace("/", "\\").Replace("\\\\", "\\");
-            RuntimeLog.Write("CreateFile for {0}...", lpFileName, 0);
-            if (lpFileName.IndexOf('\\') < 0) {
-                //System.Diagnostics.Debug.WriteLine("No path: curdir is {0}", System.IO.Directory.GetCurrentDirectory(), 0);
-                lpFileName = Path.Combine(Directory.GetCurrentDirectory(), lpFileName);
-            }
+            bool isFF7GameFile = lpFileName.StartsWith(_profile.FF7Path, StringComparison.InvariantCultureIgnoreCase);
 
-            foreach (string path in _profile.MonitorPaths) {
-                if (lpFileName.StartsWith(path, StringComparison.InvariantCultureIgnoreCase)) {
-                    OverrideFile mapped = LGPWrapper.MapFile(lpFileName.Substring(path.Length), _profile);
-                    if (mapped != null)
-                        if (mapped.Archive == null) {
-                            //System.Diagnostics.Debug.WriteLine("Remapping {0} to {1}", lpFileName, mapped.File);
-                            lpFileName = mapped.File;
-                        } else
-                            return CreateVA(mapped);
+            // Patch only FF7 Game files
+            if (isFF7GameFile)
+            {
+                lpFileName = lpFileName.Replace("\\/", "\\").Replace("/", "\\").Replace("\\\\", "\\");
+                RuntimeLog.Write("CreateFile for {0}...", lpFileName, 0);
+                if (lpFileName.IndexOf('\\') < 0)
+                {
+                    //System.Diagnostics.Debug.WriteLine("No path: curdir is {0}", System.IO.Directory.GetCurrentDirectory(), 0);
+                    lpFileName = Path.Combine(Directory.GetCurrentDirectory(), lpFileName);
+                }
+
+                foreach (string path in _profile.MonitorPaths)
+                {
+                    if (lpFileName.StartsWith(path, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        System.Diagnostics.Debug.WriteLine("Trying to override file {0} found in path {1}", lpFileName, path);
+                        OverrideFile mapped = LGPWrapper.MapFile(lpFileName.Substring(path.Length), _profile);
+                        if (mapped != null)
+                            if (mapped.Archive == null)
+                            {
+                                System.Diagnostics.Debug.WriteLine("Remapping {0} to {1}", lpFileName, mapped.File);
+                                lpFileName = mapped.File;
+                            }
+                            else
+                                return CreateVA(mapped);
+                    }
                 }
             }
 
 			IntPtr handle = CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
-			//System.Diagnostics.Debug.WriteLine("Hooked CreateFileW for {0} under {1}", lpFileName, handle.ToInt32());//
+			//System.Diagnostics.Debug.WriteLine("Hooked CreateFileW for {0} under {1}", lpFileName, handle.ToInt32());
 
-			if (handle.ToInt32() == -1)
-			{
-				return handle;
-			}
-
-            if (System.IO.Path.GetExtension(lpFileName).Equals(".ff7", StringComparison.InvariantCultureIgnoreCase))
+            if (isFF7GameFile && handle.ToInt32() != -1)
             {
-                _saveFiles.Add(handle, lpFileName);
-            }
-
-            if (System.IO.Path.GetExtension(lpFileName).Equals(".lgp", StringComparison.InvariantCultureIgnoreCase)) {
-                try {
-                    System.Diagnostics.Debug.WriteLine("Hooked CreateFileW for {0} under {1}", lpFileName, handle.ToInt32());
-                    //var fs = new System.IO.FileStream(handle, FileAccess.Read, false);
-                    //_hMap[handle] = ProcMonParser.FF7Files.LoadLGP(fs, lpFileName);
-                    //_hNames[handle] = System.IO.Path.GetFileName(lpFileName);
-                    //fs.Position = 0;
-                    LGPWrapper lgp = new LGPWrapper(handle, System.IO.Path.GetFileName(lpFileName), _profile);
-                    if (lgp.IsActive) {
-                        System.Diagnostics.Debug.WriteLine("Overrides found, activating VFile");
-                        _hMap[handle] = lgp;
-                    }
-                } catch (Exception e) {
-                    System.Diagnostics.Debug.WriteLine("ERROR: " + e.ToString());
-                    throw;
+                if (System.IO.Path.GetExtension(lpFileName).Equals(".ff7", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    _saveFiles.Add(handle, lpFileName);
                 }
+
+                if (System.IO.Path.GetExtension(lpFileName).Equals(".lgp", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    try
+                    {
+                        System.Diagnostics.Debug.WriteLine("Hooked CreateFileW for {0} under {1}", lpFileName, handle.ToInt32());
+                        //var fs = new System.IO.FileStream(handle, FileAccess.Read, false);
+                        //_hMap[handle] = ProcMonParser.FF7Files.LoadLGP(fs, lpFileName);
+                        //_hNames[handle] = System.IO.Path.GetFileName(lpFileName);
+                        //fs.Position = 0;
+                        LGPWrapper lgp = new LGPWrapper(handle, System.IO.Path.GetFileName(lpFileName), _profile);
+                        if (lgp.IsActive)
+                        {
+                            System.Diagnostics.Debug.WriteLine("Overrides found, activating VFile");
+                            _hMap[handle] = lgp;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        System.Diagnostics.Debug.WriteLine("ERROR: " + e.ToString());
+                        throw;
+                    }
+                }
+
+                if (System.IO.Path.GetFileName(lpFileName).Equals("FF7_OpenGL.cfg", StringComparison.InvariantCultureIgnoreCase) && !String.IsNullOrWhiteSpace(_profile.OpenGLConfig))
+                {
+                    _streamFiles[handle] = new VStreamFile(System.Text.Encoding.UTF8.GetBytes(_profile.OpenGLConfig));
+                    System.Diagnostics.Debug.WriteLine("Overriding FF7_OpenGL.cfg with replacement data");
+                }
+
+                
+                RuntimeLog.Write("CreateFileW: {0} -> {1}", lpFileName, handle);
             }
-
-            if (System.IO.Path.GetFileName(lpFileName).Equals("FF7_OpenGL.cfg", StringComparison.InvariantCultureIgnoreCase) && !String.IsNullOrWhiteSpace(_profile.OpenGLConfig)) {
-                _streamFiles[handle] = new VStreamFile(System.Text.Encoding.UTF8.GetBytes(_profile.OpenGLConfig));
-                System.Diagnostics.Debug.WriteLine("Overriding FF7_OpenGL.cfg with replacement data");
-            }                
-
-            RuntimeLog.Write("CreateFile: {0} -> {1}", lpFileName, handle);
 
             return handle;
         }
