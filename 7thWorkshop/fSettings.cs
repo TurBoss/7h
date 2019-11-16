@@ -110,11 +110,11 @@ namespace Iros._7th.Workshop {
             List<string> ExtraFoldersList = txtExtraFolders.Lines.ToList();
 
             //Make sure that the direct and music folders are always present
-            if (!ExtraFoldersList.Contains("direct", StringComparer.OrdinalIgnoreCase)) ExtraFoldersList.Add("direct");
-            if (!ExtraFoldersList.Contains("music")) ExtraFoldersList.Add("music");
-
+            if (!ExtraFoldersList.Contains("direct", StringComparer.InvariantCultureIgnoreCase)) ExtraFoldersList.Add("direct");
+            if (!ExtraFoldersList.Contains("music", StringComparer.InvariantCultureIgnoreCase)) ExtraFoldersList.Add("music");
+            
             //Save the Extra Folders and remove any duplicate entries for best performance
-            Sys.Settings.ExtraFolders = ExtraFoldersList.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+            Sys.Settings.ExtraFolders = ExtraFoldersList.Distinct(StringComparer.InvariantCultureIgnoreCase).ToList();
 
             Sys.Settings.AlsoLaunch = txtAlsoLaunch.Lines.ToList();
 

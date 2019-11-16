@@ -138,9 +138,6 @@ namespace Iros._7th.Workshop {
                 Settings.Options = GeneralOptions.AutoImportMods;
             }
 
-            //Fixes dupe direct/music folders on 1st run.
-            //if (Settings.ExtraFolders == null || Settings.ExtraFolders.Count == 0) Settings.ExtraFolders = new List<string>() { "direct", "music" };
-
             string lfile = System.IO.Path.Combine(SysFolder, "library.xml");
             if (System.IO.File.Exists(lfile)) {
                 try {
