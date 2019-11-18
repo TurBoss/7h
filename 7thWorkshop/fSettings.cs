@@ -68,7 +68,7 @@ namespace Iros._7th.Workshop {
                     }
                     else
                     {
-                        MessageBox.Show("could no determine ff7.exe path, is the game installed?", "Error");
+                        MessageBox.Show("Could not determine ff7.exe path. Is the game installed?", "Error");
                     }
                 }
             }
@@ -105,7 +105,17 @@ namespace Iros._7th.Workshop {
         private void bOK_Click(object sender, EventArgs e) {
 
             Sys.Settings.SubscribedUrls = txtSubscriptions.Lines.ToList();
-            if (txtExtraFolders.Lines.ToList().Count > 0 ) Sys.Settings.ExtraFolders = txtExtraFolders.Lines.ToList();
+
+            //Convert Extra Folders textbox to a list for comparison and editing
+            List<string> ExtraFoldersList = txtExtraFolders.Lines.ToList();
+
+            //Make sure that the direct and music folders are always present
+            if (!ExtraFoldersList.Contains("direct", StringComparer.InvariantCultureIgnoreCase)) ExtraFoldersList.Add("direct");
+            if (!ExtraFoldersList.Contains("music", StringComparer.InvariantCultureIgnoreCase)) ExtraFoldersList.Add("music");
+            
+            //Save the Extra Folders and remove any duplicate entries for best performance
+            Sys.Settings.ExtraFolders = ExtraFoldersList.Distinct(StringComparer.InvariantCultureIgnoreCase).ToList();
+
             Sys.Settings.AlsoLaunch = txtAlsoLaunch.Lines.ToList();
 
             Sys.Settings.FF7Exe = txtFF7.Text;
