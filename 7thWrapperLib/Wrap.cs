@@ -380,7 +380,7 @@ namespace _7thWrapperLib {
                             try {
                                 HexPatch.Apply(s);
                             } catch (Exception ex) {
-                                System.Diagnostics.Debug.WriteLine("Error applying patch: " + ex.ToString());
+                                System.Diagnostics.Debug.WriteLine("Error applying patch: " + ex.Message);
                             }
                         }
                     }
@@ -601,7 +601,7 @@ namespace _7thWrapperLib {
                 {
                     if (lpFileName.StartsWith(path, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        System.Diagnostics.Debug.WriteLine("Trying to override file {0} found in path {1}", lpFileName, path);
+                        //System.Diagnostics.Debug.WriteLine("Trying to override file {0} found in path {1}", lpFileName, path);
                         OverrideFile mapped = LGPWrapper.MapFile(lpFileName.Substring(path.Length), _profile);
                         if (mapped != null)
                             if (mapped.Archive == null)

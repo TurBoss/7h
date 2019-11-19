@@ -82,26 +82,35 @@ namespace _7thWrapperLib {
             int offset = 0;
             foreach (string instruct in FilterToUseful(lines)) {
                 //RuntimeLog.Write("Processing HEXT instruction {0}", instruct);
-                if (instruct.StartsWith("+"))
-                    offset = int.Parse(instruct.Substring(1), System.Globalization.NumberStyles.HexNumber);
-                else if (instruct.StartsWith("-"))
-                    offset = -int.Parse(instruct.Substring(1), System.Globalization.NumberStyles.HexNumber);
-                else if (instruct.Contains('=') && (instruct.IndexOf("Delay", StringComparison.InvariantCultureIgnoreCase) < 0)) {
-                    string[] parts = instruct.Split('=');
-                    IntPtr addr = GetAddress(parts[0], offset);
-                    byte[] bytes = GetBytes(parts[1]);
-                    Protection prot;
-                    if (VirtualProtect(addr, (uint)bytes.Length, Protection.PAGE_READWRITE, out prot)) {
-                        if (prot == Protection.PAGE_EXECUTE || prot == Protection.PAGE_EXECUTE_READ)
-                            VirtualProtect(addr, (uint)bytes.Length, Protection.PAGE_EXECUTE_READWRITE, out prot);
-                        System.Runtime.InteropServices.Marshal.Copy(bytes, 0, addr, bytes.Length);
+                try
+                {
+                    if (instruct.StartsWith("+"))
+                        offset = int.Parse(instruct.Substring(1), System.Globalization.NumberStyles.HexNumber);
+                    else if (instruct.StartsWith("-"))
+                        offset = -int.Parse(instruct.Substring(1), System.Globalization.NumberStyles.HexNumber);
+                    else if (instruct.Contains('=') && (instruct.IndexOf("Delay", StringComparison.InvariantCultureIgnoreCase) < 0))
+                    {
+                        string[] parts = instruct.Split('=');
+                        IntPtr addr = GetAddress(parts[0], offset);
+                        byte[] bytes = GetBytes(parts[1]);
+                        Protection prot;
+                        if (VirtualProtect(addr, (uint)bytes.Length, Protection.PAGE_READWRITE, out prot))
+                        {
+                            if (prot == Protection.PAGE_EXECUTE || prot == Protection.PAGE_EXECUTE_READ)
+                                VirtualProtect(addr, (uint)bytes.Length, Protection.PAGE_EXECUTE_READWRITE, out prot);
+                            System.Runtime.InteropServices.Marshal.Copy(bytes, 0, addr, bytes.Length);
+                        }
                     }
-                } else if (instruct.Contains(':')) {
-                    string[] parts = instruct.Split(':');
-                    IntPtr addr = GetAddress(parts[0], offset);
-                    int length = int.Parse(parts[1], System.Globalization.NumberStyles.HexNumber);
-                    Protection _;
-                    VirtualProtect(addr, (uint)length, Protection.PAGE_EXECUTE_READWRITE, out _);
+                    else if (instruct.Contains(':'))
+                    {
+                        string[] parts = instruct.Split(':');
+                        IntPtr addr = GetAddress(parts[0], offset);
+                        int length = int.Parse(parts[1], System.Globalization.NumberStyles.HexNumber);
+                        Protection _;
+                        VirtualProtect(addr, (uint)length, Protection.PAGE_EXECUTE_READWRITE, out _);
+                    }
+                } catch (Exception) {
+                    throw new System.Exception(instruct);
                 }
             }
         }
