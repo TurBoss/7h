@@ -77,6 +77,7 @@ namespace Iros._7th.Workshop {
             DefaultUpdate = UpdateType.Notify;
             Items = new List<InstalledItem>();
             PendingDelete = new List<string>();
+            CodeAllowed = new List<Guid>();
         }
     }
 
