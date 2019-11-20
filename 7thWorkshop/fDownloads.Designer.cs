@@ -47,11 +47,11 @@ namespace Iros._7th.Workshop {
             this.columnHeader3});
             this.lvDownloads.ContextMenuStrip = this.cmDownload;
             this.lvDownloads.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvDownloads.HideSelection = false;
             this.lvDownloads.Location = new System.Drawing.Point(0, 0);
-            this.lvDownloads.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.lvDownloads.Name = "lvDownloads";
             this.lvDownloads.OwnerDraw = true;
-            this.lvDownloads.Size = new System.Drawing.Size(1014, 317);
+            this.lvDownloads.Size = new System.Drawing.Size(507, 165);
             this.lvDownloads.TabIndex = 0;
             this.lvDownloads.UseCompatibleStateImageBehavior = false;
             this.lvDownloads.View = System.Windows.Forms.View.Details;
@@ -80,24 +80,24 @@ namespace Iros._7th.Workshop {
             this.cmDownload.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cancelToolStripMenuItem});
             this.cmDownload.Name = "cmDownload";
-            this.cmDownload.Size = new System.Drawing.Size(245, 84);
+            this.cmDownload.Size = new System.Drawing.Size(111, 26);
             // 
             // cancelToolStripMenuItem
             // 
             this.cancelToolStripMenuItem.Name = "cancelToolStripMenuItem";
-            this.cancelToolStripMenuItem.Size = new System.Drawing.Size(244, 36);
+            this.cancelToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.cancelToolStripMenuItem.Text = "Cancel";
             this.cancelToolStripMenuItem.Click += new System.EventHandler(this.cancelToolStripMenuItem_Click);
             // 
             // fDownloads
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1014, 317);
+            this.ClientSize = new System.Drawing.Size(507, 165);
             this.Controls.Add(this.lvDownloads);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "fDownloads";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Downloads";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.fDownloads_FormClosing);
             this.Load += new System.EventHandler(this.fDownloads_Load);

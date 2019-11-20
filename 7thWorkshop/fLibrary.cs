@@ -558,8 +558,8 @@ namespace Iros._7th.Workshop {
             newItems[newindex] = pitem;
 
             Sys.ActiveProfile.Items = newItems;
-            Transitions.Transition.run(pm, "Top", pm.Top + (pm.Height * change), new Transitions.TransitionType_Linear(200));
-            Transitions.Transition.run(other, "Top", other.Top + (pm.Height * -change), new Transitions.TransitionType_Linear(200));
+            Transitions.Transition.run(pm, "Top", pm.Top + (pm.Height * change), new Transitions.TransitionType_Linear(1));
+            Transitions.Transition.run(other, "Top", other.Top + (pm.Height * -change), new Transitions.TransitionType_Linear(1));
 
         }
 
@@ -1293,10 +1293,12 @@ They will be automatically turned off.";
                 using (var fs = new System.IO.FileStream(parms.ProfileFile, System.IO.FileMode.Create))
                     Util.SerializeBinary(rp, fs);
 
-                // Add 640x480 compatibility flag
-                RegistryKey ff7COmpatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
-                if ( ff7COmpatKey.GetValue(Sys.Settings.FF7Exe) == null ) ff7COmpatKey.SetValue(Sys.Settings.FF7Exe, "~ 640x480");
-
+                // Add 640x480 and High DPI compatibility flags if set in settings
+                if (Sys.Settings.Options.HasFlag(GeneralOptions.SetEXECompatFlags))
+                {
+                    RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
+                    ff7CompatKey.SetValue(Sys.Settings.FF7Exe, "~ 640X480 HIGHDPIAWARE");
+                }
                 EasyHook.RemoteHooking.CreateAndInject(Sys.Settings.FF7Exe, String.Empty, 0, lib, null, out pid, parms);
 
                 var proc = System.Diagnostics.Process.GetProcessById(pid);
@@ -1332,6 +1334,7 @@ They will be automatically turned off.";
             } catch (Exception e) {
                 
                 MessageBox.Show(e.ToString(), "Error starting FF7");
+
                 return;
             }
         }

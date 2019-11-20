@@ -37,7 +37,7 @@ namespace Iros._7th.Workshop {
     }
 
     public static class Sys {
-        public const decimal Version = 1.56m;
+        public const decimal Version = 1.59m;
 
         private static Dictionary<Type, object> _single = new Dictionary<Type, object>();
 
@@ -135,7 +135,9 @@ namespace Iros._7th.Workshop {
             if (Settings == null) {
                 Settings = new Settings();
                 //Settings.UpdateUrl = System.Configuration.ConfigurationManager.AppSettings["UpdateUrl"];
-                Settings.Options = GeneralOptions.AutoImportMods;
+                Settings.Options = GeneralOptions.AutoImportMods | GeneralOptions.SetEXECompatFlags;
+                Settings.SubscribedUrls.Add("iros://Url/http$pastebin.com/raw.php?i=dDBkYkDu");
+                Settings.SubscribedUrls.Add("iros://Url/http$pastebin.com/raw.php?i=QBGsgGK6");         
             }
 
             string lfile = System.IO.Path.Combine(SysFolder, "library.xml");

@@ -548,13 +548,13 @@ namespace Iros._7th.Workshop {
             this.uninstallToolStripMenuItem,
             this.mUpdateType});
             this.mMod.Name = "mMod";
-            this.mMod.Size = new System.Drawing.Size(141, 48);
+            this.mMod.Size = new System.Drawing.Size(140, 48);
             this.mMod.Opening += new System.ComponentModel.CancelEventHandler(this.mMod_Opening);
             // 
             // uninstallToolStripMenuItem
             // 
             this.uninstallToolStripMenuItem.Name = "uninstallToolStripMenuItem";
-            this.uninstallToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
+            this.uninstallToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.uninstallToolStripMenuItem.Text = "Uninstall";
             this.uninstallToolStripMenuItem.Click += new System.EventHandler(this.uninstallToolStripMenuItem_Click);
             // 
@@ -565,7 +565,7 @@ namespace Iros._7th.Workshop {
             this.mUpdateAuto,
             this.mUpdateIgnore});
             this.mUpdateType.Name = "mUpdateType";
-            this.mUpdateType.Size = new System.Drawing.Size(140, 22);
+            this.mUpdateType.Size = new System.Drawing.Size(139, 22);
             this.mUpdateType.Text = "Update Type";
             // 
             // mUpdateNotify
@@ -628,76 +628,76 @@ namespace Iros._7th.Workshop {
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
-            this.settingsToolStripMenuItem.Text = "General Settings";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.settingsToolStripMenuItem.Text = "General Settings...";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // openGLDriverConfigurationToolStripMenuItem
             // 
             this.openGLDriverConfigurationToolStripMenuItem.Name = "openGLDriverConfigurationToolStripMenuItem";
-            this.openGLDriverConfigurationToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
-            this.openGLDriverConfigurationToolStripMenuItem.Text = "Aali Driver Settings";
+            this.openGLDriverConfigurationToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.openGLDriverConfigurationToolStripMenuItem.Text = "Configure OpenGL Driver...";
             this.openGLDriverConfigurationToolStripMenuItem.Click += new System.EventHandler(this.openGLDriverConfigurationToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(216, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(213, 6);
             // 
             // checkSubscriptionsNowToolStripMenuItem
             // 
             this.checkSubscriptionsNowToolStripMenuItem.Name = "checkSubscriptionsNowToolStripMenuItem";
-            this.checkSubscriptionsNowToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.checkSubscriptionsNowToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
             this.checkSubscriptionsNowToolStripMenuItem.Text = "Update Catalog";
             this.checkSubscriptionsNowToolStripMenuItem.Click += new System.EventHandler(this.checkSubscriptionsNowToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(216, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(213, 6);
             // 
             // packUnpackiroArchivesToolStripMenuItem
             // 
             this.packUnpackiroArchivesToolStripMenuItem.Name = "packUnpackiroArchivesToolStripMenuItem";
-            this.packUnpackiroArchivesToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
-            this.packUnpackiroArchivesToolStripMenuItem.Text = "IRO Creation Tool";
+            this.packUnpackiroArchivesToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.packUnpackiroArchivesToolStripMenuItem.Text = "IRO Tools...";
             this.packUnpackiroArchivesToolStripMenuItem.Click += new System.EventHandler(this.packUnpackiroArchivesToolStripMenuItem_Click);
             // 
             // chunkToolToolStripMenuItem
             // 
             this.chunkToolToolStripMenuItem.Name = "chunkToolToolStripMenuItem";
-            this.chunkToolToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
-            this.chunkToolToolStripMenuItem.Text = "Chunk Tool";
+            this.chunkToolToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.chunkToolToolStripMenuItem.Text = "Chunk Tool...";
             this.chunkToolToolStripMenuItem.Click += new System.EventHandler(this.chunkToolToolStripMenuItem_Click);
             // 
             // modGeneratorAssistantToolStripMenuItem
             // 
             this.modGeneratorAssistantToolStripMenuItem.Name = "modGeneratorAssistantToolStripMenuItem";
-            this.modGeneratorAssistantToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
-            this.modGeneratorAssistantToolStripMenuItem.Text = "Catalog Creation Tool";
+            this.modGeneratorAssistantToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.modGeneratorAssistantToolStripMenuItem.Text = "Catalog Creation Tool...";
             this.modGeneratorAssistantToolStripMenuItem.Click += new System.EventHandler(this.modGeneratorAssistantToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(216, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(213, 6);
             // 
             // showDownloadsWindowToolStripMenuItem
             // 
             this.showDownloadsWindowToolStripMenuItem.Name = "showDownloadsWindowToolStripMenuItem";
-            this.showDownloadsWindowToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
-            this.showDownloadsWindowToolStripMenuItem.Text = "Toggle Downloads Window";
+            this.showDownloadsWindowToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.showDownloadsWindowToolStripMenuItem.Text = "Show Downloads Window";
             this.showDownloadsWindowToolStripMenuItem.Click += new System.EventHandler(this.showDownloadsWindowToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(216, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(213, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(219, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -713,6 +713,7 @@ namespace Iros._7th.Workshop {
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "fLibrary";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "7thHeaven";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.fLibrary_FormClosed);
             this.Load += new System.EventHandler(this.fLibrary_Load);

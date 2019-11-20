@@ -3,6 +3,7 @@
   The original developer is Iros <irosff@outlook.com>
 */
 
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -49,7 +50,7 @@ namespace Iros._7th.Workshop {
             String registry_path = @"HKEY_LOCAL_MACHINE\SOFTWARE\Square Soft, Inc.\Final Fantasy VII";
 
             if (String.IsNullOrEmpty(Sys.Settings.FF7Exe)) {
-                if (MessageBox.Show("No settings configured. Try to autodetect sensible settings?", "Setup", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes) {
+                if (MessageBox.Show("Would you like to load default settings and autodetect your FF7 game folders?", "No Settings Configured", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes) {
                     string ff7 = (string)Microsoft.Win32.Registry.GetValue(registry_path, "AppPath", null);
 
                     if (!String.IsNullOrEmpty(ff7))
@@ -89,7 +90,7 @@ namespace Iros._7th.Workshop {
                     Sys.Settings.MovieFolder = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Square Soft, Inc.\Final Fantasy VII", "MoviePath", null);
                 }
 
-                if (MessageBox.Show("Would you like to set up subscription links with Windows?", "Link setup", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+                if (MessageBox.Show("Would you like 7th Heaven to open catalog subscription links that begin with iros://?", "iros:// Link Setup", MessageBoxButtons.YesNo) == DialogResult.Yes) {
                     try {
                         if (!WriteLinkReg()) throw new Exception("Could not create keys");
                     } catch (Exception ex) {
@@ -127,6 +128,13 @@ namespace Iros._7th.Workshop {
             for (int i = 0; i < clOptions.Items.Count; i++)
                 if (clOptions.GetItemChecked(i)) opts |= (1 << i);
             Sys.Settings.Options = (GeneralOptions)opts;
+
+            // Clear EXE compatibility flags if user opts out
+            if (!Sys.Settings.Options.HasFlag(GeneralOptions.SetEXECompatFlags))
+            {
+                RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
+                if (ff7CompatKey.GetValue(Sys.Settings.FF7Exe) != null) ff7CompatKey.DeleteValue(Sys.Settings.FF7Exe);
+            }
 
             if (!Sys.Settings.FF7Exe.Any())
             {

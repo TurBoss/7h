@@ -72,7 +72,7 @@ namespace Iros._7th.Workshop {
             this.bOK.Location = new System.Drawing.Point(546, 13);
             this.bOK.Name = "bOK";
             this.bOK.Size = new System.Drawing.Size(75, 23);
-            this.bOK.TabIndex = 1;
+            this.bOK.TabIndex = 0;
             this.bOK.Text = "OK";
             this.bOK.UseVisualStyleBackColor = true;
             this.bOK.Click += new System.EventHandler(this.bOK_Click);
@@ -84,7 +84,7 @@ namespace Iros._7th.Workshop {
             this.bCancel.Location = new System.Drawing.Point(627, 13);
             this.bCancel.Name = "bCancel";
             this.bCancel.Size = new System.Drawing.Size(75, 23);
-            this.bCancel.TabIndex = 0;
+            this.bCancel.TabIndex = 1;
             this.bCancel.Text = "Cancel";
             this.bCancel.UseVisualStyleBackColor = true;
             // 
@@ -93,7 +93,7 @@ namespace Iros._7th.Workshop {
             this.bLibrary.Location = new System.Drawing.Point(360, 88);
             this.bLibrary.Name = "bLibrary";
             this.bLibrary.Size = new System.Drawing.Size(26, 20);
-            this.bLibrary.TabIndex = 3;
+            this.bLibrary.TabIndex = 9;
             this.bLibrary.Text = "...";
             this.bLibrary.UseVisualStyleBackColor = true;
             this.bLibrary.Click += new System.EventHandler(this.bLibrary_Click);
@@ -105,7 +105,7 @@ namespace Iros._7th.Workshop {
             this.txtLibrary.Location = new System.Drawing.Point(103, 88);
             this.txtLibrary.Name = "txtLibrary";
             this.txtLibrary.Size = new System.Drawing.Size(246, 20);
-            this.txtLibrary.TabIndex = 5;
+            this.txtLibrary.TabIndex = 8;
             // 
             // label2
             // 
@@ -124,11 +124,12 @@ namespace Iros._7th.Workshop {
             "Activate Newly Installed Mods Automatically",
             "Import Library Folder Mods Automatically",
             "Check For 7th Heaven Updates Automatically",
-            "Bypass Compatibility Locks"});
+            "Bypass Compatibility Locks",
+            "Launch Game With Compatibility Flags"});
             this.clOptions.Location = new System.Drawing.Point(101, 141);
             this.clOptions.Name = "clOptions";
-            this.clOptions.Size = new System.Drawing.Size(285, 79);
-            this.clOptions.TabIndex = 6;
+            this.clOptions.Size = new System.Drawing.Size(285, 94);
+            this.clOptions.TabIndex = 10;
             // 
             // txtFF7
             // 
@@ -137,7 +138,7 @@ namespace Iros._7th.Workshop {
             this.txtFF7.Location = new System.Drawing.Point(103, 10);
             this.txtFF7.Name = "txtFF7";
             this.txtFF7.Size = new System.Drawing.Size(246, 20);
-            this.txtFF7.TabIndex = 1;
+            this.txtFF7.TabIndex = 2;
             // 
             // label3
             // 
@@ -153,7 +154,7 @@ namespace Iros._7th.Workshop {
             this.bFF7.Location = new System.Drawing.Point(360, 10);
             this.bFF7.Name = "bFF7";
             this.bFF7.Size = new System.Drawing.Size(26, 20);
-            this.bFF7.TabIndex = 2;
+            this.bFF7.TabIndex = 3;
             this.bFF7.Text = "...";
             this.bFF7.UseVisualStyleBackColor = true;
             this.bFF7.Click += new System.EventHandler(this.bFF7_Click);
@@ -165,7 +166,7 @@ namespace Iros._7th.Workshop {
             this.txtAali.Location = new System.Drawing.Point(103, 62);
             this.txtAali.Name = "txtAali";
             this.txtAali.Size = new System.Drawing.Size(246, 20);
-            this.txtAali.TabIndex = 12;
+            this.txtAali.TabIndex = 6;
             // 
             // label4
             // 
@@ -181,7 +182,7 @@ namespace Iros._7th.Workshop {
             this.bAali.Location = new System.Drawing.Point(360, 62);
             this.bAali.Name = "bAali";
             this.bAali.Size = new System.Drawing.Size(26, 20);
-            this.bAali.TabIndex = 10;
+            this.bAali.TabIndex = 7;
             this.bAali.Text = "...";
             this.bAali.UseVisualStyleBackColor = true;
             this.bAali.Click += new System.EventHandler(this.bAali_Click);
@@ -196,17 +197,17 @@ namespace Iros._7th.Workshop {
             this.txtAlsoLaunch.Name = "txtAlsoLaunch";
             this.txtAlsoLaunch.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txtAlsoLaunch.Size = new System.Drawing.Size(282, 70);
-            this.txtAlsoLaunch.TabIndex = 15;
+            this.txtAlsoLaunch.TabIndex = 13;
             this.txtAlsoLaunch.WordWrap = false;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(518, 235);
+            this.label5.Location = new System.Drawing.Point(411, 235);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(69, 13);
+            this.label5.Size = new System.Drawing.Size(282, 13);
             this.label5.TabIndex = 14;
-            this.label5.Text = "Also Launch:";
+            this.label5.Text = "Programs to Run Before FF7:";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // ofExe
             // 
@@ -222,17 +223,17 @@ namespace Iros._7th.Workshop {
             this.txtSubscriptions.Name = "txtSubscriptions";
             this.txtSubscriptions.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txtSubscriptions.Size = new System.Drawing.Size(283, 85);
-            this.txtSubscriptions.TabIndex = 17;
+            this.txtSubscriptions.TabIndex = 11;
             this.txtSubscriptions.WordWrap = false;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(518, 13);
+            this.label1.Location = new System.Drawing.Point(412, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(73, 13);
+            this.label1.Size = new System.Drawing.Size(282, 17);
             this.label1.TabIndex = 16;
-            this.label1.Text = "Subscriptions:";
+            this.label1.Text = "Catalog Subscription Links:";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // txtMovie
             // 
@@ -241,7 +242,7 @@ namespace Iros._7th.Workshop {
             this.txtMovie.Location = new System.Drawing.Point(103, 36);
             this.txtMovie.Name = "txtMovie";
             this.txtMovie.Size = new System.Drawing.Size(246, 20);
-            this.txtMovie.TabIndex = 20;
+            this.txtMovie.TabIndex = 4;
             // 
             // label6
             // 
@@ -257,7 +258,7 @@ namespace Iros._7th.Workshop {
             this.bMovie.Location = new System.Drawing.Point(360, 36);
             this.bMovie.Name = "bMovie";
             this.bMovie.Size = new System.Drawing.Size(26, 20);
-            this.bMovie.TabIndex = 18;
+            this.bMovie.TabIndex = 5;
             this.bMovie.Text = "...";
             this.bMovie.UseVisualStyleBackColor = true;
             this.bMovie.Click += new System.EventHandler(this.bMovie_Click);
@@ -271,18 +272,18 @@ namespace Iros._7th.Workshop {
             this.txtExtraFolders.Multiline = true;
             this.txtExtraFolders.Name = "txtExtraFolders";
             this.txtExtraFolders.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtExtraFolders.Size = new System.Drawing.Size(283, 86);
-            this.txtExtraFolders.TabIndex = 22;
+            this.txtExtraFolders.Size = new System.Drawing.Size(282, 86);
+            this.txtExtraFolders.TabIndex = 12;
             this.txtExtraFolders.WordWrap = false;
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(520, 125);
+            this.label7.Location = new System.Drawing.Point(411, 125);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(71, 13);
+            this.label7.Size = new System.Drawing.Size(283, 13);
             this.label7.TabIndex = 21;
-            this.label7.Text = "Extra Folders:";
+            this.label7.Text = "Extra Folders to Monitor:";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // fSettings
             // 

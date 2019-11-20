@@ -91,7 +91,8 @@ namespace Iros._7th.Workshop {
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "fConfigSettings";
-            this.Text = "Aali Driver Settings";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "OpenGL Driver Settings";
             this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
 

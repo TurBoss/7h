@@ -590,7 +590,8 @@ namespace Iros._7th.Workshop {
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "fPack";
-            this.Text = "IRO Creation Tool";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "IRO Tools";
             this.Load += new System.EventHandler(this.fPack_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);

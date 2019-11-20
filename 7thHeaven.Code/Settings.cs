@@ -18,6 +18,7 @@ namespace Iros._7th.Workshop {
         AutoImportMods = 0x4,
         CheckForUpdates = 0x8,
         BypassCompatibility = 0x10,
+        SetEXECompatFlags = 0x20,
     }
 
     [Flags]

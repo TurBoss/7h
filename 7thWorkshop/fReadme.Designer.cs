@@ -52,6 +52,7 @@ namespace Iros._7th.Workshop {
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "fReadme";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Readme";
             this.ResumeLayout(false);
 
