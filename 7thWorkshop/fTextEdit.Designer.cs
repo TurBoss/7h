@@ -37,9 +37,10 @@ namespace Iros._7th.Workshop {
             // 
             this.bCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.bCancel.Location = new System.Drawing.Point(824, 633);
+            this.bCancel.Location = new System.Drawing.Point(412, 329);
+            this.bCancel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.bCancel.Name = "bCancel";
-            this.bCancel.Size = new System.Drawing.Size(121, 47);
+            this.bCancel.Size = new System.Drawing.Size(60, 24);
             this.bCancel.TabIndex = 0;
             this.bCancel.Text = "Cancel";
             this.bCancel.UseVisualStyleBackColor = true;
@@ -49,11 +50,12 @@ namespace Iros._7th.Workshop {
             this.txtText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtText.Location = new System.Drawing.Point(12, 12);
+            this.txtText.Location = new System.Drawing.Point(6, 6);
+            this.txtText.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtText.Multiline = true;
             this.txtText.Name = "txtText";
             this.txtText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtText.Size = new System.Drawing.Size(933, 595);
+            this.txtText.Size = new System.Drawing.Size(468, 311);
             this.txtText.TabIndex = 1;
             this.txtText.WordWrap = false;
             // 
@@ -61,9 +63,10 @@ namespace Iros._7th.Workshop {
             // 
             this.bOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.bOK.Location = new System.Drawing.Point(697, 633);
+            this.bOK.Location = new System.Drawing.Point(348, 329);
+            this.bOK.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.bOK.Name = "bOK";
-            this.bOK.Size = new System.Drawing.Size(121, 47);
+            this.bOK.Size = new System.Drawing.Size(60, 24);
             this.bOK.TabIndex = 2;
             this.bOK.Text = "OK";
             this.bOK.UseVisualStyleBackColor = true;
@@ -71,14 +74,16 @@ namespace Iros._7th.Workshop {
             // fTextEdit
             // 
             this.AcceptButton = this.bOK;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.bCancel;
-            this.ClientSize = new System.Drawing.Size(957, 692);
+            this.ClientSize = new System.Drawing.Size(478, 360);
             this.Controls.Add(this.bOK);
             this.Controls.Add(this.txtText);
             this.Controls.Add(this.bCancel);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "fTextEdit";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "fTextEdit";
             this.ResumeLayout(false);
             this.PerformLayout();

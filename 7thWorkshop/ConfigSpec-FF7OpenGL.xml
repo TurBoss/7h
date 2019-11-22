@@ -115,8 +115,14 @@
       <Settings>post_source=shaders/Nvidia_ComplexMultiShader/ComplexMultiShader.post,frag_source=shaders/Nvidia_ComplexMultiShader/main.frag,vert_source=shaders/Nvidia_ComplexMultiShader/main.vert,yuv_source=shaders/Nvidia_ComplexMultiShader/yuv.frag</Settings>
     </Option>
   </Setting>
-  
-  
+
+  <Setting xsi:type="Checkbox">
+    <Group>Rendering</Group>
+    <Name>FPS Counter</Name>
+    <Description>Displays the Frames Per Second overlay in the top right corner of the screen.</Description>
+    <TrueSetting>show_fps=on</TrueSetting>
+    <FalseSetting>show_fps=off</FalseSetting>
+  </Setting>
   <Setting xsi:type="Checkbox">
     <Group>Rendering</Group>
     <Name>Vertical Sync</Name>
