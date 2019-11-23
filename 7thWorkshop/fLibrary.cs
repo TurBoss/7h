@@ -209,8 +209,25 @@ namespace Iros._7th.Workshop {
                 System.Threading.ThreadPool.QueueUserWorkItem(UpdateCheck, Sys.Settings.AutoUpdateSource);
 
             foreach (string parm in Environment.GetCommandLineArgs())
-                if (parm.StartsWith("iros://", StringComparison.InvariantCultureIgnoreCase)) {
+                if (parm.StartsWith("iros://", StringComparison.InvariantCultureIgnoreCase))
                     ProcessIrosLink(parm);
+                else if (parm.StartsWith("/OPENIRO:", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    string irofile = parm.Substring(9);
+                    string irofilenoext = System.IO.Path.GetFileNameWithoutExtension(irofile);
+                    Log.Write("Importing IRO from Windows " + irofile);
+                    try
+                    {
+                        fImportMod.ImportMod(irofile, irofilenoext, true, false);
+                    }
+                    catch (Exception ex)
+                    {
+                        Sys.Message(new WMessage() { Text = "Mod " + irofilenoext + " failed to import: " + ex.ToString() });
+                        continue;
+                    }
+                    Sys.Message(new WMessage() { Text = "Auto imported mod " + irofilenoext });
+                    MessageBox.Show("The mod " + irofilenoext + " has been added to your Library.","Import Mod from Windows");
+                    //TODO: Add an IRO "Unpack" option here
                 } else if (parm.StartsWith("/PROFILE:", StringComparison.InvariantCultureIgnoreCase)) {
                     Sys.Settings.CurrentProfile = parm.Substring(9);
                     Sys.ActiveProfile = Util.Deserialize<Profile>(ProfileFile);

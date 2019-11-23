@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -20,17 +21,42 @@ namespace Iros._7th.Workshop {
             InitializeComponent();
         }
 
+        [DllImport("shell32.dll")]
+        public static extern void SHChangeNotify(uint wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
+
         private bool WriteLinkReg(Microsoft.Win32.RegistryKey key) {
             string app = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            var iros = key.CreateSubKey("iros");
-            if (iros == null) return false;
-            var icon = key.CreateSubKey("DefaultIcon");
-            var shell = iros.CreateSubKey("shell");
+
+            //Create Prog_ID in Registry so we can associate file types
+            //TODO: Add additional subkeys to define an "Unpack" option for IROs
+            var progid = key.CreateSubKey("7thHeaven");
+            if (progid == null) return false;
+            var icon = progid.CreateSubKey("DefaultIcon");
+            var shell = progid.CreateSubKey("shell");
             var open = shell.CreateSubKey("open");
             var command = open.CreateSubKey("command");
-            iros.SetValue(String.Empty, "URL: Alert Protocol");
-            iros.SetValue("URL Protocol", String.Empty);
-            icon.SetValue(String.Empty, app + ",1");
+            progid.SetValue(String.Empty, "7thHeaven Mod File");
+            icon.SetValue(String.Empty, "\"" + app + "\"");
+            command.SetValue(String.Empty, "\"" + app + "\" /OPENIRO:\"%1\"");
+
+            //Associate .iro mod files with 7H's Prog_ID- .IRO extension
+            var iroext = key.CreateSubKey(".iro");
+            if (iroext == null) return false;
+            iroext.SetValue(String.Empty, "7thHeaven");
+
+            //Refresh Shell/Explorer so icon cache updates
+            //do this now because we don't care so much about assoc. URL if it fails
+            SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
+
+            //Associate iros:// URL with 7H
+            var iros = key.CreateSubKey("iros");
+            if (iros == null) return false;
+            icon = iros.CreateSubKey("DefaultIcon");
+            shell = iros.CreateSubKey("shell");
+            open = shell.CreateSubKey("open");
+            command = open.CreateSubKey("command");
+            iros.SetValue(String.Empty, "7H Catalog Subscription");
+            icon.SetValue(String.Empty, "\"" + app + "\"");
             command.SetValue(String.Empty, "\"" + app + "\" \"%1\"");
             return true;
         }

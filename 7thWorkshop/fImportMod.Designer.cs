@@ -35,6 +35,9 @@ namespace Iros._7th.Workshop {
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.bIro = new System.Windows.Forms.Button();
             this.txtIro = new System.Windows.Forms.TextBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.bBatch = new System.Windows.Forms.Button();
+            this.txtBatch = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.bOK = new System.Windows.Forms.Button();
             this.bCancel = new System.Windows.Forms.Button();
@@ -43,20 +46,17 @@ namespace Iros._7th.Workshop {
             this.flFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.ofIro = new System.Windows.Forms.OpenFileDialog();
             this.label2 = new System.Windows.Forms.Label();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.bBatch = new System.Windows.Forms.Button();
-            this.txtBatch = new System.Windows.Forms.TextBox();
             this.tcSource.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tcSource
             // 
-            this.tcSource.Controls.Add(this.tabPage1);
             this.tcSource.Controls.Add(this.tabPage2);
+            this.tcSource.Controls.Add(this.tabPage1);
             this.tcSource.Controls.Add(this.tabPage3);
             this.tcSource.Location = new System.Drawing.Point(13, 13);
             this.tcSource.Name = "tcSource";
@@ -127,6 +127,37 @@ namespace Iros._7th.Workshop {
             this.txtIro.Size = new System.Drawing.Size(318, 20);
             this.txtIro.TabIndex = 2;
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.bBatch);
+            this.tabPage3.Controls.Add(this.txtBatch);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(367, 52);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Batch import";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // bBatch
+            // 
+            this.bBatch.Location = new System.Drawing.Point(333, 16);
+            this.bBatch.Name = "bBatch";
+            this.bBatch.Size = new System.Drawing.Size(25, 20);
+            this.bBatch.TabIndex = 3;
+            this.bBatch.Text = "...";
+            this.bBatch.UseVisualStyleBackColor = true;
+            this.bBatch.Click += new System.EventHandler(this.bBatch_Click);
+            // 
+            // txtBatch
+            // 
+            this.txtBatch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.txtBatch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
+            this.txtBatch.Location = new System.Drawing.Point(9, 16);
+            this.txtBatch.Name = "txtBatch";
+            this.txtBatch.Size = new System.Drawing.Size(318, 20);
+            this.txtBatch.TabIndex = 2;
+            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.bOK);
@@ -193,37 +224,6 @@ namespace Iros._7th.Workshop {
             this.label2.TabIndex = 4;
             this.label2.Text = "The selected mod file(s) will be copied into the library folder.";
             // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.bBatch);
-            this.tabPage3.Controls.Add(this.txtBatch);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(367, 52);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Batch import";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // bBatch
-            // 
-            this.bBatch.Location = new System.Drawing.Point(333, 16);
-            this.bBatch.Name = "bBatch";
-            this.bBatch.Size = new System.Drawing.Size(25, 20);
-            this.bBatch.TabIndex = 3;
-            this.bBatch.Text = "...";
-            this.bBatch.UseVisualStyleBackColor = true;
-            this.bBatch.Click += new System.EventHandler(this.bBatch_Click);
-            // 
-            // txtBatch
-            // 
-            this.txtBatch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.txtBatch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
-            this.txtBatch.Location = new System.Drawing.Point(9, 16);
-            this.txtBatch.Name = "txtBatch";
-            this.txtBatch.Size = new System.Drawing.Size(318, 20);
-            this.txtBatch.TabIndex = 2;
-            // 
             // fImportMod
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -245,9 +245,9 @@ namespace Iros._7th.Workshop {
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            this.panel1.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
