@@ -35,6 +35,8 @@ namespace SeventhHeavenUI
 
             ViewModel = new MainWindowViewModel();
             this.DataContext = ViewModel;
+
+            ctrlMyMods.SetDataContext(ViewModel.ModsViewModel);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -114,8 +116,7 @@ namespace SeventhHeavenUI
                 State = WindowState
             };
 
-            ViewModel.SaveProfile();
-            Sys.Save();
+            ViewModel.CleanUp();
         }
     }
 }

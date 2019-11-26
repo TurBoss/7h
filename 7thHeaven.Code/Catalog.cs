@@ -60,6 +60,7 @@ namespace Iros._7th.Workshop {
         public List<ModPatch> Patches { get; set; }
         [System.Xml.Serialization.XmlElement("Requirement")]
         public List<ModRequirement> Requirements { get; set; }
+        public string Category { get; set; }
 
         public IEnumerable<ModPatch> GetPatchesFromTo(decimal from, decimal to) {
             foreach (var patch in Patches) {

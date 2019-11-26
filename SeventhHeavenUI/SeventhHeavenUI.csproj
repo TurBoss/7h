@@ -68,6 +68,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\AnimatedImage.cs" />
+    <Compile Include="UserControls\MyModsUserControl.xaml.cs">
+      <DependentUpon>MyModsUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\InstalledModViewModel.cs" />
+    <Compile Include="ViewModels\MyModsViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Page Include="MainWindow.xaml">
@@ -83,6 +89,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Resources\SharedStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\MyModsUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -140,8 +150,6 @@
       <Name>Updater</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UserControls\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

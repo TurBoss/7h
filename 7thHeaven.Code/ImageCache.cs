@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -125,6 +126,47 @@ namespace Iros._7th.Workshop {
             }
             if (img == null) img = _7thHeaven.Code.Workshop.Loader;
             return img;
+        }
+
+        /// <summary>
+        /// Returns absolute path to the cached image file if it exists.
+        /// Triggers the image download if it does not exist.
+        /// </summary>
+        /// <param name="url"> image download url</param>
+        /// <param name="modID"> ID of Mod for cached image to look up </param>
+        public string GetImagePath(string url, Guid modID)
+        {
+            if (String.IsNullOrWhiteSpace(url)) return null;
+
+            bool gotValue = false;
+            string pathToImage = null;
+            ImageCacheEntry e;
+
+            lock (_entries)
+            {
+                gotValue = _entries.TryGetValue(url, out e);
+            }
+
+            if (gotValue && e.File != null)
+            {
+                string file = Path.Combine(_folder, e.File);
+                if (File.Exists(file))
+                {
+                    pathToImage = file;
+                }
+
+                // re-download image if older than a day to keep cache updated
+                if (e.Updated < DateTime.Now.AddDays(-1))
+                {
+                    TriggerDownload(url, modID);
+                }
+            }
+            else
+            {
+                TriggerDownload(url, modID);
+            }
+
+            return pathToImage;
         }
     }
 }

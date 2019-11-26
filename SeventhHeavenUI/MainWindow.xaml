@@ -4,12 +4,30 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeventhHeavenUI"
+        xmlns:ctrl="clr-namespace:SeventhHeaven.UserControls"
+        xmlns:cls="clr-namespace:SeventhHeaven.Classes"
         mc:Ignorable="d"
         Title="{Binding WindowTitle, FallbackValue='7th Heaven v2.0.0 - Ultimate Mod Manager for Final Fantasy 7 [Current Loaded Profile]'}"
         Style="{StaticResource MainWindowStyle}"
         Loaded="Window_Loaded"
         Closing="Window_Closing"
         Height="450" Width="800">
+    <Window.Resources>
+        <Style x:Key="ModInfoLabelStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="5,0,0,1"/>
+            <Setter Property="FontWeight" Value="DemiBold"/>
+            <Setter Property="VerticalAlignment" Value="Bottom"/>
+        </Style>
+
+        <Style x:Key="ModInfoDetailsStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ModInfoLabelStyle}">
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Padding" Value="0,0,0,0"/>
+            <Setter Property="FontSize" Value="11"/>
+        </Style>
+    </Window.Resources>
+
     <Grid Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -30,11 +48,49 @@
         <GroupBox Header=" Mod Info "
                   Grid.Row="1"
                   Margin="10,5,5,5">
-            <Grid>
+            <Grid x:Name="gridModInfo" Margin="0,0,0,3">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
+
+
+                <WrapPanel Margin="3,5,3,0">
+                    <TextBlock Text="Author:" Style="{StaticResource ModInfoLabelStyle}"/>
+                    <TextBlock Text="{Binding PreviewModAuthor, FallbackValue='FF7ModDude'}" 
+                               Style="{StaticResource ModInfoDetailsStyle}"/>
+                </WrapPanel>
+                
+                <WrapPanel Margin="3,5,3,0" Grid.Row="1">
+                    <TextBlock Text="Name:" Style="{StaticResource ModInfoLabelStyle}"/>
+                    <TextBlock Text="{Binding PreviewModName, FallbackValue='My Cool New Mod With a Long name look at me'}" 
+                               Style="{StaticResource ModInfoDetailsStyle}"/>
+                </WrapPanel>
+
+                <WrapPanel Margin="3,10,3,0" Grid.Row="2">
+                    <TextBlock Text="Description:" Style="{StaticResource ModInfoLabelStyle}"/>
+                    <TextBlock Text="{Binding PreviewModDescription, FallbackValue='This is a short description of my cool new mod and it does these things like a and b and even x and y.'}" 
+                               Style="{StaticResource ModInfoDetailsStyle}"/>
+                </WrapPanel>
+
+                <WrapPanel Margin="3,5,3,0" Grid.Row="3">
+                    <TextBlock Text="Link:" Style="{StaticResource ModInfoLabelStyle}"/>
+                    <TextBlock Text="{Binding PreviewModLink, FallbackValue='http://myforums.com/ff7/super'}" 
+                               Style="{StaticResource ModInfoDetailsStyle}"
+                               Foreground="{StaticResource PrimaryControlPressed}"
+                               TextDecorations="Underline"/>
+                </WrapPanel>
+                    
+                <cls:AnimatedImage Grid.Row="4"
+                                   Margin="3,3,3,0"
+                                   HorizontalAlignment="Stretch"
+                                   VerticalAlignment="Stretch"
+                                   Stretch="UniformToFill"
+                                   MinHeight="128"
+                                   cls:UriSource="{Binding PreviewModImageSource}"/>
             </Grid>
         </GroupBox>
 
@@ -43,7 +99,7 @@
                     Grid.Column="1"
                     Margin="5">
             <TabItem Header="My Mods" Padding="10,0,10,0">
-                
+                <ctrl:MyModsUserControl x:Name="ctrlMyMods" />
             </TabItem>
             <TabItem Header="Browse Catalog">
 
@@ -56,7 +112,7 @@
                 Margin="0,5,5,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"/>
-        
+
         <StatusBar Grid.Row="2" Grid.ColumnSpan="2" Margin="0,5,0,0">
             <StatusBarItem>
                 <TextBlock x:Name="txtStatusMessage"

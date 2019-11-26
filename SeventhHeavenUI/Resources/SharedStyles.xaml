@@ -47,6 +47,7 @@
                     <Border x:Name="bd" BorderThickness="0" Background="{TemplateBinding Background}">
                         <TextBlock x:Name="txtContent"
                                    Text="{TemplateBinding Content}"
+                                   TextAlignment="Center"
                                    Foreground="{TemplateBinding Foreground}"
                                    FontSize="{TemplateBinding FontSize}"
                                    Padding="{TemplateBinding Padding}"/>
