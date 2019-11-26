@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
 namespace Iros._7th.Workshop {
 
@@ -32,7 +33,7 @@ namespace Iros._7th.Workshop {
         public int Y { get; set; }
         public int W { get; set; }
         public int H { get; set; }
-        public System.Windows.Forms.FormWindowState State { get; set; }
+        public WindowState State { get; set; }
     }
 
     public class Subscription {

@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -54,6 +55,14 @@ namespace Iros._7th.Workshop {
         public static Settings Settings { get; private set; }
         public static string _7HFolder { get; private set; }
         public static string SysFolder { get; private set; }
+
+        public static string ProfileFile
+        {
+            get
+            {
+                return Path.Combine(SysFolder, "profiles", $"{Settings.CurrentProfile}.xml");
+            }
+        }
         public static Catalog Catalog { get; set; }
         public static Library Library { get; set; }
         public static ImageCache ImageCache { get; private set; }
