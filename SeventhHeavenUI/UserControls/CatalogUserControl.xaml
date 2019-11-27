@@ -1,0 +1,71 @@
+﻿<UserControl x:Class="SeventhHeaven.UserControls.CatalogUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SeventhHeaven.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+
+        <Style TargetType="{x:Type ListViewItem}">
+            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </Style>
+
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+
+        <ListView x:Name="lstCatalogMods" ItemsSource="{Binding CatalogModList}" SelectionChanged="lstCatalogMods_SelectionChanged">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" Width="250" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Author" Width="100" DisplayMemberBinding="{Binding Author}"/>
+                    <GridViewColumn Header="Size" Width="60" DisplayMemberBinding="{Binding DownloadSize}"/>
+                    <GridViewColumn Header="Version" Width="60" DisplayMemberBinding="{Binding Version}"/>
+                    <GridViewColumn Header="Release Date" Width="100" DisplayMemberBinding="{Binding ReleaseDate}"/>
+                    <GridViewColumn Header="Category" Width="100" DisplayMemberBinding="{Binding Category}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <StackPanel Grid.Column="1"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Right">
+
+            <Button x:Name="btnRefresh" 
+                    Content="Refresh"
+                    Margin="0,0,0,10"/>
+
+            <Button x:Name="btnDownload" 
+                    Content="Download"/>
+        </StackPanel>
+
+        <ListView x:Name="lstDownloads" 
+                  Grid.Row="1" 
+                  Margin="0,5,0,0"
+                  ItemsSource="{Binding DownloadList, UpdateSourceTrigger=PropertyChanged}"
+                  MinHeight="100">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Item" Width="350" DisplayMemberBinding="{Binding ItemName}"/>
+                    <GridViewColumn Header="Progress" Width="200">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <ProgressBar Value="{Binding Progress}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Speed" Width="100" DisplayMemberBinding="{Binding DownloadSpeed}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</UserControl>

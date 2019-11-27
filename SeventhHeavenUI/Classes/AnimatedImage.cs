@@ -77,6 +77,7 @@ namespace SeventhHeaven.Classes
                 source.BeginInit();
                 source.UriSource = e.NewValue as Uri;
                 source.CacheOption = BitmapCacheOption.OnLoad;
+                source.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
                 source.EndInit();
             }
             else if (e.NewValue is BitmapImage)

@@ -30,6 +30,9 @@ namespace SeventhHeavenUI.ViewModels
 
         public MyModsViewModel ModsViewModel { get; set; }
 
+        public CatalogViewModel CatalogViewModel { get; set; }
+
+
         public string WindowTitle
         {
             get
@@ -140,6 +143,14 @@ namespace SeventhHeavenUI.ViewModels
 
             ModsViewModel = new MyModsViewModel();
             ModsViewModel.SelectedModChanged += ModsViewModel_SelectedModChanged;
+
+            CatalogViewModel = new CatalogViewModel();
+            CatalogViewModel.SelectedModChanged += CatalogViewModel_SelectedModChanged;
+        }
+
+        private void CatalogViewModel_SelectedModChanged(object sender, InstalledModViewModel selected)
+        {
+            UpdateModPreviewInfo(selected);
         }
 
         private void ModsViewModel_SelectedModChanged(object sender, InstalledModViewModel selected)
@@ -153,7 +164,9 @@ namespace SeventhHeavenUI.ViewModels
             PreviewModName = selected.Name;
             PreviewModDescription = selected.InstallInfo.CachedDetails.Description;
             PreviewModLink = selected.InstallInfo.CachedDetails.Link;
-            PreviewModImageSource = new Uri(Sys.ImageCache.GetImagePath(selected.InstallInfo.CachedDetails.LatestVersion.PreviewImage, selected.InstallInfo.CachedDetails.ID));
+
+            string pathToImage = Sys.ImageCache.GetImagePath(selected.InstallInfo.CachedDetails.LatestVersion.PreviewImage, selected.InstallInfo.CachedDetails.ID);
+            PreviewModImageSource = pathToImage == null ? null : new Uri(pathToImage);
         }
 
         public void InitViewModel()
@@ -161,6 +174,9 @@ namespace SeventhHeavenUI.ViewModels
             StatusMessage = $"{App.GetAppName()} started: app v{App.GetAppVersion().ToString()} - dll v{Sys.Version.ToString()}";
 
             MegaIros.Logger = Logger.Info;
+
+            // Set the Downloads Interface so Sys can use Download methods defined in the CatalogViewModel
+            Sys.Downloads = CatalogViewModel;
 
             CopyDllAndUpdaterExe();
 
@@ -186,6 +202,10 @@ namespace SeventhHeavenUI.ViewModels
             ModsViewModel.ModList.Clear();
             ModsViewModel.ModList = null;
             ModsViewModel = null;
+
+            CatalogViewModel.SelectedModChanged -= CatalogViewModel_SelectedModChanged;
+            CatalogViewModel.CatalogModList.Clear();
+            CatalogViewModel = null;
         }
 
         private void InitLoaderContext()

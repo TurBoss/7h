@@ -22,40 +22,55 @@ namespace Iros._7th.Workshop {
     }
 
     public class ImageCache {
+
         private string _folder;
         private Dictionary<string, ImageCacheEntry> _entries;
         private HashSet<string> _usedFiles;
 
+        private object _entryLock = new object();
+
         public ImageCache(string folder) {
-            System.IO.Directory.CreateDirectory(folder);
-            string file = System.IO.Path.Combine(folder, "cache.xml");
-            if (System.IO.File.Exists(file)) {
+            Directory.CreateDirectory(folder);
+            string file = Path.Combine(folder, "cache.xml");
+            
+            if (File.Exists(file)) {
                 ImageCacheData data = Util.Deserialize<ImageCacheData>(file);
                 _entries = data.Entries.ToDictionary(e => e.Url, e => e, StringComparer.InvariantCultureIgnoreCase);
-            } else
+            } 
+            else
+            {
                 _entries = new Dictionary<string, ImageCacheEntry>(StringComparer.InvariantCultureIgnoreCase);
+            }
+
             _usedFiles = new HashSet<string>(_entries.Select(e => e.Value.File), StringComparer.InvariantCultureIgnoreCase);
             _folder = folder;
         }
 
         public void Save() {
-            string file = System.IO.Path.Combine(_folder, "cache.xml");
-            lock (_entries) {
-                var data = new ImageCacheData() { Entries = _entries.Values.ToList() };
-                using (var fs = new System.IO.FileStream(file, System.IO.FileMode.Create))
-                    Util.Serialize(data, fs);
+            string file = Path.Combine(_folder, "cache.xml");
+            ImageCacheData data;
+
+            lock (_entryLock) {
+                data = new ImageCacheData() { Entries = _entries.Values.ToList() };
+            }
+
+            using (var fs = new FileStream(file, FileMode.Create))
+            {
+                Util.Serialize(data, fs);
             }
         }
 
         private void TriggerDownload(string url, Guid modID) {
             ImageCacheEntry e;
-            lock (_entries) {
+
+            lock (_entryLock) {
                 if (!_entries.TryGetValue(url, out e)) {
                     e = new ImageCacheEntry();
                     e.Url = url;
                     _entries[url] = e;
                 }
             }
+
             e.Updated = DateTime.Now;
             string file = e.File;
             if (String.IsNullOrEmpty(file)) {
@@ -67,31 +82,46 @@ namespace Iros._7th.Workshop {
                 } while(_usedFiles.Contains(file));
                 _usedFiles.Add(file);
             }
-            Sys.Downloads.Download("iros://Url/" + url.Replace("://", "$"), System.IO.Path.Combine(_folder, file + ".tmp"), "Downloading preview image", new Install.InstallProcedureCallback(ae => {
+
+            Sys.Downloads.Download("iros://Url/" + url.Replace("://", "$"), Path.Combine(_folder, file + ".tmp"), "Downloading preview image", new Install.InstallProcedureCallback(ae => {
                 if (ae.Error == null) {
-                    lock (_entries) {
+                    lock (_entryLock) {
                         e.File = file;
-                        string f = System.IO.Path.Combine(_folder, file);
-                        if (System.IO.File.Exists(f)) System.IO.File.Delete(f);
-                        System.IO.File.Move(System.IO.Path.Combine(_folder, file + ".tmp"), f);
                     }
+
+                    try
+                    {
+                        string f = Path.Combine(_folder, file);
+
+                        if (File.Exists(f)) File.Delete(f);
+
+                        File.Move(Path.Combine(_folder, file + ".tmp"), f);
+                    }
+                    catch
+                    {
+                        Sys.Message(new WMessage() { Text = "failed to get preview image" });
+                    }
+
                 } else {
                     System.Diagnostics.Debug.WriteLine("ImageCache:Download error: " + ae.Error.ToString());
                 }
+
                 Sys.Ping(modID);
             }), null);
         }
 
         public void InsertManual(string url, byte[] data) {
             ImageCacheEntry e;
-            lock (_entries) {
+            lock (_entryLock) {
                 if (!_entries.TryGetValue(url, out e)) {
                     e = new ImageCacheEntry();
                     e.Url = url;
                     _entries[url] = e;
                 }
             }
+
             e.Updated = DateTime.Now;
+
             if (String.IsNullOrWhiteSpace(e.File)) {
                 string prefix = url.GetHashCode().ToString("x");
                 int count = 0;
@@ -101,14 +131,15 @@ namespace Iros._7th.Workshop {
                 } while (_usedFiles.Contains(e.File));
                 _usedFiles.Add(e.File);
             }
-            System.IO.File.WriteAllBytes(System.IO.Path.Combine(_folder, e.File), data);
+
+            File.WriteAllBytes(Path.Combine(_folder, e.File), data);
         }
 
         public System.Drawing.Image Get(string url, Guid modID) {
             if (String.IsNullOrWhiteSpace(url)) return null;
             System.Drawing.Image img = null;
             ImageCacheEntry e;
-            lock (_entries) {
+            lock (_entryLock) {
                 if (_entries.TryGetValue(url, out e) && e.File != null) {
                     string file = System.IO.Path.Combine(_folder, e.File);
                     if (System.IO.File.Exists(file)) {
@@ -142,7 +173,7 @@ namespace Iros._7th.Workshop {
             string pathToImage = null;
             ImageCacheEntry e;
 
-            lock (_entries)
+            lock (_entryLock)
             {
                 gotValue = _entries.TryGetValue(url, out e);
             }

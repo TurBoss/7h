@@ -99,10 +99,10 @@
                     Grid.Column="1"
                     Margin="5">
             <TabItem Header="My Mods" Padding="10,0,10,0">
-                <ctrl:MyModsUserControl x:Name="ctrlMyMods" />
+                <ctrl:MyModsUserControl x:Name="ctrlMyMods"/>
             </TabItem>
             <TabItem Header="Browse Catalog">
-
+                <ctrl:CatalogUserControl x:Name="ctrlCatalog"/>
             </TabItem>
         </TabControl>
 

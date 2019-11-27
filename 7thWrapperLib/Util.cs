@@ -16,7 +16,9 @@ namespace Iros._7th {
         }
         public static T Deserialize<T>(string file) {
             using (var fs = new System.IO.FileStream(file, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+            {
                 return Deserialize<T>(fs);
+            }
         }
         public static T DeserializeString<T>(string data) {
             var ser = new System.Xml.Serialization.XmlSerializer(typeof(T));

@@ -192,7 +192,8 @@
     </Style>
 
     <Style TargetType="{x:Type TabControl}">
-        <Setter Property="Background" Value="{DynamicResource SecondaryAppBackground}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SecondaryAppBackground}"/>
     </Style>
     
     <Style TargetType="{x:Type TabItem}">

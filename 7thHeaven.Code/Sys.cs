@@ -96,14 +96,14 @@ namespace Iros._7th.Workshop {
             ModStatus st;
             _statuses.TryGetValue(modID, out st);
             ModStatusEventArgs e = new ModStatusEventArgs() { ModID = modID, Status = st, OldStatus = st };
-            StatusChanged(null, e);
+            StatusChanged?.Invoke(null, e);
         }
         public static void SetStatus(Guid modID, ModStatus status) {
             ModStatus olds;
             _statuses.TryGetValue(modID, out olds);
             _statuses[modID] = status;
             ModStatusEventArgs e = new ModStatusEventArgs() { ModID = modID, Status = status, OldStatus = olds };
-            StatusChanged(null, e);
+            StatusChanged?.Invoke(null, e);
         }
         public static void RevertStatus(Guid modID) {
             var lib = Library.GetItem(modID);
