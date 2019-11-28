@@ -41,6 +41,7 @@
                     HorizontalAlignment="Right">
 
             <Button x:Name="btnRefresh" 
+                    Click="btnRefresh_Click"
                     Content="Refresh"
                     Margin="0,0,0,10"/>
 
@@ -52,18 +53,19 @@
                   Grid.Row="1" 
                   Margin="0,5,0,0"
                   ItemsSource="{Binding DownloadList, UpdateSourceTrigger=PropertyChanged}"
-                  MinHeight="100">
+                  MinHeight="100"
+                  MaxHeight="150">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Item" Width="350" DisplayMemberBinding="{Binding ItemName}"/>
-                    <GridViewColumn Header="Progress" Width="200">
+                    <GridViewColumn Header="Item" Width="350" DisplayMemberBinding="{Binding ItemName, FallbackValue='item text'}"/>
+                    <GridViewColumn x:Name="colProgress" Header="Progress" Width="200">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <ProgressBar Value="{Binding Progress}"/>
+                                <ProgressBar Value="{Binding PercentComplete, FallbackValue='50'}" Width="{Binding ElementName=colProgress, Path=ActualWidth}" Height="10"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Speed" Width="100" DisplayMemberBinding="{Binding DownloadSpeed}"/>
+                    <GridViewColumn Header="Speed" Width="100" DisplayMemberBinding="{Binding DownloadSpeed, FallbackValue='32.5 kb/s'}"/>
                 </GridView>
             </ListView.View>
         </ListView>

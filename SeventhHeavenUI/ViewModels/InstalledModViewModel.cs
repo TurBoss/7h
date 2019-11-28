@@ -24,6 +24,9 @@ namespace SeventhHeavenUI.ViewModels
         private ProfileItem _activeModInfo;
         private InstalledItem _installInfo;
 
+        public delegate void OnActivationChanged(object sender, InstalledModViewModel selected);
+        public event OnActivationChanged ActivationChanged;
+
 
         public string Name
         {
@@ -128,6 +131,10 @@ namespace SeventhHeavenUI.ViewModels
             get
             {
                 return ActiveModInfo != null;
+            }
+            set
+            {
+                ActivationChanged?.Invoke(this, this);
             }
         }
 

@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SeventhHeavenUI.ViewModels
 {
@@ -71,7 +72,9 @@ namespace SeventhHeavenUI.ViewModels
 
                 if (mod != null)
                 {
-                    allMods.Add(new InstalledModViewModel(mod, item));
+                    InstalledModViewModel activeMod = new InstalledModViewModel(mod, item);
+                    activeMod.ActivationChanged += ActiveMod_ActivationChanged;
+                    allMods.Add(activeMod);
                 }
             }
 
@@ -81,11 +84,19 @@ namespace SeventhHeavenUI.ViewModels
 
                 if (!isActive)
                 {
-                    allMods.Add(new InstalledModViewModel(item, null));
+                    InstalledModViewModel installedMod = new InstalledModViewModel(item, null);
+                    installedMod.ActivationChanged += ActiveMod_ActivationChanged;
+                    allMods.Add(installedMod);
                 }
             }
 
             ModList = allMods;
+        }
+
+        private void ActiveMod_ActivationChanged(object sender, InstalledModViewModel selected)
+        {
+            ToggleActivateMod(selected.InstallInfo.ModID);
+            ReloadModList();
         }
 
         /// <summary>
@@ -135,6 +146,153 @@ namespace SeventhHeavenUI.ViewModels
             }
 
             return selected;
+        }
+
+        internal void ToggleActivateMod(Guid modID)
+        {
+            if (String.IsNullOrWhiteSpace(Sys.Settings.CurrentProfile)) return;
+
+            ProfileItem item = Sys.ActiveProfile.Items.Find(i => i.ModID.Equals(modID));
+
+            // item == null - activate mod for current profile
+            // item != null - deactivate mod for current profile
+
+            if (item == null)
+            {
+                HashSet<Guid> examined = new HashSet<Guid>();
+                List<InstalledItem> pulledIn = new List<InstalledItem>();
+                List<ProfileItem> remove = new List<ProfileItem>();
+                List<string> missing = new List<string>();
+                List<InstalledItem> badVersion = new List<InstalledItem>();
+                Stack<InstalledItem> toExamine = new Stack<InstalledItem>();
+                toExamine.Push(Sys.Library.GetItem(modID));
+
+                while (toExamine.Any())
+                {
+                    examined.Add(toExamine.Peek().ModID);
+                    var info = MainWindowViewModel.GetModInfo(toExamine.Pop());
+
+                    if (info == null)
+                    {
+                        continue;
+                    }
+
+
+                    foreach (var req in info.Compatibility.Requires)
+                    {
+                        if (!examined.Contains(req.ModID))
+                        {
+                            var inst = Sys.Library.GetItem(req.ModID);
+                            if (inst == null)
+                                missing.Add(req.Description);
+                            else if (req.Versions.Any() && !req.Versions.Contains(inst.Versions.Last().VersionDetails.Version))
+                                badVersion.Add(inst);
+                            else
+                            {
+                                if (Sys.ActiveProfile.Items.Find(pi => pi.ModID.Equals(req.ModID)) == null)
+                                    pulledIn.Add(inst);
+                                toExamine.Push(inst);
+                            }
+                        }
+                    }
+
+                    foreach (var forbid in info.Compatibility.Forbids)
+                    {
+                        if (!examined.Contains(forbid.ModID))
+                        {
+                            examined.Add(forbid.ModID);
+                            var pItem = Sys.ActiveProfile.Items.Find(i => i.ModID.Equals(forbid.ModID));
+                            if (pItem != null)
+                            {
+                                if (!forbid.Versions.Any() || forbid.Versions.Contains(Sys.Library.GetItem(pItem.ModID).LatestInstalled.VersionDetails.Version))
+                                {
+                                    remove.Add(pItem);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                foreach (var active in Sys.ActiveProfile.Items.Except(remove))
+                {
+                    var info = MainWindowViewModel.GetModInfo(Sys.Library.GetItem(active.ModID));
+                    if (info != null)
+                    {
+                        foreach (Guid mID in pulledIn.Select(ii => ii.ModID).Concat(new[] { modID }))
+                        {
+                            var forbid = info.Compatibility.Forbids.Find(f => f.ModID.Equals(mID));
+
+                            if (forbid == null)
+                            {
+                                continue;
+                            }
+
+                            if (!forbid.Versions.Any() || forbid.Versions.Contains(Sys.Library.GetItem(mID).LatestInstalled.VersionDetails.Version))
+                            {
+                                if (mID.Equals(modID))
+                                    MessageBox.Show(String.Format(MainWindowViewModel._forbidMain, Sys.Library.GetItem(active.ModID).CachedDetails.Name));
+                                else
+                                    MessageBox.Show(String.Format(MainWindowViewModel._forbidDependent, Sys.Library.GetItem(mID).CachedDetails.Name, Sys.Library.GetItem(active.ModID).CachedDetails.Name));
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                if (missing.Any())
+                {
+                    MessageBox.Show(String.Format(MainWindowViewModel._msgReqMissing, String.Join("\n", missing)));
+                }
+                if (badVersion.Any())
+                {
+                    MessageBox.Show(String.Format(MainWindowViewModel._msgBadVer, String.Join("\n", badVersion.Select(ii => ii.CachedDetails.Name))));
+                }
+                if (pulledIn.Any())
+                {
+                    MessageBox.Show(String.Format(MainWindowViewModel._msgRequired, String.Join("\n", pulledIn.Select(ii => ii.CachedDetails.Name))));
+                }
+                if (remove.Any())
+                {
+                    MessageBox.Show(String.Format(MainWindowViewModel._msgRemove, String.Join("\n", remove.Select(pi => Sys.Library.GetItem(pi.ModID).CachedDetails.Name))));
+                }
+
+                DoActivate(modID);
+
+                foreach (InstalledItem req in pulledIn)
+                {
+                    DoActivate(req.ModID);
+                    Sys.Ping(req.ModID);
+                }
+                foreach (ProfileItem pi in remove)
+                {
+                    DoDeactivate(pi);
+                    Sys.Ping(pi.ModID);
+                }
+
+                MainWindowViewModel.SanityCheckSettings();
+            }
+            else
+            {
+                DoDeactivate(item);
+            }
+
+            Sys.Ping(modID);
+        }
+
+        private void DoDeactivate(ProfileItem item)
+        {
+            Sys.ActiveProfile.Items.Remove(item);
+            ReloadActiveMods(true);
+        }
+
+        private void DoActivate(Guid modID)
+        {
+            if (!MainWindowViewModel.CheckAllowedActivate(modID)) return;
+
+            var item = new ProfileItem() { ModID = modID, Settings = new List<ProfileSetting>() };
+            Sys.ActiveProfile.Items.Add(item);
+
+            ReloadActiveMods(true);
         }
     }
 }

@@ -253,4 +253,67 @@
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
     </Style>
 
+    <Style TargetType="{x:Type ListView}">
+        <Setter Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
+    </Style>
+
+    <Style TargetType="{x:Type TextBox}">
+        <Setter Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
+    </Style>
+
+    <Style TargetType="{x:Type ContextMenu}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Grid.IsSharedSizeScope" Value="true" />
+        <Setter Property="HasDropShadow" Value="False" />
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContextMenu}">
+                    <Border x:Name="Border" Background="{DynamicResource PrimaryControlBackground}" BorderBrush="{DynamicResource PrimaryControlDisabledForeground}" BorderThickness="1">
+                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type MenuItem}">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="MenuItem">
+                    <Grid>
+                        <Border x:Name="bd" Background="{DynamicResource PrimaryControlBackground}" Padding="5" BorderThickness="0">
+                            <ContentPresenter Content="{TemplateBinding Header}" TextElement.FontSize="{TemplateBinding FontSize}" Margin="3,0,0,0"/>
+                        </Border>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource PrimaryControlPressed}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ContextMenuSeperator" TargetType="{x:Type MenuItem}">
+        <Setter Property="IsEnabled" Value="False"/>
+        <Setter Property="IsHitTestVisible" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="MenuItem">
+                    <Rectangle HorizontalAlignment="Stretch" Fill="{DynamicResource PrimaryControlDisabledForeground}" Height="1" Focusable="False" IsEnabled="False" IsHitTestVisible="False"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

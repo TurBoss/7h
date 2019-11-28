@@ -23,7 +23,12 @@ namespace SeventhHeaven.UserControls
 
         private void lstCatalogMods_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ViewModel.RaiseSelectedModChanged(sender, (lstCatalogMods.SelectedItem as InstalledModViewModel));
+            ViewModel.RaiseSelectedModChanged(sender, (lstCatalogMods.SelectedItem as CatalogModItemViewModel));
+        }
+
+        private void btnRefresh_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ViewModel.ReloadModList();
         }
     }
 }

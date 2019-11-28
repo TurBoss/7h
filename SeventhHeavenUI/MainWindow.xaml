@@ -7,7 +7,7 @@
         xmlns:ctrl="clr-namespace:SeventhHeaven.UserControls"
         xmlns:cls="clr-namespace:SeventhHeaven.Classes"
         mc:Ignorable="d"
-        Title="{Binding WindowTitle, FallbackValue='7th Heaven v2.0.0 - Ultimate Mod Manager for Final Fantasy 7 [Current Loaded Profile]'}"
+        Title="{Binding WindowTitle, FallbackValue='7th Heaven v2.0.0 - Mod Manager for Final Fantasy 7 [Current Loaded Profile]'}"
         Style="{StaticResource MainWindowStyle}"
         Loaded="Window_Loaded"
         Closing="Window_Closing"
@@ -38,66 +38,137 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="2.25*"/>
         </Grid.ColumnDefinitions>
+        
+        
 
-        <WrapPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,0,0">
-            <Button x:Name="btnPlay" Content="Play" Margin="5,0,5,0" Style="{StaticResource ButtonWithToggleDownArrow}"/>
-            <Button x:Name="btnSettings" Content="Settings" Margin="5,0,5,0" Style="{StaticResource ButtonWithDownArrow}"/>
-            <Button x:Name="btnTools" Content="Tools" Margin="5,0,5,0" Style="{StaticResource ButtonWithDownArrow}"/>
+        <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5,0,0">
+            <Button x:Name="btnPlay" Content="Play" Margin="5,0,5,0" Style="{StaticResource ButtonWithToggleDownArrow}" Click="btnPlay_Click"/>
+            <Button x:Name="btnSettings" Content="Settings" Margin="5,0,5,0" Style="{StaticResource ButtonWithDownArrow}" ContextMenuService.Placement="Bottom" Click="btnSettings_Click">
+                <Button.ContextMenu>
+                    <ContextMenu x:Name="menuSettings" Closed="menuSettings_Closed">
+                        <MenuItem x:Name="menuItemGeneralSettings" Header="General Settings ..."/>
+                        <MenuItem x:Name="menuItemAaliSettings" Header="Aali Driver Settings ..."/>
+                        <MenuItem x:Name="menuItemThemeSettings" Header="Change Color Scheme ..."/>
+                        <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
+                        <MenuItem x:Name="menuUpdateCatalog" Header="Update Catalog ..."/>
+                        <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
+                        <MenuItem x:Name="menuHelp" Header="Help ..."/>
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
+            <Button x:Name="btnTools" Content="Tools" Margin="5,0,5,0" Style="{StaticResource ButtonWithDownArrow}" ContextMenuService.Placement="Bottom" Click="btnTools_Click">
+                <Button.ContextMenu>
+                    <ContextMenu x:Name="menuTools" PlacementTarget="{Binding ElementName=btnTools}" Placement="Bottom" Closed="menuTools_Closed">
+                        <MenuItem x:Name="menuItemIroCreation" Header="IRO Creation Tool"/>
+                        <MenuItem x:Name="menuItemChunkTool" Header="Chunk Tool"/>
+                        <MenuItem x:Name="menuItemCatalogCreation" Header="Catalog Creation Tool"/>
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
         </WrapPanel>
 
         <GroupBox Header=" Mod Info "
                   Grid.Row="1"
-                  Margin="10,5,5,5">
-            <Grid x:Name="gridModInfo" Margin="0,0,0,3">
+                  Margin="5,-8,3,1">
+            <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
+                <ScrollViewer Grid.Row="0">
+                    <Grid x:Name="gridModInfo" Margin="0,0,0,3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
 
-                <WrapPanel Margin="3,5,3,0">
-                    <TextBlock Text="Author:" Style="{StaticResource ModInfoLabelStyle}"/>
-                    <TextBlock Text="{Binding PreviewModAuthor, FallbackValue='FF7ModDude'}" 
-                               Style="{StaticResource ModInfoDetailsStyle}"/>
-                </WrapPanel>
-                
-                <WrapPanel Margin="3,5,3,0" Grid.Row="1">
-                    <TextBlock Text="Name:" Style="{StaticResource ModInfoLabelStyle}"/>
-                    <TextBlock Text="{Binding PreviewModName, FallbackValue='My Cool New Mod With a Long name look at me'}" 
-                               Style="{StaticResource ModInfoDetailsStyle}"/>
-                </WrapPanel>
 
-                <WrapPanel Margin="3,10,3,0" Grid.Row="2">
-                    <TextBlock Text="Description:" Style="{StaticResource ModInfoLabelStyle}"/>
-                    <TextBlock Text="{Binding PreviewModDescription, FallbackValue='This is a short description of my cool new mod and it does these things like a and b and even x and y.'}" 
+                        <WrapPanel Margin="3,5,3,0">
+                            <TextBlock Text="Author:" Style="{StaticResource ModInfoLabelStyle}"/>
+                            <TextBlock Text="{Binding PreviewModAuthor, FallbackValue='FF7ModDude'}" 
                                Style="{StaticResource ModInfoDetailsStyle}"/>
-                </WrapPanel>
+                        </WrapPanel>
 
-                <WrapPanel Margin="3,5,3,0" Grid.Row="3">
-                    <TextBlock Text="Link:" Style="{StaticResource ModInfoLabelStyle}"/>
-                    <TextBlock Text="{Binding PreviewModLink, FallbackValue='http://myforums.com/ff7/super'}" 
+                        <WrapPanel Margin="3,3,3,0" Grid.Row="1">
+                            <TextBlock Text="Name:" Style="{StaticResource ModInfoLabelStyle}"/>
+                            <TextBlock Text="{Binding PreviewModName, FallbackValue='My Cool New Mod With a Long name look at me'}" 
+                               Style="{StaticResource ModInfoDetailsStyle}"/>
+                        </WrapPanel>
+
+                        <WrapPanel Margin="3,6,3,0" Grid.Row="2">
+                            <TextBlock Text="Version:" Style="{StaticResource ModInfoLabelStyle}"/>
+                            <TextBlock Text="{Binding PreviewModVersion, FallbackValue='v1.53'}" 
+                               Style="{StaticResource ModInfoDetailsStyle}"/>
+                        </WrapPanel>
+
+                        <WrapPanel Margin="3,0,3,0" Grid.Row="3">
+                            <TextBlock Text="Release Date:" Style="{StaticResource ModInfoLabelStyle}"/>
+                            <TextBlock Text="{Binding PreviewModReleaseDate, FallbackValue='11/27/2019'}" 
+                               Style="{StaticResource ModInfoDetailsStyle}"/>
+                        </WrapPanel>
+
+                        <WrapPanel Margin="3,6,3,0" Grid.Row="4">
+                            <TextBlock Text="Category:" Style="{StaticResource ModInfoLabelStyle}"/>
+                            <TextBlock Text="{Binding PreviewModCategory, FallbackValue='Animatons'}" 
+                                       Style="{StaticResource ModInfoDetailsStyle}"/>
+                        </WrapPanel>
+
+                        <WrapPanel Margin="3,0,3,0" Grid.Row="5">
+                            <TextBlock Text="Description:" Style="{StaticResource ModInfoLabelStyle}"/>
+                            <TextBlock Text="{Binding PreviewModDescription, FallbackValue='This is a short description of my cool new mod and it does these things like a and b and even x and y.'}" 
+                               Style="{StaticResource ModInfoDetailsStyle}"/>
+                        </WrapPanel>
+
+                        <WrapPanel Margin="3,0,3,0" Grid.Row="6">
+                            <TextBlock Text="Link:" Style="{StaticResource ModInfoLabelStyle}"/>
+                            <TextBlock Text="{Binding PreviewModLink, FallbackValue='http://myforums.com/ff7/super'}" 
                                Style="{StaticResource ModInfoDetailsStyle}"
                                Foreground="{StaticResource PrimaryControlPressed}"
                                TextDecorations="Underline"/>
-                </WrapPanel>
-                    
-                <cls:AnimatedImage Grid.Row="4"
+                        </WrapPanel>
+
+                        <WrapPanel Margin="3,6,3,0" Grid.Row="7">
+                            <TextBlock x:Name="btnOpenModReadme"
+                                       Text="Open Readme" 
+                                       Style="{StaticResource ModInfoDetailsStyle}"
+                                       Foreground="{StaticResource PrimaryControlPressed}"
+                                       TextDecorations="Underline"/>
+                        </WrapPanel>
+
+
+                        <WrapPanel Margin="3,6,3,0" Grid.Row="8">
+                            <TextBlock Text="Release Notes:" Style="{StaticResource ModInfoLabelStyle}"/>
+                            <TextBlock Text="{Binding PreviewModReleaseNotes, FallbackValue='Some notes about this mod...'}" 
+                                       Style="{StaticResource ModInfoDetailsStyle}"/>
+                        </WrapPanel>
+                    </Grid>
+                </ScrollViewer>
+
+                <cls:AnimatedImage Grid.Row="1"
                                    Margin="3,3,3,0"
                                    HorizontalAlignment="Stretch"
                                    VerticalAlignment="Stretch"
                                    Stretch="UniformToFill"
                                    MinHeight="128"
                                    cls:UriSource="{Binding PreviewModImageSource}"/>
+
             </Grid>
         </GroupBox>
 
         <TabControl x:Name="tabCtrlMain"
-                    Grid.Row="1"
+                    Grid.Row="0"
+                    Grid.RowSpan="2"
                     Grid.Column="1"
-                    Margin="5">
+                    SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    Margin="0,23,5,1">
             <TabItem Header="My Mods" Padding="10,0,10,0">
                 <ctrl:MyModsUserControl x:Name="ctrlMyMods"/>
             </TabItem>
@@ -106,12 +177,51 @@
             </TabItem>
         </TabControl>
 
-        <Button x:Name="btnHelp"
-                Content="Help"
+        <Button x:Name="btnFilter"
+                Content="Filter"
+                ToolTip="Click to select what categories to filter by."
+                Visibility="{Binding FilterButtonVisibility}"
                 Grid.Column="1"
-                Margin="0,5,5,0"
+                Padding="5,2,5,2"
+                Margin="0,6,240,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"/>
+
+        <TextBox x:Name="txtSearch"
+                 Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Visibility="{Binding FilterButtonVisibility}"
+                 KeyDown="txtSearch_KeyDown"
+                 Grid.Column="1"
+                 HorizontalAlignment="Right"
+                 VerticalAlignment="Top"
+                 VerticalContentAlignment="Center"
+                 Margin="0,5,5,0"
+                 Width="225"
+                 Height="24"/>
+
+        <TextBlock Text="Type here and press enter to search ..."
+                   Foreground="{DynamicResource PrimaryControlDisabledForeground}"
+                   Grid.Column="1"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Top"
+                   Margin="0,8,28,0">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding SearchText, FallbackValue=''}" Value=""/>
+                                <Condition Binding="{Binding FilterButtonVisibility, FallbackValue='Visible'}" Value="Visible"/>
+                            </MultiDataTrigger.Conditions>
+                            <MultiDataTrigger.Setters>
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </MultiDataTrigger.Setters>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
 
         <StatusBar Grid.Row="2" Grid.ColumnSpan="2" Margin="0,5,0,0">
             <StatusBarItem>

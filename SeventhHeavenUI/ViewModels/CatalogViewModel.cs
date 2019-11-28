@@ -19,10 +19,10 @@ namespace SeventhHeavenUI.ViewModels
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public delegate void OnSelectionChanged(object sender, InstalledModViewModel selected);
+        public delegate void OnSelectionChanged(object sender, CatalogModItemViewModel selected);
         public event OnSelectionChanged SelectedModChanged;
 
-        private List<InstalledModViewModel> _modList;
+        private List<CatalogModItemViewModel> _catalogModList;
         private ObservableCollection<DownloadItemViewModel> _downloadList;
 
         private Dictionary<string, MegaIros> _megaFolders = new Dictionary<string, MegaIros>(StringComparer.InvariantCultureIgnoreCase);
@@ -30,21 +30,21 @@ namespace SeventhHeavenUI.ViewModels
         /// <summary>
         /// List of installed mods (includes active mods in the currently active profile)
         /// </summary>
-        public List<InstalledModViewModel> CatalogModList
+        public List<CatalogModItemViewModel> CatalogModList
         {
             get
             {
                 // guarantee the property never returns null
-                if (_modList == null)
+                if (_catalogModList == null)
                 {
-                    _modList = new List<InstalledModViewModel>();
+                    _catalogModList = new List<CatalogModItemViewModel>();
                 }
 
-                return _modList;
+                return _catalogModList;
             }
             set
             {
-                _modList = value;
+                _catalogModList = value;
                 NotifyPropertyChanged();
             }
         }
@@ -76,84 +76,56 @@ namespace SeventhHeavenUI.ViewModels
         /// <summary>
         /// Invokes the <see cref="SelectedModChanged"/> Event if not null.
         /// </summary>
-        internal void RaiseSelectedModChanged(object sender, InstalledModViewModel selected)
+        internal void RaiseSelectedModChanged(object sender, CatalogModItemViewModel selected)
         {
             SelectedModChanged?.Invoke(this, selected);
         }
 
         /// <summary>
-        /// Loads installed and active mods into <see cref="CatalogModList"/> from <see cref="Sys.Library"/> and <see cref="Sys.ActiveProfile"/>
+        /// Loads available mods from catalogs into <see cref="CatalogModList"/> from <see cref="Sys.Catalog.Mods"/>
         /// </summary>
-        internal void ReloadModList()
+        /// <param name="searchText"> empty string returns all mods </param>
+        internal void ReloadModList(string searchText = "")
         {
-            Sys.ActiveProfile.Items.RemoveAll(i => Sys.Library.GetItem(i.ModID) == null);
+            List<Mod> results;
 
-            List<InstalledModViewModel> allMods = new List<InstalledModViewModel>();
-
-            foreach (ProfileItem item in Sys.ActiveProfile.Items)
+            if (String.IsNullOrEmpty(searchText))
             {
-                InstalledItem mod = Sys.Library.GetItem(item.ModID);
-
-                if (mod != null)
-                {
-                    allMods.Add(new InstalledModViewModel(mod, item));
-                }
+                results = Sys.Catalog.Mods;
+            }
+            else
+            {
+                results = Sys.Catalog.Mods.Select(m => new { Mod = m, Relevance = m.SearchRelevance(searchText) })
+                                          .Where(a => a.Relevance > 0)
+                                          .OrderByDescending(a => a.Relevance)
+                                          .Select(a => a.Mod)
+                                          .ToList();
             }
 
-            foreach (InstalledItem item in Sys.Library.Items)
-            {
-                bool isActive = allMods.Any(m => m.InstallInfo.ModID == item.ModID && m.InstallInfo.LatestInstalled.InstalledLocation == item.LatestInstalled.InstalledLocation);
+            List<CatalogModItemViewModel> newList = new List<CatalogModItemViewModel>();
 
-                if (!isActive)
-                {
-                    allMods.Add(new InstalledModViewModel(item, null));
-                }
+            foreach (Mod m in results)
+            {
+                CatalogModItemViewModel item = new CatalogModItemViewModel(m);
+                newList.Add(item);
             }
 
-            CatalogModList = allMods;
-        }
-
-        /// <summary>
-        /// Loads active mods into <see cref="CatalogModList"/> from <see cref="Sys.ActiveProfile"/>
-        /// </summary>
-        /// <param name="clearList"> removes any active mods in <see cref="CatalogModList"/> before reloading </param>
-        internal void ReloadActiveMods(bool clearList)
-        {
-            Sys.ActiveProfile.Items.RemoveAll(i => Sys.Library.GetItem(i.ModID) == null);
-
-            if (clearList)
-            {
-                CatalogModList.RemoveAll(m => m.IsActive);
-            }
-
-            List<InstalledModViewModel> activeMods = new List<InstalledModViewModel>();
-
-            foreach (ProfileItem item in Sys.ActiveProfile.Items)
-            {
-                InstalledItem mod = Sys.Library.GetItem(item.ModID);
-
-                if (mod != null)
-                {
-                    activeMods.Add(new InstalledModViewModel(mod, item));
-                }
-            }
-
-            CatalogModList.AddRange(activeMods);
-            NotifyPropertyChanged(nameof(CatalogModList));
+            CatalogModList.Clear();
+            CatalogModList = newList;
         }
 
         /// <summary>
         /// Returns selected view model in <see cref="CatalogModList"/>.
         /// </summary>
-        public InstalledModViewModel GetSelectedMod()
+        public CatalogModItemViewModel GetSelectedMod()
         {
-            InstalledModViewModel selected = CatalogModList.Where(m => m.IsSelected).LastOrDefault();
+            CatalogModItemViewModel selected = CatalogModList.Where(m => m.IsSelected).LastOrDefault();
 
             // due to virtualization, IsSelected could be set on multiple items... 
             // ... so we will deselect the other items to avoid problems of multiple items being selected
             if (CatalogModList.Where(m => m.IsSelected).Count() > 1)
             {
-                foreach (var mod in CatalogModList.Where(m => m.IsSelected && m.InstallInfo.ModID != selected.InstallInfo.ModID))
+                foreach (var mod in CatalogModList.Where(m => m.IsSelected && m.Mod.ID != selected.Mod.ID))
                 {
                     mod.IsSelected = false;
                 }
@@ -173,14 +145,15 @@ namespace SeventhHeavenUI.ViewModels
         public void Download(IEnumerable<string> links, string file, string description, Install.InstallProcedure iproc, Action onCancel)
         {
             string link = links.First();
-            LocationType type; 
+            LocationType type;
             string location;
 
             if (!LocationUtil.Parse(link, out type, out location)) return;
 
             if (links.Count() > 1)
             {
-                onCancel = () => {
+                onCancel = () =>
+                {
                     Log.Write($"Downloading {file} - switching to backup url {links.ElementAt(1)}");
                     Download(links.Skip(1), file, description, iproc, onCancel);
                 };
@@ -194,7 +167,9 @@ namespace SeventhHeavenUI.ViewModels
                 DownloadSpeed = "Calculating ..."
             };
 
-            DownloadList.Add(newDownload);
+
+            // invoking on current App dispatcher to update the list from UI instead of background thread....
+            AddToDownloadList(newDownload);
 
             switch (type)
             {
@@ -221,7 +196,7 @@ namespace SeventhHeavenUI.ViewModels
                     string[] parts = location.Split(',');
 
                     MegaIros mega;
-                    
+
                     if (!_megaFolders.TryGetValue(parts[0], out mega) || mega.Dead)
                     {
                         _megaFolders[parts[0]] = mega = new MegaIros(parts[0], String.Empty);
@@ -229,7 +204,8 @@ namespace SeventhHeavenUI.ViewModels
                     DownloadItemViewModel item = newDownload;
                     MegaIros.Transfer tfr = null;
 
-                    tfr = mega.Download(parts[1], parts[2], file, () => {
+                    tfr = mega.Download(parts[1], parts[2], file, () =>
+                    {
                         switch (tfr.State)
                         {
                             case MegaIros.TransferState.Complete:
@@ -237,14 +213,13 @@ namespace SeventhHeavenUI.ViewModels
                                 break;
 
                             case MegaIros.TransferState.Failed:
-                                DownloadList.Remove(item);
-
+                                RemoveFromDownloadList(item);
                                 Sys.Message(new WMessage() { Text = "Error downloading " + item.ItemName });
                                 onCancel?.Invoke();
                                 break;
 
                             case MegaIros.TransferState.Canceled:
-                                DownloadList.Remove(item);
+                                RemoveFromDownloadList(item);
                                 Sys.Message(new WMessage() { Text = $"{item.ItemName} was canceled" });
                                 break;
 
@@ -262,18 +237,32 @@ namespace SeventhHeavenUI.ViewModels
 
         }
 
+        private void AddToDownloadList(DownloadItemViewModel newDownload)
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                DownloadList.Add(newDownload);
+            });
+        }
+
+        internal void UpdateModDetails(Guid modID)
+        {
+            CatalogModItemViewModel foundMod = CatalogModList.Where(m => m.Mod.ID == modID).FirstOrDefault();
+            foundMod?.UpdateDetails();
+        }
+
         void _wc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             DownloadItemViewModel item = (DownloadItemViewModel)e.UserState;
             if (e.Cancelled)
             {
                 item.OnCancel?.Invoke();
-                DownloadList.Remove(item);
+                RemoveFromDownloadList(item);
             }
             else if (e.Error != null)
             {
                 item.OnCancel?.Invoke();
-                DownloadList.Remove(item);
+                RemoveFromDownloadList(item);
                 string msg = "Error " + item.ItemName + e.Error.Message;
                 Sys.Message(new WMessage() { Text = msg });
             }
@@ -281,6 +270,14 @@ namespace SeventhHeavenUI.ViewModels
             {
                 ProcessDownloadComplete(item, e);
             }
+        }
+
+        private void RemoveFromDownloadList(DownloadItemViewModel item)
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                DownloadList.Remove(item);
+            });
         }
 
         void _wc_DownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
@@ -296,22 +293,25 @@ namespace SeventhHeavenUI.ViewModels
 
         private void CompleteIProc(DownloadItemViewModel item, AsyncCompletedEventArgs e)
         {
-            DownloadList.Remove(item);
+            RemoveFromDownloadList(item);
+
             item.IProc.DownloadComplete(e);
             NotifyPropertyChanged();
         }
 
         private void ProcessDownloadComplete(DownloadItemViewModel item, AsyncCompletedEventArgs e)
         {
-            item.IProc.Error = ex => {
-                DownloadList.Remove(item);
+            item.IProc.Error = ex =>
+            {
+                RemoveFromDownloadList(item);
                 Sys.Message(new WMessage() { Text = $"Error {item.ItemName}: {e.ToString()}" });
             };
 
             item.IProc.Complete = () => CompleteIProc(item, e);
 
             item.PercentComplete = 0;
-            item.IProc.SetPCComplete = i => {
+            item.IProc.SetPCComplete = i =>
+            {
                 if (item.PercentComplete != i)
                 {
                     item.PercentComplete = i;

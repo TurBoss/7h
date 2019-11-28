@@ -22,11 +22,18 @@
         <ListView x:Name="lstMods" ItemsSource="{Binding ModList}" SelectionChanged="lstMods_SelectionChanged">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Active" Width="75" DisplayMemberBinding="{Binding IsActive}"/>
                     <GridViewColumn Header="Name" Width="250" DisplayMemberBinding="{Binding Name}"/>
                     <GridViewColumn Header="Author" Width="100" DisplayMemberBinding="{Binding Author}"/>
                     <GridViewColumn Header="Version" Width="100" DisplayMemberBinding="{Binding Version}"/>
                     <GridViewColumn Header="Category" Width="100" DisplayMemberBinding="{Binding Category}"/>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Empty}"/>
+                    <GridViewColumn Header="Active" Width="75">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
@@ -39,6 +46,14 @@
                     Content="Import ..."
                     Margin="0,0,0,10"/>
 
+            <Button x:Name="btnRefresh" 
+                    Content="Refresh"
+                    Margin="0,0,0,10"/>
+
+            <Button x:Name="btnDeactivateAll" 
+                    Content="Deactivate All"
+                    Margin="0,0,0,10"/>
+
             <Button x:Name="btnUninstall" 
                     Content="Uninstall"
                     Margin="0,0,0,10"/>
@@ -46,6 +61,11 @@
             <Button x:Name="btnConfigure" 
                     Content="Configure"
                     Margin="0,0,0,10"/>
+
+            <Button x:Name="btnMoveTop" 
+                    HorizontalContentAlignment="Center"
+                    Content="Move to Top"
+                    Margin="0,0,0,2"/>
 
             <Button x:Name="btnMoveUp" 
                     HorizontalContentAlignment="Center"
@@ -55,6 +75,11 @@
             <Button x:Name="btnMoveDown" 
                     HorizontalContentAlignment="Center"
                     Content="v"/>
+
+            <Button x:Name="btnSendBottom" 
+                    HorizontalContentAlignment="Center"
+                    Content="Send to Bottom"
+                    Margin="0,2,0,0"/>
         </StackPanel>
         
     </Grid>

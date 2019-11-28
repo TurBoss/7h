@@ -110,14 +110,59 @@ namespace SeventhHeavenUI
         {
             Sys.Settings.MainWindow = new SavedWindow()
             {
-                X = (int) System.Windows.Application.Current.MainWindow.Left,
-                Y = (int) System.Windows.Application.Current.MainWindow.Top,
-                W = (int) ActualWidth,
-                H = (int) ActualHeight,
+                X = (int)System.Windows.Application.Current.MainWindow.Left,
+                Y = (int)System.Windows.Application.Current.MainWindow.Top,
+                W = (int)ActualWidth,
+                H = (int)ActualHeight,
                 State = WindowState
             };
 
             ViewModel.CleanUp();
+        }
+
+        private void btnPlay_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.LaunchGame(varDump: false, debug: false);
+        }
+
+        private void txtSearch_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                ViewModel.DoSearch();
+            }
+        }
+
+        private void btnSettings_Click(object sender, RoutedEventArgs e)
+        {
+            if (!menuSettings.IsOpen)
+            {
+                menuSettings.PlacementTarget = btnSettings;
+                menuSettings.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+                menuSettings.IsOpen = true;
+                btnSettings.IsEnabled = false;
+            }
+        }
+
+        private void btnTools_Click(object sender, RoutedEventArgs e)
+        {
+            if (!menuTools.IsOpen)
+            {
+                menuTools.PlacementTarget = btnTools;
+                menuTools.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+                menuTools.IsOpen = true;
+                btnTools.IsEnabled = false;
+            }
+        }
+
+        private void menuTools_Closed(object sender, RoutedEventArgs e)
+        {
+            btnTools.IsEnabled = true;
+        }
+
+        private void menuSettings_Closed(object sender, RoutedEventArgs e)
+        {
+            btnSettings.IsEnabled = true;
         }
     }
 }
