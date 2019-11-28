@@ -1,4 +1,5 @@
 ﻿using SeventhHeavenUI.ViewModels;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace SeventhHeaven.UserControls
@@ -29,6 +30,17 @@ namespace SeventhHeaven.UserControls
         private void btnRefresh_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             ViewModel.ReloadModList();
+        }
+
+        private void btnDownload_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (lstCatalogMods.SelectedItem == null)
+            {
+                MessageBox.Show("Select a mod to download first.", "Warning - No Mod Selected", MessageBoxButton.OK);
+                return;
+            }
+
+            ViewModel.DownloadMod((lstCatalogMods.SelectedItem as CatalogModItemViewModel));
         }
     }
 }

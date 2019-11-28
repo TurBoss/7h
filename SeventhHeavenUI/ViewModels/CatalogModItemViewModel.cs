@@ -137,7 +137,7 @@ namespace SeventhHeavenUI.ViewModels
             Category = Mod.Category;
             Version = Mod.LatestVersion.Version.ToString();
             DownloadSize = GetDLSize(Mod.LatestVersion.DownloadSize);
-            ReleaseDate = Mod.LatestVersion.ReleaseDate.ToString("MM/dd/yy");
+            ReleaseDate = Mod.LatestVersion.ReleaseDate.ToString(Sys.Settings.DateTimeStringFormat);
         }
 
         private string GetDLSize(int size)
@@ -172,7 +172,7 @@ namespace SeventhHeavenUI.ViewModels
             Category = Mod.Category;
             Version = Mod.LatestVersion.Version.ToString();
             DownloadSize = GetDLSize(Mod.LatestVersion.DownloadSize);
-            ReleaseDate = Mod.LatestVersion.ReleaseDate.ToString("mm/dd/yy");
+            ReleaseDate = Mod.LatestVersion.ReleaseDate.ToString(Sys.Settings.DateTimeStringFormat);
         }
 
     }

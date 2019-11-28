@@ -82,12 +82,15 @@ namespace Iros._7th.Workshop {
 
         public decimal VersionUpgradeCompleted { get; set; }
 
+        public string DateTimeStringFormat { get; set; }
+
         public Settings() {
             SubscribedUrls = new List<string>();
             ExtraFolders = new List<string>();
             AlsoLaunch = new List<string>();
             Subscriptions = new List<Subscription>();
             AutoUpdateSource = "#F!yBlHTYiJ!SFpmT2xII7iXcgXAmNYLJg";
+            DateTimeStringFormat = "MM/dd/yyyy";
         }
     }
 }

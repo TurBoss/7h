@@ -76,7 +76,7 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
 
-                <ScrollViewer Grid.Row="0">
+                <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
                     <Grid x:Name="gridModInfo" Margin="0,0,0,3">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
@@ -181,6 +181,7 @@
                 Content="Filter"
                 ToolTip="Click to select what categories to filter by."
                 Visibility="{Binding FilterButtonVisibility}"
+                Style="{StaticResource ButtonWithDownArrow}"
                 Grid.Column="1"
                 Padding="5,2,5,2"
                 Margin="0,6,240,0"

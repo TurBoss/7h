@@ -8,7 +8,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
 
-        <Style TargetType="{x:Type ListViewItem}">
+        <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource MainListViewItemStyle}">
             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </Style>
         
@@ -43,43 +43,57 @@
                     HorizontalAlignment="Right">
 
             <Button x:Name="btnImport" 
-                    Content="Import ..."
-                    Margin="0,0,0,10"/>
+                    Style="{StaticResource ImageButton}"
+                    Content="{StaticResource iconImport}"
+                    ToolTip="Import Mod"
+                    Margin="0,0,0,0"/>
 
             <Button x:Name="btnRefresh" 
-                    Content="Refresh"
-                    Margin="0,0,0,10"/>
+                    Style="{StaticResource ImageButton}"
+                    Content="{StaticResource iconRefresh}"
+                    ToolTip="Refresh List"
+                    Margin="0,0,0,0"/>
 
             <Button x:Name="btnDeactivateAll" 
-                    Content="Deactivate All"
-                    Margin="0,0,0,10"/>
+                    Style="{StaticResource ImageButton}"
+                    Content="{StaticResource iconCancel}"
+                    ToolTip="Deactivate All"
+                    Margin="0,0,0,0"/>
 
             <Button x:Name="btnUninstall" 
-                    Content="Uninstall"
-                    Margin="0,0,0,10"/>
+                    Style="{StaticResource ImageButton}"
+                    Content="{StaticResource iconDelete}"
+                    ToolTip="Uninstall Mod"
+                    Margin="0,0,0,0"/>
 
             <Button x:Name="btnConfigure" 
-                    Content="Configure"
+                    Style="{StaticResource ImageButton}"
+                    Content="{StaticResource iconSettings}"
+                    ToolTip="Configure Mod"
                     Margin="0,0,0,10"/>
 
             <Button x:Name="btnMoveTop" 
-                    HorizontalContentAlignment="Center"
-                    Content="Move to Top"
-                    Margin="0,0,0,2"/>
+                    Style="{StaticResource ImageButton}"
+                    Content="{StaticResource iconUpArrow}"
+                    ToolTip="Move to Top"
+                    Margin="0,0,0,0"/>
 
             <Button x:Name="btnMoveUp" 
-                    HorizontalContentAlignment="Center"
-                    Content="^"
+                    Style="{StaticResource ImageButton}"
+                    Content="{StaticResource iconUpChevron}"
+                    ToolTip="Move Up"
                     Margin="0,0,0,0"/>
             
             <Button x:Name="btnMoveDown" 
-                    HorizontalContentAlignment="Center"
-                    Content="v"/>
+                    Style="{StaticResource ImageButton}"
+                    Content="{StaticResource iconDownChevron}"
+                    ToolTip="Move Down"/>
 
             <Button x:Name="btnSendBottom" 
-                    HorizontalContentAlignment="Center"
-                    Content="Send to Bottom"
-                    Margin="0,2,0,0"/>
+                    Style="{StaticResource ImageButton}"
+                    Content="{StaticResource iconDownArrow}"
+                    ToolTip="Send to Bottom"
+                    Margin="0,0,0,0"/>
         </StackPanel>
         
     </Grid>

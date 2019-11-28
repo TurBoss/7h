@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SeventhHeavenUI.ViewModels
 {
@@ -18,6 +19,16 @@ namespace SeventhHeavenUI.ViewModels
     public class CatalogViewModel : ViewModelBase, IDownloader
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
+        private const string _msgDownloadReq =
+    @"This mod also requires you to download the following mods:
+{0}
+Download and install them?";
+
+        private const string _msgMissingReq =
+            @"This mod requires the following mods to also be installed, but I cannot find them:
+{0}
+It may not work properly unless you find and install the requirements.";
 
         public delegate void OnSelectionChanged(object sender, CatalogModItemViewModel selected);
         public event OnSelectionChanged SelectedModChanged;
@@ -46,6 +57,70 @@ namespace SeventhHeavenUI.ViewModels
             {
                 _catalogModList = value;
                 NotifyPropertyChanged();
+            }
+        }
+
+        internal void DownloadMod(CatalogModItemViewModel catalogModItemViewModel)
+        {
+            Mod modToDownload = catalogModItemViewModel.Mod;
+            ModStatus status = Sys.GetStatus(modToDownload.ID);
+
+            if (status == ModStatus.Downloading)
+            {
+                MessageBox.Show($"{modToDownload.Name} is already downloading!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (status == ModStatus.Updating)
+            {
+                MessageBox.Show($"{modToDownload.Name} is already updating!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (status == ModStatus.Installed)
+            {
+                MessageBox.Show($"{modToDownload.Name} is already downloaded and installed!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (Sys.GetStatus(modToDownload.ID) == ModStatus.NotInstalled)
+            {
+                Install.DownloadAndInstall(modToDownload);
+            }
+
+            List<Mod> required = new List<Mod>();
+            List<string> notFound = new List<string>();
+            foreach (ModRequirement req in modToDownload.Requirements)
+            {
+                InstalledItem inst = Sys.Library.GetItem(req.ModID);
+                
+                if (inst != null)
+                {
+                    continue;
+                }
+
+                Mod rMod = Sys.Catalog.GetMod(req.ModID);
+
+                if (rMod != null)
+                    required.Add(rMod);
+                else
+                    notFound.Add(req.Description);
+            }
+
+            if (required.Any())
+            {
+                if (MessageBox.Show(String.Format(_msgDownloadReq, String.Join("\n", required.Select(m => m.Name))), "Requirements", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    foreach (Mod rMod in required)
+                    {
+                        Install.DownloadAndInstall(rMod);
+                    }
+                }
+            }
+
+            if (notFound.Any())
+            {
+                MessageBox.Show(String.Format(_msgMissingReq, String.Join("\n", notFound)), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 

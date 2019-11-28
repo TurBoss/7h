@@ -1,6 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:SeventhHeaven.Resources">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Icons/IconResourceDictionary.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
     
     <!-- COLORS - Dark Theme -->
     <Color x:Key="DarkBackgroundColor">#1f1f1f</Color>
@@ -14,7 +16,6 @@
 
     <Color x:Key="DarkControlDisabledBackground" R="31" G="31" B="31" A="255"/>
     <Color x:Key="DarkControlDisabledForeground" R="121" G="121" B="121" A="255"/>
-
 
 
     <!-- BRUSHES -->
@@ -186,6 +187,37 @@
         </Setter>
     </Style>
 
+
+    <Style x:Key="ImageButton" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="{DynamicResource PrimaryControlBackground}"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
+        <Setter Property="Width" Value="48"/>
+        <Setter Property="Height" Value="48"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+
+                    <Viewbox Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Stretch="UniformToFill">
+                        <Border x:Name="bd" BorderThickness="0" Background="{TemplateBinding Background}">
+                            <ContentControl Template="{TemplateBinding Content}"/>
+                        </Border>
+                    </Viewbox>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger SourceName="bd" Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource PrimaryControlPressed}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <Style TargetType="{x:Type GroupBox}">
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
         <Setter Property="FontSize" Value="15"/>
@@ -304,6 +336,7 @@
         </Setter>
     </Style>
 
+    <!-- This style is used to make a MenuItem look like a Seperator in a Context Menu (the MenuItem is not clickable)-->
     <Style x:Key="ContextMenuSeperator" TargetType="{x:Type MenuItem}">
         <Setter Property="IsEnabled" Value="False"/>
         <Setter Property="IsHitTestVisible" Value="False"/>
@@ -311,6 +344,30 @@
             <Setter.Value>
                 <ControlTemplate TargetType="MenuItem">
                     <Rectangle HorizontalAlignment="Stretch" Fill="{DynamicResource PrimaryControlDisabledForeground}" Height="1" Focusable="False" IsEnabled="False" IsHitTestVisible="False"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <Style x:Key="MainListViewItemStyle" TargetType="{x:Type ListViewItem}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListViewItem">
+                    <Border x:Name="Border" Padding="2" SnapsToDevicePixels="true" Background="Transparent">
+                        <GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" TextElement.Foreground="{DynamicResource PrimaryControlForeground}"/>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger SourceName="Border" Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource SecondaryAppBackground}"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryControlPressed}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
