@@ -42,7 +42,17 @@
         
 
         <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5,0,0">
-            <Button x:Name="btnPlay" Content="Play" Margin="5,0,5,0" Style="{StaticResource ButtonWithToggleDownArrow}" Click="btnPlay_Click"/>
+            <Button x:Name="btnPlay" Content="Play" Margin="5,0,5,0" Click="btnPlay_Click"/>
+            <ToggleButton x:Name="btnPlayOptions" Style="{StaticResource DownArrowToggleButton}" Margin="-3,0,0,0" Click="btnPlayOptions_Click" ContextMenuService.Placement="Bottom">
+                <ToggleButton.ContextMenu>
+                    <ContextMenu x:Name="menuPlayOptions" Closed="menuPlayOptions_Closed">
+                        <MenuItem x:Name="menuPlayVariableDump" Header="Play With Variable Dump" Click="menuPlayVariableDump_Click"/>
+                        <MenuItem x:Name="menuPlayDebugLog" Header="Play With Debug Log" Click="menuPlayDebugLog_Click"/>
+                    </ContextMenu>
+                </ToggleButton.ContextMenu>
+            </ToggleButton>
+
+
             <Button x:Name="btnSettings" Content="Settings" Margin="5,0,5,0" Style="{StaticResource ButtonWithDownArrow}" ContextMenuService.Placement="Bottom" Click="btnSettings_Click">
                 <Button.ContextMenu>
                     <ContextMenu x:Name="menuSettings" Closed="menuSettings_Closed">
@@ -58,7 +68,7 @@
             </Button>
             <Button x:Name="btnTools" Content="Tools" Margin="5,0,5,0" Style="{StaticResource ButtonWithDownArrow}" ContextMenuService.Placement="Bottom" Click="btnTools_Click">
                 <Button.ContextMenu>
-                    <ContextMenu x:Name="menuTools" PlacementTarget="{Binding ElementName=btnTools}" Placement="Bottom" Closed="menuTools_Closed">
+                    <ContextMenu x:Name="menuTools" PlacementTarget="{Binding ElementName=btnTools}" Closed="menuTools_Closed">
                         <MenuItem x:Name="menuItemIroCreation" Header="IRO Creation Tool"/>
                         <MenuItem x:Name="menuItemChunkTool" Header="Chunk Tool"/>
                         <MenuItem x:Name="menuItemCatalogCreation" Header="Catalog Creation Tool"/>
@@ -69,7 +79,7 @@
 
         <GroupBox Header=" Mod Info "
                   Grid.Row="1"
-                  Margin="5,-8,3,1">
+                  Margin="5,0,3,1">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -151,12 +161,44 @@
                 </ScrollViewer>
 
                 <cls:AnimatedImage Grid.Row="1"
-                                   Margin="3,3,3,0"
+                                   Margin="3"
                                    HorizontalAlignment="Stretch"
                                    VerticalAlignment="Stretch"
-                                   Stretch="UniformToFill"
+                                   Stretch="Uniform"
                                    MinHeight="128"
-                                   cls:UriSource="{Binding PreviewModImageSource}"/>
+                                   cls:UriSource="{Binding PreviewModImageSource}">
+                    <cls:AnimatedImage.Style>
+                        <!--Custom style to hide image when loading-->
+                        <Style TargetType="{x:Type cls:AnimatedImage}">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding PreviewModImageSource}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </cls:AnimatedImage.Style>
+                </cls:AnimatedImage>
+
+                <!--Loader gif shown when image is loading-->
+                <cls:AnimatedImage Grid.Row="1"
+                                   Margin="3"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Stretch="Uniform"
+                                   Height="64"
+                                   cls:UriSource="Resources/circleLoader.gif">
+                    <cls:AnimatedImage.Style>
+                        <Style TargetType="{x:Type cls:AnimatedImage}">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding PreviewModImageSource}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </cls:AnimatedImage.Style>
+                </cls:AnimatedImage>
 
             </Grid>
         </GroupBox>

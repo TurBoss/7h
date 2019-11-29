@@ -164,5 +164,31 @@ namespace SeventhHeavenUI
         {
             btnSettings.IsEnabled = true;
         }
+
+        private void btnPlayOptions_Click(object sender, RoutedEventArgs e)
+        {
+            if (!menuPlayOptions.IsOpen)
+            {
+                menuPlayOptions.PlacementTarget = btnPlayOptions;
+                menuPlayOptions.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+                menuPlayOptions.IsOpen = true;
+                btnPlayOptions.IsEnabled = false;
+            }
+        }
+
+        private void menuPlayVariableDump_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.LaunchGame(varDump: true, debug: false);
+        }
+
+        private void menuPlayDebugLog_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.LaunchGame(varDump: false, debug: true);
+        }
+
+        private void menuPlayOptions_Closed(object sender, RoutedEventArgs e)
+        {
+            btnPlayOptions.IsEnabled = true;
+        }
     }
 }
