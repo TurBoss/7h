@@ -60,7 +60,7 @@ namespace SeventhHeavenUI.ViewModels
         /// <summary>
         /// Loads installed and active mods into <see cref="ModList"/> from <see cref="Sys.Library"/> and <see cref="Sys.ActiveProfile"/>
         /// </summary>
-        internal void ReloadModList()
+        internal void ReloadModList(Guid? modToSelect = null)
         {
             Sys.ActiveProfile.Items.RemoveAll(i => Sys.Library.GetItem(i.ModID) == null);
 
@@ -90,6 +90,23 @@ namespace SeventhHeavenUI.ViewModels
                 }
             }
 
+            if (modToSelect != null)
+            {
+                int index = allMods.FindIndex(m => m.InstallInfo.ModID == modToSelect);
+
+                if (index >= 0)
+                {
+                    allMods[index].IsSelected = true;
+                }
+            }
+            else
+            {
+                if (allMods.Count > 0)
+                {
+                    allMods[0].IsSelected = true;
+                }
+            }
+
             ModList = allMods;
         }
 
@@ -103,7 +120,7 @@ namespace SeventhHeavenUI.ViewModels
         /// Loads active mods into <see cref="ModList"/> from <see cref="Sys.ActiveProfile"/>
         /// </summary>
         /// <param name="clearList"> removes any active mods in <see cref="ModList"/> before reloading </param>
-        internal void ReloadActiveMods(bool clearList)
+        internal void ReloadActiveMods(bool clearList, Guid? modToSelect = null)
         {
             Sys.ActiveProfile.Items.RemoveAll(i => Sys.Library.GetItem(i.ModID) == null);
 
@@ -125,6 +142,17 @@ namespace SeventhHeavenUI.ViewModels
             }
 
             ModList.AddRange(activeMods);
+
+            if (modToSelect != null)
+            {
+                int index = ModList.FindIndex(m => m.InstallInfo.ModID == modToSelect);
+
+                if (index >= 0)
+                {
+                    ModList[index].IsSelected = true;
+                }
+            }
+
             NotifyPropertyChanged(nameof(ModList));
         }
 
@@ -148,7 +176,7 @@ namespace SeventhHeavenUI.ViewModels
             return selected;
         }
 
-        internal void ToggleActivateMod(Guid modID)
+        internal void ToggleActivateMod(Guid modID, bool reloadList = true)
         {
             if (String.IsNullOrWhiteSpace(Sys.Settings.CurrentProfile)) return;
 
@@ -256,16 +284,17 @@ namespace SeventhHeavenUI.ViewModels
                     MessageBox.Show(String.Format(MainWindowViewModel._msgRemove, String.Join("\n", remove.Select(pi => Sys.Library.GetItem(pi.ModID).CachedDetails.Name))));
                 }
 
-                DoActivate(modID);
+                DoActivate(modID, reloadList);
 
                 foreach (InstalledItem req in pulledIn)
                 {
-                    DoActivate(req.ModID);
+                    DoActivate(req.ModID, reloadList);
                     Sys.Ping(req.ModID);
                 }
+
                 foreach (ProfileItem pi in remove)
                 {
-                    DoDeactivate(pi);
+                    DoDeactivate(pi, reloadList);
                     Sys.Ping(pi.ModID);
                 }
 
@@ -273,26 +302,129 @@ namespace SeventhHeavenUI.ViewModels
             }
             else
             {
-                DoDeactivate(item);
+                DoDeactivate(item, reloadList);
             }
 
             Sys.Ping(modID);
         }
 
-        private void DoDeactivate(ProfileItem item)
+        private void DoDeactivate(ProfileItem item, bool reloadList = true)
         {
             Sys.ActiveProfile.Items.Remove(item);
-            ReloadActiveMods(true);
+
+            if (reloadList)
+            {
+                ReloadModList(item.ModID);
+            }
         }
 
-        private void DoActivate(Guid modID)
+        private void DoActivate(Guid modID, bool reloadList = true)
         {
             if (!MainWindowViewModel.CheckAllowedActivate(modID)) return;
 
             var item = new ProfileItem() { ModID = modID, Settings = new List<ProfileSetting>() };
             Sys.ActiveProfile.Items.Add(item);
 
-            ReloadActiveMods(true);
+            if (reloadList)
+            {
+                ReloadActiveMods(true);
+            }
         }
+
+        internal void ToggleDeactivationForAllMods()
+        {
+            foreach (var installedMod in ModList.Where(m => m.IsActive))
+            {
+                ToggleActivateMod(installedMod.ActiveModInfo.ModID, reloadList: false); // reload list at the end
+            }
+
+            ReloadModList();
+        }
+
+        internal void UninstallMod(InstalledModViewModel installedModViewModel)
+        {
+            InstalledItem installed = Sys.Library.GetItem(installedModViewModel.InstallInfo.ModID);
+
+            if (installed == null)
+            {
+                Logger.Warn("could not get InstalledItem for mod.");
+                return;
+            }
+
+            Install.Uninstall(installed);
+            ReloadModList();
+        }
+        
+        /// <summary>
+        /// Change the sort order of an active mod
+        /// </summary>
+        /// <param name="mod"></param>
+        /// <param name="change"></param>
+        public void ReorderProfileItem(InstalledModViewModel mod, int change)
+        {
+            if (!mod.IsActive)
+            {
+                return;
+            }
+
+            int index = Sys.ActiveProfile.Items.IndexOf(mod.ActiveModInfo);
+
+            int newindex = index + change;
+
+            if (newindex < 0 || newindex >= Sys.ActiveProfile.Items.Count)
+                return;
+
+            // find mod to swap with
+            InstalledModViewModel other = ModList.FirstOrDefault(p => p.ActiveModInfo == Sys.ActiveProfile.Items[newindex]);
+
+            // create new list of active mods and swap the two mods
+            List<ProfileItem> newItems = Sys.ActiveProfile.Items.ToList();
+            ProfileItem pitem = newItems[index];
+
+            newItems[index] = newItems[newindex];
+            newItems[newindex] = pitem;
+
+            Sys.ActiveProfile.Items = newItems;
+
+            ReloadModList(mod.InstallInfo.CachedDetails.ID);
+        }
+
+        public void SendModToBottom(InstalledModViewModel mod)
+        {
+            if (!mod.IsActive)
+            {
+                return;
+            }
+
+            int index = Sys.ActiveProfile.Items.IndexOf(mod.ActiveModInfo);
+
+            List<ProfileItem> reorderedList = new List<ProfileItem>();
+
+            reorderedList.AddRange(Sys.ActiveProfile.Items.Where(i => i.ModID != mod.ActiveModInfo.ModID));
+            reorderedList.Add(Sys.ActiveProfile.Items[index]);
+
+            Sys.ActiveProfile.Items = reorderedList;
+            ReloadModList(mod.ActiveModInfo.ModID);
+        }
+
+        public void SendModToTop(InstalledModViewModel mod)
+        {
+            if (!mod.IsActive)
+            {
+                return;
+            }
+
+            int index = Sys.ActiveProfile.Items.IndexOf(mod.ActiveModInfo);
+
+            List<ProfileItem> reorderedList = new List<ProfileItem>();
+
+            reorderedList.Add(Sys.ActiveProfile.Items[index]);
+            reorderedList.AddRange(Sys.ActiveProfile.Items.Where(i => i.ModID != mod.ActiveModInfo.ModID));
+
+
+            Sys.ActiveProfile.Items = reorderedList;
+            ReloadModList(mod.ActiveModInfo.ModID);
+        }
+
     }
 }

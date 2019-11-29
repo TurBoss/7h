@@ -66,8 +66,43 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        
+    </Style>
 
+    <Style x:Key="HyperlinkButton" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="{DynamicResource PrimaryControlBackground}"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryControlPressed}"/>
+        <Setter Property="Padding" Value="2"/>
+        <Setter Property="FontSize" Value="14"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+
+                    <Border x:Name="bd" BorderThickness="0" Background="{TemplateBinding Background}">
+                        <TextBlock x:Name="txtContent"
+                                   Text="{TemplateBinding Content}"
+                                   TextAlignment="Center"
+                                   TextDecorations="Underline"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   FontSize="{TemplateBinding FontSize}"
+                                   Padding="{TemplateBinding Padding}"/>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger SourceName="bd" Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                        </Trigger>
+
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource PrimaryControlPressed}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="ButtonWithDownArrow" TargetType="{x:Type Button}">
@@ -288,6 +323,38 @@
     <Style TargetType="{x:Type ListView}">
         <Setter Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
+    </Style>
+
+
+    <Style TargetType="{x:Type GridViewColumnHeader}">
+        <Setter Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SecondaryAppBackground}"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="GridViewColumnHeader">
+                    <Grid>
+                        <Border x:Name="bd" BorderThickness="1,0,1,1" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                            <TextBlock Text="{TemplateBinding Content}"
+                                       Padding="0,0,0,3"
+                                       HorizontalAlignment="Center"/>
+                        </Border>
+                        
+                        <Thumb x:Name="PART_HeaderGripper" Width="2" HorizontalAlignment="Right"/>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger SourceName="bd" Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource PrimaryControlPressed}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style TargetType="{x:Type TextBox}">

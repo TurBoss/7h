@@ -10,6 +10,7 @@ using System.Text;
 
 namespace Iros._7th.Workshop {
     public static class Log {
+        private static object streamLock = new object();
         private static System.IO.StreamWriter _sw;
 
         static Log() {
@@ -32,7 +33,7 @@ namespace Iros._7th.Workshop {
 
         public static void Write(string s) {
             if (_sw != null)
-                lock (_sw)
+                lock (streamLock)
                     _sw.WriteLine(s);
         }
     }

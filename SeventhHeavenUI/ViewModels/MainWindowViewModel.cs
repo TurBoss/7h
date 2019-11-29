@@ -401,6 +401,15 @@ They will be automatically turned off.";
             if (e.OldStatus == ModStatus.Installed && e.Status == ModStatus.NotInstalled && Sys.ActiveProfile.Items.Any(i => i.ModID.Equals(e.ModID)))
                 ModsViewModel.ToggleActivateMod(e.ModID);
 
+            // update mod preview info page
+            if ((TabIndex)SelectedTabIndex == TabIndex.MyMods)
+            {
+                UpdateModPreviewInfo(ModsViewModel.GetSelectedMod());
+            }
+            else
+            {
+                UpdateModPreviewInfo(CatalogViewModel.GetSelectedMod());
+            }
         }
 
         /// <summary>
@@ -1071,7 +1080,17 @@ They will be automatically turned off.";
 
             if (Sys.ActiveProfile.Items.Count == 0)
             {
-                MessageBox.Show("No mods have been activated.");
+                MessageBox.Show("No mods have been activated. The game will now launch as 'vanilla'");
+
+                // Add 640x480 and High DPI compatibility flags if set in settings
+                if (Sys.Settings.Options.HasFlag(GeneralOptions.SetEXECompatFlags))
+                {
+                    RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
+                    ff7CompatKey?.SetValue(Sys.Settings.FF7Exe, "~ 640X480 HIGHDPIAWARE");
+                }
+
+                Process.Start(Sys.Settings.FF7Exe);
+                return;
             }
 
             string ff7Folder = Path.GetDirectoryName(Sys.Settings.FF7Exe);

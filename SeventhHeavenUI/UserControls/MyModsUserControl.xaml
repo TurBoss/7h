@@ -51,18 +51,21 @@
             <Button x:Name="btnRefresh" 
                     Style="{StaticResource ImageButton}"
                     Content="{StaticResource iconRefresh}"
+                    Click="btnRefresh_Click"
                     ToolTip="Refresh List"
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnDeactivateAll" 
                     Style="{StaticResource ImageButton}"
                     Content="{StaticResource iconCancel}"
+                    Click="btnDeactivateAll_Click"
                     ToolTip="Deactivate All"
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnUninstall" 
                     Style="{StaticResource ImageButton}"
                     Content="{StaticResource iconDelete}"
+                    Click="btnUninstall_Click"
                     ToolTip="Uninstall Mod"
                     Margin="0,0,0,0"/>
 
@@ -75,16 +78,19 @@
             <Button x:Name="btnMoveTop" 
                     Style="{StaticResource ImageButton}"
                     Content="{StaticResource iconUpArrow}"
+                    Click="btnMoveTop_Click"
                     ToolTip="Move to Top"
                     Margin="0,0,0,0"/>
 
-            <Button x:Name="btnMoveUp" 
+            <Button x:Name="btnMoveUp"
+                    Click="btnMoveUp_Click"
                     Style="{StaticResource ImageButton}"
                     Content="{StaticResource iconUpChevron}"
                     ToolTip="Move Up"
                     Margin="0,0,0,0"/>
             
-            <Button x:Name="btnMoveDown" 
+            <Button x:Name="btnMoveDown"
+                    Click="btnMoveDown_Click"
                     Style="{StaticResource ImageButton}"
                     Content="{StaticResource iconDownChevron}"
                     ToolTip="Move Down"/>
@@ -92,6 +98,7 @@
             <Button x:Name="btnSendBottom" 
                     Style="{StaticResource ImageButton}"
                     Content="{StaticResource iconDownArrow}"
+                    Click="btnSendBottom_Click"
                     ToolTip="Send to Bottom"
                     Margin="0,0,0,0"/>
         </StackPanel>

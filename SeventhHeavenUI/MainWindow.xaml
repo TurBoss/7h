@@ -14,7 +14,7 @@
         Height="450" Width="800">
     <Window.Resources>
         <Style x:Key="ModInfoLabelStyle" TargetType="{x:Type TextBlock}">
-            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontSize" Value="13"/>
             <Setter Property="Margin" Value="5,0,0,1"/>
             <Setter Property="FontWeight" Value="DemiBold"/>
             <Setter Property="VerticalAlignment" Value="Bottom"/>
@@ -24,7 +24,7 @@
             <Setter Property="FontWeight" Value="Normal"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
             <Setter Property="Padding" Value="0,0,0,0"/>
-            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontSize" Value="12"/>
         </Style>
     </Window.Resources>
 
@@ -121,26 +121,24 @@
                                        Style="{StaticResource ModInfoDetailsStyle}"/>
                         </WrapPanel>
 
-                        <WrapPanel Margin="3,0,3,0" Grid.Row="5">
+                        <WrapPanel Margin="3,6,3,0" Grid.Row="5">
                             <TextBlock Text="Description:" Style="{StaticResource ModInfoLabelStyle}"/>
                             <TextBlock Text="{Binding PreviewModDescription, FallbackValue='This is a short description of my cool new mod and it does these things like a and b and even x and y.'}" 
                                Style="{StaticResource ModInfoDetailsStyle}"/>
                         </WrapPanel>
 
-                        <WrapPanel Margin="3,0,3,0" Grid.Row="6">
+                        <WrapPanel Margin="3,3,3,0" Grid.Row="6">
                             <TextBlock Text="Link:" Style="{StaticResource ModInfoLabelStyle}"/>
-                            <TextBlock Text="{Binding PreviewModLink, FallbackValue='http://myforums.com/ff7/super'}" 
-                               Style="{StaticResource ModInfoDetailsStyle}"
-                               Foreground="{StaticResource PrimaryControlPressed}"
-                               TextDecorations="Underline"/>
+                            <Button x:Name="btnOpenModLink" 
+                                    Style="{StaticResource HyperlinkButton}"
+                                    Content="{Binding PreviewModLink, FallbackValue='http://myforums.com/ff7/super'}"/>
                         </WrapPanel>
 
                         <WrapPanel Margin="3,6,3,0" Grid.Row="7">
-                            <TextBlock x:Name="btnOpenModReadme"
-                                       Text="Open Readme" 
-                                       Style="{StaticResource ModInfoDetailsStyle}"
-                                       Foreground="{StaticResource PrimaryControlPressed}"
-                                       TextDecorations="Underline"/>
+                            <Button x:Name="btnOpenModReadme"
+                                    Margin="3,0,0,0"
+                                    Style="{StaticResource HyperlinkButton}"
+                                    Content="Open Readme"/>
                         </WrapPanel>
 
 

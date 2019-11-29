@@ -15,11 +15,12 @@ namespace Iros._7th.Workshop {
         public UpdateType DefaultUpdate { get; set; }
         public List<InstalledItem> Items { get; set; }
 
+        private object _pendingLock = new object();
         public List<string> PendingDelete { get; set; }
         public List<Guid> CodeAllowed { get; set; }
 
         public void QueuePendingDelete(IEnumerable<string> files) {
-            lock (PendingDelete)
+            lock (_pendingLock)
                 PendingDelete.AddRange(files);
         }
 
@@ -51,7 +52,7 @@ namespace Iros._7th.Workshop {
         }
 
         public void AttemptDeletions() {
-            lock (PendingDelete) {
+            lock (_pendingLock) {
                 int oldCount = PendingDelete.Count;
                 for (int i = PendingDelete.Count - 1; i >= 0; i--) {
                     string path = System.IO.Path.Combine(Sys.Settings.LibraryLocation, PendingDelete[i]);
