@@ -116,7 +116,7 @@ namespace Iros._7th.Workshop {
                     Sys.Settings.MovieFolder = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Square Soft, Inc.\Final Fantasy VII", "MoviePath", null);
                 }
 
-                if (MessageBox.Show("Would you like 7th Heaven to open catalog subscription links that begin with iros://?", "iros:// Link Setup", MessageBoxButtons.YesNo) == DialogResult.Yes) {
+                if (MessageBox.Show("Would you like 7th Heaven to import IROs you open from Windows and iros:// catalog subscription links from the web?", "Associate Files and Links", MessageBoxButtons.YesNo) == DialogResult.Yes) {
                     try {
                         if (!WriteLinkReg()) throw new Exception("Could not create keys");
                     } catch (Exception ex) {
