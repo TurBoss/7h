@@ -72,6 +72,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\ButtonWithImage.cs" />
     <Compile Include="Classes\AnimatedImage.cs" />
     <Compile Include="Classes\Constraint.cs" />
     <Compile Include="UserControls\CatalogUserControl.xaml.cs">

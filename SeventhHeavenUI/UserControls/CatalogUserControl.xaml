@@ -29,7 +29,7 @@
                     <GridViewColumn Header="Name" Width="250" DisplayMemberBinding="{Binding Name}"/>
                     <GridViewColumn Header="Author" Width="100" DisplayMemberBinding="{Binding Author}"/>
                     <GridViewColumn Header="Size" Width="60" DisplayMemberBinding="{Binding DownloadSize}"/>
-                    <GridViewColumn Header="Version" Width="60" DisplayMemberBinding="{Binding Version}"/>
+                    <GridViewColumn Header="Ver." Width="60" DisplayMemberBinding="{Binding Version}"/>
                     <GridViewColumn Header="Release Date" Width="100" DisplayMemberBinding="{Binding ReleaseDate}"/>
                     <GridViewColumn Header="Category" Width="100" DisplayMemberBinding="{Binding Category}"/>
                 </GridView>

@@ -24,7 +24,7 @@
                 <GridView>
                     <GridViewColumn Header="Name" Width="250" DisplayMemberBinding="{Binding Name}"/>
                     <GridViewColumn Header="Author" Width="100" DisplayMemberBinding="{Binding Author}"/>
-                    <GridViewColumn Header="Version" Width="100" DisplayMemberBinding="{Binding Version}"/>
+                    <GridViewColumn Header="Ver." Width="60" DisplayMemberBinding="{Binding Version}"/>
                     <GridViewColumn Header="Category" Width="100" DisplayMemberBinding="{Binding Category}"/>
                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding Empty}"/>
                     <GridViewColumn x:Name="colActive" Header="Active" Width="75">
@@ -69,39 +69,6 @@
                     VerticalAlignment="Top"
                     HorizontalAlignment="Right">
 
-            <Button x:Name="btnImport" 
-                    Style="{StaticResource ImageButton}"
-                    Content="{StaticResource iconImport}"
-                    ToolTip="Import Mod"
-                    Margin="0,0,0,0"/>
-
-            <Button x:Name="btnRefresh" 
-                    Style="{StaticResource ImageButton}"
-                    Content="{StaticResource iconRefresh}"
-                    Click="btnRefresh_Click"
-                    ToolTip="Refresh List"
-                    Margin="0,0,0,0"/>
-
-            <Button x:Name="btnDeactivateAll" 
-                    Style="{StaticResource ImageButton}"
-                    Content="{StaticResource iconCancel}"
-                    Click="btnDeactivateAll_Click"
-                    ToolTip="Deactivate All"
-                    Margin="0,0,0,0"/>
-
-            <Button x:Name="btnUninstall" 
-                    Style="{StaticResource ImageButton}"
-                    Content="{StaticResource iconDelete}"
-                    Click="btnUninstall_Click"
-                    ToolTip="Uninstall Mod"
-                    Margin="0,0,0,0"/>
-
-            <Button x:Name="btnConfigure" 
-                    Style="{StaticResource ImageButton}"
-                    Content="{StaticResource iconSettings}"
-                    ToolTip="Configure Mod"
-                    Margin="0,0,0,10"/>
-
             <Button x:Name="btnMoveTop" 
                     Style="{StaticResource ImageButton}"
                     Content="{StaticResource iconUpArrow}"
@@ -128,6 +95,43 @@
                     Click="btnSendBottom_Click"
                     ToolTip="Send to Bottom"
                     Margin="0,0,0,0"/>
+            
+            <Button x:Name="btnConfigure" 
+                    Style="{StaticResource ImageButton}"
+                    Content="{StaticResource iconSettings}"
+                    ToolTip="Configure Mod"
+                    Margin="0,0,0,10"/>
+            
+            <Button x:Name="btnUninstall" 
+                    Style="{StaticResource ImageButton}"
+                    Content="{StaticResource iconDelete}"
+                    Click="btnUninstall_Click"
+                    ToolTip="Uninstall Mod"
+                    Margin="0,0,0,0"/>
+            
+            <Button x:Name="btnImport" 
+                    Style="{StaticResource ImageButton}"
+                    Content="{StaticResource iconImport}"
+                    ToolTip="Import Mod"
+                    Margin="0,0,0,0"/>
+
+            <Button x:Name="btnDeactivateAll" 
+                    Style="{StaticResource ImageButton}"
+                    Content="{StaticResource iconCancel}"
+                    Click="btnDeactivateAll_Click"
+                    ToolTip="Deactivate All"
+                    Margin="0,0,0,0"/>
+            
+            <Button x:Name="btnRefresh" 
+                    Style="{StaticResource ImageButton}"
+                    Content="{StaticResource iconRefresh}"
+                    Click="btnRefresh_Click"
+                    ToolTip="Refresh List"
+                    Margin="0,0,0,0"/>
+
+
+
+
         </StackPanel>
         
     </Grid>

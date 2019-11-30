@@ -316,8 +316,8 @@ They will be automatically turned off.";
             }
 
             PreviewModAuthor = selected.Author;
-            PreviewModName = selected.Name;
             PreviewModVersion = selected.InstallInfo.CachedDetails.LatestVersion.Version.ToString();
+            PreviewModName = $"{selected.Name} v{PreviewModVersion}";
             PreviewModReleaseDate = selected.InstallInfo.CachedDetails.LatestVersion.ReleaseDate.ToString(Sys.Settings.DateTimeStringFormat);
             PreviewModReleaseNotes = selected.InstallInfo.CachedDetails.LatestVersion.ReleaseNotes;
             PreviewModCategory = selected.InstallInfo.CachedDetails.Category;
@@ -345,8 +345,8 @@ They will be automatically turned off.";
             }
 
             PreviewModAuthor = selected.Author;
-            PreviewModName = selected.Name;
             PreviewModVersion = selected.Mod.LatestVersion.Version.ToString();
+            PreviewModName = $"{selected.Name} v{PreviewModVersion}";
             PreviewModReleaseDate = selected.ReleaseDate;
             PreviewModReleaseNotes = selected.Mod.LatestVersion.ReleaseNotes;
             PreviewModCategory = selected.Category;

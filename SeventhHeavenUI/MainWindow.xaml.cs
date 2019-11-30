@@ -1,22 +1,11 @@
 ﻿using Iros._7th;
 using Iros._7th.Workshop;
-using Iros.Mega;
 using SeventhHeavenUI.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SeventhHeavenUI
 {
@@ -189,6 +178,11 @@ namespace SeventhHeavenUI
         private void menuPlayOptions_Closed(object sender, RoutedEventArgs e)
         {
             btnPlayOptions.IsEnabled = true;
+        }
+
+        private void btnHelp_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
