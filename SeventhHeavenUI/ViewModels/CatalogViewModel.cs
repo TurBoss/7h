@@ -38,6 +38,9 @@ It may not work properly unless you find and install the requirements.";
 
         private Dictionary<string, MegaIros> _megaFolders = new Dictionary<string, MegaIros>(StringComparer.InvariantCultureIgnoreCase);
 
+        private object _listLock = new object();
+        private object _downloadLock = new object();
+
         /// <summary>
         /// List of installed mods (includes active mods in the currently active profile)
         /// </summary>
@@ -93,13 +96,13 @@ It may not work properly unless you find and install the requirements.";
             foreach (ModRequirement req in modToDownload.Requirements)
             {
                 InstalledItem inst = Sys.Library.GetItem(req.ModID);
-                
+
                 if (inst != null)
                 {
                     continue;
                 }
 
-                Mod rMod = Sys.Catalog.GetMod(req.ModID);
+                Mod rMod = Sys.GetModFromCatalog(req.ModID);
 
                 if (rMod != null)
                     required.Add(rMod);
@@ -185,8 +188,16 @@ It may not work properly unless you find and install the requirements.";
                 newList.Add(item);
             }
 
-            CatalogModList.Clear();
-            CatalogModList = newList;
+            // make sure to set CatalogModList on the UI thread
+            // ... due to uncaught exception that can be thrown when modifying on background thread
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                lock (_listLock)
+                {
+                    CatalogModList.Clear();
+                    CatalogModList = newList;
+                }
+            });
         }
 
         /// <summary>
@@ -194,15 +205,25 @@ It may not work properly unless you find and install the requirements.";
         /// </summary>
         public CatalogModItemViewModel GetSelectedMod()
         {
-            CatalogModItemViewModel selected = CatalogModList.Where(m => m.IsSelected).LastOrDefault();
+            CatalogModItemViewModel selected = null;
+            int selectedCount = 0;
+
+            lock (_listLock)
+            {
+                selected = CatalogModList.Where(m => m.IsSelected).LastOrDefault();
+                selectedCount = CatalogModList.Where(m => m.IsSelected).Count();
+            }
 
             // due to virtualization, IsSelected could be set on multiple items... 
             // ... so we will deselect the other items to avoid problems of multiple items being selected
-            if (CatalogModList.Where(m => m.IsSelected).Count() > 1)
+            if (selectedCount > 1)
             {
-                foreach (var mod in CatalogModList.Where(m => m.IsSelected && m.Mod.ID != selected.Mod.ID))
+                lock (_listLock)
                 {
-                    mod.IsSelected = false;
+                    foreach (var mod in CatalogModList.Where(m => m.IsSelected && m.Mod.ID != selected.Mod.ID))
+                    {
+                        mod.IsSelected = false;
+                    }
                 }
             }
 
@@ -316,13 +337,22 @@ It may not work properly unless you find and install the requirements.";
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                DownloadList.Add(newDownload);
+                lock (_downloadLock)
+                {
+                    DownloadList.Add(newDownload);
+                }
             });
         }
 
         internal void UpdateModDetails(Guid modID)
         {
-            CatalogModItemViewModel foundMod = CatalogModList.Where(m => m.Mod.ID == modID).FirstOrDefault();
+            CatalogModItemViewModel foundMod = null;
+
+            lock (_listLock)
+            {
+                foundMod = CatalogModList.Where(m => m.Mod.ID == modID).FirstOrDefault();
+            }
+
             foundMod?.UpdateDetails();
         }
 
@@ -351,7 +381,10 @@ It may not work properly unless you find and install the requirements.";
         {
             App.Current.Dispatcher.Invoke(() =>
             {
-                DownloadList.Remove(item);
+                lock (_downloadLock)
+                {
+                    DownloadList.Remove(item);
+                }
             });
         }
 

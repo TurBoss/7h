@@ -42,6 +42,8 @@ namespace Iros._7th.Workshop {
 
         private static Dictionary<Type, object> _single = new Dictionary<Type, object>();
 
+        public static object CatalogLock = new object();
+
         public static T GetSingle<T>() {
             object o;
             _single.TryGetValue(typeof(T), out o);
@@ -124,6 +126,38 @@ namespace Iros._7th.Workshop {
             using (var fs = new System.IO.FileStream(sfile, System.IO.FileMode.Create))
                 Util.Serialize(Settings, fs);
             ImageCache.Save();
+        }
+
+        /// <summary>
+        /// Updates <see cref="Catalog"/> to <paramref name="newCatalog"/>; 
+        /// thread safe by locking the object
+        /// </summary>
+        /// <param name="newCatalog"></param>
+        public static void SetNewCatalog(Catalog newCatalog)
+        {
+            lock(CatalogLock)
+            {
+                Catalog = newCatalog;
+            }
+        }
+
+        /// <summary>
+        /// Returns a Mod in <see cref="Catalog"/>
+        /// ... uses <see cref="CatalogLock"/> to ensure the catalog does not change
+        /// when multiple threads are accessing/modifying it at once.
+        /// </summary>
+        /// <param name="modId"></param>
+        /// <returns></returns>
+        public static Mod GetModFromCatalog(Guid modId)
+        {
+            Mod m = null;
+
+            lock (CatalogLock)
+            {
+                m = Catalog.GetMod(modId);
+            }
+
+            return m;
         }
 
         static Sys() {

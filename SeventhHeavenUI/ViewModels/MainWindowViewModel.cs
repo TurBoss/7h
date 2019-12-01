@@ -320,7 +320,7 @@ They will be automatically turned off.";
             PreviewModName = $"{selected.Name} v{PreviewModVersion}";
             PreviewModReleaseDate = selected.InstallInfo.CachedDetails.LatestVersion.ReleaseDate.ToString(Sys.Settings.DateTimeStringFormat);
             PreviewModReleaseNotes = selected.InstallInfo.CachedDetails.LatestVersion.ReleaseNotes;
-            PreviewModCategory = selected.InstallInfo.CachedDetails.Category;
+            PreviewModCategory = selected.InstallInfo.CachedDetails.LatestVersion.Category;
             PreviewModDescription = selected.InstallInfo.CachedDetails.Description;
             PreviewModLink = selected.InstallInfo.CachedDetails.Link;
 
@@ -597,12 +597,12 @@ They will be automatically turned off.";
             try
             {
                 _catFile = Path.Combine(Sys.SysFolder, "catalog.xml");
-                Sys.Catalog = Util.Deserialize<Catalog>(_catFile);
+                Sys.SetNewCatalog(Util.Deserialize<Catalog>(_catFile));
             }
             catch (Exception e)
             {
                 Logger.Warn(e, "failed to load catalog.xml - initializing empty catalog ...");
-                Sys.Catalog = new Catalog();
+                Sys.SetNewCatalog(new Catalog());
             }
         }
 
@@ -941,7 +941,7 @@ They will be automatically turned off.";
         {
             foreach (InstalledItem inst in Sys.Library.Items)
             {
-                Mod cat = Sys.Catalog.GetMod(inst.ModID);
+                Mod cat = Sys.GetModFromCatalog(inst.ModID);
 
                 if (cat != null && cat.LatestVersion.Version > inst.Versions.Max(v => v.VersionDetails.Version))
                 {
@@ -1244,11 +1244,13 @@ They will be automatically turned off.";
         {
             Task t = Task.Factory.StartNew(() =>
             {
-                bool changed = false;
                 List<Guid> pingIDs = null;
                 var options = (CatCheckOptions)state;
 
                 Directory.CreateDirectory(Path.Combine(Sys.SysFolder, "temp"));
+
+                int subTotalCount = Sys.Settings.SubscribedUrls.Count; // amount of subscriptions to update
+                int subUpdateCount = 0; // amount of subscriptions updated
 
                 foreach (string subscribe in Sys.Settings.SubscribedUrls.ToArray())
                 {
@@ -1263,28 +1265,40 @@ They will be automatically turned off.";
                     {
                         Logger.Info($"Checking subscription {sub.Url}");
 
-                        string path = Path.Combine(Sys.SysFolder, "temp", "cattemp.xml");
+                        string uniqueFileName = $"cattemp{Path.GetRandomFileName()}.xml"; // save temp catalog update to unique filename so multiple catalog updates can download async
+                        string path = Path.Combine(Sys.SysFolder, "temp", uniqueFileName);
 
                         Sys.Downloads.Download(subscribe, path, $"Checking catalog {subscribe}", new Install.InstallProcedureCallback(e =>
                         {
                             bool success = (e.Error == null && e.Cancelled == false);
+                            subUpdateCount++;
 
                             if (success)
                             {
                                 try
                                 {
                                     Catalog c = Util.Deserialize<Catalog>(path);
-                                    Sys.Catalog = Catalog.Merge(Sys.Catalog, c, out pingIDs);
-                                    Sys.Message(new WMessage() { Text = $"Updated catalog from {subscribe}" });
 
-                                    using (var fs = new FileStream(_catFile, FileMode.Create))
+                                    lock (Sys.CatalogLock) // put a lock on the Catalog so multiple threads can only merge one at a time
                                     {
-                                        Util.Serialize(Sys.Catalog, fs);
+                                        Sys.Catalog = Catalog.Merge(Sys.Catalog, c, out pingIDs);
+
+                                        using (FileStream fs = new FileStream(_catFile, FileMode.Create))
+                                        {
+                                            Util.Serialize(Sys.Catalog, fs);
+                                        }
                                     }
+
+                                    Sys.Message(new WMessage() { Text = $"Updated catalog from {subscribe}" });
 
                                     sub.LastSuccessfulCheck = DateTime.Now;
                                     sub.FailureCount = 0;
-                                    changed = true;
+
+
+                                    foreach (Guid id in pingIDs)
+                                    {
+                                        Sys.Ping(id);
+                                    }
                                 }
                                 catch (Exception ex)
                                 {
@@ -1300,19 +1314,32 @@ They will be automatically turned off.";
                                 sub.FailureCount++;
                             }
 
+                            // reload the UI list of catalog mods and scan for any mod updates once all subs have been attempted to download
+                            if (subUpdateCount == subTotalCount)
+                            {
+                                CatalogViewModel.ReloadModList(SearchText);
+                                ScanForModUpdates();
+                            }
+
                         }), null);
                     }
                 }
-
-                if (changed)
-                {
-                    foreach (Guid id in pingIDs) Sys.Ping(id);
-                }
-
-                ScanForModUpdates();
             });
 
             return t;
+        }
+
+        internal void ForceCheckCatalogUpdateAsync()
+        {
+            Task t = CheckForCatalogUpdatesAsync(new CatCheckOptions() { ForceCheck = true });
+
+            t.ContinueWith((taskResult) =>
+            {
+                if (taskResult.IsFaulted)
+                {
+                    Logger.Warn(taskResult.Exception);
+                }
+            });
         }
 
         internal void DoSearch()

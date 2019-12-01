@@ -134,7 +134,7 @@ namespace SeventhHeavenUI.ViewModels
             Mod = mod;
             Name = Mod.Name;
             Author = Mod.Author;
-            Category = Mod.Category;
+            Category = Mod.LatestVersion.Category;
             Version = Mod.LatestVersion.Version.ToString();
             DownloadSize = GetDLSize(Mod.LatestVersion.DownloadSize);
             ReleaseDate = Mod.LatestVersion.ReleaseDate.ToString(Sys.Settings.DateTimeStringFormat);
@@ -165,11 +165,11 @@ namespace SeventhHeavenUI.ViewModels
         /// </summary>
         public void UpdateDetails()
         {
-            Mod = Sys.Catalog.GetMod(Mod.ID) ?? Mod;
+            Mod = Sys.GetModFromCatalog(Mod.ID) ?? Mod;
 
             Name = Mod.Name;
             Author = Mod.Author;
-            Category = Mod.Category;
+            Category = Mod.LatestVersion.Category;
             Version = Mod.LatestVersion.Version.ToString();
             DownloadSize = GetDLSize(Mod.LatestVersion.DownloadSize);
             ReleaseDate = Mod.LatestVersion.ReleaseDate.ToString(Sys.Settings.DateTimeStringFormat);

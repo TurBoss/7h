@@ -146,7 +146,7 @@ namespace SeventhHeavenUI.ViewModels
             Name = InstallInfo.CachedDetails.Name;
             Author = InstallInfo.CachedDetails.Author;
             Version = InstallInfo.CachedDetails.LatestVersion.Version.ToString();
-            Category = InstallInfo.CachedDetails.Category;
+            Category = InstallInfo.CachedDetails.LatestVersion.Category;
         }
 
     }

@@ -22,6 +22,41 @@ namespace SeventhHeaven.UserControls
             this.DataContext = ViewModel;
         }
 
+        /// <summary>
+        /// Returns true if a mod is selected in the list.
+        /// Returns false and shows messagebox warning user that no mod is selected otherwise;
+        /// </summary>
+        private bool IsModSelected()
+        {
+            if (lstMods.SelectedItem == null)
+            {
+                MessageBox.Show("Select a mod first.", "No Mod Selected", MessageBoxButton.OK);
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Returns true if the selected mod is active.
+        /// Returns false and shows messagebox warning user that selected mod is not active otherwise;
+        /// </summary>
+        private bool IsActiveModSelected()
+        {
+            if (lstMods.SelectedItem == null)
+            {
+                return false;
+            }
+
+            if (!(lstMods.SelectedItem as InstalledModViewModel).IsActive)
+            {
+                MessageBox.Show("Mod is not active. Only activated mods can be re-ordered.", "Cannot Move Inactive Mod", MessageBoxButton.OK);
+                return false;
+            }
+
+            return true;
+        }
+
         private void lstMods_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ViewModel.RaiseSelectedModChanged(sender, (lstMods.SelectedItem as InstalledModViewModel));
@@ -34,7 +69,7 @@ namespace SeventhHeaven.UserControls
 
         private void btnDeactivateAll_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            ViewModel.ToggleDeactivationForAllMods();
+            ViewModel.DeactivateAllActivevMods();
         }
 
         private void btnUninstall_Click(object sender, RoutedEventArgs e)
@@ -77,33 +112,6 @@ namespace SeventhHeaven.UserControls
             ViewModel.ReorderProfileItem((lstMods.SelectedItem as InstalledModViewModel), 1);
         }
 
-        private bool IsModSelected()
-        {
-            if (lstMods.SelectedItem == null)
-            {
-                MessageBox.Show("Select a mod first.", "No Mod Selected", MessageBoxButton.OK);
-                return false;
-            }
-
-            return true;
-        }
-
-        private bool IsActiveModSelected()
-        {
-            if (lstMods.SelectedItem == null)
-            {
-                return false;
-            }
-
-            if (!(lstMods.SelectedItem as InstalledModViewModel).IsActive)
-            {
-                MessageBox.Show("Mod is not active. Only activated mods can be re-ordered.", "Cannot Move Inactive Mod", MessageBoxButton.OK);
-                return false;
-            }
-
-            return true;
-        }
-
         private void btnMoveTop_Click(object sender, RoutedEventArgs e)
         {
             if (!IsModSelected())
@@ -132,6 +140,11 @@ namespace SeventhHeaven.UserControls
             }
 
             ViewModel.SendModToBottom((lstMods.SelectedItem as InstalledModViewModel));
+        }
+
+        private void btnActivateAll_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ActivateAllMods();
         }
     }
 }

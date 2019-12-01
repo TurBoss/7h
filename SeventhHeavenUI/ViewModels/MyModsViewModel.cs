@@ -331,11 +331,21 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
-        internal void ToggleDeactivationForAllMods()
+        internal void DeactivateAllActivevMods()
         {
-            foreach (var installedMod in ModList.Where(m => m.IsActive))
+            foreach (InstalledModViewModel installedMod in ModList.Where(m => m.IsActive))
             {
                 ToggleActivateMod(installedMod.ActiveModInfo.ModID, reloadList: false); // reload list at the end
+            }
+
+            ReloadModList();
+        }
+
+        internal void ActivateAllMods()
+        {
+            foreach (InstalledModViewModel installedMod in ModList.Where(m => !m.IsActive))
+            {
+                ToggleActivateMod(installedMod.InstallInfo.ModID, reloadList: false); // reload list at the end
             }
 
             ReloadModList();

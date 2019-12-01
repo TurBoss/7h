@@ -60,7 +60,7 @@
                         <MenuItem x:Name="menuItemAaliSettings" Header="Aali Driver Settings ..."/>
                         <MenuItem x:Name="menuItemThemeSettings" Header="Change Color Scheme ..."/>
                         <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
-                        <MenuItem x:Name="menuUpdateCatalog" Header="Update Catalog ..."/>
+                        <MenuItem x:Name="menuUpdateCatalog" Header="Update Catalog ..." Click="menuUpdateCatalog_Click"/>
                     </ContextMenu>
                 </cls:ButtonWithImage.ContextMenu>
             </cls:ButtonWithImage>

@@ -184,5 +184,10 @@ namespace SeventhHeavenUI
         {
 
         }
+
+        private void menuUpdateCatalog_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ForceCheckCatalogUpdateAsync();
+        }
     }
 }

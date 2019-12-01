@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SeventhHeaven.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="500" d:DesignWidth="800">
     <UserControl.Resources>
 
         <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource MainListViewItemStyle}">
@@ -100,7 +100,7 @@
                     Style="{StaticResource ImageButton}"
                     Content="{StaticResource iconSettings}"
                     ToolTip="Configure Mod"
-                    Margin="0,0,0,10"/>
+                    Margin="0,0,0,0"/>
             
             <Button x:Name="btnUninstall" 
                     Style="{StaticResource ImageButton}"
@@ -109,10 +109,18 @@
                     ToolTip="Uninstall Mod"
                     Margin="0,0,0,0"/>
             
+
             <Button x:Name="btnImport" 
                     Style="{StaticResource ImageButton}"
                     Content="{StaticResource iconImport}"
                     ToolTip="Import Mod"
+                    Margin="0,0,0,0"/>
+
+            <Button x:Name="btnActivateAll" 
+                    Style="{StaticResource ImageButton}"
+                    Content="{StaticResource iconCheckmark}"
+                    Click="btnActivateAll_Click"
+                    ToolTip="Activate All"
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnDeactivateAll" 
@@ -121,16 +129,13 @@
                     Click="btnDeactivateAll_Click"
                     ToolTip="Deactivate All"
                     Margin="0,0,0,0"/>
-            
+
             <Button x:Name="btnRefresh" 
                     Style="{StaticResource ImageButton}"
                     Content="{StaticResource iconRefresh}"
                     Click="btnRefresh_Click"
                     ToolTip="Refresh List"
                     Margin="0,0,0,0"/>
-
-
-
 
         </StackPanel>
         

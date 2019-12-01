@@ -11,7 +11,7 @@ using System.Text;
 namespace Iros._7th.Workshop {
     public class Catalog {
         private Dictionary<Guid, Mod> _lookup;
-        
+
         public List<Mod> Mods { get; set; }
 
         public Catalog() {
@@ -60,7 +60,6 @@ namespace Iros._7th.Workshop {
         public List<ModPatch> Patches { get; set; }
         [System.Xml.Serialization.XmlElement("Requirement")]
         public List<ModRequirement> Requirements { get; set; }
-        public string Category { get; set; }
 
         public IEnumerable<ModPatch> GetPatchesFromTo(decimal from, decimal to) {
             foreach (var patch in Patches) {
@@ -140,5 +139,7 @@ namespace Iros._7th.Workshop {
 
         public string PreviewImage { get; set; }
         public string ReleaseNotes { get; set; }
+
+        public string Category { get; set; }
     }
 }
