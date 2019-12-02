@@ -195,6 +195,11 @@
                             <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
                             <Setter Property="Cursor" Value="Hand"/>
                         </Trigger>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
+                            <Setter TargetName="txtContent" Property="TextDecorations" Value="None"/>
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

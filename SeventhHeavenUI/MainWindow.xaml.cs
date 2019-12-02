@@ -189,5 +189,15 @@ namespace SeventhHeavenUI
         {
             ViewModel.ForceCheckCatalogUpdateAsync();
         }
+
+        private void btnOpenModLink_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OpenPreviewModLink();
+        }
+
+        private void btnOpenModReadme_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OpenPreviewModReadMe();
+        }
     }
 }

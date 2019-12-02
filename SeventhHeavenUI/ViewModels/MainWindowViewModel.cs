@@ -64,6 +64,7 @@ They will be automatically turned off.";
         private List<string> _statusMessageLog;
         private static _7thWrapperLib.LoaderContext _context;
 
+        private Mod _previewMod;
         private string _previewModAuthor;
         private string _previewModName;
         private string _previewModVersion;
@@ -73,6 +74,7 @@ They will be automatically turned off.";
         private string _previewModDescription;
         private string _previewModLink;
         private Uri _previewModImageSource;
+        private bool _previewModHasReadMe;
 
         public MyModsViewModel ModsViewModel { get; set; }
 
@@ -114,6 +116,15 @@ They will be automatically turned off.";
                 _selectedTabIndex = value;
                 NotifyPropertyChanged();
                 NotifyPropertyChanged(nameof(FilterButtonVisibility));
+                
+                if ((TabIndex)_selectedTabIndex == TabIndex.MyMods)
+                {
+                    UpdateModPreviewInfo(ModsViewModel.GetSelectedMod());
+                }
+                else
+                {
+                    UpdateModPreviewInfo(CatalogViewModel.GetSelectedMod());
+                }
             }
         }
 
@@ -263,6 +274,19 @@ They will be automatically turned off.";
             }
         }
 
+        public bool PreviewModHasReadMe
+        {
+            get
+            {
+                return _previewModHasReadMe;
+            }
+            set
+            {
+                _previewModHasReadMe = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public Uri PreviewModImageSource
         {
             get
@@ -315,6 +339,8 @@ They will be automatically turned off.";
                 return;
             }
 
+            _previewMod = selected.InstallInfo.CachedDetails;
+
             PreviewModAuthor = selected.Author;
             PreviewModVersion = selected.InstallInfo.CachedDetails.LatestVersion.Version.ToString();
             PreviewModName = $"{selected.Name} v{PreviewModVersion}";
@@ -323,6 +349,16 @@ They will be automatically turned off.";
             PreviewModCategory = selected.InstallInfo.CachedDetails.LatestVersion.Category;
             PreviewModDescription = selected.InstallInfo.CachedDetails.Description;
             PreviewModLink = selected.InstallInfo.CachedDetails.Link;
+
+            InstalledVersion latestVersion = selected.InstallInfo.LatestInstalled;
+            if (latestVersion != null)
+            {
+                PreviewModHasReadMe = latestVersion.HasData("readme.md") || latestVersion.HasData("readme.html") || latestVersion.HasData("readme.txt");
+            }
+            else
+            {
+                PreviewModHasReadMe = false;
+            }
 
             string pathToImage = Sys.ImageCache.GetImagePath(selected.InstallInfo.CachedDetails.LatestVersion.PreviewImage, selected.InstallInfo.CachedDetails.ID);
             PreviewModImageSource = pathToImage == null ? null : new Uri(pathToImage);
@@ -344,6 +380,8 @@ They will be automatically turned off.";
                 return;
             }
 
+            _previewMod = selected.Mod;
+
             PreviewModAuthor = selected.Author;
             PreviewModVersion = selected.Mod.LatestVersion.Version.ToString();
             PreviewModName = $"{selected.Name} v{PreviewModVersion}";
@@ -352,6 +390,7 @@ They will be automatically turned off.";
             PreviewModCategory = selected.Category;
             PreviewModDescription = selected.Mod.Description;
             PreviewModLink = selected.Mod.Link;
+            PreviewModHasReadMe = false; // no READMEs for catalog (only installed mods)
 
             string pathToImage = Sys.ImageCache.GetImagePath(selected.Mod.LatestVersion.PreviewImage, selected.Mod.ID);
             PreviewModImageSource = pathToImage == null ? null : new Uri(pathToImage);
@@ -740,42 +779,6 @@ They will be automatically turned off.";
             });
         }
 
-        /// <summary>
-        /// Returns <see cref="_7thWrapperLib.ModInfo"/> for the corresponding installed mod.
-        /// Checks <see cref="_infoCache"/> before loading mod info from disk by reading mod.xml
-        /// </summary>
-        internal static _7thWrapperLib.ModInfo GetModInfo(InstalledModViewModel mod)
-        {
-            var inst = mod.InstallInfo.Versions.OrderBy(v => v.VersionDetails.Version).Last();
-            string mfile = Path.Combine(Sys.Settings.LibraryLocation, inst.InstalledLocation);
-
-            _7thWrapperLib.ModInfo info;
-
-            if (!_infoCache.TryGetValue(mfile, out info))
-            {
-                // mod info does not exist in cache so read from disk to load mod info
-                if (mfile.EndsWith(".iro", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    using (var arc = new _7thWrapperLib.IrosArc(mfile))
-                        if (arc.HasFile("mod.xml"))
-                        {
-                            var doc = new System.Xml.XmlDocument();
-                            doc.Load(arc.GetData("mod.xml"));
-                            info = new _7thWrapperLib.ModInfo(doc, _context);
-                        }
-                }
-                else
-                {
-                    string file = Path.Combine(mfile, "mod.xml");
-                    if (File.Exists(file))
-                        info = new _7thWrapperLib.ModInfo(file, _context);
-                }
-                _infoCache.Add(mfile, info);
-            }
-
-            return info;
-        }
-
         internal static _7thWrapperLib.ModInfo GetModInfo(InstalledItem ii)
         {
             var inst = ii.Versions.OrderBy(v => v.VersionDetails.Version).Last();
@@ -1041,7 +1044,7 @@ They will be automatically turned off.";
                     {
                         continue; //good!
                     }
-                    
+
                     if (forbid.Versions.Any() && forbid.Versions.Contains(rInst.LatestInstalled.VersionDetails.Version))
                     {
                         MessageBox.Show($"Mod {item.CachedDetails.Name} is not compatible with the version of {rInst.CachedDetails.Name} you have installed. Try updating it?");
@@ -1294,6 +1297,12 @@ They will be automatically turned off.";
                                     sub.LastSuccessfulCheck = DateTime.Now;
                                     sub.FailureCount = 0;
 
+                                    // delete temp catalog
+                                    if (File.Exists(path))
+                                    {
+                                        File.Delete(path);
+                                    }
+
 
                                     foreach (Guid id in pingIDs)
                                     {
@@ -1350,9 +1359,107 @@ They will be automatically turned off.";
             }
         }
 
-        private class CatCheckOptions
+        internal void OpenPreviewModLink()
         {
-            public bool ForceCheck { get; set; }
+            if (string.IsNullOrEmpty(PreviewModLink))
+            {
+                Logger.Warn("link is null/empty");
+                return;
+            }
+
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo()
+                {
+                    FileName = PreviewModLink
+                };
+
+                Process.Start(startInfo);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
+
+        }
+
+        internal void OpenPreviewModReadMe()
+        {
+            InstalledVersion inst = Sys.Library.GetItem(_previewMod.ID)?.LatestInstalled;
+
+            if (inst == null)
+            {
+                Logger.Warn("cant find installed version");
+                return;
+            }
+
+            bool hasReadmeFile = false;
+            string tempDirPath = Path.Combine(Sys.SysFolder, "temp");
+            string tempFileName = null;
+
+            string pathToTempFile;
+
+            Directory.CreateDirectory(tempDirPath);
+
+            if (inst.HasData("readme.md"))
+            {
+                tempFileName = "readme.md";
+                hasReadmeFile = true;
+            }
+            else if (inst.HasData("readme.html"))
+            {
+                tempFileName = "readme.html";
+                hasReadmeFile = true;
+            }
+            else if (inst.HasData("readme.txt"))
+            {
+                tempFileName = "readme.txt";
+                hasReadmeFile = true;
+            }
+
+            if (!hasReadmeFile)
+            {
+                Logger.Warn($"no readme file found for {_previewMod.Name} - {_previewMod.ID}");
+                return;
+            }
+
+            pathToTempFile = Path.Combine(tempDirPath, tempFileName);
+
+            try
+            {
+                using (Stream s = inst.GetData(tempFileName))
+                {
+                    using (FileStream tempFile = new FileStream(pathToTempFile, FileMode.Create, FileAccess.Write))
+                    {
+                        s.CopyTo(tempFile);
+                    }
+                }
+
+                if (pathToTempFile.EndsWith(".txt"))
+                {
+                    Process.Start("notepad.exe", pathToTempFile);
+                }
+                else
+                {
+                    ProcessStartInfo startInfo = new ProcessStartInfo()
+                    {
+                        FileName = pathToTempFile
+                    };
+                    Process.Start(startInfo);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, "failed to open readme");
+                return;
+            }
+
         }
     }
+
+    internal class CatCheckOptions
+    {
+        public bool ForceCheck { get; set; }
+    }
+
 }

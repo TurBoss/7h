@@ -26,6 +26,15 @@
             <Setter Property="Padding" Value="0,0,0,0"/>
             <Setter Property="FontSize" Value="12"/>
         </Style>
+
+        <Style x:Key="ReadMeStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource HyperlinkButton}">
+            <Setter Property="Content" Value="Click Here"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding PreviewModHasReadMe}" Value="False">
+                    <Setter Property="Content" Value="None"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
 
     <Grid Background="Transparent">
@@ -59,6 +68,10 @@
                         <MenuItem x:Name="menuItemGeneralSettings" Header="General Settings ..."/>
                         <MenuItem x:Name="menuItemAaliSettings" Header="Aali Driver Settings ..."/>
                         <MenuItem x:Name="menuItemThemeSettings" Header="Change Color Scheme ..."/>
+                        <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
+                        <MenuItem x:Name="menuItemNewProfile" Header="New Profile ..."/>
+                        <MenuItem x:Name="menuItemOpenProfile" Header="Open Profile ..."/>
+                        <MenuItem x:Name="menuItemProfileDetails" Header="Profile Details ..."/>
                         <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
                         <MenuItem x:Name="menuUpdateCatalog" Header="Update Catalog ..." Click="menuUpdateCatalog_Click"/>
                     </ContextMenu>
@@ -137,14 +150,16 @@
                             <TextBlock Text="Link:" Style="{StaticResource ModInfoLabelStyle}" Margin="0,0,0,3"/>
                             <Button x:Name="btnOpenModLink" 
                                     Margin="2,0,5,0"
+                                    Click="btnOpenModLink_Click"
                                     Style="{StaticResource HyperlinkButton}"
                                     Content="Click Here"/>
 
                             <TextBlock Text="Readme:" Style="{StaticResource ModInfoLabelStyle}" Margin="0,0,0,3"/>
                             <Button x:Name="btnOpenModReadme"
                                     Margin="2,0,10,0"
-                                    Style="{StaticResource HyperlinkButton}"
-                                    Content="Click Here"/>
+                                    Click="btnOpenModReadme_Click"
+                                    IsEnabled="{Binding PreviewModHasReadMe, FallbackValue='False'}"
+                                    Style="{StaticResource ReadMeStyle}"/>
                         </WrapPanel>
 
 
