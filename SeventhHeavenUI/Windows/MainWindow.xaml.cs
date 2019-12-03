@@ -1,5 +1,6 @@
 ﻿using Iros._7th;
 using Iros._7th.Workshop;
+using SeventhHeaven.Windows;
 using SeventhHeavenUI.ViewModels;
 using System;
 using System.Linq;
@@ -198,6 +199,12 @@ namespace SeventhHeavenUI
         private void btnOpenModReadme_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.OpenPreviewModReadMe();
+        }
+
+        private void menuItemGeneralSettings_Click(object sender, RoutedEventArgs e)
+        {
+            GeneralSettingsWindow settingsWindow = new GeneralSettingsWindow();
+            settingsWindow.ShowDialog();
         }
     }
 }

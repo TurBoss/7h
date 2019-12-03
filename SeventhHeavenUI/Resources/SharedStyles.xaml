@@ -19,17 +19,17 @@
     <Color x:Key="DarkControlDisabledForeground" R="121" G="121" B="121" A="255"/>
 
 
-    <!-- BRUSHES -->
-    <SolidColorBrush x:Key="PrimaryAppBackground" Color="{StaticResource DarkBackgroundColor}"/>
-    <SolidColorBrush x:Key="SecondaryAppBackground" Color="{StaticResource MedDarkBackgroundColor}"/>
+    <!-- APP BRUSHES - These are used in all the below styles to have a consistent color theme across all controls. The color of these brushes can be changed in the "Color Theme" settings of the app -->
+    <SolidColorBrush x:Key="PrimaryAppBackground" Color="{DynamicResource DarkBackgroundColor}"/>
+    <SolidColorBrush x:Key="SecondaryAppBackground" Color="{DynamicResource MedDarkBackgroundColor}"/>
 
 
-    <SolidColorBrush x:Key="PrimaryControlBackground" Color="{StaticResource DarkControlBackground}"/>
-    <SolidColorBrush x:Key="PrimaryControlForeground" Color="{StaticResource DarkControlForeground}"/>
-    <SolidColorBrush x:Key="PrimaryControlPressed" Color="{StaticResource DarkControlPressed}"/>
+    <SolidColorBrush x:Key="PrimaryControlBackground" Color="{DynamicResource DarkControlBackground}"/>
+    <SolidColorBrush x:Key="PrimaryControlForeground" Color="{DynamicResource DarkControlForeground}"/>
+    <SolidColorBrush x:Key="PrimaryControlPressed" Color="{DynamicResource DarkControlPressed}"/>
     <SolidColorBrush x:Key="PrimaryControlMouseOver" Color="{DynamicResource DarkControlMouseOver}"/>
-    <SolidColorBrush x:Key="PrimaryControlDisabledBackground" Color="{StaticResource DarkControlDisabledBackground}"/>
-    <SolidColorBrush x:Key="PrimaryControlDisabledForeground" Color="{StaticResource DarkControlDisabledForeground}"/>
+    <SolidColorBrush x:Key="PrimaryControlDisabledBackground" Color="{DynamicResource DarkControlDisabledBackground}"/>
+    <SolidColorBrush x:Key="PrimaryControlDisabledForeground" Color="{DynamicResource DarkControlDisabledForeground}"/>
 
 
     <Style x:Key="MainWindowStyle" TargetType="{x:Type Window}">
@@ -413,10 +413,12 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type TextBox}">
+    <Style x:Key="PrimaryTextBoxStyle" TargetType="{x:Type TextBox}">
         <Setter Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
     </Style>
+
+    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource PrimaryTextBoxStyle}"/>
 
     <Style TargetType="{x:Type ContextMenu}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
@@ -489,6 +491,64 @@
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryControlPressed}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type CheckBox}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <!--<Setter Property="FocusVisualStyle" Value="{DynamicResource CheckBoxFocusVisual}" />-->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CheckBox}">
+                    <BulletDecorator Background="Transparent">
+                        <BulletDecorator.Bullet>
+                            <Border x:Name="Border" 
+                                    Width="14" Height="14"
+                                    CornerRadius="0"
+                                    BorderThickness="1"
+                                    BorderBrush="{DynamicResource PrimaryControlForeground}"
+                                    Background="{DynamicResource PrimaryControlBackground}">
+                                <Grid>
+                                    <Path Visibility="Collapsed" 
+                                          Width="7" Height="7"
+                                          x:Name="CheckMark"
+                                          SnapsToDevicePixels="False"
+                                          StrokeThickness="2"
+                                          Data="M 0 0 L 7 7 M 0 7 L 7 0">
+                                        <Path.Stroke>
+                                            <SolidColorBrush Color="{DynamicResource DarkControlPressed}" />
+                                        </Path.Stroke>
+                                    </Path>
+                                    <Path Visibility="Collapsed" 
+                                          Width="7" Height="7"
+                                          x:Name="InderminateMark"
+                                          SnapsToDevicePixels="False"
+                                          StrokeThickness="2"
+                                          Data="M 0 7 L 7 0">
+                                        <Path.Stroke>
+                                            <SolidColorBrush Color="{DynamicResource DarkControlPressed}" />
+                                        </Path.Stroke>
+                                    </Path>
+                                </Grid>
+                            </Border>
+                        </BulletDecorator.Bullet>
+
+                        <ContentPresenter Margin="4,0,0,0"
+                                          VerticalAlignment="Center" HorizontalAlignment="Left"
+                                          RecognizesAccessKey="True" />
+                    </BulletDecorator>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
