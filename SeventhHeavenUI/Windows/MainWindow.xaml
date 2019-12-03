@@ -65,13 +65,13 @@
             <cls:ButtonWithImage x:Name="btnSettings" Content="Settings" Margin="5,0,5,0" Style="{StaticResource ButtonWithImageAndDownArrow}" TemplateSource="{StaticResource iconSettings}" ContextMenuService.Placement="Bottom" Click="btnSettings_Click">
                 <cls:ButtonWithImage.ContextMenu>
                     <ContextMenu x:Name="menuSettings" Closed="menuSettings_Closed">
-                        <MenuItem x:Name="menuItemGeneralSettings" Header="General Settings ..." Click="menuItemGeneralSettings_Click"/>
-                        <MenuItem x:Name="menuItemAaliSettings" Header="Aali Driver Settings ..."/>
-                        <MenuItem x:Name="menuItemThemeSettings" Header="Change Color Scheme ..."/>
+                        <MenuItem x:Name="menuItemGeneralSettings" Header="General Settings" Click="menuItemGeneralSettings_Click"/>
+                        <MenuItem x:Name="menuItemAaliSettings" Header="Aali Driver Settings"/>
+                        <MenuItem x:Name="menuItemThemeSettings" Header="Change Color Scheme"/>
                         <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
-                        <MenuItem x:Name="menuItemNewProfile" Header="New Profile ..."/>
-                        <MenuItem x:Name="menuItemOpenProfile" Header="Open Profile ..."/>
-                        <MenuItem x:Name="menuItemProfileDetails" Header="Profile Details ..."/>
+                        <MenuItem x:Name="menuItemNewProfile" Header="New Profile" Click="menuItemNewProfile_Click"/>
+                        <MenuItem x:Name="menuItemOpenProfile" Header="Open Profile"/>
+                        <MenuItem x:Name="menuItemProfileDetails" Header="Profile Details"/>
                         <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
                         <MenuItem x:Name="menuUpdateCatalog" Header="Update Catalog ..." Click="menuUpdateCatalog_Click"/>
                     </ContextMenu>

@@ -206,5 +206,10 @@ namespace SeventhHeavenUI
             GeneralSettingsWindow settingsWindow = new GeneralSettingsWindow();
             settingsWindow.ShowDialog();
         }
+
+        private void menuItemNewProfile_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.CreateNewProfile();
+        }
     }
 }

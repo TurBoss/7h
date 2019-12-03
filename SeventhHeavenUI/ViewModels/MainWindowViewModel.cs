@@ -3,6 +3,7 @@ using Iros._7th.Workshop;
 using Iros.Mega;
 using Microsoft.Win32;
 using SeventhHeaven.Classes;
+using SeventhHeaven.Windows;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -116,7 +117,7 @@ They will be automatically turned off.";
                 _selectedTabIndex = value;
                 NotifyPropertyChanged();
                 NotifyPropertyChanged(nameof(FilterButtonVisibility));
-                
+
                 if ((TabIndex)_selectedTabIndex == TabIndex.MyMods)
                 {
                     UpdateModPreviewInfo(ModsViewModel.GetSelectedMod());
@@ -607,7 +608,7 @@ They will be automatically turned off.";
             {
                 try
                 {
-                    using (FileStream fs = new FileStream(Sys.ProfileFile, System.IO.FileMode.Create))
+                    using (FileStream fs = new FileStream(Sys.ProfileFile, FileMode.Create))
                     {
                         Util.Serialize(Sys.ActiveProfile, fs);
                     }
@@ -1455,6 +1456,47 @@ They will be automatically turned off.";
             }
 
         }
+
+        internal void CreateNewProfile()
+        {
+            string prompt = "Enter new Profile name:";
+            string profileName = null;
+            bool isValid = false;
+
+            do
+            {
+                isValid = true;
+                InputTextWindow inputBox = new InputTextWindow("New Profile", prompt)
+                {
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen
+                };
+
+                bool? dialogResult = inputBox.ShowDialog();
+
+                if (!dialogResult.GetValueOrDefault(false))
+                {
+                    return;
+                }
+
+                profileName = inputBox.ViewModel.TextInput;
+
+                if (string.IsNullOrEmpty(profileName))
+                {
+                    isValid = false;
+                    MessageBox.Show("Profile Name is empty.", "Profile Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                
+            } while (!isValid);
+
+            SaveProfile();
+            Sys.ActiveProfile = new Profile();
+            Sys.Settings.CurrentProfile = profileName;
+            RefreshProfile();
+            SaveProfile();
+
+            Sys.Message(new WMessage() { Text = $"Successfully created new profile {profileName}!" });
+        }
+
     }
 
     internal class CatCheckOptions

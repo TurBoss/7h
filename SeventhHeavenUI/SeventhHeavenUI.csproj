@@ -83,6 +83,7 @@
     </Compile>
     <Compile Include="ViewModels\DownloadItemViewModel.cs" />
     <Compile Include="ViewModels\CatalogModItemViewModel.cs" />
+    <Compile Include="ViewModels\InputTextViewModel.cs" />
     <Compile Include="ViewModels\GeneralSettingsViewModel.cs" />
     <Compile Include="ViewModels\InstalledModViewModel.cs" />
     <Compile Include="ViewModels\CatalogViewModel.cs" />
@@ -90,6 +91,10 @@
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Page Include="Windows\GeneralSettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\InputTextWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -103,6 +108,9 @@
     </Compile>
     <Compile Include="Windows\GeneralSettingsWindow.xaml.cs">
       <DependentUpon>GeneralSettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\InputTextWindow.xaml.cs">
+      <DependentUpon>InputTextWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
