@@ -63,6 +63,10 @@
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="bd" Property="Background" Value="{DynamicResource PrimaryControlPressed}"/>
                         </Trigger>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource PrimaryControlDisabledForeground}"/>
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -381,6 +385,12 @@
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
     </Style>
 
+    <Style TargetType="{x:Type ListBox}">
+        <Setter Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SecondaryAppBackground}"/>
+    </Style>
+
 
     <Style TargetType="{x:Type GridViewColumnHeader}">
         <Setter Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
@@ -419,6 +429,13 @@
     </Style>
 
     <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource PrimaryTextBoxStyle}"/>
+
+
+    <Style x:Key="PrimaryTextBlockStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
+    </Style>
+
+    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource PrimaryTextBlockStyle}"/>
 
     <Style TargetType="{x:Type ContextMenu}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
@@ -498,6 +515,29 @@
         </Setter>
     </Style>
 
+    <Style x:Key="MainListBoxItemStyle" TargetType="{x:Type ListBoxItem}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border x:Name="Border" Padding="2" SnapsToDevicePixels="true" Background="Transparent">
+                        <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" TextElement.Foreground="{DynamicResource PrimaryControlForeground}"/>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger SourceName="Border" Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource SecondaryAppBackground}"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryControlPressed}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="{x:Type CheckBox}">
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -555,5 +595,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
+
 
 </ResourceDictionary>

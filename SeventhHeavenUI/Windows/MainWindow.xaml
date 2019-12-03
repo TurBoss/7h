@@ -70,8 +70,8 @@
                         <MenuItem x:Name="menuItemThemeSettings" Header="Change Color Scheme"/>
                         <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
                         <MenuItem x:Name="menuItemNewProfile" Header="New Profile" Click="menuItemNewProfile_Click"/>
-                        <MenuItem x:Name="menuItemOpenProfile" Header="Open Profile"/>
-                        <MenuItem x:Name="menuItemProfileDetails" Header="Profile Details"/>
+                        <MenuItem x:Name="menuItemOpenProfile" Header="Open Profile" Click="menuItemOpenProfile_Click"/>
+                        <MenuItem x:Name="menuItemProfileDetails" Header="Profile Details" Click="menuItemProfileDetails_Click"/>
                         <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
                         <MenuItem x:Name="menuUpdateCatalog" Header="Update Catalog ..." Click="menuUpdateCatalog_Click"/>
                     </ContextMenu>

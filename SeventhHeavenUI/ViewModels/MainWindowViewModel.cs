@@ -3,6 +3,7 @@ using Iros._7th.Workshop;
 using Iros.Mega;
 using Microsoft.Win32;
 using SeventhHeaven.Classes;
+using SeventhHeaven.ViewModels;
 using SeventhHeaven.Windows;
 using System;
 using System.Collections.Generic;
@@ -498,11 +499,11 @@ They will be automatically turned off.";
 
             Directory.CreateDirectory(Path.Combine(Sys.SysFolder, "profiles"));
 
-            if (!String.IsNullOrWhiteSpace(Sys.Settings.CurrentProfile) && File.Exists(Sys.ProfileFile))
+            if (!String.IsNullOrWhiteSpace(Sys.Settings.CurrentProfile) && File.Exists(Sys.PathToCurrentProfileFile))
             {
                 try
                 {
-                    Sys.ActiveProfile = Util.Deserialize<Profile>(Sys.ProfileFile);
+                    Sys.ActiveProfile = Util.Deserialize<Profile>(Sys.PathToCurrentProfileFile);
                     RefreshProfile();
                 }
                 catch (Exception e)
@@ -608,7 +609,7 @@ They will be automatically turned off.";
             {
                 try
                 {
-                    using (FileStream fs = new FileStream(Sys.ProfileFile, FileMode.Create))
+                    using (FileStream fs = new FileStream(Sys.PathToCurrentProfileFile, FileMode.Create))
                     {
                         Util.Serialize(Sys.ActiveProfile, fs);
                     }
@@ -1459,34 +1460,12 @@ They will be automatically turned off.";
 
         internal void CreateNewProfile()
         {
-            string prompt = "Enter new Profile name:";
-            string profileName = null;
-            bool isValid = false;
+            string profileName = OpenProfileViewModel.InputNewProfileName();
 
-            do
+            if (profileName == null)
             {
-                isValid = true;
-                InputTextWindow inputBox = new InputTextWindow("New Profile", prompt)
-                {
-                    WindowStartupLocation = WindowStartupLocation.CenterScreen
-                };
-
-                bool? dialogResult = inputBox.ShowDialog();
-
-                if (!dialogResult.GetValueOrDefault(false))
-                {
-                    return;
-                }
-
-                profileName = inputBox.ViewModel.TextInput;
-
-                if (string.IsNullOrEmpty(profileName))
-                {
-                    isValid = false;
-                    MessageBox.Show("Profile Name is empty.", "Profile Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                
-            } while (!isValid);
+                return; // user canceled inputting a profile name
+            }
 
             SaveProfile();
             Sys.ActiveProfile = new Profile();
@@ -1495,6 +1474,33 @@ They will be automatically turned off.";
             SaveProfile();
 
             Sys.Message(new WMessage() { Text = $"Successfully created new profile {profileName}!" });
+        }
+
+        internal void ShowOpenProfileWindow()
+        {
+            OpenProfileWindow profileWindow = new OpenProfileWindow()
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+
+            bool? dialogResult = profileWindow.ShowDialog();
+
+            if (!dialogResult.GetValueOrDefault(false))
+            {
+                // user did not click OK so don't switch profiles
+                return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(profileWindow.ViewModel.SelectedProfile))
+            {
+                SaveProfile(); // save current profile before switching
+
+                Sys.Settings.CurrentProfile = profileWindow.ViewModel.SelectedProfile;
+                Sys.ActiveProfile = Util.Deserialize<Profile>(Sys.PathToCurrentProfileFile);
+
+                RefreshProfile();
+                Sys.Message(new WMessage($"Loaded profile {CurrentProfile}"));
+            }
         }
 
     }

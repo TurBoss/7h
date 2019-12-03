@@ -31,9 +31,20 @@ namespace Iros._7th.Workshop
 
     public class WMessage
     {
+        public WMessage()
+        {
+        }
+
+        public WMessage(string message)
+        {
+            Text = message;
+        }
+
         public string Text { get; set; }
         public string Link { get; set; }
         //TODO ....
+
+
     }
 
     public interface IDownloader
@@ -67,11 +78,19 @@ namespace Iros._7th.Workshop
         public static string _7HFolder { get; private set; }
         public static string SysFolder { get; private set; }
 
-        public static string ProfileFile
+        public static string PathToCurrentProfileFile
         {
             get
             {
-                return Path.Combine(SysFolder, "profiles", $"{Settings.CurrentProfile}.xml");
+                return Path.Combine(PathToProfiles, $"{Settings.CurrentProfile}.xml");
+            }
+        }
+
+        public static string PathToProfiles
+        {
+            get
+            {
+                return Path.Combine(SysFolder, "profiles");
             }
         }
 

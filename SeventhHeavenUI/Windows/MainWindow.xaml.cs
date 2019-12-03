@@ -82,7 +82,7 @@ namespace SeventhHeavenUI
                 else if (parm.StartsWith("/PROFILE:", StringComparison.InvariantCultureIgnoreCase))
                 {
                     Sys.Settings.CurrentProfile = parm.Substring(9);
-                    Sys.ActiveProfile = Util.Deserialize<Profile>(Sys.ProfileFile);
+                    Sys.ActiveProfile = Util.Deserialize<Profile>(Sys.PathToCurrentProfileFile);
                     ViewModel.RefreshProfile();
                 }
                 else if (parm.Equals("/LAUNCH", StringComparison.InvariantCultureIgnoreCase))
@@ -203,13 +203,26 @@ namespace SeventhHeavenUI
 
         private void menuItemGeneralSettings_Click(object sender, RoutedEventArgs e)
         {
-            GeneralSettingsWindow settingsWindow = new GeneralSettingsWindow();
+            GeneralSettingsWindow settingsWindow = new GeneralSettingsWindow()
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
             settingsWindow.ShowDialog();
         }
 
         private void menuItemNewProfile_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.CreateNewProfile();
+        }
+
+        private void menuItemProfileDetails_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void menuItemOpenProfile_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ShowOpenProfileWindow();
         }
     }
 }
