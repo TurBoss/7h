@@ -62,6 +62,11 @@
                   ItemsSource="{Binding DownloadList, UpdateSourceTrigger=PropertyChanged}"
                   MinHeight="100"
                   MaxHeight="150">
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem x:Name="menuItemCancelDownload" Header="Cancel Selected Download ..." Click="menuItemCancelDownload_Click"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Item" Width="350" DisplayMemberBinding="{Binding ItemName, FallbackValue='item text'}"/>

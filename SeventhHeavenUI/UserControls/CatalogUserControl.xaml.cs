@@ -42,5 +42,16 @@ namespace SeventhHeaven.UserControls
 
             ViewModel.DownloadMod((lstCatalogMods.SelectedItem as CatalogModItemViewModel));
         }
+
+        private void menuItemCancelDownload_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstDownloads.SelectedItem == null)
+            {
+                MessageBox.Show("No Download selected.", "Nothing Selected", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            ViewModel.CancelDownload((lstDownloads.SelectedItem as DownloadItemViewModel));
+        }
     }
 }

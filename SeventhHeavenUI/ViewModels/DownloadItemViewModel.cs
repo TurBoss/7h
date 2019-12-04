@@ -33,6 +33,8 @@ namespace SeventhHeavenUI.ViewModels
         public Action PerformCancel { get; set; }
         public Action OnCancel { get; set; }
 
+        public Action OnError { get; set; }
+
 
         public string ItemName
         {

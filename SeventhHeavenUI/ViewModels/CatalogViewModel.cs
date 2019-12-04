@@ -63,70 +63,6 @@ It may not work properly unless you find and install the requirements.";
             }
         }
 
-        internal void DownloadMod(CatalogModItemViewModel catalogModItemViewModel)
-        {
-            Mod modToDownload = catalogModItemViewModel.Mod;
-            ModStatus status = Sys.GetStatus(modToDownload.ID);
-
-            if (status == ModStatus.Downloading)
-            {
-                MessageBox.Show($"{modToDownload.Name} is already downloading!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (status == ModStatus.Updating)
-            {
-                MessageBox.Show($"{modToDownload.Name} is already updating!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (status == ModStatus.Installed)
-            {
-                MessageBox.Show($"{modToDownload.Name} is already downloaded and installed!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            if (Sys.GetStatus(modToDownload.ID) == ModStatus.NotInstalled)
-            {
-                Install.DownloadAndInstall(modToDownload);
-            }
-
-            List<Mod> required = new List<Mod>();
-            List<string> notFound = new List<string>();
-            foreach (ModRequirement req in modToDownload.Requirements)
-            {
-                InstalledItem inst = Sys.Library.GetItem(req.ModID);
-
-                if (inst != null)
-                {
-                    continue;
-                }
-
-                Mod rMod = Sys.GetModFromCatalog(req.ModID);
-
-                if (rMod != null)
-                    required.Add(rMod);
-                else
-                    notFound.Add(req.Description);
-            }
-
-            if (required.Any())
-            {
-                if (MessageBox.Show(String.Format(_msgDownloadReq, String.Join("\n", required.Select(m => m.Name))), "Requirements", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    foreach (Mod rMod in required)
-                    {
-                        Install.DownloadAndInstall(rMod);
-                    }
-                }
-            }
-
-            if (notFound.Any())
-            {
-                MessageBox.Show(String.Format(_msgMissingReq, String.Join("\n", notFound)), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-        }
-
         public ObservableCollection<DownloadItemViewModel> DownloadList
         {
             get
@@ -230,8 +166,78 @@ It may not work properly unless you find and install the requirements.";
             return selected;
         }
 
-
         #region Methods Related to Downloads
+
+        internal void CancelDownload(DownloadItemViewModel downloadItemViewModel)
+        {
+            downloadItemViewModel?.PerformCancel();
+            RemoveFromDownloadList(downloadItemViewModel);
+            Sys.Message(new WMessage($"Canceled download: {downloadItemViewModel.ItemName}"));
+        }
+
+        internal void DownloadMod(CatalogModItemViewModel catalogModItemViewModel)
+        {
+            Mod modToDownload = catalogModItemViewModel.Mod;
+            ModStatus status = Sys.GetStatus(modToDownload.ID);
+
+            if (status == ModStatus.Downloading)
+            {
+                MessageBox.Show($"{modToDownload.Name} is already downloading!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (status == ModStatus.Updating)
+            {
+                MessageBox.Show($"{modToDownload.Name} is already updating!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (status == ModStatus.Installed)
+            {
+                MessageBox.Show($"{modToDownload.Name} is already downloaded and installed!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (Sys.GetStatus(modToDownload.ID) == ModStatus.NotInstalled)
+            {
+                Install.DownloadAndInstall(modToDownload);
+            }
+
+            List<Mod> required = new List<Mod>();
+            List<string> notFound = new List<string>();
+            foreach (ModRequirement req in modToDownload.Requirements)
+            {
+                InstalledItem inst = Sys.Library.GetItem(req.ModID);
+
+                if (inst != null)
+                {
+                    continue;
+                }
+
+                Mod rMod = Sys.GetModFromCatalog(req.ModID);
+
+                if (rMod != null)
+                    required.Add(rMod);
+                else
+                    notFound.Add(req.Description);
+            }
+
+            if (required.Any())
+            {
+                if (MessageBox.Show(String.Format(_msgDownloadReq, String.Join("\n", required.Select(m => m.Name))), "Requirements", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    foreach (Mod rMod in required)
+                    {
+                        Install.DownloadAndInstall(rMod);
+                    }
+                }
+            }
+
+            if (notFound.Any())
+            {
+                MessageBox.Show(String.Format(_msgMissingReq, String.Join("\n", notFound)), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
 
         public void Download(string link, string file, string description, Install.InstallProcedure iproc, Action onCancel)
         {
@@ -246,9 +252,11 @@ It may not work properly unless you find and install the requirements.";
 
             if (!LocationUtil.Parse(link, out type, out location)) return;
 
+            Action onError = null;
+
             if (links.Count() > 1)
             {
-                onCancel = () =>
+                onError = () =>
                 {
                     Log.Write($"Downloading {file} - switching to backup url {links.ElementAt(1)}");
                     Download(links.Skip(1), file, description, iproc, onCancel);
@@ -260,6 +268,7 @@ It may not work properly unless you find and install the requirements.";
                 ItemName = description,
                 IProc = iproc,
                 OnCancel = onCancel,
+                OnError = onError,
                 DownloadSpeed = "Calculating ..."
             };
 
@@ -339,7 +348,10 @@ It may not work properly unless you find and install the requirements.";
             {
                 lock (_downloadLock)
                 {
-                    DownloadList.Add(newDownload);
+                    if (DownloadList.All(d => d.UniqueId != newDownload.UniqueId))
+                    {
+                        DownloadList.Add(newDownload);
+                    }
                 }
             });
         }
@@ -366,7 +378,7 @@ It may not work properly unless you find and install the requirements.";
             }
             else if (e.Error != null)
             {
-                item.OnCancel?.Invoke();
+                item.OnError?.Invoke();
                 RemoveFromDownloadList(item);
                 string msg = "Error " + item.ItemName + e.Error.Message;
                 Sys.Message(new WMessage() { Text = msg });
@@ -383,7 +395,10 @@ It may not work properly unless you find and install the requirements.";
             {
                 lock (_downloadLock)
                 {
-                    DownloadList.Remove(item);
+                    if (DownloadList.Any(d => d.UniqueId == item.UniqueId))
+                    {
+                        DownloadList.Remove(item);
+                    }
                 }
             });
         }

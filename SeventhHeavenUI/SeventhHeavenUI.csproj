@@ -37,6 +37,10 @@
   <PropertyGroup>
     <StartupObject>SeventhHeavenUI.App</StartupObject>
   </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EasyHook, Version=2.7.7097.0, Culture=neutral, PublicKeyToken=4b580fca19d0b0c5, processorArchitecture=MSIL">
       <HintPath>..\packages\EasyHook.2.7.7097\lib\net40\EasyHook.dll</HintPath>
@@ -176,6 +180,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Content Include="7thHeaven.var">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="app.manifest" />
     <None Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -209,10 +217,6 @@
       <Project>{03eede27-0abb-4cda-a7f2-f746e2083202}</Project>
       <Name>TurBoLog</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Updater\Updater.csproj">
-      <Project>{52f54c68-15c8-4900-a620-af5a4f6e7f87}</Project>
-      <Name>Updater</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="EasyHook32.dll">
@@ -232,6 +236,9 @@
     </Content>
     <Content Include="EasyLoad64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="mega.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\circleLoader.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

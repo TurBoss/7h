@@ -79,7 +79,13 @@ namespace SeventhHeaven.UserControls
                 return;
             }
 
-            ViewModel.UninstallMod((lstMods.SelectedItem as InstalledModViewModel));
+            InstalledModViewModel selected = (lstMods.SelectedItem as InstalledModViewModel);
+
+            if (MessageBox.Show($"Are you sure you want to delete {selected.Name}?", "Uninstall Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                ViewModel.UninstallMod(selected);
+            }
+
         }
 
         private void btnMoveUp_Click(object sender, RoutedEventArgs e)

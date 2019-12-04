@@ -442,6 +442,7 @@ They will be automatically turned off.";
                 InstalledItem mod = Sys.Library.GetItem(e.ModID);
                 string mfile = mod.LatestInstalled.InstalledLocation;
                 _infoCache.Remove(mfile);
+                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo.ModID);
             }
 
             if (e.Status == ModStatus.Installed && e.OldStatus != ModStatus.Installed && Sys.Settings.Options.HasFlag(GeneralOptions.AutoActiveNewMods))
@@ -486,8 +487,9 @@ They will be automatically turned off.";
                 VarAliases = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
             };
 
-            string varFile = Path.ChangeExtension(System.Reflection.Assembly.GetExecutingAssembly().Location, ".var");
+            string varFile = "7thHeaven.var";
 
+            
             if (File.Exists(varFile))
             {
                 foreach (string line in File.ReadAllLines(varFile))
@@ -595,6 +597,7 @@ They will be automatically turned off.";
             }
 
             Sys.Library.AttemptDeletions();
+            ModsViewModel.ReloadModList();
         }
 
         public void RefreshProfile()
@@ -790,9 +793,11 @@ They will be automatically turned off.";
 
         internal static _7thWrapperLib.ModInfo GetModInfo(InstalledItem ii)
         {
-            var inst = ii.Versions.OrderBy(v => v.VersionDetails.Version).Last();
+            InstalledVersion inst = ii.LatestInstalled;
             string mfile = Path.Combine(Sys.Settings.LibraryLocation, inst.InstalledLocation);
+
             _7thWrapperLib.ModInfo info;
+
             if (!_infoCache.TryGetValue(mfile, out info))
             {
                 if (mfile.EndsWith(".iro", StringComparison.InvariantCultureIgnoreCase))
