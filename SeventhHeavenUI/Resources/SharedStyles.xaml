@@ -7,13 +7,13 @@
     
     <!-- COLORS - Dark Theme -->
     <Color x:Key="DarkBackgroundColor">#1f1f1f</Color>
-    <Color x:Key="MedDarkBackgroundColor">#5e5e5e</Color>
+    <Color x:Key="MedDarkBackgroundColor" R="56" G="56" B="56" A="255"/>
 
 
     <Color x:Key="DarkControlBackground">#1f1f1f</Color>
     <Color x:Key="DarkControlForeground">#ffffff</Color>
     <Color x:Key="DarkControlPressed" R="0" G="119" B="215" A="255"/>
-    <Color x:Key="DarkControlMouseOver" R="56" G="56" B="56" A="255"/>
+    <Color x:Key="DarkControlMouseOver" >#5e5e5e</Color>
 
     <Color x:Key="DarkControlDisabledBackground" R="31" G="31" B="31" A="255"/>
     <Color x:Key="DarkControlDisabledForeground" R="121" G="121" B="121" A="255"/>
@@ -376,25 +376,26 @@
     </Style>
 
     <Style TargetType="{x:Type StatusBarItem}">
-        <Setter Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
+        <Setter Property="Background" Value="{DynamicResource SecondaryAppBackground}"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
     </Style>
 
     <Style TargetType="{x:Type ListView}">
-        <Setter Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
+        <Setter Property="Background" Value="{DynamicResource SecondaryAppBackground}"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryControlMouseOver}"/>
     </Style>
 
     <Style TargetType="{x:Type ListBox}">
-        <Setter Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
+        <Setter Property="Background" Value="{DynamicResource SecondaryAppBackground}"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource SecondaryAppBackground}"/>
     </Style>
 
 
     <Style TargetType="{x:Type GridViewColumnHeader}">
-        <Setter Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource SecondaryAppBackground}"/>
+        <Setter Property="Background" Value="{DynamicResource SecondaryAppBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryControlMouseOver}"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
 
         <Setter Property="Template">
@@ -424,7 +425,8 @@
     </Style>
 
     <Style x:Key="PrimaryTextBoxStyle" TargetType="{x:Type TextBox}">
-        <Setter Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
+        <Setter Property="Background" Value="{DynamicResource SecondaryAppBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryControlMouseOver}"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
     </Style>
 
@@ -504,7 +506,7 @@
 
                     <ControlTemplate.Triggers>
                         <Trigger SourceName="Border" Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource SecondaryAppBackground}"/>
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryControlPressed}"/>
