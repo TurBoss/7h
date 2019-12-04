@@ -1,12 +1,10 @@
-﻿using Iros._7th;
-using Iros._7th.Workshop;
-using Iros.Mega;
+﻿using Iros._7th.Workshop;
+using SeventhHeaven.Classes;
+using SeventhHeaven.Windows;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace SeventhHeavenUI.ViewModels
@@ -436,5 +434,124 @@ namespace SeventhHeavenUI.ViewModels
             ReloadModList(mod.ActiveModInfo.ModID);
         }
 
+        internal void ShowConfigureModWindow(InstalledModViewModel modToConfigure)
+        {
+            InstalledVersion installed = Sys.Library.GetItem(modToConfigure.InstallInfo.ModID)?.LatestInstalled;
+            _7thWrapperLib.ModInfo info = null;
+            Func<string, string> imageReader;
+            Func<string, Stream> audioReader;
+
+            string config_temp_folder = Path.Combine(Sys.PathToTempFolder, "configmod");
+            string pathToModXml = Path.Combine(Sys.Settings.LibraryLocation, installed.InstalledLocation);
+
+            IDisposable arcToDispose = null;
+            if (pathToModXml.EndsWith(".iro", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var arc = new _7thWrapperLib.IrosArc(pathToModXml);
+                if (arc.HasFile("mod.xml"))
+                {
+                    var doc = new System.Xml.XmlDocument();
+                    doc.Load(arc.GetData("mod.xml"));
+                    info = new _7thWrapperLib.ModInfo(doc, MainWindowViewModel._context);
+                }
+
+                imageReader = s => {
+                    if (arc.HasFile(s))
+                    {
+                        string tempImgPath = Path.Combine(config_temp_folder, s);
+
+                        Directory.CreateDirectory(config_temp_folder);
+
+                        if (File.Exists(tempImgPath))
+                        {
+                            return tempImgPath;
+                        }
+
+                        // extract img from IRO arc to temp img location
+                        using (Stream imgStream = arc.GetData(s))
+                        {
+                            try
+                            {
+                                using (FileStream fileStream = new FileStream(tempImgPath, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite))
+                                {
+                                    fileStream.Seek(0, SeekOrigin.Begin);
+                                    imgStream.CopyTo(fileStream);
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Logger.Warn(e, "Failed to write image to file");
+                                return null;
+                            }
+                        }
+
+                        return tempImgPath;
+                    }
+
+                    return null;
+                };
+
+                audioReader = s => {
+                    if (arc.HasFile(s))
+                        arc.GetData(s);
+                    return null;
+                };
+
+                arcToDispose = arc;
+            }
+            else
+            {
+                string file = Path.Combine(pathToModXml, "mod.xml");
+                if (File.Exists(file))
+                    info = new _7thWrapperLib.ModInfo(file, MainWindowViewModel._context);
+
+                imageReader = s => {
+                    string ifile = Path.Combine(pathToModXml, s);
+                    if (File.Exists(ifile))
+                    {
+                        return ifile;
+                    }
+
+                    return null;
+                };
+
+                audioReader = s => {
+                    string ifile = Path.Combine(pathToModXml, s);
+                    if (File.Exists(ifile))
+                        return new FileStream(ifile, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    return null;
+                };
+            }
+
+            using (arcToDispose)
+            {
+                info = info ?? new _7thWrapperLib.ModInfo();
+                if (info.Options.Count == 0)
+                {
+                    MessageBox.Show("There are no options to configure for this mod.", "No Options", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                ConfigureModWindow modWindow = new ConfigureModWindow()
+                {
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen
+                };
+
+                List<Constraint> modConstraints = MainWindowViewModel.GetConstraints().Where(c => c.ModID.Equals(modToConfigure.InstallInfo.ModID)).ToList();
+
+                modWindow.ViewModel.Init(info, imageReader, audioReader, modToConfigure.ActiveModInfo, modConstraints, pathToModXml);
+
+
+                bool? dialogResult = modWindow.ShowDialog();
+                if (dialogResult.GetValueOrDefault(false) == true)
+                {
+                    modToConfigure.ActiveModInfo.Settings = modWindow.ViewModel.GetSettings();
+                    MainWindowViewModel.SanityCheckSettings();
+                }
+
+                modWindow.ViewModel.CleanUp();
+                modWindow.ViewModel = null;
+            }
+        }
     }
 }

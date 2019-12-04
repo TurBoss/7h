@@ -580,6 +580,7 @@
 
                         <ContentPresenter Margin="4,0,0,0"
                                           VerticalAlignment="Center" HorizontalAlignment="Left"
+                                          TextElement.Foreground="{DynamicResource PrimaryControlForeground}"
                                           RecognizesAccessKey="True" />
                     </BulletDecorator>
 
@@ -595,7 +596,159 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
 
+    <!--COMBO BOX STYLE. TEMPLATE TAKEN FROM: https://docs.microsoft.com/en-us/dotnet/framework/wpf/controls/combobox-styles-and-templates -->
+    <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="20" />
+            </Grid.ColumnDefinitions>
+            <Border x:Name="Border"
+                    Grid.ColumnSpan="2"
+                    BorderBrush="{DynamicResource SecondaryAppBackground}"
+                    BorderThickness="1"/>
+
+            <Border x:Name="bd" Grid.Column="0" Margin="1" BorderThickness="0" Background="{DynamicResource PrimaryControlBackground}"/>
+
+            <Path x:Name="Arrow"
+                  Grid.Column="1"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Fill="{DynamicResource PrimaryControlForeground}"
+                  Data="M 0 0 L 4 4 L 8 0 Z"/>
+        </Grid>
+
+        <ControlTemplate.Triggers>
+            <!--<Trigger Property="IsChecked" Value="True">
+                <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,0"/>
+            </Trigger>-->
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
+                <Setter TargetName="bd" Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
+
+            </Trigger>
+
+            <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryControlPressed}"/>
+                <Setter TargetName="bd" Property="Background" Value="{DynamicResource PrimaryControlPressed}"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="MainComboBoxStyle" TargetType="{x:Type ComboBox}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
+        <Setter Property="MinWidth" Value="120" />
+        <Setter Property="MinHeight" Value="20" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBox}">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver" />
+                                <VisualState x:Name="Disabled"/>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="EditStates">
+                                <VisualState x:Name="Editable">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="ContentSite">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Hidden}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Uneditable" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <ToggleButton x:Name="ToggleButton"
+                                          Template="{StaticResource ComboBoxToggleButton}"
+                                          Grid.Column="2"
+                                          Focusable="false"
+                                          ClickMode="Press"
+                                          IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"/>
+
+                        <ContentPresenter x:Name="ContentSite"
+                                          IsHitTestVisible="False"
+                                          ContentTemplate="{TemplateBinding ItemTemplate}"
+                                          TextElement.Foreground="{DynamicResource PrimaryControlForeground}"
+                                          Margin="5"
+                                          VerticalAlignment="Stretch"
+                                          HorizontalAlignment="Stretch"/>
+
+
+                        <Popup x:Name="Popup"
+                               Placement="Bottom"
+                               IsOpen="{TemplateBinding IsDropDownOpen}"
+                               AllowsTransparency="True"
+                               Focusable="False"
+                               PopupAnimation="Slide">
+                            <Grid x:Name="DropDown"
+                                  SnapsToDevicePixels="True"
+                                  MinWidth="{TemplateBinding ActualWidth}"
+                                  MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                <Border x:Name="DropDownBorder" BorderThickness="1,0,1,1" Background="{DynamicResource PrimaryControlBackground}" BorderBrush="{DynamicResource SecondaryAppBackground}">
+                                </Border>
+                                <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                    <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                </ScrollViewer>
+                            </Grid>
+                        </Popup>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="HasItems" Value="false">
+                            <Setter TargetName="DropDownBorder"
+                                        Property="MinHeight"
+                                        Value="95" />
+                        </Trigger>
+                        <Trigger Property="IsGrouping" Value="true">
+                            <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
+                        </Trigger>
+                        <Trigger SourceName="Popup"
+                                     Property="AllowsTransparency"
+                                     Value="true">
+                            <Setter TargetName="DropDownBorder"
+                                        Property="Margin"
+                                        Value="0,0,0,0" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
+    <Style x:Key="MainComboBoxItemStyle" TargetType="{x:Type ComboBoxItem}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                    <Border x:Name="bd" BorderBrush="{DynamicResource SecondaryAppBackground}" BorderThickness="0" Background="{DynamicResource PrimaryControlBackground}">
+                        <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" DataContext="{TemplateBinding DataContext}"/>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource PrimaryControlPressed}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type ToolTip}">
+        <Setter Property="Background" Value="{DynamicResource PrimaryControlBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SecondaryAppBackground}"/>
+    </Style>
 
 </ResourceDictionary>

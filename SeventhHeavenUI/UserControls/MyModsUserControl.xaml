@@ -99,6 +99,7 @@
             <Button x:Name="btnConfigure" 
                     Style="{StaticResource ImageButton}"
                     Content="{StaticResource iconSettings}"
+                    Click="btnConfigure_Click"
                     ToolTip="Configure Mod"
                     Margin="0,0,0,0"/>
             

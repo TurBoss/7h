@@ -146,5 +146,20 @@ namespace SeventhHeaven.UserControls
         {
             ViewModel.ActivateAllMods();
         }
+
+        private void btnConfigure_Click(object sender, RoutedEventArgs e)
+        {
+            if (!IsModSelected())
+            {
+                return;
+            }
+
+            if (!IsActiveModSelected())
+            {
+                return;
+            }
+
+            ViewModel.ShowConfigureModWindow((lstMods.SelectedItem as InstalledModViewModel));
+        }
     }
 }

@@ -94,6 +94,14 @@ namespace Iros._7th.Workshop
             }
         }
 
+        public static string PathToTempFolder
+        {
+            get
+            {
+                return Path.Combine(SysFolder, "temp");
+            }
+        }
+
         public static Catalog Catalog { get; set; }
         public static Library Library { get; set; }
         public static ImageCache ImageCache { get; private set; }

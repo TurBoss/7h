@@ -64,7 +64,7 @@ They will be automatically turned off.";
         private string _searchText;
         private int _selectedTabIndex;
         private List<string> _statusMessageLog;
-        private static _7thWrapperLib.LoaderContext _context;
+        internal static _7thWrapperLib.LoaderContext _context;
 
         private Mod _previewMod;
         private string _previewModAuthor;
@@ -422,6 +422,13 @@ They will be automatically turned off.";
             CheckForCatalogUpdatesAsync(new CatCheckOptions());
 
             CatalogViewModel.ReloadModList();
+
+            // this deletes any temp images that were extracted from IRO archives
+            // ... the temp images are used for the configure mod window
+            // ... the app does not release the file lock on the images at runtime of the app so 
+            // ... this will ensure the images from last app session are deleted
+            ConfigureModViewModel.DeleteTempFolder();
+
             // TODO: check for app updates
         }
 
@@ -1502,7 +1509,6 @@ They will be automatically turned off.";
                 Sys.Message(new WMessage($"Loaded profile {CurrentProfile}"));
             }
         }
-
     }
 
     internal class CatCheckOptions
