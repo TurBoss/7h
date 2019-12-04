@@ -14,7 +14,7 @@
         ResizeMode="CanResize"
         WindowStyle="ToolWindow"
         MinHeight="400" MinWidth="600"
-        MaxHeight="600" MaxWidth="800">
+        MaxHeight="800" MaxWidth="1000">
     <Window.Resources>
 
         <DataTemplate x:Key="optionItem">
@@ -24,7 +24,7 @@
 
         <DataTemplate x:Key="dropdownItemTemplate">
             <Grid x:Name="gd" DataContext="{Binding ElementName=windowConfigureMod, Path=DataContext}" Background="Transparent">
-                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedDropdownText, FallbackValue='Value Name'}"/>
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedDropdownText, FallbackValue='Value Name'}" Margin="0,0,15,0" TextWrapping="Wrap"/>
             </Grid>
         </DataTemplate>
         
@@ -106,7 +106,7 @@
                   Grid.Row="1" Grid.Column="1"
                   HorizontalAlignment="Left"
                   VerticalAlignment="Top"
-                  Width="225"
+                  MinWidth="225"
                   Margin="5,10,0,10"/>
 
 

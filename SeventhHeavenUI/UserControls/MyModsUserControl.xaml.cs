@@ -167,5 +167,10 @@ namespace SeventhHeaven.UserControls
 
             ViewModel.ShowConfigureModWindow((lstMods.SelectedItem as InstalledModViewModel));
         }
+
+        private void btnImport_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ShowImportModWindow();
+        }
     }
 }

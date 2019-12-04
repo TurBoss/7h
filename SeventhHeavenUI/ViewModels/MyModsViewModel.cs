@@ -154,6 +154,17 @@ namespace SeventhHeavenUI.ViewModels
             NotifyPropertyChanged(nameof(ModList));
         }
 
+        internal void ShowImportModWindow()
+        {
+            ImportModWindow modWindow = new ImportModWindow()
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+
+            modWindow.ShowDialog();
+            ReloadModList(GetSelectedMod()?.InstallInfo?.ModID);
+        }
+
         /// <summary>
         /// Returns selected view model in <see cref="ModList"/>.
         /// </summary>

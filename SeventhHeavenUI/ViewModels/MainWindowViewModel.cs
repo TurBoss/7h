@@ -548,7 +548,7 @@ They will be automatically turned off.";
                             Log.Write("Trying to auto-import file " + folder);
                             try
                             {
-                                ImportMod(folder, Path.GetFileNameWithoutExtension(folder), false, true);
+                                ImportModViewModel.ImportMod(folder, Path.GetFileNameWithoutExtension(folder), false, true);
                             }
                             catch (Exception ex)
                             {
@@ -570,7 +570,7 @@ They will be automatically turned off.";
                             Log.Write($"Trying to auto-import file {iro}");
                             try
                             {
-                                ImportMod(iro, Path.GetFileNameWithoutExtension(iro), true, true);
+                                ImportModViewModel.ImportMod(iro, Path.GetFileNameWithoutExtension(iro), true, true);
                             }
                             catch (_7thWrapperLib.IrosArcException)
                             {
@@ -686,109 +686,6 @@ They will be automatically turned off.";
             {
                 Logger.Warn(uae);
             }
-        }
-
-        public static void ImportMod(string source, string name, bool iroMode, bool noCopy)
-        {
-            // TODO: move to Mod Import Window
-            Mod m = new Mod()
-            {
-                Author = String.Empty,
-                Description = "Imported mod",
-                ID = Guid.NewGuid(),
-                Link = String.Empty,
-                Tags = new List<string>(),
-                Name = name,
-                LatestVersion = new ModVersion()
-                {
-                    CompatibleGameVersions = GameVersions.All,
-                    Links = new List<string>(),
-                    PreviewImage = String.Empty,
-                    ReleaseDate = DateTime.Now,
-                    ReleaseNotes = String.Empty,
-                    Version = 1.00m,
-                }
-            };
-
-            string location;
-            if (noCopy)
-                location = Path.GetFileName(source);
-            else
-                location = String.Format("{0}_{1}", m.ID, name);
-
-            System.Xml.XmlDocument doc = null;
-            Func<string, byte[]> getData = null;
-            if (!iroMode)
-            {
-                if (!noCopy)
-                {
-                    foreach (string file in Directory.GetFiles(source, "*", SearchOption.AllDirectories))
-                    {
-                        string part = file.Substring(source.Length).Trim('\\', '/');
-                        string dest = Path.Combine(Sys.Settings.LibraryLocation, location, part);
-                        Directory.CreateDirectory(Path.GetDirectoryName(dest));
-                        File.Copy(file, dest, true);
-                    }
-                }
-                string mx = Path.Combine(Sys.Settings.LibraryLocation, location, "mod.xml");
-
-                if (File.Exists(mx))
-                {
-                    doc = new System.Xml.XmlDocument();
-                    doc.Load(mx);
-                }
-
-                getData = s =>
-                {
-                    string file = Path.Combine(Sys.Settings.LibraryLocation, location, s);
-                    if (File.Exists(file)) return File.ReadAllBytes(file);
-                    return null;
-                };
-            }
-            else
-            {
-                if (!noCopy)
-                {
-                    location += ".iro";
-                    File.Copy(source, Path.Combine(Sys.Settings.LibraryLocation, location), true);
-                }
-                var arc = new _7thWrapperLib.IrosArc(source);
-                if (arc.HasFile("mod.xml"))
-                {
-                    doc = new System.Xml.XmlDocument();
-                    doc.Load(arc.GetData("mod.xml"));
-                }
-                getData = s => arc.HasFile(s) ? arc.GetBytes(s) : null;
-            }
-
-            if (doc != null)
-            {
-                m.Author = doc.SelectSingleNode("/ModInfo/Author").NodeTextS();
-                m.Link = doc.SelectSingleNode("/ModInfo/Link").NodeTextS();
-                m.Description = doc.SelectSingleNode("/ModInfo/Description").NodeTextS();
-                decimal ver;
-                if (decimal.TryParse(doc.SelectSingleNode("/ModInfo/Version").NodeTextS().Replace(',', '.'), out ver)) m.LatestVersion.Version = ver;
-                var pv = doc.SelectSingleNode("/ModInfo/PreviewFile");
-                if (pv != null)
-                {
-                    byte[] data = getData(pv.InnerText);
-                    if (data != null)
-                    {
-                        string url = "iros://Preview/Auto/" + m.ID.ToString();
-                        m.LatestVersion.PreviewImage = url;
-                        Sys.ImageCache.InsertManual(url, data);
-                    }
-                }
-            }
-
-            Sys.Library.AddInstall(new InstalledItem()
-            {
-                CachedDetails = m,
-                CachePreview = String.Empty,
-                ModID = m.ID,
-                UpdateType = UpdateType.Ignore,
-                Versions = new List<InstalledVersion>() { new InstalledVersion() { VersionDetails = m.LatestVersion, InstalledLocation = location } },
-            });
         }
 
         internal static _7thWrapperLib.ModInfo GetModInfo(InstalledItem ii)

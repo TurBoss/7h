@@ -100,6 +100,7 @@
     <Compile Include="ViewModels\DownloadItemViewModel.cs" />
     <Compile Include="ViewModels\CatalogModItemViewModel.cs" />
     <Compile Include="ViewModels\ConfigureModViewModel.cs" />
+    <Compile Include="ViewModels\ImportModViewModel.cs" />
     <Compile Include="ViewModels\OpenProfileViewModel.cs" />
     <Compile Include="ViewModels\InputTextViewModel.cs" />
     <Compile Include="ViewModels\GeneralSettingsViewModel.cs" />
@@ -111,6 +112,9 @@
     <Compile Include="Windows\ConfigureModWindow.xaml.cs">
       <DependentUpon>ConfigureModWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\ImportModWindow.xaml.cs">
+      <DependentUpon>ImportModWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\OpenProfileWindow.xaml.cs">
       <DependentUpon>OpenProfileWindow.xaml</DependentUpon>
     </Compile>
@@ -119,6 +123,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\GeneralSettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\ImportModWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

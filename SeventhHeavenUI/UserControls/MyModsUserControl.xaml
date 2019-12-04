@@ -114,6 +114,7 @@
             <Button x:Name="btnImport" 
                     Style="{StaticResource ImageButton}"
                     Content="{StaticResource iconImport}"
+                    Click="btnImport_Click"
                     ToolTip="Import Mod"
                     Margin="0,0,0,0"/>
 
