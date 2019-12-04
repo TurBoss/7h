@@ -111,14 +111,14 @@ namespace SeventhHeaven.Classes
 
             this.Frames = decoder.Frames.ToList();
 
-            PrepareAnimation();
+            PrepareAnimation(decoder);
         }
 
         #endregion
 
         #region Private properties
 
-        private Int32Animation Animation { get; set; }
+        private Int32AnimationUsingKeyFrames Animation { get; set; }
         private bool IsAnimationWorking { get; set; }
 
         #endregion
@@ -137,22 +137,20 @@ namespace SeventhHeaven.Classes
             this.Frames = null;
         }
 
-        private void PrepareAnimation()
+        private void PrepareAnimation(BitmapDecoder decoder)
         {
-            Animation =
-                new Int32Animation(
-                    0,
-                    this.Frames.Count - 1,
-                    new Duration(
-                        new TimeSpan(
-                            0,
-                            0,
-                            0,
-                            this.Frames.Count / 10,
-                            (int)((this.Frames.Count / 10.0 - this.Frames.Count / 10) * 1000))))
-                {
-                    RepeatBehavior = RepeatBehavior.Forever
-                };
+            // get delay metadata foreach frame so the gif shows at the correct speed
+            // reference: https://stackoverflow.com/questions/210922/how-do-i-get-an-animated-gif-to-work-in-wpf/23245570#23245570
+            int duration = 0;
+            Animation = new Int32AnimationUsingKeyFrames();
+            Animation.KeyFrames.Add(new DiscreteInt32KeyFrame(0, KeyTime.FromTimeSpan(new TimeSpan(0))));
+            foreach (BitmapFrame frame in decoder.Frames)
+            {
+                BitmapMetadata btmd = (BitmapMetadata)frame.Metadata;
+                duration += (ushort)btmd.GetQuery("/grctlext/Delay");
+                Animation.KeyFrames.Add(new DiscreteInt32KeyFrame(decoder.Frames.IndexOf(frame) + 1, KeyTime.FromTimeSpan(new TimeSpan(duration * 100000))));
+            }
+            Animation.RepeatBehavior = RepeatBehavior.Forever;
 
             base.Source = this.Frames[0];
             BeginAnimation(FrameIndexProperty, Animation);
