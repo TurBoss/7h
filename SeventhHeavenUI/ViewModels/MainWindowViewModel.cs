@@ -1346,6 +1346,10 @@ They will be automatically turned off.";
 
                         }), null);
                     }
+                    else
+                    {
+                        subTotalCount -= 1; // This catalog does not have to be updated
+                    }
                 }
             });
 
