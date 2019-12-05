@@ -191,30 +191,7 @@ namespace SeventhHeaven.ViewModels
 
         internal void LoadSettings()
         {
-            if (String.IsNullOrEmpty(Sys.Settings.FF7Exe))
-            {
-                Logger.Info("FF7 Exe path is empty. Auto detecting paths ...");
-
-                string registry_path = @"HKEY_LOCAL_MACHINE\SOFTWARE\Square Soft, Inc.\Final Fantasy VII";
-                string ff7 = (string)Microsoft.Win32.Registry.GetValue(registry_path, "AppPath", null);
-
-                if (!string.IsNullOrEmpty(ff7))
-                {
-                    Sys.Settings.AaliFolder = ff7 + @"mods\Textures\";
-                    Sys.Settings.FF7Exe = ff7 + @"FF7.exe";
-
-                    Sys.Settings.MovieFolder = (string)Microsoft.Win32.Registry.GetValue(registry_path, "MoviePath", null);
-
-                    Sys.Settings.LibraryLocation = ff7 + @"mods\7th Heaven\";
-
-                    Sys.Settings.ExtraFolders.Add("direct");
-                    Sys.Settings.ExtraFolders.Add("music");
-                }
-                else
-                {
-                    Logger.Warn("Auto detect paths failed - could not determine ff7.exe path from Windows Registry.");
-                }
-            }
+            AutoDetectSystemPaths();
 
             SubscriptionsInput = string.Join("\n", Sys.Settings.SubscribedUrls.Distinct().ToArray());
             ExtraFoldersInput = string.Join("\n", Sys.Settings.ExtraFolders.Distinct().ToArray());
@@ -253,6 +230,34 @@ namespace SeventhHeaven.ViewModels
             }
 
             Sys.Settings.VersionUpgradeCompleted = Sys.Version;
+        }
+
+        public static void AutoDetectSystemPaths()
+        {
+            if (String.IsNullOrEmpty(Sys.Settings.FF7Exe))
+            {
+                Logger.Info("FF7 Exe path is empty. Auto detecting paths ...");
+
+                string registry_path = @"HKEY_LOCAL_MACHINE\SOFTWARE\Square Soft, Inc.\Final Fantasy VII";
+                string ff7 = (string)Registry.GetValue(registry_path, "AppPath", null);
+
+                if (!string.IsNullOrEmpty(ff7))
+                {
+                    Sys.Settings.AaliFolder = ff7 + @"mods\Textures\";
+                    Sys.Settings.FF7Exe = ff7 + @"FF7.exe";
+
+                    Sys.Settings.MovieFolder = (string)Registry.GetValue(registry_path, "MoviePath", null);
+
+                    Sys.Settings.LibraryLocation = ff7 + @"mods\7th Heaven\";
+
+                    Sys.Settings.ExtraFolders.Add("direct");
+                    Sys.Settings.ExtraFolders.Add("music");
+                }
+                else
+                {
+                    Logger.Warn("Auto detect paths failed - could not determine ff7.exe path from Windows Registry.");
+                }
+            }
         }
 
         internal bool SaveSettings()

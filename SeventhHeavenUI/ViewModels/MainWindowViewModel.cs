@@ -407,6 +407,8 @@ They will be automatically turned off.";
             // Set the Downloads Interface so Sys can use Download methods defined in the CatalogViewModel
             Sys.Downloads = CatalogViewModel;
 
+            GeneralSettingsViewModel.AutoDetectSystemPaths();
+
             CopyDllAndUpdaterExe();
 
             LoadCatalogXmlFile();
@@ -418,6 +420,8 @@ They will be automatically turned off.";
             Sys.StatusChanged += new EventHandler<ModStatusEventArgs>(Sys_StatusChanged);
 
             InitActiveProfile();
+
+            TryAutoImportMods();
 
             CheckForCatalogUpdatesAsync(new CatCheckOptions());
 
@@ -521,8 +525,6 @@ They will be automatically turned off.";
                     Sys.Settings.CurrentProfile = null;
                 }
             }
-
-            TryAutoImportMods();
 
             if (Sys.ActiveProfile == null)
             {
