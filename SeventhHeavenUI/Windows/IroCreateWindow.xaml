@@ -1,0 +1,30 @@
+﻿<Window x:Class="SeventhHeaven.Windows.IroCreateWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SeventhHeaven.Windows"
+        mc:Ignorable="d"
+        Style="{StaticResource MainWindowStyle}"
+        Title="IRO Tools"
+        WindowStyle="ToolWindow"
+        ResizeMode="NoResize"
+        Height="325" Width="500">
+    <Grid>
+        <TabControl Margin="0,3,0,0"
+                    BorderThickness="0,1,0,0">
+            <TabItem Header="Pack IRO">
+                
+            </TabItem>
+            <TabItem Header="Unpack IRO">
+
+            </TabItem>
+            <TabItem Header="Patch IRO">
+
+            </TabItem>
+            <TabItem Header="Patch IRO (Advanced)">
+
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
