@@ -575,7 +575,8 @@ They will be automatically turned off.";
                             Log.Write("Trying to auto-import file " + folder);
                             try
                             {
-                                ImportModViewModel.ImportMod(folder, Path.GetFileNameWithoutExtension(folder), false, true);
+                                string modName = ImportModViewModel.ParseNameFromFileOrFolder(Path.GetFileNameWithoutExtension(folder));
+                                ImportModViewModel.ImportMod(folder, modName, false, true);
                             }
                             catch (Exception ex)
                             {
@@ -597,7 +598,8 @@ They will be automatically turned off.";
                             Log.Write($"Trying to auto-import file {iro}");
                             try
                             {
-                                ImportModViewModel.ImportMod(iro, Path.GetFileNameWithoutExtension(iro), true, true);
+                                string modName = ImportModViewModel.ParseNameFromFileOrFolder(Path.GetFileNameWithoutExtension(iro));
+                                ImportModViewModel.ImportMod(iro, modName, true, true);
                             }
                             catch (_7thWrapperLib.IrosArcException)
                             {

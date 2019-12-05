@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -241,6 +242,13 @@ namespace SeventhHeaven.ViewModels
 
             if (doc != null)
             {
+                m.Name = doc.SelectSingleNode("/ModInfo/Name").NodeTextS();
+
+                if (string.IsNullOrWhiteSpace(m.Name))
+                {
+                    m.Name = name;
+                }
+
                 m.Author = doc.SelectSingleNode("/ModInfo/Author").NodeTextS();
                 m.Link = doc.SelectSingleNode("/ModInfo/Link").NodeTextS();
                 m.Description = doc.SelectSingleNode("/ModInfo/Description").NodeTextS();
@@ -405,5 +413,26 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        /// <summary>
+        /// Removes guid from passed in string and replaces underscores '_' with spaces if guid is found in string.
+        /// </summary>
+        /// <param name="name"> name of mod with possible Guid in string </param>
+        /// <returns> if Guid found then returns parsed string; other wise returns <paramref name="name"/></returns>
+        internal static string ParseNameFromFileOrFolder(string name)
+        {
+            string parsedName = name;
+
+            Regex regex = new Regex(@"[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}");
+            Match match = regex.Match(name);
+
+            if (match.Success)
+            {
+                int index = name.IndexOf(match.Value) + match.Length;
+                parsedName = name.Substring(index);
+                parsedName = parsedName.Replace("_", " ").Trim();
+            }
+
+            return parsedName;
+        }
     }
 }
