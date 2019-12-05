@@ -529,28 +529,37 @@ namespace SeventhHeaven.ViewModels
         {
             if (_audio == null)
             {
-                _audio = new NAudio.Wave.WaveOut();
+                try
+                {
+                    _audio = new NAudio.Wave.WaveOut();
 
-                if (_audioFileName.EndsWith(".ogg", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    if (_audioPath != null)
-                        _audio.Init(new NAudio.Vorbis.VorbisWaveReader(_audioPath));
-                    else if (_audioFile != null)
-                        _audio.Init(new NAudio.Vorbis.VorbisWaveReader(_audioFile));
+                    if (_audioFileName.EndsWith(".ogg", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        if (_audioPath != null)
+                            _audio.Init(new NAudio.Vorbis.VorbisWaveReader(_audioPath));
+                        else if (_audioFile != null)
+                            _audio.Init(new NAudio.Vorbis.VorbisWaveReader(_audioFile));
+                    }
+                    else if (_audioFileName.EndsWith(".mp3", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        if (_audioPath != null)
+                            _audio.Init(new NAudio.Wave.Mp3FileReader(_audioPath));
+                        else if (_audioFile != null)
+                            _audio.Init(new NAudio.Wave.Mp3FileReader(_audioFile));
+                    }
+                    else
+                    {
+                        return;
+                    }
+
+                    _audio.Play();
                 }
-                else if (_audioFileName.EndsWith(".mp3", StringComparison.InvariantCultureIgnoreCase))
+                catch (Exception e)
                 {
-                    if (_audioPath != null)
-                        _audio.Init(new NAudio.Wave.Mp3FileReader(_audioPath));
-                    else if (_audioFile != null)
-                        _audio.Init(new NAudio.Wave.Mp3FileReader(_audioFile));
-                }
-                else
-                {
-                    return;
+                    Logger.Error(e);
+                    Sys.Message(new WMessage($"Failed to play preview audio {_audioFileName}"));
                 }
 
-                _audio.Play();
             }
             else
             {
