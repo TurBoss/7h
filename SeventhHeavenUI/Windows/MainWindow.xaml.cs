@@ -203,11 +203,7 @@ namespace SeventhHeavenUI
 
         private void menuItemGeneralSettings_Click(object sender, RoutedEventArgs e)
         {
-            GeneralSettingsWindow settingsWindow = new GeneralSettingsWindow()
-            {
-                WindowStartupLocation = WindowStartupLocation.CenterScreen
-            };
-            settingsWindow.ShowDialog();
+            ViewModel.ShowGeneralSettingsWindow();
         }
 
         private void menuItemNewProfile_Click(object sender, RoutedEventArgs e)

@@ -8,19 +8,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Iros._7th.Workshop {
-    public class Catalog {
+namespace Iros._7th.Workshop
+{
+    public class Catalog
+    {
         private Dictionary<Guid, Mod> _lookup;
 
         public List<Mod> Mods { get; set; }
 
-        public Catalog() {
+        public Catalog()
+        {
             Mods = new List<Mod>();
         }
         //https://mega.co.nz/#F!DYQWTZ7B!FWil2nif2HQF_Dr7RxvOLA
 
-        public Mod GetMod(Guid modID) {
-            if (_lookup == null) {
+        public Mod GetMod(Guid modID)
+        {
+            if (_lookup == null)
+            {
                 _lookup = Mods.ToDictionary(m => m.ID, m => m);
             }
             Mod mod;
@@ -28,24 +33,34 @@ namespace Iros._7th.Workshop {
             return mod;
         }
 
-        public static Catalog Merge(Catalog c1, Catalog c2, out List<Guid> pingIDs) {
+        public static Catalog Merge(Catalog c1, Catalog c2, out List<Guid> pingIDs)
+        {
             Dictionary<Guid, Mod> mods = c1.Mods.ToDictionary(m => m.ID, m => m);
             pingIDs = new List<Guid>();
-            foreach (var mod in c2.Mods) {
+
+            foreach (var mod in c2.Mods)
+            {
                 Mod m;
-                if (mods.TryGetValue(mod.ID, out m)) {
-                    if (mod.LatestVersion.Version > m.LatestVersion.Version || mod.MetaVersion > m.MetaVersion) {
+                if (mods.TryGetValue(mod.ID, out m))
+                {
+                    if (mod.LatestVersion.Version > m.LatestVersion.Version || mod.MetaVersion > m.MetaVersion)
+                    {
                         mods[mod.ID] = mod;
                         pingIDs.Add(mod.ID);
                     }
-                } else
+                }
+                else
+                {
                     mods[mod.ID] = mod;
+                }
             }
+
             return new Catalog() { Mods = mods.Values.ToList() };
         }
     }
 
-    public class Mod {
+    public class Mod
+    {
         public Guid ID { get; set; }
         public string Author { get; set; }
         public string Link { get; set; }
@@ -63,26 +78,46 @@ namespace Iros._7th.Workshop {
         [System.Xml.Serialization.XmlElement("Requirement")]
         public List<ModRequirement> Requirements { get; set; }
 
-        public IEnumerable<ModPatch> GetPatchesFromTo(decimal from, decimal to) {
-            foreach (var patch in Patches) {
+        public IEnumerable<ModPatch> GetPatchesFromTo(decimal from, decimal to)
+        {
+            foreach (var patch in Patches)
+            {
                 if (patch.VerTo == to && patch.VerFrom.Split(',').Select(s => decimal.Parse(s)).Contains(from))
                     yield return patch;
             }
         }
 
-        public int SearchRelevance(string text) {
+        public int SearchRelevance(string text)
+        {
             if (Name.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) >= 0) return 200;
             if (Description.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) >= 0) return 100;
             return 0;
         }
+
+        /// <summary>
+        /// Compares properties to another Mod to see if 
+        /// name, description, category, author, or link is different.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns> true if properties are different; false if they are equal. </returns>
+        internal bool HasChanges(Mod other)
+        {
+            return (this.Name != other.Name ||
+                    this.Description != other.Description ||
+                    this.Category != other.Category ||
+                    this.Author != other.Author ||
+                    this.Link != other.Link);
+        }
     }
 
-    public class ModRequirement {
+    public class ModRequirement
+    {
         public string Description { get; set; }
         public Guid ModID { get; set; }
     }
 
-    public class ModPatch {
+    public class ModPatch
+    {
         [System.Xml.Serialization.XmlAttribute("VerFrom")]
         public string VerFrom { get; set; }
         [System.Xml.Serialization.XmlAttribute("VerTo")]
@@ -94,15 +129,18 @@ namespace Iros._7th.Workshop {
 
     }
 
-    public enum LocationType {
+    public enum LocationType
+    {
         INVALID,
         Url,
         MegaSharedFolder, //Format: SharedFolderLink,FileIDString,HintFileName
         GDrive,
     }
 
-    public static class LocationUtil {
-        public static bool Parse(string link, out LocationType type, out string url) {
+    public static class LocationUtil
+    {
+        public static bool Parse(string link, out LocationType type, out string url)
+        {
             if (link.StartsWith("iros://", StringComparison.InvariantCultureIgnoreCase)) link = link.Substring(7);
             string[] parts = link.Split(new[] { '/' }, 2);
             type = LocationType.INVALID; url = null;
@@ -118,7 +156,8 @@ namespace Iros._7th.Workshop {
     }
 
     [Flags]
-    public enum GameVersions {
+    public enum GameVersions
+    {
         Original = 0x1,
         Rerelease = 0x2,
         Steam = 0x4,
@@ -126,7 +165,8 @@ namespace Iros._7th.Workshop {
         All = 0xff
     }
 
-    public class ModVersion {
+    public class ModVersion
+    {
         public int DownloadSize { get; set; }
         [System.Xml.Serialization.XmlElement("Link")]
         public List<string> Links { get; set; }

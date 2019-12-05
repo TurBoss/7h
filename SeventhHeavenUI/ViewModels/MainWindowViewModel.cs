@@ -400,26 +400,51 @@ They will be automatically turned off.";
 
         public void InitViewModel()
         {
-            StatusMessage = $"{App.GetAppName()} started: app v{App.GetAppVersion().ToString()} - Sys v{Sys.Version.ToString()}";
-
-            MegaIros.Logger = Logger.Info;
+            Sys.MessageReceived += Sys_MessageReceived;
+            Sys.StatusChanged += new EventHandler<ModStatusEventArgs>(Sys_StatusChanged);
 
             // Set the Downloads Interface so Sys can use Download methods defined in the CatalogViewModel
             Sys.Downloads = CatalogViewModel;
 
+            StatusMessage = $"{App.GetAppName()} started: app v{App.GetAppVersion().ToString()} - Sys v{Sys.Version.ToString()}";
+
+            MegaIros.Logger = Logger.Info;
+
             GeneralSettingsViewModel.AutoDetectSystemPaths();
 
-            CopyDllAndUpdaterExe();
+            CopyDllAndUpdaterExe(); // TODO: change or fix app updater process
 
             LoadCatalogXmlFile();
 
             InitLoaderContext();
 
-            Sys.MessageReceived += Sys_MessageReceived;
-
-            Sys.StatusChanged += new EventHandler<ModStatusEventArgs>(Sys_StatusChanged);
-
             InitActiveProfile();
+
+
+            // check if the settings window should be showed (on first start or if errors in settings)
+            // ... note that VersionUpgradeCompleted will be 0 when Sys.Settings is initialized for the first time.
+            bool showSettings = false;
+            if (Sys.Settings.VersionUpgradeCompleted < Sys.Version)
+            {
+                showSettings = true;
+            }
+            else
+            {
+                var errors = Sys.Settings.VerifySettings();
+                if (errors.Any())
+                {
+                    string msg = "The following errors were found in your configuration:\n" +
+                                 string.Join("\n", errors) + "\n" +
+                                 "The settings window will now be displayed so you can fix them.";
+                    MessageBox.Show(msg, "Config Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    showSettings = true;
+                }
+            }
+
+            if (showSettings)
+            {
+                ShowGeneralSettingsWindow();
+            }
 
             TryAutoImportMods();
 
@@ -1425,6 +1450,15 @@ They will be automatically turned off.";
                 WindowStartupLocation = WindowStartupLocation.CenterScreen
             };
             toolWindow.ShowDialog();
+        }
+
+        internal void ShowGeneralSettingsWindow()
+        {
+            GeneralSettingsWindow settingsWindow = new GeneralSettingsWindow()
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+            settingsWindow.ShowDialog();
         }
     }
 

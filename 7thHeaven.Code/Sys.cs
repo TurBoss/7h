@@ -213,11 +213,12 @@ namespace Iros._7th.Workshop
 
         static Sys()
         {
-
             string appPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            _7HFolder = appPath;
 
             SysFolder = Path.Combine(appPath, "7thWorkshop");
-            _7HFolder = appPath;
+            Directory.CreateDirectory(SysFolder);
+
 
             string sfile = Path.Combine(SysFolder, "settings.xml");
             if (File.Exists(sfile))
@@ -234,7 +235,6 @@ namespace Iros._7th.Workshop
             if (Settings == null)
             {
                 Settings = new Settings();
-                //Settings.UpdateUrl = System.Configuration.ConfigurationManager.AppSettings["UpdateUrl"];
                 Settings.Options = GeneralOptions.AutoImportMods | GeneralOptions.SetEXECompatFlags;
                 Settings.SubscribedUrls.Add("iros://Url/http$pastebin.com/raw.php?i=dDBkYkDu");
                 Settings.SubscribedUrls.Add("iros://Url/http$pastebin.com/raw.php?i=QBGsgGK6");
@@ -252,8 +252,10 @@ namespace Iros._7th.Workshop
                     Sys.Message(new WMessage() { Text = "Error loading library file" });
                 }
             }
+
             if (Library == null)
                 Library = new Library();
+
             _statuses = Library.Items.ToDictionary(i => i.ModID, _ => ModStatus.Installed);
 
             ImageCache = new ImageCache(System.IO.Path.Combine(SysFolder, "cache"));
