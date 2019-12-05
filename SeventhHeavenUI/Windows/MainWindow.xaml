@@ -94,7 +94,7 @@
 
         <GroupBox Header=" Mod Info "
                   Grid.Row="1"
-                  Margin="5,0,3,1">
+                  Margin="5,-10,3,1">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="2*"/>
@@ -235,8 +235,9 @@
                 Style="{StaticResource ButtonWithDownArrow}"
                 Grid.Column="1"
                 Padding="5,2,5,2"
-                Margin="0,6,240,0"
+                Margin="0,25,240,0"
                 HorizontalAlignment="Right"
+                Panel.ZIndex="10"
                 VerticalAlignment="Top"/>
 
         <TextBox x:Name="txtSearch"
@@ -247,16 +248,19 @@
                  HorizontalAlignment="Right"
                  VerticalAlignment="Top"
                  VerticalContentAlignment="Center"
-                 Margin="0,5,5,0"
+                 Panel.ZIndex="10"
+                 Margin="0,25,5,0"
                  Width="225"
                  Height="24"/>
 
         <TextBlock Text="Type here and press enter to search ..."
                    Foreground="{DynamicResource PrimaryControlDisabledForeground}"
                    Grid.Column="1"
+                   IsHitTestVisible="False"
+                   Panel.ZIndex="10"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Top"
-                   Margin="0,8,28,0">
+                   Margin="0,29,28,0">
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
                     <Setter Property="Visibility" Value="Hidden"/>

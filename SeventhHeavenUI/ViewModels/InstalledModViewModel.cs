@@ -23,6 +23,7 @@ namespace SeventhHeavenUI.ViewModels
         private bool _isSelected;
         private ProfileItem _activeModInfo;
         private InstalledItem _installInfo;
+        private string _releaseDate;
 
         public delegate void OnActivationChanged(object sender, InstalledModViewModel selected);
         public event OnActivationChanged ActivationChanged;
@@ -76,6 +77,19 @@ namespace SeventhHeavenUI.ViewModels
             set
             {
                 _category = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string ReleaseDate
+        {
+            get
+            {
+                return _releaseDate;
+            }
+            set
+            {
+                _releaseDate = value;
                 NotifyPropertyChanged();
             }
         }
@@ -147,6 +161,7 @@ namespace SeventhHeavenUI.ViewModels
             Author = InstallInfo.CachedDetails.Author;
             Version = InstallInfo.CachedDetails.LatestVersion.Version.ToString();
             Category = InstallInfo.CachedDetails.LatestVersion.Category;
+            ReleaseDate = InstallInfo.CachedDetails.LatestVersion.ReleaseDate.ToString(Sys.Settings.DateTimeStringFormat);
         }
 
     }
