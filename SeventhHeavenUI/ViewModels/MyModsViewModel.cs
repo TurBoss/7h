@@ -473,6 +473,13 @@ namespace SeventhHeavenUI.ViewModels
 
                         Directory.CreateDirectory(config_temp_folder);
 
+                        string fullImgDirectoryPath = Path.GetDirectoryName(tempImgPath);
+
+                        if (!Directory.Exists(fullImgDirectoryPath))
+                        {
+                            Directory.CreateDirectory(fullImgDirectoryPath);
+                        }
+
                         if (File.Exists(tempImgPath))
                         {
                             return tempImgPath;

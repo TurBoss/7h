@@ -74,6 +74,7 @@
                 <CheckBox Content="Import Library Folder Mods Automatically" IsChecked="{Binding ImportLibraryFolderAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
                 <CheckBox Content="Check For 7th Heaven Updates Automatically" IsChecked="{Binding CheckForUpdatesAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
                 <CheckBox Content="Bypass Compatibility Locks" IsChecked="{Binding BypassCompatibilityLocks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <CheckBox Content="Launch Game With Compatibility Flags" IsChecked="{Binding LaunchWithCompatFlags, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
         </GroupBox>
 

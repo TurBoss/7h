@@ -28,6 +28,7 @@ namespace SeventhHeaven.ViewModels
         private string _subscriptionsInput;
         private string _extraFoldersInput;
         private string _alsoLaunchInput;
+        private bool _launchWithCompatFlags;
 
         public string FF7ExePathInput
         {
@@ -185,6 +186,19 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public bool LaunchWithCompatFlags
+        {
+            get
+            {
+                return _launchWithCompatFlags;
+            }
+            set
+            {
+                _launchWithCompatFlags = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public GeneralSettingsViewModel()
         {
         }
@@ -207,6 +221,7 @@ namespace SeventhHeaven.ViewModels
             ImportLibraryFolderAuto = Sys.Settings.Options.HasFlag(GeneralOptions.AutoImportMods);
             CheckForUpdatesAuto = Sys.Settings.Options.HasFlag(GeneralOptions.CheckForUpdates);
             BypassCompatibilityLocks = Sys.Settings.Options.HasFlag(GeneralOptions.BypassCompatibility);
+            LaunchWithCompatFlags = Sys.Settings.Options.HasFlag(GeneralOptions.SetEXECompatFlags);
 
             if (Sys.Settings.VersionUpgradeCompleted < Sys.Version)
             {
@@ -304,6 +319,9 @@ namespace SeventhHeaven.ViewModels
 
             if (BypassCompatibilityLocks)
                 newOptions |= GeneralOptions.BypassCompatibility;
+
+            if (LaunchWithCompatFlags)
+                newOptions |= GeneralOptions.SetEXECompatFlags;
 
             Sys.Settings.Options = newOptions;
 

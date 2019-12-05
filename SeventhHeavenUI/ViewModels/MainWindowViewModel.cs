@@ -1023,11 +1023,19 @@ They will be automatically turned off.";
             {
                 MessageBox.Show("No mods have been activated. The game will now launch as 'vanilla'");
 
-                // Add 640x480 and High DPI compatibility flags if set in settings
+                // remove the flag for 640x480 when playing vanilla since Easy Hook is not being used
                 if (Sys.Settings.Options.HasFlag(GeneralOptions.SetEXECompatFlags))
                 {
                     RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
-                    ff7CompatKey?.SetValue(Sys.Settings.FF7Exe, "~ 640X480 HIGHDPIAWARE");
+
+                    try
+                    {
+                        ff7CompatKey?.DeleteValue(Sys.Settings.FF7Exe);
+                    }
+                    catch (Exception e)
+                    {
+                        // will fail if already deleted
+                    }
                 }
 
                 Process.Start(Sys.Settings.FF7Exe);
