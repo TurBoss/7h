@@ -346,9 +346,9 @@ They will be automatically turned off.";
             PreviewModAuthor = selected.Author;
             PreviewModVersion = selected.InstallInfo.CachedDetails.LatestVersion.Version.ToString();
             PreviewModName = $"{selected.Name} v{PreviewModVersion}";
-            PreviewModReleaseDate = selected.InstallInfo.CachedDetails.LatestVersion.ReleaseDate.ToString(Sys.Settings.DateTimeStringFormat);
+            PreviewModReleaseDate = selected.ReleaseDate;
             PreviewModReleaseNotes = selected.InstallInfo.CachedDetails.LatestVersion.ReleaseNotes;
-            PreviewModCategory = selected.InstallInfo.CachedDetails.LatestVersion.Category;
+            PreviewModCategory = selected.Category;
             PreviewModDescription = selected.InstallInfo.CachedDetails.Description;
             PreviewModLink = selected.InstallInfo.CachedDetails.Link;
 

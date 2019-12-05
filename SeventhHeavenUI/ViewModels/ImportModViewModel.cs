@@ -172,6 +172,7 @@ namespace SeventhHeaven.ViewModels
             {
                 Author = String.Empty,
                 Description = "Imported mod",
+                Category = "Unknown",
                 ID = Guid.NewGuid(),
                 Link = String.Empty,
                 Tags = new List<string>(),
@@ -243,6 +244,7 @@ namespace SeventhHeaven.ViewModels
                 m.Author = doc.SelectSingleNode("/ModInfo/Author").NodeTextS();
                 m.Link = doc.SelectSingleNode("/ModInfo/Link").NodeTextS();
                 m.Description = doc.SelectSingleNode("/ModInfo/Description").NodeTextS();
+                m.Category = doc.SelectSingleNode("/ModInfo/Category").NodeTextS();
                 decimal ver;
                 if (decimal.TryParse(doc.SelectSingleNode("/ModInfo/Version").NodeTextS().Replace(',', '.'), out ver)) m.LatestVersion.Version = ver;
                 var pv = doc.SelectSingleNode("/ModInfo/PreviewFile");

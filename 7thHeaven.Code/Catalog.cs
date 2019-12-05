@@ -55,6 +55,8 @@ namespace Iros._7th.Workshop {
         public string Name { get; set; }
         public string Description { get; set; }
 
+        public string Category { get; set; }
+
         public List<string> Tags { get; set; }
         [System.Xml.Serialization.XmlElement("Patch")]
         public List<ModPatch> Patches { get; set; }

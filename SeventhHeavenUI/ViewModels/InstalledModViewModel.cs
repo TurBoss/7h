@@ -160,8 +160,10 @@ namespace SeventhHeavenUI.ViewModels
             Name = InstallInfo.CachedDetails.Name;
             Author = InstallInfo.CachedDetails.Author;
             Version = InstallInfo.CachedDetails.LatestVersion.Version.ToString();
-            Category = InstallInfo.CachedDetails.LatestVersion.Category;
             ReleaseDate = InstallInfo.CachedDetails.LatestVersion.ReleaseDate.ToString(Sys.Settings.DateTimeStringFormat);
+
+            // if latest version does not have category then use category from Mod
+            Category = string.IsNullOrWhiteSpace(InstallInfo.CachedDetails.LatestVersion.Category) ? InstallInfo.CachedDetails.Category : InstallInfo.CachedDetails.LatestVersion.Category;
         }
 
     }
