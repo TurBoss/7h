@@ -82,7 +82,7 @@
                 <cls:ButtonWithImage.ContextMenu>
                     <ContextMenu x:Name="menuTools" PlacementTarget="{Binding ElementName=btnTools}" Closed="menuTools_Closed">
                         <MenuItem x:Name="menuItemIroCreation" Header="IRO Creation Tool"/>
-                        <MenuItem x:Name="menuItemChunkTool" Header="Chunk Tool"/>
+                        <MenuItem x:Name="menuItemChunkTool" Header="Chunk Tool" Click="menuItemChunkTool_Click"/>
                         <MenuItem x:Name="menuItemCatalogCreation" Header="Catalog Creation Tool"/>
                     </ContextMenu>
                 </cls:ButtonWithImage.ContextMenu>

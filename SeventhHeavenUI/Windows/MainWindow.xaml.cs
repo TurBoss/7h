@@ -224,5 +224,10 @@ namespace SeventhHeavenUI
         {
             ViewModel.ShowOpenProfileWindow();
         }
+
+        private void menuItemChunkTool_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ShowChunkToolWindow();
+        }
     }
 }

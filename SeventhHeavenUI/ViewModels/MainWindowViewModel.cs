@@ -1415,6 +1415,15 @@ They will be automatically turned off.";
                 Sys.Message(new WMessage($"Loaded profile {CurrentProfile}"));
             }
         }
+
+        internal void ShowChunkToolWindow()
+        {
+            ChunkToolWindow toolWindow = new ChunkToolWindow()
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+            toolWindow.ShowDialog();
+        }
     }
 
     internal class CatCheckOptions

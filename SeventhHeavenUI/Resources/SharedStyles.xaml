@@ -582,7 +582,7 @@
 
                         <ContentPresenter Margin="4,0,0,0"
                                           VerticalAlignment="Center" HorizontalAlignment="Left"
-                                          TextElement.Foreground="{DynamicResource PrimaryControlForeground}"
+                                          TextElement.Foreground="{TemplateBinding Foreground}"
                                           RecognizesAccessKey="True" />
                     </BulletDecorator>
 
@@ -593,10 +593,15 @@
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
                         </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource PrimaryControlDisabledForeground}"/>
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
     </Style>
 
     <!--COMBO BOX STYLE. TEMPLATE TAKEN FROM: https://docs.microsoft.com/en-us/dotnet/framework/wpf/controls/combobox-styles-and-templates -->
