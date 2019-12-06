@@ -310,6 +310,40 @@
             </TextBlock.Style>
         </TextBlock>
 
+        <ToggleButton x:Name="btnTags"
+                      ClickMode="Release"
+                      Click="btnTags_Click"
+                      ToolTip="Click to select what tags to filter by."
+                      Style="{StaticResource DownArrowToggleButton}"
+                      Visibility="{Binding FilterButtonVisibility}"
+                      Background="Transparent"
+                      Width="24"
+                      Height="23"
+                      Grid.Column="1"
+                      HorizontalAlignment="Right"
+                      VerticalAlignment="Top"
+                      VerticalContentAlignment="Center"
+                      Panel.ZIndex="10"
+                      Margin="0,25,5,0"/>
+
+        <Popup x:Name="popupTags"
+               Closed="popupTags_Closed"
+               Placement="Bottom"
+               HorizontalOffset="-141"
+               PlacementTarget="{Binding ElementName=btnTags}"
+               StaysOpen="False">
+            <Grid>
+                <ListBox MinWidth="165"
+                         FontSize="13"
+                         MaxHeight="225"
+                         ItemsSource="{Binding AvailableTags}"
+                         Background="{DynamicResource PrimaryControlBackground}"
+                         BorderBrush="{DynamicResource SecondaryAppBackground}" 
+                         ItemContainerStyle="{StaticResource CategoryFilterListBoxItem}"/>
+            </Grid>
+        </Popup>
+
+
         <StatusBar Grid.Row="2" Grid.ColumnSpan="2" Margin="0,5,0,0">
             <StatusBarItem>
                 <TextBlock x:Name="txtStatusMessage"

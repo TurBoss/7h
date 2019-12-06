@@ -63,6 +63,7 @@ They will be automatically turned off.";
         private int _selectedTabIndex;
         private List<string> _statusMessageLog;
         private List<FilterItemViewModel> _availableFilterCategories;
+        private List<FilterItemViewModel> _availableTags;
         internal static _7thWrapperLib.LoaderContext _context;
 
         private Mod _previewMod;
@@ -325,6 +326,30 @@ They will be automatically turned off.";
             }
         }
 
+        public List<FilterItemViewModel> AvailableTags
+        {
+            get
+            {
+                if (_availableTags == null)
+                    _availableTags = new List<FilterItemViewModel>();
+
+                return _availableTags;
+            }
+            set
+            {
+                _availableTags = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public List<FilterItemViewModel> CheckedTags
+        {
+            get
+            {
+                return AvailableTags.Where(c => c.IsChecked && c.Name != _showAllText).ToList();
+            }
+        }
+
         #endregion
 
         public MainWindowViewModel()
@@ -476,6 +501,7 @@ They will be automatically turned off.";
             CatalogViewModel.ReloadModList();
 
             ReloadCategoryFilters();
+            ReloadAvailableTags();
 
             // this deletes any temp images that were extracted from IRO archives
             // ... the temp images are used for the configure mod window
@@ -1333,8 +1359,9 @@ They will be automatically turned off.";
             if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
             {
                 CatalogViewModel.ClearRememberedSearchTextAndCategories();
-                CatalogViewModel.ReloadModList(SearchText, CheckedFilterCategories);
+                CatalogViewModel.ReloadModList(SearchText, CheckedFilterCategories, CheckedTags);
                 ReloadCategoryFilters();
+                ReloadAvailableTags();
             }
         }
 
@@ -1525,7 +1552,7 @@ They will be automatically turned off.";
 
             List<FilterItemViewModel> newList = categories.Select(c => new FilterItemViewModel(c)
             {
-                OnChecked = new Action<bool>(isChecked => CheckOrUncheckShowAllFilter())
+                OnChecked = new Action<bool>(isChecked => CheckOrUncheckShowAllFilter(AvailableFilterCategories))
             }).ToList();
 
             // re-check items
@@ -1544,7 +1571,7 @@ They will be automatically turned off.";
             FilterItemViewModel showAllItem = new FilterItemViewModel(_showAllText) 
             { 
                 IsChecked = allChecked,
-                OnChecked = new Action<bool>(isChecked => ToggleIsCheckedForAll(isChecked))
+                OnChecked = new Action<bool>(isChecked => ToggleIsCheckedForAll(isChecked, AvailableFilterCategories))
             };
             newList.Insert(0, showAllItem);
 
@@ -1552,23 +1579,23 @@ They will be automatically turned off.";
         }
 
         /// <summary>
-        /// sets IsChecked to value of <paramref name="isChecked"/> for all items in <see cref="AvailableFilterCategories"/> except for the 'Show All' category 
+        /// sets IsChecked to value of <paramref name="isChecked"/> for all items in <paramref name="filterItems"/> except for the 'Show All' category 
         /// </summary>
-        private void ToggleIsCheckedForAll(bool isChecked)
+        private void ToggleIsCheckedForAll(bool isChecked, List<FilterItemViewModel> filterItems)
         {
-            foreach (var item in AvailableFilterCategories.Where(c => c.Name != _showAllText).ToList())
+            foreach (var item in filterItems.Where(c => c.Name != _showAllText).ToList())
             {
                 item.IsChecked = isChecked;
             }
         }
 
         /// <summary>
-        /// Updates the IsChecked property of the 'Show All' category based on all other items in <see cref="AvailableFilterCategories"/> being checked or not.
+        /// Updates the IsChecked property of the 'Show All' item based on all other items in <paramref name="filterItems"/> being checked or not.
         /// </summary>
-        private void CheckOrUncheckShowAllFilter()
+        private void CheckOrUncheckShowAllFilter(List<FilterItemViewModel> filterItems)
         {
-            FilterItemViewModel item = AvailableFilterCategories.FirstOrDefault(cat => cat.Name == _showAllText);
-            item.SetIsChecked(AvailableFilterCategories.Where(cat => cat.Name != _showAllText).All(cat => cat.IsChecked));
+            FilterItemViewModel item = filterItems.FirstOrDefault(cat => cat.Name == _showAllText);
+            item.SetIsChecked(filterItems.Where(cat => cat.Name != _showAllText).All(cat => cat.IsChecked));
         }
 
         /// <summary>
@@ -1576,9 +1603,58 @@ They will be automatically turned off.";
         /// </summary>
         internal void ApplyCategoryFilterAndReloadList()
         {
-            CatalogViewModel.ReloadModList(SearchText, CheckedFilterCategories);
+            CatalogViewModel.ReloadModList(SearchText, CheckedFilterCategories, CheckedTags);
             ReloadCategoryFilters();
         }
+
+        internal void ReloadAvailableTags()
+        {
+            List<string> tags = new List<string>();
+
+            foreach (List<string> modTags in Sys.Catalog.Mods.Where(c => c.Tags.Count > 0).Select(c => c.Tags))
+            {
+                tags.AddRange(modTags);
+            }
+
+            tags = tags.Distinct().OrderBy(s => s).ToList();
+            
+
+            List<FilterItemViewModel> newList = tags.Select(c => new FilterItemViewModel(c)
+            {
+                OnChecked = new Action<bool>(isChecked => CheckOrUncheckShowAllFilter(AvailableTags))
+            }).ToList();
+
+
+            // re-check items
+            List<FilterItemViewModel> oldItems = AvailableTags.ToList();
+
+            foreach (FilterItemViewModel item in newList)
+            {
+                if (oldItems.Any(c => c.Name == item.Name && c.IsChecked))
+                {
+                    item.IsChecked = true;
+                }
+            }
+
+            // setup 'Show All' filter item as first in the list
+            bool allChecked = newList.All(c => c.IsChecked);
+            FilterItemViewModel showAllItem = new FilterItemViewModel(_showAllText)
+            {
+                IsChecked = allChecked,
+                OnChecked = new Action<bool>(isChecked => ToggleIsCheckedForAll(isChecked, AvailableTags))
+            };
+            newList.Insert(0, showAllItem);
+
+            AvailableTags = newList;
+        }
+
+
+        internal void ApplyTagsAndReloadList()
+        {
+            CatalogViewModel.ReloadModList(SearchText, CheckedFilterCategories, CheckedTags);
+            ReloadAvailableTags();
+        }
+
     }
 
     internal class CatCheckOptions

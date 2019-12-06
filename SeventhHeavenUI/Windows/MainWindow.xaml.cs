@@ -238,8 +238,22 @@ namespace SeventhHeavenUI
         private void popupFilter_Closed(object sender, EventArgs e)
         {
             btnFilter.IsEnabled = true;
-
             ViewModel.ApplyCategoryFilterAndReloadList();
+        }
+
+        private void btnTags_Click(object sender, RoutedEventArgs e)
+        {
+            if (!popupTags.IsOpen)
+            {
+                btnTags.IsEnabled = false; // disable button while it is opened
+                popupTags.IsOpen = true;
+            }
+        }
+
+        private void popupTags_Closed(object sender, EventArgs e)
+        {
+            btnTags.IsEnabled = true;
+            ViewModel.ApplyTagsAndReloadList();
         }
     }
 }
