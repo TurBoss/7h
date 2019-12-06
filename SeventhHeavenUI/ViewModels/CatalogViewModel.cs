@@ -1,6 +1,7 @@
 ﻿using Iros._7th;
 using Iros._7th.Workshop;
 using Iros.Mega;
+using SeventhHeaven.Classes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -36,9 +37,7 @@ It may not work properly unless you find and install the requirements.";
         private List<CatalogModItemViewModel> _catalogModList;
         private ObservableCollection<DownloadItemViewModel> _downloadList;
 
-        private List<FilterItemViewModel> _previousCategoryFilters;
-        private List<FilterItemViewModel> _previousTags;
-        private string _previousSearchText;
+        internal ReloadListOption _previousReloadOptions;
 
         private Dictionary<string, MegaIros> _megaFolders = new Dictionary<string, MegaIros>(StringComparer.InvariantCultureIgnoreCase);
 
@@ -89,6 +88,7 @@ It may not work properly unless you find and install the requirements.";
         public CatalogViewModel()
         {
             DownloadList = new ObservableCollection<DownloadItemViewModel>();
+            _previousReloadOptions = new ReloadListOption();
         }
 
         /// <summary>
@@ -107,22 +107,20 @@ It may not work properly unless you find and install the requirements.";
         {
             List<Mod> results;
 
-            categories = SetOrGetPreviousCategories(categories);
-
-            searchText = SetOrGetPreviousSearchText(searchText);
-
-            tags = SetOrGetPreviousTags(tags);
+            categories = _previousReloadOptions.SetOrGetPreviousCategories(categories);
+            searchText = _previousReloadOptions.SetOrGetPreviousSearchText(searchText);
+            tags = _previousReloadOptions.SetOrGetPreviousTags(tags);
 
             if (String.IsNullOrEmpty(searchText))
             {
-                results = Sys.Catalog.Mods.Where(m => FilterByCategory(m, categories))
-                                          .Where(m => FilterByTags(m, tags))
+                results = Sys.Catalog.Mods.Where(m => FilterItemViewModel.FilterByCategory(m, categories))
+                                          .Where(m => FilterItemViewModel.FilterByTags(m, tags))
                                           .ToList();
             }
             else
             {
-                results = Sys.Catalog.Mods.Where(m => FilterByCategory(m, categories))
-                                          .Where(m => FilterByTags(m, tags))
+                results = Sys.Catalog.Mods.Where(m => FilterItemViewModel.FilterByCategory(m, categories))
+                                          .Where(m => FilterItemViewModel.FilterByTags(m, tags))
                                           .Select(m => new { Mod = m, Relevance = m.SearchRelevance(searchText) })
                                           .Where(a => a.Relevance > 0)
                                           .OrderByDescending(a => a.Relevance)
@@ -156,111 +154,9 @@ It may not work properly unless you find and install the requirements.";
             });
         }
 
-        /// <summary>
-        /// Returns true if <paramref name="mod"/> has a tag matching the given <paramref name="tags"/>.
-        /// Returns true if <paramref name="tags"/> is empty.
-        /// </summary>
-        private bool FilterByTags(Mod mod, IEnumerable<FilterItemViewModel> tags)
-        {
-            if (tags == null)
-                tags = new List<FilterItemViewModel>();
-
-            return tags.Count() == 0 || tags.Any(t => mod.Tags.Contains(t.Name));
-        }
-
-        /// <summary>
-        /// Returns <see cref="_previousTags"/> if <paramref name="tags"/> is null; otherwise returns <paramref name="tags"/>.
-        /// if <see cref="_previousTags"/> is null or <paramref name="tags"/> is not null then <see cref="_previousTags"/> will be set.
-        /// </summary>
-        private IEnumerable<FilterItemViewModel> SetOrGetPreviousTags(IEnumerable<FilterItemViewModel> tags)
-        {
-            if (tags == null && _previousTags != null)
-            {
-                tags = _previousTags;
-            }
-            else if (tags == null && _previousTags == null)
-            {
-                tags = new List<FilterItemViewModel>();
-                _previousTags = tags.ToList();
-            }
-            else if (tags != null)
-            {
-                _previousTags = tags.ToList();
-            }
-
-            return tags;
-        }
-
-        /// <summary>
-        /// Returns <see cref="_previousSearchText"/> if <paramref name="searchText"/> is null/empty; otherwise returns <paramref name="searchText"/>.
-        /// if <see cref="_previousSearchText"/> is null or <paramref name="searchText"/> is not null then <see cref="_previousSearchText"/> will be set.
-        /// </summary>
-        private string SetOrGetPreviousSearchText(string searchText)
-        {
-            if (string.IsNullOrEmpty(searchText) && !string.IsNullOrEmpty(_previousSearchText))
-            {
-                searchText = _previousSearchText;
-            }
-            else if (string.IsNullOrEmpty(searchText) && string.IsNullOrEmpty(_previousSearchText))
-            {
-                searchText = "";
-                _previousSearchText = "";
-            }
-            else if (!string.IsNullOrEmpty(searchText))
-            {
-                _previousSearchText = searchText;
-            }
-
-            return searchText;
-        }
-
-        /// <summary>
-        /// Returns <see cref="_previousCategoryFilters"/> if <paramref name="categories"/> is null; otherwise returns <paramref name="categories"/>.
-        /// if <see cref="_previousCategoryFilters"/> is null or <paramref name="categories"/> is not null then <see cref="_previousCategoryFilters"/> will be set.
-        /// </summary>
-        private IEnumerable<FilterItemViewModel> SetOrGetPreviousCategories(IEnumerable<FilterItemViewModel> categories)
-        {
-            if (categories == null && _previousCategoryFilters != null)
-            {
-                categories = _previousCategoryFilters;
-            }
-            else if (categories == null && _previousCategoryFilters == null)
-            {
-                categories = new List<FilterItemViewModel>();
-                _previousCategoryFilters = categories.ToList();
-            }
-            else if (categories != null)
-            {
-                _previousCategoryFilters = categories.ToList();
-            }
-
-            return categories;
-        }
-
-        /// <summary>
-        /// Returns true if <paramref name="mod"/>.Category is found in <paramref name="categories"/>.
-        /// Returns true if <paramref name="categories"/> is empty.
-        /// </summary>
-        /// <param name="mod"></param>
-        /// <param name="categories"></param>
-        /// <returns></returns>
-        bool FilterByCategory(Mod mod, IEnumerable<FilterItemViewModel> categories)
-        {
-            if (categories == null)
-                categories = new List<FilterItemViewModel>();
-
-            string modCategory = mod.Category ?? mod.LatestVersion.Category;
-
-            return categories.Count() == 0 ||
-                   categories.Any(c => c.Name == modCategory) ||
-                   (categories.Any(c => c.Name == MainWindowViewModel._unknownText) && string.IsNullOrEmpty(modCategory));
-        }
-
         internal void ClearRememberedSearchTextAndCategories()
         {
-            _previousSearchText = "";
-            _previousCategoryFilters = null;
-            _previousTags = null;
+            _previousReloadOptions = new ReloadListOption();
         }
 
         /// <summary>

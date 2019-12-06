@@ -246,7 +246,6 @@
                 Content="Filter"
                 ToolTip="Click to select what categories to filter by."
                 Click="btnFilter_Click"
-                Visibility="{Binding FilterButtonVisibility}"
                 Style="{StaticResource ButtonWithDownArrow}"
                 Grid.Column="1"
                 Padding="5,2,5,2"
@@ -273,7 +272,6 @@
 
         <TextBox x:Name="txtSearch"
                  Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 Visibility="{Binding FilterButtonVisibility}"
                  KeyDown="txtSearch_KeyDown"
                  Grid.Column="1"
                  HorizontalAlignment="Right"
@@ -296,15 +294,9 @@
                 <Style TargetType="TextBlock">
                     <Setter Property="Visibility" Value="Hidden"/>
                     <Style.Triggers>
-                        <MultiDataTrigger>
-                            <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding SearchText, FallbackValue=''}" Value=""/>
-                                <Condition Binding="{Binding FilterButtonVisibility, FallbackValue='Visible'}" Value="Visible"/>
-                            </MultiDataTrigger.Conditions>
-                            <MultiDataTrigger.Setters>
-                                <Setter Property="Visibility" Value="Visible"/>
-                            </MultiDataTrigger.Setters>
-                        </MultiDataTrigger>
+                        <DataTrigger Binding="{Binding SearchText, FallbackValue=''}" Value="">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </TextBlock.Style>
@@ -315,7 +307,6 @@
                       Click="btnTags_Click"
                       ToolTip="Click to select what tags to filter by."
                       Style="{StaticResource DownArrowToggleButton}"
-                      Visibility="{Binding FilterButtonVisibility}"
                       Background="Transparent"
                       Width="24"
                       Height="23"

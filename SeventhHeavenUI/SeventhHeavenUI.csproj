@@ -93,6 +93,7 @@
     </ApplicationDefinition>
     <Compile Include="Classes\ButtonWithImage.cs" />
     <Compile Include="Classes\Constraint.cs" />
+    <Compile Include="Classes\ReloadListOption.cs" />
     <Compile Include="UserControls\CatalogUserControl.xaml.cs">
       <DependentUpon>CatalogUserControl.xaml</DependentUpon>
     </Compile>

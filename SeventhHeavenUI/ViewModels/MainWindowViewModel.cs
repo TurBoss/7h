@@ -117,7 +117,6 @@ They will be automatically turned off.";
             {
                 _selectedTabIndex = value;
                 NotifyPropertyChanged();
-                NotifyPropertyChanged(nameof(FilterButtonVisibility));
 
                 if ((TabIndex)_selectedTabIndex == TabIndex.MyMods)
                 {
@@ -129,20 +128,6 @@ They will be automatically turned off.";
                 }
             }
         }
-
-        public Visibility FilterButtonVisibility
-        {
-            get
-            {
-                if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
-                {
-                    return Visibility.Visible;
-                }
-
-                return Visibility.Hidden;
-            }
-        }
-
 
         public string StatusMessage
         {
@@ -522,7 +507,7 @@ They will be automatically turned off.";
                 InstalledItem mod = Sys.Library.GetItem(e.ModID);
                 string mfile = mod.LatestInstalled.InstalledLocation;
                 _infoCache.Remove(mfile);
-                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo.ModID);
+                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo.ModID, SearchText, CheckedFilterCategories, CheckedTags);
             }
 
             if (e.Status == ModStatus.Installed && e.OldStatus != ModStatus.Installed && Sys.Settings.Options.HasFlag(GeneralOptions.AutoActiveNewMods))
@@ -569,7 +554,7 @@ They will be automatically turned off.";
 
             string varFile = "7thHeaven.var";
 
-            
+
             if (File.Exists(varFile))
             {
                 foreach (string line in File.ReadAllLines(varFile))
@@ -677,7 +662,7 @@ They will be automatically turned off.";
             }
 
             Sys.Library.AttemptDeletions();
-            ModsViewModel.ReloadModList();
+            ModsViewModel.ReloadModList(null, SearchText, CheckedFilterCategories, CheckedTags);
         }
 
         public void RefreshProfile()
@@ -690,7 +675,7 @@ They will be automatically turned off.";
             CurrentProfile = Sys.Settings.CurrentProfile;
 
             // reload list of active mods for the profile
-            ModsViewModel.ReloadModList();
+            ModsViewModel.ReloadModList(null, SearchText, CheckedFilterCategories, CheckedTags);
         }
 
         internal void SaveProfile()
@@ -1360,9 +1345,15 @@ They will be automatically turned off.";
             {
                 CatalogViewModel.ClearRememberedSearchTextAndCategories();
                 CatalogViewModel.ReloadModList(SearchText, CheckedFilterCategories, CheckedTags);
-                ReloadCategoryFilters();
-                ReloadAvailableTags();
             }
+            else
+            {
+                ModsViewModel.ClearRememberedSearchTextAndCategories();
+                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedFilterCategories, CheckedTags);
+            }
+
+            ReloadCategoryFilters();
+            ReloadAvailableTags();
         }
 
         internal void OpenPreviewModLink()
@@ -1556,7 +1547,7 @@ They will be automatically turned off.";
             }).ToList();
 
             // re-check items
-            List<FilterItemViewModel> oldItems = AvailableFilterCategories.ToList(); 
+            List<FilterItemViewModel> oldItems = AvailableFilterCategories.ToList();
 
             foreach (FilterItemViewModel item in newList)
             {
@@ -1568,8 +1559,8 @@ They will be automatically turned off.";
 
             // setup 'Show All' filter item as first in the list
             bool allChecked = newList.All(c => c.IsChecked);
-            FilterItemViewModel showAllItem = new FilterItemViewModel(_showAllText) 
-            { 
+            FilterItemViewModel showAllItem = new FilterItemViewModel(_showAllText)
+            {
                 IsChecked = allChecked,
                 OnChecked = new Action<bool>(isChecked => ToggleIsCheckedForAll(isChecked, AvailableFilterCategories))
             };
@@ -1603,7 +1594,15 @@ They will be automatically turned off.";
         /// </summary>
         internal void ApplyCategoryFilterAndReloadList()
         {
-            CatalogViewModel.ReloadModList(SearchText, CheckedFilterCategories, CheckedTags);
+            if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
+            {
+                CatalogViewModel.ReloadModList(SearchText, CheckedFilterCategories, CheckedTags);
+            }
+            else
+            {
+                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedFilterCategories, CheckedTags);
+            }
+
             ReloadCategoryFilters();
         }
 
@@ -1617,7 +1616,7 @@ They will be automatically turned off.";
             }
 
             tags = tags.Distinct().OrderBy(s => s).ToList();
-            
+
 
             List<FilterItemViewModel> newList = tags.Select(c => new FilterItemViewModel(c)
             {
@@ -1651,7 +1650,15 @@ They will be automatically turned off.";
 
         internal void ApplyTagsAndReloadList()
         {
-            CatalogViewModel.ReloadModList(SearchText, CheckedFilterCategories, CheckedTags);
+            if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
+            {
+                CatalogViewModel.ReloadModList(SearchText, CheckedFilterCategories, CheckedTags);
+            }
+            else
+            {
+                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedFilterCategories, CheckedTags);
+            }
+
             ReloadAvailableTags();
         }
 

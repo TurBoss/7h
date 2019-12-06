@@ -59,5 +59,37 @@ namespace SeventhHeavenUI.ViewModels
             _isChecked = isChecked;
             NotifyPropertyChanged(nameof(IsChecked));
         }
+
+
+        /// <summary>
+        /// Returns true if <paramref name="mod"/> has a tag matching the given <paramref name="tags"/>.
+        /// Returns true if <paramref name="tags"/> is empty.
+        /// </summary>
+        public static bool FilterByTags(Mod mod, IEnumerable<FilterItemViewModel> tags)
+        {
+            if (tags == null)
+                tags = new List<FilterItemViewModel>();
+
+            return tags.Count() == 0 || tags.Any(t => mod.Tags.Contains(t.Name));
+        }
+
+        /// <summary>
+        /// Returns true if <paramref name="mod"/>.Category is found in <paramref name="categories"/>.
+        /// Returns true if <paramref name="categories"/> is empty.
+        /// </summary>
+        /// <param name="mod"></param>
+        /// <param name="categories"></param>
+        /// <returns></returns>
+        public static bool FilterByCategory(Mod mod, IEnumerable<FilterItemViewModel> categories)
+        {
+            if (categories == null)
+                categories = new List<FilterItemViewModel>();
+
+            string modCategory = mod.Category ?? mod.LatestVersion.Category;
+
+            return categories.Count() == 0 ||
+                   categories.Any(c => c.Name == modCategory) ||
+                   (categories.Any(c => c.Name == MainWindowViewModel._unknownText) && string.IsNullOrEmpty(modCategory));
+        }
     }
 }

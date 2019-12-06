@@ -64,12 +64,12 @@ namespace SeventhHeaven.UserControls
 
         private void btnRefresh_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            ViewModel.ReloadModList();
+            ViewModel.ReloadModList(ViewModel.GetSelectedMod()?.InstallInfo.ModID);
         }
 
         private void btnDeactivateAll_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            ViewModel.DeactivateAllActivevMods();
+            ViewModel.DeactivateAllActiveMods();
         }
 
         private void btnUninstall_Click(object sender, RoutedEventArgs e)

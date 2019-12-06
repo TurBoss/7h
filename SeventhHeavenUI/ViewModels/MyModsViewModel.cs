@@ -43,8 +43,11 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
+        internal ReloadListOption _previousReloadOptions;
+
         public MyModsViewModel()
         {
+            _previousReloadOptions = new ReloadListOption();
         }
 
         /// <summary>
@@ -55,11 +58,20 @@ namespace SeventhHeavenUI.ViewModels
             SelectedModChanged?.Invoke(this, selected);
         }
 
+        internal void ClearRememberedSearchTextAndCategories()
+        {
+            _previousReloadOptions = new ReloadListOption();
+        }
+
         /// <summary>
         /// Loads installed and active mods into <see cref="ModList"/> from <see cref="Sys.Library"/> and <see cref="Sys.ActiveProfile"/>
         /// </summary>
-        internal void ReloadModList(Guid? modToSelect = null)
+        internal void ReloadModList(Guid? modToSelect = null, string searchText = "", IEnumerable<FilterItemViewModel> categories = null, IEnumerable<FilterItemViewModel> tags = null)
         {
+            categories = _previousReloadOptions.SetOrGetPreviousCategories(categories);
+            searchText = _previousReloadOptions.SetOrGetPreviousSearchText(searchText);
+            tags = _previousReloadOptions.SetOrGetPreviousTags(tags);
+
             Sys.ActiveProfile.Items.RemoveAll(i => Sys.Library.GetItem(i.ModID) == null);
 
             List<InstalledModViewModel> allMods = new List<InstalledModViewModel>();
@@ -70,9 +82,16 @@ namespace SeventhHeavenUI.ViewModels
 
                 if (mod != null)
                 {
-                    InstalledModViewModel activeMod = new InstalledModViewModel(mod, item);
-                    activeMod.ActivationChanged += ActiveMod_ActivationChanged;
-                    allMods.Add(activeMod);
+                    bool includeMod = FilterItemViewModel.FilterByCategory(mod.CachedDetails, categories) &&
+                                      FilterItemViewModel.FilterByTags(mod.CachedDetails, tags) &&
+                                      (string.IsNullOrEmpty(searchText) || mod.CachedDetails.SearchRelevance(searchText) > 0);
+
+                    if (includeMod)
+                    {
+                        InstalledModViewModel activeMod = new InstalledModViewModel(mod, item);
+                        activeMod.ActivationChanged += ActiveMod_ActivationChanged;
+                        allMods.Add(activeMod);
+                    }
                 }
             }
 
@@ -80,8 +99,13 @@ namespace SeventhHeavenUI.ViewModels
             {
                 bool isActive = allMods.Any(m => m.InstallInfo.ModID == item.ModID && m.InstallInfo.LatestInstalled.InstalledLocation == item.LatestInstalled.InstalledLocation);
 
-                if (!isActive)
+                bool includeMod = FilterItemViewModel.FilterByCategory(item.CachedDetails, categories) &&
+                                  FilterItemViewModel.FilterByTags(item.CachedDetails, tags) &&
+                                  (string.IsNullOrEmpty(searchText) || item.CachedDetails.SearchRelevance(searchText) > 0);
+
+                if (!isActive && includeMod)
                 {
+
                     InstalledModViewModel installedMod = new InstalledModViewModel(item, null);
                     installedMod.ActivationChanged += ActiveMod_ActivationChanged;
                     allMods.Add(installedMod);
@@ -105,13 +129,24 @@ namespace SeventhHeavenUI.ViewModels
                 }
             }
 
+            ClearModList();
             ModList = allMods;
+        }
+
+        private void ClearModList()
+        {
+            foreach (var item in ModList)
+            {
+                item.ActivationChanged -= ActiveMod_ActivationChanged;
+            }
+
+            ModList.Clear();
         }
 
         private void ActiveMod_ActivationChanged(object sender, InstalledModViewModel selected)
         {
             ToggleActivateMod(selected.InstallInfo.ModID);
-            ReloadModList();
+            ReloadModList(selected.InstallInfo.ModID);
         }
 
         /// <summary>
@@ -340,7 +375,7 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
-        internal void DeactivateAllActivevMods()
+        internal void DeactivateAllActiveMods()
         {
             foreach (InstalledModViewModel installedMod in ModList.Where(m => m.IsActive))
             {
@@ -352,7 +387,7 @@ namespace SeventhHeavenUI.ViewModels
 
         internal void ActivateAllMods()
         {
-            foreach (InstalledModViewModel installedMod in ModList.Where(m => !m.IsActive))
+            foreach (InstalledModViewModel installedMod in ModList.Where(m => !m.IsActive).ToList())
             {
                 ToggleActivateMod(installedMod.InstallInfo.ModID, reloadList: false); // reload list at the end
             }
