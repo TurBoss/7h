@@ -9,6 +9,8 @@ namespace SeventhHeaven.UserControls
     /// </summary>
     public partial class MyModsUserControl : UserControl
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         public MyModsViewModel ViewModel { get; set; }
 
         public MyModsUserControl()
@@ -171,6 +173,42 @@ namespace SeventhHeaven.UserControls
         private void btnImport_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.ShowImportModWindow();
+        }
+
+        internal void RecalculateColumnWidths()
+        {
+            double staticColumnWidth = 40 + 90 + 90 + 75; // sum of columns with static widths
+            double listWidth = lstMods.ActualWidth;
+
+            if (listWidth == 0)
+            {
+                return; // ActualWidth could be zero if list has not been rendered yet
+            }
+
+            double remainingWidth = listWidth - staticColumnWidth;
+
+            double nameWidth = (0.66) * remainingWidth; // Name takes 66% of remaining width
+            double authorWidth = (0.33) * remainingWidth; // Author takes up 33% of remaining width
+
+            double minNameWidth = 100; // don't resize columns less than the minimums
+            double minAuthorWidth = 60;
+
+            try
+            {
+                if (nameWidth < listWidth && nameWidth > minNameWidth)
+                {
+                    colName.Width = nameWidth;
+                }
+
+                if (authorWidth < listWidth && authorWidth > minAuthorWidth)
+                {
+                    colAuthor.Width = authorWidth;
+                }
+            }
+            catch (System.Exception e)
+            {
+                Logger.Warn(e, "failed to resize columns");
+            }
         }
     }
 }

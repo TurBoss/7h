@@ -11,6 +11,7 @@
         Title="{Binding WindowTitle, FallbackValue='7th Heaven v2.0.0 - Mod Manager for Final Fantasy 7 [Current Loaded Profile]'}"
         Style="{StaticResource MainWindowStyle}"
         Loaded="Window_Loaded"
+        SizeChanged="Window_SizeChanged"
         Closing="Window_Closing"
         Height="550" Width="1000">
     <Window.Resources>

@@ -26,11 +26,11 @@
                   VirtualizingStackPanel.IsVirtualizing="False">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Name" Width="Auto" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="Author" Width="Auto" DisplayMemberBinding="{Binding Author}"/>
+                    <GridViewColumn x:Name="colName" Header="Name" Width="Auto" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn x:Name="colAuthor" Header="Author" Width="Auto" DisplayMemberBinding="{Binding Author}"/>
                     <GridViewColumn Header="Ver." Width="40" DisplayMemberBinding="{Binding Version}"/>
                     <GridViewColumn Header="Released" Width="90" DisplayMemberBinding="{Binding ReleaseDate}"/>
-                    <GridViewColumn Header="Category" Width="Auto" DisplayMemberBinding="{Binding Category}"/>
+                    <GridViewColumn Header="Category" Width="90" DisplayMemberBinding="{Binding Category}"/>
                     <GridViewColumn x:Name="colActive" Header="Active" Width="75">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>

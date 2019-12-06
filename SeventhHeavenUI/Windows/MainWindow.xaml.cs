@@ -51,6 +51,8 @@ namespace SeventhHeavenUI
             }
 
             ProcessCommandLineArgs();
+
+            ctrlMyMods.RecalculateColumnWidths();
         }
 
         private void ProcessCommandLineArgs()
@@ -239,6 +241,11 @@ namespace SeventhHeavenUI
         {
             btnFilters.IsEnabled = true;
             ViewModel.ApplyFiltersAndReloadList();
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            ctrlMyMods.RecalculateColumnWidths();
         }
     }
 }

@@ -1608,12 +1608,16 @@ They will be automatically turned off.";
                 OnChecked = new Action<bool>(isChecked => CheckOrUncheckShowAllFilter(AvailableFilters))
             }).ToList());
 
-            newList.Add(new FilterItemViewModel("", FilterItemType.Separator));
-
-            newList.AddRange(tags.Select(t => new FilterItemViewModel(t, FilterItemType.Tag)
+            if (tags.Count > 0)
             {
-                OnChecked = new Action<bool>(isChecked => CheckOrUncheckShowAllFilter(AvailableFilters))
-            }).ToList());
+                newList.Add(new FilterItemViewModel("", FilterItemType.Separator));
+
+                newList.AddRange(tags.Select(t => new FilterItemViewModel(t, FilterItemType.Tag)
+                {
+                    OnChecked = new Action<bool>(isChecked => CheckOrUncheckShowAllFilter(AvailableFilters))
+                }).ToList());
+            }
+
 
             // re-check items
             List<FilterItemViewModel> oldItems = AvailableFilters.ToList();
