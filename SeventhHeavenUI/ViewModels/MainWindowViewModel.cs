@@ -64,6 +64,7 @@ They will be automatically turned off.";
         private string _searchText;
         private int _selectedTabIndex;
         private List<string> _statusMessageLog;
+        private List<FilterItemViewModel> _availableFilterCategories;
         internal static _7thWrapperLib.LoaderContext _context;
 
         private Mod _previewMod;
@@ -302,6 +303,30 @@ They will be automatically turned off.";
             }
         }
 
+        public List<FilterItemViewModel> AvailableFilterCategories
+        {
+            get
+            {
+                if (_availableFilterCategories == null)
+                    _availableFilterCategories = new List<FilterItemViewModel>();
+
+                return _availableFilterCategories;
+            }
+            set
+            {
+                _availableFilterCategories = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public List<FilterItemViewModel> CheckedFilterCategories
+        {
+            get
+            {
+                return AvailableFilterCategories.Where(c => c.IsChecked && c.Name != "Show All").ToList();
+            }
+        }
+
         #endregion
 
         public MainWindowViewModel()
@@ -451,6 +476,8 @@ They will be automatically turned off.";
             CheckForCatalogUpdatesAsync(new CatCheckOptions());
 
             CatalogViewModel.ReloadModList();
+
+            ReloadCategoryFilters();
 
             // this deletes any temp images that were extracted from IRO archives
             // ... the temp images are used for the configure mod window
@@ -1307,7 +1334,9 @@ They will be automatically turned off.";
         {
             if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
             {
-                CatalogViewModel.ReloadModList(SearchText);
+                CatalogViewModel.ClearRememberedSearchTextAndCategories();
+                CatalogViewModel.ReloadModList(SearchText, CheckedFilterCategories);
+                ReloadCategoryFilters();
             }
         }
 
@@ -1469,6 +1498,43 @@ They will be automatically turned off.";
                 WindowStartupLocation = WindowStartupLocation.CenterScreen
             };
             settingsWindow.ShowDialog();
+        }
+
+        internal void ReloadCategoryFilters()
+        {
+            List<string> categories = Sys.Catalog.Mods.Where(c => !string.IsNullOrEmpty(c.Category) || !string.IsNullOrEmpty(c.LatestVersion.Category))
+                                                      .Select(c => c.Category ?? c.LatestVersion.Category)
+                                                      .Distinct()
+                                                      .ToList();
+
+            if (!categories.Contains("Unknown"))
+            {
+                categories.Add("Unknown");
+            }
+
+            List<FilterItemViewModel> oldItems = AvailableFilterCategories.ToList();
+
+            List<FilterItemViewModel> newList = categories.Select(c => new FilterItemViewModel(c)).ToList();
+
+            // re-check items
+            foreach (var item in newList)
+            {
+                if (oldItems.Any(c => c.Name == item.Name && c.IsChecked))
+                {
+                    item.IsChecked = true;
+                }
+            }
+
+            bool allChecked = newList.All(c => c.IsChecked);
+            newList.Insert(0, new FilterItemViewModel("Show All") { IsChecked = allChecked });
+
+            AvailableFilterCategories = newList;
+        }
+
+        internal void ApplyCategoryFilterAndReloadList()
+        {
+            CatalogViewModel.ReloadModList(SearchText, CheckedFilterCategories);
+            ReloadCategoryFilters();
         }
     }
 

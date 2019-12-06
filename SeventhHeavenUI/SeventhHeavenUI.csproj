@@ -99,6 +99,7 @@
     <Compile Include="UserControls\MyModsUserControl.xaml.cs">
       <DependentUpon>MyModsUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\FilterItemViewModel.cs" />
     <Compile Include="ViewModels\ChunkToolViewModel.cs" />
     <Compile Include="ViewModels\DownloadItemViewModel.cs" />
     <Compile Include="ViewModels\CatalogModItemViewModel.cs" />

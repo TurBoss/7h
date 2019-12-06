@@ -36,6 +36,9 @@ It may not work properly unless you find and install the requirements.";
         private List<CatalogModItemViewModel> _catalogModList;
         private ObservableCollection<DownloadItemViewModel> _downloadList;
 
+        private List<FilterItemViewModel> _previousCategoryFilters;
+        private string _previousSearchText;
+
         private Dictionary<string, MegaIros> _megaFolders = new Dictionary<string, MegaIros>(StringComparer.InvariantCultureIgnoreCase);
 
         private object _listLock = new object();
@@ -99,17 +102,47 @@ It may not work properly unless you find and install the requirements.";
         /// Loads available mods from catalogs into <see cref="CatalogModList"/> from <see cref="Sys.Catalog.Mods"/>
         /// </summary>
         /// <param name="searchText"> empty string returns all mods </param>
-        internal void ReloadModList(string searchText = "")
+        internal void ReloadModList(string searchText = "", IEnumerable<FilterItemViewModel> categories = null)
         {
             List<Mod> results;
 
+            if (categories == null && _previousCategoryFilters != null)
+            {
+                categories = _previousCategoryFilters;
+            }
+            else if (categories == null && _previousCategoryFilters == null)
+            {
+                categories = new List<FilterItemViewModel>();
+                _previousCategoryFilters = categories.ToList();
+            }
+            else if (categories != null)
+            {
+                _previousCategoryFilters = categories.ToList();
+            }
+
+            if (string.IsNullOrEmpty(searchText) && !string.IsNullOrEmpty(_previousSearchText))
+            {
+                searchText = _previousSearchText;
+            }
+            else if (string.IsNullOrEmpty(searchText) && string.IsNullOrEmpty(_previousSearchText))
+            {
+                searchText = "";
+                _previousSearchText = "";
+            }
+            else if (!string.IsNullOrEmpty(searchText))
+            {
+                _previousSearchText = searchText;
+            }
+
+
             if (String.IsNullOrEmpty(searchText))
             {
-                results = Sys.Catalog.Mods;
+                results = Sys.Catalog.Mods.Where(m => FilterByCategory(m, categories)).ToList();
             }
             else
             {
-                results = Sys.Catalog.Mods.Select(m => new { Mod = m, Relevance = m.SearchRelevance(searchText) })
+                results = Sys.Catalog.Mods.Where(m => FilterByCategory(m, categories))
+                                          .Select(m => new { Mod = m, Relevance = m.SearchRelevance(searchText) })
                                           .Where(a => a.Relevance > 0)
                                           .OrderByDescending(a => a.Relevance)
                                           .Select(a => a.Mod)
@@ -124,6 +157,12 @@ It may not work properly unless you find and install the requirements.";
                 newList.Add(item);
             }
 
+            if (categories.Count() > 0)
+            {
+                // order by category then relevance
+                newList = newList.OrderBy(m => m.Category).ThenByDescending(m => m.Mod.SearchRelevance(searchText)).ToList();
+            }
+
             // make sure to set CatalogModList on the UI thread
             // ... due to uncaught exception that can be thrown when modifying on background thread
             App.Current.Dispatcher.Invoke(() =>
@@ -134,6 +173,28 @@ It may not work properly unless you find and install the requirements.";
                     CatalogModList = newList;
                 }
             });
+        }
+
+        /// <summary>
+        /// Returns true if <paramref name="mod"/>.Category is found in <paramref name="categories"/>.
+        /// Returns true if <paramref name="categories"/> is empty.
+        /// </summary>
+        /// <param name="mod"></param>
+        /// <param name="categories"></param>
+        /// <returns></returns>
+        bool FilterByCategory(Mod mod, IEnumerable<FilterItemViewModel> categories)
+        {
+            string modCategory = mod.Category ?? mod.LatestVersion.Category;
+
+            return categories.Count() == 0 ||
+                   categories.Any(c => c.Name == modCategory) ||
+                   (categories.Any(c => c.Name == "Unknown") && string.IsNullOrEmpty(modCategory));
+        }
+
+        internal void ClearRememberedSearchTextAndCategories()
+        {
+            _previousSearchText = "";
+            _previousCategoryFilters = null;
         }
 
         /// <summary>

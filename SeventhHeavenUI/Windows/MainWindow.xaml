@@ -36,6 +36,18 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+
+        <DataTemplate x:Key="FilterItemTemplate">
+            <Border Background="{DynamicResource PrimaryControlBackground}" Padding="5" Focusable="False">
+                <CheckBox Content="{Binding Name, FallbackValue='Category Name'}"
+                          IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </Border>
+        </DataTemplate>
+        
+        <Style x:Key="CategoryFilterListBoxItem" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MainListBoxItemStyle}">
+            <Setter Property="Background" Value="{DynamicResource PrimaryControlBackground}"/>
+            <Setter Property="ContentTemplate" Value="{StaticResource FilterItemTemplate}"/>
+        </Style>
     </Window.Resources>
 
     <Grid Background="Transparent">
@@ -233,6 +245,7 @@
         <Button x:Name="btnFilter"
                 Content="Filter"
                 ToolTip="Click to select what categories to filter by."
+                Click="btnFilter_Click"
                 Visibility="{Binding FilterButtonVisibility}"
                 Style="{StaticResource ButtonWithDownArrow}"
                 Grid.Column="1"
@@ -241,6 +254,22 @@
                 HorizontalAlignment="Right"
                 Panel.ZIndex="10"
                 VerticalAlignment="Top"/>
+
+        <Popup x:Name="popupFilter"
+               Placement="Bottom"
+               PlacementTarget="{Binding ElementName=btnFilter}"
+               Closed="popupFilter_Closed"
+               StaysOpen="False">
+            <Grid>
+                <ListBox MinWidth="165"
+                         FontSize="13"
+                         MaxHeight="225"
+                         ItemsSource="{Binding AvailableFilterCategories}"
+                         Background="{DynamicResource PrimaryControlBackground}"
+                         BorderBrush="{DynamicResource SecondaryAppBackground}" 
+                         ItemContainerStyle="{StaticResource CategoryFilterListBoxItem}"/>
+            </Grid>
+        </Popup>
 
         <TextBox x:Name="txtSearch"
                  Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"

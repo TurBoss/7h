@@ -225,5 +225,21 @@ namespace SeventhHeavenUI
         {
             ViewModel.ShowChunkToolWindow();
         }
+
+        private void btnFilter_Click(object sender, RoutedEventArgs e)
+        {
+            if (!popupFilter.IsOpen)
+            {
+                btnFilter.IsEnabled = false; // disable button while it is opened
+                popupFilter.IsOpen = true;
+            }
+        }
+
+        private void popupFilter_Closed(object sender, EventArgs e)
+        {
+            btnFilter.IsEnabled = true;
+
+            ViewModel.ApplyCategoryFilterAndReloadList();
+        }
     }
 }

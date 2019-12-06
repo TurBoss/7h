@@ -524,7 +524,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="ListBoxItem">
                     <Border x:Name="Border" Padding="2" SnapsToDevicePixels="true" Background="Transparent">
-                        <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" TextElement.Foreground="{DynamicResource PrimaryControlForeground}"/>
+                        <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" TextElement.Foreground="{DynamicResource PrimaryControlForeground}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
                     </Border>
 
                     <ControlTemplate.Triggers>
