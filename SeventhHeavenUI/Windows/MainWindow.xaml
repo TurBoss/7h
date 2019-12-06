@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:SeventhHeavenUI"
         xmlns:ctrl="clr-namespace:SeventhHeaven.UserControls"
         xmlns:cls="clr-namespace:SeventhHeaven.Classes"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         mc:Ignorable="d"
         Title="{Binding WindowTitle, FallbackValue='7th Heaven v2.0.0 - Mod Manager for Final Fantasy 7 [Current Loaded Profile]'}"
         Style="{StaticResource MainWindowStyle}"
@@ -171,36 +172,37 @@
                     </Grid>
                 </ScrollViewer>
 
-                <cls:AnimatedImage Grid.Row="1"
-                                   Margin="3"
-                                   HorizontalAlignment="Stretch"
-                                   VerticalAlignment="Stretch"
-                                   Stretch="Uniform"
-                                   MinHeight="128"
-                                   cls:UriSource="{Binding PreviewModImageSource}">
-                    <cls:AnimatedImage.Style>
+                <Image Grid.Row="1"
+                       Margin="3"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch"
+                       Stretch="Uniform"
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                       gif:ImageBehavior.AnimatedSource="{Binding PreviewModImageSource}">
+                    <Image.Style>
                         <!--Custom style to hide image when loading-->
-                        <Style TargetType="{x:Type cls:AnimatedImage}">
+                        <Style TargetType="{x:Type Image}">
                             <Setter Property="Visibility" Value="Visible"/>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding PreviewModImageSource}" Value="{x:Null}">
+                                <DataTrigger Binding="{Binding PreviewModImageSource, FallbackValue=''}" Value="{x:Null}">
                                     <Setter Property="Visibility" Value="Hidden"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
-                    </cls:AnimatedImage.Style>
-                </cls:AnimatedImage>
+                    </Image.Style>
+                </Image>
 
                 <!--Loader gif shown when image is loading-->
-                <cls:AnimatedImage Grid.Row="1"
-                                   Margin="3"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   Stretch="Uniform"
-                                   Height="64"
-                                   cls:UriSource="Resources/circleLoader.gif">
-                    <cls:AnimatedImage.Style>
-                        <Style TargetType="{x:Type cls:AnimatedImage}">
+                <Image Grid.Row="1"
+                       Margin="3"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Stretch="Uniform"
+                       Height="64"
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                       gif:ImageBehavior.AnimatedSource="../Resources/circleLoader.gif">
+                    <Image.Style>
+                        <Style TargetType="{x:Type Image}">
                             <Setter Property="Visibility" Value="Hidden"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding PreviewModImageSource}" Value="{x:Null}">
@@ -208,8 +210,8 @@
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
-                    </cls:AnimatedImage.Style>
-                </cls:AnimatedImage>
+                    </Image.Style>
+                </Image>
 
             </Grid>
         </GroupBox>

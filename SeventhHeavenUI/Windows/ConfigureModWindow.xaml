@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         xmlns:cls="clr-namespace:SeventhHeaven.Classes"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         mc:Ignorable="d"
         Style="{StaticResource MainWindowStyle}"
         Title="{Binding WindowTitle, FallbackValue='Configure Mod'}" 
@@ -110,12 +111,13 @@
                   Margin="5,10,0,10"/>
 
 
-        <cls:AnimatedImage x:Name="imgOption"
-                           Grid.Row="2"
-                           Grid.Column="1"
-                           cls:UriSource="{Binding ImageOptionSource}"
-                           VerticalAlignment="Stretch"
-                           Margin="10"/>
+        <Image x:Name="imgOption"
+               Grid.Row="2"
+               Grid.Column="1"
+               RenderOptions.BitmapScalingMode="HighQuality"
+               gif:ImageBehavior.AnimatedSource="{Binding ImageOptionSource}"
+               VerticalAlignment="Stretch"
+               Margin="10"/>
 
         <TextBlock x:Name="txtCompatibility"
                    Grid.Column="1"
