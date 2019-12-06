@@ -43,10 +43,22 @@
                           IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Border>
         </DataTemplate>
-        
+
+        <DataTemplate x:Key="FilterItemSeparatorTemplate">
+            <Border Background="{DynamicResource SecondaryAppBackground}" Height="2" Padding="5" Focusable="False"/>
+        </DataTemplate>
+
         <Style x:Key="CategoryFilterListBoxItem" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MainListBoxItemStyle}">
             <Setter Property="Background" Value="{DynamicResource PrimaryControlBackground}"/>
             <Setter Property="ContentTemplate" Value="{StaticResource FilterItemTemplate}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding FilterType, FallbackValue='0'}" Value="3">
+                    <Setter Property="ContentTemplate" Value="{StaticResource FilterItemSeparatorTemplate}"/>
+                    <Setter Property="IsEnabled" Value="False"/>
+                    <Setter Property="IsHitTestVisible" Value="False"/>
+                    <Setter Property="Focusable" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
     </Window.Resources>
 
@@ -241,35 +253,7 @@
                 <ctrl:CatalogUserControl x:Name="ctrlCatalog"/>
             </TabItem>
         </TabControl>
-
-        <Button x:Name="btnFilter"
-                Content="Filter"
-                ToolTip="Click to select what categories to filter by."
-                Click="btnFilter_Click"
-                Style="{StaticResource ButtonWithDownArrow}"
-                Grid.Column="1"
-                Padding="5,2,5,2"
-                Margin="0,25,240,0"
-                HorizontalAlignment="Right"
-                Panel.ZIndex="10"
-                VerticalAlignment="Top"/>
-
-        <Popup x:Name="popupFilter"
-               Placement="Bottom"
-               PlacementTarget="{Binding ElementName=btnFilter}"
-               Closed="popupFilter_Closed"
-               StaysOpen="False">
-            <Grid>
-                <ListBox MinWidth="165"
-                         FontSize="13"
-                         MaxHeight="225"
-                         ItemsSource="{Binding AvailableFilterCategories}"
-                         Background="{DynamicResource PrimaryControlBackground}"
-                         BorderBrush="{DynamicResource SecondaryAppBackground}" 
-                         ItemContainerStyle="{StaticResource CategoryFilterListBoxItem}"/>
-            </Grid>
-        </Popup>
-
+        
         <TextBox x:Name="txtSearch"
                  Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  KeyDown="txtSearch_KeyDown"
@@ -278,8 +262,8 @@
                  VerticalAlignment="Top"
                  VerticalContentAlignment="Center"
                  Panel.ZIndex="10"
-                 Margin="0,25,5,0"
-                 Width="225"
+                 Margin="0,25,56,0"
+                 Width="260"
                  Height="24"/>
 
         <TextBlock Text="Type here and press enter to search ..."
@@ -289,7 +273,7 @@
                    Panel.ZIndex="10"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Top"
-                   Margin="0,29,28,0">
+                   Margin="0,29,112,0">
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
                     <Setter Property="Visibility" Value="Hidden"/>
@@ -302,32 +286,32 @@
             </TextBlock.Style>
         </TextBlock>
 
-        <ToggleButton x:Name="btnTags"
+        <ToggleButton x:Name="btnFilters"
                       ClickMode="Release"
-                      Click="btnTags_Click"
-                      ToolTip="Click to select what tags to filter by."
+                      Click="btnFilters_Click"
+                      ToolTip="Click to select what categories and tags to filter by."
                       Style="{StaticResource DownArrowToggleButton}"
                       Background="Transparent"
                       Width="24"
-                      Height="23"
+                      Height="22"
                       Grid.Column="1"
                       HorizontalAlignment="Right"
                       VerticalAlignment="Top"
                       VerticalContentAlignment="Center"
                       Panel.ZIndex="10"
-                      Margin="0,25,5,0"/>
+                      Margin="0,26,57,0"/>
 
-        <Popup x:Name="popupTags"
-               Closed="popupTags_Closed"
+        <Popup x:Name="popupFilters"
+               Closed="popupFilters_Closed"
                Placement="Bottom"
-               HorizontalOffset="-141"
-               PlacementTarget="{Binding ElementName=btnTags}"
+               HorizontalOffset="-140"
+               PlacementTarget="{Binding ElementName=btnFilters}"
                StaysOpen="False">
             <Grid>
                 <ListBox MinWidth="165"
                          FontSize="13"
                          MaxHeight="225"
-                         ItemsSource="{Binding AvailableTags}"
+                         ItemsSource="{Binding AvailableFilters}"
                          Background="{DynamicResource PrimaryControlBackground}"
                          BorderBrush="{DynamicResource SecondaryAppBackground}" 
                          ItemContainerStyle="{StaticResource CategoryFilterListBoxItem}"/>

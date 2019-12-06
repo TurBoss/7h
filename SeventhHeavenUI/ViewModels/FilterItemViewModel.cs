@@ -10,11 +10,19 @@ using System.Threading.Tasks;
 
 namespace SeventhHeavenUI.ViewModels
 {
+    public enum FilterItemType
+    {
+        Category,
+        Tag,
+        ShowAll,
+        Separator
+    }
 
     public class FilterItemViewModel : ViewModelBase
     {
         private string _name;
         private bool _isChecked;
+        private FilterItemType _filterType;
 
         public string Name
         {
@@ -25,6 +33,19 @@ namespace SeventhHeavenUI.ViewModels
             set
             {
                 _name = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public FilterItemType FilterType
+        {
+            get
+            {
+                return _filterType;
+            }
+            set
+            {
+                _filterType = value;
                 NotifyPropertyChanged();
             }
         }
@@ -45,10 +66,11 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
-        public FilterItemViewModel(string name)
+        public FilterItemViewModel(string name, FilterItemType filterType)
         {
             Name = name;
             IsChecked = false;
+            FilterType = filterType;
         }
 
         /// <summary>

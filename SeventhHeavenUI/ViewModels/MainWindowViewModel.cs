@@ -54,7 +54,7 @@ They will be automatically turned off.";
 
         internal const string _forbidDependent =
             @"You cannot activate this mod, because it requires {0} to be active, but {0} is incompatible with {1}. You will have to deactivate {1} before you can enable this mod.";
-        internal const string _showAllText = "Show All";
+        internal const string _showAllText = "Select All";
         internal const string _unknownText = "Unknown";
         private string _catFile;
         private string _statusMessage;
@@ -62,8 +62,7 @@ They will be automatically turned off.";
         private string _searchText;
         private int _selectedTabIndex;
         private List<string> _statusMessageLog;
-        private List<FilterItemViewModel> _availableFilterCategories;
-        private List<FilterItemViewModel> _availableTags;
+        private List<FilterItemViewModel> _availableFilters;
         internal static _7thWrapperLib.LoaderContext _context;
 
         private Mod _previewMod;
@@ -287,43 +286,27 @@ They will be automatically turned off.";
             }
         }
 
-        public List<FilterItemViewModel> AvailableFilterCategories
+        public List<FilterItemViewModel> AvailableFilters
         {
             get
             {
-                if (_availableFilterCategories == null)
-                    _availableFilterCategories = new List<FilterItemViewModel>();
+                if (_availableFilters == null)
+                    _availableFilters = new List<FilterItemViewModel>();
 
-                return _availableFilterCategories;
+                return _availableFilters;
             }
             set
             {
-                _availableFilterCategories = value;
+                _availableFilters = value;
                 NotifyPropertyChanged();
             }
         }
 
-        public List<FilterItemViewModel> CheckedFilterCategories
+        public List<FilterItemViewModel> CheckedFilters
         {
             get
             {
-                return AvailableFilterCategories.Where(c => c.IsChecked && c.Name != _showAllText).ToList();
-            }
-        }
-
-        public List<FilterItemViewModel> AvailableTags
-        {
-            get
-            {
-                if (_availableTags == null)
-                    _availableTags = new List<FilterItemViewModel>();
-
-                return _availableTags;
-            }
-            set
-            {
-                _availableTags = value;
-                NotifyPropertyChanged();
+                return AvailableFilters.Where(c => c.FilterType == FilterItemType.Category && c.IsChecked && c.Name != _showAllText).ToList();
             }
         }
 
@@ -331,7 +314,7 @@ They will be automatically turned off.";
         {
             get
             {
-                return AvailableTags.Where(c => c.IsChecked && c.Name != _showAllText).ToList();
+                return AvailableFilters.Where(c => c.FilterType == FilterItemType.Tag && c.IsChecked && c.Name != _showAllText).ToList();
             }
         }
 
@@ -485,8 +468,7 @@ They will be automatically turned off.";
 
             CatalogViewModel.ReloadModList();
 
-            ReloadCategoryFilters();
-            ReloadAvailableTags();
+            ReloadAvailableFilters();
 
             // this deletes any temp images that were extracted from IRO archives
             // ... the temp images are used for the configure mod window
@@ -507,7 +489,7 @@ They will be automatically turned off.";
                 InstalledItem mod = Sys.Library.GetItem(e.ModID);
                 string mfile = mod.LatestInstalled.InstalledLocation;
                 _infoCache.Remove(mfile);
-                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo.ModID, SearchText, CheckedFilterCategories, CheckedTags);
+                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo.ModID, SearchText, CheckedFilters, CheckedTags);
             }
 
             if (e.Status == ModStatus.Installed && e.OldStatus != ModStatus.Installed && Sys.Settings.Options.HasFlag(GeneralOptions.AutoActiveNewMods))
@@ -662,7 +644,7 @@ They will be automatically turned off.";
             }
 
             Sys.Library.AttemptDeletions();
-            ModsViewModel.ReloadModList(null, SearchText, CheckedFilterCategories, CheckedTags);
+            ModsViewModel.ReloadModList(null, SearchText, CheckedFilters, CheckedTags);
         }
 
         public void RefreshProfile()
@@ -675,7 +657,7 @@ They will be automatically turned off.";
             CurrentProfile = Sys.Settings.CurrentProfile;
 
             // reload list of active mods for the profile
-            ModsViewModel.ReloadModList(null, SearchText, CheckedFilterCategories, CheckedTags);
+            ModsViewModel.ReloadModList(null, SearchText, CheckedFilters, CheckedTags);
         }
 
         internal void SaveProfile()
@@ -1344,16 +1326,15 @@ They will be automatically turned off.";
             if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
             {
                 CatalogViewModel.ClearRememberedSearchTextAndCategories();
-                CatalogViewModel.ReloadModList(SearchText, CheckedFilterCategories, CheckedTags);
+                CatalogViewModel.ReloadModList(SearchText, CheckedFilters, CheckedTags);
             }
             else
             {
                 ModsViewModel.ClearRememberedSearchTextAndCategories();
-                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedFilterCategories, CheckedTags);
+                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedFilters, CheckedTags);
             }
 
-            ReloadCategoryFilters();
-            ReloadAvailableTags();
+            ReloadAvailableFilters();
         }
 
         internal void OpenPreviewModLink()
@@ -1525,56 +1506,11 @@ They will be automatically turned off.";
         }
 
         /// <summary>
-        /// Refreshes the <see cref="AvailableFilterCategories"/> list with available categories from the Catalog
-        /// (re-checks what was previously checked after loading new list)
-        /// </summary>
-        internal void ReloadCategoryFilters()
-        {
-            List<string> categories = Sys.Catalog.Mods.Where(c => !string.IsNullOrEmpty(c.Category) || !string.IsNullOrEmpty(c.LatestVersion.Category))
-                                                      .Select(c => c.Category ?? c.LatestVersion.Category)
-                                                      .Distinct()
-                                                      .ToList();
-
-            // mods with no category are filtered with the 'Unknown' category
-            if (!categories.Contains(_unknownText))
-            {
-                categories.Add(_unknownText);
-            }
-
-            List<FilterItemViewModel> newList = categories.Select(c => new FilterItemViewModel(c)
-            {
-                OnChecked = new Action<bool>(isChecked => CheckOrUncheckShowAllFilter(AvailableFilterCategories))
-            }).ToList();
-
-            // re-check items
-            List<FilterItemViewModel> oldItems = AvailableFilterCategories.ToList();
-
-            foreach (FilterItemViewModel item in newList)
-            {
-                if (oldItems.Any(c => c.Name == item.Name && c.IsChecked))
-                {
-                    item.IsChecked = true;
-                }
-            }
-
-            // setup 'Show All' filter item as first in the list
-            bool allChecked = newList.All(c => c.IsChecked);
-            FilterItemViewModel showAllItem = new FilterItemViewModel(_showAllText)
-            {
-                IsChecked = allChecked,
-                OnChecked = new Action<bool>(isChecked => ToggleIsCheckedForAll(isChecked, AvailableFilterCategories))
-            };
-            newList.Insert(0, showAllItem);
-
-            AvailableFilterCategories = newList;
-        }
-
-        /// <summary>
         /// sets IsChecked to value of <paramref name="isChecked"/> for all items in <paramref name="filterItems"/> except for the 'Show All' category 
         /// </summary>
         private void ToggleIsCheckedForAll(bool isChecked, List<FilterItemViewModel> filterItems)
         {
-            foreach (var item in filterItems.Where(c => c.Name != _showAllText).ToList())
+            foreach (var item in filterItems.Where(c => c.Name != _showAllText && c.FilterType != FilterItemType.Separator).ToList())
             {
                 item.IsChecked = isChecked;
             }
@@ -1586,80 +1522,114 @@ They will be automatically turned off.";
         private void CheckOrUncheckShowAllFilter(List<FilterItemViewModel> filterItems)
         {
             FilterItemViewModel item = filterItems.FirstOrDefault(cat => cat.Name == _showAllText);
-            item.SetIsChecked(filterItems.Where(cat => cat.Name != _showAllText).All(cat => cat.IsChecked));
+            item.SetIsChecked(filterItems.Where(cat => cat.Name != _showAllText && cat.FilterType != FilterItemType.Separator).All(cat => cat.IsChecked));
         }
 
-        /// <summary>
-        /// Reloads the list of mods filtering using <see cref="CheckedFilterCategories"/> and <see cref="SearchText"/>
-        /// </summary>
-        internal void ApplyCategoryFilterAndReloadList()
-        {
-            if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
-            {
-                CatalogViewModel.ReloadModList(SearchText, CheckedFilterCategories, CheckedTags);
-            }
-            else
-            {
-                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedFilterCategories, CheckedTags);
-            }
-
-            ReloadCategoryFilters();
-        }
-
-        internal void ReloadAvailableTags()
+        internal List<string> GetTagsForSelectedTab()
         {
             List<string> tags = new List<string>();
 
-            foreach (List<string> modTags in Sys.Catalog.Mods.Where(c => c.Tags.Count > 0).Select(c => c.Tags))
+            if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
             {
-                tags.AddRange(modTags);
+                foreach (List<string> modTags in Sys.Catalog.Mods.Where(c => c.Tags.Count > 0).Select(c => c.Tags))
+                {
+                    tags.AddRange(modTags);
+                }
+            }
+            else
+            {
+                foreach (List<string> modTags in Sys.Library.Items.Where(m => m.CachedDetails.Tags.Count > 0).Select(m => m.CachedDetails.Tags))
+                {
+                    tags.AddRange(modTags);
+                }
             }
 
             tags = tags.Distinct().OrderBy(s => s).ToList();
 
+            return tags;
+        }
 
-            List<FilterItemViewModel> newList = tags.Select(c => new FilterItemViewModel(c)
+        internal List<string> GetCategoriesForSelectedTab()
+        {
+            List<string> categories = null;  
+
+            if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
             {
-                OnChecked = new Action<bool>(isChecked => CheckOrUncheckShowAllFilter(AvailableTags))
-            }).ToList();
+                categories = Sys.Catalog.Mods.Where(c => !string.IsNullOrEmpty(c.Category) || !string.IsNullOrEmpty(c.LatestVersion.Category))
+                                             .Select(c => c.Category ?? c.LatestVersion.Category)
+                                             .Distinct()
+                                             .ToList();
+            }
+            else
+            {
+                categories = Sys.Library.Items.Where(c => !string.IsNullOrEmpty(c.CachedDetails.Category) || !string.IsNullOrEmpty(c.CachedDetails.LatestVersion.Category))
+                                              .Select(c => c.CachedDetails.Category ?? c.CachedDetails.LatestVersion.Category)
+                                              .Distinct()
+                                              .ToList();
+            }
 
+            // mods with no category are filtered with the 'Unknown' category
+            if (!categories.Contains(_unknownText))
+            {
+                categories.Add(_unknownText);
+            }
+
+            return categories;
+        }
+
+        internal void ApplyFiltersAndReloadList()
+        {
+            if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
+            {
+                CatalogViewModel.ReloadModList(SearchText, CheckedFilters, CheckedTags);
+            }
+            else
+            {
+                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedFilters, CheckedTags);
+            }
+
+            ReloadAvailableFilters();
+        }
+
+        internal void ReloadAvailableFilters()
+        {
+            List<string> tags = GetTagsForSelectedTab();
+            List<string> categories = GetCategoriesForSelectedTab();
+            List<FilterItemViewModel> newList = new List<FilterItemViewModel>();
+
+            newList.AddRange(categories.Select(c => new FilterItemViewModel(c, FilterItemType.Category)
+            {
+                OnChecked = new Action<bool>(isChecked => CheckOrUncheckShowAllFilter(AvailableFilters))
+            }).ToList());
+
+            newList.Add(new FilterItemViewModel("", FilterItemType.Separator));
+
+            newList.AddRange(tags.Select(t => new FilterItemViewModel(t, FilterItemType.Tag)
+            {
+                OnChecked = new Action<bool>(isChecked => CheckOrUncheckShowAllFilter(AvailableFilters))
+            }).ToList());
 
             // re-check items
-            List<FilterItemViewModel> oldItems = AvailableTags.ToList();
+            List<FilterItemViewModel> oldItems = AvailableFilters.ToList();
 
             foreach (FilterItemViewModel item in newList)
             {
-                if (oldItems.Any(c => c.Name == item.Name && c.IsChecked))
+                if (oldItems.Any(c => c.Name == item.Name && c.IsChecked && c.FilterType != FilterItemType.Separator))
                 {
                     item.IsChecked = true;
                 }
             }
 
             // setup 'Show All' filter item as first in the list
-            bool allChecked = newList.All(c => c.IsChecked);
-            FilterItemViewModel showAllItem = new FilterItemViewModel(_showAllText)
+            bool allChecked = newList.Where(c => c.FilterType != FilterItemType.Separator).All(c => c.IsChecked);
+            FilterItemViewModel showAllItem = new FilterItemViewModel(_showAllText, FilterItemType.ShowAll)
             {
                 IsChecked = allChecked,
-                OnChecked = new Action<bool>(isChecked => ToggleIsCheckedForAll(isChecked, AvailableTags))
+                OnChecked = new Action<bool>(isChecked => ToggleIsCheckedForAll(isChecked, AvailableFilters))
             };
             newList.Insert(0, showAllItem);
 
-            AvailableTags = newList;
-        }
-
-
-        internal void ApplyTagsAndReloadList()
-        {
-            if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
-            {
-                CatalogViewModel.ReloadModList(SearchText, CheckedFilterCategories, CheckedTags);
-            }
-            else
-            {
-                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedFilterCategories, CheckedTags);
-            }
-
-            ReloadAvailableTags();
+            AvailableFilters = newList;
         }
 
     }

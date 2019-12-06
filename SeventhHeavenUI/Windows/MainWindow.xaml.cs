@@ -226,34 +226,19 @@ namespace SeventhHeavenUI
             ViewModel.ShowChunkToolWindow();
         }
 
-        private void btnFilter_Click(object sender, RoutedEventArgs e)
+        private void btnFilters_Click(object sender, RoutedEventArgs e)
         {
-            if (!popupFilter.IsOpen)
+            if (!popupFilters.IsOpen)
             {
-                btnFilter.IsEnabled = false; // disable button while it is opened
-                popupFilter.IsOpen = true;
+                btnFilters.IsEnabled = false; // disable button while it is opened
+                popupFilters.IsOpen = true;
             }
         }
 
-        private void popupFilter_Closed(object sender, EventArgs e)
+        private void popupFilters_Closed(object sender, EventArgs e)
         {
-            btnFilter.IsEnabled = true;
-            ViewModel.ApplyCategoryFilterAndReloadList();
-        }
-
-        private void btnTags_Click(object sender, RoutedEventArgs e)
-        {
-            if (!popupTags.IsOpen)
-            {
-                btnTags.IsEnabled = false; // disable button while it is opened
-                popupTags.IsOpen = true;
-            }
-        }
-
-        private void popupTags_Closed(object sender, EventArgs e)
-        {
-            btnTags.IsEnabled = true;
-            ViewModel.ApplyTagsAndReloadList();
+            btnFilters.IsEnabled = true;
+            ViewModel.ApplyFiltersAndReloadList();
         }
     }
 }
