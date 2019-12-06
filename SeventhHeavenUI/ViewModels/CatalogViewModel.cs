@@ -188,7 +188,7 @@ It may not work properly unless you find and install the requirements.";
 
             return categories.Count() == 0 ||
                    categories.Any(c => c.Name == modCategory) ||
-                   (categories.Any(c => c.Name == "Unknown") && string.IsNullOrEmpty(modCategory));
+                   (categories.Any(c => c.Name == MainWindowViewModel._unknownText) && string.IsNullOrEmpty(modCategory));
         }
 
         internal void ClearRememberedSearchTextAndCategories()

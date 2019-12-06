@@ -41,7 +41,7 @@ namespace SeventhHeaven.UserControls
         /// Returns true if the selected mod is active.
         /// Returns false and shows messagebox warning user that selected mod is not active otherwise;
         /// </summary>
-        private bool IsActiveModSelected()
+        private bool IsActiveModSelected(string notActiveMessage, string notActiveTitle)
         {
             if (lstMods.SelectedItem == null)
             {
@@ -50,7 +50,7 @@ namespace SeventhHeaven.UserControls
 
             if (!(lstMods.SelectedItem as InstalledModViewModel).IsActive)
             {
-                MessageBox.Show("Mod is not active. Only activated mods can be re-ordered.", "Cannot Move Inactive Mod", MessageBoxButton.OK);
+                MessageBox.Show(notActiveMessage, notActiveTitle, MessageBoxButton.OK);
                 return false;
             }
 
@@ -95,7 +95,7 @@ namespace SeventhHeaven.UserControls
                 return;
             }
 
-            if (!IsActiveModSelected())
+            if (!IsActiveModSelected("Mod is not active. Only activated mods can be re-ordered.", "Cannot Move Inactive Mod"))
             {
                 return;
             }
@@ -110,7 +110,7 @@ namespace SeventhHeaven.UserControls
                 return;
             }
 
-            if (!IsActiveModSelected())
+            if (!IsActiveModSelected("Mod is not active. Only activated mods can be re-ordered.", "Cannot Move Inactive Mod"))
             {
                 return;
             }
@@ -125,7 +125,7 @@ namespace SeventhHeaven.UserControls
                 return;
             }
 
-            if (!IsActiveModSelected())
+            if (!IsActiveModSelected("Mod is not active. Only activated mods can be re-ordered.", "Cannot Move Inactive Mod"))
             {
                 return;
             }
@@ -140,7 +140,7 @@ namespace SeventhHeaven.UserControls
                 return;
             }
 
-            if (!IsActiveModSelected())
+            if (!IsActiveModSelected("Mod is not active. Only activated mods can be re-ordered.", "Cannot Move Inactive Mod"))
             {
                 return;
             }
@@ -160,7 +160,7 @@ namespace SeventhHeaven.UserControls
                 return;
             }
 
-            if (!IsActiveModSelected())
+            if (!IsActiveModSelected("Mod is not active. Only activated mods can be configured.", "Cannot Configure Inactive Mod"))
             {
                 return;
             }

@@ -29,6 +29,8 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
+        public Action<bool> OnChecked { get; set; }
+
         public bool IsChecked
         {
             get
@@ -39,6 +41,7 @@ namespace SeventhHeavenUI.ViewModels
             {
                 _isChecked = value;
                 NotifyPropertyChanged();
+                OnChecked?.Invoke(_isChecked);
             }
         }
 
@@ -46,6 +49,15 @@ namespace SeventhHeavenUI.ViewModels
         {
             Name = name;
             IsChecked = false;
+        }
+
+        /// <summary>
+        /// Sets <see cref="_isChecked"/> without invoking <see cref="OnChecked"/>
+        /// </summary>
+        public void SetIsChecked(bool isChecked)
+        {
+            _isChecked = isChecked;
+            NotifyPropertyChanged(nameof(IsChecked));
         }
     }
 }

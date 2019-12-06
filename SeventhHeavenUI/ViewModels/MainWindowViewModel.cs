@@ -54,10 +54,8 @@ They will be automatically turned off.";
 
         internal const string _forbidDependent =
             @"You cannot activate this mod, because it requires {0} to be active, but {0} is incompatible with {1}. You will have to deactivate {1} before you can enable this mod.";
-
-
-
-
+        internal const string _showAllText = "Show All";
+        internal const string _unknownText = "Unknown";
         private string _catFile;
         private string _statusMessage;
         private string _currentProfile;
@@ -323,7 +321,7 @@ They will be automatically turned off.";
         {
             get
             {
-                return AvailableFilterCategories.Where(c => c.IsChecked && c.Name != "Show All").ToList();
+                return AvailableFilterCategories.Where(c => c.IsChecked && c.Name != _showAllText).ToList();
             }
         }
 
@@ -1364,6 +1362,10 @@ They will be automatically turned off.";
 
         }
 
+        /// <summary>
+        /// Opens the read-me of the selected mod being previewed.
+        /// First looks for .html -> .md -> .txt in that order.
+        /// </summary>
         internal void OpenPreviewModReadMe()
         {
             InstalledVersion inst = Sys.Library.GetItem(_previewMod.ID)?.LatestInstalled;
@@ -1382,14 +1384,14 @@ They will be automatically turned off.";
 
             Directory.CreateDirectory(tempDirPath);
 
-            if (inst.HasData("readme.md"))
-            {
-                tempFileName = "readme.md";
-                hasReadmeFile = true;
-            }
-            else if (inst.HasData("readme.html"))
+            if (inst.HasData("readme.html"))
             {
                 tempFileName = "readme.html";
+                hasReadmeFile = true;
+            }
+            else if (inst.HasData("readme.md"))
+            {
+                tempFileName = "readme.md";
                 hasReadmeFile = true;
             }
             else if (inst.HasData("readme.txt"))
@@ -1437,6 +1439,10 @@ They will be automatically turned off.";
 
         }
 
+        /// <summary>
+        /// Opens a window to input a new profile name.
+        /// if new profile is created, then current profile is saved before switching to new profile.
+        /// </summary>
         internal void CreateNewProfile()
         {
             string profileName = OpenProfileViewModel.InputNewProfileName();
@@ -1500,6 +1506,10 @@ They will be automatically turned off.";
             settingsWindow.ShowDialog();
         }
 
+        /// <summary>
+        /// Refreshes the <see cref="AvailableFilterCategories"/> list with available categories from the Catalog
+        /// (re-checks what was previously checked after loading new list)
+        /// </summary>
         internal void ReloadCategoryFilters()
         {
             List<string> categories = Sys.Catalog.Mods.Where(c => !string.IsNullOrEmpty(c.Category) || !string.IsNullOrEmpty(c.LatestVersion.Category))
@@ -1507,17 +1517,21 @@ They will be automatically turned off.";
                                                       .Distinct()
                                                       .ToList();
 
-            if (!categories.Contains("Unknown"))
+            // mods with no category are filtered with the 'Unknown' category
+            if (!categories.Contains(_unknownText))
             {
-                categories.Add("Unknown");
+                categories.Add(_unknownText);
             }
 
-            List<FilterItemViewModel> oldItems = AvailableFilterCategories.ToList();
-
-            List<FilterItemViewModel> newList = categories.Select(c => new FilterItemViewModel(c)).ToList();
+            List<FilterItemViewModel> newList = categories.Select(c => new FilterItemViewModel(c)
+            {
+                OnChecked = new Action<bool>(isChecked => CheckOrUncheckShowAllFilter())
+            }).ToList();
 
             // re-check items
-            foreach (var item in newList)
+            List<FilterItemViewModel> oldItems = AvailableFilterCategories.ToList(); 
+
+            foreach (FilterItemViewModel item in newList)
             {
                 if (oldItems.Any(c => c.Name == item.Name && c.IsChecked))
                 {
@@ -1525,12 +1539,41 @@ They will be automatically turned off.";
                 }
             }
 
+            // setup 'Show All' filter item as first in the list
             bool allChecked = newList.All(c => c.IsChecked);
-            newList.Insert(0, new FilterItemViewModel("Show All") { IsChecked = allChecked });
+            FilterItemViewModel showAllItem = new FilterItemViewModel(_showAllText) 
+            { 
+                IsChecked = allChecked,
+                OnChecked = new Action<bool>(isChecked => ToggleIsCheckedForAll(isChecked))
+            };
+            newList.Insert(0, showAllItem);
 
             AvailableFilterCategories = newList;
         }
 
+        /// <summary>
+        /// sets IsChecked to value of <paramref name="isChecked"/> for all items in <see cref="AvailableFilterCategories"/> except for the 'Show All' category 
+        /// </summary>
+        private void ToggleIsCheckedForAll(bool isChecked)
+        {
+            foreach (var item in AvailableFilterCategories.Where(c => c.Name != _showAllText).ToList())
+            {
+                item.IsChecked = isChecked;
+            }
+        }
+
+        /// <summary>
+        /// Updates the IsChecked property of the 'Show All' category based on all other items in <see cref="AvailableFilterCategories"/> being checked or not.
+        /// </summary>
+        private void CheckOrUncheckShowAllFilter()
+        {
+            FilterItemViewModel item = AvailableFilterCategories.FirstOrDefault(cat => cat.Name == _showAllText);
+            item.SetIsChecked(AvailableFilterCategories.Where(cat => cat.Name != _showAllText).All(cat => cat.IsChecked));
+        }
+
+        /// <summary>
+        /// Reloads the list of mods filtering using <see cref="CheckedFilterCategories"/> and <see cref="SearchText"/>
+        /// </summary>
         internal void ApplyCategoryFilterAndReloadList()
         {
             CatalogViewModel.ReloadModList(SearchText, CheckedFilterCategories);
