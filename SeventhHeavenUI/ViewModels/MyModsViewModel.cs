@@ -82,9 +82,7 @@ namespace SeventhHeavenUI.ViewModels
 
                 if (mod != null)
                 {
-                    bool includeMod = FilterItemViewModel.FilterByCategory(mod.CachedDetails, categories) &&
-                                      FilterItemViewModel.FilterByTags(mod.CachedDetails, tags) &&
-                                      (string.IsNullOrEmpty(searchText) || mod.CachedDetails.SearchRelevance(searchText) > 0);
+                    bool includeMod = DoesModMatchSearchCriteria(searchText, categories, tags, mod.CachedDetails);
 
                     if (includeMod)
                     {
@@ -99,9 +97,7 @@ namespace SeventhHeavenUI.ViewModels
             {
                 bool isActive = allMods.Any(m => m.InstallInfo.ModID == item.ModID && m.InstallInfo.LatestInstalled.InstalledLocation == item.LatestInstalled.InstalledLocation);
 
-                bool includeMod = FilterItemViewModel.FilterByCategory(item.CachedDetails, categories) &&
-                                  FilterItemViewModel.FilterByTags(item.CachedDetails, tags) &&
-                                  (string.IsNullOrEmpty(searchText) || item.CachedDetails.SearchRelevance(searchText) > 0);
+                bool includeMod = DoesModMatchSearchCriteria(searchText, categories, tags, item.CachedDetails);
 
                 if (!isActive && includeMod)
                 {
@@ -135,6 +131,27 @@ namespace SeventhHeavenUI.ViewModels
 
             ClearModList();
             ModList = allMods;
+        }
+
+        private static bool DoesModMatchSearchCriteria(string searchText, IEnumerable<FilterItemViewModel> categories, IEnumerable<FilterItemViewModel> tags, Mod mod)
+        {
+            bool includeMod = false;
+
+            if (categories.Count() > 0 && tags.Count() > 0)
+            {
+                includeMod = FilterItemViewModel.FilterByCategory(mod, categories) || FilterItemViewModel.FilterByTags(mod, tags);
+            }
+            else if (categories.Count() > 0)
+            {
+                includeMod = FilterItemViewModel.FilterByCategory(mod, categories);
+            }
+            else
+            {
+                includeMod = FilterItemViewModel.FilterByTags(mod, tags);
+            }
+
+            includeMod = includeMod && (string.IsNullOrEmpty(searchText) || mod.SearchRelevance(searchText) > 0);
+            return includeMod;
         }
 
         private void ClearModList()
@@ -412,7 +429,7 @@ namespace SeventhHeavenUI.ViewModels
             Install.Uninstall(installed);
             ReloadModList();
         }
-        
+
         /// <summary>
         /// Change the sort order of an active mod
         /// </summary>
@@ -505,7 +522,8 @@ namespace SeventhHeavenUI.ViewModels
                     info = new _7thWrapperLib.ModInfo(doc, MainWindowViewModel._context);
                 }
 
-                imageReader = s => {
+                imageReader = s =>
+                {
                     if (arc.HasFile(s))
                     {
                         string tempImgPath = Path.Combine(config_temp_folder, s);
@@ -548,7 +566,8 @@ namespace SeventhHeavenUI.ViewModels
                     return null;
                 };
 
-                audioReader = s => {
+                audioReader = s =>
+                {
                     if (arc.HasFile(s))
                         arc.GetData(s);
                     return null;
@@ -562,7 +581,8 @@ namespace SeventhHeavenUI.ViewModels
                 if (File.Exists(file))
                     info = new _7thWrapperLib.ModInfo(file, MainWindowViewModel._context);
 
-                imageReader = s => {
+                imageReader = s =>
+                {
                     string ifile = Path.Combine(pathToModXml, s);
                     if (File.Exists(ifile))
                     {
@@ -572,7 +592,8 @@ namespace SeventhHeavenUI.ViewModels
                     return null;
                 };
 
-                audioReader = s => {
+                audioReader = s =>
+                {
                     string ifile = Path.Combine(pathToModXml, s);
                     if (File.Exists(ifile))
                         return new FileStream(ifile, FileMode.Open, FileAccess.Read, FileShare.Read);

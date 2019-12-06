@@ -92,7 +92,7 @@ namespace SeventhHeavenUI.ViewModels
             if (tags == null)
                 tags = new List<FilterItemViewModel>();
 
-            return tags.Count() == 0 || tags.Any(t => mod.Tags.Contains(t.Name));
+            return tags.Count() == 0 || tags.Any(t => mod.Tags.Contains(t.Name, StringComparer.CurrentCultureIgnoreCase));
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace SeventhHeavenUI.ViewModels
             string modCategory = mod.Category ?? mod.LatestVersion.Category;
 
             return categories.Count() == 0 ||
-                   categories.Any(c => c.Name == modCategory) ||
+                   categories.Any(c => c.Name.Equals(modCategory, StringComparison.InvariantCultureIgnoreCase)) ||
                    (categories.Any(c => c.Name == MainWindowViewModel._unknownText) && string.IsNullOrEmpty(modCategory));
         }
     }

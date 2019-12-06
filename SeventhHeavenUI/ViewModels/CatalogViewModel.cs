@@ -113,19 +113,43 @@ It may not work properly unless you find and install the requirements.";
 
             if (String.IsNullOrEmpty(searchText))
             {
-                results = Sys.Catalog.Mods.Where(m => FilterItemViewModel.FilterByCategory(m, categories))
-                                          .Where(m => FilterItemViewModel.FilterByTags(m, tags))
-                                          .ToList();
+                results = Sys.Catalog.Mods.Where(m =>
+                {
+                    if (categories.Count() > 0 && tags.Count() > 0)
+                    {
+                        return FilterItemViewModel.FilterByCategory(m, categories) || FilterItemViewModel.FilterByTags(m, tags);
+                    }
+                    else if (categories.Count() > 0)
+                    {
+                        return FilterItemViewModel.FilterByCategory(m, categories);
+                    }
+                    else
+                    {
+                        return FilterItemViewModel.FilterByTags(m, tags);
+                    }
+                }).ToList();
             }
             else
             {
-                results = Sys.Catalog.Mods.Where(m => FilterItemViewModel.FilterByCategory(m, categories))
-                                          .Where(m => FilterItemViewModel.FilterByTags(m, tags))
-                                          .Select(m => new { Mod = m, Relevance = m.SearchRelevance(searchText) })
-                                          .Where(a => a.Relevance > 0)
-                                          .OrderByDescending(a => a.Relevance)
-                                          .Select(a => a.Mod)
-                                          .ToList();
+                results = Sys.Catalog.Mods.Where(m =>
+                {
+                    if (categories.Count() > 0 && tags.Count() > 0)
+                    {
+                        return FilterItemViewModel.FilterByCategory(m, categories) || FilterItemViewModel.FilterByTags(m, tags);
+                    }
+                    else if (categories.Count() > 0)
+                    {
+                        return FilterItemViewModel.FilterByCategory(m, categories);
+                    }
+                    else
+                    {
+                        return FilterItemViewModel.FilterByTags(m, tags);
+                    }
+                }).Select(m => new { Mod = m, Relevance = m.SearchRelevance(searchText) })
+                  .Where(a => a.Relevance > 0)
+                  .OrderByDescending(a => a.Relevance)
+                  .Select(a => a.Mod)
+                  .ToList();
             }
 
             List<CatalogModItemViewModel> newList = new List<CatalogModItemViewModel>();

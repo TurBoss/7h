@@ -1548,7 +1548,10 @@ They will be automatically turned off.";
                 }
             }
 
-            tags = tags.Distinct().OrderBy(s => s).ToList();
+            tags = tags.Select(s => $"{s.Substring(0,1).ToUpper()}{s.Substring(1)}") // make Tag display as proper case e.g. 'My tag' intead of 'my tag'
+                       .Distinct(StringComparer.CurrentCultureIgnoreCase)
+                       .OrderBy(s => s)
+                       .ToList();
 
             return tags;
         }
