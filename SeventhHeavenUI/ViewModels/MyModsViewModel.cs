@@ -120,6 +120,10 @@ namespace SeventhHeavenUI.ViewModels
                 {
                     allMods[index].IsSelected = true;
                 }
+                else if (allMods.Count > 0)
+                {
+                    allMods[0].IsSelected = true;
+                }
             }
             else
             {
@@ -377,7 +381,7 @@ namespace SeventhHeavenUI.ViewModels
 
         internal void DeactivateAllActiveMods()
         {
-            foreach (InstalledModViewModel installedMod in ModList.Where(m => m.IsActive))
+            foreach (InstalledModViewModel installedMod in ModList.Where(m => m.IsActive).ToList())
             {
                 ToggleActivateMod(installedMod.ActiveModInfo.ModID, reloadList: false); // reload list at the end
             }

@@ -29,7 +29,7 @@ namespace SeventhHeaven.UserControls
 
         private void btnRefresh_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            ViewModel.ReloadModList();
+            ViewModel.ReloadModList(ViewModel.GetSelectedMod()?.Mod?.ID);
         }
 
         private void btnDownload_Click(object sender, System.Windows.RoutedEventArgs e)

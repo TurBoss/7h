@@ -116,13 +116,17 @@ They will be automatically turned off.";
             {
                 _selectedTabIndex = value;
                 NotifyPropertyChanged();
+                
+                ReloadAvailableFilters();
 
                 if ((TabIndex)_selectedTabIndex == TabIndex.MyMods)
                 {
+                    ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedCategories, CheckedTags);
                     UpdateModPreviewInfo(ModsViewModel.GetSelectedMod());
                 }
                 else
                 {
+                    CatalogViewModel.ReloadModList(CatalogViewModel.GetSelectedMod()?.Mod.ID, SearchText, CheckedCategories, CheckedTags);
                     UpdateModPreviewInfo(CatalogViewModel.GetSelectedMod());
                 }
             }
@@ -302,7 +306,7 @@ They will be automatically turned off.";
             }
         }
 
-        public List<FilterItemViewModel> CheckedFilters
+        public List<FilterItemViewModel> CheckedCategories
         {
             get
             {
@@ -489,7 +493,7 @@ They will be automatically turned off.";
                 InstalledItem mod = Sys.Library.GetItem(e.ModID);
                 string mfile = mod.LatestInstalled.InstalledLocation;
                 _infoCache.Remove(mfile);
-                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo.ModID, SearchText, CheckedFilters, CheckedTags);
+                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo.ModID, SearchText, CheckedCategories, CheckedTags);
             }
 
             if (e.Status == ModStatus.Installed && e.OldStatus != ModStatus.Installed && Sys.Settings.Options.HasFlag(GeneralOptions.AutoActiveNewMods))
@@ -644,7 +648,7 @@ They will be automatically turned off.";
             }
 
             Sys.Library.AttemptDeletions();
-            ModsViewModel.ReloadModList(null, SearchText, CheckedFilters, CheckedTags);
+            ModsViewModel.ReloadModList(null, SearchText, CheckedCategories, CheckedTags);
         }
 
         public void RefreshProfile()
@@ -657,7 +661,7 @@ They will be automatically turned off.";
             CurrentProfile = Sys.Settings.CurrentProfile;
 
             // reload list of active mods for the profile
-            ModsViewModel.ReloadModList(null, SearchText, CheckedFilters, CheckedTags);
+            ModsViewModel.ReloadModList(null, SearchText, CheckedCategories, CheckedTags);
         }
 
         internal void SaveProfile()
@@ -1292,7 +1296,7 @@ They will be automatically turned off.";
                             // reload the UI list of catalog mods and scan for any mod updates once all subs have been attempted to download
                             if (subUpdateCount == subTotalCount)
                             {
-                                CatalogViewModel.ReloadModList(SearchText);
+                                CatalogViewModel.ReloadModList(null, SearchText, CheckedCategories, CheckedTags);
                                 ScanForModUpdates();
                             }
 
@@ -1326,12 +1330,12 @@ They will be automatically turned off.";
             if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
             {
                 CatalogViewModel.ClearRememberedSearchTextAndCategories();
-                CatalogViewModel.ReloadModList(SearchText, CheckedFilters, CheckedTags);
+                CatalogViewModel.ReloadModList(CatalogViewModel.GetSelectedMod()?.Mod?.ID, SearchText, CheckedCategories, CheckedTags);
             }
             else
             {
                 ModsViewModel.ClearRememberedSearchTextAndCategories();
-                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedFilters, CheckedTags);
+                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedCategories, CheckedTags);
             }
 
             ReloadAvailableFilters();
@@ -1568,6 +1572,8 @@ They will be automatically turned off.";
                                               .ToList();
             }
 
+            categories = categories.OrderBy(s => s).ToList();
+
             // mods with no category are filtered with the 'Unknown' category
             if (!categories.Contains(_unknownText))
             {
@@ -1581,11 +1587,11 @@ They will be automatically turned off.";
         {
             if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
             {
-                CatalogViewModel.ReloadModList(SearchText, CheckedFilters, CheckedTags);
+                CatalogViewModel.ReloadModList(CatalogViewModel.GetSelectedMod()?.Mod?.ID, SearchText, CheckedCategories, CheckedTags);
             }
             else
             {
-                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedFilters, CheckedTags);
+                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedCategories, CheckedTags);
             }
 
             ReloadAvailableFilters();

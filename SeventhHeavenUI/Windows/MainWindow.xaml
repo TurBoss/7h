@@ -16,7 +16,7 @@
     <Window.Resources>
         <Style x:Key="ModInfoLabelStyle" TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Margin" Value="0,0,0,1"/>
+            <Setter Property="Margin" Value="0,0,3,1"/>
             <Setter Property="FontWeight" Value="DemiBold"/>
             <Setter Property="VerticalAlignment" Value="Bottom"/>
         </Style>

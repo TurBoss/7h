@@ -103,7 +103,7 @@ It may not work properly unless you find and install the requirements.";
         /// Loads available mods from catalogs into <see cref="CatalogModList"/> from <see cref="Sys.Catalog.Mods"/>
         /// </summary>
         /// <param name="searchText"> empty string returns all mods </param>
-        internal void ReloadModList(string searchText = "", IEnumerable<FilterItemViewModel> categories = null, IEnumerable<FilterItemViewModel> tags = null)
+        internal void ReloadModList(Guid? modToSelect = null, string searchText = "", IEnumerable<FilterItemViewModel> categories = null, IEnumerable<FilterItemViewModel> tags = null)
         {
             List<Mod> results;
 
@@ -140,6 +140,27 @@ It may not work properly unless you find and install the requirements.";
             {
                 // order by category then relevance
                 newList = newList.OrderBy(m => m.Category).ThenByDescending(m => m.Mod.SearchRelevance(searchText)).ToList();
+            }
+
+            if (modToSelect != null)
+            {
+                int index = newList.FindIndex(m => m.Mod.ID == modToSelect);
+
+                if (index >= 0)
+                {
+                    newList[index].IsSelected = true;
+                }
+                else if (newList.Count > 0)
+                {
+                    newList[0].IsSelected = true;
+                }
+            }
+            else
+            {
+                if (newList.Count > 0)
+                {
+                    newList[0].IsSelected = true;
+                }
             }
 
             // make sure to set CatalogModList on the UI thread
