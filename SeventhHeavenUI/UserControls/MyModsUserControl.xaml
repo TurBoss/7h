@@ -10,6 +10,7 @@
 
         <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource MainListViewItemStyle}">
             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
         </Style>
 
     </UserControl.Resources>

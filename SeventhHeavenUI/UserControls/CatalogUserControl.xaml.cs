@@ -53,5 +53,13 @@ namespace SeventhHeaven.UserControls
 
             ViewModel.CancelDownload((lstDownloads.SelectedItem as DownloadItemViewModel));
         }
+
+        private void ListViewItem_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (lstCatalogMods.SelectedItem != null)
+            {
+                ViewModel.DownloadMod((lstCatalogMods.SelectedItem as CatalogModItemViewModel));
+            }
+        }
     }
 }

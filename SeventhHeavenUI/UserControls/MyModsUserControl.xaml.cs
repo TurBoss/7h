@@ -210,5 +210,13 @@ namespace SeventhHeaven.UserControls
                 Logger.Warn(e, "failed to resize columns");
             }
         }
+
+        private void ListViewItem_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (lstMods.SelectedItem != null)
+            {
+                ViewModel.ToggleActivateMod((lstMods.SelectedItem as InstalledModViewModel).InstallInfo.ModID);
+            }
+        }
     }
 }
