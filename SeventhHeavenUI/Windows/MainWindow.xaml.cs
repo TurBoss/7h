@@ -247,5 +247,10 @@ namespace SeventhHeavenUI
         {
             ctrlMyMods.RecalculateColumnWidths();
         }
+
+        private void menuItemIroCreation_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ShowIroToolsWindow();
+        }
     }
 }

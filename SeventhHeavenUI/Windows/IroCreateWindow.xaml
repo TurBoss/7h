@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
+        xmlns:ctl="clr-namespace:SeventhHeaven.UserControls"
         mc:Ignorable="d"
         Style="{StaticResource MainWindowStyle}"
         Title="IRO Tools"
@@ -14,7 +15,7 @@
         <TabControl Margin="0,3,0,0"
                     BorderThickness="0,1,0,0">
             <TabItem Header="Pack IRO">
-                
+                <ctl:PackIroUserControl x:Name="ctrlPack"/>
             </TabItem>
             <TabItem Header="Unpack IRO">
 

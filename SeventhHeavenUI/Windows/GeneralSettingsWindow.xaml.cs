@@ -1,4 +1,5 @@
-﻿using SeventhHeaven.ViewModels;
+﻿using SeventhHeaven.Classes;
+using SeventhHeaven.ViewModels;
 using System.Windows;
 using System.Windows.Forms;
 
@@ -40,7 +41,7 @@ namespace SeventhHeaven.Windows
 
         private void btnFf7Exe_Click(object sender, RoutedEventArgs e)
         {
-            string exePath = BrowseForExeFile();
+            string exePath = FileDialogHelper.BrowseForFile("exe file (*.exe)|*.exe", "Select FF7.exe");
 
             if (!string.IsNullOrEmpty(exePath))
             {
@@ -50,7 +51,7 @@ namespace SeventhHeaven.Windows
 
         private void btnMovies_Click(object sender, RoutedEventArgs e)
         {
-            string folderPath = BrowseForFolder();
+            string folderPath = FileDialogHelper.BrowseForFolder();
 
             if (!string.IsNullOrEmpty(folderPath))
             {
@@ -60,7 +61,7 @@ namespace SeventhHeaven.Windows
 
         private void btnTextures_Click(object sender, RoutedEventArgs e)
         {
-            string folderPath = BrowseForFolder();
+            string folderPath = FileDialogHelper.BrowseForFolder();
 
             if (!string.IsNullOrEmpty(folderPath))
             {
@@ -70,42 +71,12 @@ namespace SeventhHeaven.Windows
 
         private void btnLibrary_Click(object sender, RoutedEventArgs e)
         {
-            string folderPath = BrowseForFolder();
+            string folderPath = FileDialogHelper.BrowseForFolder();
 
             if (!string.IsNullOrEmpty(folderPath))
             {
                 ViewModel.LibraryPathInput = folderPath;
             }
-        }
-
-        private string BrowseForExeFile()
-        {
-            using (OpenFileDialog fileBrowserDialog = new OpenFileDialog())
-            {
-                fileBrowserDialog.Filter = "exe file (*.exe)|*.exe";
-                fileBrowserDialog.Title = "Select FF7.exe";
-                DialogResult result = fileBrowserDialog.ShowDialog();
-                if (result == System.Windows.Forms.DialogResult.OK)
-                {
-                    return fileBrowserDialog.FileName;
-                }
-            }
-
-            return "";
-        }
-
-        private string BrowseForFolder()
-        {
-            using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
-            {
-                DialogResult result = folderBrowserDialog.ShowDialog();
-                if (result == System.Windows.Forms.DialogResult.OK)
-                {
-                    return folderBrowserDialog.SelectedPath;
-                }
-            }
-
-            return "";
         }
     }
 }

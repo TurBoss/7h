@@ -107,7 +107,7 @@
             <cls:ButtonWithImage x:Name="btnTools" Content="Tools" Margin="5,0,5,0" Style="{StaticResource ButtonWithImageAndDownArrow}" TemplateSource="{StaticResource iconTools}" ContextMenuService.Placement="Bottom" Click="btnTools_Click">
                 <cls:ButtonWithImage.ContextMenu>
                     <ContextMenu x:Name="menuTools" PlacementTarget="{Binding ElementName=btnTools}" Closed="menuTools_Closed">
-                        <MenuItem x:Name="menuItemIroCreation" Header="IRO Creation Tool"/>
+                        <MenuItem x:Name="menuItemIroCreation" Header="IRO Creation Tool" Click="menuItemIroCreation_Click"/>
                         <MenuItem x:Name="menuItemChunkTool" Header="Chunk Tool" Click="menuItemChunkTool_Click"/>
                         <MenuItem x:Name="menuItemCatalogCreation" Header="Catalog Creation Tool"/>
                     </ContextMenu>

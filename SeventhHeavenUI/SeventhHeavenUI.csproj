@@ -93,6 +93,7 @@
     </ApplicationDefinition>
     <Compile Include="Classes\ButtonWithImage.cs" />
     <Compile Include="Classes\Constraint.cs" />
+    <Compile Include="Classes\FileDialogHelper.cs" />
     <Compile Include="Classes\ReloadListOption.cs" />
     <Compile Include="UserControls\CatalogUserControl.xaml.cs">
       <DependentUpon>CatalogUserControl.xaml</DependentUpon>
@@ -100,6 +101,10 @@
     <Compile Include="UserControls\MyModsUserControl.xaml.cs">
       <DependentUpon>MyModsUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\PackIroUserControl.xaml.cs">
+      <DependentUpon>PackIroUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\PackIroViewModel.cs" />
     <Compile Include="ViewModels\FilterItemViewModel.cs" />
     <Compile Include="ViewModels\ChunkToolViewModel.cs" />
     <Compile Include="ViewModels\DownloadItemViewModel.cs" />
@@ -129,6 +134,10 @@
     <Compile Include="Windows\OpenProfileWindow.xaml.cs">
       <DependentUpon>OpenProfileWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="UserControls\PackIroUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\ChunkToolWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

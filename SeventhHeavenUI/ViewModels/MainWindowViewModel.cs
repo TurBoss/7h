@@ -1509,6 +1509,15 @@ They will be automatically turned off.";
             settingsWindow.ShowDialog();
         }
 
+        internal void ShowIroToolsWindow()
+        {
+            IroCreateWindow createWindow = new IroCreateWindow()
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+            createWindow.ShowDialog();
+        }
+
         /// <summary>
         /// sets IsChecked to value of <paramref name="isChecked"/> for all items in <paramref name="filterItems"/> except for the 'Show All' category 
         /// </summary>

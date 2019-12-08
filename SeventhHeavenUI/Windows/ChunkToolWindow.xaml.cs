@@ -1,4 +1,5 @@
-﻿using SeventhHeaven.ViewModels;
+﻿using SeventhHeaven.Classes;
+using SeventhHeaven.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace SeventhHeaven.Windows
 
         private void btnBrowseFlevel_Click(object sender, RoutedEventArgs e)
         {
-            string pathToFile = BrowseForFlevelFile();
+            string pathToFile = FileDialogHelper.BrowseForFile("FLevel.lgp|FLevel.lgp", "Select FLevel.lgp file");
 
             if (!string.IsNullOrEmpty(pathToFile))
             {
@@ -43,7 +44,7 @@ namespace SeventhHeaven.Windows
 
         private void btnBrowseOutput_Click(object sender, RoutedEventArgs e)
         {
-            string pathToFolder = BrowseForFolder();
+            string pathToFolder = FileDialogHelper.BrowseForFolder();
 
             if (!string.IsNullOrEmpty(pathToFolder))
             {
@@ -56,34 +57,5 @@ namespace SeventhHeaven.Windows
             ViewModel.BeginExtract();
         }
 
-        private string BrowseForFlevelFile()
-        {
-            using (OpenFileDialog fileBrowserDialog = new OpenFileDialog())
-            {
-                fileBrowserDialog.Filter = "FLevel.lgp|FLevel.lgp";
-                fileBrowserDialog.Title = "Select FLevel.lgp file";
-                DialogResult result = fileBrowserDialog.ShowDialog();
-                if (result == System.Windows.Forms.DialogResult.OK)
-                {
-                    return fileBrowserDialog.FileName;
-                }
-            }
-
-            return "";
-        }
-
-        private string BrowseForFolder()
-        {
-            using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
-            {
-                DialogResult result = folderBrowserDialog.ShowDialog();
-                if (result == System.Windows.Forms.DialogResult.OK)
-                {
-                    return folderBrowserDialog.SelectedPath;
-                }
-            }
-
-            return "";
-        }
     }
 }

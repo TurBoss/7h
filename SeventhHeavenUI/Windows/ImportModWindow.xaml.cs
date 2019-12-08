@@ -1,4 +1,5 @@
-﻿using SeventhHeaven.ViewModels;
+﻿using SeventhHeaven.Classes;
+using SeventhHeaven.ViewModels;
 using System.IO;
 using System.Windows;
 using System.Windows.Forms;
@@ -33,7 +34,7 @@ namespace SeventhHeaven.Windows
 
         private void btnBrowseIro_Click(object sender, RoutedEventArgs e)
         {
-            string selectedFile = BrowseForIroFile();
+            string selectedFile = FileDialogHelper.BrowseForFile("iro archive (*.iro)|*.iro", "Select .iro Archive File");
 
             if (!string.IsNullOrEmpty(selectedFile))
             {
@@ -44,7 +45,7 @@ namespace SeventhHeaven.Windows
 
         private void btnBrowseModFolder_Click(object sender, RoutedEventArgs e)
         {
-            string selectedFolder = BrowseForFolder();
+            string selectedFolder = FileDialogHelper.BrowseForFolder();
 
             if (!string.IsNullOrEmpty(selectedFolder))
             {
@@ -55,7 +56,7 @@ namespace SeventhHeaven.Windows
 
         private void btnBrowseBatchFolder_Click(object sender, RoutedEventArgs e)
         {
-            string selectedFolder = BrowseForFolder();
+            string selectedFolder = FileDialogHelper.BrowseForFolder();
 
             if (!string.IsNullOrEmpty(selectedFolder))
             {
@@ -63,35 +64,5 @@ namespace SeventhHeaven.Windows
             }
         }
 
-        private string BrowseForIroFile()
-        {
-            using (OpenFileDialog fileBrowserDialog = new OpenFileDialog())
-            {
-                fileBrowserDialog.Filter = "iro archive (*.iro)|*.iro";
-                fileBrowserDialog.Title = "Select .iro Archive File";
-
-                DialogResult result = fileBrowserDialog.ShowDialog();
-                if (result == System.Windows.Forms.DialogResult.OK)
-                {
-                    return fileBrowserDialog.FileName;
-                }
-            }
-
-            return "";
-        }
-
-        private string BrowseForFolder()
-        {
-            using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
-            {
-                DialogResult result = folderBrowserDialog.ShowDialog();
-                if (result == System.Windows.Forms.DialogResult.OK)
-                {
-                    return folderBrowserDialog.SelectedPath;
-                }
-            }
-
-            return "";
-        }
     }
 }

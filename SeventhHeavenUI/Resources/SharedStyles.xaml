@@ -683,6 +683,7 @@
                         <ContentPresenter x:Name="ContentSite"
                                           IsHitTestVisible="False"
                                           ContentTemplate="{TemplateBinding ItemTemplate}"
+                                          DataContext="{TemplateBinding DataContext}"
                                           TextElement.Foreground="{DynamicResource PrimaryControlForeground}"
                                           Margin="5"
                                           VerticalAlignment="Stretch"
