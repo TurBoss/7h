@@ -18,10 +18,10 @@
                 <ctl:PackIroUserControl x:Name="ctrlPack"/>
             </TabItem>
             <TabItem Header="Unpack IRO">
-
+                <ctl:UnpackIroUserControl x:Name="ctrlUnpack"/>
             </TabItem>
             <TabItem Header="Patch IRO">
-
+                <ctl:PatchIroUserControl x:Name="ctrlPatch"/>
             </TabItem>
             <TabItem Header="Patch IRO (Advanced)">
 

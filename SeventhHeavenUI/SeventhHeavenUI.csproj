@@ -101,9 +101,17 @@
     <Compile Include="UserControls\MyModsUserControl.xaml.cs">
       <DependentUpon>MyModsUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\PatchIroUserControl.xaml.cs">
+      <DependentUpon>PatchIroUserControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\UnpackIroUserControl.xaml.cs">
+      <DependentUpon>UnpackIroUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\PackIroUserControl.xaml.cs">
       <DependentUpon>PackIroUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\PatchIroViewModel.cs" />
+    <Compile Include="ViewModels\UnpackIroViewModel.cs" />
     <Compile Include="ViewModels\PackIroViewModel.cs" />
     <Compile Include="ViewModels\FilterItemViewModel.cs" />
     <Compile Include="ViewModels\ChunkToolViewModel.cs" />
@@ -134,6 +142,14 @@
     <Compile Include="Windows\OpenProfileWindow.xaml.cs">
       <DependentUpon>OpenProfileWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="UserControls\PatchIroUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserControls\UnpackIroUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UserControls\PackIroUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -157,7 +157,7 @@
                      Margin="10,0,10,0"
                      Value="{Binding ProgressValue, FallbackValue='33'}">
             <ProgressBar.Style>
-                <Style TargetType="{x:Type ProgressBar}">
+                <Style TargetType="{x:Type ProgressBar}" BasedOn="{StaticResource MainProgressBarStyle}">
                     <Setter Property="Visibility" Value="Visible"/>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding ProgressValue, FallbackValue='5'}" Value="0">
