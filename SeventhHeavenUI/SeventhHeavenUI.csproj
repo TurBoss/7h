@@ -95,6 +95,7 @@
     <Compile Include="Classes\Constraint.cs" />
     <Compile Include="Classes\FileDialogHelper.cs" />
     <Compile Include="Classes\ReloadListOption.cs" />
+    <Compile Include="Classes\ThemeSettings.cs" />
     <Compile Include="UserControls\CatalogUserControl.xaml.cs">
       <DependentUpon>CatalogUserControl.xaml</DependentUpon>
     </Compile>
@@ -111,6 +112,7 @@
       <DependentUpon>PackIroUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\PatchIroViewModel.cs" />
+    <Compile Include="ViewModels\ThemeSettingsViewModel.cs" />
     <Compile Include="ViewModels\UnpackIroViewModel.cs" />
     <Compile Include="ViewModels\PackIroViewModel.cs" />
     <Compile Include="ViewModels\FilterItemViewModel.cs" />
@@ -141,6 +143,9 @@
     </Compile>
     <Compile Include="Windows\OpenProfileWindow.xaml.cs">
       <DependentUpon>OpenProfileWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ThemeSettingsWindow.xaml.cs">
+      <DependentUpon>ThemeSettingsWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="UserControls\PatchIroUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -213,6 +218,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\OpenProfileWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\ThemeSettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

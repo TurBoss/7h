@@ -13,17 +13,30 @@
     <Color x:Key="DarkControlBackground">#1f1f1f</Color>
     <Color x:Key="DarkControlForeground">#ffffff</Color>
     <Color x:Key="DarkControlPressed" R="0" G="119" B="215" A="255"/>
-    <Color x:Key="DarkControlMouseOver" >#5e5e5e</Color>
+    <Color x:Key="DarkControlMouseOver">#5e5e5e</Color>
 
     <Color x:Key="DarkControlDisabledBackground" R="31" G="31" B="31" A="255"/>
     <Color x:Key="DarkControlDisabledForeground" R="121" G="121" B="121" A="255"/>
 
 
+    <!-- COLORS - Light Theme -->
+    <Color x:Key="LightBackgroundColor">#CFD8DC</Color>
+    <Color x:Key="MedLightBackgroundColor">#ECEFF1</Color>
+
+    <Color x:Key="LightControlBackground">#CFD8DC</Color>
+    <Color x:Key="LightControlForeground">#212121</Color>
+    <Color x:Key="LightControlPressed">#90A4AE</Color>
+    <Color x:Key="LightControlMouseOver">#B0BEC5</Color>
+
+    <Color x:Key="LightControlDisabledBackground" R="31" G="31" B="31" A="255"/>
+    <Color x:Key="LightControlDisabledForeground" R="121" G="121" B="121" A="255"/>
+
+
+
     <!-- APP BRUSHES - These are used in all the below styles to have a consistent color theme across all controls. The color of these brushes can be changed in the "Color Theme" settings of the app -->
     <SolidColorBrush x:Key="PrimaryAppBackground" Color="{DynamicResource DarkBackgroundColor}"/>
     <SolidColorBrush x:Key="SecondaryAppBackground" Color="{DynamicResource MedDarkBackgroundColor}"/>
-
-
+    
     <SolidColorBrush x:Key="PrimaryControlBackground" Color="{DynamicResource DarkControlBackground}"/>
     <SolidColorBrush x:Key="PrimaryControlForeground" Color="{DynamicResource DarkControlForeground}"/>
     <SolidColorBrush x:Key="PrimaryControlPressed" Color="{DynamicResource DarkControlPressed}"/>
@@ -738,7 +751,32 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBoxItem}">
                     <Border x:Name="bd" BorderBrush="{DynamicResource SecondaryAppBackground}" BorderThickness="0" Background="{DynamicResource PrimaryControlBackground}">
-                        <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" DataContext="{TemplateBinding DataContext}"/>
+                        <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                          Content="{TemplateBinding Content}" 
+                                          DataContext="{TemplateBinding DataContext}" 
+                                          TextElement.Foreground="{DynamicResource PrimaryControlForeground}"/>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource PrimaryControlPressed}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="TextComboBoxItemStyle" TargetType="{x:Type ComboBoxItem}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                    <Border x:Name="bd" BorderBrush="{DynamicResource SecondaryAppBackground}" BorderThickness="0" Background="{DynamicResource PrimaryControlBackground}">
+                        <TextBlock  Text="{Binding }" 
+                                    Foreground="{DynamicResource PrimaryControlForeground}"/>
                     </Border>
 
                     <ControlTemplate.Triggers>

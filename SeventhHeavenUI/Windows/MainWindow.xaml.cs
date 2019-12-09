@@ -252,5 +252,11 @@ namespace SeventhHeavenUI
         {
             ViewModel.ShowIroToolsWindow();
         }
+
+        private void menuItemThemeSettings_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new ThemeSettingsWindow() { WindowStartupLocation = WindowStartupLocation.CenterScreen };
+            window.ShowDialog();
+        }
     }
 }
