@@ -23,7 +23,7 @@
                 <ctl:PatchIroUserControl x:Name="ctrlPatch"/>
             </TabItem>
             <TabItem Header="Patch IRO (Advanced)">
-
+                <ctl:PatchIroAdvancedUserControl x:Name="ctrlPatchAdvanced"/>
             </TabItem>
         </TabControl>
     </Grid>

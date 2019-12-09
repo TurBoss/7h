@@ -102,6 +102,9 @@
     <Compile Include="UserControls\MyModsUserControl.xaml.cs">
       <DependentUpon>MyModsUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\PatchIroAdvancedUserControl.xaml.cs">
+      <DependentUpon>PatchIroAdvancedUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\PatchIroUserControl.xaml.cs">
       <DependentUpon>PatchIroUserControl.xaml</DependentUpon>
     </Compile>
@@ -147,6 +150,10 @@
     <Compile Include="Windows\ThemeSettingsWindow.xaml.cs">
       <DependentUpon>ThemeSettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="UserControls\PatchIroAdvancedUserControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UserControls\PatchIroUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

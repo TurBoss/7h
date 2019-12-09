@@ -14,14 +14,29 @@ namespace SeventhHeaven.ViewModels
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
+        private string _pathToSourceFolder;
         private string _pathToOriginalIroFile;
         private string _pathToNewIroFile;
-        private List<string> _compressionOptions;
-        private bool _isPatching;
-        private int _progressValue;
-        private int _compressionSelectedIndex;
-        private string _statusText;
         private string _pathToIropFile;
+        private string _statusText;
+        private List<string> _compressionOptions;
+        private int _compressionSelectedIndex;
+        private int _progressValue;
+        private bool _isPatching;
+        private string _filesToDeleteText;
+
+        public string PathToSourceFolder
+        {
+            get
+            {
+                return _pathToSourceFolder;
+            }
+            set
+            {
+                _pathToSourceFolder = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         public string PathToOriginalIroFile
         {
@@ -59,6 +74,27 @@ namespace SeventhHeaven.ViewModels
             {
                 _pathToIropFile = value;
                 NotifyPropertyChanged();
+            }
+        }
+
+        public string FilesToDeleteText
+        {
+            get
+            {
+                return _filesToDeleteText;
+            }
+            set
+            {
+                _filesToDeleteText = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public List<string> FilesToDelete
+        {
+            get
+            {
+                return FilesToDeleteText.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).ToList();
             }
         }
 
@@ -139,6 +175,7 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+
         public bool IsNotPatching
         {
             get
@@ -147,11 +184,14 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public bool IsAdvancedMode { get; private set; }
 
-        public PatchIroViewModel()
+        public PatchIroViewModel(bool isAdvancedPatching)
         {
             ProgressValue = 0;
             IsPatching = false;
+            IsAdvancedMode = isAdvancedPatching;
+            PathToSourceFolder = "";
             PathToOriginalIroFile = "";
             PathToNewIroFile = "";
             StatusText = "";
@@ -164,14 +204,24 @@ namespace SeventhHeaven.ViewModels
             string errorMsg = "";
             bool isValid = true;
 
-            if (string.IsNullOrEmpty(PathToOriginalIroFile))
+            if (string.IsNullOrEmpty(PathToOriginalIroFile) && !IsAdvancedMode)
+            {
+                errorMsg = "Path to original iro is required";
+                isValid = false;
+            }
+            else if (string.IsNullOrEmpty(PathToNewIroFile) && !IsAdvancedMode)
+            {
+                errorMsg = "Path to new iro file is required";
+                isValid = false;
+            }
+            else if (string.IsNullOrEmpty(PathToSourceFolder) && IsAdvancedMode)
             {
                 errorMsg = "Path to source folder is required";
                 isValid = false;
             }
-            else if (string.IsNullOrEmpty(PathToNewIroFile))
+            else if (string.IsNullOrEmpty(PathToIropFile))
             {
-                errorMsg = "Path to output iro file is required";
+                errorMsg = "Path to irop file to save is required";
                 isValid = false;
             }
             else if (CompressionSelectedIndex < 0)
@@ -225,6 +275,53 @@ namespace SeventhHeaven.ViewModels
                 StatusText = "Patching complete!";
             });
         }
+
+        internal void PatchIroAdvanced()
+        {
+            string pathToSource = PathToSourceFolder;
+            string iropFile = PathToIropFile;
+            List<string> filesToDelete = FilesToDelete;
+            _7thWrapperLib.CompressType compressType = (_7thWrapperLib.CompressType)CompressionSelectedIndex;
+
+            IsPatching = true;
+
+            Task patchTask = Task.Factory.StartNew(() =>
+            {
+                var files = Directory.GetFiles(pathToSource, "*", SearchOption.AllDirectories)
+                                     .Select(s => s.Substring(pathToSource.Length).Trim('\\', '/'))
+                                     .Select(s => _7thWrapperLib.IrosArc.ArchiveCreateEntry.FromDisk(pathToSource, s))
+                                     .ToList();
+
+                if (filesToDelete.Any())
+                {
+                    byte[] deldata = Encoding.Unicode.GetBytes(String.Join("\n", filesToDelete));
+                    files.Add(new _7thWrapperLib.IrosArc.ArchiveCreateEntry()
+                    {
+                        Filename = "%IrosPatch:Deleted",
+                        GetData = () => deldata
+                    });
+                }
+
+                using (var fs = new FileStream(iropFile, FileMode.Create))
+                    _7thWrapperLib.IrosArc.Create(fs, files, _7thWrapperLib.ArchiveFlags.Patch, compressType, IroProgress);
+            });
+
+            patchTask.ContinueWith((result) =>
+            {
+                IsPatching = false;
+                ProgressValue = 0;
+
+                if (result.IsFaulted)
+                {
+                    Logger.Warn(result.Exception.GetBaseException());
+                    StatusText = $"An error occured while patching: {result.Exception.GetBaseException().Message}";
+                    return;
+                }
+
+                StatusText = "Patching complete!";
+            });
+        }
+
 
         private void IroProgress(double d, string s)
         {

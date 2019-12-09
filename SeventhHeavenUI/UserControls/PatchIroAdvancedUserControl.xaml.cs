@@ -20,15 +20,15 @@ namespace SeventhHeaven.UserControls
     /// <summary>
     /// Interaction logic for PackIroUserControl.xaml
     /// </summary>
-    public partial class PatchIroUserControl : UserControl
+    public partial class PatchIroAdvancedUserControl : UserControl
     {
         PatchIroViewModel ViewModel { get; set; }
 
-        public PatchIroUserControl()
+        public PatchIroAdvancedUserControl()
         {
             InitializeComponent();
 
-            ViewModel = new PatchIroViewModel(isAdvancedPatching: false);
+            ViewModel = new PatchIroViewModel(isAdvancedPatching: true);
             this.DataContext = ViewModel;
         }
 
@@ -36,27 +36,17 @@ namespace SeventhHeaven.UserControls
         {
             if (ViewModel.Validate())
             {
-                ViewModel.PatchIro();
+                ViewModel.PatchIroAdvanced();
             }
         }
 
-        private void btnBrowseNewIro_Click(object sender, RoutedEventArgs e)
+        private void btnBrowseSourceFolder_Click(object sender, RoutedEventArgs e)
         {
-            string saveFile = FileDialogHelper.BrowseForFile("IRO files|*.iro", "Select .iro");
-
-            if (!string.IsNullOrEmpty(saveFile))
-            {
-                ViewModel.PathToNewIroFile = saveFile;
-            }
-        }
-
-        private void btnBrowseOriginalIro_Click(object sender, RoutedEventArgs e)
-        {
-            string sourceFolder = FileDialogHelper.BrowseForFile("IRO files|*.iro", "Select .iro");
+            string sourceFolder = FileDialogHelper.BrowseForFolder();
 
             if (!string.IsNullOrEmpty(sourceFolder))
             {
-                ViewModel.PathToOriginalIroFile = sourceFolder;
+                ViewModel.PathToSourceFolder = sourceFolder;
             }
         }
 
