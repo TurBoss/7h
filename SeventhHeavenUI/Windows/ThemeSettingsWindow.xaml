@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         mc:Ignorable="d"
         Style="{StaticResource MainWindowStyle}"
-        Title="Change Color Scheme" Height="350" Width="600">
+        Title="Change Color Theme" Height="350" Width="600">
     <Window.Resources>
 
         <DataTemplate x:Key="selectedThemeTemplate">
@@ -40,7 +40,7 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Color Scheme:"
+        <TextBlock Text="Color Theme:"
                    Margin="5,15,0,0"/>
 
         <ComboBox x:Name="cboThemes"
