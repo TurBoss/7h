@@ -286,6 +286,7 @@ namespace SeventhHeaven.ViewModels
             }
             else
             {
+                InitColorTextInput();
                 ApplyCustomTheme();
                 return;
             }
