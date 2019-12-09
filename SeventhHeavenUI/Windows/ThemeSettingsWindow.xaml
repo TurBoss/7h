@@ -6,6 +6,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         mc:Ignorable="d"
+        Closing="windowTheme_Closing"
+        ResizeMode="NoResize"
         Style="{StaticResource MainWindowStyle}"
         Title="Change Color Theme" Height="350" Width="600">
     <Window.Resources>
@@ -47,11 +49,22 @@
                   SelectedItem="{Binding SelectedThemeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   ItemsSource="{Binding ThemeDropdownItems}"
                   HorizontalAlignment="Left"
+                  VerticalAlignment="Bottom"
                   SelectionChanged="cboThemes_SelectionChanged"
                   MinWidth="125"
                   Grid.Column="1"
                   Margin="5,10,0,0">
         </ComboBox>
+
+        <Button x:Name="btnLoad"
+                Grid.Column="1"
+                Content="..."
+                Click="btnLoad_Click"
+                ToolTip="Import Theme"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Margin="135,0,0,0"
+                Padding="10,3,10,3"/>
 
         <StackPanel Grid.Row="1"
                     Grid.Column="1"
@@ -290,20 +303,46 @@
         </StackPanel>
 
         <TextBlock Grid.Row="2"
-                   Grid.Column="1"
-                   Grid.ColumnSpan="2"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="3"
                    FontSize="13"
                    Text="{Binding StatusText, FallbackValue='Something about applying the theme'}"
                    TextWrapping="Wrap"
-                   Margin="0,0,120,0"/>
+                   Margin="5,0,220,5"/>
 
         <Button x:Name="btnSave"
                 Click="btnSave_Click"
                 Content="Save"
                 Grid.Row="2"
                 Grid.Column="2"
-                Margin="0,0,38,5"
-                Width="100"
+                Margin="0,0,123,5"
+                Width="80"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"/>
+        <ToggleButton x:Name="btnSaveAs"
+                      Click="btnSaveAs_Click"
+                      Grid.Row="2"
+                      Grid.Column="2"
+                      Margin="0,0,105,5"
+                      Padding="3,0,3,0"
+                      Height="{Binding ElementName=btnSave, Path=ActualHeight}"
+                      HorizontalAlignment="Right"
+                      VerticalAlignment="Bottom"
+                      Style="{StaticResource DownArrowToggleButton}">
+            <ToggleButton.ContextMenu>
+                <ContextMenu x:Name="menuSaveOptions" Closed="menuSaveOptions_Closed" ContextMenuService.Placement="Bottom">
+                    <MenuItem x:Name="menuExport" Header="Export Theme ..." Click="menuExport_Click"/>
+                </ContextMenu>
+            </ToggleButton.ContextMenu>
+        </ToggleButton>
+
+        <Button x:Name="btnCancel"
+                Content="Cancel"
+                Click="btnCancel_Click"
+                Grid.Row="2"
+                Grid.Column="2"
+                Margin="0,0,5,5"
+                Width="90"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"/>
 

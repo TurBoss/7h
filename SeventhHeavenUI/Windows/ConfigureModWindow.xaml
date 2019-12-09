@@ -13,7 +13,6 @@
         Closed="Window_Closed"
         Height="400" Width="600"
         ResizeMode="CanResize"
-        WindowStyle="ToolWindow"
         MinHeight="400" MinWidth="600"
         MaxHeight="800" MaxWidth="1000">
     <Window.Resources>

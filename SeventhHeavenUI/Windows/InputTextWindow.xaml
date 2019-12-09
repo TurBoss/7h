@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="{Binding WindowTitle, FallbackValue='Input Window'}" 
         Style="{StaticResource MainWindowStyle}"
-        WindowStyle="ToolWindow"
+        ResizeMode="NoResize"
         MinHeight="150" MinWidth="350"
         MaxHeight="250" MaxWidth="400"
         Height="175"

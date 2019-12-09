@@ -438,7 +438,7 @@ They will be automatically turned off.";
 
             InitLoaderContext();
 
-            ThemeSettingsViewModel.LoadTheme();
+            ThemeSettingsViewModel.LoadThemeFromFile();
 
             InitActiveProfile();
 

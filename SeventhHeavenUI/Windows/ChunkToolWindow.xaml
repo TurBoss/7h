@@ -7,7 +7,6 @@
         mc:Ignorable="d"
         Title="Chunk Tool" 
         Style="{StaticResource MainWindowStyle}"
-        WindowStyle="ToolWindow"
         ResizeMode="NoResize"
         Height="310" Width="450">
     <Grid>

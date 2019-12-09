@@ -8,8 +8,7 @@
         Style="{StaticResource MainWindowStyle}"
         Title="Open Profile" 
         ResizeMode="NoResize"
-        WindowStyle="ToolWindow"
-        Width="325" Height="400" >
+        Width="325" Height="400">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>

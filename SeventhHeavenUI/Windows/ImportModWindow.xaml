@@ -6,7 +6,6 @@
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         mc:Ignorable="d"
         Title="Import Mod"
-        WindowStyle="ToolWindow"
         ResizeMode="NoResize"
         Style="{StaticResource MainWindowStyle}"
         Height="240" Width="400">

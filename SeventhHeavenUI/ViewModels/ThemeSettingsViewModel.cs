@@ -13,7 +13,7 @@ using System.Windows.Media;
 
 namespace SeventhHeaven.ViewModels
 {
-    class ThemeSettingsViewModel : ViewModelBase
+    public class ThemeSettingsViewModel : ViewModelBase
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -70,7 +70,7 @@ namespace SeventhHeaven.ViewModels
             get
             {
                 if (_themeDropdownItems == null)
-                    _themeDropdownItems = new List<string>();
+                    _themeDropdownItems = new List<string>() { "Dark Mode", "Light Mode", "Custom" };
 
                 return _themeDropdownItems;
             }
@@ -185,7 +185,103 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public ThemeSettingsViewModel()
+        {
+            StatusText = "";
+            SelectedThemeText = GetSavedThemeName();
+            InitColorTextInput();
+        }
+
+        public ThemeSettingsViewModel(bool loadThemeXml)
+        {
+            StatusText = "";
+            SelectedThemeText = "Custom";
+
+            if (loadThemeXml)
+            {
+                SelectedThemeText = GetSavedThemeName();
+                InitColorTextInput();
+            }
+        }
+
+        /// <summary>
+        /// imports the theme.xml file and sets the app color brushes.
+        /// </summary>
+        internal static void LoadThemeFromFile()
+        {
+            string pathToThemeFile = Path.Combine(Sys.SysFolder, "theme.xml");
+
+            // dark theme will be applied as the default when theme.xml file does not exist
+            if (!File.Exists(pathToThemeFile))
+            {
+                new ThemeSettingsViewModel(loadThemeXml: false).ApplyDarkTheme();
+                return;
+            }
+
+            ImportTheme(pathToThemeFile);
+        }
+
+        /// <summary>
+        /// Reads theme .xml and sets App Brush resources
+        /// </summary>
+        /// <param name="themeFile"></param>
+        internal static void ImportTheme(string themeFile)
+        {
+            try
+            {
+                ThemeSettings theme = Util.Deserialize<ThemeSettings>(themeFile);
+                ThemeSettingsViewModel settingsViewModel = new ThemeSettingsViewModel(loadThemeXml: false);
+                
+                if (theme.Name == "Dark Mode")
+                {
+                    settingsViewModel.ApplyDarkTheme();
+                    return;
+                }
+                else if (theme.Name == "Light Mode")
+                {
+                    settingsViewModel.ApplyLightTheme();
+                    return;
+                }
+
+                settingsViewModel.ApplyThemeFromFile(themeFile);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
+        }
+
+        /// <summary>
+        /// Reads theme.xml file and returns Name of theme ("Dark Mode", "Light Mode", or "Custom")
+        /// </summary>
+        /// <returns></returns>
+        internal static string GetSavedThemeName()
+        {
+            try
+            {
+                string pathToThemeFile = Path.Combine(Sys.SysFolder, "theme.xml");
+                ThemeSettings savedTheme = Util.Deserialize<ThemeSettings>(pathToThemeFile);
+                return savedTheme.Name;
+            }
+            catch (Exception e)
+            {
+                Logger.Warn(e);
+            }
+
+            return "Dark Mode";
+        }
+
+        /// <summary>
+        /// saves current colors to theme.xml
+        /// </summary>
         internal void SaveTheme()
+        {
+            string pathToThemeFile = Path.Combine(Sys.SysFolder, "theme.xml");
+            SaveTheme(pathToThemeFile);
+            StatusText = "Theme saved!";
+        }
+
+        internal void SaveTheme(string pathToTheme)
         {
             ThemeSettings settings = new ThemeSettings()
             {
@@ -204,16 +300,15 @@ namespace SeventhHeaven.ViewModels
                 settings.PrimaryControlPressed = ControlPressedText;
             }
 
-            string pathToThemeFile = Path.Combine(Sys.SysFolder, "theme.xml");
 
             try
             {
-                using (FileStream file = new FileStream(pathToThemeFile, FileMode.Create, FileAccess.ReadWrite))
+                using (FileStream file = new FileStream(pathToTheme, FileMode.Create, FileAccess.ReadWrite))
                 {
                     Util.Serialize(settings, file);
                 }
 
-                StatusText = "Theme saved!";
+                StatusText = $"Theme saved as {Path.GetFileName(pathToTheme)}";
             }
             catch (Exception e)
             {
@@ -223,66 +318,16 @@ namespace SeventhHeaven.ViewModels
 
         }
 
-        internal static void LoadTheme()
-        {
-            try
-            {
-                string pathToThemeFile = Path.Combine(Sys.SysFolder, "theme.xml");
-                ThemeSettings savedTheme = Util.Deserialize<ThemeSettings>(pathToThemeFile);
-
-                App.Current.Resources["PrimaryAppBackground"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(savedTheme.PrimaryAppBackground));
-                App.Current.Resources["SecondaryAppBackground"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(savedTheme.SecondaryAppBackground));
-
-                App.Current.Resources["PrimaryControlBackground"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(savedTheme.PrimaryControlBackground));
-                App.Current.Resources["PrimaryControlForeground"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(savedTheme.PrimaryControlForeground));
-                App.Current.Resources["PrimaryControlPressed"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(savedTheme.PrimaryControlPressed));
-                App.Current.Resources["PrimaryControlMouseOver"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(savedTheme.PrimaryControlMouseOver));
-
-                App.Current.Resources["PrimaryControlDisabledBackground"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(savedTheme.PrimaryControlDisabledBackground));
-                App.Current.Resources["PrimaryControlDisabledForeground"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(savedTheme.PrimaryControlDisabledForeground));
-
-                App.Current.Resources["iconColorBrush"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(savedTheme.PrimaryControlForeground));
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-            }
-        }
-
         internal void ChangeTheme()
         {
-            Color? darkBg = null;
-            Color? secondBg = null;
-            Color? controlBg = null;
-            Color? controlFg = null;
-            Color? controlPressed = null;
-            Color? controlMouseOver = null;
-            Color? controlDisabledBg = null;
-            Color? controlDisabledFg = null;
-
-
             if (SelectedThemeText == "Dark Mode")
             {
-                darkBg = App.Current.TryFindResource("DarkBackgroundColor") as Color?;
-                secondBg = App.Current.TryFindResource("MedDarkBackgroundColor") as Color?;
-                controlBg = App.Current.TryFindResource("DarkControlBackground") as Color?;
-                controlFg = App.Current.TryFindResource("DarkControlForeground") as Color?;
-                controlPressed = App.Current.TryFindResource("DarkControlPressed") as Color?;
-                controlMouseOver = App.Current.TryFindResource("DarkControlMouseOver") as Color?;
-                controlDisabledBg = App.Current.TryFindResource("DarkControlDisabledBackground") as Color?;
-                controlDisabledFg = App.Current.TryFindResource("DarkControlDisabledForeground") as Color?;
+                ApplyDarkTheme();
 
             }
             else if (SelectedThemeText == "Light Mode")
             {
-                darkBg = App.Current.TryFindResource("LightBackgroundColor") as Color?;
-                secondBg = App.Current.TryFindResource("MedLightBackgroundColor") as Color?;
-                controlBg = App.Current.TryFindResource("LightControlBackground") as Color?;
-                controlFg = App.Current.TryFindResource("LightControlForeground") as Color?;
-                controlPressed = App.Current.TryFindResource("LightControlPressed") as Color?;
-                controlMouseOver = App.Current.TryFindResource("LightControlMouseOver") as Color?;
-                controlDisabledBg = App.Current.TryFindResource("LightControlDisabledBackground") as Color?;
-                controlDisabledFg = App.Current.TryFindResource("LightControlDisabledForeground") as Color?;
+                ApplyLightTheme();
             }
             else
             {
@@ -290,6 +335,18 @@ namespace SeventhHeaven.ViewModels
                 ApplyCustomTheme();
                 return;
             }
+        }
+
+        private void ApplyLightTheme()
+        {
+            Color? darkBg = App.Current.TryFindResource("LightBackgroundColor") as Color?;
+            Color? secondBg = App.Current.TryFindResource("MedLightBackgroundColor") as Color?;
+            Color? controlBg = App.Current.TryFindResource("LightControlBackground") as Color?;
+            Color? controlFg = App.Current.TryFindResource("LightControlForeground") as Color?;
+            Color? controlPressed = App.Current.TryFindResource("LightControlPressed") as Color?;
+            Color? controlMouseOver = App.Current.TryFindResource("LightControlMouseOver") as Color?;
+            Color? controlDisabledBg = App.Current.TryFindResource("LightControlDisabledBackground") as Color?;
+            Color? controlDisabledFg = App.Current.TryFindResource("LightControlDisabledForeground") as Color?;
 
             AppBackgroundText = ColorToHexString(darkBg.Value);
             SecondaryBackgroundText = ColorToHexString(secondBg.Value);
@@ -300,21 +357,36 @@ namespace SeventhHeaven.ViewModels
             ControlDisabledBgText = ColorToHexString(controlDisabledBg.Value);
             ControlDisabledFgText = ColorToHexString(controlDisabledFg.Value);
 
-            App.Current.Resources["PrimaryAppBackground"] = new SolidColorBrush(darkBg.Value);
-            App.Current.Resources["SecondaryAppBackground"] = new SolidColorBrush(secondBg.Value);
-
-            App.Current.Resources["PrimaryControlBackground"] = new SolidColorBrush(controlBg.Value);
-            App.Current.Resources["PrimaryControlForeground"] = new SolidColorBrush(controlFg.Value);
-            App.Current.Resources["PrimaryControlPressed"] = new SolidColorBrush(controlPressed.Value);
-            App.Current.Resources["PrimaryControlMouseOver"] = new SolidColorBrush(controlMouseOver.Value);
-
-            App.Current.Resources["PrimaryControlDisabledBackground"] = new SolidColorBrush(controlDisabledBg.Value);
-            App.Current.Resources["PrimaryControlDisabledForeground"] = new SolidColorBrush(controlDisabledFg.Value);
-
-            App.Current.Resources["iconColorBrush"] = new SolidColorBrush(controlFg.Value);
+            ApplyCustomTheme();
         }
 
-        private void ApplyCustomTheme()
+        private void ApplyDarkTheme()
+        {
+            Color? darkBg = App.Current.TryFindResource("DarkBackgroundColor") as Color?;
+            Color? secondBg = App.Current.TryFindResource("MedDarkBackgroundColor") as Color?;
+            Color? controlBg = App.Current.TryFindResource("DarkControlBackground") as Color?;
+            Color? controlFg = App.Current.TryFindResource("DarkControlForeground") as Color?;
+            Color? controlPressed = App.Current.TryFindResource("DarkControlPressed") as Color?;
+            Color? controlMouseOver = App.Current.TryFindResource("DarkControlMouseOver") as Color?;
+            Color? controlDisabledBg = App.Current.TryFindResource("DarkControlDisabledBackground") as Color?;
+            Color? controlDisabledFg = App.Current.TryFindResource("DarkControlDisabledForeground") as Color?;
+
+            AppBackgroundText = ColorToHexString(darkBg.Value);
+            SecondaryBackgroundText = ColorToHexString(secondBg.Value);
+            ControlBackgroundText = ColorToHexString(controlBg.Value);
+            ControlForegroundText = ColorToHexString(controlFg.Value);
+            ControlPressedText = ColorToHexString(controlPressed.Value);
+            ControlMouseOverText = ColorToHexString(controlMouseOver.Value);
+            ControlDisabledBgText = ColorToHexString(controlDisabledBg.Value);
+            ControlDisabledFgText = ColorToHexString(controlDisabledFg.Value);
+
+            ApplyCustomTheme();
+        }
+
+        /// <summary>
+        /// Updates App brush resources based on properties in view model (e.g. <see cref="AppBackgroundText"/>, <see cref="ControlBackgroundText"/>, etc...)
+        /// </summary>
+        internal void ApplyCustomTheme()
         {
             try
             {
@@ -338,27 +410,40 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-        private string ColorToHexString(Color color)
-        {
-            return string.Format("#{0:X2}{1:X2}{2:X2}{3:X2}", color.A, color.R, color.G, color.B);
-        }
-
-        private string GetSavedThemeName()
+        /// <summary>
+        /// Updates app brush resources from valid theme .xml file
+        /// </summary>
+        /// <param name="themeFile"></param>
+        internal void ApplyThemeFromFile(string themeFile)
         {
             try
             {
-                string pathToThemeFile = Path.Combine(Sys.SysFolder, "theme.xml");
-                ThemeSettings savedTheme = Util.Deserialize<ThemeSettings>(pathToThemeFile);
-                return savedTheme.Name;
+                ThemeSettings theme = Util.Deserialize<ThemeSettings>(themeFile);
+
+                AppBackgroundText = theme.PrimaryAppBackground;
+                SecondaryBackgroundText = theme.SecondaryAppBackground;
+                ControlBackgroundText = theme.PrimaryControlBackground;
+                ControlForegroundText = theme.PrimaryControlForeground;
+                ControlPressedText = theme.PrimaryControlPressed;
+                ControlMouseOverText = theme.PrimaryControlMouseOver;
+                ControlDisabledBgText = theme.PrimaryControlDisabledBackground;
+                ControlDisabledFgText = theme.PrimaryControlDisabledForeground;
+
+                ApplyCustomTheme();
+                SelectedThemeText = "Custom";
+
+                StatusText = "Theme loaded! Click 'Save' to save this theme as the default ...";
             }
             catch (Exception e)
             {
                 Logger.Warn(e);
+                StatusText = $"Failed to load theme: {e.Message}";
             }
-
-            return "Dark Mode";
         }
 
+        /// <summary>
+        /// Reads theme.xml file and sets properties in view model
+        /// </summary>
         private void InitColorTextInput()
         {
             ThemeSettings savedTheme = null;
@@ -374,7 +459,7 @@ namespace SeventhHeaven.ViewModels
                 return;
             }
 
-            if (savedTheme == null)
+            if (savedTheme == null || savedTheme?.Name != "Custom")
             {
                 return;
             }
@@ -389,12 +474,9 @@ namespace SeventhHeaven.ViewModels
             ControlDisabledFgText = savedTheme.PrimaryControlDisabledForeground;
         }
 
-        public ThemeSettingsViewModel()
+        public static string ColorToHexString(Color color)
         {
-            StatusText = "";
-            SelectedThemeText = GetSavedThemeName();
-            InitColorTextInput();
-            ThemeDropdownItems = new List<string>() { "Dark Mode", "Light Mode", "Custom" };
+            return string.Format("#{0:X2}{1:X2}{2:X2}{3:X2}", color.A, color.R, color.G, color.B);
         }
     }
 }

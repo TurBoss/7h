@@ -8,7 +8,6 @@
         mc:Ignorable="d"
         Style="{StaticResource MainWindowStyle}"
         Title="IRO Tools"
-        WindowStyle="ToolWindow"
         ResizeMode="NoResize"
         Height="325" Width="500">
     <Grid>

@@ -9,7 +9,6 @@
         Title="General Settings" 
         MinHeight="475" MinWidth="775"
         Height="475" Width="775"
-        WindowStyle="ToolWindow"
         MaxHeight="475" MaxWidth="1300">
     <Window.Resources>
         <Style x:Key="MultiLineTextBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource PrimaryTextBoxStyle}">
