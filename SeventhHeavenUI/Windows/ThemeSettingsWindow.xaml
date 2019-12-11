@@ -9,7 +9,7 @@
         Closing="windowTheme_Closing"
         ResizeMode="NoResize"
         Style="{StaticResource MainWindowStyle}"
-        Title="Change Color Theme" Height="350" Width="600">
+        Title="Change Color Theme" Height="350" Width="550">
     <Window.Resources>
 
         <DataTemplate x:Key="selectedThemeTemplate">
@@ -32,7 +32,7 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="10"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
@@ -42,29 +42,34 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Color Theme:"
-                   Margin="5,15,0,0"/>
+        <WrapPanel Grid.Column="1"
+                   Grid.ColumnSpan="2"
+                   HorizontalAlignment="Left">
+            <TextBlock Text="Color Theme:"
+                       Margin="0,15,0,0"/>
 
-        <ComboBox x:Name="cboThemes"
-                  SelectedItem="{Binding SelectedThemeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  ItemsSource="{Binding ThemeDropdownItems}"
-                  HorizontalAlignment="Left"
-                  VerticalAlignment="Bottom"
-                  SelectionChanged="cboThemes_SelectionChanged"
-                  MinWidth="125"
-                  Grid.Column="1"
-                  Margin="5,10,0,0">
-        </ComboBox>
+            <ComboBox x:Name="cboThemes"
+                      SelectedItem="{Binding SelectedThemeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{Binding ThemeDropdownItems}"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Bottom"
+                      SelectionChanged="cboThemes_SelectionChanged"
+                      MinWidth="125"
+                      Grid.Column="1"
+                      Margin="5,10,0,0">
+            </ComboBox>
 
-        <Button x:Name="btnLoad"
-                Grid.Column="1"
-                Content="..."
-                Click="btnLoad_Click"
-                ToolTip="Import Theme"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                Margin="135,0,0,0"
-                Padding="10,3,10,3"/>
+            <Button x:Name="btnLoad"
+                    Grid.Column="1"
+                    Content="Import"
+                    Click="btnLoad_Click"
+                    ToolTip="Import Theme"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    Margin="5,0,0,0"
+                    Padding="10,3,10,3"/>
+        </WrapPanel>
+        
 
         <StackPanel Grid.Row="1"
                     Grid.Column="1"
@@ -303,12 +308,12 @@
         </StackPanel>
 
         <TextBlock Grid.Row="2"
-                   Grid.Column="0"
-                   Grid.ColumnSpan="3"
+                   Grid.Column="1"
+                   Grid.ColumnSpan="2"
                    FontSize="13"
                    Text="{Binding StatusText, FallbackValue='Something about applying the theme'}"
                    TextWrapping="Wrap"
-                   Margin="5,0,220,5"/>
+                   Margin="0,0,220,5"/>
 
         <Button x:Name="btnSave"
                 Click="btnSave_Click"

@@ -40,6 +40,7 @@ namespace SeventhHeaven.Windows
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.SaveTheme();
+            this.Close();
         }
 
         private void TextBox_KeyDown(object sender, KeyEventArgs e)

@@ -234,6 +234,148 @@ It may not work properly unless you find and install the requirements.";
             return selected;
         }
 
+        internal Task CheckForCatalogUpdatesAsync(object state)
+        {
+            Task t = Task.Factory.StartNew(() =>
+            {
+                List<Guid> pingIDs = null;
+                var options = (CatCheckOptions)state;
+                string catFile = Path.Combine(Sys.SysFolder, "catalog.xml");
+
+                Directory.CreateDirectory(Path.Combine(Sys.SysFolder, "temp"));
+
+                int subTotalCount = Sys.Settings.SubscribedUrls.Count; // amount of subscriptions to update
+                int subUpdateCount = 0; // amount of subscriptions updated
+
+                if (options.ForceCheck)
+                {
+                    // on force check, initialize a new catalog to ignore any cached items
+                    Sys.SetNewCatalog(new Catalog());
+                }
+
+                foreach (string subscribe in Sys.Settings.SubscribedUrls.ToArray())
+                {
+                    Subscription sub = Sys.Settings.Subscriptions.Find(s => s.Url.Equals(subscribe, StringComparison.InvariantCultureIgnoreCase));
+                    if (sub == null)
+                    {
+                        sub = new Subscription() { Url = subscribe, FailureCount = 0, LastSuccessfulCheck = DateTime.MinValue };
+                        Sys.Settings.Subscriptions.Add(sub);
+                    }
+
+                    if ((sub.LastSuccessfulCheck < DateTime.Now.AddDays(-1)) || options.ForceCheck)
+                    {
+                        Logger.Info($"Checking subscription {sub.Url}");
+
+                        string uniqueFileName = $"cattemp{Path.GetRandomFileName()}.xml"; // save temp catalog update to unique filename so multiple catalog updates can download async
+                        string path = Path.Combine(Sys.SysFolder, "temp", uniqueFileName);
+
+                        Sys.Downloads.Download(subscribe, path, $"Checking catalog {subscribe}", new Install.InstallProcedureCallback(e =>
+                        {
+                            bool success = (e.Error == null && e.Cancelled == false);
+                            subUpdateCount++;
+
+                            if (success)
+                            {
+                                try
+                                {
+                                    Catalog c = Util.Deserialize<Catalog>(path);
+
+                                    lock (Sys.CatalogLock) // put a lock on the Catalog so multiple threads can only merge one at a time
+                                    {
+                                        Sys.Catalog = Catalog.Merge(Sys.Catalog, c, out pingIDs);
+
+                                        using (FileStream fs = new FileStream(catFile, FileMode.Create))
+                                        {
+                                            Util.Serialize(Sys.Catalog, fs);
+                                        }
+                                    }
+
+                                    Sys.Message(new WMessage() { Text = $"Updated catalog from {subscribe}" });
+
+                                    sub.LastSuccessfulCheck = DateTime.Now;
+                                    sub.FailureCount = 0;
+
+                                    // delete temp catalog
+                                    if (File.Exists(path))
+                                    {
+                                        File.Delete(path);
+                                    }
+
+
+                                    foreach (Guid id in pingIDs)
+                                    {
+                                        Sys.Ping(id);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.Error(ex);
+
+                                    sub.FailureCount++;
+                                    Sys.Message(new WMessage() { Text = $"Failed to load subscription {subscribe}: {ex.Message}" });
+                                }
+                            }
+                            else
+                            {
+                                Logger.Warn(e.Error?.Message, "catalog download failed");
+                                sub.FailureCount++;
+                            }
+
+                            // reload the UI list of catalog mods and scan for any mod updates once all subs have been attempted to download
+                            if (subUpdateCount == subTotalCount)
+                            {
+                                ReloadModList(GetSelectedMod()?.Mod.ID);
+                                ScanForModUpdates();
+                            }
+
+                        }), null);
+                    }
+                    else
+                    {
+                        subTotalCount -= 1; // This catalog does not have to be updated
+                    }
+                }
+            });
+
+            return t;
+        }
+
+        internal void ForceCheckCatalogUpdateAsync()
+        {
+            Task t = CheckForCatalogUpdatesAsync(new CatCheckOptions() { ForceCheck = true });
+
+            t.ContinueWith((taskResult) =>
+            {
+                if (taskResult.IsFaulted)
+                {
+                    Logger.Warn(taskResult.Exception);
+                }
+            });
+        }
+
+        private void ScanForModUpdates()
+        {
+            foreach (InstalledItem inst in Sys.Library.Items)
+            {
+                Mod cat = Sys.GetModFromCatalog(inst.ModID);
+
+                if (cat != null && cat.LatestVersion.Version > inst.Versions.Max(v => v.VersionDetails.Version))
+                {
+                    switch (inst.UpdateType)
+                    {
+                        case UpdateType.Notify:
+                            Sys.Message(new WMessage() { Text = $"New version of {cat.Name} available", Link = "iros://" + cat.ID.ToString() });
+                            Sys.Ping(inst.ModID);
+                            break;
+
+                        case UpdateType.Install:
+                            Install.DownloadAndInstall(cat);
+                            break;
+                    }
+                }
+            }
+        }
+
         #region Methods Related to Downloads
 
         internal void CancelDownload(DownloadItemViewModel downloadItemViewModel)

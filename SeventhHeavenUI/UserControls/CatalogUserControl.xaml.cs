@@ -1,4 +1,5 @@
 ﻿using SeventhHeavenUI.ViewModels;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,6 +10,8 @@ namespace SeventhHeaven.UserControls
     /// </summary>
     public partial class CatalogUserControl : UserControl
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         CatalogViewModel ViewModel { get; set; }
 
         public CatalogUserControl()
@@ -29,7 +32,8 @@ namespace SeventhHeaven.UserControls
 
         private void btnRefresh_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            ViewModel.ReloadModList(ViewModel.GetSelectedMod()?.Mod?.ID);
+            ViewModel.ForceCheckCatalogUpdateAsync();
+            RecalculateColumnWidths();
         }
 
         private void btnDownload_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -60,6 +64,54 @@ namespace SeventhHeaven.UserControls
             {
                 ViewModel.DownloadMod((lstCatalogMods.SelectedItem as CatalogModItemViewModel));
             }
+        }
+
+        internal void RecalculateColumnWidths(double listWidth)
+        {
+            double scrollBarWidth = 15;
+            double staticColumnWidth = 40 + 90 + 90 + 60; // sum of columns with static widths
+
+            if (listWidth == 0)
+            {
+                return; // ActualWidth could be zero if list has not been rendered yet
+            }
+
+            var scrollBarVis = ScrollViewer.GetVerticalScrollBarVisibility(lstCatalogMods);
+
+            if (scrollBarVis == ScrollBarVisibility.Visible)
+            {
+                scrollBarWidth = 15;
+            }
+
+            double remainingWidth = listWidth - staticColumnWidth - scrollBarWidth;
+
+            double nameWidth = (0.66) * remainingWidth; // Name takes 66% of remaining width
+            double authorWidth = (0.33) * remainingWidth; // Author takes up 33% of remaining width
+
+            double minNameWidth = 100; // don't resize columns less than the minimums
+            double minAuthorWidth = 60;
+
+            try
+            {
+                if (nameWidth < listWidth && nameWidth > minNameWidth)
+                {
+                    colName.Width = nameWidth;
+                }
+
+                if (authorWidth < listWidth && authorWidth > minAuthorWidth)
+                {
+                    colAuthor.Width = authorWidth;
+                }
+            }
+            catch (System.Exception e)
+            {
+                Logger.Warn(e, "failed to resize columns");
+            }
+        }
+
+        internal void RecalculateColumnWidths()
+        {
+            RecalculateColumnWidths(lstCatalogMods.ActualWidth);
         }
     }
 }

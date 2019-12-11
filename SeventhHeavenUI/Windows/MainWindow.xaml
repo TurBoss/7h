@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SeventhHeavenUI"
         xmlns:ctrl="clr-namespace:SeventhHeaven.UserControls"
         xmlns:cls="clr-namespace:SeventhHeaven.Classes"
-        xmlns:gif="http://wpfanimatedgif.codeplex.com"
+        xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
         mc:Ignorable="d"
         Title="{Binding WindowTitle, FallbackValue='7th Heaven v2.0.0 - Mod Manager for Final Fantasy 7 [Current Loaded Profile]'}"
         Style="{StaticResource MainWindowStyle}"
@@ -70,13 +70,14 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="1.75*"/>
+            <ColumnDefinition Width="222*"/>
+            <ColumnDefinition Width="139*"/>
+            <ColumnDefinition Width="631*"/>
         </Grid.ColumnDefinitions>
-        
-        
 
-        <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5,0,0">
+
+
+        <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5,0,0" Grid.ColumnSpan="2">
             <cls:ButtonWithImage x:Name="btnPlay" Content="Play" Margin="5,0,5,0" Click="btnPlay_Click" TemplateSource="{StaticResource iconPlay}"/>
             <ToggleButton x:Name="btnPlayOptions" Style="{StaticResource DownArrowToggleButton}" Margin="-3,0,0,0" Click="btnPlayOptions_Click" ContextMenuService.Placement="Bottom">
                 <ToggleButton.ContextMenu>
@@ -92,24 +93,22 @@
                 <cls:ButtonWithImage.ContextMenu>
                     <ContextMenu x:Name="menuSettings" Closed="menuSettings_Closed">
                         <MenuItem x:Name="menuItemGeneralSettings" Header="General Settings" Click="menuItemGeneralSettings_Click"/>
-                        <MenuItem x:Name="menuItemAaliSettings" Header="Aali Driver Settings"/>
-                        <MenuItem x:Name="menuItemThemeSettings" Header="Change Color Theme" Click="menuItemThemeSettings_Click"/>
+                        <MenuItem x:Name="menuItemAaliSettings" Header="Configure OpenGL Driver..."/>
+                        <MenuItem x:Name="menuItemThemeSettings" Header="Change Color Theme..." Click="menuItemThemeSettings_Click"/>
                         <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
                         <MenuItem x:Name="menuItemNewProfile" Header="New Profile" Click="menuItemNewProfile_Click"/>
                         <MenuItem x:Name="menuItemOpenProfile" Header="Open Profile" Click="menuItemOpenProfile_Click"/>
                         <MenuItem x:Name="menuItemProfileDetails" Header="Profile Details" Click="menuItemProfileDetails_Click"/>
-                        <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
-                        <MenuItem x:Name="menuUpdateCatalog" Header="Update Catalog ..." Click="menuUpdateCatalog_Click"/>
                     </ContextMenu>
                 </cls:ButtonWithImage.ContextMenu>
             </cls:ButtonWithImage>
-            
+
             <cls:ButtonWithImage x:Name="btnTools" Content="Tools" Margin="5,0,5,0" Style="{StaticResource ButtonWithImageAndDownArrow}" TemplateSource="{StaticResource iconTools}" ContextMenuService.Placement="Bottom" Click="btnTools_Click">
                 <cls:ButtonWithImage.ContextMenu>
                     <ContextMenu x:Name="menuTools" PlacementTarget="{Binding ElementName=btnTools}" Closed="menuTools_Closed">
-                        <MenuItem x:Name="menuItemIroCreation" Header="IRO Creation Tool" Click="menuItemIroCreation_Click"/>
-                        <MenuItem x:Name="menuItemChunkTool" Header="Chunk Tool" Click="menuItemChunkTool_Click"/>
-                        <MenuItem x:Name="menuItemCatalogCreation" Header="Catalog Creation Tool"/>
+                        <MenuItem x:Name="menuItemIroCreation" Header="IRO Tools..." Click="menuItemIroCreation_Click"/>
+                        <MenuItem x:Name="menuItemChunkTool" Header="Chunk Tool..." Click="menuItemChunkTool_Click"/>
+                        <MenuItem x:Name="menuItemCatalogCreation" Header="Catalog/Mod Creation Tool..."/>
                     </ContextMenu>
                 </cls:ButtonWithImage.ContextMenu>
             </cls:ButtonWithImage>
@@ -119,8 +118,7 @@
         </WrapPanel>
 
         <GroupBox Header=" Mod Info "
-                  Grid.Row="1"
-                  Margin="5,-10,3,1">
+                  Margin="5,39,3,1" Grid.ColumnSpan="2" Grid.RowSpan="2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="2*"/>
@@ -197,13 +195,30 @@
                     </Grid>
                 </ScrollViewer>
 
+
+                <!--Loader gif shown when image is loading-->
+                <Image Grid.Row="1"
+                       Margin="3"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Stretch="Uniform"
+                       Height="64"
+                       Visibility="{Binding LoadingGifVisibility}"
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                       gif:AnimationBehavior.AutoStart="True"
+                       gif:AnimationBehavior.RepeatBehavior="Forever"
+                       gif:AnimationBehavior.SourceUri="/SeventhHeaven;component/Resources/circleLoader.gif"/>
+
+
                 <Image Grid.Row="1"
                        Margin="3"
                        HorizontalAlignment="Stretch"
                        VerticalAlignment="Stretch"
                        Stretch="Uniform"
                        RenderOptions.BitmapScalingMode="HighQuality"
-                       gif:ImageBehavior.AnimatedSource="{Binding PreviewModImageSource}">
+                       gif:AnimationBehavior.AutoStart="True"
+                       gif:AnimationBehavior.Loaded="Image_Loaded"
+                       gif:AnimationBehavior.SourceUri="{Binding PreviewModImageSource}">
                     <Image.Style>
                         <!--Custom style to hide image when loading-->
                         <Style TargetType="{x:Type Image}">
@@ -217,26 +232,6 @@
                     </Image.Style>
                 </Image>
 
-                <!--Loader gif shown when image is loading-->
-                <Image Grid.Row="1"
-                       Margin="3"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       Stretch="Uniform"
-                       Height="64"
-                       RenderOptions.BitmapScalingMode="HighQuality"
-                       gif:ImageBehavior.AnimatedSource="../Resources/circleLoader.gif">
-                    <Image.Style>
-                        <Style TargetType="{x:Type Image}">
-                            <Setter Property="Visibility" Value="Hidden"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding PreviewModImageSource}" Value="{x:Null}">
-                                    <Setter Property="Visibility" Value="Visible"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Image.Style>
-                </Image>
 
             </Grid>
         </GroupBox>
@@ -244,8 +239,9 @@
         <TabControl x:Name="tabCtrlMain"
                     Grid.Row="0"
                     Grid.RowSpan="2"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    SelectionChanged="tabCtrlMain_SelectionChanged"
                     Margin="0,23,5,1">
             <TabItem Header="My Mods" Padding="10,0,10,0">
                 <ctrl:MyModsUserControl x:Name="ctrlMyMods"/>
@@ -254,11 +250,11 @@
                 <ctrl:CatalogUserControl x:Name="ctrlCatalog"/>
             </TabItem>
         </TabControl>
-        
+
         <TextBox x:Name="txtSearch"
                  Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  KeyDown="txtSearch_KeyDown"
-                 Grid.Column="1"
+                 Grid.Column="2"
                  HorizontalAlignment="Right"
                  VerticalAlignment="Top"
                  VerticalContentAlignment="Center"
@@ -269,12 +265,12 @@
 
         <TextBlock Text="Type here and press enter to search ..."
                    Foreground="{DynamicResource PrimaryControlDisabledForeground}"
-                   Grid.Column="1"
+                   Grid.Column="2"
                    IsHitTestVisible="False"
                    Panel.ZIndex="10"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Top"
-                   Margin="0,29,112,0">
+                   Margin="0,29,111,0">
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
                     <Setter Property="Visibility" Value="Hidden"/>
@@ -295,7 +291,7 @@
                       Background="Transparent"
                       Width="24"
                       Height="22"
-                      Grid.Column="1"
+                      Grid.Column="2"
                       HorizontalAlignment="Right"
                       VerticalAlignment="Top"
                       VerticalContentAlignment="Center"
@@ -307,7 +303,7 @@
                Placement="Bottom"
                HorizontalOffset="-140"
                PlacementTarget="{Binding ElementName=btnFilters}"
-               StaysOpen="False">
+               StaysOpen="False" Grid.ColumnSpan="2" Margin="0,0,0,26">
             <Grid>
                 <ListBox MinWidth="165"
                          FontSize="13"
@@ -320,7 +316,7 @@
         </Popup>
 
 
-        <StatusBar Grid.Row="2" Grid.ColumnSpan="2" Margin="0,5,0,0">
+        <StatusBar Grid.Row="2" Grid.ColumnSpan="3" Margin="0,5,0,0">
             <StatusBarItem>
                 <TextBlock x:Name="txtStatusMessage"
                            Text="{Binding StatusMessage, FallbackValue='Some message to the user ...'}"

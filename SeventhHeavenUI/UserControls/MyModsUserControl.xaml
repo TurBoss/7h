@@ -23,6 +23,7 @@
         <ListView x:Name="lstMods" 
                   ItemsSource="{Binding ModList}"
                   SelectionChanged="lstMods_SelectionChanged"
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
                   ScrollViewer.CanContentScroll="False"
                   VirtualizingStackPanel.IsVirtualizing="False">
             <ListView.View>
@@ -31,7 +32,7 @@
                     <GridViewColumn x:Name="colAuthor" Header="Author" Width="Auto" DisplayMemberBinding="{Binding Author}"/>
                     <GridViewColumn Header="Ver." Width="40" DisplayMemberBinding="{Binding Version}"/>
                     <GridViewColumn Header="Released" Width="90" DisplayMemberBinding="{Binding ReleaseDate}"/>
-                    <GridViewColumn Header="Category" Width="90" DisplayMemberBinding="{Binding Category}"/>
+                    <GridViewColumn Header="Category" Width="100" DisplayMemberBinding="{Binding Category}"/>
                     <GridViewColumn x:Name="colActive" Header="Active" Width="75">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -74,6 +75,13 @@
                     VerticalAlignment="Top"
                     HorizontalAlignment="Right">
 
+            <Button x:Name="btnImport" 
+                    Style="{StaticResource ImageButton}"
+                    Content="{StaticResource iconImport}"
+                    Click="btnImport_Click"
+                    ToolTip="Import Mod"
+                    Margin="0,0,0,0"/>
+
             <Button x:Name="btnMoveTop" 
                     Style="{StaticResource ImageButton}"
                     Content="{StaticResource iconUpArrow}"
@@ -100,27 +108,12 @@
                     Click="btnSendBottom_Click"
                     ToolTip="Send to Bottom"
                     Margin="0,0,0,0"/>
-            
+
             <Button x:Name="btnConfigure" 
                     Style="{StaticResource ImageButton}"
                     Content="{StaticResource iconSettings}"
                     Click="btnConfigure_Click"
                     ToolTip="Configure Mod"
-                    Margin="0,0,0,0"/>
-            
-            <Button x:Name="btnUninstall" 
-                    Style="{StaticResource ImageButton}"
-                    Content="{StaticResource iconDelete}"
-                    Click="btnUninstall_Click"
-                    ToolTip="Uninstall Mod"
-                    Margin="0,0,0,0"/>
-            
-
-            <Button x:Name="btnImport" 
-                    Style="{StaticResource ImageButton}"
-                    Content="{StaticResource iconImport}"
-                    Click="btnImport_Click"
-                    ToolTip="Import Mod"
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnActivateAll" 
@@ -142,6 +135,13 @@
                     Content="{StaticResource iconRefresh}"
                     Click="btnRefresh_Click"
                     ToolTip="Refresh List"
+                    Margin="0,0,0,0"/>
+
+            <Button x:Name="btnUninstall" 
+                    Style="{StaticResource ImageButton}"
+                    Content="{StaticResource iconDelete}"
+                    Click="btnUninstall_Click"
+                    ToolTip="Uninstall Mod"
                     Margin="0,0,0,0"/>
 
         </StackPanel>

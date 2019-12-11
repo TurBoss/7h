@@ -84,6 +84,7 @@ They will be automatically turned off.";
         private static Dictionary<string, _7thWrapperLib.ModInfo> _infoCache = new Dictionary<string, _7thWrapperLib.ModInfo>(StringComparer.InvariantCultureIgnoreCase);
         private Dictionary<string, Process> _alsoLaunchProcesses = new Dictionary<string, Process>(StringComparer.InvariantCultureIgnoreCase);
         private Dictionary<string, _7HPlugin> _plugins = new Dictionary<string, _7HPlugin>(StringComparer.InvariantCultureIgnoreCase);
+        private Visibility _loadingGifVisibility;
 
         public string WindowTitle
         {
@@ -114,20 +115,21 @@ They will be automatically turned off.";
             }
             set
             {
-                _selectedTabIndex = value;
-                NotifyPropertyChanged();
-                
-                ReloadAvailableFilters();
+                if (_selectedTabIndex != value)
+                {
+                    _selectedTabIndex = value;
+                    NotifyPropertyChanged();
 
-                if ((TabIndex)_selectedTabIndex == TabIndex.MyMods)
-                {
-                    ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedCategories, CheckedTags);
-                    UpdateModPreviewInfo(ModsViewModel.GetSelectedMod());
-                }
-                else
-                {
-                    CatalogViewModel.ReloadModList(CatalogViewModel.GetSelectedMod()?.Mod.ID, SearchText, CheckedCategories, CheckedTags);
-                    UpdateModPreviewInfo(CatalogViewModel.GetSelectedMod());
+                    ReloadAvailableFilters();
+
+                    if ((TabIndex)_selectedTabIndex == TabIndex.MyMods)
+                    {
+                        UpdateModPreviewInfo(ModsViewModel.GetSelectedMod());
+                    }
+                    else
+                    {
+                        UpdateModPreviewInfo(CatalogViewModel.GetSelectedMod());
+                    }
                 }
             }
         }
@@ -285,8 +287,11 @@ They will be automatically turned off.";
             }
             set
             {
-                _previewModImageSource = value;
-                NotifyPropertyChanged();
+                if (_previewModImageSource == null || !_previewModImageSource.Equals(value))
+                {
+                    _previewModImageSource = value;
+                    NotifyPropertyChanged();
+                }
             }
         }
 
@@ -322,6 +327,22 @@ They will be automatically turned off.";
             }
         }
 
+        public Visibility LoadingGifVisibility
+        {
+            get
+            {
+                return _loadingGifVisibility;
+            }
+            set
+            {
+                if (_loadingGifVisibility != value)
+                {
+                    _loadingGifVisibility = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         #endregion
 
         public MainWindowViewModel()
@@ -333,6 +354,8 @@ They will be automatically turned off.";
 
             CatalogViewModel = new CatalogViewModel();
             CatalogViewModel.SelectedModChanged += CatalogViewModel_SelectedModChanged;
+
+            LoadingGifVisibility = Visibility.Hidden;
         }
 
         private void CatalogViewModel_SelectedModChanged(object sender, CatalogModItemViewModel selected)
@@ -382,6 +405,8 @@ They will be automatically turned off.";
                 PreviewModHasReadMe = false;
             }
 
+            LoadingGifVisibility = Visibility.Visible;
+
             string pathToImage = Sys.ImageCache.GetImagePath(selected.InstallInfo.CachedDetails.LatestVersion.PreviewImage, selected.InstallInfo.CachedDetails.ID);
             PreviewModImageSource = pathToImage == null ? null : new Uri(pathToImage);
         }
@@ -414,8 +439,16 @@ They will be automatically turned off.";
             PreviewModLink = selected.Mod.Link;
             PreviewModHasReadMe = false; // no READMEs for catalog (only installed mods)
 
+            LoadingGifVisibility = Visibility.Visible;
+
             string pathToImage = Sys.ImageCache.GetImagePath(selected.Mod.LatestVersion.PreviewImage, selected.Mod.ID);
-            PreviewModImageSource = pathToImage == null ? null : new Uri(pathToImage);
+
+            CatalogModItemViewModel currentSelection = CatalogViewModel.GetSelectedMod();
+
+            if (selected.Mod.ID == currentSelection?.Mod.ID)
+            {
+                PreviewModImageSource = pathToImage == null ? null : new Uri(pathToImage);
+            }
         }
 
         public void InitViewModel()
@@ -470,7 +503,7 @@ They will be automatically turned off.";
 
             TryAutoImportMods();
 
-            CheckForCatalogUpdatesAsync(new CatCheckOptions());
+            CatalogViewModel.CheckForCatalogUpdatesAsync(new CatCheckOptions());
 
             CatalogViewModel.ReloadModList();
 
@@ -503,14 +536,24 @@ They will be automatically turned off.";
             if (e.OldStatus == ModStatus.Installed && e.Status == ModStatus.NotInstalled && Sys.ActiveProfile.Items.Any(i => i.ModID.Equals(e.ModID)))
                 ModsViewModel.ToggleActivateMod(e.ModID);
 
-            // update mod preview info page
+            // update mod preview info page if the mod is currently selected
             if ((TabIndex)SelectedTabIndex == TabIndex.MyMods)
             {
-                UpdateModPreviewInfo(ModsViewModel.GetSelectedMod());
+                InstalledModViewModel currentlySelected = ModsViewModel.GetSelectedMod();
+
+                if (currentlySelected?.InstallInfo.ModID == e.ModID)
+                {
+                    UpdateModPreviewInfo(currentlySelected);
+                }
             }
             else
             {
-                UpdateModPreviewInfo(CatalogViewModel.GetSelectedMod());
+                CatalogModItemViewModel currentlySelected = CatalogViewModel.GetSelectedMod();
+
+                if (currentlySelected?.Mod.ID == e.ModID)
+                {
+                    UpdateModPreviewInfo(currentlySelected);
+                }
             }
         }
 
@@ -904,29 +947,6 @@ They will be automatically turned off.";
             return constraints;
         }
 
-        private void ScanForModUpdates()
-        {
-            foreach (InstalledItem inst in Sys.Library.Items)
-            {
-                Mod cat = Sys.GetModFromCatalog(inst.ModID);
-
-                if (cat != null && cat.LatestVersion.Version > inst.Versions.Max(v => v.VersionDetails.Version))
-                {
-                    switch (inst.UpdateType)
-                    {
-                        case UpdateType.Notify:
-                            Sys.Message(new WMessage() { Text = $"New version of {cat.Name} available", Link = "iros://" + cat.ID.ToString() });
-                            Sys.Ping(inst.ModID);
-                            break;
-
-                        case UpdateType.Install:
-                            Install.DownloadAndInstall(cat);
-                            break;
-                    }
-                }
-            }
-        }
-
         private bool VerifyOrdering()
         {
             var details = Sys.ActiveProfile
@@ -1215,118 +1235,6 @@ They will be automatically turned off.";
             }
         }
 
-        private Task CheckForCatalogUpdatesAsync(object state)
-        {
-            Task t = Task.Factory.StartNew(() =>
-            {
-                List<Guid> pingIDs = null;
-                var options = (CatCheckOptions)state;
-
-                Directory.CreateDirectory(Path.Combine(Sys.SysFolder, "temp"));
-
-                int subTotalCount = Sys.Settings.SubscribedUrls.Count; // amount of subscriptions to update
-                int subUpdateCount = 0; // amount of subscriptions updated
-
-                foreach (string subscribe in Sys.Settings.SubscribedUrls.ToArray())
-                {
-                    Subscription sub = Sys.Settings.Subscriptions.Find(s => s.Url.Equals(subscribe, StringComparison.InvariantCultureIgnoreCase));
-                    if (sub == null)
-                    {
-                        sub = new Subscription() { Url = subscribe, FailureCount = 0, LastSuccessfulCheck = DateTime.MinValue };
-                        Sys.Settings.Subscriptions.Add(sub);
-                    }
-
-                    if ((sub.LastSuccessfulCheck < DateTime.Now.AddDays(-1)) || options.ForceCheck)
-                    {
-                        Logger.Info($"Checking subscription {sub.Url}");
-
-                        string uniqueFileName = $"cattemp{Path.GetRandomFileName()}.xml"; // save temp catalog update to unique filename so multiple catalog updates can download async
-                        string path = Path.Combine(Sys.SysFolder, "temp", uniqueFileName);
-
-                        Sys.Downloads.Download(subscribe, path, $"Checking catalog {subscribe}", new Install.InstallProcedureCallback(e =>
-                        {
-                            bool success = (e.Error == null && e.Cancelled == false);
-                            subUpdateCount++;
-
-                            if (success)
-                            {
-                                try
-                                {
-                                    Catalog c = Util.Deserialize<Catalog>(path);
-
-                                    lock (Sys.CatalogLock) // put a lock on the Catalog so multiple threads can only merge one at a time
-                                    {
-                                        Sys.Catalog = Catalog.Merge(Sys.Catalog, c, out pingIDs);
-
-                                        using (FileStream fs = new FileStream(_catFile, FileMode.Create))
-                                        {
-                                            Util.Serialize(Sys.Catalog, fs);
-                                        }
-                                    }
-
-                                    Sys.Message(new WMessage() { Text = $"Updated catalog from {subscribe}" });
-
-                                    sub.LastSuccessfulCheck = DateTime.Now;
-                                    sub.FailureCount = 0;
-
-                                    // delete temp catalog
-                                    if (File.Exists(path))
-                                    {
-                                        File.Delete(path);
-                                    }
-
-
-                                    foreach (Guid id in pingIDs)
-                                    {
-                                        Sys.Ping(id);
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    Logger.Error(ex);
-
-                                    sub.FailureCount++;
-                                    Sys.Message(new WMessage() { Text = $"Failed to load subscription {subscribe}: {ex.Message}" });
-                                }
-                            }
-                            else
-                            {
-                                Logger.Warn(e.Error?.Message, "catalog download failed");
-                                sub.FailureCount++;
-                            }
-
-                            // reload the UI list of catalog mods and scan for any mod updates once all subs have been attempted to download
-                            if (subUpdateCount == subTotalCount)
-                            {
-                                CatalogViewModel.ReloadModList(null, SearchText, CheckedCategories, CheckedTags);
-                                ScanForModUpdates();
-                            }
-
-                        }), null);
-                    }
-                    else
-                    {
-                        subTotalCount -= 1; // This catalog does not have to be updated
-                    }
-                }
-            });
-
-            return t;
-        }
-
-        internal void ForceCheckCatalogUpdateAsync()
-        {
-            Task t = CheckForCatalogUpdatesAsync(new CatCheckOptions() { ForceCheck = true });
-
-            t.ContinueWith((taskResult) =>
-            {
-                if (taskResult.IsFaulted)
-                {
-                    Logger.Warn(taskResult.Exception);
-                }
-            });
-        }
-
         internal void DoSearch()
         {
             if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
@@ -1559,7 +1467,7 @@ They will be automatically turned off.";
                 }
             }
 
-            tags = tags.Select(s => $"{s.Substring(0,1).ToUpper()}{s.Substring(1)}") // make Tag display as proper case e.g. 'My tag' intead of 'my tag'
+            tags = tags.Select(s => $"{s.Substring(0, 1).ToUpper()}{s.Substring(1)}") // make Tag display as proper case e.g. 'My tag' intead of 'my tag'
                        .Distinct(StringComparer.CurrentCultureIgnoreCase)
                        .OrderBy(s => s)
                        .ToList();
@@ -1569,7 +1477,7 @@ They will be automatically turned off.";
 
         internal List<string> GetCategoriesForSelectedTab()
         {
-            List<string> categories = null;  
+            List<string> categories = null;
 
             if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
             {

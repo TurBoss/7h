@@ -67,6 +67,7 @@ namespace SeventhHeaven.UserControls
         private void btnRefresh_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             ViewModel.ReloadModList(ViewModel.GetSelectedMod()?.InstallInfo.ModID);
+            RecalculateColumnWidths();
         }
 
         private void btnDeactivateAll_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -175,17 +176,24 @@ namespace SeventhHeaven.UserControls
             ViewModel.ShowImportModWindow();
         }
 
-        internal void RecalculateColumnWidths()
+        internal void RecalculateColumnWidths(double listWidth)
         {
             double staticColumnWidth = 40 + 90 + 90 + 75; // sum of columns with static widths
-            double listWidth = lstMods.ActualWidth;
+            double scrollBarWidth = 15;
+
+            var scrollBarVis = ScrollViewer.GetVerticalScrollBarVisibility(lstMods);
+
+            if (scrollBarVis == ScrollBarVisibility.Visible)
+            {
+                scrollBarWidth = 20;
+            }
 
             if (listWidth == 0)
             {
                 return; // ActualWidth could be zero if list has not been rendered yet
             }
 
-            double remainingWidth = listWidth - staticColumnWidth;
+            double remainingWidth = listWidth - staticColumnWidth - scrollBarWidth;
 
             double nameWidth = (0.66) * remainingWidth; // Name takes 66% of remaining width
             double authorWidth = (0.33) * remainingWidth; // Author takes up 33% of remaining width
@@ -209,6 +217,11 @@ namespace SeventhHeaven.UserControls
             {
                 Logger.Warn(e, "failed to resize columns");
             }
+        }
+
+        internal void RecalculateColumnWidths()
+        {
+            RecalculateColumnWidths(lstMods.ActualWidth);
         }
 
         private void ListViewItem_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)

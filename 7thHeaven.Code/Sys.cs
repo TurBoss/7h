@@ -235,9 +235,9 @@ namespace Iros._7th.Workshop
             if (Settings == null)
             {
                 Settings = new Settings();
-                Settings.Options = GeneralOptions.AutoImportMods | GeneralOptions.SetEXECompatFlags;
+                Settings.Options = GeneralOptions.AutoImportMods | GeneralOptions.SetEXECompatFlags | GeneralOptions.AutoActiveNewMods;
+                Settings.SubscribedUrls.Add("iros://Url/http$pastebin.com/raw.php?i=frmT5PEh");
                 Settings.SubscribedUrls.Add("iros://Url/http$pastebin.com/raw.php?i=dDBkYkDu");
-                Settings.SubscribedUrls.Add("iros://Url/http$pastebin.com/raw.php?i=QBGsgGK6");
             }
 
             string lfile = Path.Combine(SysFolder, "library.xml");

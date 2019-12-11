@@ -19,6 +19,8 @@ namespace SeventhHeavenUI
 
         internal MainWindowViewModel ViewModel { get; set; }
 
+        private int _currentTabIndex = 0;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -33,6 +35,8 @@ namespace SeventhHeavenUI
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.InitViewModel();
+
+            _currentTabIndex = tabCtrlMain.SelectedIndex;
 
             if (Sys.Settings.MainWindow != null)
             {
@@ -188,11 +192,6 @@ namespace SeventhHeavenUI
 
         }
 
-        private void menuUpdateCatalog_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.ForceCheckCatalogUpdateAsync();
-        }
-
         private void btnOpenModLink_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.OpenPreviewModLink();
@@ -246,6 +245,7 @@ namespace SeventhHeavenUI
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             ctrlMyMods.RecalculateColumnWidths();
+            ctrlCatalog.RecalculateColumnWidths();
         }
 
         private void menuItemIroCreation_Click(object sender, RoutedEventArgs e)
@@ -257,6 +257,27 @@ namespace SeventhHeavenUI
         {
             var window = new ThemeSettingsWindow() { WindowStartupLocation = WindowStartupLocation.CenterScreen };
             window.ShowDialog();
+        }
+
+        private void tabCtrlMain_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            int tabSelectedIndex = tabCtrlMain.SelectedIndex;
+
+            if (tabCtrlMain.SelectedIndex == 0 && _currentTabIndex != tabSelectedIndex)
+            {
+                _currentTabIndex = tabSelectedIndex;
+                ctrlMyMods.RecalculateColumnWidths(ctrlCatalog.lstCatalogMods.ActualWidth);
+            }
+            else if (_currentTabIndex != tabSelectedIndex)
+            {
+                _currentTabIndex = tabSelectedIndex;
+                ctrlCatalog.RecalculateColumnWidths(ctrlMyMods.lstMods.ActualWidth);
+            }
+        }
+
+        private void Image_Loaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.LoadingGifVisibility = Visibility.Hidden;
         }
     }
 }
