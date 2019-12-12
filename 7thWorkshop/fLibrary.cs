@@ -19,6 +19,7 @@ using System.Diagnostics;
 //using SharpCompress.Reader;
 using TurBoLog.UI;
 using System.Threading;
+using System.IO;
 
 namespace Iros._7th.Workshop {
     public partial class fLibrary : Form {
@@ -1245,6 +1246,7 @@ They will be automatically turned off.";
                 ModPath = Sys.Settings.LibraryLocation,
                 OpenGLConfig = Sys.ActiveProfile.OpenGLConfig,
                 FF7Path = ff7folder,
+                gameFiles = Directory.GetFiles(ff7folder, "*.*", SearchOption.AllDirectories),
                 Mods = Sys.ActiveProfile.Items
                     .Select(i => i.GetRuntime(_context))
                     .Where(i => i != null)
