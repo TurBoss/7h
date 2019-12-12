@@ -1101,6 +1101,7 @@ They will be automatically turned off.";
                 ModPath = Sys.Settings.LibraryLocation,
                 OpenGLConfig = Sys.ActiveProfile.OpenGLConfig,
                 FF7Path = ff7Folder,
+                gameFiles = Directory.GetFiles(ff7Folder, "*.*", SearchOption.AllDirectories),
                 Mods = Sys.ActiveProfile.Items
                     .Select(i => i.GetRuntime(_context))
                     .Where(i => i != null)
