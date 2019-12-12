@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Iros._7th.Workshop {
@@ -15,12 +16,20 @@ namespace Iros._7th.Workshop {
         /// </summary>
         [STAThread]
         static void Main() {
+                bool result;
+                var mutex = new System.Threading.Mutex(true, "UniqueAppId", out result);
+                if (!result)
+                {
+                  MessageBox.Show("Sorry, only one instance of 7thHeaven can be run at a time!  Please first close all instances of 7thHeaven if you are trying to import an IRO.");
+                    return;
+                }
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             Application.Run(new fLibrary());
+            GC.KeepAlive(mutex);
         }
 
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e) {

@@ -119,10 +119,10 @@ namespace Iros._7th.Workshop {
         private void bOK_Click(object sender, EventArgs e) {
             switch (tcSource.SelectedIndex) {
                 case 0:
-                    ImportMod(txtFolder.Text, txtName.Text, false, false);
+                    ImportMod(txtIro.Text, txtName.Text, true, false);
                     break;
                 case 1:
-                    ImportMod(txtIro.Text, txtName.Text, true, false);
+                    ImportMod(txtFolder.Text, txtName.Text, false, false);
                     break;
                 case 2:
                     foreach (string iro in System.IO.Directory.GetFiles(txtBatch.Text, "*.iro")) {
