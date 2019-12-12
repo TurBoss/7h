@@ -279,5 +279,10 @@ namespace SeventhHeavenUI
         {
             ViewModel.LoadingGifVisibility = Visibility.Hidden;
         }
+
+        private void menuItemAaliSettings_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ShowGLConfigWindow();
+        }
     }
 }

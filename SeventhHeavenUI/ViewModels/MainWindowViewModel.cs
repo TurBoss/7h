@@ -1428,6 +1428,17 @@ They will be automatically turned off.";
             createWindow.ShowDialog();
         }
 
+        internal void ShowGLConfigWindow()
+        {
+            string spec = Path.Combine(Sys._7HFolder, "ConfigSpec-FF7OpenGL.xml");
+            string cfg = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "ff7_opengl.cfg");
+
+            ConfigureGLWindow gLWindow = new ConfigureGLWindow() { WindowStartupLocation = WindowStartupLocation.CenterScreen };
+            gLWindow.Init(spec, cfg);
+            gLWindow.ShowDialog();
+        }
+
+
         /// <summary>
         /// sets IsChecked to value of <paramref name="isChecked"/> for all items in <paramref name="filterItems"/> except for the 'Show All' category 
         /// </summary>

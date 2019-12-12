@@ -114,6 +114,7 @@
     <Compile Include="UserControls\PackIroUserControl.xaml.cs">
       <DependentUpon>PackIroUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\GLSettingViewModel.cs" />
     <Compile Include="ViewModels\PatchIroViewModel.cs" />
     <Compile Include="ViewModels\ThemeSettingsViewModel.cs" />
     <Compile Include="ViewModels\UnpackIroViewModel.cs" />
@@ -134,6 +135,9 @@
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Windows\ChunkToolWindow.xaml.cs">
       <DependentUpon>ChunkToolWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ConfigureGLWindow.xaml.cs">
+      <DependentUpon>ConfigureGLWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\ConfigureModWindow.xaml.cs">
       <DependentUpon>ConfigureModWindow.xaml</DependentUpon>
@@ -167,6 +171,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\ChunkToolWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\ConfigureGLWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -291,6 +299,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ConfigSpec-FF7OpenGL.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="EasyHook32.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -93,7 +93,7 @@
                 <cls:ButtonWithImage.ContextMenu>
                     <ContextMenu x:Name="menuSettings" Closed="menuSettings_Closed">
                         <MenuItem x:Name="menuItemGeneralSettings" Header="General Settings" Click="menuItemGeneralSettings_Click"/>
-                        <MenuItem x:Name="menuItemAaliSettings" Header="Configure OpenGL Driver..."/>
+                        <MenuItem x:Name="menuItemAaliSettings" Header="Configure OpenGL Driver..." Click="menuItemAaliSettings_Click"/>
                         <MenuItem x:Name="menuItemThemeSettings" Header="Change Color Theme..." Click="menuItemThemeSettings_Click"/>
                         <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
                         <MenuItem x:Name="menuItemNewProfile" Header="New Profile" Click="menuItemNewProfile_Click"/>
