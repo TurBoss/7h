@@ -26,18 +26,20 @@ namespace SeventhHeaven.Classes
             return "";
         }
 
-        public static string BrowseForFolder(string description = "")
+        public static string BrowseForFolder(string description = "", bool multiselect = false)
         {
-            using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
+            OpenFolderDialog folder = new OpenFolderDialog()
             {
-                folderBrowserDialog.Description = description;
+                Title = description,
+                AutoUpgradeEnabled = true,
+                CheckPathExists = true,
+                Multiselect = multiselect,
+                RestoreDirectory = true
+            };
+            DialogResult result = folder.ShowDialog(IntPtr.Zero);
 
-                DialogResult result = folderBrowserDialog.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    return folderBrowserDialog.SelectedPath;
-                }
-            }
+            if (result.Equals(DialogResult.OK))
+                return folder.SelectedPath;
 
             return "";
         }

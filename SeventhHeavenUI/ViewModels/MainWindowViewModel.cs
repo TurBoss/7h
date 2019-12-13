@@ -531,7 +531,7 @@ They will be automatically turned off.";
                 ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo.ModID, SearchText, CheckedCategories, CheckedTags);
             }
 
-            if (e.Status == ModStatus.Installed && e.OldStatus != ModStatus.Installed && Sys.Settings.Options.HasFlag(GeneralOptions.AutoActiveNewMods))
+            if (e.Status == ModStatus.Installed && e.OldStatus != ModStatus.Installed && Sys.Settings.HasOption(GeneralOptions.AutoActiveNewMods))
                 ModsViewModel.ToggleActivateMod(e.ModID);
             if (e.OldStatus == ModStatus.Installed && e.Status == ModStatus.NotInstalled && Sys.ActiveProfile.Items.Any(i => i.ModID.Equals(e.ModID)))
                 ModsViewModel.ToggleActivateMod(e.ModID);
@@ -630,7 +630,7 @@ They will be automatically turned off.";
 
         private void TryAutoImportMods()
         {
-            if (Sys.Settings.Options.HasFlag(GeneralOptions.AutoImportMods) && Directory.Exists(Sys.Settings.LibraryLocation))
+            if (Sys.Settings.HasOption(GeneralOptions.AutoImportMods) && Directory.Exists(Sys.Settings.LibraryLocation))
             {
                 foreach (string folder in Directory.GetDirectories(Sys.Settings.LibraryLocation))
                 {
@@ -847,14 +847,18 @@ They will be automatically turned off.";
             }
 
             if (!hasCode) return true;
+            
 
-            string msg = "This mod ({0}) contains code/patches that could change FF7.exe. Are you sure you want to activate and run this mod?\n" +
-                "Only choose YES if you trust the author of this mod to run code/programs on your computer!";
-            msg = String.Format(msg, mod.CachedDetails.Name);
-
-            if (MessageBox.Show(msg, "Allow mod to run?", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+            if (Sys.Settings.HasOption(GeneralOptions.WarnAboutModCode))
             {
-                return false;
+                string msg = "This mod ({0}) contains code/patches that could change FF7.exe. Are you sure you want to activate and run this mod?\n\n" +
+                             "Only choose YES if you trust the author of this mod to run code/programs on your computer!";
+                msg = String.Format(msg, mod.CachedDetails.Name);
+
+                if (MessageBox.Show(msg, "Allow mod to run?", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                {
+                    return false;
+                }
             }
 
             Sys.Library.CodeAllowed.Add(modID);
@@ -1165,7 +1169,7 @@ They will be automatically turned off.";
                     Util.SerializeBinary(runtimeProfiles, fs);
 
                 // Add 640x480 and High DPI compatibility flags if set in settings
-                if (Sys.Settings.Options.HasFlag(GeneralOptions.SetEXECompatFlags))
+                if (Sys.Settings.HasOption(GeneralOptions.SetEXECompatFlags))
                 {
                     RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
                     ff7CompatKey?.SetValue(Sys.Settings.FF7Exe, "~ 640X480 HIGHDPIAWARE");
@@ -1231,7 +1235,7 @@ They will be automatically turned off.";
         internal static void LaunchFF7Exe()
         {
             // remove the flag for 640x480 when playing vanilla since Easy Hook is not being used
-            if (Sys.Settings.Options.HasFlag(GeneralOptions.SetEXECompatFlags))
+            if (Sys.Settings.HasOption(GeneralOptions.SetEXECompatFlags))
             {
                 RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
 

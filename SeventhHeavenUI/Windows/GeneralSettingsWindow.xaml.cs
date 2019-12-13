@@ -78,5 +78,25 @@ namespace SeventhHeaven.Windows
                 ViewModel.LibraryPathInput = folderPath;
             }
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            // reference: https://stackoverflow.com/questions/11232438/single-line-wpf-textbox-horizontal-scroll-to-end
+            txtMovies.CaretIndex = ViewModel.MoviesPathInput.Length;
+            var rect = txtMovies.GetRectFromCharacterIndex(txtMovies.CaretIndex);
+            txtMovies.ScrollToHorizontalOffset(rect.Right);
+
+            txtTextures.CaretIndex = ViewModel.TexturesPathInput.Length;
+            rect = txtTextures.GetRectFromCharacterIndex(txtTextures.CaretIndex);
+            txtTextures.ScrollToHorizontalOffset(rect.Right);
+
+            txtLibrary.CaretIndex = ViewModel.LibraryPathInput.Length;
+            rect = txtLibrary.GetRectFromCharacterIndex(txtLibrary.CaretIndex);
+            txtLibrary.ScrollToHorizontalOffset(rect.Right);
+
+            txtFf7Exe.CaretIndex = ViewModel.FF7ExePathInput.Length;
+            rect = txtFf7Exe.GetRectFromCharacterIndex(txtFf7Exe.CaretIndex);
+            txtFf7Exe.ScrollToHorizontalOffset(rect.Right);
+        }
     }
 }

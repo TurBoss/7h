@@ -11,15 +11,19 @@ using System.Windows;
 
 namespace Iros._7th.Workshop {
 
-    [Flags]
+
     public enum GeneralOptions {
         None = 0,
-        KeepOldVersions = 0x1,
-        AutoActiveNewMods = 0x2,
-        AutoImportMods = 0x4,
-        CheckForUpdates = 0x8,
-        BypassCompatibility = 0x10,
-        SetEXECompatFlags = 0x20,
+        KeepOldVersions,
+        AutoActiveNewMods,
+        AutoImportMods,
+        CheckForUpdates,
+        BypassCompatibility,
+        SetEXECompatFlags,
+        OpenIrosLinksWith7H,
+        OpenModFilesWith7H,
+        Show7HInFileExplorerContextMenu,
+        WarnAboutModCode
     }
 
     [Flags]
@@ -73,7 +77,7 @@ namespace Iros._7th.Workshop {
         public string MovieFolder { get; set; }
 
         public DateTime LastUpdateCheck { get; set; }
-        public GeneralOptions Options { get; set; }
+        public List<GeneralOptions> Options { get; set; }
         public InterfaceOptions IntOptions { get; set; }
         public string CurrentProfile { get; set; }
         public SavedWindow MainWindow { get; set; }
@@ -89,8 +93,29 @@ namespace Iros._7th.Workshop {
             ExtraFolders = new List<string>();
             AlsoLaunch = new List<string>();
             Subscriptions = new List<Subscription>();
+            Options = new List<GeneralOptions>();
             AutoUpdateSource = "#F!yBlHTYiJ!SFpmT2xII7iXcgXAmNYLJg";
             DateTimeStringFormat = "MM/dd/yyyy";
+        }
+
+        public bool HasOption(GeneralOptions option)
+        {
+            return Options != null && Options.Any(o => o == option);
+        }
+
+        internal static Settings UseDefaultSettings()
+        {
+            Settings defaultSettings = new Settings();
+
+            defaultSettings.Options.Add(GeneralOptions.AutoImportMods);
+            defaultSettings.Options.Add(GeneralOptions.AutoActiveNewMods);
+            defaultSettings.Options.Add(GeneralOptions.OpenIrosLinksWith7H);
+            defaultSettings.Options.Add(GeneralOptions.OpenModFilesWith7H);
+
+            defaultSettings.SubscribedUrls.Add("iros://Url/http$pastebin.com/raw.php?i=frmT5PEh");
+            defaultSettings.SubscribedUrls.Add("iros://Url/http$pastebin.com/raw.php?i=dDBkYkDu");
+
+            return defaultSettings;
         }
     }
 }

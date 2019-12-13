@@ -5,18 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         mc:Ignorable="d"
+        Loaded="Window_Loaded"
         Style="{StaticResource MainWindowStyle}"
         Title="General Settings" 
-        MinHeight="475" MinWidth="775"
-        Height="475" Width="775"
+        ResizeMode="NoResize"
+        Height="475" Width="900"
         MaxHeight="475" MaxWidth="1300">
     <Window.Resources>
         <Style x:Key="MultiLineTextBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource PrimaryTextBoxStyle}">
             <Setter Property="MinWidth" Value="325"/>
-            <Setter Property="MinHeight" Value="75"/>
+            <Setter Property="Height" Value="75"/>
             <Setter Property="Margin" Value="1"/>
             <Setter Property="AcceptsReturn" Value="True"/>
-            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="TextWrapping" Value="NoWrap"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
         </Style>
     </Window.Resources>
     
@@ -73,12 +76,15 @@
                 <CheckBox Content="Import Library Folder Mods Automatically" IsChecked="{Binding ImportLibraryFolderAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
                 <CheckBox Content="Check For 7th Heaven Updates Automatically" IsChecked="{Binding CheckForUpdatesAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
                 <CheckBox Content="Bypass Compatibility Locks" IsChecked="{Binding BypassCompatibilityLocks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <CheckBox Content="Launch Game With Compatibility Flags" IsChecked="{Binding LaunchWithCompatFlags, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <CheckBox Content="Open iros:// links with 7th Heaven" IsChecked="{Binding OpenIrosLinks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <CheckBox Content="Open Mod Files with 7th Heaven" IsChecked="{Binding OpenModFilesWith7H, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <CheckBox Content="Warn When Mod Contains Code" IsChecked="{Binding WarnAboutModCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
             </StackPanel>
         </GroupBox>
 
         <GroupBox Grid.Column="1" Header=" Catalog Subscriptions: " Margin="25,10,10,0">
-            <TextBox Style="{StaticResource MultiLineTextBoxStyle}" Text="{Binding SubscriptionsInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Style="{StaticResource MultiLineTextBoxStyle}" Height="115" Text="{Binding SubscriptionsInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </GroupBox>
 
         <GroupBox Grid.Row="1" Grid.Column="1" Header=" Additional Folders to Monitor: " Margin="25,10,10,0">

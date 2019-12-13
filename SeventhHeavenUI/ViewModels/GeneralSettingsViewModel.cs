@@ -28,7 +28,9 @@ namespace SeventhHeaven.ViewModels
         private string _subscriptionsInput;
         private string _extraFoldersInput;
         private string _alsoLaunchInput;
-        private bool _launchWithCompatFlags;
+        private bool _openIrosLinks;
+        private bool _openModFilesWith7H;
+        private bool _warnAboutModCode;
 
         public string FF7ExePathInput
         {
@@ -186,15 +188,41 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-        public bool LaunchWithCompatFlags
+        public bool OpenIrosLinks
         {
             get
             {
-                return _launchWithCompatFlags;
+                return _openIrosLinks;
             }
             set
             {
-                _launchWithCompatFlags = value;
+                _openIrosLinks = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public bool OpenModFilesWith7H
+        {
+            get
+            {
+                return _openModFilesWith7H;
+            }
+            set
+            {
+                _openModFilesWith7H = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public bool WarnAboutModCode
+        {
+            get
+            {
+                return _warnAboutModCode;
+            }
+            set
+            {
+                _warnAboutModCode = value;
                 NotifyPropertyChanged();
             }
         }
@@ -216,33 +244,14 @@ namespace SeventhHeaven.ViewModels
             MoviesPathInput = Sys.Settings.MovieFolder;
             TexturesPathInput = Sys.Settings.AaliFolder;
 
-            KeepOldModsAfterUpdating = Sys.Settings.Options.HasFlag(GeneralOptions.KeepOldVersions);
-            ActivateInstalledModsAuto = Sys.Settings.Options.HasFlag(GeneralOptions.AutoActiveNewMods);
-            ImportLibraryFolderAuto = Sys.Settings.Options.HasFlag(GeneralOptions.AutoImportMods);
-            CheckForUpdatesAuto = Sys.Settings.Options.HasFlag(GeneralOptions.CheckForUpdates);
-            BypassCompatibilityLocks = Sys.Settings.Options.HasFlag(GeneralOptions.BypassCompatibility);
-            LaunchWithCompatFlags = Sys.Settings.Options.HasFlag(GeneralOptions.SetEXECompatFlags);
-
-            if (Sys.Settings.VersionUpgradeCompleted < Sys.Version)
-            {
-                if (String.IsNullOrWhiteSpace(Sys.Settings.MovieFolder))
-                {
-                    Sys.Settings.MovieFolder = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Square Soft, Inc.\Final Fantasy VII", "MoviePath", null);
-                }
-
-                if (MessageBox.Show("Would you like 7th Heaven to open catalog subscription links that begin with iros://?", "iros:// Link Setup", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    try
-                    {
-                        if (!WriteLinkReg()) throw new Exception("Could not create keys");
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error(ex);
-                        MessageBox.Show("Unable to register links: " + ex.ToString(), "Failed To Register Links", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
-            }
+            KeepOldModsAfterUpdating = Sys.Settings.HasOption(GeneralOptions.KeepOldVersions);
+            ActivateInstalledModsAuto = Sys.Settings.HasOption(GeneralOptions.AutoActiveNewMods);
+            ImportLibraryFolderAuto = Sys.Settings.HasOption(GeneralOptions.AutoImportMods);
+            CheckForUpdatesAuto = Sys.Settings.HasOption(GeneralOptions.CheckForUpdates);
+            BypassCompatibilityLocks = Sys.Settings.HasOption(GeneralOptions.BypassCompatibility);
+            OpenIrosLinks = Sys.Settings.HasOption(GeneralOptions.OpenIrosLinksWith7H);
+            OpenModFilesWith7H = Sys.Settings.HasOption(GeneralOptions.OpenModFilesWith7H);
+            WarnAboutModCode = Sys.Settings.HasOption(GeneralOptions.WarnAboutModCode);
 
             Sys.Settings.VersionUpgradeCompleted = Sys.Version;
         }
@@ -282,10 +291,9 @@ namespace SeventhHeaven.ViewModels
                 return false;
             }
 
-            Sys.Settings.SubscribedUrls = SubscriptionsInput.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
-            Sys.Settings.ExtraFolders = ExtraFoldersInput.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
-            Sys.Settings.AlsoLaunch = AlsoLaunchInput.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
-
+            Sys.Settings.SubscribedUrls = SubscriptionsInput.Split(new string[] { "\n", "\r\n", " " }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
+            Sys.Settings.ExtraFolders = ExtraFoldersInput.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
+            Sys.Settings.AlsoLaunch = AlsoLaunchInput.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
 
             // ensure 'direct' and 'music' folders are always in ExtraFolders list
             if (!Sys.Settings.ExtraFolders.Contains("direct", StringComparer.InvariantCultureIgnoreCase))
@@ -303,30 +311,42 @@ namespace SeventhHeaven.ViewModels
             Sys.Settings.MovieFolder = MoviesPathInput;
             Sys.Settings.AaliFolder = TexturesPathInput;
 
-            GeneralOptions newOptions = 0;
+            List<GeneralOptions> newOptions = new List<GeneralOptions>();
 
             if (KeepOldModsAfterUpdating)
-                newOptions |= GeneralOptions.KeepOldVersions;
+                newOptions.Add(GeneralOptions.KeepOldVersions);
 
             if (ActivateInstalledModsAuto)
-                newOptions |= GeneralOptions.AutoActiveNewMods;
+                newOptions.Add(GeneralOptions.AutoActiveNewMods);
 
             if (ImportLibraryFolderAuto)
-                newOptions |= GeneralOptions.AutoImportMods;
+                newOptions.Add(GeneralOptions.AutoImportMods);
 
             if (CheckForUpdatesAuto)
-                newOptions |= GeneralOptions.CheckForUpdates;
+                newOptions.Add(GeneralOptions.CheckForUpdates);
 
             if (BypassCompatibilityLocks)
-                newOptions |= GeneralOptions.BypassCompatibility;
+                newOptions.Add(GeneralOptions.BypassCompatibility);
 
-            if (LaunchWithCompatFlags)
-                newOptions |= GeneralOptions.SetEXECompatFlags;
+            if (OpenIrosLinks)
+            {
+                AssociateIrosUrlWith7H();
+                newOptions.Add(GeneralOptions.OpenIrosLinksWith7H);
+            }
+
+            if (OpenModFilesWith7H)
+            {
+                AssociateIroFilesWith7H();
+                newOptions.Add(GeneralOptions.OpenModFilesWith7H);
+            }
+
+            if (WarnAboutModCode)
+                newOptions.Add(GeneralOptions.WarnAboutModCode);
 
             Sys.Settings.Options = newOptions;
 
             // Clear EXE compatibility flags if user opts out
-            if (!Sys.Settings.Options.HasFlag(GeneralOptions.SetEXECompatFlags))
+            if (!Sys.Settings.HasOption(GeneralOptions.SetEXECompatFlags))
             {
                 RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
                 if (ff7CompatKey.GetValue(Sys.Settings.FF7Exe) != null) ff7CompatKey.DeleteValue(Sys.Settings.FF7Exe);
@@ -344,25 +364,25 @@ namespace SeventhHeaven.ViewModels
             string validationMessage = "";
             bool isValid = true;
 
-            if (string.IsNullOrEmpty(FF7ExePathInput))
+            if (string.IsNullOrWhiteSpace(FF7ExePathInput))
             {
                 validationMessage = "Missing FF7 Exe path.";
                 isValid = false;
             }
 
-            if (string.IsNullOrEmpty(LibraryPathInput))
+            if (string.IsNullOrWhiteSpace(LibraryPathInput))
             {
                 validationMessage = "Missing Library path.";
                 isValid = false;
             }
 
-            if (string.IsNullOrEmpty(TexturesPathInput))
+            if (string.IsNullOrWhiteSpace(TexturesPathInput))
             {
                 validationMessage = "Missing Textures (Aali OpenGL) path.";
                 isValid = false;
             }
 
-            if (string.IsNullOrEmpty(MoviesPathInput))
+            if (string.IsNullOrWhiteSpace(MoviesPathInput))
             {
                 validationMessage = "Missing Movie path.";
                 isValid = false;
@@ -379,7 +399,12 @@ namespace SeventhHeaven.ViewModels
         [DllImport("shell32.dll")]
         public static extern void SHChangeNotify(uint wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
 
-        private bool WriteLinkReg(RegistryKey key)
+        /// <summary>
+        /// Update Registry to associate .iro mod files with 7H
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private static bool AssociateIroFilesWith7H(RegistryKey key)
         {
             string app = System.Reflection.Assembly.GetExecutingAssembly().Location;
 
@@ -387,6 +412,7 @@ namespace SeventhHeaven.ViewModels
             //TODO: Add additional subkeys to define an "Unpack" option for IROs
             var progid = key.CreateSubKey("7thHeaven");
             if (progid == null) return false;
+
             var icon = progid.CreateSubKey("DefaultIcon");
             var shell = progid.CreateSubKey("shell");
             var open = shell.CreateSubKey("open");
@@ -398,35 +424,88 @@ namespace SeventhHeaven.ViewModels
             //Associate .iro mod files with 7H's Prog_ID- .IRO extension
             var iroext = key.CreateSubKey(".iro");
             if (iroext == null) return false;
+
             iroext.SetValue(String.Empty, "7thHeaven");
 
             //Refresh Shell/Explorer so icon cache updates
             //do this now because we don't care so much about assoc. URL if it fails
             SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
 
-            //Associate iros:// URL with 7H
-            var iros = key.CreateSubKey("iros");
-            if (iros == null) return false;
-            icon = iros.CreateSubKey("DefaultIcon");
-            shell = iros.CreateSubKey("shell");
-            open = shell.CreateSubKey("open");
-            command = open.CreateSubKey("command");
-            iros.SetValue(String.Empty, "7H Catalog Subscription");
-            icon.SetValue(String.Empty, "\"" + app + "\"");
-            command.SetValue(String.Empty, "\"" + app + "\" \"%1\"");
             return true;
         }
 
-        private bool WriteLinkReg()
+        /// <summary>
+        /// Update Registry to asssociate iros:// URL with 7H
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private static bool AssociateIrosUrlWith7H(RegistryKey key)
         {
-            var key = Microsoft.Win32.Registry.ClassesRoot;
-            bool global = WriteLinkReg(key);
-            if (!global)
+            string app = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
+            var iros = key.CreateSubKey("iros");
+            if (iros == null) return false;
+
+            var icon = iros.CreateSubKey("DefaultIcon");
+            var shell = iros.CreateSubKey("shell");
+            var open = shell.CreateSubKey("open");
+            var command = open.CreateSubKey("command");
+
+            iros.SetValue(String.Empty, "7H Catalog Subscription");
+            icon.SetValue(String.Empty, "\"" + app + "\"");
+
+            command.SetValue(String.Empty, "\"" + app + "\" \"%1\"");
+
+            //Refresh Shell/Explorer so icon cache updates
+            //do this now because we don't care so much about assoc. URL if it fails
+            SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
+
+            return true;
+        }
+
+        internal static bool AssociateIroFilesWith7H()
+        {
+            try
             {
-                key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Classes");
-                global = WriteLinkReg(key);
+                RegistryKey key = Registry.ClassesRoot;
+                bool global = AssociateIroFilesWith7H(key);
+                if (!global)
+                {
+                    key = Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Classes");
+                    global = AssociateIroFilesWith7H(key);
+                }
+
+                return global;
             }
-            return global;
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                Sys.Message(new WMessage("Failed to associate iros:// links with 7th Heaven"));
+                return false;
+            }
+
+
+        }
+
+        internal static bool AssociateIrosUrlWith7H()
+        {
+            try
+            {
+                RegistryKey key = Registry.ClassesRoot;
+                bool global = AssociateIrosUrlWith7H(key);
+                if (!global)
+                {
+                    key = Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Classes");
+                    global = AssociateIrosUrlWith7H(key);
+                }
+                return global;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                Sys.Message(new WMessage("Failed to associate .iro mod files with 7th Heaven"));
+                return false;
+            }
         }
     }
 }

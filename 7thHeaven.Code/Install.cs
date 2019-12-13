@@ -249,7 +249,7 @@ namespace Iros._7th.Workshop {
                         Sys.SetStatus(Mod.ID, ModStatus.Installed);
                     } else {
                         inst.CachedDetails = Mod;
-                        if (!Sys.Settings.Options.HasFlag(GeneralOptions.KeepOldVersions)) {
+                        if (!Sys.Settings.HasOption(GeneralOptions.KeepOldVersions)) {
                             foreach (string ivfile in inst.Versions.Select(v => v.InstalledLocation)) {
                                 string ifile = System.IO.Path.Combine(Sys.Settings.LibraryLocation, ivfile);
                                 if (System.IO.File.Exists(ifile))
@@ -407,7 +407,7 @@ namespace Iros._7th.Workshop {
                         Sys.SetStatus(Mod.ID, ModStatus.Installed);
                     } else {
                         inst.CachedDetails = Mod;
-                        if (!Sys.Settings.Options.HasFlag(GeneralOptions.KeepOldVersions)) {
+                        if (!Sys.Settings.HasOption(GeneralOptions.KeepOldVersions)) {
                             foreach (string ivfile in inst.Versions.Select(v => v.InstalledLocation)) {
                                 string ifile = System.IO.Path.Combine(Sys.Settings.LibraryLocation, ivfile);
                                 if (System.IO.File.Exists(ifile))
