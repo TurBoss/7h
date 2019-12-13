@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Closing="windowTheme_Closing"
         ResizeMode="NoResize"
@@ -26,6 +27,26 @@
         <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource PrimaryTextBoxStyle}">
             <EventSetter Event="LostFocus" Handler="TextBox_LostFocus"/>
             <EventSetter Event="KeyDown" Handler="TextBox_KeyDown"/>
+        </Style>
+
+        <Style x:Key="colorPickerButton" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
+        <Style TargetType="{x:Type xctk:ColorPicker}">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="DisplayColorAndName" Value="False"/>
+            <Setter Property="ShowDropDownButton" Value="False"/>
+            <Setter Property="DisplayColorTooltip" Value="False"/>
+            <Setter Property="Width" Value="38"/>
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="TabBackground" Value="{DynamicResource PrimaryAppBackground}"/>
+            <Setter Property="DropDownBackground" Value="{DynamicResource PrimaryAppBackground}"/>
+            <Setter Property="HeaderBackground" Value="{DynamicResource PrimaryAppBackground}"/>
+            <Setter Property="HeaderForeground" Value="{DynamicResource PrimaryControlForeground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource SecondaryAppBackground}"/>
+            <Setter Property="BorderThickness" Value="2"/>
         </Style>
 
     </Window.Resources>
@@ -93,15 +114,13 @@
                          Text="{Binding AppBackgroundText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          HorizontalAlignment="Stretch"/>
 
-                <Border Grid.Column="1"
-                        Grid.RowSpan="2"
-                        VerticalAlignment="Stretch"
-                        Margin="5,0,0,0"
-                        Width="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualHeight}"
-                        HorizontalAlignment="Left"
-                        Background="{DynamicResource PrimaryAppBackground}"
-                        BorderBrush="{DynamicResource SecondaryAppBackground}"
-                        BorderThickness="2"/>
+
+                <xctk:ColorPicker x:Name="pickerAppBg" 
+                                  SelectedColorChanged="pickerAppBg_SelectedColorChanged"
+                                  Grid.Column="1"
+                                  Grid.RowSpan="2"
+                                  Margin="5,0,0,0"
+                                  Background="{DynamicResource PrimaryAppBackground}"/>
             </Grid>
 
             <Grid Margin="0,10,0,0">
@@ -122,13 +141,12 @@
                          Text="{Binding SecondaryBackgroundText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          HorizontalAlignment="Stretch"/>
 
-                <Border Grid.Column="1"
-                        Grid.RowSpan="2"
-                        VerticalAlignment="Stretch"
-                        Margin="5,0,0,0"
-                        Width="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualHeight}"
-                        HorizontalAlignment="Left"
-                        Background="{DynamicResource SecondaryAppBackground}"/>
+                <xctk:ColorPicker x:Name="pickerSecondBg"
+                                  SelectedColorChanged="pickerSecondBg_SelectedColorChanged"
+                                  Grid.Column="1"
+                                  Grid.RowSpan="2"
+                                  Margin="5,0,0,0"
+                                  Background="{DynamicResource SecondaryAppBackground}"/>
             </Grid>
 
             <Grid Margin="0,10,0,0">
@@ -149,15 +167,12 @@
                          Text="{Binding ControlDisabledBgText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          HorizontalAlignment="Stretch"/>
 
-                <Border Grid.Column="1"
-                        Grid.RowSpan="2"
-                        VerticalAlignment="Stretch"
-                        Margin="5,0,0,0"
-                        Width="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualHeight}"
-                        HorizontalAlignment="Left"
-                        Background="{DynamicResource PrimaryControlDisabledBackground}"
-                        BorderBrush="{DynamicResource SecondaryAppBackground}"
-                        BorderThickness="2"/>
+                <xctk:ColorPicker x:Name="pickerDisabledBg" 
+                                  SelectedColorChanged="pickerDisabledBg_SelectedColorChanged"
+                                  Grid.Column="1"
+                                  Grid.RowSpan="2"
+                                  Margin="5,0,0,0"
+                                  Background="{DynamicResource PrimaryControlDisabledBackground}"/>
             </Grid>
 
             <Grid Margin="0,10,0,0">
@@ -178,13 +193,12 @@
                          Text="{Binding ControlDisabledFgText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          HorizontalAlignment="Stretch"/>
 
-                <Border Grid.Column="1"
-                        Grid.RowSpan="2"
-                        VerticalAlignment="Stretch"
-                        Margin="5,0,0,0"
-                        Width="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualHeight}"
-                        HorizontalAlignment="Left"
-                        Background="{DynamicResource PrimaryControlDisabledForeground}"/>
+                <xctk:ColorPicker x:Name="pickerDisabledFg" 
+                                  SelectedColorChanged="pickerDisabledFg_SelectedColorChanged"
+                                  Grid.Column="1"
+                                  Grid.RowSpan="2"
+                                  Margin="5,0,0,0"
+                                  Background="{DynamicResource PrimaryControlDisabledForeground}"/>
             </Grid>
 
         </StackPanel>
@@ -213,15 +227,12 @@
                          Text="{Binding ControlBackgroundText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          HorizontalAlignment="Stretch"/>
 
-                <Border Grid.Column="1"
-                        Grid.RowSpan="2"
-                        VerticalAlignment="Stretch"
-                        Margin="5,0,0,0"
-                        Width="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualHeight}"
-                        HorizontalAlignment="Left"
-                        Background="{DynamicResource PrimaryControlBackground}"
-                        BorderBrush="{DynamicResource SecondaryAppBackground}"
-                        BorderThickness="2"/>
+                <xctk:ColorPicker x:Name="pickerControlBg"
+                                  SelectedColorChanged="pickerControlBg_SelectedColorChanged"
+                                  Grid.Column="1"
+                                  Grid.RowSpan="2"
+                                  Margin="5,0,0,0"
+                                  Background="{DynamicResource PrimaryControlBackground}"/>
             </Grid>
 
 
@@ -243,13 +254,12 @@
                          Text="{Binding ControlForegroundText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          HorizontalAlignment="Stretch"/>
 
-                <Border Grid.Column="1"
-                        Grid.RowSpan="2"
-                        VerticalAlignment="Stretch"
-                        Margin="5,0,0,0"
-                        Width="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualHeight}"
-                        HorizontalAlignment="Left"
-                        Background="{DynamicResource PrimaryControlForeground}"/>
+                <xctk:ColorPicker x:Name="pickerControlFg"
+                                  SelectedColorChanged="pickerControlFg_SelectedColorChanged"
+                                  Grid.Column="1"
+                                  Grid.RowSpan="2"
+                                  Margin="5,0,0,0"
+                                  Background="{DynamicResource PrimaryControlForeground}"/>
             </Grid>
 
             <Grid Margin="0,10,0,0">
@@ -270,13 +280,12 @@
                          Text="{Binding ControlMouseOverText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          HorizontalAlignment="Stretch"/>
 
-                <Border Grid.Column="1"
-                        Grid.RowSpan="2"
-                        VerticalAlignment="Stretch"
-                        Margin="5,0,0,0"
-                        Width="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualHeight}"
-                        HorizontalAlignment="Left"
-                        Background="{DynamicResource PrimaryControlMouseOver}"/>
+                <xctk:ColorPicker x:Name="pickerMouseOver" 
+                                  SelectedColorChanged="pickerMouseOver_SelectedColorChanged"
+                                  Grid.Column="1"
+                                  Grid.RowSpan="2"
+                                  Margin="5,0,0,0"
+                                  Background="{DynamicResource PrimaryControlMouseOver}"/>
             </Grid>
 
 
@@ -298,43 +307,40 @@
                          Text="{Binding ControlPressedText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          HorizontalAlignment="Stretch"/>
 
-                <Border Grid.Column="1"
-                        Grid.RowSpan="2"
-                        VerticalAlignment="Stretch"
-                        Margin="5,0,0,0"
-                        Width="{Binding RelativeSource={RelativeSource Mode=Self}, Path=ActualHeight}"
-                        HorizontalAlignment="Left"
-                        Background="{DynamicResource PrimaryControlPressed}"/>
+                <xctk:ColorPicker x:Name="pickerPressed" 
+                                  SelectedColorChanged="pickerPressed_SelectedColorChanged"
+                                  Grid.Column="1"
+                                  Grid.RowSpan="2"
+                                  Margin="5,0,0,0"
+                                  Background="{DynamicResource PrimaryControlPressed}"/>
             </Grid>
         </StackPanel>
 
-        <TextBlock Grid.Row="1"
+        <TextBlock Grid.Row="2"
                    Grid.Column="1"
-                   Grid.ColumnSpan="3"
+                   Grid.ColumnSpan="2"
                    FontSize="13"
                    Text="{Binding StatusText, FallbackValue='Something about applying the theme'}"
                    TextWrapping="Wrap"
-                   VerticalAlignment="Bottom"
-                   HorizontalAlignment="Left"
-                   Margin="0,0,0,5"/>
+                   Margin="0,0,235,5"/>
 
         <Button x:Name="btnSave"
                 Click="btnSave_Click"
                 Content="Save"
                 Grid.Row="2"
-                Grid.Column="1"
-                Margin="0,0,0,5"
+                Grid.Column="2"
+                Margin="0,0,146,5"
                 Width="80"
-                HorizontalAlignment="Left"
+                HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"/>
         <ToggleButton x:Name="btnSaveAs"
                       Click="btnSaveAs_Click"
                       Grid.Row="2"
-                      Grid.Column="1"
-                      Margin="80,0,0,5"
+                      Grid.Column="2"
+                      Margin="0,0,128,5"
                       Padding="3,0,3,0"
                       Height="{Binding ElementName=btnSave, Path=ActualHeight}"
-                      HorizontalAlignment="Left"
+                      HorizontalAlignment="Right"
                       VerticalAlignment="Bottom"
                       Style="{StaticResource DownArrowToggleButton}">
             <ToggleButton.ContextMenu>
@@ -348,10 +354,10 @@
                 Content="Cancel"
                 Click="btnCancel_Click"
                 Grid.Row="2"
-                Grid.Column="1"
-                Margin="128,0,0,5"
+                Grid.Column="2"
+                Margin="0,0,10,5"
                 Width="90"
-                HorizontalAlignment="Left"
+                HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"/>
 
     </Grid>

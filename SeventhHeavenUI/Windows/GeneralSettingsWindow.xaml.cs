@@ -1,5 +1,6 @@
 ﻿using SeventhHeaven.Classes;
 using SeventhHeaven.ViewModels;
+using System.IO;
 using System.Windows;
 using System.Windows.Forms;
 
@@ -41,7 +42,14 @@ namespace SeventhHeaven.Windows
 
         private void btnFf7Exe_Click(object sender, RoutedEventArgs e)
         {
-            string exePath = FileDialogHelper.BrowseForFile("exe file (*.exe)|*.exe", "Select FF7.exe");
+            string initialDir = "";
+
+            if (File.Exists(ViewModel.FF7ExePathInput))
+            {
+                initialDir = Path.GetDirectoryName(ViewModel.FF7ExePathInput);
+            }
+
+            string exePath = FileDialogHelper.BrowseForFile("exe file (*.exe)|*.exe", "Select FF7.exe", initialDir);
 
             if (!string.IsNullOrEmpty(exePath))
             {
@@ -51,7 +59,7 @@ namespace SeventhHeaven.Windows
 
         private void btnMovies_Click(object sender, RoutedEventArgs e)
         {
-            string folderPath = FileDialogHelper.BrowseForFolder();
+            string folderPath = FileDialogHelper.BrowseForFolder("Select Movies Folder", ViewModel.MoviesPathInput);
 
             if (!string.IsNullOrEmpty(folderPath))
             {
@@ -61,7 +69,7 @@ namespace SeventhHeaven.Windows
 
         private void btnTextures_Click(object sender, RoutedEventArgs e)
         {
-            string folderPath = FileDialogHelper.BrowseForFolder();
+            string folderPath = FileDialogHelper.BrowseForFolder("Select Textures Folder", ViewModel.TexturesPathInput);
 
             if (!string.IsNullOrEmpty(folderPath))
             {
@@ -71,7 +79,7 @@ namespace SeventhHeaven.Windows
 
         private void btnLibrary_Click(object sender, RoutedEventArgs e)
         {
-            string folderPath = FileDialogHelper.BrowseForFolder();
+            string folderPath = FileDialogHelper.BrowseForFolder("Select 7th Heaven Library Folder", ViewModel.LibraryPathInput);
 
             if (!string.IsNullOrEmpty(folderPath))
             {

@@ -252,8 +252,6 @@ namespace SeventhHeaven.ViewModels
             OpenIrosLinks = Sys.Settings.HasOption(GeneralOptions.OpenIrosLinksWith7H);
             OpenModFilesWith7H = Sys.Settings.HasOption(GeneralOptions.OpenModFilesWith7H);
             WarnAboutModCode = Sys.Settings.HasOption(GeneralOptions.WarnAboutModCode);
-
-            Sys.Settings.VersionUpgradeCompleted = Sys.Version;
         }
 
         public static void AutoDetectSystemPaths()
@@ -292,8 +290,11 @@ namespace SeventhHeaven.ViewModels
             }
 
             Sys.Settings.SubscribedUrls = SubscriptionsInput.Split(new string[] { "\n", "\r\n", " " }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
-            Sys.Settings.ExtraFolders = ExtraFoldersInput.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
             Sys.Settings.AlsoLaunch = AlsoLaunchInput.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
+            Sys.Settings.ExtraFolders = ExtraFoldersInput.ToLower()
+                                                         .Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
+                                                         .Distinct()
+                                                         .ToList();
 
             // ensure 'direct' and 'music' folders are always in ExtraFolders list
             if (!Sys.Settings.ExtraFolders.Contains("direct", StringComparer.InvariantCultureIgnoreCase))

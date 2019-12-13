@@ -56,8 +56,6 @@ namespace Iros._7th.Workshop
 
     public static class Sys
     {
-        public const decimal Version = 1.59m;
-
         private static Dictionary<Type, object> _single = new Dictionary<Type, object>();
 
         public static object CatalogLock = new object();
@@ -235,6 +233,7 @@ namespace Iros._7th.Workshop
             if (Settings == null)
             {
                 Settings = Settings.UseDefaultSettings();
+                Settings.IsFirstStart = true;
             }
 
             string lfile = Path.Combine(SysFolder, "library.xml");

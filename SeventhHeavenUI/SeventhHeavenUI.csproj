@@ -86,6 +86,9 @@
     <Reference Include="XamlAnimatedGif, Version=1.2.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\XamlAnimatedGif.1.2.2\lib\net45\XamlAnimatedGif.dll</HintPath>
     </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=3.7.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.7.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -334,4 +337,8 @@
     </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>

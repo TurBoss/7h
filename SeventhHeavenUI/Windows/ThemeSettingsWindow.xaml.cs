@@ -35,6 +35,29 @@ namespace SeventhHeaven.Windows
         private void cboThemes_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ViewModel.ChangeTheme();
+            InitColorPickerBackgrounds();
+        }
+
+        /// <summary>
+        /// Sets the SelectedColor of the ColorPicker controls to the ViewModel properties
+        /// </summary>
+        private void InitColorPickerBackgrounds()
+        {
+            try
+            {
+                pickerAppBg.SelectedColor = (Color)ColorConverter.ConvertFromString(ViewModel.AppBackgroundText);
+                pickerSecondBg.SelectedColor = (Color)ColorConverter.ConvertFromString(ViewModel.SecondaryBackgroundText);
+                pickerDisabledBg.SelectedColor = (Color)ColorConverter.ConvertFromString(ViewModel.ControlDisabledBgText);
+                pickerDisabledFg.SelectedColor = (Color)ColorConverter.ConvertFromString(ViewModel.ControlDisabledFgText);
+                pickerControlBg.SelectedColor = (Color)ColorConverter.ConvertFromString(ViewModel.ControlBackgroundText);
+                pickerControlFg.SelectedColor = (Color)ColorConverter.ConvertFromString(ViewModel.ControlForegroundText);
+                pickerMouseOver.SelectedColor = (Color)ColorConverter.ConvertFromString(ViewModel.ControlMouseOverText);
+                pickerPressed.SelectedColor = (Color)ColorConverter.ConvertFromString(ViewModel.ControlPressedText);
+            }
+            catch (Exception)
+            {
+                // color was invalid - the viewmodel will handle displaying error message to user so ignore this exception
+            }
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
@@ -48,12 +71,14 @@ namespace SeventhHeaven.Windows
             if (e.Key == Key.Enter)
             {
                 ViewModel.ApplyCustomTheme();
+                InitColorPickerBackgrounds(); // when the user types a color in then we have to make sure the color pickers get updated to match the new color
             }
         }
 
         private void TextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             ViewModel.ApplyCustomTheme();
+            InitColorPickerBackgrounds(); // when the user types a color in then we have to make sure the color pickers get updated to match the new color
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -102,5 +127,43 @@ namespace SeventhHeaven.Windows
         {
             ThemeSettingsViewModel.LoadThemeFromFile(); // reload theme.xml on close in-case any unsaved changes are made
         }
+
+
+        #region Color Picker Color Changed Events
+
+        private void pickerAppBg_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            ViewModel.ColorChanged(nameof(ViewModel.AppBackgroundText), e.NewValue);
+        }
+        private void pickerSecondBg_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            ViewModel.ColorChanged(nameof(ViewModel.SecondaryBackgroundText), e.NewValue);
+        }
+        private void pickerDisabledBg_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            ViewModel.ColorChanged(nameof(ViewModel.ControlDisabledBgText), e.NewValue);
+        }
+        private void pickerDisabledFg_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            ViewModel.ColorChanged(nameof(ViewModel.ControlDisabledFgText), e.NewValue);
+        }
+        private void pickerControlBg_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            ViewModel.ColorChanged(nameof(ViewModel.ControlBackgroundText), e.NewValue);
+        }
+        private void pickerControlFg_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            ViewModel.ColorChanged(nameof(ViewModel.ControlForegroundText), e.NewValue);
+        }
+        private void pickerMouseOver_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            ViewModel.ColorChanged(nameof(ViewModel.ControlMouseOverText), e.NewValue);
+        }
+        private void pickerPressed_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            ViewModel.ColorChanged(nameof(ViewModel.ControlPressedText), e.NewValue);
+        }
+
+        #endregion
     }
 }

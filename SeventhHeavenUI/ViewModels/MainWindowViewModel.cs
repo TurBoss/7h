@@ -459,7 +459,7 @@ They will be automatically turned off.";
             // Set the Downloads Interface so Sys can use Download methods defined in the CatalogViewModel
             Sys.Downloads = CatalogViewModel;
 
-            StatusMessage = $"{App.GetAppName()} started: app v{App.GetAppVersion().ToString()} - Sys v{Sys.Version.ToString()}";
+            StatusMessage = $"{App.GetAppName()} v{App.GetAppVersion().ToString()} started";
 
             MegaIros.Logger = Logger.Info;
 
@@ -477,15 +477,15 @@ They will be automatically turned off.";
 
 
             // check if the settings window should be showed (on first start or if errors in settings)
-            // ... note that VersionUpgradeCompleted will be 0 when Sys.Settings is initialized for the first time.
             bool showSettings = false;
-            if (Sys.Settings.VersionUpgradeCompleted < Sys.Version)
+            if (Sys.Settings.IsFirstStart)
             {
+                Sys.Settings.IsFirstStart = false;
                 showSettings = true;
             }
             else
             {
-                var errors = Sys.Settings.VerifySettings();
+                IEnumerable<string> errors = Sys.Settings.VerifySettings();
                 if (errors.Any())
                 {
                     string msg = "The following errors were found in your configuration:\n" +

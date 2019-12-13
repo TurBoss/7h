@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -41,8 +42,7 @@ namespace SeventhHeaven.ViewModels
                 NotifyPropertyChanged();
             }
         }
-
-
+        
         public bool IsCustomThemeEnabled
         {
             get
@@ -472,6 +472,26 @@ namespace SeventhHeaven.ViewModels
             ControlMouseOverText = savedTheme.PrimaryControlMouseOver;
             ControlDisabledBgText = savedTheme.PrimaryControlDisabledBackground;
             ControlDisabledFgText = savedTheme.PrimaryControlDisabledForeground;
+        }
+
+        /// <summary>
+        /// Use Reflection to set the property to a new color
+        /// </summary>
+        /// <param name="propertyName"> property to update e.g. 'ControlForegroundText' </param>
+        /// <param name="newValue"> new color to use </param>
+        internal void ColorChanged(string propertyName, Color? newValue)
+        {
+            if (newValue == null)
+            {
+                return;
+            }
+
+            string hexValue = ColorToHexString(newValue.Value);
+
+            PropertyInfo propInfo = typeof(ThemeSettingsViewModel).GetProperty(propertyName);
+            propInfo.SetValue(this, hexValue);
+
+            ApplyCustomTheme();
         }
 
         public static string ColorToHexString(Color color)

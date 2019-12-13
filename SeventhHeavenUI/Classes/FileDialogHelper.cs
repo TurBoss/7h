@@ -9,12 +9,14 @@ namespace SeventhHeaven.Classes
 {
     public static class FileDialogHelper
     {
-        public static string BrowseForFile(string filter, string title = "Select File")
+        public static string BrowseForFile(string filter, string title = "Select File", string initialDir = null)
         {
             using (OpenFileDialog fileBrowserDialog = new OpenFileDialog())
             {
                 fileBrowserDialog.Filter = filter;
                 fileBrowserDialog.Title = title;
+                fileBrowserDialog.AutoUpgradeEnabled = true;
+                fileBrowserDialog.InitialDirectory = initialDir;
 
                 DialogResult result = fileBrowserDialog.ShowDialog();
                 if (result == DialogResult.OK)
@@ -26,13 +28,14 @@ namespace SeventhHeaven.Classes
             return "";
         }
 
-        public static string BrowseForFolder(string description = "", bool multiselect = false)
+        public static string BrowseForFolder(string description = "", string initialDir = null, bool multiselect = false)
         {
             OpenFolderDialog folder = new OpenFolderDialog()
             {
                 Title = description,
                 AutoUpgradeEnabled = true,
                 CheckPathExists = true,
+                InitialDirectory = initialDir,
                 Multiselect = multiselect,
                 RestoreDirectory = true
             };

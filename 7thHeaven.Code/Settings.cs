@@ -84,9 +84,12 @@ namespace Iros._7th.Workshop {
         public string AutoUpdateSource { get; set; }
         public decimal AutoUpdateOffered { get; set; }
 
-        public decimal VersionUpgradeCompleted { get; set; }
-
         public string DateTimeStringFormat { get; set; }
+
+        /// <summary>
+        /// Flag to determine if the app is being launched for the first time.
+        /// </summary>
+        public bool IsFirstStart { get; set; }
 
         public Settings() {
             SubscribedUrls = new List<string>();
@@ -96,6 +99,7 @@ namespace Iros._7th.Workshop {
             Options = new List<GeneralOptions>();
             AutoUpdateSource = "#F!yBlHTYiJ!SFpmT2xII7iXcgXAmNYLJg";
             DateTimeStringFormat = "MM/dd/yyyy";
+            IsFirstStart = false;
         }
 
         public bool HasOption(GeneralOptions option)
