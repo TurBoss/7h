@@ -9,7 +9,7 @@
         Closing="windowTheme_Closing"
         ResizeMode="NoResize"
         Style="{StaticResource MainWindowStyle}"
-        Title="Change Color Theme" Height="350" Width="550">
+        Title="Change Color Theme" Height="350" Width="500">
     <Window.Resources>
 
         <DataTemplate x:Key="selectedThemeTemplate">
@@ -27,9 +27,9 @@
             <EventSetter Event="LostFocus" Handler="TextBox_LostFocus"/>
             <EventSetter Event="KeyDown" Handler="TextBox_KeyDown"/>
         </Style>
-        
+
     </Window.Resources>
-    
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10"/>
@@ -69,7 +69,7 @@
                     Margin="5,0,0,0"
                     Padding="10,3,10,3"/>
         </WrapPanel>
-        
+
 
         <StackPanel Grid.Row="1"
                     Grid.Column="1"
@@ -192,8 +192,9 @@
 
         <StackPanel Grid.Row="1" 
                     Grid.Column="2"
+                    HorizontalAlignment="Right"
                     IsEnabled="{Binding IsCustomThemeEnabled}"
-                    Margin="0,20,0,0">
+                    Margin="0,20,10,0">
             <Grid Margin="0,0,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
@@ -307,31 +308,33 @@
             </Grid>
         </StackPanel>
 
-        <TextBlock Grid.Row="2"
+        <TextBlock Grid.Row="1"
                    Grid.Column="1"
-                   Grid.ColumnSpan="2"
+                   Grid.ColumnSpan="3"
                    FontSize="13"
                    Text="{Binding StatusText, FallbackValue='Something about applying the theme'}"
                    TextWrapping="Wrap"
-                   Margin="0,0,220,5"/>
+                   VerticalAlignment="Bottom"
+                   HorizontalAlignment="Left"
+                   Margin="0,0,0,5"/>
 
         <Button x:Name="btnSave"
                 Click="btnSave_Click"
                 Content="Save"
                 Grid.Row="2"
-                Grid.Column="2"
-                Margin="0,0,123,5"
+                Grid.Column="1"
+                Margin="0,0,0,5"
                 Width="80"
-                HorizontalAlignment="Right"
+                HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"/>
         <ToggleButton x:Name="btnSaveAs"
                       Click="btnSaveAs_Click"
                       Grid.Row="2"
-                      Grid.Column="2"
-                      Margin="0,0,105,5"
+                      Grid.Column="1"
+                      Margin="80,0,0,5"
                       Padding="3,0,3,0"
                       Height="{Binding ElementName=btnSave, Path=ActualHeight}"
-                      HorizontalAlignment="Right"
+                      HorizontalAlignment="Left"
                       VerticalAlignment="Bottom"
                       Style="{StaticResource DownArrowToggleButton}">
             <ToggleButton.ContextMenu>
@@ -345,10 +348,10 @@
                 Content="Cancel"
                 Click="btnCancel_Click"
                 Grid.Row="2"
-                Grid.Column="2"
-                Margin="0,0,5,5"
+                Grid.Column="1"
+                Margin="128,0,0,5"
                 Width="90"
-                HorizontalAlignment="Right"
+                HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"/>
 
     </Grid>

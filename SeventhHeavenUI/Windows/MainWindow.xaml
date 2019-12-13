@@ -82,6 +82,8 @@
             <ToggleButton x:Name="btnPlayOptions" Style="{StaticResource DownArrowToggleButton}" Margin="-3,0,0,0" Click="btnPlayOptions_Click" ContextMenuService.Placement="Bottom">
                 <ToggleButton.ContextMenu>
                     <ContextMenu x:Name="menuPlayOptions" Closed="menuPlayOptions_Closed">
+                        <MenuItem x:Name="menuPlayWithMods" Header="Play With Mods (default)" Click="menuPlayWithMods_Click"/>
+                        <MenuItem x:Name="menuPlayWithoutMods" Header="Play Without Mods" Click="menuPlayWithoutMods_Click"/>
                         <MenuItem x:Name="menuPlayVariableDump" Header="Play With Variable Dump" Click="menuPlayVariableDump_Click"/>
                         <MenuItem x:Name="menuPlayDebugLog" Header="Play With Debug Log" Click="menuPlayDebugLog_Click"/>
                     </ContextMenu>

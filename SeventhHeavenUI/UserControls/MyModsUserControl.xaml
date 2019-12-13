@@ -9,8 +9,16 @@
     <UserControl.Resources>
 
         <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource MainListViewItemStyle}">
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+        </Style>
+
+        <Style x:Key="SmallImageButton"  TargetType="{x:Type Button}" BasedOn="{StaticResource ImageButton}">
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Width" Value="48"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
         </Style>
 
     </UserControl.Resources>
@@ -76,14 +84,14 @@
                     HorizontalAlignment="Right">
 
             <Button x:Name="btnImport" 
-                    Style="{StaticResource ImageButton}"
+                    Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconImport}"
                     Click="btnImport_Click"
                     ToolTip="Import Mod"
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnMoveTop" 
-                    Style="{StaticResource ImageButton}"
+                    Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconUpArrow}"
                     Click="btnMoveTop_Click"
                     ToolTip="Move to Top"
@@ -91,54 +99,54 @@
 
             <Button x:Name="btnMoveUp"
                     Click="btnMoveUp_Click"
-                    Style="{StaticResource ImageButton}"
+                    Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconUpChevron}"
                     ToolTip="Move Up"
                     Margin="0,0,0,0"/>
             
             <Button x:Name="btnMoveDown"
                     Click="btnMoveDown_Click"
-                    Style="{StaticResource ImageButton}"
+                    Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconDownChevron}"
                     ToolTip="Move Down"/>
 
             <Button x:Name="btnSendBottom" 
-                    Style="{StaticResource ImageButton}"
+                    Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconDownArrow}"
                     Click="btnSendBottom_Click"
                     ToolTip="Send to Bottom"
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnConfigure" 
-                    Style="{StaticResource ImageButton}"
+                    Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconSettings}"
                     Click="btnConfigure_Click"
                     ToolTip="Configure Mod"
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnActivateAll" 
-                    Style="{StaticResource ImageButton}"
+                    Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconCheckmark}"
                     Click="btnActivateAll_Click"
                     ToolTip="Activate All"
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnDeactivateAll" 
-                    Style="{StaticResource ImageButton}"
+                    Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconCancel}"
                     Click="btnDeactivateAll_Click"
                     ToolTip="Deactivate All"
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnRefresh" 
-                    Style="{StaticResource ImageButton}"
+                    Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconRefresh}"
                     Click="btnRefresh_Click"
                     ToolTip="Refresh List"
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnUninstall" 
-                    Style="{StaticResource ImageButton}"
+                    Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconDelete}"
                     Click="btnUninstall_Click"
                     ToolTip="Uninstall Mod"

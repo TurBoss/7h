@@ -1045,6 +1045,11 @@ They will be automatically turned off.";
             return true;
         }
 
+        /// <summary>
+        /// getsLaunches FF7 exe 
+        /// </summary>
+        /// <param name="varDump"></param>
+        /// <param name="debug"></param>
         public void LaunchGame(bool varDump, bool debug)
         {
 
@@ -1052,7 +1057,7 @@ They will be automatically turned off.";
             if (!SanityCheckSettings()) return;
             if (!VerifyOrdering()) return;
 
-            string lib = Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "7thWrapperLib.dll");
+            string lib = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "7thWrapperLib.dll");
             if (Sys.ActiveProfile == null)
             {
                 MessageBox.Show("Create a profile first");
@@ -1069,22 +1074,7 @@ They will be automatically turned off.";
             {
                 MessageBox.Show("No mods have been activated. The game will now launch as 'vanilla'");
 
-                // remove the flag for 640x480 when playing vanilla since Easy Hook is not being used
-                if (Sys.Settings.Options.HasFlag(GeneralOptions.SetEXECompatFlags))
-                {
-                    RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
-
-                    try
-                    {
-                        ff7CompatKey?.DeleteValue(Sys.Settings.FF7Exe);
-                    }
-                    catch (Exception e)
-                    {
-                        // will fail if already deleted
-                    }
-                }
-
-                Process.Start(Sys.Settings.FF7Exe);
+                LaunchFF7Exe();
                 return;
             }
 
@@ -1102,10 +1092,9 @@ They will be automatically turned off.";
                 OpenGLConfig = Sys.ActiveProfile.OpenGLConfig,
                 FF7Path = ff7Folder,
                 gameFiles = Directory.GetFiles(ff7Folder, "*.*", SearchOption.AllDirectories),
-                Mods = Sys.ActiveProfile.Items
-                    .Select(i => i.GetRuntime(_context))
-                    .Where(i => i != null)
-                    .ToList()
+                Mods = Sys.ActiveProfile.Items.Select(i => i.GetRuntime(_context))
+                                              .Where(i => i != null)
+                                              .ToList()
             };
 
             runtimeProfiles.MonitorPaths.AddRange(Sys.Settings.ExtraFolders.Where(s => s.Length > 0).Select(s => Path.Combine(ff7Folder, s)));
@@ -1233,6 +1222,37 @@ They will be automatically turned off.";
                 MessageBox.Show(e.ToString(), "Error starting FF7");
 
                 return;
+            }
+        }
+
+        /// <summary>
+        /// Launches FF7.exe without loading any mods.
+        /// </summary>
+        internal static void LaunchFF7Exe()
+        {
+            // remove the flag for 640x480 when playing vanilla since Easy Hook is not being used
+            if (Sys.Settings.Options.HasFlag(GeneralOptions.SetEXECompatFlags))
+            {
+                RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
+
+                try
+                {
+                    ff7CompatKey?.DeleteValue(Sys.Settings.FF7Exe);
+                }
+                catch (Exception e)
+                {
+                    // will fail if already deleted
+                }
+            }
+
+            try
+            {
+                Process.Start(Sys.Settings.FF7Exe);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                Sys.Message(new WMessage("Failed to start FF7 process..."));
             }
         }
 
@@ -1576,6 +1596,27 @@ They will be automatically turned off.";
             AvailableFilters = newList;
         }
 
+
+        /// <summary>
+        /// Opens /Resources/Help/index.html if it exists as a new process
+        /// </summary>
+        internal void LaunchHelpPage()
+        {
+            string helpFile = Path.Combine(new string[] { Sys._7HFolder, "Resources", "Help", "index.html" });
+
+            if (!File.Exists(helpFile))
+            {
+                Sys.Message(new WMessage("Cannot open help - Resources/Help/index.html file not found"));
+                return;
+            }
+
+            ProcessStartInfo startInfo = new ProcessStartInfo()
+            {
+                FileName = helpFile
+            };
+
+            Process.Start(startInfo);
+        }
     }
 
     internal class CatCheckOptions

@@ -12,7 +12,7 @@
 
     <Color x:Key="DarkControlBackground">#1f1f1f</Color>
     <Color x:Key="DarkControlForeground">#ffffff</Color>
-    <Color x:Key="DarkControlPressed" R="0" G="119" B="215" A="255"/>
+    <Color x:Key="DarkControlPressed">#CF2D2A</Color>
     <Color x:Key="DarkControlMouseOver">#5e5e5e</Color>
 
     <Color x:Key="DarkControlDisabledBackground" R="31" G="31" B="31" A="255"/>
@@ -25,7 +25,7 @@
 
     <Color x:Key="LightControlBackground">#CFD8DC</Color>
     <Color x:Key="LightControlForeground">#212121</Color>
-    <Color x:Key="LightControlPressed">#90A4AE</Color>
+    <Color x:Key="LightControlPressed">#59B3E7</Color>
     <Color x:Key="LightControlMouseOver">#B0BEC5</Color>
 
     <Color x:Key="LightControlDisabledBackground" R="31" G="31" B="31" A="255"/>
@@ -308,7 +308,7 @@
 
                     <Viewbox Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Stretch="UniformToFill">
                         <Border x:Name="bd" BorderThickness="0" Background="{TemplateBinding Background}">
-                            <ContentControl Template="{TemplateBinding Content}"/>
+                            <ContentControl Template="{TemplateBinding Content}" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </Viewbox>
 

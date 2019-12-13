@@ -17,6 +17,8 @@ namespace SeventhHeavenUI
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
+        internal const string _warningMessage = "Are you sure you want to play FF7 in this mode? Playing FF7 this way can cause extreme slowness and use a lot of disk space.\n\nYou should only use this option while troubleshooting a single active mod so that you can troubleshoot and provide bug reports to the mod author and/or to the 7H developers.";
+
         internal MainWindowViewModel ViewModel { get; set; }
 
         private int _currentTabIndex = 0;
@@ -174,12 +176,18 @@ namespace SeventhHeavenUI
 
         private void menuPlayVariableDump_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.LaunchGame(varDump: true, debug: false);
+            if (System.Windows.MessageBox.Show(_warningMessage, "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                ViewModel.LaunchGame(varDump: true, debug: false);
+            }
         }
 
         private void menuPlayDebugLog_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.LaunchGame(varDump: false, debug: true);
+            if (System.Windows.MessageBox.Show(_warningMessage, "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                ViewModel.LaunchGame(varDump: false, debug: true);
+            }
         }
 
         private void menuPlayOptions_Closed(object sender, RoutedEventArgs e)
@@ -189,7 +197,7 @@ namespace SeventhHeavenUI
 
         private void btnHelp_Click(object sender, RoutedEventArgs e)
         {
-
+            ViewModel.LaunchHelpPage();
         }
 
         private void btnOpenModLink_Click(object sender, RoutedEventArgs e)
@@ -283,6 +291,16 @@ namespace SeventhHeavenUI
         private void menuItemAaliSettings_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.ShowGLConfigWindow();
+        }
+
+        private void menuPlayWithMods_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.LaunchGame(varDump: false, debug: false);
+        }
+
+        private void menuPlayWithoutMods_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindowViewModel.LaunchFF7Exe();
         }
     }
 }
