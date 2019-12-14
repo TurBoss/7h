@@ -305,6 +305,8 @@ namespace SeventhHeaven.ViewModels
 
         public GeneralSettingsViewModel()
         {
+            NewUrlText = "";
+            NewNameText = "";
         }
 
         internal void LoadSettings()
@@ -381,15 +383,26 @@ namespace SeventhHeaven.ViewModels
                 return false;
             }
 
-            foreach (SubscriptionSettingViewModel item in SubscriptionList)
-            {
-                if (Sys.Settings.Subscriptions.Any(s => s.Url == item.Url))
-                {
 
+            List<Subscription> updatedSubscriptions = new List<Subscription>();
+
+            foreach (SubscriptionSettingViewModel item in SubscriptionList.ToList())
+            {
+                var existingSub = Sys.Settings.Subscriptions.FirstOrDefault(s => s.Url == item.Url);
+
+                if (existingSub == null)
+                {
+                    existingSub = new Subscription() { Name = item.Name, Url = item.Url };
                 }
+                else
+                {
+                    existingSub.Name = item.Name;
+                }
+
+                updatedSubscriptions.Add(existingSub);
             }
 
-            //Sys.Settings.SubscribedUrls = SubscriptionsInput.Split(new string[] { "\n", "\r\n", " " }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
+            Sys.Settings.Subscriptions = updatedSubscriptions;
             Sys.Settings.AlsoLaunch = AlsoLaunchInput.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
             Sys.Settings.ExtraFolders = ExtraFoldersInput.ToLower()
                                                          .Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
@@ -740,21 +753,36 @@ namespace SeventhHeaven.ViewModels
         {
             IsSubscriptionPopupOpen = true;
             NewUrlText = selected.Url;
-            NewNameText = selected.Name;
+            NewNameText = selected.Name ?? "";
         }
 
         internal void AddNewSubscription()
         {
             IsSubscriptionPopupOpen = true;
-            NewUrlText = "";
-            NewNameText = "";
+            string clipboardContent = "";
+
+            if (Clipboard.ContainsText(TextDataFormat.Text))
+            {
+                clipboardContent = Clipboard.GetText(TextDataFormat.Text);   
+            }
+
+            if (!string.IsNullOrWhiteSpace(clipboardContent) && clipboardContent.StartsWith("iros://"))
+            {
+                NewUrlText = clipboardContent;
+            }
         }
 
         /// <summary>
         /// Adds or Edits subscription and closes subscription popup
         /// </summary>
-        internal void SaveSubscription()
+        internal bool SaveSubscription()
         {
+            if (!NewUrlText.StartsWith("iros://"))
+            {
+                Sys.Message(new WMessage("URL must be in iros:// format"));
+                return false;
+            }
+
             if (!SubscriptionList.Any(s => s.Url == NewUrlText))
             {
                 SubscriptionList.Add(new SubscriptionSettingViewModel(NewUrlText, NewNameText));
@@ -766,6 +794,7 @@ namespace SeventhHeaven.ViewModels
             }
 
             CloseSubscriptionPopup();
+            return true;
         }
 
         internal void CloseSubscriptionPopup()

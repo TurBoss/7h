@@ -93,6 +93,7 @@ namespace SeventhHeaven.Windows
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ScrollTextboxesToEnd();
+            RecalculateColumnWidths();
         }
 
         private void ScrollTextboxesToEnd()
@@ -174,6 +175,9 @@ namespace SeventhHeaven.Windows
                 return; // dont do anything if popup opened already
             }
 
+
+
+            ToggleCatalogNameIsEnabled(false);
             ViewModel.AddNewSubscription();
         }
 
@@ -183,11 +187,68 @@ namespace SeventhHeaven.Windows
         private void btnCancelSubscription_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.CloseSubscriptionPopup();
+            ToggleCatalogNameIsEnabled(true);
+        }
+
+        private void ToggleCatalogNameIsEnabled(bool isEnabled)
+        {
+            txtNameHint.Text = isEnabled ? "Enter name for catalog" : "Catalog Name will auto resolve on save";
+            txtCatalogName.IsEnabled = isEnabled;
         }
 
         private void btnSaveSubscription_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.SaveSubscription();
+            if (ViewModel.SaveSubscription())
+            {
+                ToggleCatalogNameIsEnabled(true);
+                RecalculateColumnWidths();
+            }
+        }
+
+        private void Window_LocationChanged(object sender, System.EventArgs e)
+        {
+            ViewModel.IsSubscriptionPopupOpen = false;
+        }
+
+        private void Window_Deactivated(object sender, System.EventArgs e)
+        {
+            ViewModel.IsSubscriptionPopupOpen = false;
+        }
+
+        internal void RecalculateColumnWidths()
+        {
+            double scrollBarWidth = 10;
+            double listWidth = lstSubscriptions.ActualWidth;
+
+            if (listWidth == 0)
+            {
+                return; // ActualWidth could be zero if list has not been rendered yet
+            }
+
+            double remainingWidth = listWidth - scrollBarWidth;
+
+            double nameWidth = (0.5) * remainingWidth; // Name takes 50% of remaining width
+            double urlWidth = (0.5) * remainingWidth; // Url takes up 50% of remaining width
+
+            double minNameWidth = 50; // don't resize columns less than the minimums
+            double minUrlWidth = 100;
+
+            try
+            {
+                if (nameWidth < listWidth && nameWidth > minNameWidth)
+                {
+                    colName.Width = nameWidth;
+                }
+
+                if (urlWidth < listWidth && urlWidth > minUrlWidth)
+                {
+                    colUrl.Width = urlWidth;
+                }
+            }
+            catch (System.Exception e)
+            {
+                Logger.Warn(e, "failed to resize columns");
+            }
         }
     }
 }
