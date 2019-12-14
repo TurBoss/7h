@@ -162,7 +162,6 @@ namespace Iros._7th.Workshop
         Original = 0x1,
         Rerelease = 0x2,
         Steam = 0x4,
-
         All = 0xff
     }
 
@@ -183,6 +182,5 @@ namespace Iros._7th.Workshop
         public string PreviewImage { get; set; }
         public string ReleaseNotes { get; set; }
 
-        public string Category { get; set; }
     }
 }
