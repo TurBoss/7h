@@ -107,12 +107,21 @@ namespace Iros._7th.Workshop {
             return Options != null && Options.Any(o => o == option);
         }
 
+        public void RemoveOption(GeneralOptions option)
+        {
+            if (Options.Contains(option))
+            {
+                Options.Remove(option);
+            }
+        }
+
         internal static Settings UseDefaultSettings()
         {
             Settings defaultSettings = new Settings();
 
             defaultSettings.Options.Add(GeneralOptions.AutoImportMods);
             defaultSettings.Options.Add(GeneralOptions.AutoActiveNewMods);
+            defaultSettings.Options.Add(GeneralOptions.WarnAboutModCode);
             defaultSettings.Options.Add(GeneralOptions.OpenIrosLinksWith7H);
             defaultSettings.Options.Add(GeneralOptions.OpenModFilesWith7H);
 

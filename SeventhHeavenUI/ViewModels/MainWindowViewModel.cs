@@ -343,16 +343,11 @@ They will be automatically turned off.";
             }
         }
 
-        public static bool IgnoreModCodeWarning { get; private set; }
-
-        public static MessageBoxResult IgnoreModDontAskAgainResult { get; private set; }
-
         #endregion
 
         public MainWindowViewModel()
         {
             SearchText = "";
-            IgnoreModCodeWarning = false;
 
             ModsViewModel = new MyModsViewModel();
             ModsViewModel.SelectedModChanged += ModsViewModel_SelectedModChanged;
@@ -856,24 +851,23 @@ They will be automatically turned off.";
 
             if (Sys.Settings.HasOption(GeneralOptions.WarnAboutModCode))
             {
-                if (!IgnoreModCodeWarning)
+                string msg = "This mod ({0}) contains code/patches that could change FF7.exe. Are you sure you want to activate and run this mod?\n\n" +
+                             "Only choose YES if you trust the author of this mod to run code/programs on your computer!";
+                msg = String.Format(msg, mod.CachedDetails.Name);
+
+                CheckBoxMessageWindow messageWin = new CheckBoxMessageWindow("Allow mod to run?", msg, MessageBoxButton.YesNo, "Don't ask me again", true)
                 {
-                    string msg = "This mod ({0}) contains code/patches that could change FF7.exe. Are you sure you want to activate and run this mod?\n\n" +
-                                 "Only choose YES if you trust the author of this mod to run code/programs on your computer!";
-                    msg = String.Format(msg, mod.CachedDetails.Name);
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen
+                };
+                messageWin.ShowDialog();
 
-                    CheckBoxMessageWindow messageWin = new CheckBoxMessageWindow("Allow mod to run?", msg, MessageBoxButton.YesNo, "Don't ask me again", IgnoreModCodeWarning)
-                    {
-                        WindowStartupLocation = WindowStartupLocation.CenterScreen
-                    };
-                    messageWin.ShowDialog();
-
-                    IgnoreModDontAskAgainResult = messageWin.ViewModel.Result;
-                    IgnoreModCodeWarning = messageWin.ViewModel.IsChecked;
+                if (messageWin.ViewModel.IsChecked)
+                {
+                    // set settings to turn off warning
+                    Sys.Settings.RemoveOption(GeneralOptions.WarnAboutModCode);
                 }
 
-
-                if (IgnoreModDontAskAgainResult != MessageBoxResult.Yes)
+                if (messageWin.ViewModel.Result != MessageBoxResult.Yes)
                 {
                     return false;
                 }
