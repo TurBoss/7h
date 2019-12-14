@@ -1529,15 +1529,15 @@ They will be automatically turned off.";
 
             if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
             {
-                categories = Sys.Catalog.Mods.Where(c => !string.IsNullOrEmpty(c.Category) || !string.IsNullOrEmpty(c.LatestVersion.Category))
-                                             .Select(c => c.Category ?? c.LatestVersion.Category)
+                categories = Sys.Catalog.Mods.Where(c => !string.IsNullOrEmpty(c.Category))
+                                             .Select(c => c.Category)
                                              .Distinct()
                                              .ToList();
             }
             else
             {
-                categories = Sys.Library.Items.Where(c => !string.IsNullOrEmpty(c.CachedDetails.Category) || !string.IsNullOrEmpty(c.CachedDetails.LatestVersion.Category))
-                                              .Select(c => c.CachedDetails.Category ?? c.CachedDetails.LatestVersion.Category)
+                categories = Sys.Library.Items.Where(c => !string.IsNullOrEmpty(c.CachedDetails.Category))
+                                              .Select(c => c.CachedDetails.Category)
                                               .Distinct()
                                               .ToList();
             }

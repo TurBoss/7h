@@ -169,7 +169,7 @@ namespace SeventhHeavenUI.ViewModels
 
             Name = Mod.Name;
             Author = Mod.Author;
-            Category = Mod.LatestVersion.Category;
+            Category = Mod.Category;
             Version = Mod.LatestVersion.Version.ToString();
             DownloadSize = GetDLSize(Mod.LatestVersion.DownloadSize);
             ReleaseDate = Mod.LatestVersion.ReleaseDate.ToString(Sys.Settings.DateTimeStringFormat);

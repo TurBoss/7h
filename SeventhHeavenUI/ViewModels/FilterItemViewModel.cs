@@ -107,7 +107,7 @@ namespace SeventhHeavenUI.ViewModels
             if (categories == null)
                 categories = new List<FilterItemViewModel>();
 
-            string modCategory = mod.Category ?? mod.LatestVersion.Category;
+            string modCategory = mod.Category;
 
             return categories.Count() == 0 ||
                    categories.Any(c => c.Name.Equals(modCategory, StringComparison.InvariantCultureIgnoreCase)) ||
