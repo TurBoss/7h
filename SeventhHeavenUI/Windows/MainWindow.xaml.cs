@@ -1,5 +1,6 @@
 ﻿using Iros._7th;
 using Iros._7th.Workshop;
+using SeventhHeaven.ViewModels;
 using SeventhHeaven.Windows;
 using SeventhHeavenUI.ViewModels;
 using System;
@@ -58,6 +59,15 @@ namespace SeventhHeavenUI
 
             ProcessCommandLineArgs();
 
+            App.uniqueMutex = new System.Threading.Mutex(true, App.uniqueAppGuid, out bool result);
+            GC.KeepAlive(App.uniqueMutex);
+
+            if (!result)
+            {
+                App.Current.Shutdown(); // only one instance of the app opened at a time so close after processing arguments
+                return;
+            }
+
             ctrlMyMods.RecalculateColumnWidths();
         }
 
@@ -68,23 +78,30 @@ namespace SeventhHeavenUI
                 if (parm.StartsWith("iros://", StringComparison.InvariantCultureIgnoreCase))
                 {
                     //TODO: ProcessIrosLink(parm);
+                    
                 }
                 else if (parm.StartsWith("/OPENIRO:", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    string irofile = parm.Substring(9);
-                    string irofilenoext = System.IO.Path.GetFileNameWithoutExtension(irofile);
-                    Log.Write("Importing IRO from Windows " + irofile);
+                    string irofile = null;
+                    string irofilenoext = null;
+
                     try
                     {
-                        //TODO: fImportMod.ImportMod(irofile, irofilenoext, true, false);
+                        irofile = parm.Substring(9);
+                        irofilenoext = System.IO.Path.GetFileNameWithoutExtension(irofile);
+                        Log.Write("Importing IRO from Windows " + irofile);
+
+                        ImportModViewModel.ImportMod(irofile, irofilenoext, true, false);
                     }
                     catch (Exception ex)
                     {
                         Sys.Message(new WMessage() { Text = "Mod " + irofilenoext + " failed to import: " + ex.ToString() });
                         continue;
                     }
+
                     Sys.Message(new WMessage() { Text = "Auto imported mod " + irofilenoext });
                     System.Windows.MessageBox.Show("The mod " + irofilenoext + " has been added to your Library.", "Import Mod from Windows");
+
                     //TODO: Add an IRO "Unpack" option here
                 }
                 else if (parm.StartsWith("/PROFILE:", StringComparison.InvariantCultureIgnoreCase))
@@ -95,11 +112,11 @@ namespace SeventhHeavenUI
                 }
                 else if (parm.Equals("/LAUNCH", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    //TODO: bLaunch.PerformClick();
+                    ViewModel.LaunchGame(false, false);
                 }
                 else if (parm.Equals("/QUIT", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    System.Windows.Application.Current.Shutdown();
+                    App.Current.Shutdown();
                 }
             }
         }

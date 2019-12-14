@@ -1,6 +1,9 @@
-﻿using System;
+﻿using SeventhHeaven.Windows;
+using System;
 using System.Diagnostics;
 using System.Security.Principal;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace SeventhHeavenUI
@@ -10,6 +13,14 @@ namespace SeventhHeavenUI
     /// </summary>
     public partial class App : Application
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
+        public const string uniqueAppGuid = "F73958FA-160F-4185-AE8F-CF5B7EA89494";
+
+        public static Mutex uniqueMutex;
+
+        private bool hasShownErrorWindow = false;
+
         public static Version GetAppVersion()
         {
             return typeof(SeventhHeavenUI.App).Assembly.GetName().Version;
@@ -36,12 +47,38 @@ namespace SeventhHeavenUI
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+            SetupExceptionHandling();
         }
 
-        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        private void SetupExceptionHandling()
         {
-            Debug.WriteLine($"Unhandled exception: {e.Exception.Message}");
+            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+                LogUnhandledException((Exception)e.ExceptionObject, "AppDomain.CurrentDomain.UnhandledException");
+
+            Dispatcher.UnhandledException += (s, e) =>
+                LogUnhandledException(e.Exception, "Application.Current.DispatcherUnhandledException");
+
+            TaskScheduler.UnobservedTaskException += (s, e) =>
+                LogUnhandledException(e.Exception, "TaskScheduler.UnobservedTaskException");
         }
+
+        private void LogUnhandledException(Exception exception, string source)
+        {
+            string message = $"! Unhandled exception ({source})";
+            Logger.Error(message);
+            Logger.Error(exception);
+
+            if (!hasShownErrorWindow)
+            {
+                hasShownErrorWindow = true;
+                UnhandledErrorWindow.Show(exception);
+            }
+        }
+
+        //private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        //{
+        //    Logger.Warn($"! Unhandled exception ! App Closing...");
+        //    Logger.Error(e.Exception);
+        //}
     }
 }

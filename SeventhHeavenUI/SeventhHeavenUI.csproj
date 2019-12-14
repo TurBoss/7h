@@ -163,6 +163,9 @@
     <Compile Include="Windows\ThemeSettingsWindow.xaml.cs">
       <DependentUpon>ThemeSettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\UnhandledErrorWindow.xaml.cs">
+      <DependentUpon>UnhandledErrorWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="UserControls\PatchIroAdvancedUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -250,6 +253,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\ThemeSettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\UnhandledErrorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
