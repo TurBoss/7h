@@ -260,8 +260,18 @@ namespace SeventhHeaven.ViewModels
             {
                 Logger.Info("FF7 Exe path is empty. Auto detecting paths ...");
 
-                string registry_path = @"HKEY_LOCAL_MACHINE\SOFTWARE\Square Soft, Inc.\Final Fantasy VII";
-                string ff7 = (string)Registry.GetValue(registry_path, "AppPath", null);
+                string registry_path = null;
+                string ff7 = null;
+
+                try
+                {
+                    registry_path = @"HKEY_LOCAL_MACHINE\SOFTWARE\Square Soft, Inc.\Final Fantasy VII";
+                    ff7 = (string)Registry.GetValue(registry_path, "AppPath", null);
+                }
+                catch
+                {
+                    // could fail if game not installed
+                }
 
                 if (!string.IsNullOrEmpty(ff7))
                 {
