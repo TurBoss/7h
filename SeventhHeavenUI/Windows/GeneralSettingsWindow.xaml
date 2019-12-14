@@ -9,7 +9,7 @@
         Style="{StaticResource MainWindowStyle}"
         Title="General Settings" 
         ResizeMode="NoResize"
-        Height="550" Width="900">
+        Height="610" Width="1200">
     <Window.Resources>
         <Style x:Key="MultiLineTextBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource PrimaryTextBoxStyle}">
             <Setter Property="MinWidth" Value="325"/>
@@ -24,7 +24,7 @@
         <Style TargetType="CheckBox" BasedOn="{StaticResource ToggleSwitchCheckbox}">
             <Setter Property="HorizontalAlignment" Value="Right"/>
             <Setter Property="VerticalAlignment" Value="Top"/>
-            <Setter Property="Margin" Value="0,0,0,5"/>
+            <Setter Property="Margin" Value="0,2,0,2"/>
         </Style>
     </Window.Resources>
     
@@ -37,11 +37,11 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <GroupBox Header=" Paths " Grid.RowSpan="1" Margin="10,10,0,0">
-            <Grid Margin="5">
+            <Grid Margin="5" VerticalAlignment="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -55,41 +55,93 @@
                 </Grid.ColumnDefinitions>
                 
                 <TextBlock Text="FF7 Exe:" Margin="0,0,5,0" HorizontalAlignment="Right"/>
-                <TextBox x:Name="txtFf7Exe" Text="{Binding FF7ExePathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="200" Grid.Column="1"/>
-                <Button x:Name="btnFf7Exe" Content="..." Padding="10,0,10,0" Click="btnFf7Exe_Click" Grid.Column="2"/>
+                <TextBox x:Name="txtFf7Exe" Text="{Binding FF7ExePathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="200" Grid.Column="1" Margin="0,0,0,6"/>
+                <Button x:Name="btnFf7Exe" Content="..." Padding="10,0,10,0" Click="btnFf7Exe_Click" Grid.Column="2" Margin="0,0,0,3"/>
 
                 <TextBlock Text="Movies:" Margin="0,6,5,0" HorizontalAlignment="Right" Grid.Row="1"/>
-                <TextBox x:Name="txtMovies" Text="{Binding MoviesPathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="0,6,0,0" Width="{Binding ElementName=txtFf7Exe, Path=ActualWidth}"/>
-                <Button x:Name="btnMovies" Content="..." Padding="10,6,10,0" Click="btnMovies_Click" Grid.Row="1" Grid.Column="2"/>
+                <TextBox x:Name="txtMovies" Text="{Binding MoviesPathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="0,6,0,6" Width="{Binding ElementName=txtFf7Exe, Path=ActualWidth}"/>
+                <Button x:Name="btnMovies" Content="..." Padding="10,6,10,0" Click="btnMovies_Click" Grid.Row="1" Grid.Column="2" Margin="0,3,0,3"/>
 
 
                 <TextBlock Text="Textures:" Margin="0,6,5,0" HorizontalAlignment="Right" Grid.Row="2"/>
-                <TextBox x:Name="txtTextures" Text="{Binding TexturesPathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1" Margin="0,6,0,0" Width="{Binding ElementName=txtFf7Exe, Path=ActualWidth}"/>
-                <Button x:Name="btnTextures" Content="..." Padding="10,6,10,0" Click="btnTextures_Click" Grid.Row="2" Grid.Column="2"/>
+                <TextBox x:Name="txtTextures" Text="{Binding TexturesPathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1" Margin="0,6,0,6" Width="{Binding ElementName=txtFf7Exe, Path=ActualWidth}"/>
+                <Button x:Name="btnTextures" Content="..." Padding="10,6,10,0" Click="btnTextures_Click" Grid.Row="2" Grid.Column="2" Margin="0,3,0,3"/>
 
 
                 <TextBlock Text="Library:" Margin="0,6,5,0" HorizontalAlignment="Right" Grid.Row="3"/>
                 <TextBox x:Name="txtLibrary" Text="{Binding LibraryPathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Grid.Column="1" Margin="0,6,0,0" Width="{Binding ElementName=txtFf7Exe, Path=ActualWidth}"/>
-                <Button x:Name="btnLibrary" Content="..." Padding="10,6,10,0" Click="btnLibrary_Click" Grid.Row="3" Grid.Column="2"/>
+                <Button x:Name="btnLibrary" Content="..." Padding="10,6,10,0" Click="btnLibrary_Click" Grid.Row="3" Grid.Column="2" Margin="0,3,0,0"/>
             </Grid>
         </GroupBox>
 
-        <GroupBox Header=" Options " Grid.Row="1" Grid.RowSpan="2" Margin="10,10,0,0" >
+        <GroupBox Header=" Options " Grid.Row="1" Grid.RowSpan="2" Margin="10,10,0,0" HorizontalAlignment="Left">
             <StackPanel Margin="5" HorizontalAlignment="Left">
                 <CheckBox Content="Keep Older Mod Versions After Updating" IsChecked="{Binding KeepOldModsAfterUpdating, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='True'}" Margin="0,0,0,2"/>
                 <CheckBox Content="Activate Newly Installed Mods Automatically" IsChecked="{Binding ActivateInstalledModsAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
                 <CheckBox Content="Import Library Folder Mods Automatically" IsChecked="{Binding ImportLibraryFolderAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
+                <CheckBox Content="Warn When Mod Contains Code" IsChecked="{Binding WarnAboutModCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <CheckBox Content="Check For 7th Heaven Updates Automatically" IsChecked="{Binding CheckForUpdatesAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
                 <CheckBox Content="Bypass Compatibility Locks" IsChecked="{Binding BypassCompatibilityLocks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <CheckBox Content="Open iros:// links with 7th Heaven" IsChecked="{Binding OpenIrosLinks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <CheckBox Content="Open Mod Files with 7th Heaven" IsChecked="{Binding OpenModFilesWith7H, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <CheckBox Content="Warn When Mod Contains Code" IsChecked="{Binding WarnAboutModCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <CheckBox Content="Context Menu in Explorer" IsChecked="{Binding ShowContextMenuInExplorer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
             </StackPanel>
         </GroupBox>
 
         <GroupBox Grid.Column="1" Header=" Catalog Subscriptions: " Margin="25,10,10,0">
-            <TextBox Style="{StaticResource MultiLineTextBoxStyle}" Text="{Binding SubscriptionsInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Margin="5,5,0,5">
+                    <Button x:Name="btnAddUrl"
+                            Click="btnAddUrl_Click"
+                            ToolTip="Add Subscription URL"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="28"
+                            Width="28"
+                            Margin="0,0,0,5"
+                            Content="{StaticResource iconAdd}"/>
+
+                    <Button x:Name="btnRemoveUrl"
+                            Click="btnRemoveUrl_Click"
+                            ToolTip="Remove Subscription URL"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="28"
+                            Width="28"
+                            Margin="0,0,0,5"
+                            Content="{StaticResource iconMinus}"/>
+
+                    <Button x:Name="btnEditUrl"
+                            ToolTip="Edit Subscription URL/Name"
+                            Click="btnEditUrl_Click"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="28"
+                            Width="28"
+                            Content="{StaticResource iconEdit}"/>
+
+                </StackPanel>
+                
+
+                <ListView x:Name="lstSubscriptions" Grid.Column="1" 
+                          ItemsSource="{Binding SubscriptionList}" 
+                          ItemContainerStyle="{StaticResource MainListViewItemStyle}"
+                          Margin="5,5,5,5"
+                          Height="150">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Name" Width="Auto" DisplayMemberBinding="{Binding Name}"/>
+                            <GridViewColumn Header="Url" Width="Auto" DisplayMemberBinding="{Binding Url}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
         </GroupBox>
 
         <GroupBox Grid.Row="1" Grid.Column="1" Header=" Additional Folders to Monitor: " Margin="25,10,10,0">
@@ -117,5 +169,84 @@
                 Margin="0,5,10,5"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"/>
+
+        <Popup x:Name="popupSubscription"
+               IsOpen="{Binding IsSubscriptionPopupOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+               StaysOpen="True"
+               Placement="Right"
+               PlacementTarget="{Binding ElementName=btnAddUrl}">
+            <Grid Width="542" Height="152" 
+                  Background="{DynamicResource PrimaryControlBackground}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+
+                </Grid.RowDefinitions>
+
+                <TextBox Text="{Binding NewUrlText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                         FontSize="14"
+                         VerticalContentAlignment="Center"
+                         Margin="25,15,25,10"/>
+
+                <TextBlock Text="Enter url in iros:// format"
+                           Foreground="{DynamicResource PrimaryControlDisabledForeground}"
+                           IsHitTestVisible="False"
+                           FontSize="14"
+                           Margin="30,20,25,10">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding NewUrlText, FallbackValue=''}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <TextBox Text="{Binding NewNameText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                         Grid.Row="1"
+                         FontSize="14"
+                         VerticalContentAlignment="Center"
+                         Margin="25,15,25,10"/>
+
+                <TextBlock Text="Enter name for catalog"
+                           Grid.Row="1"
+                           Foreground="{DynamicResource PrimaryControlDisabledForeground}"
+                           IsHitTestVisible="False"
+                           FontSize="14"
+                           Margin="30,20,25,10">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding NewNameText, FallbackValue=''}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <Button x:Name="btnSaveSubscription"
+                        Click="btnSaveSubscription_Click"
+                        Grid.Row="2"
+                        HorizontalAlignment="Center"
+                        Width="80"
+                        Margin="0,0,90,10"
+                        Content="Save"/>
+
+                <Button x:Name="btnCancelSubscription"
+                        Click="btnCancelSubscription_Click"
+                        Grid.Row="2"
+                        HorizontalAlignment="Center"
+                        Width="80"
+                        Margin="90,0,0,10"
+                        Content="Cancel"/>
+
+            </Grid>
+        </Popup>
     </Grid>
 </Window>

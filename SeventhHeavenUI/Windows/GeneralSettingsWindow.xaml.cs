@@ -1,5 +1,6 @@
 ﻿using SeventhHeaven.Classes;
 using SeventhHeaven.ViewModels;
+using SeventhHeavenUI.ViewModels;
 using System.IO;
 using System.Windows;
 using System.Windows.Forms;
@@ -11,6 +12,8 @@ namespace SeventhHeaven.Windows
     /// </summary>
     public partial class GeneralSettingsWindow : Window
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         public GeneralSettingsViewModel ViewModel { get; set; }
 
         public GeneralSettingsWindow()
@@ -89,22 +92,102 @@ namespace SeventhHeaven.Windows
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            // reference: https://stackoverflow.com/questions/11232438/single-line-wpf-textbox-horizontal-scroll-to-end
-            txtMovies.CaretIndex = ViewModel.MoviesPathInput.Length;
-            var rect = txtMovies.GetRectFromCharacterIndex(txtMovies.CaretIndex);
-            txtMovies.ScrollToHorizontalOffset(rect.Right);
+            ScrollTextboxesToEnd();
+        }
 
-            txtTextures.CaretIndex = ViewModel.TexturesPathInput.Length;
-            rect = txtTextures.GetRectFromCharacterIndex(txtTextures.CaretIndex);
-            txtTextures.ScrollToHorizontalOffset(rect.Right);
+        private void ScrollTextboxesToEnd()
+        {
+            try
+            {
+                // reference: https://stackoverflow.com/questions/11232438/single-line-wpf-textbox-horizontal-scroll-to-end
+                if (!string.IsNullOrWhiteSpace(ViewModel.MoviesPathInput))
+                {
+                    txtMovies.CaretIndex = ViewModel.MoviesPathInput.Length;
+                    var rect = txtMovies.GetRectFromCharacterIndex(txtMovies.CaretIndex);
+                    txtMovies.ScrollToHorizontalOffset(rect.Right);
+                }
 
-            txtLibrary.CaretIndex = ViewModel.LibraryPathInput.Length;
-            rect = txtLibrary.GetRectFromCharacterIndex(txtLibrary.CaretIndex);
-            txtLibrary.ScrollToHorizontalOffset(rect.Right);
+                if (!string.IsNullOrWhiteSpace(ViewModel.TexturesPathInput))
+                {
+                    txtTextures.CaretIndex = ViewModel.TexturesPathInput.Length;
+                    var rect = txtTextures.GetRectFromCharacterIndex(txtTextures.CaretIndex);
+                    txtTextures.ScrollToHorizontalOffset(rect.Right);
 
-            txtFf7Exe.CaretIndex = ViewModel.FF7ExePathInput.Length;
-            rect = txtFf7Exe.GetRectFromCharacterIndex(txtFf7Exe.CaretIndex);
-            txtFf7Exe.ScrollToHorizontalOffset(rect.Right);
+                }
+
+                if (!string.IsNullOrWhiteSpace(ViewModel.LibraryPathInput))
+                {
+                    txtLibrary.CaretIndex = ViewModel.LibraryPathInput.Length;
+                    var rect = txtLibrary.GetRectFromCharacterIndex(txtLibrary.CaretIndex);
+                    txtLibrary.ScrollToHorizontalOffset(rect.Right);
+
+                }
+
+                if (!string.IsNullOrWhiteSpace(ViewModel.FF7ExePathInput))
+                {
+                    txtFf7Exe.CaretIndex = ViewModel.FF7ExePathInput.Length;
+                    var rect = txtFf7Exe.GetRectFromCharacterIndex(txtFf7Exe.CaretIndex);
+                    txtFf7Exe.ScrollToHorizontalOffset(rect.Right);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Logger.Warn($"Failed to scroll textbox to end: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Opens 'Edit Subscription' popup
+        /// </summary>
+        private void btnEditUrl_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.IsSubscriptionPopupOpen)
+            {
+                return; // dont do anything if popup opened already
+            }
+
+            if (lstSubscriptions.SelectedItem == null)
+            {
+                return; // nothing selected
+            }
+
+            ViewModel.EditSelectedSubscription((lstSubscriptions.SelectedItem as SubscriptionSettingViewModel));
+        }
+
+        private void btnRemoveUrl_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.IsSubscriptionPopupOpen)
+            {
+                return; // dont do anything if popup is opened
+            }
+
+            ViewModel.RemoveSelectedSubscription((lstSubscriptions.SelectedItem as SubscriptionSettingViewModel));
+        }
+
+        /// <summary>
+        /// Opens 'Add Subscription' popup
+        /// </summary>
+        private void btnAddUrl_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.IsSubscriptionPopupOpen)
+            {
+                return; // dont do anything if popup opened already
+            }
+
+            ViewModel.AddNewSubscription();
+        }
+
+        /// <summary>
+        /// Closes 'New/Edit' subscription popup and clears out any entered text
+        /// </summary>
+        private void btnCancelSubscription_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.CloseSubscriptionPopup();
+        }
+
+        private void btnSaveSubscription_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SaveSubscription();
         }
     }
 }

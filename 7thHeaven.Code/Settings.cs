@@ -23,7 +23,7 @@ namespace Iros._7th.Workshop {
         OpenIrosLinksWith7H,
         OpenModFilesWith7H,
         Show7HInFileExplorerContextMenu,
-        WarnAboutModCode
+        WarnAboutModCode,
     }
 
     [Flags]
@@ -44,6 +44,8 @@ namespace Iros._7th.Workshop {
         public DateTime LastSuccessfulCheck { get; set; }
         public int FailureCount { get; set; }
         public string Url { get; set; }
+        public string Name { get; set; }
+
     }
 
     public class Settings {
@@ -64,7 +66,15 @@ namespace Iros._7th.Workshop {
             }
         }
 
-        public List<string> SubscribedUrls { get; set; }
+
+        public List<string> SubscribedUrls
+        {
+            get
+            {
+                return Subscriptions?.Select(s => s.Url).ToList();
+            }
+        }
+
         public List<string> ExtraFolders { get; set; }
         public List<Subscription> Subscriptions { get; set; }
 
@@ -92,7 +102,6 @@ namespace Iros._7th.Workshop {
         public bool IsFirstStart { get; set; }
 
         public Settings() {
-            SubscribedUrls = new List<string>();
             ExtraFolders = new List<string>();
             AlsoLaunch = new List<string>();
             Subscriptions = new List<Subscription>();
@@ -125,8 +134,8 @@ namespace Iros._7th.Workshop {
             defaultSettings.Options.Add(GeneralOptions.OpenIrosLinksWith7H);
             defaultSettings.Options.Add(GeneralOptions.OpenModFilesWith7H);
 
-            defaultSettings.SubscribedUrls.Add("iros://Url/http$pastebin.com/raw.php?i=frmT5PEh");
-            defaultSettings.SubscribedUrls.Add("iros://Url/http$pastebin.com/raw.php?i=dDBkYkDu");
+            defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/http$pastebin.com/raw.php?i=frmT5PEh", Name = "" });
+            defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/http$pastebin.com/raw.php?i=dDBkYkDu", Name = "" });
 
             return defaultSettings;
         }

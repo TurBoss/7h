@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using SeventhHeavenUI.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -31,6 +32,12 @@ namespace SeventhHeaven.ViewModels
         private bool _openIrosLinks;
         private bool _openModFilesWith7H;
         private bool _warnAboutModCode;
+        private bool _showContextMenuInExplorer;
+
+        private ObservableCollection<SubscriptionSettingViewModel> _subscriptionList;
+        private string _newUrlText;
+        private string _newNameText;
+        private bool _isSubscriptionPopupOpen;
 
         public string FF7ExePathInput
         {
@@ -227,6 +234,75 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public bool ShowContextMenuInExplorer
+        {
+            get
+            {
+                return _showContextMenuInExplorer;
+            }
+            set
+            {
+                _showContextMenuInExplorer = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+
+        public bool IsSubscriptionPopupOpen
+        {
+            get
+            {
+                return _isSubscriptionPopupOpen;
+            }
+            set
+            {
+                _isSubscriptionPopupOpen = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<SubscriptionSettingViewModel> SubscriptionList
+        {
+            get
+            {
+                if (_subscriptionList == null)
+                    _subscriptionList = new ObservableCollection<SubscriptionSettingViewModel>();
+
+                return _subscriptionList;
+            }
+            set
+            {
+                _subscriptionList = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string NewUrlText
+        {
+            get
+            {
+                return _newUrlText;
+            }
+            set
+            {
+                _newUrlText = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string NewNameText
+        {
+            get
+            {
+                return _newNameText;
+            }
+            set
+            {
+                _newNameText = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public GeneralSettingsViewModel()
         {
         }
@@ -234,6 +310,11 @@ namespace SeventhHeaven.ViewModels
         internal void LoadSettings()
         {
             AutoDetectSystemPaths();
+
+            foreach (Subscription item in Sys.Settings.Subscriptions)
+            {
+                SubscriptionList.Add(new SubscriptionSettingViewModel(item.Url, item.Name));
+            }
 
             SubscriptionsInput = string.Join("\n", Sys.Settings.SubscribedUrls.Distinct().ToArray());
             ExtraFoldersInput = string.Join("\n", Sys.Settings.ExtraFolders.Distinct().ToArray());
@@ -252,6 +333,7 @@ namespace SeventhHeaven.ViewModels
             OpenIrosLinks = Sys.Settings.HasOption(GeneralOptions.OpenIrosLinksWith7H);
             OpenModFilesWith7H = Sys.Settings.HasOption(GeneralOptions.OpenModFilesWith7H);
             WarnAboutModCode = Sys.Settings.HasOption(GeneralOptions.WarnAboutModCode);
+            ShowContextMenuInExplorer = Sys.Settings.HasOption(GeneralOptions.Show7HInFileExplorerContextMenu);
         }
 
         public static void AutoDetectSystemPaths()
@@ -299,7 +381,15 @@ namespace SeventhHeaven.ViewModels
                 return false;
             }
 
-            Sys.Settings.SubscribedUrls = SubscriptionsInput.Split(new string[] { "\n", "\r\n", " " }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
+            foreach (SubscriptionSettingViewModel item in SubscriptionList)
+            {
+                if (Sys.Settings.Subscriptions.Any(s => s.Url == item.Url))
+                {
+
+                }
+            }
+
+            //Sys.Settings.SubscribedUrls = SubscriptionsInput.Split(new string[] { "\n", "\r\n", " " }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
             Sys.Settings.AlsoLaunch = AlsoLaunchInput.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
             Sys.Settings.ExtraFolders = ExtraFoldersInput.ToLower()
                                                          .Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
@@ -361,6 +451,12 @@ namespace SeventhHeaven.ViewModels
 
             if (WarnAboutModCode)
                 newOptions.Add(GeneralOptions.WarnAboutModCode);
+
+            if (ShowContextMenuInExplorer)
+            {
+                // TODO: add context menu option to Explorer
+                newOptions.Add(GeneralOptions.Show7HInFileExplorerContextMenu);
+            }
 
 
             Sys.Settings.Options = newOptions;
@@ -639,5 +735,50 @@ namespace SeventhHeaven.ViewModels
                 return false;
             }
         }
+
+        internal void EditSelectedSubscription(SubscriptionSettingViewModel selected)
+        {
+            IsSubscriptionPopupOpen = true;
+            NewUrlText = selected.Url;
+            NewNameText = selected.Name;
+        }
+
+        internal void AddNewSubscription()
+        {
+            IsSubscriptionPopupOpen = true;
+            NewUrlText = "";
+            NewNameText = "";
+        }
+
+        /// <summary>
+        /// Adds or Edits subscription and closes subscription popup
+        /// </summary>
+        internal void SaveSubscription()
+        {
+            if (!SubscriptionList.Any(s => s.Url == NewUrlText))
+            {
+                SubscriptionList.Add(new SubscriptionSettingViewModel(NewUrlText, NewNameText));
+            }
+            else
+            {
+                SubscriptionSettingViewModel toEdit = SubscriptionList.FirstOrDefault(s => s.Url == NewUrlText);
+                toEdit.Name = NewNameText;
+            }
+
+            CloseSubscriptionPopup();
+        }
+
+        internal void CloseSubscriptionPopup()
+        {
+            IsSubscriptionPopupOpen = false;
+            NewUrlText = "";
+            NewNameText = "";
+        }
+
+        internal void RemoveSelectedSubscription(SubscriptionSettingViewModel selected)
+        {
+            SubscriptionList.Remove(selected);
+        }
+
     }
 }

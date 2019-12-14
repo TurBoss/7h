@@ -119,6 +119,7 @@
     <Compile Include="UserControls\PackIroUserControl.xaml.cs">
       <DependentUpon>PackIroUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\SubscriptionSettingViewModel.cs" />
     <Compile Include="ViewModels\GLSettingViewModel.cs" />
     <Compile Include="ViewModels\CheckboxMessageViewModel.cs" />
     <Compile Include="ViewModels\PatchIroViewModel.cs" />
@@ -275,6 +276,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Content Include="Resources\icons_license.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Help\index.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
