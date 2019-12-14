@@ -43,6 +43,12 @@
             <Setter Property="ItemContainerStyle" Value="{StaticResource dropdownItemStyle}"/>
         </Style>
 
+        <Style TargetType="CheckBox" BasedOn="{StaticResource ToggleSwitchCheckbox}">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Margin" Value="-5,1,0,0"/>
+        </Style>
+
         <Style TargetType="{x:Type ContentControl}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -64,7 +70,6 @@
                                       IsChecked="{Binding IsOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       VerticalAlignment="Top"
                                       HorizontalAlignment="Left"
-                                      Margin="0,6,0,0"
                                       Grid.Column="1"/>
 
                             <TextBox Grid.Column="1"

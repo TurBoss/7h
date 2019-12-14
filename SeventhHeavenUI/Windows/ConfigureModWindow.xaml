@@ -11,7 +11,7 @@
         Style="{StaticResource MainWindowStyle}"
         Title="{Binding WindowTitle, FallbackValue='Configure Mod'}" 
         Closed="Window_Closed"
-        Height="400" Width="600"
+        Height="600" Width="800"
         ResizeMode="CanResize"
         MinHeight="400" MinWidth="600">
     <Window.Resources>
@@ -56,6 +56,12 @@
         <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MainComboBoxStyle}">
             <Setter Property="ItemTemplate" Value="{StaticResource dropdownItemTemplate}"/>
             <Setter Property="ItemContainerStyle" Value="{StaticResource dropdownItemStyle}"/>
+        </Style>
+
+        <Style TargetType="CheckBox" BasedOn="{StaticResource ToggleSwitchCheckbox}">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Margin" Value="-5,1,0,0"/>
         </Style>
     </Window.Resources>
     <Grid>

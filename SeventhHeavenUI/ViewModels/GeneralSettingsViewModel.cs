@@ -334,15 +334,24 @@ namespace SeventhHeaven.ViewModels
                 AssociateIrosUrlWith7H();
                 newOptions.Add(GeneralOptions.OpenIrosLinksWith7H);
             }
+            else
+            {
+                RemoveIrosUrlAssociationFromRegistry();
+            }
 
             if (OpenModFilesWith7H)
             {
                 AssociateIroFilesWith7H();
                 newOptions.Add(GeneralOptions.OpenModFilesWith7H);
             }
+            else
+            {
+                RemoveIroFileAssociationFromRegistry();
+            }
 
             if (WarnAboutModCode)
                 newOptions.Add(GeneralOptions.WarnAboutModCode);
+
 
             Sys.Settings.Options = newOptions;
 
@@ -436,6 +445,45 @@ namespace SeventhHeaven.ViewModels
         }
 
         /// <summary>
+        /// Deletes Registry keys/values (if they exist) to unassociate .iro mod files with 7H
+        /// </summary>
+        /// <param name="key"> could be HKEY_CLASSES_ROOT or HKEY_CURRENT_USER/Software/Classes </param>
+        private static bool RemoveIroFileAssociationFromRegistry(RegistryKey key)
+        {
+            try
+            {
+                List<string> subkeys = key.GetSubKeyNames().Where(k => k == "7thHeaven" || k == ".iro").ToList();
+                bool deletedKeys = false;
+
+                if (subkeys.Contains("7thHeaven"))
+                {
+                    key.DeleteSubKeyTree("7thHeaven");
+                    deletedKeys = true;
+                }
+
+                if (subkeys.Contains(".iro"))
+                {
+                    key.DeleteSubKeyTree(".iro");
+                    deletedKeys = true;
+                }
+
+                if (deletedKeys)
+                {
+                    //Refresh Shell/Explorer so icon cache updates
+                    //do this now because we don't care so much about assoc. URL if it fails
+                    SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Warn(e); // could be error thrown if already deleted
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Update Registry to asssociate iros:// URL with 7H
         /// </summary>
         /// <param name="key"></param>
@@ -464,6 +512,35 @@ namespace SeventhHeaven.ViewModels
             return true;
         }
 
+        /// <summary>
+        /// Deletes Registry key/values (if they exist) to unasssociate iros:// URL with 7H
+        /// </summary>
+        /// <param name="key"> could be HKEY_CLASSES_ROOT or HKEY_CURRENT_USER/Software/Classes </param>
+        /// <returns></returns>
+        private static bool RemoveIrosUrlAssociationFromRegistry(RegistryKey key)
+        {
+            try
+            {
+                List<string> subkeys = key.GetSubKeyNames().Where(k => k == "iros").ToList();
+
+                if (subkeys.Contains("iros"))
+                {
+                    key.DeleteSubKeyTree("iros");
+
+                    //Refresh Shell/Explorer so icon cache updates
+                    //do this now because we don't care so much about assoc. URL if it fails
+                    SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Warn(e); // could be error thrown if already deleted
+                return false;
+            }
+        }
+
         internal static bool AssociateIroFilesWith7H()
         {
             try
@@ -481,11 +558,55 @@ namespace SeventhHeaven.ViewModels
             catch (Exception e)
             {
                 Logger.Error(e);
-                Sys.Message(new WMessage("Failed to associate iros:// links with 7th Heaven"));
+                Sys.Message(new WMessage("Failed to register .iro mod files with 7th Heaven"));
                 return false;
             }
 
 
+        }
+
+        internal static bool RemoveIroFileAssociationFromRegistry()
+        {
+            try
+            {
+                RegistryKey key = Registry.ClassesRoot;
+                bool global = RemoveIroFileAssociationFromRegistry(key);
+                if (!global)
+                {
+                    key = Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Classes");
+                    global = RemoveIroFileAssociationFromRegistry(key);
+                }
+
+                return global;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                Sys.Message(new WMessage("Failed to un-register .iro mod files with 7th Heaven"));
+                return false;
+            }
+        }
+
+        internal static bool RemoveIrosUrlAssociationFromRegistry()
+        {
+            try
+            {
+                RegistryKey key = Registry.ClassesRoot;
+                bool global = RemoveIrosUrlAssociationFromRegistry(key);
+                if (!global)
+                {
+                    key = Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Classes");
+                    global = RemoveIrosUrlAssociationFromRegistry(key);
+                }
+
+                return global;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                Sys.Message(new WMessage("Failed to un-register iros:// links with 7th Heaven"));
+                return false;
+            }
         }
 
         internal static bool AssociateIrosUrlWith7H()
@@ -504,7 +625,7 @@ namespace SeventhHeaven.ViewModels
             catch (Exception e)
             {
                 Logger.Error(e);
-                Sys.Message(new WMessage("Failed to associate .iro mod files with 7th Heaven"));
+                Sys.Message(new WMessage("Failed to register iros:// links with 7th Heaven"));
                 return false;
             }
         }

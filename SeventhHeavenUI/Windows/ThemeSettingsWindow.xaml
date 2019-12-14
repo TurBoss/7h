@@ -28,12 +28,9 @@
             <EventSetter Event="LostFocus" Handler="TextBox_LostFocus"/>
             <EventSetter Event="KeyDown" Handler="TextBox_KeyDown"/>
         </Style>
-
-        <Style x:Key="colorPickerButton" TargetType="{x:Type ToggleButton}">
-            <Setter Property="Cursor" Value="Hand"/>
-        </Style>
-
+        
         <Style TargetType="{x:Type xctk:ColorPicker}">
+            <EventSetter Event="Closed" Handler="ColorPicker_Closed"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="DisplayColorAndName" Value="False"/>
             <Setter Property="ShowDropDownButton" Value="False"/>
@@ -94,7 +91,6 @@
 
         <StackPanel Grid.Row="1"
                     Grid.Column="1"
-                    IsEnabled="{Binding IsCustomThemeEnabled}"
                     Margin="0,20,0,0">
             <Grid>
                 <Grid.RowDefinitions>
@@ -207,7 +203,6 @@
         <StackPanel Grid.Row="1" 
                     Grid.Column="2"
                     HorizontalAlignment="Right"
-                    IsEnabled="{Binding IsCustomThemeEnabled}"
                     Margin="0,20,10,0">
             <Grid Margin="0,0,0,0">
                 <Grid.RowDefinitions>

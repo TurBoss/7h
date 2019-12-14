@@ -72,6 +72,7 @@ namespace SeventhHeaven.Windows
             {
                 ViewModel.ApplyCustomTheme();
                 InitColorPickerBackgrounds(); // when the user types a color in then we have to make sure the color pickers get updated to match the new color
+                SetSelectedThemeToCustom();
             }
         }
 
@@ -79,6 +80,7 @@ namespace SeventhHeaven.Windows
         {
             ViewModel.ApplyCustomTheme();
             InitColorPickerBackgrounds(); // when the user types a color in then we have to make sure the color pickers get updated to match the new color
+            SetSelectedThemeToCustom();
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -128,6 +130,11 @@ namespace SeventhHeaven.Windows
             ThemeSettingsViewModel.LoadThemeFromFile(); // reload theme.xml on close in-case any unsaved changes are made
         }
 
+        private void SetSelectedThemeToCustom()
+        {
+            if (ViewModel.SelectedThemeText != "Custom")
+                ViewModel.SelectedThemeText = "Custom";
+        }
 
         #region Color Picker Color Changed Events
 
@@ -165,5 +172,10 @@ namespace SeventhHeaven.Windows
         }
 
         #endregion
+
+        private void ColorPicker_Closed(object sender, RoutedEventArgs e)
+        {
+            SetSelectedThemeToCustom();
+        }
     }
 }

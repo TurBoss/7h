@@ -9,17 +9,22 @@
         Style="{StaticResource MainWindowStyle}"
         Title="General Settings" 
         ResizeMode="NoResize"
-        Height="475" Width="900"
-        MaxHeight="475" MaxWidth="1300">
+        Height="550" Width="900">
     <Window.Resources>
         <Style x:Key="MultiLineTextBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource PrimaryTextBoxStyle}">
             <Setter Property="MinWidth" Value="325"/>
-            <Setter Property="Height" Value="75"/>
-            <Setter Property="Margin" Value="1"/>
+            <Setter Property="Height" Value="115"/>
+            <Setter Property="Margin" Value="2"/>
             <Setter Property="AcceptsReturn" Value="True"/>
             <Setter Property="TextWrapping" Value="NoWrap"/>
             <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
             <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+        </Style>
+
+        <Style TargetType="CheckBox" BasedOn="{StaticResource ToggleSwitchCheckbox}">
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
         </Style>
     </Window.Resources>
     
@@ -70,8 +75,8 @@
         </GroupBox>
 
         <GroupBox Header=" Options " Grid.Row="1" Grid.RowSpan="2" Margin="10,10,0,0" >
-            <StackPanel Margin="5">
-                <CheckBox Content="Keep Older Mod Versions After Updating" IsChecked="{Binding KeepOldModsAfterUpdating, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
+            <StackPanel Margin="5" HorizontalAlignment="Left">
+                <CheckBox Content="Keep Older Mod Versions After Updating" IsChecked="{Binding KeepOldModsAfterUpdating, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='True'}" Margin="0,0,0,2"/>
                 <CheckBox Content="Activate Newly Installed Mods Automatically" IsChecked="{Binding ActivateInstalledModsAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
                 <CheckBox Content="Import Library Folder Mods Automatically" IsChecked="{Binding ImportLibraryFolderAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
                 <CheckBox Content="Check For 7th Heaven Updates Automatically" IsChecked="{Binding CheckForUpdatesAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
@@ -84,7 +89,7 @@
         </GroupBox>
 
         <GroupBox Grid.Column="1" Header=" Catalog Subscriptions: " Margin="25,10,10,0">
-            <TextBox Style="{StaticResource MultiLineTextBoxStyle}" Height="115" Text="{Binding SubscriptionsInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Style="{StaticResource MultiLineTextBoxStyle}" Text="{Binding SubscriptionsInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         </GroupBox>
 
         <GroupBox Grid.Row="1" Grid.Column="1" Header=" Additional Folders to Monitor: " Margin="25,10,10,0">
@@ -97,16 +102,20 @@
 
         <Button x:Name="btnOk" 
                 Content="OK" 
+                Width="80"
                 Click="btnOk_Click"
                 Grid.Row="3" Grid.Column="1"
-                Margin="0,5,73,5"
-                HorizontalAlignment="Right"/>
+                Margin="0,5,100,5"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"/>
 
         <Button x:Name="btnCancel" 
-                Content="Cancel" 
+                Content="Cancel"
+                Width="80"
                 Click="btnCancel_Click"
                 Grid.Row="3" Grid.Column="1"
                 Margin="0,5,10,5"
-                HorizontalAlignment="Right"/>
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"/>
     </Grid>
 </Window>

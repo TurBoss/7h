@@ -563,7 +563,7 @@
                     <BulletDecorator Background="Transparent">
                         <BulletDecorator.Bullet>
                             <Border x:Name="Border" 
-                                    Width="14" Height="14"
+                                    Width="18" Height="18"
                                     CornerRadius="0"
                                     BorderThickness="1"
                                     BorderBrush="{DynamicResource PrimaryControlForeground}"
@@ -804,5 +804,125 @@
     </Style>
 
     <Style TargetType="{x:Type ProgressBar}" BasedOn="{StaticResource MainProgressBarStyle}"/>
+
+    <!-- Checkbox stylized to look like Windows 10 toggle switch; reference: https://github.com/TacticApps/C-WPf-Toggle-Switch-UI-Control/blob/master/ToggleSwitch/ToggleSwitch/ToggleButton.xaml--> 
+    <Style x:Key="ToggleSwitchCheckbox" TargetType="{x:Type CheckBox}">
+        <Setter Property="Height" Value="28"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <Viewbox Margin="0,2,2,1" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" IsHitTestVisible="True">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="55"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock x:Name="contentText"
+                                       HorizontalAlignment="Left"
+                                       Style="{StaticResource PrimaryTextBlockStyle}"
+                                       Text="{TemplateBinding Content}"
+                                       FontSize="28"
+                                       Margin="0,0,15,10"
+                                       VerticalAlignment="Center"/>
+
+                            <Grid x:Name="grid" Grid.Column="1" HorizontalAlignment="Left" Height="60" Margin="0" VerticalAlignment="Top" Width="100">
+                                <Rectangle x:Name="Back" 
+                                           Fill="{DynamicResource PrimaryControlBackground}" 
+                                           Stroke="{DynamicResource PrimaryControlForeground}"
+                                           StrokeThickness="3"
+                                           HorizontalAlignment="Left" Height="50" VerticalAlignment="Top" Width="96" Margin="2,2,0,0" RadiusY="24" RadiusX="24"/>
+
+                                <Ellipse x:Name="Dot" 
+                                         Fill="White" 
+                                         HorizontalAlignment="Center" 
+                                         Height="38" 
+                                         Width="38"
+                                         VerticalAlignment="Center">
+                                </Ellipse>
+
+                                <Rectangle x:Name="Overlay" Fill="{DynamicResource PrimaryControlBackground}" Opacity="0" HorizontalAlignment="Left" Height="52" VerticalAlignment="Top" Width="98" Margin="1,1,0,0" RadiusY="29" RadiusX="29"/>
+                            </Grid>
+
+                            <TextBlock x:Name="toggleText"
+                                       Grid.Column="2"
+                                       Style="{StaticResource PrimaryTextBlockStyle}"
+                                       Text="Off"
+                                       FontSize="28"
+                                       Margin="10,0,0,10"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                    </Viewbox>
+
+
+
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter TargetName="Dot" Property="Margin" Value="-44,0,0,5"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Dot" Property="Margin" Value="0,0,-44,5"/>
+                            <Setter TargetName="toggleText" Property="Text" Value="On"/>
+                            <Setter TargetName="Back" Property="Fill" Value="{DynamicResource PrimaryControlPressed}"/>
+                        </Trigger>
+                        
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Back" Property="Fill" Value="{DynamicResource PrimaryControlMouseOver}"/>
+                        </Trigger>
+                        
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Overlay" Property="Opacity" Value="0.25"/>
+                        </Trigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsPressed" Value="True"/>
+                                <Condition Property="IsChecked" Value="True"/>
+                            </MultiTrigger.Conditions>
+
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard x:Name="moveLeft">
+                                    <Storyboard SpeedRatio="15">
+                                        <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="Dot" Storyboard.TargetProperty="Margin" BeginTime="00:00:00">
+                                            <SplineThicknessKeyFrame KeyTime="00:00:00" Value="0,0,-44,5" />
+                                            <SplineThicknessKeyFrame KeyTime="00:00:01" Value="-44,0,0,5" />
+                                        </ThicknessAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.EnterActions>
+                            <MultiTrigger.ExitActions>
+                                <RemoveStoryboard BeginStoryboardName="moveLeft"/>
+                            </MultiTrigger.ExitActions>
+                        </MultiTrigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsPressed" Value="True"/>
+                                <Condition Property="IsChecked" Value="False"/>
+                            </MultiTrigger.Conditions>
+
+                            <MultiTrigger.EnterActions>
+                                <BeginStoryboard x:Name="moveRight">
+                                    <Storyboard SpeedRatio="15">
+                                        <ThicknessAnimationUsingKeyFrames Storyboard.TargetName="Dot" Storyboard.TargetProperty="Margin" BeginTime="00:00:00">
+                                            <SplineThicknessKeyFrame KeyTime="00:00:00" Value="-44,0,0,5" />
+                                            <SplineThicknessKeyFrame KeyTime="00:00:01" Value="0,0,-44,5" />
+                                        </ThicknessAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </MultiTrigger.EnterActions>
+                            <MultiTrigger.ExitActions>
+                                <RemoveStoryboard BeginStoryboardName="moveRight"/>
+                            </MultiTrigger.ExitActions>
+                        </MultiTrigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
 </ResourceDictionary>
