@@ -167,7 +167,6 @@ namespace SeventhHeavenUI.ViewModels
         private void ActiveMod_ActivationChanged(object sender, InstalledModViewModel selected)
         {
             ToggleActivateMod(selected.InstallInfo.ModID);
-            ReloadModList(selected.InstallInfo.ModID);
         }
 
         /// <summary>

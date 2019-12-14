@@ -120,6 +120,7 @@
       <DependentUpon>PackIroUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\GLSettingViewModel.cs" />
+    <Compile Include="ViewModels\CheckboxMessageViewModel.cs" />
     <Compile Include="ViewModels\PatchIroViewModel.cs" />
     <Compile Include="ViewModels\ThemeSettingsViewModel.cs" />
     <Compile Include="ViewModels\UnpackIroViewModel.cs" />
@@ -149,6 +150,9 @@
     </Compile>
     <Compile Include="Windows\ImportModWindow.xaml.cs">
       <DependentUpon>ImportModWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\CheckBoxMessageWindow.xaml.cs">
+      <DependentUpon>CheckBoxMessageWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\IroCreateWindow.xaml.cs">
       <DependentUpon>IroCreateWindow.xaml</DependentUpon>
@@ -194,6 +198,10 @@
     <Page Include="Windows\ImportModWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\CheckBoxMessageWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\InputTextWindow.xaml">
       <SubType>Designer</SubType>
