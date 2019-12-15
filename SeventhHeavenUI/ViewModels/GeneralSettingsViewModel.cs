@@ -1,4 +1,5 @@
-﻿using Iros._7th.Workshop;
+﻿using Iros._7th;
+using Iros._7th.Workshop;
 using Microsoft.Win32;
 using SeventhHeavenUI.ViewModels;
 using System;
@@ -763,7 +764,7 @@ namespace SeventhHeaven.ViewModels
 
             if (Clipboard.ContainsText(TextDataFormat.Text))
             {
-                clipboardContent = Clipboard.GetText(TextDataFormat.Text);   
+                clipboardContent = Clipboard.GetText(TextDataFormat.Text);
             }
 
             if (!string.IsNullOrWhiteSpace(clipboardContent) && clipboardContent.StartsWith("iros://"))
@@ -785,15 +786,20 @@ namespace SeventhHeaven.ViewModels
 
             if (!SubscriptionList.Any(s => s.Url == NewUrlText))
             {
-                SubscriptionList.Add(new SubscriptionSettingViewModel(NewUrlText, NewNameText));
+                ResolveCatalogNameFromUrl(NewUrlText, resolvedName => 
+                {
+                    NewNameText = resolvedName;
+                    SubscriptionList.Add(new SubscriptionSettingViewModel(NewUrlText, NewNameText));
+                    CloseSubscriptionPopup();
+                });
             }
             else
             {
                 SubscriptionSettingViewModel toEdit = SubscriptionList.FirstOrDefault(s => s.Url == NewUrlText);
                 toEdit.Name = NewNameText;
+                CloseSubscriptionPopup();
             }
 
-            CloseSubscriptionPopup();
             return true;
         }
 
@@ -807,6 +813,57 @@ namespace SeventhHeaven.ViewModels
         internal void RemoveSelectedSubscription(SubscriptionSettingViewModel selected)
         {
             SubscriptionList.Remove(selected);
+        }
+
+        /// <summary>
+        /// Downloads catalog.xml to temp file and gets Name of the catalog. 
+        /// resolved name gets passed to delegate method that is called after download
+        /// </summary>
+        /// <param name="catalogUrl"></param>
+        /// <param name="callback"></param>
+        internal void ResolveCatalogNameFromUrl(string catalogUrl, Action<string> callback)
+        {
+            string name = "";
+
+            string uniqueFileName = $"cattemp{Path.GetRandomFileName()}.xml"; // save temp catalog update to unique filename so multiple catalog updates can download async
+            string path = Path.Combine(Sys.SysFolder, "temp", uniqueFileName);
+
+            Sys.Downloads.Download(catalogUrl, path, $"Resolving catalog name for {catalogUrl}", new Install.InstallProcedureCallback(e =>
+            {
+                bool success = (e.Error == null && e.Cancelled == false);
+
+                if (success)
+                {
+                    try
+                    {
+                        Catalog c = Util.Deserialize<Catalog>(path);
+                        name = c.Name ?? "";
+
+                        // delete temp file if it exists
+                        if (File.Exists(path))
+                        {
+                            File.Delete(path);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Warn($"Failed to deserialize catalog - {ex.Message}");
+                    }
+                }
+
+                callback(name);
+
+            }), new Action(() =>
+            {
+                // delete temp file on cancel if it exists
+                if (File.Exists(path))
+                {
+                    File.Delete(path); 
+                }
+
+                callback(name);
+
+            }));
         }
 
     }

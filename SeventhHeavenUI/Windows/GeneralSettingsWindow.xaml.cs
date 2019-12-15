@@ -163,6 +163,7 @@ namespace SeventhHeaven.Windows
             }
 
             ViewModel.RemoveSelectedSubscription((lstSubscriptions.SelectedItem as SubscriptionSettingViewModel));
+            RecalculateColumnWidths();
         }
 
         /// <summary>
@@ -217,6 +218,11 @@ namespace SeventhHeaven.Windows
 
         internal void RecalculateColumnWidths()
         {
+            double urlColWidth = colUrl.ActualWidth;
+            colUrl.Width = urlColWidth;
+            colUrl.Width = double.NaN;
+
+
             double scrollBarWidth = 10;
             double listWidth = lstSubscriptions.ActualWidth;
 
@@ -225,24 +231,15 @@ namespace SeventhHeaven.Windows
                 return; // ActualWidth could be zero if list has not been rendered yet
             }
 
-            double remainingWidth = listWidth - scrollBarWidth;
-
-            double nameWidth = (0.5) * remainingWidth; // Name takes 50% of remaining width
-            double urlWidth = (0.5) * remainingWidth; // Url takes up 50% of remaining width
+            double remainingWidth = listWidth - urlColWidth - scrollBarWidth;
 
             double minNameWidth = 50; // don't resize columns less than the minimums
-            double minUrlWidth = 100;
 
             try
             {
-                if (nameWidth < listWidth && nameWidth > minNameWidth)
+                if (remainingWidth < listWidth && remainingWidth > minNameWidth)
                 {
-                    colName.Width = nameWidth;
-                }
-
-                if (urlWidth < listWidth && urlWidth > minUrlWidth)
-                {
-                    colUrl.Width = urlWidth;
+                    colName.Width = remainingWidth;
                 }
             }
             catch (System.Exception e)

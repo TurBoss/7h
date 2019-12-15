@@ -14,6 +14,9 @@ namespace Iros._7th.Workshop
     {
         private Dictionary<Guid, Mod> _lookup;
 
+        [System.Xml.Serialization.XmlAttribute("Name")]
+        public string Name { get; set; }
+
         public List<Mod> Mods { get; set; }
 
         public Catalog()
