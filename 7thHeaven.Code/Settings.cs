@@ -137,6 +137,9 @@ namespace Iros._7th.Workshop {
             defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/http$pastebin.com/raw.php?i=frmT5PEh", Name = "" });
             defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/http$pastebin.com/raw.php?i=dDBkYkDu", Name = "" });
 
+            defaultSettings.ExtraFolders.Add("direct");
+            defaultSettings.ExtraFolders.Add("music");
+
             return defaultSettings;
         }
     }

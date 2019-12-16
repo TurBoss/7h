@@ -20,7 +20,6 @@ namespace Iros._7th.Workshop
 
         private object _pendingLock = new object();
         public List<string> PendingDelete { get; set; }
-        public List<Guid> CodeAllowed { get; set; }
 
         public void QueuePendingDelete(IEnumerable<string> files)
         {
@@ -96,7 +95,6 @@ namespace Iros._7th.Workshop
             DefaultUpdate = UpdateType.Notify;
             Items = new List<InstalledItem>();
             PendingDelete = new List<string>();
-            CodeAllowed = new List<Guid>();
         }
     }
 

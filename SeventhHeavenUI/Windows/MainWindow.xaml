@@ -13,7 +13,7 @@
         Loaded="Window_Loaded"
         SizeChanged="Window_SizeChanged"
         Closing="Window_Closing"
-        Height="600" Width="1000">
+        Height="600" Width="1100">
     <Window.Resources>
         <Style x:Key="ModInfoLabelStyle" TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize" Value="13"/>
@@ -78,7 +78,7 @@
 
 
         <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5,0,0" Grid.ColumnSpan="2">
-            <cls:ButtonWithImage x:Name="btnPlay" Content="Play" Margin="5,0,5,0" Click="btnPlay_Click" TemplateSource="{StaticResource iconPlay}"/>
+            <cls:ButtonWithImage x:Name="btnPlay" Content="Play" Margin="5,0,5,0" Click="btnPlay_Click" Padding="0,8,10,0" TemplateSource="{StaticResource iconPlay}"/>
             <ToggleButton x:Name="btnPlayOptions" Style="{StaticResource DownArrowToggleButton}" Margin="-3,0,0,0" Click="btnPlayOptions_Click" ContextMenuService.Placement="Bottom">
                 <ToggleButton.ContextMenu>
                     <ContextMenu x:Name="menuPlayOptions" Closed="menuPlayOptions_Closed">
@@ -115,12 +115,13 @@
                 </cls:ButtonWithImage.ContextMenu>
             </cls:ButtonWithImage>
 
-            <cls:ButtonWithImage x:Name="btnHelp" Content="Help" TemplateSource="{StaticResource iconHelp}" Margin="5,0,5,0" Click="btnHelp_Click"/>
+            <cls:ButtonWithImage x:Name="btnHelp" Content="Help" TemplateSource="{StaticResource iconHelp}" Margin="5,0,5,0" Padding="0,8,10,0" Click="btnHelp_Click"/>
 
         </WrapPanel>
 
         <GroupBox Header=" Mod Info "
-                  Margin="5,39,3,1" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                  Grid.Row="1"
+                  Margin="5,-7,3,1" Grid.ColumnSpan="2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="2*"/>

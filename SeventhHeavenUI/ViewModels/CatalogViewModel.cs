@@ -253,6 +253,12 @@ It may not work properly unless you find and install the requirements.";
                     Sys.SetNewCatalog(new Catalog());
                 }
 
+                if (Sys.Settings.SubscribedUrls.Count == 0)
+                {
+                    ReloadModList();
+                    return;
+                }
+
                 foreach (string subscribe in Sys.Settings.SubscribedUrls.ToArray())
                 {
                     Subscription sub = Sys.Settings.Subscriptions.Find(s => s.Url.Equals(subscribe, StringComparison.InvariantCultureIgnoreCase));
@@ -295,13 +301,6 @@ It may not work properly unless you find and install the requirements.";
                                     sub.LastSuccessfulCheck = DateTime.Now;
                                     sub.FailureCount = 0;
 
-                                    // delete temp catalog
-                                    if (File.Exists(path))
-                                    {
-                                        File.Delete(path);
-                                    }
-
-
                                     foreach (Guid id in pingIDs)
                                     {
                                         Sys.Ping(id);
@@ -313,6 +312,14 @@ It may not work properly unless you find and install the requirements.";
 
                                     sub.FailureCount++;
                                     Sys.Message(new WMessage() { Text = $"Failed to load subscription {subscribe}: {ex.Message}" });
+                                }
+                                finally
+                                {
+                                    // delete temp catalog
+                                    if (File.Exists(path))
+                                    {
+                                        File.Delete(path);
+                                    }
                                 }
                             }
                             else
@@ -462,7 +469,10 @@ It may not work properly unless you find and install the requirements.";
 
             if (!LocationUtil.Parse(link, out type, out location)) return;
 
-            Action onError = null;
+            Action onError = () =>
+            {
+                iproc.Error?.Invoke(new Exception($"Failed {description}"));
+            };
 
             if (links.Count() > 1)
             {
@@ -626,18 +636,18 @@ It may not work properly unless you find and install the requirements.";
 
         private void CompleteIProc(DownloadItemViewModel item, AsyncCompletedEventArgs e)
         {
-            RemoveFromDownloadList(item);
-
             item.IProc.DownloadComplete(e);
-            NotifyPropertyChanged();
+            RemoveFromDownloadList(item);
         }
 
         private void ProcessDownloadComplete(DownloadItemViewModel item, AsyncCompletedEventArgs e)
         {
+            // wire-up error action to also remove the item from the download list
+            Action<Exception> existingErrorAction = item.IProc.Error;
             item.IProc.Error = ex =>
             {
+                existingErrorAction(ex);
                 RemoveFromDownloadList(item);
-                Sys.Message(new WMessage() { Text = $"Error {item.ItemName}: {e.ToString()}" });
             };
 
             item.IProc.Complete = () => CompleteIProc(item, e);

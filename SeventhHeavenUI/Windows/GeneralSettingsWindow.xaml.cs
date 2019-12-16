@@ -218,34 +218,12 @@ namespace SeventhHeaven.Windows
 
         internal void RecalculateColumnWidths()
         {
-            double urlColWidth = colUrl.ActualWidth;
-            colUrl.Width = urlColWidth;
+            // trigger columns to auto re-size. https://stackoverflow.com/questions/42676198/gridviewcolumn-autosize-only-work-once
+            colName.Width = colName.ActualWidth;
+            colName.Width = double.NaN;
+
+            colUrl.Width = colUrl.ActualWidth;
             colUrl.Width = double.NaN;
-
-
-            double scrollBarWidth = 10;
-            double listWidth = lstSubscriptions.ActualWidth;
-
-            if (listWidth == 0)
-            {
-                return; // ActualWidth could be zero if list has not been rendered yet
-            }
-
-            double remainingWidth = listWidth - urlColWidth - scrollBarWidth;
-
-            double minNameWidth = 50; // don't resize columns less than the minimums
-
-            try
-            {
-                if (remainingWidth < listWidth && remainingWidth > minNameWidth)
-                {
-                    colName.Width = remainingWidth;
-                }
-            }
-            catch (System.Exception e)
-            {
-                Logger.Warn(e, "failed to resize columns");
-            }
         }
     }
 }

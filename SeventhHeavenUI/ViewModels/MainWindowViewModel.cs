@@ -816,8 +816,6 @@ They will be automatically turned off.";
 
         internal static bool CheckAllowedActivate(Guid modID)
         {
-            if (Sys.Library.CodeAllowed.Contains(modID)) return true;
-
             InstalledItem mod = Sys.Library.GetItem(modID);
             InstalledVersion inst = mod.LatestInstalled;
             string mfile = Path.Combine(Sys.Settings.LibraryLocation, inst.InstalledLocation);
@@ -851,30 +849,36 @@ They will be automatically turned off.";
 
             if (Sys.Settings.HasOption(GeneralOptions.WarnAboutModCode))
             {
-                string msg = "This mod ({0}) contains code/patches that could change FF7.exe. Are you sure you want to activate and run this mod?\n\n" +
-                             "Only choose YES if you trust the author of this mod to run code/programs on your computer!";
-                msg = String.Format(msg, mod.CachedDetails.Name);
-
-                CheckBoxMessageWindow messageWin = new CheckBoxMessageWindow("Allow mod to run?", msg, MessageBoxButton.YesNo, "Don't ask me again", true)
+                // invoke the message on the Dispatcher UI Thread since this could be called from background threads
+                App.Current.Dispatcher.Invoke(() =>
                 {
-                    WindowStartupLocation = WindowStartupLocation.CenterScreen
-                };
-                messageWin.ShowDialog();
+                    string msg = "This mod ({0}) contains code/patches that could change FF7.exe. Are you sure you want to activate and run this mod?\n\n" +
+                                 "Only choose YES if you trust the author of this mod to run code/programs on your computer!";
+                    msg = String.Format(msg, mod.CachedDetails.Name);
 
-                if (messageWin.ViewModel.IsChecked)
-                {
-                    // set settings to turn off warning
-                    Sys.Settings.RemoveOption(GeneralOptions.WarnAboutModCode);
-                }
+                    CheckBoxMessageWindow messageWin = new CheckBoxMessageWindow("Allow mod to run?", msg, MessageBoxButton.YesNo, "Don't ask me again", true)
+                    {
+                        WindowStartupLocation = WindowStartupLocation.CenterScreen
+                    };
+                    messageWin.ShowDialog();
 
-                if (messageWin.ViewModel.Result != MessageBoxResult.Yes)
-                {
-                    return false;
-                }
+                    if (messageWin.ViewModel.IsChecked)
+                    {
+                        // set settings to turn off warning
+                        Sys.Settings.RemoveOption(GeneralOptions.WarnAboutModCode);
+                        Sys.Save();
+                    }
+
+                    if (messageWin.ViewModel.Result != MessageBoxResult.Yes)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                });
+
             }
 
-            Sys.Library.CodeAllowed.Add(modID);
-            Sys.Save();
             return true;
         }
 
@@ -1453,7 +1457,12 @@ They will be automatically turned off.";
             {
                 WindowStartupLocation = WindowStartupLocation.CenterScreen
             };
-            settingsWindow.ShowDialog();
+            bool? didSave = settingsWindow.ShowDialog();
+
+            if (didSave.GetValueOrDefault(false) && settingsWindow.ViewModel.SubscriptionsChanged)
+            {
+                CatalogViewModel.ForceCheckCatalogUpdateAsync();
+            }
         }
 
         internal void ShowIroToolsWindow()

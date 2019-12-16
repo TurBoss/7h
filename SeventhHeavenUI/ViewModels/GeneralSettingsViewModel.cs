@@ -278,6 +278,8 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public bool SubscriptionsChanged { get; set; }
+
         public string NewUrlText
         {
             get
@@ -308,6 +310,7 @@ namespace SeventhHeaven.ViewModels
         {
             NewUrlText = "";
             NewNameText = "";
+            SubscriptionsChanged = false;
         }
 
         internal void LoadSettings()
@@ -800,6 +803,7 @@ namespace SeventhHeaven.ViewModels
                 CloseSubscriptionPopup();
             }
 
+            SubscriptionsChanged = true;
             return true;
         }
 
@@ -812,6 +816,7 @@ namespace SeventhHeaven.ViewModels
 
         internal void RemoveSelectedSubscription(SubscriptionSettingViewModel selected)
         {
+            SubscriptionsChanged = true;
             SubscriptionList.Remove(selected);
         }
 
