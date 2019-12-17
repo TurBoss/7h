@@ -12,13 +12,14 @@ using System.Windows;
 
 namespace SeventhHeaven.ViewModels
 {
-    public class CheckboxMessageViewModel : ViewModelBase
+    public class MessageDialogViewModel : ViewModelBase
     {
         private string _windowTitle;
         private string _message;
         private bool _isChecked;
         private string _checkboxText;
-
+        private Visibility _checkboxVisibility;
+        private MessageBoxImage _imageToDisplay;
 
         public string WindowTitle
         {
@@ -59,6 +60,19 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public Visibility CheckboxVisibility
+        {
+            get
+            {
+                return _checkboxVisibility;
+            }
+            set
+            {
+                _checkboxVisibility = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public bool IsChecked
         {
             get
@@ -74,11 +88,25 @@ namespace SeventhHeaven.ViewModels
 
         public MessageBoxResult Result { get; set; }
 
+        public MessageBoxImage ImageToDisplay
+        {
+            get
+            {
+                return _imageToDisplay;
+            }
+            set
+            {
+                _imageToDisplay = value;
+                NotifyPropertyChanged();
+            }
+        }
 
-        public CheckboxMessageViewModel()
+        public MessageDialogViewModel()
         {
             Result = MessageBoxResult.Cancel;
             IsChecked = false;
+            CheckboxVisibility = Visibility.Collapsed;
+            ImageToDisplay = MessageBoxImage.None;
         }
 
     }

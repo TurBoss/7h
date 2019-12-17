@@ -382,8 +382,6 @@ They will be automatically turned off.";
             // Set the Downloads Interface so Sys can use Download methods defined in the CatalogViewModel
             Sys.Downloads = CatalogMods;
 
-            StatusMessage = $"{App.GetAppName()} v{App.GetAppVersion().ToString()} started";
-
             MegaIros.Logger = Logger.Info;
 
             GeneralSettingsViewModel.AutoDetectSystemPaths();
@@ -442,6 +440,8 @@ They will be automatically turned off.";
             ConfigureModViewModel.DeleteTempFolder();
 
             // TODO: check for app updates
+            StatusMessage = $"{App.GetAppName()} v{App.GetAppVersion().ToString()} started - Click here to view the app log.";
+
         }
 
         /// <summary>
@@ -911,7 +911,7 @@ They will be automatically turned off.";
                                  "Only choose YES if you trust the author of this mod to run code/programs on your computer!";
                     msg = String.Format(msg, mod.CachedDetails.Name);
 
-                    CheckBoxMessageWindow messageWin = new CheckBoxMessageWindow("Allow mod to run?", msg, MessageBoxButton.YesNo, "Don't ask me again", true)
+                    MessageDialogWindow messageWin = new MessageDialogWindow("Allow mod to run?", msg, MessageBoxButton.YesNo, "Don't ask me again", true)
                     {
                         WindowStartupLocation = WindowStartupLocation.CenterScreen
                     };

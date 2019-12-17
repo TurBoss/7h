@@ -6,28 +6,56 @@ namespace SeventhHeaven.Windows
     /// <summary>
     /// Interaction logic for InputTextWindow.xaml
     /// </summary>
-    public partial class CheckBoxMessageWindow : Window
+    public partial class MessageDialogWindow : Window
     {
-        public CheckboxMessageViewModel ViewModel { get; set; }
+        public MessageDialogViewModel ViewModel { get; set; }
 
-        public CheckBoxMessageWindow()
+        public MessageDialogWindow()
         {
             InitializeComponent();
 
-            ViewModel = new CheckboxMessageViewModel();
+            ViewModel = new MessageDialogViewModel();
             this.DataContext = ViewModel;
             btnOkay.Focus();
         }
 
-        public CheckBoxMessageWindow(string windowTitle, string prompt, MessageBoxButton buttons, string checkText = "Don't ask me again", bool isChecked = false)
+        public MessageDialogWindow(string windowTitle, string prompt, MessageBoxButton buttons, MessageBoxImage image)
         {
             InitializeComponent();
 
-            ViewModel = new CheckboxMessageViewModel()
+            ViewModel = new MessageDialogViewModel()
+            {
+                WindowTitle = windowTitle,
+                Message = prompt,
+                ImageToDisplay = image,
+                CheckboxVisibility = Visibility.Collapsed,
+            };
+
+            if (buttons == MessageBoxButton.YesNo)
+            {
+                btnOkay.Visibility = Visibility.Hidden;
+                btnOkay.Focus();
+            }
+            else
+            {
+                btnYes.Visibility = Visibility.Hidden;
+                btnNo.Visibility = Visibility.Hidden;
+                btnYes.Focus();
+            }
+
+            this.DataContext = ViewModel;
+        }
+
+        public MessageDialogWindow(string windowTitle, string prompt, MessageBoxButton buttons, string checkText = "Don't ask me again", bool isChecked = false)
+        {
+            InitializeComponent();
+
+            ViewModel = new MessageDialogViewModel()
             {
                 WindowTitle = windowTitle,
                 Message = prompt,
                 CheckboxText = checkText,
+                CheckboxVisibility = Visibility.Visible,
                 IsChecked = isChecked
             };
 

@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -261,6 +262,30 @@ namespace Iros._7th.Workshop
             _statuses = Library.Items.ToDictionary(i => i.ModID, _ => ModStatus.Installed);
 
             ImageCache = new ImageCache(System.IO.Path.Combine(SysFolder, "cache"));
+        }
+
+        /// <summary>
+        /// Opens applog.txt in default text editor program
+        /// </summary>
+        public static void OpenAppLog()
+        {
+            string pathToLog = Path.Combine(Sys.SysFolder, "applog.txt");
+            if (!File.Exists(pathToLog))
+            {
+                return;
+            }
+
+            ProcessStartInfo startInfo = new ProcessStartInfo(pathToLog);
+            Process.Start(startInfo);
+        }
+
+        public static void OpenLibraryFolderInExplorer()
+        {
+            if (Directory.Exists(Settings.LibraryLocation))
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo(Settings.LibraryLocation);
+                Process.Start(startInfo);
+            }
         }
     }
 }

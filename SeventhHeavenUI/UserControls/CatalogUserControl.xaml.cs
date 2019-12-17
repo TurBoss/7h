@@ -1,4 +1,5 @@
-﻿using SeventhHeavenUI.ViewModels;
+﻿using Iros._7th.Workshop;
+using SeventhHeavenUI.ViewModels;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -40,7 +41,7 @@ namespace SeventhHeaven.UserControls
         {
             if (lstCatalogMods.SelectedItem == null)
             {
-                MessageBox.Show("Select a mod to download first.", "Warning - No Mod Selected", MessageBoxButton.OK);
+                Sys.Message(new WMessage("Select a mod to download first.", true));
                 return;
             }
 
@@ -51,7 +52,7 @@ namespace SeventhHeaven.UserControls
         {
             if (lstDownloads.SelectedItem == null)
             {
-                MessageBox.Show("No Download selected.", "Nothing Selected", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Sys.Message(new WMessage("No Download selected.", true));
                 return;
             }
 
@@ -103,7 +104,7 @@ namespace SeventhHeaven.UserControls
                     colAuthor.Width = authorWidth;
                 }
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Logger.Warn(e, "failed to resize columns");
             }

@@ -86,6 +86,28 @@
         </Setter>
     </Style>
 
+    <Style x:Key="MainButtonStyleWithNoTriggers" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="{DynamicResource PrimaryControlBackground}"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
+        <Setter Property="Padding" Value="10,8,10,8"/>
+        <Setter Property="FontSize" Value="14"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="bd" BorderThickness="0" Background="{TemplateBinding Background}">
+                        <TextBlock x:Name="txtContent"
+                                   Text="{TemplateBinding Content}"
+                                   TextAlignment="Center"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   FontSize="{TemplateBinding FontSize}"
+                                   Padding="{TemplateBinding Padding}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="{x:Type cls:ButtonWithImage}">
         <Setter Property="Background" Value="{DynamicResource PrimaryControlBackground}"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>

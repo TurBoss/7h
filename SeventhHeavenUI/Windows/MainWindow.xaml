@@ -248,10 +248,28 @@
                     SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectionChanged="tabCtrlMain_SelectionChanged"
                     Margin="0,23,5,1">
-            <TabItem Header="My Mods" Padding="10,0,10,0">
+            <TabItem Padding="10,0,10,0" MouseRightButtonUp="MyModsTabItem_MouseRightButtonUp">
+                <TabItem.Header>
+                    <Label Content="My Mods"
+                           PreviewMouseRightButtonUp="MyModsTabItem_MouseRightButtonUp"
+                           Padding="0"
+                           Foreground="{DynamicResource PrimaryControlForeground}" 
+                           MouseEnter="TabItem_MouseEnter" 
+                           MouseLeave="TabItem_MouseLeave"/>
+                </TabItem.Header>
+                
                 <ctrl:MyModsUserControl x:Name="ctrlMyMods"/>
             </TabItem>
-            <TabItem Header="Browse Catalog">
+            <TabItem MouseRightButtonUp="BrowseCatalogTabItem_MouseRightButtonUp">
+                <TabItem.Header>
+                    <Label Content="Browse Catalog"
+                           PreviewMouseRightButtonUp="BrowseCatalogTabItem_MouseRightButtonUp"
+                           Padding="0"
+                           Foreground="{DynamicResource PrimaryControlForeground}" 
+                           MouseEnter="TabItem_MouseEnter" 
+                           MouseLeave="TabItem_MouseLeave"/>
+                </TabItem.Header>
+                
                 <ctrl:CatalogUserControl x:Name="ctrlCatalog"/>
             </TabItem>
         </TabControl>
@@ -322,15 +340,36 @@
 
 
         <StatusBar  Grid.Row="2" Grid.ColumnSpan="3" Margin="0,5,0,0">
-            <StatusBarItem x:Name="statusBarItem">
-                <TextBlock x:Name="txtStatusMessage"
-                           Text="{Binding StatusMessage, FallbackValue='Some message to the user ...'}"
-                           Padding="5,1,0,1"
-                           TextTrimming="CharacterEllipsis"
-                           TextWrapping="Wrap"/>
-
+            <StatusBarItem x:Name="statusBarItem" Height="22">
                 <StatusBarItem.Style>
                     <Style TargetType="{x:Type StatusBarItem}" BasedOn="{StaticResource MainStatusBarStyle}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="StatusBarItem">
+                                    <Border Background="{DynamicResource SecondaryAppBackground}">
+                                        <Grid>
+                                            <Button x:Name="btnOpenAppLog" 
+                                                    Click="btnOpenAppLog_Click"
+                                                    Height="{TemplateBinding Height}"
+                                                    Style="{StaticResource MainButtonStyleWithNoTriggers}"
+                                                    Cursor="Hand"
+                                                    ToolTip="Click to view app log"
+                                                    Background="Transparent"/>
+
+
+                                            <TextBlock x:Name="txtStatusMessage"
+                                                       Text="{Binding StatusMessage, FallbackValue='Some message to the user ...'}"
+                                                       IsHitTestVisible="False"
+                                                       Padding="5,1,0,1"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       VerticalAlignment="Center"
+                                                       TextWrapping="Wrap"/>
+                                        </Grid>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding IsFlashingStatus}" Value="True">
                                 <DataTrigger.EnterActions>

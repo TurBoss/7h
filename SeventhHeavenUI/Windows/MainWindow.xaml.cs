@@ -6,6 +6,7 @@ using SeventhHeavenUI.ViewModels;
 using System;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -23,6 +24,8 @@ namespace SeventhHeavenUI
         internal MainWindowViewModel ViewModel { get; set; }
 
         private int _currentTabIndex = 0;
+
+        private string previousStatusMessage;
 
         public MainWindow()
         {
@@ -327,6 +330,63 @@ namespace SeventhHeavenUI
         private void menuPlayWithoutMods_Click(object sender, RoutedEventArgs e)
         {
             MainWindowViewModel.LaunchFF7Exe();
+        }
+
+        private void btnOpenAppLog_Click(object sender, RoutedEventArgs e)
+        {
+            Sys.OpenAppLog();
+        }
+
+        private void MyModsTabItem_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            // additional check the source of the click since this event can be raised when the content of the TabItem is clicked
+            if (e.Source is TabItem || e.Source is System.Windows.Controls.Label)
+            {
+                Sys.OpenLibraryFolderInExplorer();
+                e.Handled = true;
+            }
+        }
+
+        private void BrowseCatalogTabItem_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.Source is TabItem || e.Source is System.Windows.Controls.Label)
+            {
+                ViewModel.ShowGeneralSettingsWindow();
+                e.Handled = true;
+            }
+        }
+
+        private void TabItem_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            System.Windows.Controls.Label tab = e.Source as System.Windows.Controls.Label;
+
+            if (tab == null)
+            {
+                return;
+            }
+
+            string myModsHint = "Right-click My Mods tab to open your Mod Library Folder";
+            string catalogHint = "Right-click Browse Catalog tab to open your Catalog settings";
+
+            // remember the status message so it can be set back after mouse leaves the TabItem Header
+            if (previousStatusMessage != myModsHint && previousStatusMessage != catalogHint)
+            {
+                previousStatusMessage = ViewModel.StatusMessage;
+            }
+            
+            if (tab.Content.ToString() == "My Mods")
+            {
+                ViewModel.StatusMessage = myModsHint;
+            }
+            else
+            {
+                ViewModel.StatusMessage = catalogHint;
+            }
+        }
+
+        private void TabItem_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            ViewModel.StatusMessage = previousStatusMessage;
         }
     }
 }

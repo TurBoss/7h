@@ -1,4 +1,6 @@
-﻿using SeventhHeavenUI.ViewModels;
+﻿using Iros._7th.Workshop;
+using SeventhHeaven.Windows;
+using SeventhHeavenUI.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -32,7 +34,7 @@ namespace SeventhHeaven.UserControls
         {
             if (lstMods.SelectedItem == null)
             {
-                MessageBox.Show("Select a mod first.", "No Mod Selected", MessageBoxButton.OK);
+                Sys.Message(new WMessage("Select a mod first.", true));
                 return false;
             }
 
@@ -43,7 +45,7 @@ namespace SeventhHeaven.UserControls
         /// Returns true if the selected mod is active.
         /// Returns false and shows messagebox warning user that selected mod is not active otherwise;
         /// </summary>
-        private bool IsActiveModSelected(string notActiveMessage, string notActiveTitle)
+        private bool IsActiveModSelected(string notActiveMessage)
         {
             if (lstMods.SelectedItem == null)
             {
@@ -52,7 +54,7 @@ namespace SeventhHeaven.UserControls
 
             if (!(lstMods.SelectedItem as InstalledModViewModel).IsActive)
             {
-                MessageBox.Show(notActiveMessage, notActiveTitle, MessageBoxButton.OK);
+                Sys.Message(new WMessage(notActiveMessage, true));
                 return false;
             }
 
@@ -84,7 +86,10 @@ namespace SeventhHeaven.UserControls
 
             InstalledModViewModel selected = (lstMods.SelectedItem as InstalledModViewModel);
 
-            if (MessageBox.Show($"Are you sure you want to delete {selected.Name}?", "Uninstall Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            MessageDialogWindow messageDialog = new MessageDialogWindow("Uninstall Warning", $"Are you sure you want to delete {selected.Name}?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            messageDialog.ShowDialog();
+
+            if (messageDialog.ViewModel.Result == MessageBoxResult.Yes)
             {
                 ViewModel.UninstallMod(selected);
             }
@@ -98,7 +103,7 @@ namespace SeventhHeaven.UserControls
                 return;
             }
 
-            if (!IsActiveModSelected("Mod is not active. Only activated mods can be re-ordered.", "Cannot Move Inactive Mod"))
+            if (!IsActiveModSelected("Mod is not active. Only activated mods can be re-ordered."))
             {
                 return;
             }
@@ -113,7 +118,7 @@ namespace SeventhHeaven.UserControls
                 return;
             }
 
-            if (!IsActiveModSelected("Mod is not active. Only activated mods can be re-ordered.", "Cannot Move Inactive Mod"))
+            if (!IsActiveModSelected("Mod is not active. Only activated mods can be re-ordered."))
             {
                 return;
             }
@@ -128,7 +133,7 @@ namespace SeventhHeaven.UserControls
                 return;
             }
 
-            if (!IsActiveModSelected("Mod is not active. Only activated mods can be re-ordered.", "Cannot Move Inactive Mod"))
+            if (!IsActiveModSelected("Mod is not active. Only activated mods can be re-ordered."))
             {
                 return;
             }
@@ -143,7 +148,7 @@ namespace SeventhHeaven.UserControls
                 return;
             }
 
-            if (!IsActiveModSelected("Mod is not active. Only activated mods can be re-ordered.", "Cannot Move Inactive Mod"))
+            if (!IsActiveModSelected("Mod is not active. Only activated mods can be re-ordered."))
             {
                 return;
             }
@@ -163,7 +168,7 @@ namespace SeventhHeaven.UserControls
                 return;
             }
 
-            if (!IsActiveModSelected("Mod is not active. Only activated mods can be configured.", "Cannot Configure Inactive Mod"))
+            if (!IsActiveModSelected("Mod is not active. Only activated mods can be configured."))
             {
                 return;
             }

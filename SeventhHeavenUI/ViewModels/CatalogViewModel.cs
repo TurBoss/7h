@@ -270,6 +270,8 @@ It may not work properly unless you find and install the requirements.";
 
         internal Task CheckForCatalogUpdatesAsync(object state)
         {
+            object countLock = new object();
+
             Task t = Task.Factory.StartNew(() =>
             {
                 List<Guid> pingIDs = null;
@@ -363,7 +365,14 @@ It may not work properly unless you find and install the requirements.";
                             }
 
                             // reload the UI list of catalog mods and scan for any mod updates once all subs have been attempted to download
-                            if (subUpdateCount == subTotalCount)
+                            bool isDoneDownloading = false;
+
+                            lock(countLock)
+                            {
+                                isDoneDownloading = (subUpdateCount == subTotalCount);
+                            }
+
+                            if (isDoneDownloading)
                             {
                                 ReloadModList(GetSelectedMod()?.Mod.ID);
                                 ScanForModUpdates();
@@ -373,7 +382,10 @@ It may not work properly unless you find and install the requirements.";
                     }
                     else
                     {
-                        subTotalCount -= 1; // This catalog does not have to be updated
+                        lock(countLock)
+                        {
+                            subTotalCount -= 1; // This catalog does not have to be updated
+                        }
                     }
                 }
             });
