@@ -27,9 +27,7 @@ namespace SeventhHeaven.ViewModels
         private bool _importLibraryFolderAuto;
         private bool _checkForUpdatesAuto;
         private bool _bypassCompatibilityLocks;
-        private string _subscriptionsInput;
         private string _extraFoldersInput;
-        private string _alsoLaunchInput;
         private bool _openIrosLinks;
         private bool _openModFilesWith7H;
         private bool _warnAboutModCode;
@@ -39,6 +37,10 @@ namespace SeventhHeaven.ViewModels
         private string _newUrlText;
         private string _newNameText;
         private bool _isSubscriptionPopupOpen;
+        private ObservableCollection<ProgramToRunViewModel> _programList;
+        private string _newProgramPathText;
+        private string _newProgramArgsText;
+        private bool _isProgramPopupOpen;
 
         public string FF7ExePathInput
         {
@@ -92,19 +94,6 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-        public string SubscriptionsInput
-        {
-            get
-            {
-                return _subscriptionsInput;
-            }
-            set
-            {
-                _subscriptionsInput = value;
-                NotifyPropertyChanged();
-            }
-        }
-
         public string ExtraFoldersInput
         {
             get
@@ -114,19 +103,6 @@ namespace SeventhHeaven.ViewModels
             set
             {
                 _extraFoldersInput = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public string AlsoLaunchInput
-        {
-            get
-            {
-                return _alsoLaunchInput;
-            }
-            set
-            {
-                _alsoLaunchInput = value;
                 NotifyPropertyChanged();
             }
         }
@@ -306,10 +282,68 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+
+        public bool IsProgramPopupOpen
+        {
+            get
+            {
+                return _isProgramPopupOpen;
+            }
+            set
+            {
+                _isProgramPopupOpen = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<ProgramToRunViewModel> ProgramList
+        {
+            get
+            {
+                if (_programList == null)
+                    _programList = new ObservableCollection<ProgramToRunViewModel>();
+
+                return _programList;
+            }
+            set
+            {
+                _programList = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string NewProgramPathText
+        {
+            get
+            {
+                return _newProgramPathText;
+            }
+            set
+            {
+                _newProgramPathText = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string NewProgramArgsText
+        {
+            get
+            {
+                return _newProgramArgsText;
+            }
+            set
+            {
+                _newProgramArgsText = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public GeneralSettingsViewModel()
         {
             NewUrlText = "";
             NewNameText = "";
+            NewProgramPathText = "";
+            NewProgramArgsText = "";
             SubscriptionsChanged = false;
         }
 
@@ -317,14 +351,9 @@ namespace SeventhHeaven.ViewModels
         {
             AutoDetectSystemPaths();
 
-            foreach (Subscription item in Sys.Settings.Subscriptions)
-            {
-                SubscriptionList.Add(new SubscriptionSettingViewModel(item.Url, item.Name));
-            }
-
-            SubscriptionsInput = string.Join("\n", Sys.Settings.SubscribedUrls.Distinct().ToArray());
+            SubscriptionList = new ObservableCollection<SubscriptionSettingViewModel>(Sys.Settings.Subscriptions.Select(s => new SubscriptionSettingViewModel(s.Url, s.Name)));
             ExtraFoldersInput = string.Join("\n", Sys.Settings.ExtraFolders.Distinct().ToArray());
-            AlsoLaunchInput = string.Join("\n", Sys.Settings.AlsoLaunch.Distinct().ToArray());
+            ProgramList = new ObservableCollection<ProgramToRunViewModel>(Sys.Settings.ProgramsToLaunchPrior.Select(s => new ProgramToRunViewModel(s.PathToProgram, s.ProgramArgs)));
 
             FF7ExePathInput = Sys.Settings.FF7Exe;
             LibraryPathInput = Sys.Settings.LibraryLocation;
@@ -387,27 +416,8 @@ namespace SeventhHeaven.ViewModels
                 return false;
             }
 
-
-            List<Subscription> updatedSubscriptions = new List<Subscription>();
-
-            foreach (SubscriptionSettingViewModel item in SubscriptionList.ToList())
-            {
-                var existingSub = Sys.Settings.Subscriptions.FirstOrDefault(s => s.Url == item.Url);
-
-                if (existingSub == null)
-                {
-                    existingSub = new Subscription() { Name = item.Name, Url = item.Url };
-                }
-                else
-                {
-                    existingSub.Name = item.Name;
-                }
-
-                updatedSubscriptions.Add(existingSub);
-            }
-
-            Sys.Settings.Subscriptions = updatedSubscriptions;
-            Sys.Settings.AlsoLaunch = AlsoLaunchInput.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries).Distinct().ToList();
+            Sys.Settings.Subscriptions = GetUpdatedSubscriptions();
+            Sys.Settings.ProgramsToLaunchPrior = GetUpdatedProgramsToRun();
             Sys.Settings.ExtraFolders = ExtraFoldersInput.ToLower()
                                                          .Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
                                                          .Distinct()
@@ -429,6 +439,56 @@ namespace SeventhHeaven.ViewModels
             Sys.Settings.MovieFolder = MoviesPathInput;
             Sys.Settings.AaliFolder = TexturesPathInput;
 
+
+            Sys.Settings.Options = GetUpdatedOptions();
+
+            ApplyOptions();
+
+            Directory.CreateDirectory(Sys.Settings.LibraryLocation);
+
+            Sys.Message(new WMessage() { Text = "General settings have been updated!" });
+
+            return true;
+        }
+
+        /// <summary>
+        /// applies various options based on what is enabled e.g. updating registry to associate files
+        /// </summary>
+        private static void ApplyOptions()
+        {
+            // Clear EXE compatibility flags if user opts out
+            if (!Sys.Settings.HasOption(GeneralOptions.SetEXECompatFlags))
+            {
+                RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
+                if (ff7CompatKey.GetValue(Sys.Settings.FF7Exe) != null) ff7CompatKey.DeleteValue(Sys.Settings.FF7Exe);
+            }
+
+            if (Sys.Settings.HasOption(GeneralOptions.OpenIrosLinksWith7H))
+            {
+                AssociateIrosUrlWith7H();
+            }
+            else
+            {
+                RemoveIrosUrlAssociationFromRegistry();
+            }
+
+            if (Sys.Settings.HasOption(GeneralOptions.OpenModFilesWith7H))
+            {
+                AssociateIroFilesWith7H();
+            }
+            else
+            {
+                RemoveIroFileAssociationFromRegistry();
+            }
+
+            // TODO: add context menu option to Explorer
+        }
+
+        /// <summary>
+        /// returns list of options currently set to true.
+        /// </summary>
+        private List<GeneralOptions> GetUpdatedOptions()
+        {
             List<GeneralOptions> newOptions = new List<GeneralOptions>();
 
             if (KeepOldModsAfterUpdating)
@@ -447,49 +507,71 @@ namespace SeventhHeaven.ViewModels
                 newOptions.Add(GeneralOptions.BypassCompatibility);
 
             if (OpenIrosLinks)
-            {
-                AssociateIrosUrlWith7H();
                 newOptions.Add(GeneralOptions.OpenIrosLinksWith7H);
-            }
-            else
-            {
-                RemoveIrosUrlAssociationFromRegistry();
-            }
 
             if (OpenModFilesWith7H)
-            {
-                AssociateIroFilesWith7H();
                 newOptions.Add(GeneralOptions.OpenModFilesWith7H);
-            }
-            else
-            {
-                RemoveIroFileAssociationFromRegistry();
-            }
 
             if (WarnAboutModCode)
                 newOptions.Add(GeneralOptions.WarnAboutModCode);
 
             if (ShowContextMenuInExplorer)
-            {
-                // TODO: add context menu option to Explorer
                 newOptions.Add(GeneralOptions.Show7HInFileExplorerContextMenu);
-            }
 
 
-            Sys.Settings.Options = newOptions;
+            return newOptions;
+        }
 
-            // Clear EXE compatibility flags if user opts out
-            if (!Sys.Settings.HasOption(GeneralOptions.SetEXECompatFlags))
+        /// <summary>
+        /// Returns list of Subscriptions based on the current input in <see cref="SubscriptionList"/>
+        /// </summary>
+        private List<Subscription> GetUpdatedSubscriptions()
+        {
+            List<Subscription> updatedSubscriptions = new List<Subscription>();
+
+            foreach (SubscriptionSettingViewModel item in SubscriptionList.ToList())
             {
-                RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
-                if (ff7CompatKey.GetValue(Sys.Settings.FF7Exe) != null) ff7CompatKey.DeleteValue(Sys.Settings.FF7Exe);
+                var existingSub = Sys.Settings.Subscriptions.FirstOrDefault(s => s.Url == item.Url);
+
+                if (existingSub == null)
+                {
+                    existingSub = new Subscription() { Name = item.Name, Url = item.Url };
+                }
+                else
+                {
+                    existingSub.Name = item.Name;
+                }
+
+                updatedSubscriptions.Add(existingSub);
             }
 
-            Directory.CreateDirectory(Sys.Settings.LibraryLocation);
+            return updatedSubscriptions;
+        }
 
-            Sys.Message(new WMessage() { Text = "General settings have been updated!" });
+        /// <summary>
+        /// Returns list of <see cref="ProgramLaunchInfo"/> objects based on the current input in <see cref="ProgramList"/>
+        /// </summary>
+        private List<ProgramLaunchInfo> GetUpdatedProgramsToRun()
+        {
+            List<ProgramLaunchInfo> updatedPrograms = new List<ProgramLaunchInfo>();
 
-            return true;
+            foreach (ProgramToRunViewModel item in ProgramList.ToList())
+            {
+                ProgramLaunchInfo existingProg = Sys.Settings.ProgramsToLaunchPrior.FirstOrDefault(s => s.PathToProgram == item.ProgramPath);
+
+                if (existingProg == null)
+                {
+                    existingProg = new ProgramLaunchInfo() { PathToProgram = item.ProgramPath, ProgramArgs = item.ProgramArguments };
+                }
+                else
+                {
+                    existingProg.ProgramArgs = item.ProgramArguments;
+                }
+
+                updatedPrograms.Add(existingProg);
+            }
+
+            return updatedPrograms;
         }
 
         private bool ValidateSettings(bool showMessage = true)
@@ -789,7 +871,7 @@ namespace SeventhHeaven.ViewModels
 
             if (!SubscriptionList.Any(s => s.Url == NewUrlText))
             {
-                ResolveCatalogNameFromUrl(NewUrlText, resolvedName => 
+                ResolveCatalogNameFromUrl(NewUrlText, resolvedName =>
                 {
                     NewNameText = resolvedName;
                     SubscriptionList.Add(new SubscriptionSettingViewModel(NewUrlText, NewNameText));
@@ -863,12 +945,62 @@ namespace SeventhHeaven.ViewModels
                 // delete temp file on cancel if it exists
                 if (File.Exists(path))
                 {
-                    File.Delete(path); 
+                    File.Delete(path);
                 }
 
                 callback(name);
 
             }));
+        }
+
+
+        internal void EditSelectedProgram(ProgramToRunViewModel selected)
+        {
+            IsProgramPopupOpen = true;
+            NewProgramPathText = selected.ProgramPath;
+            NewProgramArgsText = selected.ProgramArguments ?? "";
+        }
+
+        internal void AddNewProgram()
+        {
+            IsProgramPopupOpen = true;
+        }
+
+        /// <summary>
+        /// Adds or Edits program to run and closes programs popup
+        /// </summary>
+        internal bool SaveProgramToRun()
+        {
+            if (!File.Exists(NewProgramPathText))
+            {
+                Sys.Message(new WMessage("Program to run not found"));
+                return false;
+            }
+
+            if (!ProgramList.Any(s => s.ProgramPath == NewProgramPathText))
+            {
+                ProgramList.Add(new ProgramToRunViewModel(NewProgramPathText, NewProgramArgsText));
+            }
+            else
+            {
+                ProgramToRunViewModel toEdit = ProgramList.FirstOrDefault(s => s.ProgramPath == NewProgramPathText);
+                toEdit.ProgramArguments = NewProgramArgsText;
+            }
+
+            CloseProgramPopup();
+            return true;
+        }
+
+        internal void CloseProgramPopup()
+        {
+            IsProgramPopupOpen = false;
+            NewProgramPathText = "";
+            NewProgramArgsText = "";
+        }
+
+        internal void RemoveSelectedProgram(ProgramToRunViewModel selected)
+        {
+            ProgramList.Remove(selected);
         }
 
     }

@@ -11,8 +11,18 @@
         ResizeMode="NoResize"
         Deactivated="Window_Deactivated"
         LocationChanged="Window_LocationChanged"
-        Height="610" Width="1200">
+        Height="650" Width="1200">
     <Window.Resources>
+
+        <DataTemplate x:Key="programItem">
+            <TextBlock Text="{Binding DisplayName, FallbackValue='Program Name And Args'}"/>
+        </DataTemplate>
+
+        <Style x:Key="programItemStyle" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MainListBoxItemStyle}">
+            <Setter Property="ContentTemplate" Value="{StaticResource programItem}"/>
+        </Style>
+
+
         <Style x:Key="MultiLineTextBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource PrimaryTextBoxStyle}">
             <Setter Property="MinWidth" Value="325"/>
             <Setter Property="Height" Value="115"/>
@@ -156,7 +166,54 @@
         </GroupBox>
 
         <GroupBox Grid.Row="2" Grid.Column="1" Header=" Programs to run prior to FF7: " Margin="25,10,10,0">
-            <TextBox Style="{StaticResource MultiLineTextBoxStyle}" Text="{Binding AlsoLaunchInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Margin="5,5,0,5">
+                    <Button x:Name="btnAddProgram"
+                            Click="btnAddProgram_Click"
+                            ToolTip="Add Program to run"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="28"
+                            Width="28"
+                            Margin="0,0,0,5"
+                            Content="{StaticResource iconAdd}"/>
+
+                    <Button x:Name="btnRemoveProgram"
+                            Click="btnRemoveProgram_Click"
+                            ToolTip="Remove Program"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="28"
+                            Width="28"
+                            Margin="0,0,0,5"
+                            Content="{StaticResource iconMinus}"/>
+
+                    <Button x:Name="btnEditProgram"
+                            ToolTip="Edit Program and Arguments"
+                            Click="btnEditProgram_Click"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="28"
+                            Width="28"
+                            Content="{StaticResource iconEdit}"/>
+
+                </StackPanel>
+
+
+                <ListBox x:Name="lstPrograms" Grid.Column="1" 
+                          ItemsSource="{Binding ProgramList}" 
+                          VirtualizingPanel.IsVirtualizing="false"
+                          ItemContainerStyle="{StaticResource programItemStyle}"
+                          Margin="5,5,5,5"
+                          Height="150">
+
+                </ListBox>
+            </Grid>
         </GroupBox>
 
         <Button x:Name="btnOk" 
@@ -249,6 +306,99 @@
 
                 <Button x:Name="btnCancelSubscription"
                         Click="btnCancelSubscription_Click"
+                        Grid.Row="2"
+                        HorizontalAlignment="Center"
+                        Width="80"
+                        Margin="90,0,0,10"
+                        Content="Cancel"/>
+
+            </Grid>
+        </Popup>
+
+        <Popup x:Name="popupProgram"
+               IsOpen="{Binding IsProgramPopupOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+               StaysOpen="True"
+               Placement="Right"
+               PlacementTarget="{Binding ElementName=btnAddProgram}">
+            <Grid Width="542" Height="152" 
+                  Background="{DynamicResource PrimaryControlBackground}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox Text="{Binding NewProgramPathText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                         FontSize="14"
+                         VerticalContentAlignment="Center"
+                         Margin="25,15,5,10"/>
+
+                <TextBlock Text="Enter full path to program to run"
+                           Foreground="{DynamicResource PrimaryControlDisabledForeground}"
+                           IsHitTestVisible="False"
+                           FontSize="14"
+                           Margin="30,20,5,10">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding NewProgramPathText, FallbackValue=''}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <Button x:Name="btnBrowseProgram"
+                        Click="btnBrowseProgram_Click"
+                        Content="..."
+                        ToolTip="Browse for program to run"
+                        Grid.Column="1"
+                        Margin="0,5,25,0"
+                        VerticalAlignment="Center"/>
+
+
+                <TextBox x:Name="txtProgramPath"
+                         Text="{Binding NewProgramArgsText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Grid.Row="1"
+                         FontSize="14"
+                         VerticalContentAlignment="Center"
+                         Margin="25,15,5,10"/>
+
+                <TextBlock x:Name="txtProgramArgs"
+                           Text="Enter program arguments"
+                           Grid.Row="1"
+                           Foreground="{DynamicResource PrimaryControlDisabledForeground}"
+                           IsHitTestVisible="False"
+                           FontSize="14"
+                           Margin="30,20,5,10">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding NewProgramArgsText, FallbackValue=''}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <Button x:Name="btnSaveProgram"
+                        Click="btnSaveProgram_Click"
+                        Grid.Row="2"
+                        HorizontalAlignment="Center"
+                        Width="80"
+                        Margin="0,0,90,10"
+                        Content="Save"/>
+
+                <Button x:Name="btnCancelProgramAction"
+                        Click="btnCancelProgramAction_Click"
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         Width="80"

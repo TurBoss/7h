@@ -48,13 +48,19 @@ namespace Iros._7th.Workshop {
 
     }
 
+    public class ProgramLaunchInfo
+    {
+        public string PathToProgram { get; set; }
+        public string ProgramArgs { get; set; }
+    }
+
     public class Settings {
 
         public IEnumerable<string> VerifySettings() {
             bool validexe = System.IO.File.Exists(FF7Exe);
             if (!validexe) yield return "FF7Exe " + FF7Exe + " not found";
-            foreach (string al in AlsoLaunch.Where(s => !String.IsNullOrWhiteSpace(s)))
-                if (!System.IO.File.Exists(al)) yield return "AlsoLaunch " + al + " not found";
+            foreach (var al in ProgramsToLaunchPrior.Where(s => !String.IsNullOrWhiteSpace(s.PathToProgram)))
+                if (!System.IO.File.Exists(al.PathToProgram)) yield return "AlsoLaunch " + al.PathToProgram + " not found";
             if (!System.IO.Directory.Exists(MovieFolder)) yield return "MovieFolder " + MovieFolder + " not found";
             if (!System.IO.Directory.Exists(AaliFolder)) yield return "Aali Modpath " + AaliFolder + " not found";
             if (validexe) {
@@ -82,7 +88,7 @@ namespace Iros._7th.Workshop {
         
         public string FF7Exe { get; set; }
         [System.Xml.Serialization.XmlElement("AlsoLaunch")]
-        public List<string> AlsoLaunch { get; set; }
+        public List<ProgramLaunchInfo> ProgramsToLaunchPrior { get; set; }
         public string AaliFolder { get; set; }
         public string MovieFolder { get; set; }
 
@@ -103,7 +109,7 @@ namespace Iros._7th.Workshop {
 
         public Settings() {
             ExtraFolders = new List<string>();
-            AlsoLaunch = new List<string>();
+            ProgramsToLaunchPrior = new List<ProgramLaunchInfo>();
             Subscriptions = new List<Subscription>();
             Options = new List<GeneralOptions>();
             AutoUpdateSource = "#F!yBlHTYiJ!SFpmT2xII7iXcgXAmNYLJg";

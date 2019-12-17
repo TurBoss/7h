@@ -119,6 +119,7 @@
     <Compile Include="UserControls\PackIroUserControl.xaml.cs">
       <DependentUpon>PackIroUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\ProgramToRunViewModel.cs" />
     <Compile Include="ViewModels\SubscriptionSettingViewModel.cs" />
     <Compile Include="ViewModels\GLSettingViewModel.cs" />
     <Compile Include="ViewModels\CheckboxMessageViewModel.cs" />

@@ -176,8 +176,6 @@ namespace SeventhHeaven.Windows
                 return; // dont do anything if popup opened already
             }
 
-
-
             ToggleCatalogNameIsEnabled(false);
             ViewModel.AddNewSubscription();
         }
@@ -209,11 +207,13 @@ namespace SeventhHeaven.Windows
         private void Window_LocationChanged(object sender, System.EventArgs e)
         {
             ViewModel.IsSubscriptionPopupOpen = false;
+            ViewModel.IsProgramPopupOpen = false;
         }
 
         private void Window_Deactivated(object sender, System.EventArgs e)
         {
             ViewModel.IsSubscriptionPopupOpen = false;
+            ViewModel.IsProgramPopupOpen = false;
         }
 
         internal void RecalculateColumnWidths()
@@ -224,6 +224,63 @@ namespace SeventhHeaven.Windows
 
             colUrl.Width = colUrl.ActualWidth;
             colUrl.Width = double.NaN;
+        }
+
+        private void btnAddProgram_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.IsProgramPopupOpen)
+            {
+                return; // dont do anything if popup opened already
+            }
+
+            ViewModel.AddNewProgram();
+        }
+
+        private void btnRemoveProgram_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstPrograms.SelectedItem == null)
+            {
+                return; // nothing selected
+            }
+
+            ViewModel.RemoveSelectedProgram((lstPrograms.SelectedItem as ProgramToRunViewModel));
+        }
+
+        private void btnEditProgram_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.IsProgramPopupOpen)
+            {
+                return; // dont do anything if popup opened already
+            }
+
+            if (lstPrograms.SelectedItem == null)
+            {
+                return; // nothing selected
+            }
+
+            ViewModel.EditSelectedProgram((lstPrograms.SelectedItem as ProgramToRunViewModel));
+        }
+
+        private void btnCancelProgramAction_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.CloseProgramPopup();
+        }
+
+        private void btnSaveProgram_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SaveProgramToRun();
+        }
+
+        private void btnBrowseProgram_Click(object sender, RoutedEventArgs e)
+        {
+            string pathToProgram = FileDialogHelper.BrowseForFile("All files|*.*", "Select a program to run such as an .exe or script", ViewModel.NewProgramPathText);
+
+            ViewModel.IsProgramPopupOpen = true; // opening file dialog closes popup so re-open it
+
+            if (!string.IsNullOrWhiteSpace(pathToProgram))
+            {
+                ViewModel.NewProgramPathText = pathToProgram;
+            }
         }
     }
 }

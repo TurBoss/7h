@@ -1137,20 +1137,21 @@ They will be automatically turned off.";
             }
 
             // launch other processes set in settings
-            foreach (string al in Sys.Settings.AlsoLaunch.Where(s => !String.IsNullOrWhiteSpace(s)))
+            foreach (ProgramLaunchInfo al in Sys.Settings.ProgramsToLaunchPrior.Where(s => !String.IsNullOrWhiteSpace(s.PathToProgram)))
             {
-                if (!_alsoLaunchProcesses.ContainsKey(al))
+                if (!_alsoLaunchProcesses.ContainsKey(al.PathToProgram))
                 {
-                    string lal = al;
-                    ProcessStartInfo psi = new ProcessStartInfo(lal)
+                    ProcessStartInfo psi = new ProcessStartInfo()
                     {
-                        WorkingDirectory = Path.GetDirectoryName(lal)
+                        WorkingDirectory = Path.GetDirectoryName(al.PathToProgram),
+                        FileName = al.PathToProgram,
+                        Arguments = al.ProgramArgs
                     };
                     Process aproc = Process.Start(psi);
 
-                    _alsoLaunchProcesses.Add(lal, aproc);
+                    _alsoLaunchProcesses.Add(al.PathToProgram, aproc);
                     aproc.EnableRaisingEvents = true;
-                    aproc.Exited += (_o, _e) => _alsoLaunchProcesses.Remove(lal);
+                    aproc.Exited += (_o, _e) => _alsoLaunchProcesses.Remove(al.PathToProgram);
                 }
             }
 
