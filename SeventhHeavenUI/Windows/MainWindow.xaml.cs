@@ -31,8 +31,8 @@ namespace SeventhHeavenUI
             ViewModel = new MainWindowViewModel();
             this.DataContext = ViewModel;
 
-            ctrlMyMods.SetDataContext(ViewModel.ModsViewModel);
-            ctrlCatalog.SetDataContext(ViewModel.CatalogViewModel);
+            ctrlMyMods.SetDataContext(ViewModel.MyMods);
+            ctrlCatalog.SetDataContext(ViewModel.CatalogMods);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

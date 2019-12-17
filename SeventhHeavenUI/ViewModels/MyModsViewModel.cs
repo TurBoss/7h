@@ -19,6 +19,9 @@ namespace SeventhHeavenUI.ViewModels
         public delegate void OnSelectionChanged(object sender, InstalledModViewModel selected);
         public event OnSelectionChanged SelectedModChanged;
 
+        public delegate void OnRefreshListRequested();
+        public event OnRefreshListRequested RefreshListRequested;
+
         private List<InstalledModViewModel> _modList;
 
         /// <summary>
@@ -61,6 +64,13 @@ namespace SeventhHeavenUI.ViewModels
         internal void ClearRememberedSearchTextAndCategories()
         {
             _previousReloadOptions = new ReloadListOption();
+        }
+
+        internal void RefreshModList()
+        {
+            ClearRememberedSearchTextAndCategories();
+            ReloadModList(GetSelectedMod()?.InstallInfo.ModID);
+            RefreshListRequested?.Invoke();
         }
 
         /// <summary>

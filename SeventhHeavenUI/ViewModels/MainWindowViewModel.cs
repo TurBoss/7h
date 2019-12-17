@@ -77,9 +77,9 @@ They will be automatically turned off.";
         private Uri _previewModImageSource;
         private bool _previewModHasReadMe;
 
-        public MyModsViewModel ModsViewModel { get; set; }
+        public MyModsViewModel MyMods { get; set; }
 
-        public CatalogViewModel CatalogViewModel { get; set; }
+        public CatalogViewModel CatalogMods { get; set; }
 
         private static Dictionary<string, _7thWrapperLib.ModInfo> _infoCache = new Dictionary<string, _7thWrapperLib.ModInfo>(StringComparer.InvariantCultureIgnoreCase);
         private Dictionary<string, Process> _alsoLaunchProcesses = new Dictionary<string, Process>(StringComparer.InvariantCultureIgnoreCase);
@@ -125,11 +125,11 @@ They will be automatically turned off.";
 
                     if ((TabIndex)_selectedTabIndex == TabIndex.MyMods)
                     {
-                        UpdateModPreviewInfo(ModsViewModel.GetSelectedMod());
+                        UpdateModPreviewInfo(MyMods.GetSelectedMod());
                     }
                     else
                     {
-                        UpdateModPreviewInfo(CatalogViewModel.GetSelectedMod());
+                        UpdateModPreviewInfo(CatalogMods.GetSelectedMod());
                     }
                 }
             }
@@ -364,11 +364,11 @@ They will be automatically turned off.";
         {
             SearchText = "";
 
-            ModsViewModel = new MyModsViewModel();
-            ModsViewModel.SelectedModChanged += ModsViewModel_SelectedModChanged;
+            MyMods = new MyModsViewModel();
+            MyMods.SelectedModChanged += ModsViewModel_SelectedModChanged;
 
-            CatalogViewModel = new CatalogViewModel();
-            CatalogViewModel.SelectedModChanged += CatalogViewModel_SelectedModChanged;
+            CatalogMods = new CatalogViewModel();
+            CatalogMods.SelectedModChanged += CatalogViewModel_SelectedModChanged;
 
             LoadingGifVisibility = Visibility.Hidden;
         }
@@ -380,7 +380,7 @@ They will be automatically turned off.";
             Sys.StatusChanged += new EventHandler<ModStatusEventArgs>(Sys_StatusChanged);
 
             // Set the Downloads Interface so Sys can use Download methods defined in the CatalogViewModel
-            Sys.Downloads = CatalogViewModel;
+            Sys.Downloads = CatalogMods;
 
             StatusMessage = $"{App.GetAppName()} v{App.GetAppVersion().ToString()} started";
 
@@ -426,9 +426,12 @@ They will be automatically turned off.";
 
             TryAutoImportMods();
 
-            CatalogViewModel.CheckForCatalogUpdatesAsync(new CatCheckOptions());
+            CatalogMods.RefreshListRequested += ModList_RefreshRequested;
+            MyMods.RefreshListRequested += ModList_RefreshRequested;
 
-            CatalogViewModel.ReloadModList();
+            CatalogMods.CheckForCatalogUpdatesAsync(new CatCheckOptions());
+
+            CatalogMods.ReloadModList();
 
             ReloadAvailableFilters();
 
@@ -439,6 +442,16 @@ They will be automatically turned off.";
             ConfigureModViewModel.DeleteTempFolder();
 
             // TODO: check for app updates
+        }
+
+        /// <summary>
+        /// Clears the search text and applied filters.
+        /// Triggered when my mods or catalog mods list is refreshed from button click
+        /// </summary>
+        private void ModList_RefreshRequested()
+        {
+            SearchText = "";
+            ReloadAvailableFilters(recheckFilters: false);
         }
 
         private void CatalogViewModel_SelectedModChanged(object sender, CatalogModItemViewModel selected)
@@ -453,7 +466,7 @@ They will be automatically turned off.";
 
         private void Sys_StatusChanged(object sender, ModStatusEventArgs e)
         {
-            CatalogViewModel.UpdateModDetails(e.ModID);
+            CatalogMods.UpdateModDetails(e.ModID);
 
             if (e.Status == ModStatus.Installed)
             {
@@ -461,18 +474,18 @@ They will be automatically turned off.";
                 InstalledItem mod = Sys.Library.GetItem(e.ModID);
                 string mfile = mod.LatestInstalled.InstalledLocation;
                 _infoCache.Remove(mfile);
-                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo.ModID, SearchText, CheckedCategories, CheckedTags);
+                MyMods.ReloadModList(MyMods.GetSelectedMod()?.InstallInfo.ModID, SearchText, CheckedCategories, CheckedTags);
             }
 
             if (e.Status == ModStatus.Installed && e.OldStatus != ModStatus.Installed && Sys.Settings.HasOption(GeneralOptions.AutoActiveNewMods))
-                ModsViewModel.ToggleActivateMod(e.ModID);
+                MyMods.ToggleActivateMod(e.ModID);
             if (e.OldStatus == ModStatus.Installed && e.Status == ModStatus.NotInstalled && Sys.ActiveProfile.Items.Any(i => i.ModID.Equals(e.ModID)))
-                ModsViewModel.ToggleActivateMod(e.ModID);
+                MyMods.ToggleActivateMod(e.ModID);
 
             // update mod preview info page if the mod is currently selected
             if ((TabIndex)SelectedTabIndex == TabIndex.MyMods)
             {
-                InstalledModViewModel currentlySelected = ModsViewModel.GetSelectedMod();
+                InstalledModViewModel currentlySelected = MyMods.GetSelectedMod();
 
                 if (currentlySelected?.InstallInfo.ModID == e.ModID)
                 {
@@ -481,7 +494,7 @@ They will be automatically turned off.";
             }
             else
             {
-                CatalogModItemViewModel currentlySelected = CatalogViewModel.GetSelectedMod();
+                CatalogModItemViewModel currentlySelected = CatalogMods.GetSelectedMod();
 
                 if (currentlySelected?.Mod.ID == e.ModID)
                 {
@@ -499,14 +512,16 @@ They will be automatically turned off.";
             SaveProfile();
             Sys.Save();
 
-            ModsViewModel.SelectedModChanged -= ModsViewModel_SelectedModChanged;
-            ModsViewModel.ModList.Clear();
-            ModsViewModel.ModList = null;
-            ModsViewModel = null;
+            MyMods.SelectedModChanged -= ModsViewModel_SelectedModChanged;
+            MyMods.RefreshListRequested -= ModList_RefreshRequested;
+            MyMods.ModList.Clear();
+            MyMods.ModList = null;
+            MyMods = null;
 
-            CatalogViewModel.SelectedModChanged -= CatalogViewModel_SelectedModChanged;
-            CatalogViewModel.CatalogModList.Clear();
-            CatalogViewModel = null;
+            CatalogMods.SelectedModChanged -= CatalogViewModel_SelectedModChanged;
+            CatalogMods.RefreshListRequested -= ModList_RefreshRequested;
+            CatalogMods.CatalogModList.Clear();
+            CatalogMods = null;
         }
 
         private void UpdateModPreviewInfo(InstalledModViewModel selected)
@@ -717,7 +732,7 @@ They will be automatically turned off.";
             }
 
             Sys.Library.AttemptDeletions();
-            ModsViewModel.ReloadModList(null, SearchText, CheckedCategories, CheckedTags);
+            MyMods.ReloadModList(null, SearchText, CheckedCategories, CheckedTags);
         }
 
         public void RefreshProfile()
@@ -730,7 +745,7 @@ They will be automatically turned off.";
             CurrentProfile = Sys.Settings.CurrentProfile;
 
             // reload list of active mods for the profile
-            ModsViewModel.ReloadModList(null, SearchText, CheckedCategories, CheckedTags);
+            MyMods.ReloadModList(null, SearchText, CheckedCategories, CheckedTags);
         }
 
         internal void SaveProfile()
@@ -1321,13 +1336,13 @@ They will be automatically turned off.";
         {
             if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
             {
-                CatalogViewModel.ClearRememberedSearchTextAndCategories();
-                CatalogViewModel.ReloadModList(CatalogViewModel.GetSelectedMod()?.Mod?.ID, SearchText, CheckedCategories, CheckedTags);
+                CatalogMods.ClearRememberedSearchTextAndCategories();
+                CatalogMods.ReloadModList(CatalogMods.GetSelectedMod()?.Mod?.ID, SearchText, CheckedCategories, CheckedTags);
             }
             else
             {
-                ModsViewModel.ClearRememberedSearchTextAndCategories();
-                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedCategories, CheckedTags);
+                MyMods.ClearRememberedSearchTextAndCategories();
+                MyMods.ReloadModList(MyMods.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedCategories, CheckedTags);
             }
 
             ReloadAvailableFilters();
@@ -1502,7 +1517,7 @@ They will be automatically turned off.";
 
             if (didSave.GetValueOrDefault(false) && settingsWindow.ViewModel.SubscriptionsChanged)
             {
-                CatalogViewModel.ForceCheckCatalogUpdateAsync();
+                CatalogMods.ForceCheckCatalogUpdateAsync();
             }
         }
 
@@ -1607,17 +1622,17 @@ They will be automatically turned off.";
         {
             if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
             {
-                CatalogViewModel.ReloadModList(CatalogViewModel.GetSelectedMod()?.Mod?.ID, SearchText, CheckedCategories, CheckedTags);
+                CatalogMods.ReloadModList(CatalogMods.GetSelectedMod()?.Mod?.ID, SearchText, CheckedCategories, CheckedTags);
             }
             else
             {
-                ModsViewModel.ReloadModList(ModsViewModel.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedCategories, CheckedTags);
+                MyMods.ReloadModList(MyMods.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedCategories, CheckedTags);
             }
 
             ReloadAvailableFilters();
         }
 
-        internal void ReloadAvailableFilters()
+        internal void ReloadAvailableFilters(bool recheckFilters = true)
         {
             List<string> tags = GetTagsForSelectedTab();
             List<string> categories = GetCategoriesForSelectedTab();
@@ -1640,13 +1655,16 @@ They will be automatically turned off.";
 
 
             // re-check items
-            List<FilterItemViewModel> oldItems = AvailableFilters.ToList();
-
-            foreach (FilterItemViewModel item in newList)
+            if (recheckFilters)
             {
-                if (oldItems.Any(c => c.Name == item.Name && c.IsChecked && c.FilterType != FilterItemType.Separator))
+                List<FilterItemViewModel> oldItems = AvailableFilters.ToList();
+
+                foreach (FilterItemViewModel item in newList)
                 {
-                    item.IsChecked = true;
+                    if (oldItems.Any(c => c.Name == item.Name && c.IsChecked && c.FilterType != FilterItemType.Separator))
+                    {
+                        item.IsChecked = true;
+                    }
                 }
             }
 
@@ -1661,7 +1679,6 @@ They will be automatically turned off.";
 
             AvailableFilters = newList;
         }
-
 
         /// <summary>
         /// Opens /Resources/Help/index.html if it exists as a new process

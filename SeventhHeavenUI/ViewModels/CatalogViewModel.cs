@@ -34,6 +34,9 @@ It may not work properly unless you find and install the requirements.";
         public delegate void OnSelectionChanged(object sender, CatalogModItemViewModel selected);
         public event OnSelectionChanged SelectedModChanged;
 
+        public delegate void OnRefreshListRequested();
+        public event OnRefreshListRequested RefreshListRequested;
+
         private List<CatalogModItemViewModel> _catalogModList;
         private ObservableCollection<DownloadItemViewModel> _downloadList;
 
@@ -208,6 +211,13 @@ It may not work properly unless you find and install the requirements.";
         internal void ClearRememberedSearchTextAndCategories()
         {
             _previousReloadOptions = new ReloadListOption();
+        }
+
+        internal void RefreshCatalogList()
+        {
+            ClearRememberedSearchTextAndCategories();
+            ForceCheckCatalogUpdateAsync();
+            RefreshListRequested?.Invoke();
         }
 
         /// <summary>

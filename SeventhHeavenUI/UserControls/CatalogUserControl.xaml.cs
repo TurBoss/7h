@@ -32,7 +32,7 @@ namespace SeventhHeaven.UserControls
 
         private void btnRefresh_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            ViewModel.ForceCheckCatalogUpdateAsync();
+            ViewModel.RefreshCatalogList();
             RecalculateColumnWidths();
         }
 

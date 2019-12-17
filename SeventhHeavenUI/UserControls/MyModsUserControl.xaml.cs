@@ -66,7 +66,7 @@ namespace SeventhHeaven.UserControls
 
         private void btnRefresh_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            ViewModel.ReloadModList(ViewModel.GetSelectedMod()?.InstallInfo.ModID);
+            ViewModel.RefreshModList();
             RecalculateColumnWidths();
         }
 
