@@ -40,11 +40,17 @@ namespace Iros._7th.Workshop
             Text = message;
         }
 
+        public WMessage(string message, bool isImportant)
+        {
+            Text = message;
+            IsImportant = isImportant;
+        }
+
+
         public string Text { get; set; }
         public string Link { get; set; }
-        //TODO ....
-
-
+        
+        public bool IsImportant { get; set; }
     }
 
     public interface IDownloader

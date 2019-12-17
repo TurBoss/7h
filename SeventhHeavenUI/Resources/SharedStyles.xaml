@@ -388,10 +388,12 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type StatusBarItem}">
+    <Style x:Key="MainStatusBarStyle" TargetType="{x:Type StatusBarItem}">
         <Setter Property="Background" Value="{DynamicResource SecondaryAppBackground}"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
     </Style>
+
+    <Style TargetType="{x:Type StatusBarItem}" BasedOn="{StaticResource MainStatusBarStyle}"/>
 
     <Style TargetType="{x:Type ListView}">
         <Setter Property="Background" Value="{DynamicResource SecondaryAppBackground}"/>

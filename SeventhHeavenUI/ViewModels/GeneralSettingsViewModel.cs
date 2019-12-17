@@ -865,7 +865,7 @@ namespace SeventhHeaven.ViewModels
         {
             if (!NewUrlText.StartsWith("iros://"))
             {
-                Sys.Message(new WMessage("URL must be in iros:// format"));
+                Sys.Message(new WMessage("URL must be in iros:// format", true));
                 return false;
             }
 
@@ -973,7 +973,7 @@ namespace SeventhHeaven.ViewModels
         {
             if (!File.Exists(NewProgramPathText))
             {
-                Sys.Message(new WMessage("Program to run not found"));
+                Sys.Message(new WMessage("Program to run not found", true));
                 return false;
             }
 

@@ -85,6 +85,7 @@ They will be automatically turned off.";
         private Dictionary<string, Process> _alsoLaunchProcesses = new Dictionary<string, Process>(StringComparer.InvariantCultureIgnoreCase);
         private Dictionary<string, _7HPlugin> _plugins = new Dictionary<string, _7HPlugin>(StringComparer.InvariantCultureIgnoreCase);
         private Visibility _loadingGifVisibility;
+        private bool _isFlashingStatus;
 
         public string WindowTitle
         {
@@ -342,6 +343,20 @@ They will be automatically turned off.";
                 }
             }
         }
+
+        public bool IsFlashingStatus
+        {
+            get
+            {
+                return _isFlashingStatus;
+            }
+            set
+            {
+                _isFlashingStatus = value;
+                NotifyPropertyChanged();
+            }
+        }
+
 
         #endregion
 
@@ -737,6 +752,22 @@ They will be automatically turned off.";
             }
 
             StatusMessage = receivedMessage;
+
+            if (e.Message.IsImportant)
+            {
+                FlashStatusBar();
+            }
+        }
+
+        private void FlashStatusBar(int timeToFlashInMilliseconds = 500)
+        {
+            IsFlashingStatus = true;
+
+            Task.Factory.StartNew(() =>
+            {
+                System.Threading.Thread.Sleep(timeToFlashInMilliseconds);
+                IsFlashingStatus = false;
+            });
         }
 
         private void LoadCatalogXmlFile()

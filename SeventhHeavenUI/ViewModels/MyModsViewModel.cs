@@ -129,6 +129,12 @@ namespace SeventhHeavenUI.ViewModels
                 }
             }
 
+            if (allMods.Count == 0)
+            {
+                Sys.Message(new WMessage("No results found", true));
+                return;
+            }
+
             ClearModList();
             ModList = allMods;
         }

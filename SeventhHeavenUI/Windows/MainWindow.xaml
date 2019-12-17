@@ -15,6 +15,7 @@
         Closing="Window_Closing"
         Height="600" Width="1100">
     <Window.Resources>
+
         <Style x:Key="ModInfoLabelStyle" TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="Margin" Value="0,0,3,1"/>
@@ -319,13 +320,33 @@
         </Popup>
 
 
-        <StatusBar Grid.Row="2" Grid.ColumnSpan="3" Margin="0,5,0,0">
-            <StatusBarItem>
+        <StatusBar  Grid.Row="2" Grid.ColumnSpan="3" Margin="0,5,0,0">
+            <StatusBarItem x:Name="statusBarItem">
                 <TextBlock x:Name="txtStatusMessage"
                            Text="{Binding StatusMessage, FallbackValue='Some message to the user ...'}"
                            Padding="5,1,0,1"
                            TextTrimming="CharacterEllipsis"
                            TextWrapping="Wrap"/>
+
+                <StatusBarItem.Style>
+                    <Style TargetType="{x:Type StatusBarItem}" BasedOn="{StaticResource MainStatusBarStyle}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsFlashingStatus}" Value="True">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard x:Name="beginStory">
+                                        <Storyboard AutoReverse="True" RepeatBehavior="Forever" SpeedRatio="8">
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity" 
+                                                             From="1" To="0.75" Duration="0:0:1" AutoReverse="True"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                                <DataTrigger.ExitActions>
+                                    <StopStoryboard BeginStoryboardName="beginStory"/>
+                                </DataTrigger.ExitActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StatusBarItem.Style>
             </StatusBarItem>
         </StatusBar>
     </Grid>

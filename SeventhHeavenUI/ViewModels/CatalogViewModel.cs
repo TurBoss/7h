@@ -191,6 +191,12 @@ It may not work properly unless you find and install the requirements.";
             // ... due to uncaught exception that can be thrown when modifying on background thread
             App.Current.Dispatcher.Invoke(() =>
             {
+                if (newList.Count == 0)
+                {
+                    Sys.Message(new WMessage("No results found", true));
+                    return;
+                }
+
                 lock (_listLock)
                 {
                     CatalogModList.Clear();
