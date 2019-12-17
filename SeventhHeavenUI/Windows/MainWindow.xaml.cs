@@ -41,6 +41,28 @@ namespace SeventhHeavenUI
 
             _currentTabIndex = tabCtrlMain.SelectedIndex;
 
+            SetWindowSizeAndLocation();
+
+            ProcessCommandLineArgs();
+
+            App.uniqueMutex = new System.Threading.Mutex(true, App.uniqueAppGuid, out bool result);
+            GC.KeepAlive(App.uniqueMutex);
+
+            if (!result)
+            {
+                App.Current.Shutdown(); // only one instance of the app opened at a time so close after processing arguments
+                return;
+            }
+
+            ctrlMyMods.RecalculateColumnWidths();
+        }
+
+        /// <summary>
+        /// Sets the window size and location based on what was saved in <see cref="Sys.Settings"/>.
+        /// Sets startup location to <see cref="WindowStartupLocation.CenterScreen"/> if no settings saved
+        /// </summary>
+        private void SetWindowSizeAndLocation()
+        {
             if (Sys.Settings.MainWindow != null)
             {
                 var loc = new System.Drawing.Point((int)Sys.Settings.MainWindow.X, (int)Sys.Settings.MainWindow.Y);
@@ -56,19 +78,6 @@ namespace SeventhHeavenUI
                 Height = Sys.Settings.MainWindow.H;
                 WindowState = Sys.Settings.MainWindow.State;
             }
-
-            ProcessCommandLineArgs();
-
-            App.uniqueMutex = new System.Threading.Mutex(true, App.uniqueAppGuid, out bool result);
-            GC.KeepAlive(App.uniqueMutex);
-
-            if (!result)
-            {
-                App.Current.Shutdown(); // only one instance of the app opened at a time so close after processing arguments
-                return;
-            }
-
-            ctrlMyMods.RecalculateColumnWidths();
         }
 
         private void ProcessCommandLineArgs()

@@ -10,6 +10,7 @@
         mc:Ignorable="d"
         Title="{Binding WindowTitle, FallbackValue='7th Heaven v2.0.0 - Mod Manager for Final Fantasy 7 [Current Loaded Profile]'}"
         Style="{StaticResource MainWindowStyle}"
+        WindowStartupLocation="CenterScreen"
         Loaded="Window_Loaded"
         SizeChanged="Window_SizeChanged"
         Closing="Window_Closing"

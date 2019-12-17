@@ -108,6 +108,24 @@ It may not work properly unless you find and install the requirements.";
         /// <param name="searchText"> empty string returns all mods </param>
         internal void ReloadModList(Guid? modToSelect = null, string searchText = "", IEnumerable<FilterItemViewModel> categories = null, IEnumerable<FilterItemViewModel> tags = null)
         {
+            // if there are no mods in the catalog then just clear the list and return since no extra filtering work needs to be done
+            if (Sys.Catalog.Mods.Count == 0)
+            {
+                // make sure to set CatalogModList on the UI thread
+                // ... due to uncaught exception that can be thrown when modifying on background thread
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    lock (_listLock)
+                    {
+                        CatalogModList.Clear();
+                        CatalogModList = new List<CatalogModItemViewModel>();
+                    }
+                });
+
+                return;
+            }
+
+
             List<Mod> results;
 
             categories = _previousReloadOptions.SetOrGetPreviousCategories(categories);
@@ -628,7 +646,7 @@ It may not work properly unless you find and install the requirements.";
             {
                 item.OnError?.Invoke();
                 RemoveFromDownloadList(item);
-                string msg = "Error " + item.ItemName + e.Error.Message;
+                string msg = $"Error {item.ItemName} - {e.Error.Message}";
                 Sys.Message(new WMessage() { Text = msg });
             }
             else

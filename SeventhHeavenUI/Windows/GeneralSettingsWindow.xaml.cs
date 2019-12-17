@@ -176,7 +176,6 @@ namespace SeventhHeaven.Windows
                 return; // dont do anything if popup opened already
             }
 
-            ToggleCatalogNameIsEnabled(false);
             ViewModel.AddNewSubscription();
         }
 
@@ -186,20 +185,12 @@ namespace SeventhHeaven.Windows
         private void btnCancelSubscription_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.CloseSubscriptionPopup();
-            ToggleCatalogNameIsEnabled(true);
-        }
-
-        private void ToggleCatalogNameIsEnabled(bool isEnabled)
-        {
-            txtNameHint.Text = isEnabled ? "Enter name for catalog" : "Catalog Name will auto resolve on save";
-            txtCatalogName.IsEnabled = isEnabled;
         }
 
         private void btnSaveSubscription_Click(object sender, RoutedEventArgs e)
         {
             if (ViewModel.SaveSubscription())
             {
-                ToggleCatalogNameIsEnabled(true);
                 RecalculateColumnWidths();
             }
         }

@@ -41,6 +41,9 @@ namespace SeventhHeaven.ViewModels
         private string _newProgramPathText;
         private string _newProgramArgsText;
         private bool _isProgramPopupOpen;
+        private bool _isResolvingName;
+        private string _subscriptionNameHintText;
+        private bool _subscriptionNameTextBoxIsEnabled;
 
         public string FF7ExePathInput
         {
@@ -256,6 +259,57 @@ namespace SeventhHeaven.ViewModels
 
         public bool SubscriptionsChanged { get; set; }
 
+        private bool IsEditingSubscription { get; set; }
+
+        public string SubscriptionNameHintText
+        {
+            get
+            {
+                return _subscriptionNameHintText;
+            }
+            set
+            {
+                _subscriptionNameHintText = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public bool SubscriptionNameTextBoxIsEnabled
+        {
+            get
+            {
+                return _subscriptionNameTextBoxIsEnabled;
+            }
+            set
+            {
+                _subscriptionNameTextBoxIsEnabled = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+
+        public bool IsResolvingName
+        {
+            get
+            {
+                return _isResolvingName;
+            }
+            set
+            {
+                _isResolvingName = value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(IsNotResolvingName));
+            }
+        }
+
+        public bool IsNotResolvingName
+        {
+            get
+            {
+                return !IsResolvingName;
+            }
+        }
+
         public string NewUrlText
         {
             get
@@ -295,6 +349,9 @@ namespace SeventhHeaven.ViewModels
                 NotifyPropertyChanged();
             }
         }
+
+
+
 
         public ObservableCollection<ProgramToRunViewModel> ProgramList
         {
@@ -345,6 +402,9 @@ namespace SeventhHeaven.ViewModels
             NewProgramPathText = "";
             NewProgramArgsText = "";
             SubscriptionsChanged = false;
+            IsResolvingName = false;
+            SubscriptionNameTextBoxIsEnabled = true;
+            SubscriptionNameHintText = "Enter name for catalog";
         }
 
         internal void LoadSettings()
@@ -837,6 +897,7 @@ namespace SeventhHeaven.ViewModels
 
         internal void EditSelectedSubscription(SubscriptionSettingViewModel selected)
         {
+            IsEditingSubscription = true;
             IsSubscriptionPopupOpen = true;
             NewUrlText = selected.Url;
             NewNameText = selected.Name ?? "";
@@ -844,6 +905,9 @@ namespace SeventhHeaven.ViewModels
 
         internal void AddNewSubscription()
         {
+            IsEditingSubscription = false;
+            SubscriptionNameTextBoxIsEnabled = false;
+            SubscriptionNameHintText = "Catalog Name will auto resolve on save";
             IsSubscriptionPopupOpen = true;
             string clipboardContent = "";
 
@@ -871,18 +935,27 @@ namespace SeventhHeaven.ViewModels
 
             if (!SubscriptionList.Any(s => s.Url == NewUrlText))
             {
+                IsResolvingName = true;
+                SubscriptionNameHintText = "Resolving catalog name ...";
                 ResolveCatalogNameFromUrl(NewUrlText, resolvedName =>
                 {
                     NewNameText = resolvedName;
                     SubscriptionList.Add(new SubscriptionSettingViewModel(NewUrlText, NewNameText));
                     CloseSubscriptionPopup();
+                    IsResolvingName = false;
                 });
             }
-            else
+            else if (IsEditingSubscription)
             {
                 SubscriptionSettingViewModel toEdit = SubscriptionList.FirstOrDefault(s => s.Url == NewUrlText);
                 toEdit.Name = NewNameText;
                 CloseSubscriptionPopup();
+            }
+            else
+            {
+                // if user is trying to add a url that already exists in list then just close popup
+                CloseSubscriptionPopup();
+                return true;
             }
 
             SubscriptionsChanged = true;
@@ -891,9 +964,12 @@ namespace SeventhHeaven.ViewModels
 
         internal void CloseSubscriptionPopup()
         {
+            IsEditingSubscription = false;
             IsSubscriptionPopupOpen = false;
             NewUrlText = "";
             NewNameText = "";
+            SubscriptionNameTextBoxIsEnabled = true;
+            SubscriptionNameHintText = "Enter name for catalog";
         }
 
         internal void RemoveSelectedSubscription(SubscriptionSettingViewModel selected)
@@ -913,7 +989,9 @@ namespace SeventhHeaven.ViewModels
             string name = "";
 
             string uniqueFileName = $"cattemp{Path.GetRandomFileName()}.xml"; // save temp catalog update to unique filename so multiple catalog updates can download async
-            string path = Path.Combine(Sys.SysFolder, "temp", uniqueFileName);
+            string path = Path.Combine(Sys.PathToTempFolder, uniqueFileName);
+
+            Directory.CreateDirectory(Sys.PathToTempFolder); // temp folder could be missing so ensure its created
 
             Sys.Downloads.Download(catalogUrl, path, $"Resolving catalog name for {catalogUrl}", new Install.InstallProcedureCallback(e =>
             {

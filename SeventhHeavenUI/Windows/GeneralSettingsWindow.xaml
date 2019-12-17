@@ -249,6 +249,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBox Text="{Binding NewUrlText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                         IsEnabled="{Binding IsNotResolvingName}"
                          FontSize="14"
                          VerticalContentAlignment="Center"
                          Margin="25,15,25,10"/>
@@ -272,13 +273,14 @@
 
                 <TextBox x:Name="txtCatalogName"
                          Text="{Binding NewNameText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         IsEnabled="{Binding SubscriptionNameTextBoxIsEnabled}"
                          Grid.Row="1"
                          FontSize="14"
                          VerticalContentAlignment="Center"
                          Margin="25,15,25,10"/>
 
                 <TextBlock x:Name="txtNameHint"
-                           Text="Enter name for catalog"
+                           Text="{Binding SubscriptionNameHintText, FallbackValue='enter name for catalog'}"
                            Grid.Row="1"
                            Foreground="{DynamicResource PrimaryControlDisabledForeground}"
                            IsHitTestVisible="False"
@@ -298,6 +300,7 @@
 
                 <Button x:Name="btnSaveSubscription"
                         Click="btnSaveSubscription_Click"
+                        IsEnabled="{Binding IsNotResolvingName}"
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         Width="80"

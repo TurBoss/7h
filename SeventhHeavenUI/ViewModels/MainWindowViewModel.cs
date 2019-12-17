@@ -1149,6 +1149,8 @@ They will be automatically turned off.";
             {
                 MessageBox.Show("No mods have been activated. The game will now launch as 'vanilla'");
 
+                LaunchAdditionalProgramsToRunPrior();
+
                 LaunchFF7Exe();
                 return;
             }
@@ -1191,24 +1193,7 @@ They will be automatically turned off.";
                 aproc.Exited += (o, e) => _alsoLaunchProcesses.Remove(turboLogProcName);
             }
 
-            // launch other processes set in settings
-            foreach (ProgramLaunchInfo al in Sys.Settings.ProgramsToLaunchPrior.Where(s => !String.IsNullOrWhiteSpace(s.PathToProgram)))
-            {
-                if (!_alsoLaunchProcesses.ContainsKey(al.PathToProgram))
-                {
-                    ProcessStartInfo psi = new ProcessStartInfo()
-                    {
-                        WorkingDirectory = Path.GetDirectoryName(al.PathToProgram),
-                        FileName = al.PathToProgram,
-                        Arguments = al.ProgramArgs
-                    };
-                    Process aproc = Process.Start(psi);
-
-                    _alsoLaunchProcesses.Add(al.PathToProgram, aproc);
-                    aproc.EnableRaisingEvents = true;
-                    aproc.Exited += (_o, _e) => _alsoLaunchProcesses.Remove(al.PathToProgram);
-                }
-            }
+            LaunchAdditionalProgramsToRunPrior();
 
             // copy EasyHook.dll to FF7
             string dir = Path.GetDirectoryName(Sys.Settings.FF7Exe);
@@ -1298,6 +1283,31 @@ They will be automatically turned off.";
                 MessageBox.Show(e.ToString(), "Error starting FF7");
 
                 return;
+            }
+        }
+
+        /// <summary>
+        /// Starts the processes with the specified arguments that are set in <see cref="Sys.Settings.ProgramsToLaunchPrior"/>.
+        /// </summary>
+        private void LaunchAdditionalProgramsToRunPrior()
+        {
+            // launch other processes set in settings
+            foreach (ProgramLaunchInfo al in Sys.Settings.ProgramsToLaunchPrior.Where(s => !String.IsNullOrWhiteSpace(s.PathToProgram)))
+            {
+                if (!_alsoLaunchProcesses.ContainsKey(al.PathToProgram))
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo()
+                    {
+                        WorkingDirectory = Path.GetDirectoryName(al.PathToProgram),
+                        FileName = al.PathToProgram,
+                        Arguments = al.ProgramArgs
+                    };
+                    Process aproc = Process.Start(psi);
+
+                    _alsoLaunchProcesses.Add(al.PathToProgram, aproc);
+                    aproc.EnableRaisingEvents = true;
+                    aproc.Exited += (_o, _e) => _alsoLaunchProcesses.Remove(al.PathToProgram);
+                }
             }
         }
 
