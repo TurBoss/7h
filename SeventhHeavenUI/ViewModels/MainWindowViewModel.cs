@@ -373,98 +373,6 @@ They will be automatically turned off.";
             LoadingGifVisibility = Visibility.Hidden;
         }
 
-        private void CatalogViewModel_SelectedModChanged(object sender, CatalogModItemViewModel selected)
-        {
-            UpdateModPreviewInfo(selected);
-        }
-
-        private void ModsViewModel_SelectedModChanged(object sender, InstalledModViewModel selected)
-        {
-            UpdateModPreviewInfo(selected);
-        }
-
-        private void UpdateModPreviewInfo(InstalledModViewModel selected)
-        {
-            if (selected == null)
-            {
-                PreviewModAuthor = "";
-                PreviewModName = "";
-                PreviewModVersion = "";
-                PreviewModReleaseDate = "";
-                PreviewModReleaseNotes = "";
-                PreviewModCategory = "";
-                PreviewModDescription = "";
-                PreviewModLink = "";
-                PreviewModImageSource = null;
-                return;
-            }
-
-            _previewMod = selected.InstallInfo.CachedDetails;
-
-            PreviewModAuthor = selected.Author;
-            PreviewModVersion = selected.InstallInfo.CachedDetails.LatestVersion.Version.ToString();
-            PreviewModName = $"{selected.Name} v{PreviewModVersion}";
-            PreviewModReleaseDate = selected.ReleaseDate;
-            PreviewModReleaseNotes = selected.InstallInfo.CachedDetails.LatestVersion.ReleaseNotes;
-            PreviewModCategory = selected.Category;
-            PreviewModDescription = selected.InstallInfo.CachedDetails.Description;
-            PreviewModLink = selected.InstallInfo.CachedDetails.Link;
-
-            InstalledVersion latestVersion = selected.InstallInfo.LatestInstalled;
-            if (latestVersion != null)
-            {
-                PreviewModHasReadMe = latestVersion.HasData("readme.md") || latestVersion.HasData("readme.html") || latestVersion.HasData("readme.txt");
-            }
-            else
-            {
-                PreviewModHasReadMe = false;
-            }
-
-            LoadingGifVisibility = Visibility.Visible;
-
-            string pathToImage = Sys.ImageCache.GetImagePath(selected.InstallInfo.CachedDetails.LatestVersion.PreviewImage, selected.InstallInfo.CachedDetails.ID);
-            PreviewModImageSource = pathToImage == null ? null : new Uri(pathToImage);
-        }
-
-        private void UpdateModPreviewInfo(CatalogModItemViewModel selected)
-        {
-            if (selected == null)
-            {
-                PreviewModAuthor = "";
-                PreviewModName = "";
-                PreviewModVersion = "";
-                PreviewModReleaseDate = "";
-                PreviewModReleaseNotes = "";
-                PreviewModCategory = "";
-                PreviewModDescription = "";
-                PreviewModLink = "";
-                PreviewModImageSource = null;
-                return;
-            }
-
-            _previewMod = selected.Mod;
-
-            PreviewModAuthor = selected.Author;
-            PreviewModVersion = selected.Mod.LatestVersion.Version.ToString();
-            PreviewModName = $"{selected.Name} v{PreviewModVersion}";
-            PreviewModReleaseDate = selected.ReleaseDate;
-            PreviewModReleaseNotes = selected.Mod.LatestVersion.ReleaseNotes;
-            PreviewModCategory = selected.Category;
-            PreviewModDescription = selected.Mod.Description;
-            PreviewModLink = selected.Mod.Link;
-            PreviewModHasReadMe = false; // no READMEs for catalog (only installed mods)
-
-            LoadingGifVisibility = Visibility.Visible;
-
-            string pathToImage = Sys.ImageCache.GetImagePath(selected.Mod.LatestVersion.PreviewImage, selected.Mod.ID);
-
-            CatalogModItemViewModel currentSelection = CatalogViewModel.GetSelectedMod();
-
-            if (selected.Mod.ID == currentSelection?.Mod.ID)
-            {
-                PreviewModImageSource = pathToImage == null ? null : new Uri(pathToImage);
-            }
-        }
 
         public void InitViewModel()
         {
@@ -533,6 +441,16 @@ They will be automatically turned off.";
             // TODO: check for app updates
         }
 
+        private void CatalogViewModel_SelectedModChanged(object sender, CatalogModItemViewModel selected)
+        {
+            UpdateModPreviewInfo(selected);
+        }
+
+        private void ModsViewModel_SelectedModChanged(object sender, InstalledModViewModel selected)
+        {
+            UpdateModPreviewInfo(selected);
+        }
+
         private void Sys_StatusChanged(object sender, ModStatusEventArgs e)
         {
             CatalogViewModel.UpdateModDetails(e.ModID);
@@ -589,6 +507,97 @@ They will be automatically turned off.";
             CatalogViewModel.SelectedModChanged -= CatalogViewModel_SelectedModChanged;
             CatalogViewModel.CatalogModList.Clear();
             CatalogViewModel = null;
+        }
+
+        private void UpdateModPreviewInfo(InstalledModViewModel selected)
+        {
+            if (selected == null)
+            {
+                PreviewModAuthor = "";
+                PreviewModName = "";
+                PreviewModVersion = "";
+                PreviewModReleaseDate = "";
+                PreviewModReleaseNotes = "";
+                PreviewModCategory = "";
+                PreviewModDescription = "";
+                PreviewModLink = "";
+                PreviewModImageSource = null;
+                return;
+            }
+
+            _previewMod = selected.InstallInfo.CachedDetails;
+
+            PreviewModAuthor = selected.Author;
+            PreviewModVersion = selected.InstallInfo.CachedDetails.LatestVersion.Version.ToString();
+            PreviewModName = $"{selected.Name} v{PreviewModVersion}";
+            PreviewModReleaseDate = selected.ReleaseDate;
+            PreviewModReleaseNotes = selected.InstallInfo.CachedDetails.LatestVersion.ReleaseNotes;
+            PreviewModCategory = selected.Category;
+            PreviewModDescription = selected.InstallInfo.CachedDetails.Description;
+            PreviewModLink = selected.InstallInfo.CachedDetails.Link;
+
+            InstalledVersion latestVersion = selected.InstallInfo.LatestInstalled;
+            if (latestVersion != null)
+            {
+                PreviewModHasReadMe = latestVersion.HasData("readme.md") || latestVersion.HasData("readme.html") || latestVersion.HasData("readme.txt");
+            }
+            else
+            {
+                PreviewModHasReadMe = false;
+            }
+
+
+            string pathToImage = Sys.ImageCache.GetImagePath(selected.InstallInfo.CachedDetails.LatestVersion.PreviewImage, selected.InstallInfo.CachedDetails.ID);
+
+            SetPreviewImage(pathToImage);
+        }
+
+        private void UpdateModPreviewInfo(CatalogModItemViewModel selected)
+        {
+            if (selected == null)
+            {
+                PreviewModAuthor = "";
+                PreviewModName = "";
+                PreviewModVersion = "";
+                PreviewModReleaseDate = "";
+                PreviewModReleaseNotes = "";
+                PreviewModCategory = "";
+                PreviewModDescription = "";
+                PreviewModLink = "";
+                PreviewModImageSource = null;
+                return;
+            }
+
+            _previewMod = selected.Mod;
+
+            PreviewModAuthor = selected.Author;
+            PreviewModVersion = selected.Mod.LatestVersion.Version.ToString();
+            PreviewModName = $"{selected.Name} v{PreviewModVersion}";
+            PreviewModReleaseDate = selected.ReleaseDate;
+            PreviewModReleaseNotes = selected.Mod.LatestVersion.ReleaseNotes;
+            PreviewModCategory = selected.Category;
+            PreviewModDescription = selected.Mod.Description;
+            PreviewModLink = selected.Mod.Link;
+            PreviewModHasReadMe = false; // no READMEs for catalog (only installed mods)
+            
+            string pathToImage = Sys.ImageCache.GetImagePath(selected.Mod.LatestVersion.PreviewImage, selected.Mod.ID);
+
+            SetPreviewImage(pathToImage);
+        }
+
+        private void SetPreviewImage(string pathToImage)
+        {
+            LoadingGifVisibility = Visibility.Visible;
+            Uri newImageUri = pathToImage == null ? null : new Uri(pathToImage);
+
+            if (newImageUri != null && newImageUri.AbsolutePath == PreviewModImageSource?.AbsolutePath)
+            {
+                LoadingGifVisibility = Visibility.Hidden; // image does not have to be changed so hide the loading gif
+            }
+            else
+            {
+                PreviewModImageSource = newImageUri;
+            }
         }
 
         private static void InitLoaderContext()

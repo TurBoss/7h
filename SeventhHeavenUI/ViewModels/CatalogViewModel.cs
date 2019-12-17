@@ -395,7 +395,7 @@ It may not work properly unless you find and install the requirements.";
         {
             downloadItemViewModel?.PerformCancel();
             RemoveFromDownloadList(downloadItemViewModel);
-            Sys.Message(new WMessage($"Canceled download: {downloadItemViewModel.ItemName}"));
+            Sys.Message(new WMessage($"Canceled {downloadItemViewModel.ItemName}"));
         }
 
         internal void DownloadMod(CatalogModItemViewModel catalogModItemViewModel)
@@ -507,7 +507,11 @@ It may not work properly unless you find and install the requirements.";
                 case LocationType.Url:
                     using (var wc = new System.Net.WebClient())
                     {
-                        newDownload.PerformCancel = wc.CancelAsync;
+                        newDownload.PerformCancel = () =>
+                        {
+                            wc.CancelAsync();
+                            newDownload.OnCancel?.Invoke();
+                        };
                         wc.DownloadProgressChanged += new System.Net.DownloadProgressChangedEventHandler(_wc_DownloadProgressChanged);
                         wc.DownloadFileCompleted += new AsyncCompletedEventHandler(_wc_DownloadFileCompleted);
                         wc.DownloadFileAsync(new Uri(location), file, newDownload);
@@ -517,7 +521,11 @@ It may not work properly unless you find and install the requirements.";
 
                 case LocationType.GDrive:
                     var gd = new GDrive();
-                    newDownload.PerformCancel = gd.CancelAsync;
+                    newDownload.PerformCancel = () => 
+                    {
+                        gd.CancelAsync();
+                        newDownload.OnCancel?.Invoke();
+                    };
                     gd.DownloadProgressChanged += new System.Net.DownloadProgressChangedEventHandler(_wc_DownloadProgressChanged);
                     gd.DownloadFileCompleted += new AsyncCompletedEventHandler(_wc_DownloadFileCompleted);
                     gd.Download(location, file, newDownload);
@@ -561,7 +569,11 @@ It may not work properly unless you find and install the requirements.";
                     });
 
                     mega.ConfirmStartTransfer();
-                    newDownload.PerformCancel = () => mega.CancelDownload(tfr);
+                    newDownload.PerformCancel = () =>
+                    {
+                        mega.CancelDownload(tfr);
+                        newDownload.OnCancel?.Invoke();
+                    };
                     break;
             }
 
