@@ -45,6 +45,13 @@ namespace SeventhHeaven.ViewModels
         private string _subscriptionNameHintText;
         private bool _subscriptionNameTextBoxIsEnabled;
 
+        public delegate void OnListDataChanged();
+
+        /// <summary>
+        /// Event raised when data is changed (added/edited/removed) from <see cref="SubscriptionList"/>
+        /// </summary>
+        public event OnListDataChanged ListDataChanged;
+
         public string FF7ExePathInput
         {
             get
@@ -943,6 +950,7 @@ namespace SeventhHeaven.ViewModels
                     SubscriptionList.Add(new SubscriptionSettingViewModel(NewUrlText, NewNameText));
                     CloseSubscriptionPopup();
                     IsResolvingName = false;
+                    ListDataChanged?.Invoke();
                 });
             }
             else if (IsEditingSubscription)
@@ -950,6 +958,7 @@ namespace SeventhHeaven.ViewModels
                 SubscriptionSettingViewModel toEdit = SubscriptionList.FirstOrDefault(s => s.Url == NewUrlText);
                 toEdit.Name = NewNameText;
                 CloseSubscriptionPopup();
+                ListDataChanged?.Invoke();
             }
             else
             {
@@ -976,6 +985,7 @@ namespace SeventhHeaven.ViewModels
         {
             SubscriptionsChanged = true;
             SubscriptionList.Remove(selected);
+            ListDataChanged?.Invoke();
         }
 
         /// <summary>
@@ -993,7 +1003,23 @@ namespace SeventhHeaven.ViewModels
 
             Directory.CreateDirectory(Sys.PathToTempFolder); // temp folder could be missing so ensure its created
 
-            Sys.Downloads.Download(catalogUrl, path, $"Resolving catalog name for {catalogUrl}", new Install.InstallProcedureCallback(e =>
+            Action onCancel = () =>
+            {
+                // delete temp file on cancel if it exists
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+
+                callback(name);
+            };
+
+            Action<Exception> onError = ex =>
+            {
+                callback("");
+            };
+
+            Install.InstallProcedureCallback downloadCallback = new Install.InstallProcedureCallback(e =>
             {
                 bool success = (e.Error == null && e.Cancelled == false);
 
@@ -1018,17 +1044,10 @@ namespace SeventhHeaven.ViewModels
 
                 callback(name);
 
-            }), new Action(() =>
-            {
-                // delete temp file on cancel if it exists
-                if (File.Exists(path))
-                {
-                    File.Delete(path);
-                }
+            });
+            downloadCallback.Error = onError;
 
-                callback(name);
-
-            }));
+            Sys.Downloads.Download(catalogUrl, path, $"Resolving catalog name for {catalogUrl}", downloadCallback, onCancel);
         }
 
 

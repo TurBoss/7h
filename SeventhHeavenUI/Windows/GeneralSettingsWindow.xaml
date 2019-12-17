@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
+        Unloaded="Window_Unloaded"
         Style="{StaticResource MainWindowStyle}"
         Title="General Settings" 
         ResizeMode="NoResize"

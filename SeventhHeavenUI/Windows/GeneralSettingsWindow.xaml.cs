@@ -21,9 +21,16 @@ namespace SeventhHeaven.Windows
             InitializeComponent();
 
             ViewModel = new GeneralSettingsViewModel();
+            ViewModel.ListDataChanged += ViewModel_ListDataChanged;
+
             this.DataContext = ViewModel;
 
             ViewModel.LoadSettings();
+        }
+
+        private void ViewModel_ListDataChanged()
+        {
+            RecalculateColumnWidths();
         }
 
         private void btnOk_Click(object sender, RoutedEventArgs e)
@@ -163,7 +170,6 @@ namespace SeventhHeaven.Windows
             }
 
             ViewModel.RemoveSelectedSubscription((lstSubscriptions.SelectedItem as SubscriptionSettingViewModel));
-            RecalculateColumnWidths();
         }
 
         /// <summary>
@@ -189,10 +195,7 @@ namespace SeventhHeaven.Windows
 
         private void btnSaveSubscription_Click(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.SaveSubscription())
-            {
-                RecalculateColumnWidths();
-            }
+            ViewModel.SaveSubscription();
         }
 
         private void Window_LocationChanged(object sender, System.EventArgs e)
@@ -272,6 +275,11 @@ namespace SeventhHeaven.Windows
             {
                 ViewModel.NewProgramPathText = pathToProgram;
             }
+        }
+
+        private void Window_Unloaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ListDataChanged -= ViewModel_ListDataChanged;
         }
     }
 }
