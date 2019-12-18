@@ -119,6 +119,7 @@
     <Compile Include="UserControls\PackIroUserControl.xaml.cs">
       <DependentUpon>PackIroUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\AllowModToRunViewModel.cs" />
     <Compile Include="ViewModels\ProgramToRunViewModel.cs" />
     <Compile Include="ViewModels\SubscriptionSettingViewModel.cs" />
     <Compile Include="ViewModels\GLSettingViewModel.cs" />
@@ -152,6 +153,9 @@
     </Compile>
     <Compile Include="Windows\ImportModWindow.xaml.cs">
       <DependentUpon>ImportModWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\AllowModToRunWindow.xaml.cs">
+      <DependentUpon>AllowModToRunWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\MessageDialogWindow.xaml.cs">
       <DependentUpon>MessageDialogWindow.xaml</DependentUpon>
@@ -203,6 +207,10 @@
     <Page Include="Windows\ImportModWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\AllowModToRunWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\MessageDialogWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

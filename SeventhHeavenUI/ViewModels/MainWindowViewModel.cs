@@ -905,33 +905,28 @@ They will be automatically turned off.";
             if (Sys.Settings.HasOption(GeneralOptions.WarnAboutModCode))
             {
                 // invoke the message on the Dispatcher UI Thread since this could be called from background threads
-                App.Current.Dispatcher.Invoke(() =>
+                return App.Current.Dispatcher.Invoke(() =>
                 {
-                    string msg = "This mod ({0}) contains code/patches that could change FF7.exe. Are you sure you want to activate and run this mod?\n\n" +
-                                 "Only choose YES if you trust the author of this mod to run code/programs on your computer!";
+                    string msg = "This mod '{0}' contains data that could potentially harm your computer. You should only activate mods you trust.\n\nDo you still want to activate this mod?";
                     msg = String.Format(msg, mod.CachedDetails.Name);
 
-                    MessageDialogWindow messageWin = new MessageDialogWindow("Allow mod to run?", msg, MessageBoxButton.YesNo, "Don't ask me again", true)
-                    {
-                        WindowStartupLocation = WindowStartupLocation.CenterScreen
-                    };
-                    messageWin.ShowDialog();
+                    AllowModToRunWindow warningWindow = new AllowModToRunWindow(msg);
+                    warningWindow.ShowDialog();
 
-                    if (messageWin.ViewModel.IsChecked)
+                    if (warningWindow.ViewModel.IsChecked)
                     {
                         // set settings to turn off warning
                         Sys.Settings.RemoveOption(GeneralOptions.WarnAboutModCode);
                         Sys.Save();
                     }
 
-                    if (messageWin.ViewModel.Result != MessageBoxResult.Yes)
+                    if (warningWindow.ViewModel.YesRadioButtonIsChecked)
                     {
-                        return false;
+                        return true;
                     }
 
-                    return true;
+                    return false;
                 });
-
             }
 
             return true;
