@@ -1,6 +1,7 @@
 ﻿using Iros._7th;
 using Iros._7th.Workshop;
 using Microsoft.Win32;
+using SeventhHeaven.Classes;
 using SeventhHeavenUI.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,8 @@ namespace SeventhHeaven.ViewModels
         private bool _isResolvingName;
         private string _subscriptionNameHintText;
         private bool _subscriptionNameTextBoxIsEnabled;
+        private ObservableCollection<string> _extraFolderList;
+        private string _statusMessage;
 
         public delegate void OnListDataChanged();
 
@@ -104,15 +107,15 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-        public string ExtraFoldersInput
+        public string StatusMessage
         {
             get
             {
-                return _extraFoldersInput;
+                return _statusMessage;
             }
             set
             {
-                _extraFoldersInput = value;
+                _statusMessage = value;
                 NotifyPropertyChanged();
             }
         }
@@ -234,6 +237,21 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public ObservableCollection<string> ExtraFolderList
+        {
+            get
+            {
+                if (_extraFolderList == null)
+                    _extraFolderList = new ObservableCollection<string>();
+
+                return _extraFolderList;
+            }
+            set
+            {
+                _extraFolderList = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         public bool IsSubscriptionPopupOpen
         {
@@ -294,7 +312,6 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-
         public bool IsResolvingName
         {
             get
@@ -343,7 +360,6 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-
         public bool IsProgramPopupOpen
         {
             get
@@ -356,9 +372,6 @@ namespace SeventhHeaven.ViewModels
                 NotifyPropertyChanged();
             }
         }
-
-
-
 
         public ObservableCollection<ProgramToRunViewModel> ProgramList
         {
@@ -419,7 +432,7 @@ namespace SeventhHeaven.ViewModels
             AutoDetectSystemPaths();
 
             SubscriptionList = new ObservableCollection<SubscriptionSettingViewModel>(Sys.Settings.Subscriptions.Select(s => new SubscriptionSettingViewModel(s.Url, s.Name)));
-            ExtraFoldersInput = string.Join("\n", Sys.Settings.ExtraFolders.Distinct().ToArray());
+            ExtraFolderList = new ObservableCollection<string>(Sys.Settings.ExtraFolders.ToList());
             ProgramList = new ObservableCollection<ProgramToRunViewModel>(Sys.Settings.ProgramsToLaunchPrior.Select(s => new ProgramToRunViewModel(s.PathToProgram, s.ProgramArgs)));
 
             FF7ExePathInput = Sys.Settings.FF7Exe;
@@ -485,10 +498,7 @@ namespace SeventhHeaven.ViewModels
 
             Sys.Settings.Subscriptions = GetUpdatedSubscriptions();
             Sys.Settings.ProgramsToLaunchPrior = GetUpdatedProgramsToRun();
-            Sys.Settings.ExtraFolders = ExtraFoldersInput.ToLower()
-                                                         .Split(new string[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
-                                                         .Distinct()
-                                                         .ToList();
+            Sys.Settings.ExtraFolders = ExtraFolderList.Distinct().ToList();
 
             // ensure 'direct' and 'music' folders are always in ExtraFolders list
             if (!Sys.Settings.ExtraFolders.Contains("direct", StringComparer.InvariantCultureIgnoreCase))
@@ -936,7 +946,7 @@ namespace SeventhHeaven.ViewModels
         {
             if (!NewUrlText.StartsWith("iros://"))
             {
-                Sys.Message(new WMessage("URL must be in iros:// format", true));
+                StatusMessage = "URL must be in iros:// format";
                 return false;
             }
 
@@ -1050,7 +1060,6 @@ namespace SeventhHeaven.ViewModels
             Sys.Downloads.Download(catalogUrl, path, $"Resolving catalog name for {catalogUrl}", downloadCallback, onCancel);
         }
 
-
         internal void EditSelectedProgram(ProgramToRunViewModel selected)
         {
             IsProgramPopupOpen = true;
@@ -1070,7 +1079,7 @@ namespace SeventhHeaven.ViewModels
         {
             if (!File.Exists(NewProgramPathText))
             {
-                Sys.Message(new WMessage("Program to run not found", true));
+                StatusMessage = "Program to run not found";
                 return false;
             }
 
@@ -1098,6 +1107,23 @@ namespace SeventhHeaven.ViewModels
         internal void RemoveSelectedProgram(ProgramToRunViewModel selected)
         {
             ProgramList.Remove(selected);
+        }
+
+        internal void AddExtraFolder()
+        {
+            string initialDir = File.Exists(FF7ExePathInput) ? Path.GetDirectoryName(FF7ExePathInput) : "";
+            string pathToFolder = FileDialogHelper.BrowseForFolder("", initialDir);
+
+            if (!string.IsNullOrWhiteSpace(pathToFolder))
+            {
+                DirectoryInfo dirInfo = new DirectoryInfo(pathToFolder);
+                string folderName = dirInfo.Name.ToLower();
+
+                if (!ExtraFolderList.Contains(folderName))
+                {
+                    ExtraFolderList.Add(folderName);
+                }
+            }
         }
 
     }

@@ -156,7 +156,8 @@ namespace SeventhHeaven.Windows
 
             if (lstSubscriptions.SelectedItem == null)
             {
-                return; // nothing selected
+                ViewModel.StatusMessage = "Selet a subscription to edit first.";
+                return;
             }
 
             ViewModel.EditSelectedSubscription((lstSubscriptions.SelectedItem as SubscriptionSettingViewModel));
@@ -167,6 +168,12 @@ namespace SeventhHeaven.Windows
             if (ViewModel.IsSubscriptionPopupOpen)
             {
                 return; // dont do anything if popup is opened
+            }
+
+            if (lstSubscriptions.SelectedItem == null)
+            {
+                ViewModel.StatusMessage = "Selet a subscription to remove first.";
+                return;
             }
 
             ViewModel.RemoveSelectedSubscription((lstSubscriptions.SelectedItem as SubscriptionSettingViewModel));
@@ -234,7 +241,8 @@ namespace SeventhHeaven.Windows
         {
             if (lstPrograms.SelectedItem == null)
             {
-                return; // nothing selected
+                ViewModel.StatusMessage = "Selet a program to remove first.";
+                return;
             }
 
             ViewModel.RemoveSelectedProgram((lstPrograms.SelectedItem as ProgramToRunViewModel));
@@ -249,7 +257,8 @@ namespace SeventhHeaven.Windows
 
             if (lstPrograms.SelectedItem == null)
             {
-                return; // nothing selected
+                ViewModel.StatusMessage = "Select a program to edit first.";
+                return;
             }
 
             ViewModel.EditSelectedProgram((lstPrograms.SelectedItem as ProgramToRunViewModel));
@@ -280,6 +289,22 @@ namespace SeventhHeaven.Windows
         private void Window_Unloaded(object sender, RoutedEventArgs e)
         {
             ViewModel.ListDataChanged -= ViewModel_ListDataChanged;
+        }
+
+        private void btnAddFolder_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.AddExtraFolder();
+        }
+
+        private void btnRemoveFolder_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstExtraFolders.SelectedItem == null)
+            {
+                ViewModel.StatusMessage = "Select a folder to remove first.";
+                return;
+            }
+
+            ViewModel.ExtraFolderList.Remove((lstExtraFolders.SelectedItem as string));
         }
     }
 }

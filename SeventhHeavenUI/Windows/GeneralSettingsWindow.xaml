@@ -12,7 +12,7 @@
         ResizeMode="NoResize"
         Deactivated="Window_Deactivated"
         LocationChanged="Window_LocationChanged"
-        Height="650" Width="1200">
+        Height="590" Width="825">
     <Window.Resources>
 
         <DataTemplate x:Key="programItem">
@@ -43,17 +43,20 @@
     
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="1.1*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <GroupBox Header=" Paths " Grid.RowSpan="1" Margin="10,10,0,0">
+        <GroupBox Header=" Paths " 
+                  Margin="10,5,0,0" 
+                  HorizontalAlignment="Left"
+                  Width="{Binding ElementName=grpOptions, Path=ActualWidth}">
             <Grid Margin="5" VerticalAlignment="Center">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
@@ -68,52 +71,70 @@
                 </Grid.ColumnDefinitions>
                 
                 <TextBlock Text="FF7 Exe:" Margin="0,0,5,0" HorizontalAlignment="Right"/>
-                <TextBox x:Name="txtFf7Exe" Text="{Binding FF7ExePathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MinWidth="200" Grid.Column="1" Margin="0,0,0,6"/>
-                <Button x:Name="btnFf7Exe" Content="..." Padding="10,0,10,0" Click="btnFf7Exe_Click" Grid.Column="2" Margin="0,0,0,3"
+                <TextBox x:Name="txtFf7Exe" Text="{Binding FF7ExePathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" Grid.Column="1" Margin="0,0,0,6"/>
+                <Button x:Name="btnFf7Exe" Content="..." Padding="10,0,10,3" Click="btnFf7Exe_Click" Grid.Column="2" 
+                        Margin="0,0,0,0"
+                        VerticalAlignment="Top"
                         ToolTip="Click to select your FF7.exe file"/>
 
                 <TextBlock Text="Movies:" Margin="0,6,5,0" HorizontalAlignment="Right" Grid.Row="1"/>
-                <TextBox x:Name="txtMovies" Text="{Binding MoviesPathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="0,6,0,6" Width="{Binding ElementName=txtFf7Exe, Path=ActualWidth}"/>
-                <Button x:Name="btnMovies" Content="..." Padding="10,6,10,0" Click="btnMovies_Click" Grid.Row="1" Grid.Column="2" Margin="0,3,0,3"
+                <TextBox x:Name="txtMovies" Text="{Binding MoviesPathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="0,6,0,6"/>
+                <Button x:Name="btnMovies" Content="..." Padding="10,3,10,0" Click="btnMovies_Click" Grid.Row="1" Grid.Column="2" 
+                        Margin="0,6,0,3"
+                        VerticalAlignment="Top"
                         ToolTip="Click to select where your movie folder is"/>
 
 
                 <TextBlock Text="Textures:" Margin="0,6,5,0" HorizontalAlignment="Right" Grid.Row="2"/>
-                <TextBox x:Name="txtTextures" Text="{Binding TexturesPathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1" Margin="0,6,0,6" Width="{Binding ElementName=txtFf7Exe, Path=ActualWidth}"/>
-                <Button x:Name="btnTextures" Content="..." Padding="10,6,10,0" Click="btnTextures_Click" Grid.Row="2" Grid.Column="2" Margin="0,3,0,3"
+                <TextBox x:Name="txtTextures" Text="{Binding TexturesPathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1" Margin="0,6,0,6" />
+                <Button x:Name="btnTextures" Content="..." Padding="10,3,10,0" Click="btnTextures_Click" Grid.Row="2" Grid.Column="2" 
+                        Margin="0,6,0,0"
+                        VerticalAlignment="Top"
                         ToolTip="Click to select where Textures are saved"/>
 
 
                 <TextBlock Text="Library:" Margin="0,6,5,0" HorizontalAlignment="Right" Grid.Row="3"/>
-                <TextBox x:Name="txtLibrary" Text="{Binding LibraryPathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Grid.Column="1" Margin="0,6,0,0" Width="{Binding ElementName=txtFf7Exe, Path=ActualWidth}"/>
-                <Button x:Name="btnLibrary" Content="..." Padding="10,6,10,0" Click="btnLibrary_Click" Grid.Row="3" Grid.Column="2" Margin="0,3,0,0"
+                <TextBox x:Name="txtLibrary" Text="{Binding LibraryPathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Grid.Column="1" Margin="0,6,0,0"/>
+                <Button x:Name="btnLibrary" Content="..." Padding="10,0,10,3" Click="btnLibrary_Click" Grid.Row="3" Grid.Column="2" 
+                        Margin="0,6,0,0"
+                        VerticalAlignment="Top"
                         ToolTip="Click to select where your Mod Library is"/>
             </Grid>
         </GroupBox>
 
-        <GroupBox Header=" Options " Grid.Row="1" Grid.RowSpan="2" Margin="10,10,0,0" HorizontalAlignment="Left">
-            <StackPanel Margin="5" HorizontalAlignment="Left">
-                <CheckBox Content="Activate Newly Installed Mods Automatically" IsChecked="{Binding ActivateInstalledModsAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
-                <CheckBox Content="Import Library Folder Mods Automatically" IsChecked="{Binding ImportLibraryFolderAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
-                <CheckBox Content="Warn When Mod Contains Code" IsChecked="{Binding WarnAboutModCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <CheckBox Content="Keep Older Mod Versions After Updating" IsChecked="{Binding KeepOldModsAfterUpdating, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='True'}" Margin="0,0,0,2"/>
-                <CheckBox Content="Ignore Mod Compatibility Restrictions" IsChecked="{Binding BypassCompatibilityLocks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <CheckBox Content="Check For 7th Heaven Updates Automatically" IsChecked="{Binding CheckForUpdatesAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
-                <CheckBox Content="Open iros:// links with 7th Heaven" IsChecked="{Binding OpenIrosLinks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <CheckBox Content="Open Mod Files with 7th Heaven" IsChecked="{Binding OpenModFilesWith7H, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <CheckBox Content="Context Menu in Explorer" IsChecked="{Binding ShowContextMenuInExplorer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
+        <GroupBox x:Name="grpOptions" Header=" Options " Grid.Row="1" Margin="10,10,0,0"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top">
+            <StackPanel Margin="3" HorizontalAlignment="Left">
+                <CheckBox Height="25" Content="Activate Newly Installed Mods Automatically" IsChecked="{Binding ActivateInstalledModsAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
+                <CheckBox Height="25" Content="Import Library Folder Mods Automatically" IsChecked="{Binding ImportLibraryFolderAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
+                <CheckBox Height="25" Content="Warn When Mod Contains Code" IsChecked="{Binding WarnAboutModCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <CheckBox Height="25" Content="Keep Older Mod Versions After Updating" IsChecked="{Binding KeepOldModsAfterUpdating, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='True'}" Margin="0,0,0,2"/>
+                <CheckBox Height="25" Content="Ignore Mod Compatibility Restrictions" IsChecked="{Binding BypassCompatibilityLocks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <CheckBox Height="25" Content="Check For 7th Heaven Updates Automatically" IsChecked="{Binding CheckForUpdatesAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
             </StackPanel>
         </GroupBox>
 
-        <GroupBox Grid.Column="1" Header=" Catalog Subscriptions: " Margin="25,10,10,0">
+        <GroupBox x:Name="grpShell"
+                  Header=" Shell Integration " Grid.Row="2" Margin="10,10,0,0" 
+                  Width="{Binding ElementName=grpOptions, Path=ActualWidth}"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top">
+            <StackPanel Margin="3" HorizontalAlignment="Right">
+                <CheckBox Height="25" Content="Open iros:// links with 7th Heaven" IsChecked="{Binding OpenIrosLinks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <CheckBox Height="25" Content="Open Mod Files with 7th Heaven" IsChecked="{Binding OpenModFilesWith7H, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <CheckBox Height="25" Content="Context Menu in Explorer" IsChecked="{Binding ShowContextMenuInExplorer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox Grid.Row="1" Grid.Column="1" Header=" Catalog Subscriptions: " Margin="25,10,10,0">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Margin="5,5,0,5">
+                <StackPanel Margin="3,3,0,3">
                     <Button x:Name="btnAddUrl"
                             Click="btnAddUrl_Click"
                             ToolTip="Add Subscription URL"
@@ -150,8 +171,7 @@
                           ItemsSource="{Binding SubscriptionList}" 
                           VirtualizingPanel.IsVirtualizing="false"
                           ItemContainerStyle="{StaticResource MainListViewItemStyle}"
-                          Margin="5,5,5,5"
-                          Height="150">
+                          Margin="3">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn x:Name="colName" Header="Name" Width="Auto" DisplayMemberBinding="{Binding Name}"/>
@@ -162,18 +182,59 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox Grid.Row="1" Grid.Column="1" Header=" Additional Folders to Monitor: " Margin="25,10,10,0">
-            <TextBox Style="{StaticResource MultiLineTextBoxStyle}" Text="{Binding ExtraFoldersInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        </GroupBox>
-
-        <GroupBox Grid.Row="2" Grid.Column="1" Header=" Programs to run prior to FF7: " Margin="25,10,10,0">
+        <GroupBox Grid.Row="0" Grid.Column="1" Header=" Additional Folders to Monitor: " Margin="25,5,10,0">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Margin="5,5,0,5">
+                <StackPanel Margin="3,3,0,3">
+                    <Button x:Name="btnAddFolder"
+                            Click="btnAddFolder_Click"
+                            ToolTip="Add Folder"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="28"
+                            Width="28"
+                            Margin="0,0,0,5"
+                            Content="{StaticResource iconAdd}"/>
+
+                    <Button x:Name="btnRemoveFolder"
+                            Click="btnRemoveFolder_Click"
+                            ToolTip="Remove Folder"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="28"
+                            Width="28"
+                            Margin="0,0,0,5"
+                            Content="{StaticResource iconMinus}"/>
+
+                </StackPanel>
+
+
+                <ListBox x:Name="lstExtraFolders" Grid.Column="1"
+                          ItemsSource="{Binding ExtraFolderList}" 
+                          VirtualizingPanel.IsVirtualizing="false"
+                          ItemContainerStyle="{StaticResource MainListBoxItemStyle}"
+                          Margin="3">
+
+                </ListBox>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Grid.Row="2" 
+                  Grid.Column="1" 
+                  Height="{Binding ElementName=grpShell, Path=ActualHeight}"
+                  Header=" Programs to run prior to FF7: " 
+                  Margin="25,10,10,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Margin="3,3,0,3">
                     <Button x:Name="btnAddProgram"
                             Click="btnAddProgram_Click"
                             ToolTip="Add Program to run"
@@ -181,7 +242,7 @@
                             VerticalAlignment="Top"
                             Height="28"
                             Width="28"
-                            Margin="0,0,0,5"
+                            Margin="0,0,0,0"
                             Content="{StaticResource iconAdd}"/>
 
                     <Button x:Name="btnRemoveProgram"
@@ -191,7 +252,7 @@
                             VerticalAlignment="Top"
                             Height="28"
                             Width="28"
-                            Margin="0,0,0,5"
+                            Margin="0,0,0,0"
                             Content="{StaticResource iconMinus}"/>
 
                     <Button x:Name="btnEditProgram"
@@ -206,23 +267,29 @@
                 </StackPanel>
 
 
-                <ListBox x:Name="lstPrograms" Grid.Column="1" 
+                <ListBox x:Name="lstPrograms" Grid.Column="1"
                           ItemsSource="{Binding ProgramList}" 
                           VirtualizingPanel.IsVirtualizing="false"
                           ItemContainerStyle="{StaticResource programItemStyle}"
-                          Margin="5,5,5,5"
-                          Height="150">
+                          Margin="3">
 
                 </ListBox>
             </Grid>
         </GroupBox>
 
+        <TextBlock Grid.Row="3"
+                   Grid.ColumnSpan="2"
+                   VerticalAlignment="Center"
+                   Margin="10,0,190,0"
+                   TextTrimming="CharacterEllipsis"
+                   Text="{Binding StatusMessage, FallbackValue='Select a subscription to edit.'}"/>
+
         <Button x:Name="btnOk" 
-                Content="OK" 
+                Content="Save" 
                 Width="80"
                 Click="btnOk_Click"
                 Grid.Row="3" Grid.Column="1"
-                Margin="0,5,100,5"
+                Margin="0,5,100,10"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"/>
 
@@ -231,7 +298,7 @@
                 Width="80"
                 Click="btnCancel_Click"
                 Grid.Row="3" Grid.Column="1"
-                Margin="0,5,10,5"
+                Margin="0,5,10,10"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"/>
 
@@ -240,12 +307,12 @@
                StaysOpen="True"
                Placement="Right"
                PlacementTarget="{Binding ElementName=btnAddUrl}">
-            <Grid Width="542" Height="152" 
+            <Grid Width="400" Height="166" 
                   Background="{DynamicResource PrimaryControlBackground}">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
 
                 </Grid.RowDefinitions>
 
@@ -259,7 +326,7 @@
                            Foreground="{DynamicResource PrimaryControlDisabledForeground}"
                            IsHitTestVisible="False"
                            FontSize="14"
-                           Margin="30,20,25,10">
+                           Margin="30,16,25,10">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="Visibility" Value="Hidden"/>
@@ -281,12 +348,12 @@
                          Margin="25,15,25,10"/>
 
                 <TextBlock x:Name="txtNameHint"
-                           Text="{Binding SubscriptionNameHintText, FallbackValue='enter name for catalog'}"
+                           Text="{Binding SubscriptionNameHintText, FallbackValue='Enter name for catalog'}"
                            Grid.Row="1"
                            Foreground="{DynamicResource PrimaryControlDisabledForeground}"
                            IsHitTestVisible="False"
                            FontSize="14"
-                           Margin="30,20,25,10">
+                           Margin="30,16,25,10">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="Visibility" Value="Hidden"/>
@@ -300,6 +367,7 @@
                 </TextBlock>
 
                 <Button x:Name="btnSaveSubscription"
+                        VerticalAlignment="Bottom"
                         Click="btnSaveSubscription_Click"
                         IsEnabled="{Binding IsNotResolvingName}"
                         Grid.Row="2"
@@ -311,6 +379,7 @@
                 <Button x:Name="btnCancelSubscription"
                         Click="btnCancelSubscription_Click"
                         Grid.Row="2"
+                        VerticalAlignment="Bottom"
                         HorizontalAlignment="Center"
                         Width="80"
                         Margin="90,0,0,10"
@@ -324,11 +393,11 @@
                StaysOpen="True"
                Placement="Right"
                PlacementTarget="{Binding ElementName=btnAddProgram}">
-            <Grid Width="542" Height="152" 
+            <Grid Width="400" Height="90" 
                   Background="{DynamicResource PrimaryControlBackground}">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -339,13 +408,13 @@
                 <TextBox Text="{Binding NewProgramPathText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                          FontSize="14"
                          VerticalContentAlignment="Center"
-                         Margin="25,15,5,10"/>
+                         Margin="25,3,5,0"/>
 
                 <TextBlock Text="Enter full path to program to run"
                            Foreground="{DynamicResource PrimaryControlDisabledForeground}"
                            IsHitTestVisible="False"
                            FontSize="14"
-                           Margin="30,20,5,10">
+                           Margin="30,3,5,0">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="Visibility" Value="Hidden"/>
@@ -363,7 +432,8 @@
                         Content="..."
                         ToolTip="Browse for program to run"
                         Grid.Column="1"
-                        Margin="0,5,25,0"
+                        Padding="10,0,10,1"
+                        Margin="0,3,25,0"
                         VerticalAlignment="Center"/>
 
 
@@ -372,7 +442,7 @@
                          Grid.Row="1"
                          FontSize="14"
                          VerticalContentAlignment="Center"
-                         Margin="25,15,5,10"/>
+                         Margin="25,3,5,0"/>
 
                 <TextBlock x:Name="txtProgramArgs"
                            Text="Enter program arguments"
@@ -380,7 +450,7 @@
                            Foreground="{DynamicResource PrimaryControlDisabledForeground}"
                            IsHitTestVisible="False"
                            FontSize="14"
-                           Margin="30,20,5,10">
+                           Margin="30,3,5,0">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="Visibility" Value="Hidden"/>
@@ -398,7 +468,7 @@
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         Width="80"
-                        Margin="0,0,90,10"
+                        Margin="0,3,90,3"
                         Content="Save"/>
 
                 <Button x:Name="btnCancelProgramAction"
@@ -406,7 +476,7 @@
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         Width="80"
-                        Margin="90,0,0,10"
+                        Margin="90,3,0,3"
                         Content="Cancel"/>
 
             </Grid>
