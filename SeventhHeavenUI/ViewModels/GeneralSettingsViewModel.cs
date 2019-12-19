@@ -478,9 +478,6 @@ namespace SeventhHeaven.ViewModels
                     Sys.Settings.MovieFolder = (string)Registry.GetValue(registry_path, "MoviePath", null);
 
                     Sys.Settings.LibraryLocation = ff7 + @"mods\7th Heaven\";
-
-                    Sys.Settings.ExtraFolders.Add("direct");
-                    Sys.Settings.ExtraFolders.Add("music");
                 }
                 else
                 {

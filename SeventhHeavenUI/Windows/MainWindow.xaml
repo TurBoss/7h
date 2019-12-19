@@ -14,7 +14,8 @@
         Loaded="Window_Loaded"
         SizeChanged="Window_SizeChanged"
         Closing="Window_Closing"
-        Height="600" Width="1100">
+        Height="600" Width="1100"
+        MinHeight="525" MinWidth="870">
     <Window.Resources>
 
         <Style x:Key="ModInfoLabelStyle" TargetType="{x:Type TextBlock}">
@@ -139,11 +140,12 @@
         </WrapPanel>
 
         <GroupBox Header=" Mod Info "
+                  Background="{DynamicResource SecondaryAppBackground}"
                   Grid.Row="1"
                   Margin="5,-7,3,1" Grid.ColumnSpan="2">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="1.5*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -195,6 +197,7 @@
                         <WrapPanel Margin="3,0,3,0" Grid.Row="4">
                             <TextBlock Text="Link:" Style="{StaticResource ModInfoLabelStyle}" Margin="0,0,0,3"/>
                             <Button x:Name="btnOpenModLink" 
+                                    Background="Transparent"
                                     Margin="2,0,5,0"
                                     Click="btnOpenModLink_Click"
                                     Style="{StaticResource HyperlinkButton}"
@@ -202,6 +205,7 @@
 
                             <TextBlock Text="Readme:" Style="{StaticResource ModInfoLabelStyle}" Margin="0,0,0,3"/>
                             <Button x:Name="btnOpenModReadme"
+                                    Background="Transparent"
                                     Margin="2,0,10,0"
                                     Click="btnOpenModReadme_Click"
                                     IsEnabled="{Binding PreviewModHasReadMe, FallbackValue='False'}"
@@ -236,7 +240,7 @@
                        Margin="3"
                        HorizontalAlignment="Stretch"
                        VerticalAlignment="Stretch"
-                       Stretch="Uniform"
+                       Stretch="Fill"
                        RenderOptions.BitmapScalingMode="HighQuality"
                        gif:AnimationBehavior.AutoStart="True"
                        gif:AnimationBehavior.Loaded="Image_Loaded"

@@ -252,6 +252,10 @@ namespace SeventhHeaven.ViewModels
                 m.Author = doc.SelectSingleNode("/ModInfo/Author").NodeTextS();
                 m.Link = doc.SelectSingleNode("/ModInfo/Link").NodeTextS();
                 m.Description = doc.SelectSingleNode("/ModInfo/Description").NodeTextS();
+
+                DateTime.TryParse(doc.SelectSingleNode("/ModInfo/ReleaseDate").NodeTextS(), out DateTime parsedDate);
+                m.LatestVersion.ReleaseDate = parsedDate == DateTime.MinValue ? m.LatestVersion.ReleaseDate : parsedDate;
+
                 m.Category = doc.SelectSingleNode("/ModInfo/Category").NodeTextS();
                 decimal ver;
                 if (decimal.TryParse(doc.SelectSingleNode("/ModInfo/Version").NodeTextS().Replace(',', '.'), out ver)) m.LatestVersion.Version = ver;
