@@ -1,4 +1,5 @@
-﻿using SeventhHeavenUI;
+﻿using SeventhHeaven.Windows;
+using SeventhHeavenUI;
 using SeventhHeavenUI.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -123,7 +124,7 @@ namespace SeventhHeaven.ViewModels
             if (!isValid && showErrorMsg)
             {
                 Logger.Warn($"invalid unpack iro options: {errorMsg}");
-                MessageBox.Show(errorMsg, "Missing Required Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show(errorMsg, "Missing Required Input", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
             return isValid;

@@ -412,7 +412,7 @@ They will be automatically turned off.";
                     string msg = "The following errors were found in your configuration:\n" +
                                  string.Join("\n", errors) + "\n" +
                                  "The settings window will now be displayed so you can fix them.";
-                    MessageBox.Show(msg, "Config Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    MessageDialogWindow.Show(msg, "Config Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                     showSettings = true;
                 }
             }
@@ -474,7 +474,7 @@ They will be automatically turned off.";
                 InstalledItem mod = Sys.Library.GetItem(e.ModID);
                 string mfile = mod.LatestInstalled.InstalledLocation;
                 _infoCache.Remove(mfile);
-                MyMods.ReloadModList(MyMods.GetSelectedMod()?.InstallInfo.ModID, SearchText, CheckedCategories, CheckedTags);
+                MyMods.ReloadModListFromUIThread(MyMods.GetSelectedMod()?.InstallInfo.ModID, SearchText, CheckedCategories, CheckedTags);
             }
 
             if (e.Status == ModStatus.Installed && e.OldStatus != ModStatus.Installed && Sys.Settings.HasOption(GeneralOptions.AutoActiveNewMods))
@@ -514,7 +514,7 @@ They will be automatically turned off.";
 
             MyMods.SelectedModChanged -= ModsViewModel_SelectedModChanged;
             MyMods.RefreshListRequested -= ModList_RefreshRequested;
-            MyMods.ModList.Clear();
+            MyMods.ClearModList();
             MyMods.ModList = null;
             MyMods = null;
 
@@ -594,7 +594,7 @@ They will be automatically turned off.";
             PreviewModDescription = selected.Mod.Description;
             PreviewModLink = selected.Mod.Link;
             PreviewModHasReadMe = false; // no READMEs for catalog (only installed mods)
-            
+
             string pathToImage = Sys.ImageCache.GetImagePath(selected.Mod.LatestVersion.PreviewImage, selected.Mod.ID);
 
             SetPreviewImage(pathToImage);
@@ -939,7 +939,7 @@ They will be automatically turned off.";
             {
                 if (!constraint.Verify(out string msg))
                 {
-                    MessageBox.Show(msg, "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageDialogWindow.Show(msg, "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return false;
                 }
 
@@ -951,7 +951,7 @@ They will be automatically turned off.";
 
             if (changes.Any())
             {
-                MessageBox.Show($"The following settings have been changed to make these mods compatible:\n{String.Join("\n", changes)}", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show($"The following settings have been changed to make these mods compatible:\n{String.Join("\n", changes)}", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
             return true;
@@ -1056,7 +1056,7 @@ They will be automatically turned off.";
 
             if (problems.Any())
             {
-                if (MessageBox.Show($"The following mods will not work properly in the current order:\n{String.Join("\n", problems)}\nDo you want to continue anyway?", "Load Order Incompatible", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+                if (MessageDialogWindow.Show($"The following mods will not work properly in the current order:\n{String.Join("\n", problems)}\nDo you want to continue anyway?", "Load Order Incompatible", MessageBoxButton.YesNo).Result != MessageBoxResult.Yes)
                     return false;
             }
 
@@ -1081,12 +1081,12 @@ They will be automatically turned off.";
                     var rInst = profInst.Find(i => i.ModID.Equals(req.ModID));
                     if (rInst == null)
                     {
-                        MessageBox.Show(String.Format("Mod {0} requires you to activate {1} as well.", item.CachedDetails.Name, req.Description));
+                        MessageDialogWindow.Show(String.Format("Mod {0} requires you to activate {1} as well.", item.CachedDetails.Name, req.Description), "Missing Required Activation");
                         return false;
                     }
                     else if (req.Versions.Any() && !req.Versions.Contains(rInst.LatestInstalled.VersionDetails.Version))
                     {
-                        MessageBox.Show(String.Format("Mod {0} requires you to activate {1}, but you do not have a compatible version installed. Try updating it?", item.CachedDetails.Name, rInst.CachedDetails.Name));
+                        MessageDialogWindow.Show(String.Format("Mod {0} requires you to activate {1}, but you do not have a compatible version installed. Try updating it?", item.CachedDetails.Name, rInst.CachedDetails.Name), "Unsupported Mod Version");
                         return false;
                     }
                 }
@@ -1101,12 +1101,12 @@ They will be automatically turned off.";
 
                     if (forbid.Versions.Any() && forbid.Versions.Contains(rInst.LatestInstalled.VersionDetails.Version))
                     {
-                        MessageBox.Show($"Mod {item.CachedDetails.Name} is not compatible with the version of {rInst.CachedDetails.Name} you have installed. Try updating it?");
+                        MessageDialogWindow.Show($"Mod {item.CachedDetails.Name} is not compatible with the version of {rInst.CachedDetails.Name} you have installed. Try updating it?", "Incompatible Mod");
                         return false;
                     }
                     else
                     {
-                        MessageBox.Show($"Mod {item.CachedDetails.Name} is not compatible with {rInst.CachedDetails.Name}. You will need to disable it.");
+                        MessageDialogWindow.Show($"Mod {item.CachedDetails.Name} is not compatible with {rInst.CachedDetails.Name}. You will need to disable it.", "Incompatible Mod");
                         return false;
                     }
                 }
@@ -1130,22 +1130,21 @@ They will be automatically turned off.";
             string lib = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "7thWrapperLib.dll");
             if (Sys.ActiveProfile == null)
             {
-                MessageBox.Show("Create a profile first");
+                MessageDialogWindow.Show("Create a profile first", "Missing Profile");
                 return;
             }
 
             if (!File.Exists(Sys.Settings.FF7Exe))
             {
-                MessageBox.Show("FF7.exe not found. You may need to configure 7H using the Workshop/Settings menu.");
+                MessageDialogWindow.Show("FF7.exe not found. You may need to configure 7H using the Workshop/Settings menu.", "FF7.exe Missing", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
+            LaunchAdditionalProgramsToRunPrior();
+
             if (Sys.ActiveProfile.Items.Count == 0)
             {
-                MessageBox.Show("No mods have been activated. The game will now launch as 'vanilla'");
-
-                LaunchAdditionalProgramsToRunPrior();
-
+                MessageDialogWindow.Show("No mods have been activated. The game will now launch as 'vanilla'", "Launch Warning");
                 LaunchFF7Exe();
                 return;
             }
@@ -1187,8 +1186,6 @@ They will be automatically turned off.";
                 aproc.EnableRaisingEvents = true;
                 aproc.Exited += (o, e) => _alsoLaunchProcesses.Remove(turboLogProcName);
             }
-
-            LaunchAdditionalProgramsToRunPrior();
 
             // copy EasyHook.dll to FF7
             string dir = Path.GetDirectoryName(Sys.Settings.FF7Exe);
@@ -1275,7 +1272,7 @@ They will be automatically turned off.";
             catch (Exception e)
             {
                 Logger.Error(e);
-                MessageBox.Show(e.ToString(), "Error starting FF7");
+                MessageDialogWindow.Show(e.ToString(), "Error starting FF7", MessageBoxButton.OK, MessageBoxImage.Error);
 
                 return;
             }

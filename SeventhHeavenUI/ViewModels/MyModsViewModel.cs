@@ -3,6 +3,7 @@ using SeventhHeaven.Classes;
 using SeventhHeaven.Windows;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -22,19 +23,21 @@ namespace SeventhHeavenUI.ViewModels
         public delegate void OnRefreshListRequested();
         public event OnRefreshListRequested RefreshListRequested;
 
-        private List<InstalledModViewModel> _modList;
+        private object listLock = new object();
+
+        private ObservableCollection<InstalledModViewModel> _modList;
 
         /// <summary>
         /// List of installed mods (includes active mods in the currently active profile)
         /// </summary>
-        public List<InstalledModViewModel> ModList
+        public ObservableCollection<InstalledModViewModel> ModList
         {
             get
             {
                 // guarantee the property never returns null
                 if (_modList == null)
                 {
-                    _modList = new List<InstalledModViewModel>();
+                    _modList = new ObservableCollection<InstalledModViewModel>();
                 }
 
                 return _modList;
@@ -82,7 +85,10 @@ namespace SeventhHeavenUI.ViewModels
             if (Sys.Library.Items.Count == 0)
             {
                 ClearModList();
-                ModList = new List<InstalledModViewModel>();
+                lock (listLock)
+                {
+                    ModList = new ObservableCollection<InstalledModViewModel>();
+                }
                 return;
             }
 
@@ -94,7 +100,7 @@ namespace SeventhHeavenUI.ViewModels
 
             List<InstalledModViewModel> allMods = new List<InstalledModViewModel>();
 
-            foreach (ProfileItem item in Sys.ActiveProfile.Items)
+            foreach (ProfileItem item in Sys.ActiveProfile.Items.ToList())
             {
                 InstalledItem mod = Sys.Library.GetItem(item.ModID);
 
@@ -111,7 +117,7 @@ namespace SeventhHeavenUI.ViewModels
                 }
             }
 
-            foreach (InstalledItem item in Sys.Library.Items)
+            foreach (InstalledItem item in Sys.Library.Items.ToList())
             {
                 bool isActive = allMods.Any(m => m.InstallInfo.ModID == item.ModID && m.InstallInfo.LatestInstalled.InstalledLocation == item.LatestInstalled.InstalledLocation);
 
@@ -154,7 +160,26 @@ namespace SeventhHeavenUI.ViewModels
             }
 
             ClearModList();
-            ModList = allMods;
+
+            lock (listLock)
+            {
+                ModList = new ObservableCollection<InstalledModViewModel>(allMods);
+            }
+        }
+
+        /// <summary>
+        /// Invokes ReloadModList on the UI Thread (useful when having to modify collection from background thread)
+        /// </summary>
+        /// <param name="modToSelect"></param>
+        /// <param name="searchText"></param>
+        /// <param name="categories"></param>
+        /// <param name="tags"></param>
+        internal void ReloadModListFromUIThread(Guid? modToSelect = null, string searchText = "", IEnumerable<FilterItemViewModel> categories = null, IEnumerable<FilterItemViewModel> tags = null)
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                ReloadModList(modToSelect, searchText, categories, tags);
+            });
         }
 
         private static bool DoesModMatchSearchCriteria(string searchText, IEnumerable<FilterItemViewModel> categories, IEnumerable<FilterItemViewModel> tags, Mod mod)
@@ -178,14 +203,17 @@ namespace SeventhHeavenUI.ViewModels
             return includeMod;
         }
 
-        private void ClearModList()
+        internal void ClearModList()
         {
-            foreach (var item in ModList)
+            lock (listLock)
             {
-                item.ActivationChanged -= ActiveMod_ActivationChanged;
-            }
+                foreach (var item in ModList)
+                {
+                    item.ActivationChanged -= ActiveMod_ActivationChanged;
+                }
 
-            ModList.Clear();
+                ModList.Clear();
+            }
         }
 
         private void ActiveMod_ActivationChanged(object sender, InstalledModViewModel selected)
@@ -203,12 +231,22 @@ namespace SeventhHeavenUI.ViewModels
 
             if (clearList)
             {
-                ModList.RemoveAll(m => m.IsActive);
+                lock (listLock)
+                {
+                    for (int i = ModList.Count-1; i >= 0; i--)
+                    {
+                        if (ModList[i].IsActive)
+                        {
+                            ModList.RemoveAt(i);
+                        }
+                    }
+                    //ModList.RemoveAll(m => m.IsActive);
+                }
             }
 
             List<InstalledModViewModel> activeMods = new List<InstalledModViewModel>();
 
-            foreach (ProfileItem item in Sys.ActiveProfile.Items)
+            foreach (ProfileItem item in Sys.ActiveProfile.Items.ToList())
             {
                 InstalledItem mod = Sys.Library.GetItem(item.ModID);
 
@@ -218,19 +256,41 @@ namespace SeventhHeavenUI.ViewModels
                 }
             }
 
-            ModList.AddRange(activeMods);
+            lock (listLock)
+            {
+                foreach (var item in activeMods)
+                {
+                    ModList.Add(item);
+                }
+            }
 
             if (modToSelect != null)
             {
-                int index = ModList.FindIndex(m => m.InstallInfo.ModID == modToSelect);
-
-                if (index >= 0)
+                lock (listLock)
                 {
-                    ModList[index].IsSelected = true;
+                    var found = ModList.FirstOrDefault(m => m.InstallInfo.ModID == modToSelect);
+
+                    if (found != null)
+                    {
+                        int index = ModList.IndexOf(found);
+
+                        if (index >= 0)
+                        {
+                            ModList[index].IsSelected = true;
+                        }
+                    }
                 }
             }
 
             NotifyPropertyChanged(nameof(ModList));
+        }
+
+        internal void ReloadActiveModsFromUIThread(bool clearList, Guid? modToSelect = null)
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                ReloadActiveMods(clearList, modToSelect);
+            });
         }
 
         internal void ShowImportModWindow()
@@ -249,15 +309,20 @@ namespace SeventhHeavenUI.ViewModels
         /// </summary>
         public InstalledModViewModel GetSelectedMod()
         {
-            InstalledModViewModel selected = ModList.Where(m => m.IsSelected).LastOrDefault();
+            InstalledModViewModel selected = null;
 
-            // due to virtualization, IsSelected could be set on multiple items... 
-            // ... so we will deselect the other items to avoid problems of multiple items being selected
-            if (ModList.Where(m => m.IsSelected).Count() > 1)
+            lock (listLock)
             {
-                foreach (var mod in ModList.Where(m => m.IsSelected && m.InstallInfo.ModID != selected.InstallInfo.ModID))
+                selected = ModList.Where(m => m.IsSelected).LastOrDefault();
+
+                // due to virtualization, IsSelected could be set on multiple items... 
+                // ... so we will deselect the other items to avoid problems of multiple items being selected
+                if (ModList.Where(m => m.IsSelected).Count() > 1)
                 {
-                    mod.IsSelected = false;
+                    foreach (var mod in ModList.Where(m => m.IsSelected && m.InstallInfo.ModID != selected.InstallInfo.ModID))
+                    {
+                        mod.IsSelected = false;
+                    }
                 }
             }
 
@@ -346,9 +411,9 @@ namespace SeventhHeavenUI.ViewModels
                             if (!forbid.Versions.Any() || forbid.Versions.Contains(Sys.Library.GetItem(mID).LatestInstalled.VersionDetails.Version))
                             {
                                 if (mID.Equals(modID))
-                                    MessageBox.Show(String.Format(MainWindowViewModel._forbidMain, Sys.Library.GetItem(active.ModID).CachedDetails.Name));
+                                    MessageDialogWindow.Show(String.Format(MainWindowViewModel._forbidMain, Sys.Library.GetItem(active.ModID).CachedDetails.Name), "Warning");
                                 else
-                                    MessageBox.Show(String.Format(MainWindowViewModel._forbidDependent, Sys.Library.GetItem(mID).CachedDetails.Name, Sys.Library.GetItem(active.ModID).CachedDetails.Name));
+                                    MessageDialogWindow.Show(String.Format(MainWindowViewModel._forbidDependent, Sys.Library.GetItem(mID).CachedDetails.Name, Sys.Library.GetItem(active.ModID).CachedDetails.Name), "Warning");
                                 return;
                             }
                         }
@@ -357,19 +422,19 @@ namespace SeventhHeavenUI.ViewModels
 
                 if (missing.Any())
                 {
-                    MessageBox.Show(String.Format(MainWindowViewModel._msgReqMissing, String.Join("\n", missing)));
+                    MessageDialogWindow.Show(String.Format(MainWindowViewModel._msgReqMissing, String.Join("\n", missing)), "Missing Requirements");
                 }
                 if (badVersion.Any())
                 {
-                    MessageBox.Show(String.Format(MainWindowViewModel._msgBadVer, String.Join("\n", badVersion.Select(ii => ii.CachedDetails.Name))));
+                    MessageDialogWindow.Show(String.Format(MainWindowViewModel._msgBadVer, String.Join("\n", badVersion.Select(ii => ii.CachedDetails.Name))), "Unsupported Version");
                 }
                 if (pulledIn.Any())
                 {
-                    MessageBox.Show(String.Format(MainWindowViewModel._msgRequired, String.Join("\n", pulledIn.Select(ii => ii.CachedDetails.Name))));
+                    MessageDialogWindow.Show(String.Format(MainWindowViewModel._msgRequired, String.Join("\n", pulledIn.Select(ii => ii.CachedDetails.Name))), "Missing Required Active Mods");
                 }
                 if (remove.Any())
                 {
-                    MessageBox.Show(String.Format(MainWindowViewModel._msgRemove, String.Join("\n", remove.Select(pi => Sys.Library.GetItem(pi.ModID).CachedDetails.Name))));
+                    MessageDialogWindow.Show(String.Format(MainWindowViewModel._msgRemove, String.Join("\n", remove.Select(pi => Sys.Library.GetItem(pi.ModID).CachedDetails.Name))), "Deactivate Mods Warning");
                 }
 
                 DoActivate(modID, reloadList);
@@ -415,7 +480,7 @@ namespace SeventhHeavenUI.ViewModels
 
             if (reloadList)
             {
-                ReloadActiveMods(true);
+                ReloadActiveModsFromUIThread(true);
             }
         }
 
@@ -629,7 +694,7 @@ namespace SeventhHeavenUI.ViewModels
                 info = info ?? new _7thWrapperLib.ModInfo();
                 if (info.Options.Count == 0)
                 {
-                    MessageBox.Show("There are no options to configure for this mod.", "No Options", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageDialogWindow.Show("There are no options to configure for this mod.", "No Options", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 

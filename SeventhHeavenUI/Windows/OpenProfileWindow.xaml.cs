@@ -45,7 +45,7 @@ namespace SeventhHeaven.Windows
 
             string selected = (string)lstProfiles.SelectedItem;
 
-            if (MessageBox.Show($"Are you sure you want to delete the selected profile ({selected})?", "Delete Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (MessageDialogWindow.Show($"Are you sure you want to delete the selected profile ({selected})?", "Delete Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning).Result == MessageBoxResult.Yes)
             {
                 ViewModel.DeleteProfile(selected);
             }
@@ -70,7 +70,7 @@ namespace SeventhHeaven.Windows
         {
             if (lstProfiles.SelectedItem == null)
             {
-                MessageBox.Show("Select a Profile first.", "No Profile Selected", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageDialogWindow.Show("Select a Profile first.", "No Profile Selected", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return false;
             }
 

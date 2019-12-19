@@ -90,9 +90,9 @@ namespace SeventhHeaven.Windows
                 Sys.Message(new WMessage("OpenGL settings saved!"));
                 this.Close();
             }
-            catch (System.UnauthorizedAccessException)
+            catch (UnauthorizedAccessException)
             {
-                MessageBox.Show("Could not write to ff7_opengl.cfg file. Check that it is not set to read only, and that FF7 is installed in a folder you have full write access to.", "Save Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show("Could not write to ff7_opengl.cfg file. Check that it is not set to read only, and that FF7 is installed in a folder you have full write access to.", "Save Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             catch (Exception ex)
             {

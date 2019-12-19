@@ -1,4 +1,5 @@
-﻿using SeventhHeavenUI;
+﻿using SeventhHeaven.Windows;
+using SeventhHeavenUI;
 using SeventhHeavenUI.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -230,19 +231,31 @@ namespace SeventhHeaven.ViewModels
         {
             if (string.IsNullOrWhiteSpace(PathToFlevelFile))
             {
-                MessageBox.Show("Path to Flevel required.", "Missing path", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show("Path to Flevel required.", "Missing path", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(PathToOutputFolder))
             {
-                MessageBox.Show("Path to output folder required.", "Missing path", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show("Path to output folder required.", "Missing path", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (GetSelectedChunks()?.Count == 0)
             {
-                MessageBox.Show("Select the sections to extract.", "Missing path", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show("Select the sections to extract.", "Missing path", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (!File.Exists(PathToFlevelFile))
+            {
+                MessageDialogWindow.Show("Flevel file does not exist at given path.", "Missing path", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (!Directory.Exists(PathToOutputFolder))
+            {
+                MessageDialogWindow.Show("Output folder does not exist.", "Missing path", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -259,7 +272,7 @@ namespace SeventhHeaven.ViewModels
                     message = "Failed to extract. the error has been logged";
                 }
 
-                MessageBox.Show(message);
+                MessageDialogWindow.Show(message, "Extract Complete.");
                 ProgressValue = 0;
             });
         }

@@ -1,4 +1,5 @@
 ﻿using SeventhHeaven.ViewModels;
+using SeventhHeavenUI;
 using System.Windows;
 
 namespace SeventhHeaven.Windows
@@ -73,6 +74,17 @@ namespace SeventhHeaven.Windows
             btnOkay.Focus();
         }
 
+        public static MessageDialogViewModel Show(string prompt, string windowTitle, MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None)
+        {
+            return App.Current.Dispatcher.Invoke(() =>
+            {
+                MessageDialogWindow window = new MessageDialogWindow(windowTitle, prompt, buttons, image);
+                window.ShowDialog();
+
+                return window.ViewModel;
+            });
+        }
+
         private void btnOkay_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.Result = MessageBoxResult.OK;
@@ -103,10 +115,24 @@ namespace SeventhHeaven.Windows
             this.Close();
         }
 
+        /// <summary>
+        /// Increase the height of the Window if message is long
+        /// </summary>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            double padding = 10;
-            this.Height = gridMain.ActualHeight + padding;
+            double padding = 75; // this is to account for margins between controls
+
+            double newHeight = txtMessage.ActualHeight + btnOkay.ActualHeight + padding;
+
+            if (ViewModel.CheckboxVisibility == Visibility.Visible)
+            {
+                newHeight += chkOption.ActualHeight;
+            }
+
+            if (newHeight > this.Height)
+            {
+                this.Height = newHeight;
+            }
         }
     }
 }

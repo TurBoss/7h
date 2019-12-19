@@ -66,10 +66,7 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -78,6 +75,7 @@
         </Grid.ColumnDefinitions>
 
         <GroupBox Header=" Options "
+                  Background="{DynamicResource SecondaryAppBackground}"
                   Grid.RowSpan="5"
                   Margin="5,2,0,5">
             <ListBox x:Name="lstOptions"
@@ -87,50 +85,71 @@
                      Margin="1"/>
         </GroupBox>
 
-        <TextBlock x:Name="txtDescription"
-                   Grid.Column="1"
-                   Margin="5,10,5,0"
-                   TextWrapping="Wrap"
-                   Text="{Binding Description, FallbackValue='This is some text about the option.'}"/>
+        <GroupBox Header=" Preview "
+                  Background="{DynamicResource SecondaryAppBackground}"
+                  Grid.Column="1"
+                  Margin="3,2,5,5">
 
-        <CheckBox x:Name="chkOption"
-                  Content="{Binding CheckBoxText, FallbackValue='My Checked Option'}"
-                  Visibility="{Binding CheckBoxVisibility, FallbackValue='Hidden'}"
-                  IsEnabled="{Binding CheckBoxIsEnabled}"
-                  IsChecked="{Binding IsOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  Grid.Row="1" Grid.Column="1"
-                  HorizontalAlignment="Left"
-                  VerticalAlignment="Top"
-                  Margin="5,10,0,10"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                
+                <TextBlock x:Name="txtDescription"
+                           Grid.Column="1"
+                           Margin="5,10,5,0"
+                           TextWrapping="Wrap"
+                           Text="{Binding Description, FallbackValue='This is some text about the option.'}"/>
 
-        <ComboBox x:Name="dropdownOption"
-                  ItemsSource="{Binding DropdownOptions}"
-                  SelectedIndex="{Binding DropdownSelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  IsEnabled="{Binding ComboBoxIsEnabled}"
-                  Visibility="{Binding ComboBoxVisibility, FallbackValue=''}"
-                  Grid.Row="1" Grid.Column="1"
-                  HorizontalAlignment="Left"
-                  VerticalAlignment="Top"
-                  MinWidth="225"
-                  Margin="5,10,0,10"/>
+                <CheckBox x:Name="chkOption"
+                          Content="{Binding CheckBoxText, FallbackValue='My Checked Option'}"
+                          Visibility="{Binding CheckBoxVisibility, FallbackValue='Hidden'}"
+                          IsEnabled="{Binding CheckBoxIsEnabled}"
+                          IsChecked="{Binding IsOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Grid.Row="1" Grid.Column="1"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Top"
+                          Margin="5,10,0,10"/>
+
+                <Border Grid.Row="1" Grid.Column="1"
+                        BorderThickness="1"
+                        VerticalAlignment="Top"
+                        HorizontalAlignment="Left"
+                        BorderBrush="{DynamicResource PrimaryControlBackground}"
+                        Margin="5,10,0,10">
+                    <ComboBox x:Name="dropdownOption"
+                              ItemsSource="{Binding DropdownOptions}"
+                              SelectedIndex="{Binding DropdownSelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              IsEnabled="{Binding ComboBoxIsEnabled}"
+                              Visibility="{Binding ComboBoxVisibility, FallbackValue=''}"
+                              MinWidth="225"/>
+                </Border>
 
 
-        <Image x:Name="imgOption"
-               Grid.Row="2"
-               Grid.Column="1"
-               RenderOptions.BitmapScalingMode="HighQuality"
-               gif:AnimationBehavior.AutoStart="True"
-               gif:AnimationBehavior.SourceUri="{Binding ImageOptionSource}"
-               VerticalAlignment="Stretch"
-               Margin="10"/>
+                <Image x:Name="imgOption"
+                       Grid.Row="2"
+                       Grid.Column="1"
+                       Stretch="Uniform"
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                       gif:AnimationBehavior.AutoStart="True"
+                       gif:AnimationBehavior.SourceUri="{Binding ImageOptionSource}"
+                       VerticalAlignment="Stretch"
+                       Margin="10"/>
 
-        <TextBlock x:Name="txtCompatibility"
-                   Grid.Column="1"
-                   Grid.Row="3"
-                   Margin="5,0,5,0"
-                   VerticalAlignment="Top"
-                   TextWrapping="Wrap"
-                   Text="{Binding CompatibilityNote, FallbackValue='This is some text about compatibility with the mod option.... '}"/>
+                <TextBlock x:Name="txtCompatibility"
+                           Grid.Column="1"
+                           Grid.Row="3"
+                           Margin="5,0,5,5"
+                           VerticalAlignment="Top"
+                           TextWrapping="Wrap"
+                           Text="{Binding CompatibilityNote, FallbackValue='This is some text about compatibility with the mod option.... '}"/>
+            </Grid>
+            
+        </GroupBox>
+
 
         <cls:ButtonWithImage x:Name="btnPreview"
                              Grid.Row="4"

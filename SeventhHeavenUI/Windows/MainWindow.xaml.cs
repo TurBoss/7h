@@ -112,7 +112,7 @@ namespace SeventhHeavenUI
                     }
 
                     Sys.Message(new WMessage() { Text = "Auto imported mod " + irofilenoext });
-                    System.Windows.MessageBox.Show("The mod " + irofilenoext + " has been added to your Library.", "Import Mod from Windows");
+                    MessageDialogWindow.Show("The mod " + irofilenoext + " has been added to your Library.", "Import Mod from Windows");
 
                     //TODO: Add an IRO "Unpack" option here
                 }
@@ -205,7 +205,7 @@ namespace SeventhHeavenUI
 
         private void menuPlayVariableDump_Click(object sender, RoutedEventArgs e)
         {
-            if (System.Windows.MessageBox.Show(_warningMessage, "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (MessageDialogWindow.Show(_warningMessage, "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning).Result == MessageBoxResult.Yes)
             {
                 ViewModel.LaunchGame(varDump: true, debug: false);
             }
@@ -213,7 +213,7 @@ namespace SeventhHeavenUI
 
         private void menuPlayDebugLog_Click(object sender, RoutedEventArgs e)
         {
-            if (System.Windows.MessageBox.Show(_warningMessage, "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (MessageDialogWindow.Show(_warningMessage, "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning).Result == MessageBoxResult.Yes)
             {
                 ViewModel.LaunchGame(varDump: false, debug: true);
             }

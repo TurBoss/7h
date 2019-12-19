@@ -158,7 +158,7 @@ namespace SeventhHeaven.ViewModels
                 if (string.IsNullOrEmpty(profileName))
                 {
                     isValid = false;
-                    MessageBox.Show("Profile Name is empty.", "Profile Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageDialogWindow.Show("Profile Name is empty.", "Profile Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
             } while (!isValid);

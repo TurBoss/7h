@@ -2,6 +2,7 @@
 using Iros._7th.Workshop;
 using Microsoft.Win32;
 using SeventhHeaven.Classes;
+using SeventhHeaven.Windows;
 using SeventhHeavenUI.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -679,7 +680,7 @@ namespace SeventhHeaven.ViewModels
 
             if (showMessage && !isValid)
             {
-                MessageBox.Show(validationMessage, "Settings Not Valid", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show(validationMessage, "Settings Not Valid", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             return isValid;

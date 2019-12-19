@@ -18,7 +18,7 @@ namespace SeventhHeaven.Windows
             {
                 Message = message,
                 WindowTitle = "Allow Mod To Run?",
-                CheckboxVisibility = Visibility.Collapsed,
+                CheckboxVisibility = Visibility.Visible,
             };
             this.DataContext = ViewModel;
             btnOkay.Focus();
@@ -42,8 +42,22 @@ namespace SeventhHeaven.Windows
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            double padding = 10;
-            this.Height = gridMain.ActualHeight + padding;
+            ViewModel.CheckboxVisibility = Visibility.Collapsed; // hide checkbox after Window is loaded so the ActualHeight is calculated
+            ResizeWindowToFitContent();
+        }
+
+        private void ResizeWindowToFitContent()
+        {
+            double padding = 90; // this is to account for margins between controls
+
+            double newHeight = txtMessage.ActualHeight + btnOkay.ActualHeight + chkOption.ActualHeight + stackRadioOptions.ActualHeight + padding;
+
+            this.Height = newHeight;
+        }
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            ResizeWindowToFitContent();
         }
     }
 }

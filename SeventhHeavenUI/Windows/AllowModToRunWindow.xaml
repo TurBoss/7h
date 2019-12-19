@@ -10,7 +10,7 @@
         WindowStartupLocation="CenterScreen"
         Loaded="Window_Loaded"
         ResizeMode="NoResize"
-        Height="300"
+        Height="325"
         Width="400">
     <Grid x:Name="gridMain" KeyDown="gridMain_KeyDown">
         <Grid.ColumnDefinitions>
@@ -40,18 +40,21 @@
                        Text="{Binding Message, FallbackValue='This is going to run code for a mod that can be dangerous and stuff so hereherehereherehereherehereherehereherehereherehereherehere is some more text to make it wrap and be long'}"/>
         </ScrollViewer>
 
-        <StackPanel Grid.Row="1" 
+        <StackPanel x:Name="stackRadioOptions"
+                    Grid.Row="1" 
                     Grid.Column="1"
                     Margin="0,0,0,10">
             <RadioButton Content="No, don't activate this mod"
                          IsChecked="{Binding NoRadioButtonIsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Checked="RadioButton_Checked"
                          Margin="0,0,0,5"/>
             <RadioButton Content="Yes, activate this mod"
+                         Checked="RadioButton_Checked"
                          IsChecked="{Binding YesRadioButtonIsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
         </StackPanel>
 
-        <CheckBox Content="Dont ask me again for ANY mods"
+        <CheckBox x:Name="chkOption" Content="Don&apos;t ask me again for ANY mods"
                   Grid.Column="1"
                   IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   Visibility="{Binding CheckboxVisibility, FallbackValue='Visible'}"

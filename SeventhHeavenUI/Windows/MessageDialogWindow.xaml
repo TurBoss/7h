@@ -10,9 +10,9 @@
         WindowStartupLocation="CenterScreen"
         Loaded="Window_Loaded"
         ResizeMode="NoResize"
-        Height="250"
+        Height="190"
         Width="400">
-    <Grid x:Name="gridMain" KeyDown="gridMain_KeyDown">
+    <Grid x:Name="gridMain" KeyDown="gridMain_KeyDown" VerticalAlignment="Stretch">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
@@ -33,6 +33,9 @@
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding ImageToDisplay}" Value="0">
                             <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ImageToDisplay}" Value="16">
+                            <Setter Property="Template" Value="{StaticResource iconStop}"/>
                         </DataTrigger>
                         <DataTrigger Binding="{Binding ImageToDisplay}" Value="32">
                             <Setter Property="Template" Value="{StaticResource iconHelp}"/>
@@ -59,10 +62,11 @@
                        Foreground="{DynamicResource PrimaryControlForeground}"
                        FontSize="14"
                        TextWrapping="Wrap"
-                       Text="{Binding Message, FallbackValue='This is going to run code for a mod that can be dangerous and stuff so hereherehereherehereherehereherehereherehereherehereherehere is some more text to make it wrap and be long'}"/>
+                       Text="{Binding Message, FallbackValue='This is going to run code for a mod that can be dangerous and stuff so is some more text to make it wrap and be long'}"/>
         </ScrollViewer>
 
-        <CheckBox Content="{Binding CheckboxText, FallbackValue='Dont ask me again'}"
+        <CheckBox x:Name="chkOption" 
+                  Content="{Binding CheckboxText, FallbackValue='Dont ask me again'}"
                   Grid.ColumnSpan="2"
                   IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   Visibility="{Binding CheckboxVisibility, FallbackValue='Visible'}"

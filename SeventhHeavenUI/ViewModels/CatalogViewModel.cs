@@ -2,6 +2,7 @@
 using Iros._7th.Workshop;
 using Iros.Mega;
 using SeventhHeaven.Classes;
+using SeventhHeaven.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -291,6 +292,10 @@ It may not work properly unless you find and install the requirements.";
 
                 if (Sys.Settings.SubscribedUrls.Count == 0)
                 {
+                    if (File.Exists(catFile))
+                    {
+                        File.Delete(catFile);
+                    }
                     ReloadModList();
                     return;
                 }
@@ -445,19 +450,19 @@ It may not work properly unless you find and install the requirements.";
 
             if (status == ModStatus.Downloading)
             {
-                MessageBox.Show($"{modToDownload.Name} is already downloading!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show($"{modToDownload.Name} is already downloading!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (status == ModStatus.Updating)
             {
-                MessageBox.Show($"{modToDownload.Name} is already updating!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show($"{modToDownload.Name} is already updating!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (status == ModStatus.Installed)
             {
-                MessageBox.Show($"{modToDownload.Name} is already downloaded and installed!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show($"{modToDownload.Name} is already downloaded and installed!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -487,7 +492,7 @@ It may not work properly unless you find and install the requirements.";
 
             if (required.Any())
             {
-                if (MessageBox.Show(String.Format(_msgDownloadReq, String.Join("\n", required.Select(m => m.Name))), "Requirements", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                if (MessageDialogWindow.Show(String.Format(_msgDownloadReq, String.Join("\n", required.Select(m => m.Name))), "Requirements", MessageBoxButton.YesNo, MessageBoxImage.Question).Result == MessageBoxResult.Yes)
                 {
                     foreach (Mod rMod in required)
                     {
@@ -498,7 +503,7 @@ It may not work properly unless you find and install the requirements.";
 
             if (notFound.Any())
             {
-                MessageBox.Show(String.Format(_msgMissingReq, String.Join("\n", notFound)), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show(String.Format(_msgMissingReq, String.Join("\n", notFound)), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 

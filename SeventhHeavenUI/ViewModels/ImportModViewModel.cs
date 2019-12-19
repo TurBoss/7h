@@ -1,5 +1,6 @@
 ﻿using Iros._7th;
 using Iros._7th.Workshop;
+using SeventhHeaven.Windows;
 using SeventhHeavenUI;
 using SeventhHeavenUI.ViewModels;
 using System;
@@ -252,13 +253,19 @@ namespace SeventhHeaven.ViewModels
                 m.Author = doc.SelectSingleNode("/ModInfo/Author").NodeTextS();
                 m.Link = doc.SelectSingleNode("/ModInfo/Link").NodeTextS();
                 m.Description = doc.SelectSingleNode("/ModInfo/Description").NodeTextS();
-
-                DateTime.TryParse(doc.SelectSingleNode("/ModInfo/ReleaseDate").NodeTextS(), out DateTime parsedDate);
-                m.LatestVersion.ReleaseDate = parsedDate == DateTime.MinValue ? m.LatestVersion.ReleaseDate : parsedDate;
-
                 m.Category = doc.SelectSingleNode("/ModInfo/Category").NodeTextS();
-                decimal ver;
-                if (decimal.TryParse(doc.SelectSingleNode("/ModInfo/Version").NodeTextS().Replace(',', '.'), out ver)) m.LatestVersion.Version = ver;
+                m.LatestVersion.ReleaseNotes = doc.SelectSingleNode("/ModInfo/ReleaseNotes").NodeTextS();
+
+                if (DateTime.TryParse(doc.SelectSingleNode("/ModInfo/ReleaseDate").NodeTextS(), out DateTime parsedDate))
+                {
+                    m.LatestVersion.ReleaseDate = parsedDate;
+                }
+
+                if (decimal.TryParse(doc.SelectSingleNode("/ModInfo/Version").NodeTextS().Replace(',', '.'), out decimal ver))
+                {
+                    m.LatestVersion.Version = ver;
+                }
+
                 var pv = doc.SelectSingleNode("/ModInfo/PreviewFile");
                 if (pv != null)
                 {
@@ -305,7 +312,7 @@ namespace SeventhHeaven.ViewModels
                 IsImporting = false;
             });
 
-            t.ContinueWith((taskResult) => 
+            t.ContinueWith((taskResult) =>
             {
                 if (taskResult.IsFaulted)
                 {
@@ -318,19 +325,19 @@ namespace SeventhHeaven.ViewModels
         {
             if (string.IsNullOrWhiteSpace(PathToIroArchiveInput))
             {
-                MessageBox.Show("Enter a path to a .iro archive file", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show("Enter a path to a .iro archive file", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(ModNameInput))
             {
-                MessageBox.Show("Enter a name for the mod.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show("Enter a name for the mod.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (!File.Exists(PathToIroArchiveInput))
             {
-                MessageBox.Show(".iro archive file does not exist", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show(".iro archive file does not exist", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -342,7 +349,7 @@ namespace SeventhHeaven.ViewModels
             catch (Exception e)
             {
                 Logger.Error(e);
-                MessageBox.Show("Failed to import mod. The error has been logged", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show("Failed to import mod. The error has been logged", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -350,19 +357,19 @@ namespace SeventhHeaven.ViewModels
         {
             if (string.IsNullOrWhiteSpace(PathToModFolderInput))
             {
-                MessageBox.Show("Enter a path to a folder containing mod files.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show("Enter a path to a folder containing mod files.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(ModNameInput))
             {
-                MessageBox.Show("Enter a name for the mod", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show("Enter a name for the mod", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (!Directory.Exists(PathToModFolderInput))
             {
-                MessageBox.Show("Directory does not exist", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show("Directory does not exist", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -374,21 +381,21 @@ namespace SeventhHeaven.ViewModels
             catch (Exception e)
             {
                 Logger.Error(e);
-                MessageBox.Show("Failed to import mod. The error has been logged", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show("Failed to import mod. The error has been logged", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        
+
         private void TryBatchImport()
         {
             if (string.IsNullOrWhiteSpace(PathToBatchFolderInput))
             {
-                MessageBox.Show("Enter a path to a folder containing .iro mod files and/or mod folders", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show("Enter a path to a folder containing .iro mod files and/or mod folders", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (!Directory.Exists(PathToBatchFolderInput))
             {
-                MessageBox.Show("Directory does not exist", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show("Directory does not exist", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -398,13 +405,15 @@ namespace SeventhHeaven.ViewModels
 
                 foreach (string iro in Directory.GetFiles(PathToBatchFolderInput, "*.iro"))
                 {
-                    ImportMod(iro, Path.GetFileNameWithoutExtension(iro), true, false);
+                    string modName = ImportModViewModel.ParseNameFromFileOrFolder(Path.GetFileNameWithoutExtension(iro));
+                    ImportMod(iro, modName, true, false);
                     modImportCount++;
                 }
 
                 foreach (string dir in Directory.GetDirectories(PathToBatchFolderInput))
                 {
-                    ImportMod(dir, Path.GetFileNameWithoutExtension(dir), false, false);
+                    string modName = ImportModViewModel.ParseNameFromFileOrFolder(Path.GetFileNameWithoutExtension(dir));
+                    ImportMod(dir, modName, false, false);
                     modImportCount++;
                 }
 
@@ -413,7 +422,7 @@ namespace SeventhHeaven.ViewModels
             catch (Exception e)
             {
                 Logger.Error(e);
-                MessageBox.Show("Failed to import mod(s). The error has been logged", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show("Failed to import mod(s). The error has been logged", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
