@@ -51,17 +51,34 @@
             <Border Background="{DynamicResource SecondaryAppBackground}" Height="2" Padding="5" Focusable="False"/>
         </DataTemplate>
 
-        <Style x:Key="CategoryFilterListBoxItem" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MainListBoxItemStyle}">
+        <Style x:Key="CategoryFilterListBoxItem" TargetType="{x:Type ListBoxItem}">
             <Setter Property="Background" Value="{DynamicResource PrimaryControlBackground}"/>
             <Setter Property="ContentTemplate" Value="{StaticResource FilterItemTemplate}"/>
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding FilterType, FallbackValue='0'}" Value="3">
-                    <Setter Property="ContentTemplate" Value="{StaticResource FilterItemSeparatorTemplate}"/>
-                    <Setter Property="IsEnabled" Value="False"/>
-                    <Setter Property="IsHitTestVisible" Value="False"/>
-                    <Setter Property="Focusable" Value="False"/>
-                </DataTrigger>
-            </Style.Triggers>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="Border" Padding="2" SnapsToDevicePixels="true" Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" TextElement.Foreground="{DynamicResource PrimaryControlForeground}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger SourceName="Border" Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource SecondaryAppBackground}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
+                            </Trigger>
+                            <DataTrigger Binding="{Binding FilterType, FallbackValue='0'}" Value="3">
+                                <Setter Property="ContentTemplate" Value="{StaticResource FilterItemSeparatorTemplate}"/>
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Setter Property="IsHitTestVisible" Value="False"/>
+                                <Setter Property="Focusable" Value="False"/>
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Window.Resources>
 
@@ -248,27 +265,27 @@
                     SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectionChanged="tabCtrlMain_SelectionChanged"
                     Margin="0,23,5,1">
-            <TabItem Padding="10,0,10,0" MouseRightButtonUp="MyModsTabItem_MouseRightButtonUp">
-                <TabItem.Header>
+            <TabItem Padding="10,0,10,0" Header="My Mods" MouseRightButtonUp="MyModsTabItem_MouseRightButtonUp">
+                <!--<TabItem.Header>
                     <Label Content="My Mods"
                            PreviewMouseRightButtonUp="MyModsTabItem_MouseRightButtonUp"
                            Padding="0"
                            Foreground="{DynamicResource PrimaryControlForeground}" 
                            MouseEnter="TabItem_MouseEnter" 
                            MouseLeave="TabItem_MouseLeave"/>
-                </TabItem.Header>
+                </TabItem.Header>-->
                 
                 <ctrl:MyModsUserControl x:Name="ctrlMyMods"/>
             </TabItem>
-            <TabItem MouseRightButtonUp="BrowseCatalogTabItem_MouseRightButtonUp">
-                <TabItem.Header>
+            <TabItem Header="Browse Catalog" MouseRightButtonUp="BrowseCatalogTabItem_MouseRightButtonUp">
+                <!--<TabItem.Header>
                     <Label Content="Browse Catalog"
                            PreviewMouseRightButtonUp="BrowseCatalogTabItem_MouseRightButtonUp"
                            Padding="0"
                            Foreground="{DynamicResource PrimaryControlForeground}" 
                            MouseEnter="TabItem_MouseEnter" 
                            MouseLeave="TabItem_MouseLeave"/>
-                </TabItem.Header>
+                </TabItem.Header>-->
                 
                 <ctrl:CatalogUserControl x:Name="ctrlCatalog"/>
             </TabItem>
@@ -331,6 +348,7 @@
                 <ListBox MinWidth="165"
                          FontSize="13"
                          MaxHeight="225"
+                         ScrollViewer.CanContentScroll="False"
                          ItemsSource="{Binding AvailableFilters}"
                          Background="{DynamicResource PrimaryControlBackground}"
                          BorderBrush="{DynamicResource SecondaryAppBackground}" 

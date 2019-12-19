@@ -555,12 +555,13 @@
     </Style>
 
     <Style x:Key="MainListBoxItemStyle" TargetType="{x:Type ListBoxItem}">
+        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListBoxItem">
-                    <Border x:Name="Border" Padding="2" SnapsToDevicePixels="true" Background="Transparent">
+                    <Border x:Name="Border" Padding="2" SnapsToDevicePixels="true" Background="{TemplateBinding Background}">
                         <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" TextElement.Foreground="{DynamicResource PrimaryControlForeground}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
                     </Border>
 
