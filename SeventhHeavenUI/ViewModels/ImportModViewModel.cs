@@ -289,114 +289,116 @@ namespace SeventhHeaven.ViewModels
             });
         }
 
-        public void ImportModFromWindow()
+        public Task<bool> ImportModFromWindowAsync()
         {
             IsImporting = true;
             Sys.Message(new WMessage("Importing mod(s)... Please wait ..."));
 
-            Task t = Task.Factory.StartNew(() =>
+            Task<bool> t = Task.Factory.StartNew(() =>
             {
+                bool didImport = false;
+
                 switch ((ImportTabIndex)SelectedTabIndex)
                 {
                     case ImportTabIndex.FromIro:
-                        TryImportFromIroArchive();
+                        didImport = TryImportFromIroArchive();
                         break;
                     case ImportTabIndex.FromFolder:
-                        TryImportFromFolder();
+                        didImport = TryImportFromFolder();
                         break;
                     case ImportTabIndex.BatchImport:
-                        TryBatchImport();
+                        didImport = TryBatchImport();
                         break;
                 }
 
                 IsImporting = false;
+                return didImport;
             });
 
-            t.ContinueWith((taskResult) =>
-            {
-                if (taskResult.IsFaulted)
-                {
-                    Logger.Error(taskResult.Exception);
-                }
-            });
+            return t;
         }
 
-        private void TryImportFromIroArchive()
+        private bool TryImportFromIroArchive()
         {
             if (string.IsNullOrWhiteSpace(PathToIroArchiveInput))
             {
                 MessageDialogWindow.Show("Enter a path to a .iro archive file", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
 
             if (string.IsNullOrWhiteSpace(ModNameInput))
             {
                 MessageDialogWindow.Show("Enter a name for the mod.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
 
             if (!File.Exists(PathToIroArchiveInput))
             {
                 MessageDialogWindow.Show(".iro archive file does not exist", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
 
             try
             {
                 ImportMod(PathToIroArchiveInput, ModNameInput, true, false);
                 Sys.Message(new WMessage($"Successfully imported {ModNameInput}!"));
+                return true;
             }
             catch (Exception e)
             {
                 Logger.Error(e);
                 MessageDialogWindow.Show("Failed to import mod. The error has been logged", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
             }
+
         }
 
-        private void TryImportFromFolder()
+        private bool TryImportFromFolder()
         {
             if (string.IsNullOrWhiteSpace(PathToModFolderInput))
             {
                 MessageDialogWindow.Show("Enter a path to a folder containing mod files.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
 
             if (string.IsNullOrWhiteSpace(ModNameInput))
             {
                 MessageDialogWindow.Show("Enter a name for the mod", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
 
             if (!Directory.Exists(PathToModFolderInput))
             {
                 MessageDialogWindow.Show("Directory does not exist", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
 
             try
             {
                 ImportMod(PathToModFolderInput, ModNameInput, false, false);
-                Sys.Message(new WMessage($"Successfully imported {ModNameInput}!"));
+                Sys.Message(new WMessage($"Successfully imported {ModNameInput}!", true));
+                return true;
             }
             catch (Exception e)
             {
                 Logger.Error(e);
                 MessageDialogWindow.Show("Failed to import mod. The error has been logged", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
             }
         }
 
-        private void TryBatchImport()
+        private bool TryBatchImport()
         {
             if (string.IsNullOrWhiteSpace(PathToBatchFolderInput))
             {
                 MessageDialogWindow.Show("Enter a path to a folder containing .iro mod files and/or mod folders", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
 
             if (!Directory.Exists(PathToBatchFolderInput))
             {
                 MessageDialogWindow.Show("Directory does not exist", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
 
             try
@@ -417,12 +419,14 @@ namespace SeventhHeaven.ViewModels
                     modImportCount++;
                 }
 
-                Sys.Message(new WMessage($"Successfully imported {modImportCount} mod(s)!"));
+                Sys.Message(new WMessage($"Successfully imported {modImportCount} mod(s)!", true));
+                return true;
             }
             catch (Exception e)
             {
                 Logger.Error(e);
                 MessageDialogWindow.Show("Failed to import mod(s). The error has been logged", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
             }
         }
 

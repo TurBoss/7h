@@ -329,6 +329,7 @@ namespace SeventhHeavenUI
 
         private void menuPlayWithoutMods_Click(object sender, RoutedEventArgs e)
         {
+            ViewModel.LaunchAdditionalProgramsToRunPrior();
             MainWindowViewModel.LaunchFF7Exe();
         }
 
@@ -356,37 +357,5 @@ namespace SeventhHeavenUI
             }
         }
 
-        private void TabItem_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            System.Windows.Controls.Label tab = e.Source as System.Windows.Controls.Label;
-
-            if (tab == null)
-            {
-                return;
-            }
-
-            string myModsHint = "Right-click My Mods tab to open your Mod Library Folder";
-            string catalogHint = "Right-click Browse Catalog tab to open your Catalog settings";
-
-            // remember the status message so it can be set back after mouse leaves the TabItem Header
-            if (previousStatusMessage != myModsHint && previousStatusMessage != catalogHint)
-            {
-                previousStatusMessage = ViewModel.StatusMessage;
-            }
-            
-            if (tab.Content.ToString() == "My Mods")
-            {
-                ViewModel.StatusMessage = myModsHint;
-            }
-            else
-            {
-                ViewModel.StatusMessage = catalogHint;
-            }
-        }
-
-        private void TabItem_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            ViewModel.StatusMessage = previousStatusMessage;
-        }
     }
 }

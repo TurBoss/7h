@@ -498,17 +498,6 @@ namespace SeventhHeaven.ViewModels
             Sys.Settings.ProgramsToLaunchPrior = GetUpdatedProgramsToRun();
             Sys.Settings.ExtraFolders = ExtraFolderList.Distinct().ToList();
 
-            // ensure 'direct' and 'music' folders are always in ExtraFolders list
-            if (!Sys.Settings.ExtraFolders.Contains("direct", StringComparer.InvariantCultureIgnoreCase))
-            {
-                Sys.Settings.ExtraFolders.Add("direct");
-            }
-
-            if (!Sys.Settings.ExtraFolders.Contains("music", StringComparer.InvariantCultureIgnoreCase))
-            {
-                Sys.Settings.ExtraFolders.Add("music");
-            }
-
             Sys.Settings.FF7Exe = FF7ExePathInput;
             Sys.Settings.LibraryLocation = LibraryPathInput;
             Sys.Settings.MovieFolder = MoviesPathInput;

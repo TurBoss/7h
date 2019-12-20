@@ -1,6 +1,9 @@
-﻿using SeventhHeaven.Classes;
+﻿using Iros._7th.Workshop;
+using SeventhHeaven.Classes;
 using SeventhHeaven.ViewModels;
+using SeventhHeavenUI;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 
@@ -29,7 +32,31 @@ namespace SeventhHeaven.Windows
 
         private void btnOk_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.ImportModFromWindow();
+            Task<bool> t = ViewModel.ImportModFromWindowAsync();
+
+            t.ContinueWith((taskResult) =>
+            {
+                if (taskResult.IsFaulted)
+                {
+                    Sys.Message(new WMessage($"Failed to import - {taskResult.Exception.GetBaseException()?.Message}", true));
+                    return;
+                }
+
+                // close window on succesful import
+                if (taskResult.Result)
+                {
+                    CloseWindow();
+                }
+
+            });
+        }
+
+        private void CloseWindow()
+        {
+            App.Current.Dispatcher.Invoke(() => 
+            { 
+                this.Close();
+            });
         }
 
         private void btnBrowseIro_Click(object sender, RoutedEventArgs e)

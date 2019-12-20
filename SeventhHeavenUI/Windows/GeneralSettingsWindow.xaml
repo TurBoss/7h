@@ -90,7 +90,7 @@
                 <Button x:Name="btnTextures" Content="..." Padding="10,3,10,0" Click="btnTextures_Click" Grid.Row="2" Grid.Column="2" 
                         Margin="0,6,0,0"
                         VerticalAlignment="Top"
-                        ToolTip="Click to select where Textures are saved"/>
+                        ToolTip="Click to select where PNG Textures are loaded from"/>
 
 
                 <TextBlock Text="Library:" Margin="0,6,5,0" HorizontalAlignment="Right" Grid.Row="3"/>

@@ -1281,7 +1281,7 @@ They will be automatically turned off.";
         /// <summary>
         /// Starts the processes with the specified arguments that are set in <see cref="Sys.Settings.ProgramsToLaunchPrior"/>.
         /// </summary>
-        private void LaunchAdditionalProgramsToRunPrior()
+        internal void LaunchAdditionalProgramsToRunPrior()
         {
             // launch other processes set in settings
             foreach (ProgramLaunchInfo al in Sys.Settings.ProgramsToLaunchPrior.Where(s => !String.IsNullOrWhiteSpace(s.PathToProgram)))

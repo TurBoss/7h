@@ -143,9 +143,9 @@
                   Background="{DynamicResource SecondaryAppBackground}"
                   Grid.Row="1"
                   Margin="5,-7,3,1" Grid.ColumnSpan="2">
-            <Grid>
+            <Grid x:Name="gridOuterMod">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="1.5*"/>
+                    <RowDefinition Height="1.25*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
@@ -239,8 +239,8 @@
                 <Image Grid.Row="1"
                        Margin="3"
                        HorizontalAlignment="Stretch"
-                       VerticalAlignment="Stretch"
-                       Stretch="Fill"
+                       VerticalAlignment="Bottom"
+                       Stretch="Uniform"
                        RenderOptions.BitmapScalingMode="HighQuality"
                        gif:AnimationBehavior.AutoStart="True"
                        gif:AnimationBehavior.Loaded="Image_Loaded"
@@ -269,27 +269,27 @@
                     SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectionChanged="tabCtrlMain_SelectionChanged"
                     Margin="0,23,5,1">
-            <TabItem Padding="10,0,10,0" Header="My Mods" MouseRightButtonUp="MyModsTabItem_MouseRightButtonUp">
-                <!--<TabItem.Header>
-                    <Label Content="My Mods"
-                           PreviewMouseRightButtonUp="MyModsTabItem_MouseRightButtonUp"
-                           Padding="0"
-                           Foreground="{DynamicResource PrimaryControlForeground}" 
-                           MouseEnter="TabItem_MouseEnter" 
-                           MouseLeave="TabItem_MouseLeave"/>
-                </TabItem.Header>-->
+            <TabItem Padding="10,0,10,0" 
+                     
+                     MouseRightButtonUp="MyModsTabItem_MouseRightButtonUp">
+                <TabItem.Header>
+                    <TextBlock Text="My Mods"
+                               ToolTip="Right-click My Mods tab to open your Mod Library Folder"
+                               ToolTipService.InitialShowDelay="1500"
+                               PreviewMouseRightButtonUp="MyModsTabItem_MouseRightButtonUp"
+                               Padding="0"/>
+                </TabItem.Header>
                 
                 <ctrl:MyModsUserControl x:Name="ctrlMyMods"/>
             </TabItem>
-            <TabItem Header="Browse Catalog" MouseRightButtonUp="BrowseCatalogTabItem_MouseRightButtonUp">
-                <!--<TabItem.Header>
-                    <Label Content="Browse Catalog"
-                           PreviewMouseRightButtonUp="BrowseCatalogTabItem_MouseRightButtonUp"
-                           Padding="0"
-                           Foreground="{DynamicResource PrimaryControlForeground}" 
-                           MouseEnter="TabItem_MouseEnter" 
-                           MouseLeave="TabItem_MouseLeave"/>
-                </TabItem.Header>-->
+            <TabItem MouseRightButtonUp="BrowseCatalogTabItem_MouseRightButtonUp">
+                <TabItem.Header>
+                    <TextBlock Text="Browse Catalog"
+                               ToolTip="Right-click Browse Catalog tab to open your Catalog settings"
+                               ToolTipService.InitialShowDelay="1200"
+                               PreviewMouseRightButtonUp="BrowseCatalogTabItem_MouseRightButtonUp"
+                               Padding="0"/>
+                </TabItem.Header>
                 
                 <ctrl:CatalogUserControl x:Name="ctrlCatalog"/>
             </TabItem>

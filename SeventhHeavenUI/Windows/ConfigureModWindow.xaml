@@ -85,7 +85,7 @@
                      Margin="1"/>
         </GroupBox>
 
-        <GroupBox Header=" Preview "
+        <GroupBox Header=" Configure "
                   Background="{DynamicResource SecondaryAppBackground}"
                   Grid.Column="1"
                   Margin="3,2,5,5">
