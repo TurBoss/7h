@@ -184,14 +184,7 @@ namespace SeventhHeaven.UserControls
         internal void RecalculateColumnWidths(double listWidth)
         {
             double staticColumnWidth = 40 + 90 + 90 + 75; // sum of columns with static widths
-            double scrollBarWidth = 15;
-
-            var scrollBarVis = ScrollViewer.GetVerticalScrollBarVisibility(lstMods);
-
-            if (scrollBarVis == ScrollBarVisibility.Visible)
-            {
-                scrollBarWidth = 20;
-            }
+            double scrollBarWidth = 17;
 
             if (listWidth == 0)
             {

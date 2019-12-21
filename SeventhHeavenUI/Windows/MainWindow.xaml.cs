@@ -341,7 +341,7 @@ namespace SeventhHeavenUI
         private void MyModsTabItem_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
             // additional check the source of the click since this event can be raised when the content of the TabItem is clicked
-            if (e.Source is TabItem || e.Source is System.Windows.Controls.Label)
+            if (e.Source is TabItem || e.Source is System.Windows.Controls.TextBlock)
             {
                 Sys.OpenLibraryFolderInExplorer();
                 e.Handled = true;
@@ -350,7 +350,7 @@ namespace SeventhHeavenUI
 
         private void BrowseCatalogTabItem_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (e.Source is TabItem || e.Source is System.Windows.Controls.Label)
+            if (e.Source is TabItem || e.Source is System.Windows.Controls.TextBlock)
             {
                 ViewModel.ShowGeneralSettingsWindow();
                 e.Handled = true;
