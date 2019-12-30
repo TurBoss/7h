@@ -1,6 +1,7 @@
 ﻿using Iros._7th;
 using Iros._7th.Workshop;
 using SeventhHeaven.Classes;
+using SeventhHeaven.Classes.Themes;
 using SeventhHeavenUI;
 using SeventhHeavenUI.ViewModels;
 using System;
@@ -42,7 +43,7 @@ namespace SeventhHeaven.ViewModels
                 NotifyPropertyChanged();
             }
         }
-        
+
         public bool IsCustomThemeEnabled
         {
             get
@@ -69,15 +70,7 @@ namespace SeventhHeaven.ViewModels
         {
             get
             {
-                if (_themeDropdownItems == null)
-                    _themeDropdownItems = new List<string>() { "Dark Mode", "Light Mode", "Custom" };
-
-                return _themeDropdownItems;
-            }
-            set
-            {
-                _themeDropdownItems = value;
-                NotifyPropertyChanged();
+                return DropDownOptionEnums.Keys.ToList();
             }
         }
 
@@ -185,6 +178,20 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public Dictionary<string, AppTheme> DropDownOptionEnums
+        {
+            get
+            {
+                return new Dictionary<string, AppTheme>
+                {
+                    { "Dark Mode", AppTheme.DarkMode },
+                    { "Light Mode", AppTheme.LightMode },
+                    { "Classic 7H", AppTheme.Classic7H },
+                    { "Custom", AppTheme.Custom },
+                };
+            }
+        }
+
         public ThemeSettingsViewModel()
         {
             StatusText = "";
@@ -214,7 +221,7 @@ namespace SeventhHeaven.ViewModels
             // dark theme will be applied as the default when theme.xml file does not exist
             if (!File.Exists(pathToThemeFile))
             {
-                new ThemeSettingsViewModel(loadThemeXml: false).ApplyDarkTheme();
+                new ThemeSettingsViewModel(loadThemeXml: false).ApplyBuiltInTheme(AppTheme.DarkMode);
                 return;
             }
 
@@ -231,19 +238,19 @@ namespace SeventhHeaven.ViewModels
             {
                 ThemeSettings theme = Util.Deserialize<ThemeSettings>(themeFile);
                 ThemeSettingsViewModel settingsViewModel = new ThemeSettingsViewModel(loadThemeXml: false);
-                
-                if (theme.Name == "Dark Mode")
-                {
-                    settingsViewModel.ApplyDarkTheme();
-                    return;
-                }
-                else if (theme.Name == "Light Mode")
-                {
-                    settingsViewModel.ApplyLightTheme();
-                    return;
-                }
 
-                settingsViewModel.ApplyThemeFromFile(themeFile);
+                settingsViewModel.DropDownOptionEnums.TryGetValue(theme.Name, out AppTheme appTheme);
+
+                if (appTheme == AppTheme.Custom)
+                {
+                    settingsViewModel.ApplyThemeFromFile(themeFile);
+                    return;
+                }
+                else
+                {
+                    settingsViewModel.ApplyBuiltInTheme(appTheme);
+                    return;
+                }
             }
             catch (Exception e)
             {
@@ -320,65 +327,32 @@ namespace SeventhHeaven.ViewModels
 
         internal void ChangeTheme()
         {
-            if (SelectedThemeText == "Dark Mode")
-            {
-                ApplyDarkTheme();
+            DropDownOptionEnums.TryGetValue(SelectedThemeText, out AppTheme selectedTheme);
 
-            }
-            else if (SelectedThemeText == "Light Mode")
-            {
-                ApplyLightTheme();
-            }
-            else
+            if (selectedTheme == AppTheme.Custom)
             {
                 InitColorTextInput();
                 ApplyCustomTheme();
                 return;
             }
+            else
+            {
+                ApplyBuiltInTheme(selectedTheme);
+            }
         }
 
-        private void ApplyLightTheme()
+        internal void ApplyBuiltInTheme(AppTheme selectedTheme)
         {
-            Color? darkBg = App.Current.TryFindResource("LightBackgroundColor") as Color?;
-            Color? secondBg = App.Current.TryFindResource("MedLightBackgroundColor") as Color?;
-            Color? controlBg = App.Current.TryFindResource("LightControlBackground") as Color?;
-            Color? controlFg = App.Current.TryFindResource("LightControlForeground") as Color?;
-            Color? controlPressed = App.Current.TryFindResource("LightControlPressed") as Color?;
-            Color? controlMouseOver = App.Current.TryFindResource("LightControlMouseOver") as Color?;
-            Color? controlDisabledBg = App.Current.TryFindResource("LightControlDisabledBackground") as Color?;
-            Color? controlDisabledFg = App.Current.TryFindResource("LightControlDisabledForeground") as Color?;
+            ITheme theme = ThemeSettings.GetThemeFromEnum(selectedTheme);
 
-            AppBackgroundText = ColorToHexString(darkBg.Value);
-            SecondaryBackgroundText = ColorToHexString(secondBg.Value);
-            ControlBackgroundText = ColorToHexString(controlBg.Value);
-            ControlForegroundText = ColorToHexString(controlFg.Value);
-            ControlPressedText = ColorToHexString(controlPressed.Value);
-            ControlMouseOverText = ColorToHexString(controlMouseOver.Value);
-            ControlDisabledBgText = ColorToHexString(controlDisabledBg.Value);
-            ControlDisabledFgText = ColorToHexString(controlDisabledFg.Value);
-
-            ApplyCustomTheme();
-        }
-
-        private void ApplyDarkTheme()
-        {
-            Color? darkBg = App.Current.TryFindResource("DarkBackgroundColor") as Color?;
-            Color? secondBg = App.Current.TryFindResource("MedDarkBackgroundColor") as Color?;
-            Color? controlBg = App.Current.TryFindResource("DarkControlBackground") as Color?;
-            Color? controlFg = App.Current.TryFindResource("DarkControlForeground") as Color?;
-            Color? controlPressed = App.Current.TryFindResource("DarkControlPressed") as Color?;
-            Color? controlMouseOver = App.Current.TryFindResource("DarkControlMouseOver") as Color?;
-            Color? controlDisabledBg = App.Current.TryFindResource("DarkControlDisabledBackground") as Color?;
-            Color? controlDisabledFg = App.Current.TryFindResource("DarkControlDisabledForeground") as Color?;
-
-            AppBackgroundText = ColorToHexString(darkBg.Value);
-            SecondaryBackgroundText = ColorToHexString(secondBg.Value);
-            ControlBackgroundText = ColorToHexString(controlBg.Value);
-            ControlForegroundText = ColorToHexString(controlFg.Value);
-            ControlPressedText = ColorToHexString(controlPressed.Value);
-            ControlMouseOverText = ColorToHexString(controlMouseOver.Value);
-            ControlDisabledBgText = ColorToHexString(controlDisabledBg.Value);
-            ControlDisabledFgText = ColorToHexString(controlDisabledFg.Value);
+            AppBackgroundText = theme.PrimaryAppBackground;
+            SecondaryBackgroundText = theme.SecondaryAppBackground;
+            ControlBackgroundText = theme.PrimaryControlBackground;
+            ControlForegroundText = theme.PrimaryControlForeground;
+            ControlPressedText = theme.PrimaryControlPressed;
+            ControlMouseOverText = theme.PrimaryControlMouseOver;
+            ControlDisabledBgText = theme.PrimaryControlDisabledBackground;
+            ControlDisabledFgText = theme.PrimaryControlDisabledForeground;
 
             ApplyCustomTheme();
         }
@@ -486,17 +460,12 @@ namespace SeventhHeaven.ViewModels
                 return;
             }
 
-            string hexValue = ColorToHexString(newValue.Value);
+            string hexValue = ThemeSettings.ColorToHexString(newValue.Value);
 
             PropertyInfo propInfo = typeof(ThemeSettingsViewModel).GetProperty(propertyName);
             propInfo.SetValue(this, hexValue);
 
             ApplyCustomTheme();
-        }
-
-        public static string ColorToHexString(Color color)
-        {
-            return string.Format("#{0:X2}{1:X2}{2:X2}{3:X2}", color.A, color.R, color.G, color.B);
         }
     }
 }

@@ -100,7 +100,11 @@
     <Compile Include="Classes\FileDialogHelper.cs" />
     <Compile Include="Classes\OpenFolderDialog.cs" />
     <Compile Include="Classes\ReloadListOption.cs" />
-    <Compile Include="Classes\ThemeSettings.cs" />
+    <Compile Include="Classes\Themes\Classic7HTheme.cs" />
+    <Compile Include="Classes\Themes\LightTheme.cs" />
+    <Compile Include="Classes\Themes\DarkTheme.cs" />
+    <Compile Include="Classes\Themes\ITheme.cs" />
+    <Compile Include="Classes\Themes\ThemeSettings.cs" />
     <Compile Include="UserControls\CatalogUserControl.xaml.cs">
       <DependentUpon>CatalogUserControl.xaml</DependentUpon>
     </Compile>

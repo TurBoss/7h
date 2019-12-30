@@ -31,6 +31,19 @@
     <Color x:Key="LightControlDisabledBackground" R="31" G="31" B="31" A="255"/>
     <Color x:Key="LightControlDisabledForeground" R="121" G="121" B="121" A="255"/>
 
+    
+    <!-- COLORS - Classic 7H Theme -->
+    <Color x:Key="ClassicBackgroundColor">#FFF0F0F0</Color>
+    <Color x:Key="ClassicSecondaryBackgroundColor">#FFFFFFFF</Color>
+
+    <Color x:Key="ClassicControlBackground">#FFC0C0FF</Color>
+    <Color x:Key="ClassicControlForeground">#FF000000</Color>
+    <Color x:Key="ClassicControlPressed">#FF90EE90</Color>
+    <Color x:Key="ClassicControlMouseOver">#FFACACE5</Color>
+
+    <Color x:Key="ClassicControlDisabledBackground">#FF696969</Color>
+    <Color x:Key="ClassicControlDisabledForeground">#FFCADCD3</Color>
+
 
 
     <!-- APP BRUSHES - These are used in all the below styles to have a consistent color theme across all controls. The color of these brushes can be changed in the "Color Theme" settings of the app -->

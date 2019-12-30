@@ -98,7 +98,7 @@
 
 
         <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5,0,0" Grid.ColumnSpan="2">
-            <cls:ButtonWithImage x:Name="btnPlay" Content="Play" Margin="5,0,5,0" Click="btnPlay_Click" Padding="0,8,10,0" TemplateSource="{StaticResource iconPlay}"/>
+            <cls:ButtonWithImage x:Name="btnPlay" Content="Play" Margin="5,0,0,0" Click="btnPlay_Click" Padding="0,8,10,0" TemplateSource="{StaticResource iconPlay}"/>
             <ToggleButton x:Name="btnPlayOptions" Style="{StaticResource DownArrowToggleButton}" Margin="-3,0,0,0" Click="btnPlayOptions_Click" ContextMenuService.Placement="Bottom">
                 <ToggleButton.ContextMenu>
                     <ContextMenu x:Name="menuPlayOptions" Closed="menuPlayOptions_Closed">
@@ -111,7 +111,7 @@
             </ToggleButton>
 
 
-            <cls:ButtonWithImage x:Name="btnSettings" Content="Settings" Margin="5,0,5,0" Style="{StaticResource ButtonWithImageAndDownArrow}" TemplateSource="{StaticResource iconSettings}" ContextMenuService.Placement="Bottom" Click="btnSettings_Click">
+            <cls:ButtonWithImage x:Name="btnSettings" Content="Settings" Margin="0,0,0,0" Style="{StaticResource ButtonWithImageAndDownArrow}" TemplateSource="{StaticResource iconSettings}" ContextMenuService.Placement="Bottom" Click="btnSettings_Click">
                 <cls:ButtonWithImage.ContextMenu>
                     <ContextMenu x:Name="menuSettings" Closed="menuSettings_Closed">
                         <MenuItem x:Name="menuItemGeneralSettings" Header="General Settings" Click="menuItemGeneralSettings_Click"/>
@@ -125,7 +125,7 @@
                 </cls:ButtonWithImage.ContextMenu>
             </cls:ButtonWithImage>
 
-            <cls:ButtonWithImage x:Name="btnTools" Content="Tools" Margin="5,0,5,0" Style="{StaticResource ButtonWithImageAndDownArrow}" TemplateSource="{StaticResource iconTools}" ContextMenuService.Placement="Bottom" Click="btnTools_Click">
+            <cls:ButtonWithImage x:Name="btnTools" Content="Tools" Margin="0,0,0,0" Style="{StaticResource ButtonWithImageAndDownArrow}" TemplateSource="{StaticResource iconTools}" ContextMenuService.Placement="Bottom" Click="btnTools_Click">
                 <cls:ButtonWithImage.ContextMenu>
                     <ContextMenu x:Name="menuTools" PlacementTarget="{Binding ElementName=btnTools}" Closed="menuTools_Closed">
                         <MenuItem x:Name="menuItemIroCreation" Header="IRO Tools..." Click="menuItemIroCreation_Click"/>
@@ -135,7 +135,7 @@
                 </cls:ButtonWithImage.ContextMenu>
             </cls:ButtonWithImage>
 
-            <cls:ButtonWithImage x:Name="btnHelp" Content="Help" TemplateSource="{StaticResource iconHelp}" Margin="5,0,5,0" Padding="0,8,10,0" Click="btnHelp_Click"/>
+            <cls:ButtonWithImage x:Name="btnHelp" Content="Help" TemplateSource="{StaticResource iconHelp}" Margin="0,0,5,0" Padding="0,8,10,0" Click="btnHelp_Click"/>
 
         </WrapPanel>
 
