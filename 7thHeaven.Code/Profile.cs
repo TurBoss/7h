@@ -109,9 +109,7 @@ namespace Iros._7th.Workshop {
                 location,
                 modinfo.Conditionals.Where(f => IsActive(f.ActiveWhen)),
                 modinfo.ModFolders.Where(f => IsActive(f.ActiveWhen)).Select(f => f.Folder),
-                modinfo.LoadLibraries,
-                modinfo.LoadAssemblies,
-                modinfo.LoadPlugins
+                modinfo
                 );
         }
     }

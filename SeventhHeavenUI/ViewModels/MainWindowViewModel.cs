@@ -84,6 +84,8 @@ They will be automatically turned off.";
         private static Dictionary<string, _7thWrapperLib.ModInfo> _infoCache = new Dictionary<string, _7thWrapperLib.ModInfo>(StringComparer.InvariantCultureIgnoreCase);
         private Dictionary<string, Process> _alsoLaunchProcesses = new Dictionary<string, Process>(StringComparer.InvariantCultureIgnoreCase);
         private Dictionary<string, _7HPlugin> _plugins = new Dictionary<string, _7HPlugin>(StringComparer.InvariantCultureIgnoreCase);
+        private Dictionary<_7thWrapperLib.ProgramInfo, Process> _sideLoadProcesses = new Dictionary<_7thWrapperLib.ProgramInfo, Process>();
+
         private Visibility _loadingGifVisibility;
         private bool _isFlashingStatus;
 
@@ -1226,20 +1228,20 @@ They will be automatically turned off.";
 
                 EasyHook.RemoteHooking.CreateAndInject(Sys.Settings.FF7Exe, String.Empty, 0, lib, null, out pid, parms);
 
-                var proc = Process.GetProcessById(pid);
-                if (proc != null)
+                var ff7Proc = Process.GetProcessById(pid);
+                if (ff7Proc != null)
                 {
-                    proc.EnableRaisingEvents = true;
+                    ff7Proc.EnableRaisingEvents = true;
                     if (debug)
                     {
-                        proc.Exited += (o, e) =>
+                        ff7Proc.Exited += (o, e) =>
                         {
                             Process.Start(runtimeProfiles.LogFile);
                         };
                     }
                 }
 
-                /// load plugins for mods
+                /// load plugins and sideload other programs for mods
                 foreach (var mod in runtimeProfiles.Mods)
                 {
                     if (mod.LoadPlugins.Any())
@@ -1260,13 +1262,17 @@ They will be automatically turned off.";
                             plugin.Start(mod);
                         }
                     }
+
+                    LaunchProgramsForMod(mod);
                 }
 
-                // wire up process to stop plugins when proc has exited
-                proc.Exited += (o, e) =>
+                // wire up process to stop plugins and side processes when proc has exited
+                ff7Proc.Exited += (o, e) =>
                 {
                     foreach (var plugin in _plugins.Values)
                         plugin.Stop();
+
+                    StopAllSideProcessesForMods();
                 };
             }
             catch (Exception e)
@@ -1278,6 +1284,63 @@ They will be automatically turned off.";
             }
         }
 
+        /// <summary>
+        /// Kills any currently running process found in <see cref="_sideLoadProcesses"/>
+        /// </summary>
+        private void StopAllSideProcessesForMods()
+        {
+            foreach (var valuePair in _sideLoadProcesses.ToList())
+            {
+                _7thWrapperLib.ProgramInfo info = valuePair.Key;
+                Process sideProc = valuePair.Value;
+                string procName = sideProc.ProcessName;
+
+                if (!sideProc.HasExited)
+                {
+                    sideProc.Kill();
+                }
+
+                // Kill all instances with same process name if necessary
+                if (info.CloseAllInstances)
+                {
+                    foreach (Process otherProc in Process.GetProcessesByName(procName))
+                    {
+                        if (!otherProc.HasExited)
+                            otherProc.Kill();
+                    }
+                }
+            }
+        }
+
+        internal void LaunchProgramsForMod(_7thWrapperLib.RuntimeMod mod)
+        {
+            if (!mod.LoadPrograms.Any())
+            {
+                return;
+            }
+
+            mod.Startup();
+
+            foreach (var program in mod.GetLoadPrograms())
+            {
+                if (!_sideLoadProcesses.ContainsKey(program))
+                {
+                    ProcessStartInfo psi = new ProcessStartInfo()
+                    {
+                        WorkingDirectory = Path.GetDirectoryName(program.PathToProgram),
+                        FileName = program.PathToProgram,
+                        Arguments = program.ProgramArgs,
+                        UseShellExecute = false
+                    };
+                    Process aproc = Process.Start(psi);
+
+                    aproc.EnableRaisingEvents = true;
+                    aproc.Exited += (_o, _e) => _sideLoadProcesses.Remove(program);
+
+                    _sideLoadProcesses.Add(program, aproc);
+                }
+            }
+        }
         /// <summary>
         /// Starts the processes with the specified arguments that are set in <see cref="Sys.Settings.ProgramsToLaunchPrior"/>.
         /// </summary>
