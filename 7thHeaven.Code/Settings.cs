@@ -58,16 +58,16 @@ namespace Iros._7th.Workshop {
 
         public IEnumerable<string> VerifySettings() {
             bool validexe = System.IO.File.Exists(FF7Exe);
-            if (!validexe) yield return "FF7Exe " + FF7Exe + " not found";
+            if (!validexe) yield return "FF7 Exe: " + FF7Exe + " not found";
             foreach (var al in ProgramsToLaunchPrior.Where(s => !String.IsNullOrWhiteSpace(s.PathToProgram)))
-                if (!System.IO.File.Exists(al.PathToProgram)) yield return "AlsoLaunch " + al.PathToProgram + " not found";
-            if (!System.IO.Directory.Exists(MovieFolder)) yield return "MovieFolder " + MovieFolder + " not found";
-            if (!System.IO.Directory.Exists(AaliFolder)) yield return "Aali Modpath " + AaliFolder + " not found";
+                if (!System.IO.File.Exists(al.PathToProgram)) yield return "AlsoLaunch: " + al.PathToProgram + " not found";
+            if (!System.IO.Directory.Exists(MovieFolder)) yield return "Movie Folder: " + MovieFolder + " not found";
+            if (!System.IO.Directory.Exists(AaliFolder)) yield return "Texture Path: " + AaliFolder + " not found";
             if (validexe) {
                 string ff7folder = System.IO.Path.GetDirectoryName(FF7Exe);
                 foreach (string extra in ExtraFolders.Where(s => !String.IsNullOrWhiteSpace(s))) {
                     string path = System.IO.Path.Combine(ff7folder, extra);
-                    if (!System.IO.Directory.Exists(path)) yield return "Extra folder " + path + " not found";
+                    if (!System.IO.Directory.Exists(path)) yield return "Extra Folder: " + path + " not found";
                 }
             }
         }

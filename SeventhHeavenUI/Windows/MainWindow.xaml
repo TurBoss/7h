@@ -64,12 +64,7 @@
                         </Border>
 
                         <ControlTemplate.Triggers>
-                            <Trigger SourceName="Border" Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource SecondaryAppBackground}"/>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
-                            </Trigger>
+
                             <DataTrigger Binding="{Binding FilterType, FallbackValue='0'}" Value="3">
                                 <Setter Property="ContentTemplate" Value="{StaticResource FilterItemSeparatorTemplate}"/>
                                 <Setter Property="IsEnabled" Value="False"/>

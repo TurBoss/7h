@@ -184,23 +184,25 @@ namespace SeventhHeavenUI.ViewModels
 
         private static bool DoesModMatchSearchCriteria(string searchText, IEnumerable<FilterItemViewModel> categories, IEnumerable<FilterItemViewModel> tags, Mod mod)
         {
-            bool includeMod = false;
+            bool isSearchTextRelevant = !string.IsNullOrWhiteSpace(searchText) && mod.SearchRelevance(searchText) > 0;
 
             if (categories.Count() > 0 && tags.Count() > 0)
             {
-                includeMod = FilterItemViewModel.FilterByCategory(mod, categories) || FilterItemViewModel.FilterByTags(mod, tags);
+                return FilterItemViewModel.FilterByCategory(mod, categories) || FilterItemViewModel.FilterByTags(mod, tags) || isSearchTextRelevant;
             }
             else if (categories.Count() > 0)
             {
-                includeMod = FilterItemViewModel.FilterByCategory(mod, categories);
+                return FilterItemViewModel.FilterByCategory(mod, categories) || isSearchTextRelevant;
+            }
+            else if (tags.Count() > 0)
+            {
+                return FilterItemViewModel.FilterByTags(mod, tags) || isSearchTextRelevant;
             }
             else
             {
-                includeMod = FilterItemViewModel.FilterByTags(mod, tags);
+                return isSearchTextRelevant || string.IsNullOrWhiteSpace(searchText); // returns all if search text is empty and no category/tags are checked
             }
 
-            includeMod = includeMod && (string.IsNullOrEmpty(searchText) || mod.SearchRelevance(searchText) > 0);
-            return includeMod;
         }
 
         internal void ClearModList()

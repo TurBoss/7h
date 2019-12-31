@@ -1726,7 +1726,7 @@ They will be automatically turned off.";
 
                 foreach (FilterItemViewModel item in newList)
                 {
-                    if (oldItems.Any(c => c.Name == item.Name && c.IsChecked && c.FilterType != FilterItemType.Separator))
+                    if (oldItems.Any(c => c.Name == item.Name && c.IsChecked && c.FilterType == item.FilterType))
                     {
                         item.IsChecked = true;
                     }

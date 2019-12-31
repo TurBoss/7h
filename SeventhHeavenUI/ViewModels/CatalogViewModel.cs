@@ -155,22 +155,26 @@ It may not work properly unless you find and install the requirements.";
             {
                 results = Sys.Catalog.Mods.Where(m =>
                 {
+                    bool isRelevant = m.SearchRelevance(searchText) > 0;
+
                     if (categories.Count() > 0 && tags.Count() > 0)
                     {
-                        return FilterItemViewModel.FilterByCategory(m, categories) || FilterItemViewModel.FilterByTags(m, tags);
+                        return FilterItemViewModel.FilterByCategory(m, categories) || FilterItemViewModel.FilterByTags(m, tags) || isRelevant;
                     }
                     else if (categories.Count() > 0)
                     {
-                        return FilterItemViewModel.FilterByCategory(m, categories);
+                        return FilterItemViewModel.FilterByCategory(m, categories) || isRelevant;
+                    }
+                    else if (tags.Count() > 0)
+                    {
+                        return FilterItemViewModel.FilterByTags(m, tags) || isRelevant;
                     }
                     else
                     {
-                        return FilterItemViewModel.FilterByTags(m, tags);
+                        return isRelevant;
                     }
-                }).Select(m => new { Mod = m, Relevance = m.SearchRelevance(searchText) })
-                  .Where(a => a.Relevance > 0)
-                  .OrderByDescending(a => a.Relevance)
-                  .Select(a => a.Mod)
+                }).OrderByDescending(a => a.Category)
+                  .ThenByDescending(a => a.Name)
                   .ToList();
             }
 
