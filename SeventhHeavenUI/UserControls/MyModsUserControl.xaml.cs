@@ -3,6 +3,7 @@ using SeventhHeaven.Windows;
 using SeventhHeavenUI.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace SeventhHeaven.UserControls
 {
@@ -183,15 +184,26 @@ namespace SeventhHeaven.UserControls
 
         internal void RecalculateColumnWidths(double listWidth)
         {
-            double staticColumnWidth = 40 + 90 + 90 + 75; // sum of columns with static widths
-            double scrollBarWidth = 17;
+            double staticColumnWidth = 40 + 90 + 100 + 75; // sum of columns with static widths
+            double padding = 6;
 
             if (listWidth == 0)
             {
                 return; // ActualWidth could be zero if list has not been rendered yet
             }
 
-            double remainingWidth = listWidth - staticColumnWidth - scrollBarWidth;
+
+            // account for the scroll bar being visible and add extra padding
+            ScrollViewer sv = FindVisualChild<ScrollViewer>(lstMods);
+            Visibility? scrollVis = sv?.ComputedVerticalScrollBarVisibility;
+
+            if (scrollVis.GetValueOrDefault(Visibility.Collapsed) == Visibility.Visible)
+            {
+                padding = 24;
+            }
+
+
+            double remainingWidth = listWidth - staticColumnWidth - padding;
 
             double nameWidth = (0.66) * remainingWidth; // Name takes 66% of remaining width
             double authorWidth = (0.33) * remainingWidth; // Author takes up 33% of remaining width
@@ -228,6 +240,90 @@ namespace SeventhHeaven.UserControls
             {
                 ViewModel.ToggleActivateMod((lstMods.SelectedItem as InstalledModViewModel).InstallInfo.ModID);
             }
+        }
+
+        private childItem FindVisualChild<childItem>(DependencyObject obj)
+            where childItem : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is childItem)
+                    return (childItem)child;
+                else
+                {
+                    childItem childOfChild = FindVisualChild<childItem>(child);
+                    if (childOfChild != null)
+                        return childOfChild;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Initiates the Drag/Drop re-ordering of active mods
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void lstMods_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
+            {
+                if (e.OriginalSource is CheckBox)
+                {
+                    return; // do not do drag/drop since user is clicking on checkbox to activate mod
+                }
+
+                if ((e.OriginalSource as FrameworkElement).DataContext is InstalledModViewModel)
+                {
+                    ListViewItem lbi = FindVisualParent<ListViewItem>(((DependencyObject)e.OriginalSource));
+
+                    if (lbi != null)
+                    {
+                        DragDrop.DoDragDrop(lbi, lbi.DataContext, DragDropEffects.Move);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Re-orders active mods after Drag/Drop has been "dropped"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void lstMods_Drop(object sender, DragEventArgs e)
+        {
+            try
+            {
+                InstalledModViewModel droppedData = e.Data.GetData(typeof(InstalledModViewModel)) as InstalledModViewModel;
+                InstalledModViewModel target = ((FrameworkElement)e.OriginalSource).DataContext as InstalledModViewModel;
+
+                int removedIdx = lstMods.Items.IndexOf(droppedData);
+                int targetIdx = lstMods.Items.IndexOf(target);
+
+                int delta = targetIdx - removedIdx;
+
+                ViewModel.ReorderProfileItem(droppedData, delta);
+            }
+            catch (System.Exception ex)
+            {
+                Logger.Warn("Failed to drag/drop mods");
+                Logger.Error(ex);
+            }
+        }
+
+        private T FindVisualParent<T>(DependencyObject child)
+            where T : DependencyObject
+        {
+            var parentObject = VisualTreeHelper.GetParent(child);
+            if (parentObject == null)
+                return null;
+
+            T parent = parentObject as T;
+            if (parent != null)
+                return parent;
+
+            return FindVisualParent<T>(parentObject);
         }
     }
 }

@@ -263,7 +263,7 @@
                     Grid.Column="2"
                     SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectionChanged="tabCtrlMain_SelectionChanged"
-                    Margin="0,23,5,1">
+                    Margin="0,23,5,-2">
             <TabItem Padding="10,0,10,0" 
                      
                      MouseRightButtonUp="MyModsTabItem_MouseRightButtonUp">

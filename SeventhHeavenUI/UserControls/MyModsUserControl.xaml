@@ -31,6 +31,9 @@
         <ListView x:Name="lstMods" 
                   ItemsSource="{Binding ModList}"
                   SelectionChanged="lstMods_SelectionChanged"
+                  PreviewMouseMove="lstMods_PreviewMouseMove"
+                  AllowDrop="True"
+                  Drop="lstMods_Drop"
                   ScrollViewer.HorizontalScrollBarVisibility="Auto"
                   ScrollViewer.CanContentScroll="False"
                   VirtualizingStackPanel.IsVirtualizing="False">

@@ -711,14 +711,20 @@ namespace _7thWrapperLib
             foreach (XmlNode LP in doc.SelectNodes("/ModInfo/LoadPlugin"))
                 LoadPlugins.Add(LP.InnerText);
 
-            foreach (XmlNode pi in doc.SelectSingleNode("/ModInfo/LoadPrograms").ChildNodes)
-            {
-                string programPath = pi.SelectSingleNode("PathToProgram").NodeText();
-                string programArgs = pi.SelectSingleNode("ProgramArgs").NodeText();
-                bool closeAll = pi.SelectSingleNode("CloseAllInstances").NodeText().Equals("true", StringComparison.InvariantCultureIgnoreCase);
+            XmlNode loadPrograms = doc.SelectSingleNode("/ModInfo/LoadPrograms");
 
-                LoadPrograms.Add(new ProgramInfo() { PathToProgram = programPath, ProgramArgs = programArgs, CloseAllInstances = closeAll });
+            if (loadPrograms != null)
+            {
+                foreach (XmlNode pi in loadPrograms.ChildNodes)
+                {
+                    string programPath = pi.SelectSingleNode("PathToProgram").NodeText();
+                    string programArgs = pi.SelectSingleNode("ProgramArgs").NodeText();
+                    bool closeAll = pi.SelectSingleNode("CloseAllInstances").NodeText().Equals("true", StringComparison.InvariantCultureIgnoreCase);
+
+                    LoadPrograms.Add(new ProgramInfo() { PathToProgram = programPath, ProgramArgs = programArgs, CloseAllInstances = closeAll });
+                }
             }
+
 
             OrderBefore = doc.SelectNodes("/ModInfo/OrderConstraints/Before")
                 .Cast<XmlNode>()

@@ -32,6 +32,7 @@
         </Grid.ColumnDefinitions>
 
         <ListView x:Name="lstCatalogMods" ItemsSource="{Binding CatalogModList}" SelectionChanged="lstCatalogMods_SelectionChanged"
+                  ScrollViewer.HorizontalScrollBarVisibility="Auto"
                   ScrollViewer.CanContentScroll="False"
                   VirtualizingStackPanel.IsVirtualizing="False">
             <ListView.View>

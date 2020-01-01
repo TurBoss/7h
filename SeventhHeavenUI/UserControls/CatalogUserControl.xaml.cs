@@ -1,8 +1,10 @@
 ﻿using Iros._7th.Workshop;
 using SeventhHeavenUI.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace SeventhHeaven.UserControls
 {
@@ -69,22 +71,25 @@ namespace SeventhHeaven.UserControls
 
         internal void RecalculateColumnWidths(double listWidth)
         {
-            double scrollBarWidth = 15;
-            double staticColumnWidth = 40 + 90 + 90 + 60; // sum of columns with static widths
+            double padding = 6;
+            double staticColumnWidth = 40 + 90 + 100 + 60; // sum of columns with static widths
 
             if (listWidth == 0)
             {
                 return; // ActualWidth could be zero if list has not been rendered yet
             }
 
-            var scrollBarVis = ScrollViewer.GetVerticalScrollBarVisibility(lstCatalogMods);
+            // account for the scroll bar being visible and add extra padding
+            ScrollViewer sv = FindVisualChild<ScrollViewer>(lstCatalogMods);
+            Visibility? scrollVis = sv?.ComputedVerticalScrollBarVisibility;
 
-            if (scrollBarVis == ScrollBarVisibility.Visible)
+            if (scrollVis.GetValueOrDefault() == Visibility.Visible)
             {
-                scrollBarWidth = 15;
+                padding = 24;
             }
 
-            double remainingWidth = listWidth - staticColumnWidth - scrollBarWidth;
+
+            double remainingWidth = listWidth - staticColumnWidth - padding;
 
             double nameWidth = (0.66) * remainingWidth; // Name takes 66% of remaining width
             double authorWidth = (0.33) * remainingWidth; // Author takes up 33% of remaining width
@@ -113,6 +118,24 @@ namespace SeventhHeaven.UserControls
         internal void RecalculateColumnWidths()
         {
             RecalculateColumnWidths(lstCatalogMods.ActualWidth);
+        }
+
+        private childItem FindVisualChild<childItem>(DependencyObject obj)
+            where childItem : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is childItem)
+                    return (childItem)child;
+                else
+                {
+                    childItem childOfChild = FindVisualChild<childItem>(child);
+                    if (childOfChild != null)
+                        return childOfChild;
+                }
+            }
+            return null;
         }
     }
 }
