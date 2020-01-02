@@ -331,6 +331,16 @@ It may not work properly unless you find and install the requirements.";
                                 {
                                     Catalog c = Util.Deserialize<Catalog>(path);
 
+                                    // set the catalog name of where the mod came from for filtering later
+                                    string sourceCatalogName = sub.Name;
+                                    if (string.IsNullOrWhiteSpace(sourceCatalogName))
+                                    {
+                                        sourceCatalogName = c.Name;
+                                    }
+
+                                    c.Mods.ForEach(m => m.SourceCatalogName = sourceCatalogName);
+
+
                                     lock (Sys.CatalogLock) // put a lock on the Catalog so multiple threads can only merge one at a time
                                     {
                                         Sys.Catalog = Catalog.Merge(Sys.Catalog, c, out pingIDs);

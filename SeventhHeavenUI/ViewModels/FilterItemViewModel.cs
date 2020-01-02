@@ -92,7 +92,11 @@ namespace SeventhHeavenUI.ViewModels
             if (tags == null)
                 tags = new List<FilterItemViewModel>();
 
-            return tags.Count() == 0 || tags.Any(t => mod.Tags.Contains(t.Name, StringComparer.CurrentCultureIgnoreCase));
+            if (tags.Count() == 0)
+                return true;
+
+            // Check that the tag exists in the mods list of Tags or it matches the source catalog name (the catalog name is treated as a Tag)
+            return tags.Any(t => t.Name.Equals(mod.SourceCatalogName, StringComparison.InvariantCultureIgnoreCase) ||  mod.Tags.Contains(t.Name, StringComparer.CurrentCultureIgnoreCase));
         }
 
         /// <summary>

@@ -75,6 +75,8 @@ namespace Iros._7th.Workshop
 
         public string Category { get; set; }
 
+        public string SourceCatalogName { get; set; }
+
         public List<string> Tags { get; set; }
         [System.Xml.Serialization.XmlElement("Patch")]
         public List<ModPatch> Patches { get; set; }

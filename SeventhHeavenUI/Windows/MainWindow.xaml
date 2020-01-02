@@ -292,6 +292,7 @@
 
         <TextBox x:Name="txtSearch"
                  Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 TextChanged="txtSearch_TextChanged"
                  KeyDown="txtSearch_KeyDown"
                  Grid.Column="2"
                  HorizontalAlignment="Right"
