@@ -159,11 +159,53 @@ namespace SeventhHeavenUI.ViewModels
                 return;
             }
 
+            SetPreviousSortOrder(allMods);
+
             ClearModList();
 
             lock (listLock)
             {
-                ModList = new ObservableCollection<InstalledModViewModel>(allMods);
+                if (allMods.Any(m => m.SortOrder != InstalledModViewModel.defaultSortOrder))
+                {
+                    ModList = new ObservableCollection<InstalledModViewModel>(allMods.OrderBy(m => m.SortOrder));
+                }
+                else
+                {
+                    ModList = new ObservableCollection<InstalledModViewModel>(allMods);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets sort order for <see cref="ModList"/> and applies the same sort order to <paramref name="allMods"/> based on the Mod ID.
+        /// </summary>
+        private void SetPreviousSortOrder(List<InstalledModViewModel> allMods)
+        {
+            Dictionary<Guid, int> modRowIndexes = new Dictionary<Guid, int>();
+            int rowIdx = 0;
+
+            lock (listLock)
+            {
+                foreach (var mod in ModList.ToList())
+                {
+                    if (!modRowIndexes.ContainsKey(mod.InstallInfo.ModID))
+                    {
+                        modRowIndexes.Add(mod.InstallInfo.ModID, rowIdx);
+                    }
+
+                    rowIdx++;
+                }
+            }
+
+            if (modRowIndexes.Count > 0)
+            {
+                foreach (var mod in allMods)
+                {
+                    if (modRowIndexes.TryGetValue(mod.InstallInfo.ModID, out int expectedRowIdx))
+                    {
+                        mod.SortOrder = expectedRowIdx;
+                    }
+                }
             }
         }
 
@@ -221,78 +263,6 @@ namespace SeventhHeavenUI.ViewModels
         private void ActiveMod_ActivationChanged(object sender, InstalledModViewModel selected)
         {
             ToggleActivateMod(selected.InstallInfo.ModID);
-        }
-
-        /// <summary>
-        /// Loads active mods into <see cref="ModList"/> from <see cref="Sys.ActiveProfile"/>
-        /// </summary>
-        /// <param name="clearList"> removes any active mods in <see cref="ModList"/> before reloading </param>
-        internal void ReloadActiveMods(bool clearList, Guid? modToSelect = null)
-        {
-            Sys.ActiveProfile.Items.RemoveAll(i => Sys.Library.GetItem(i.ModID) == null);
-
-            if (clearList)
-            {
-                lock (listLock)
-                {
-                    for (int i = ModList.Count-1; i >= 0; i--)
-                    {
-                        if (ModList[i].IsActive)
-                        {
-                            ModList.RemoveAt(i);
-                        }
-                    }
-                    //ModList.RemoveAll(m => m.IsActive);
-                }
-            }
-
-            List<InstalledModViewModel> activeMods = new List<InstalledModViewModel>();
-
-            foreach (ProfileItem item in Sys.ActiveProfile.Items.ToList())
-            {
-                InstalledItem mod = Sys.Library.GetItem(item.ModID);
-
-                if (mod != null)
-                {
-                    activeMods.Add(new InstalledModViewModel(mod, item));
-                }
-            }
-
-            lock (listLock)
-            {
-                foreach (var item in activeMods)
-                {
-                    ModList.Add(item);
-                }
-            }
-
-            if (modToSelect != null)
-            {
-                lock (listLock)
-                {
-                    var found = ModList.FirstOrDefault(m => m.InstallInfo.ModID == modToSelect);
-
-                    if (found != null)
-                    {
-                        int index = ModList.IndexOf(found);
-
-                        if (index >= 0)
-                        {
-                            ModList[index].IsSelected = true;
-                        }
-                    }
-                }
-            }
-
-            NotifyPropertyChanged(nameof(ModList));
-        }
-
-        internal void ReloadActiveModsFromUIThread(bool clearList, Guid? modToSelect = null)
-        {
-            App.Current.Dispatcher.Invoke(() =>
-            {
-                ReloadActiveMods(clearList, modToSelect);
-            });
         }
 
         internal void ShowImportModWindow()
@@ -444,13 +414,15 @@ namespace SeventhHeavenUI.ViewModels
                 foreach (InstalledItem req in pulledIn)
                 {
                     DoActivate(req.ModID, reloadList);
-                    Sys.Ping(req.ModID);
+                    if (reloadList) 
+                        Sys.Ping(req.ModID);
                 }
 
                 foreach (ProfileItem pi in remove)
                 {
                     DoDeactivate(pi, reloadList);
-                    Sys.Ping(pi.ModID);
+                    if (reloadList) 
+                        Sys.Ping(pi.ModID);
                 }
 
                 MainWindowViewModel.SanityCheckSettings();
@@ -460,7 +432,8 @@ namespace SeventhHeavenUI.ViewModels
                 DoDeactivate(item, reloadList);
             }
 
-            Sys.Ping(modID);
+            if (reloadList) 
+                Sys.Ping(modID);
         }
 
         private void DoDeactivate(ProfileItem item, bool reloadList = true)
@@ -482,7 +455,7 @@ namespace SeventhHeavenUI.ViewModels
 
             if (reloadList)
             {
-                ReloadActiveModsFromUIThread(true);
+                ReloadModListFromUIThread(modID);
             }
         }
 
@@ -527,64 +500,64 @@ namespace SeventhHeavenUI.ViewModels
         /// <param name="change"></param>
         public void ReorderProfileItem(InstalledModViewModel mod, int change)
         {
-            if (!mod.IsActive)
-            {
-                return;
-            }
-
-            int index = Sys.ActiveProfile.Items.IndexOf(mod.ActiveModInfo);
+            int index = ModList.IndexOf(mod);
 
             int newindex = index + change;
 
-            if (newindex < 0 || newindex >= Sys.ActiveProfile.Items.Count)
+            if (newindex < 0 || newindex >= ModList.Count)
                 return;
 
-            // create new list of active mods and insert at new position
-            List<ProfileItem> newItems = Sys.ActiveProfile.Items.ToList();
-            ProfileItem pitem = newItems[index];
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                // ensure to modify observable collection on UI thread 
+                lock (listLock)
+                {
+                    ModList.RemoveAt(index);
+                    ModList.Insert(newindex, mod);
+                }
 
-            newItems.RemoveAt(index);
-            newItems.Insert(newindex, pitem);
-            Sys.ActiveProfile.Items = newItems;
+                Sys.ActiveProfile.Items = ModList.Where(m => m.IsActive).Select(m => m.ActiveModInfo).ToList();
 
-            ReloadModList(mod.InstallInfo.CachedDetails.ID);
+                ReloadModList(mod.InstallInfo.CachedDetails.ID);
+            });
         }
 
         public void SendModToBottom(InstalledModViewModel mod)
         {
-            if (!mod.IsActive)
+            int index = ModList.IndexOf(mod);
+
+            App.Current.Dispatcher.Invoke(() =>
             {
-                return;
-            }
+                // ensure to modify observable collection on UI thread 
+                lock (listLock)
+                {
+                    ModList.RemoveAt(index);
+                    ModList.Add(mod);
+                }
 
-            int index = Sys.ActiveProfile.Items.IndexOf(mod.ActiveModInfo);
+                Sys.ActiveProfile.Items = ModList.Where(m => m.IsActive).Select(m => m.ActiveModInfo).ToList();
 
-            List<ProfileItem> reorderedList = new List<ProfileItem>();
-
-            reorderedList.AddRange(Sys.ActiveProfile.Items.Where(i => i.ModID != mod.ActiveModInfo.ModID));
-            reorderedList.Add(Sys.ActiveProfile.Items[index]);
-
-            Sys.ActiveProfile.Items = reorderedList;
-            ReloadModList(mod.ActiveModInfo.ModID);
+                ReloadModList(mod.InstallInfo.CachedDetails.ID);
+            });
         }
 
         public void SendModToTop(InstalledModViewModel mod)
         {
-            if (!mod.IsActive)
+            int index = ModList.IndexOf(mod);
+
+            App.Current.Dispatcher.Invoke(() =>
             {
-                return;
-            }
+                // ensure to modify observable collection on UI thread 
+                lock (listLock)
+                {
+                    ModList.RemoveAt(index);
+                    ModList.Insert(0, mod);
+                }
 
-            int index = Sys.ActiveProfile.Items.IndexOf(mod.ActiveModInfo);
+                Sys.ActiveProfile.Items = ModList.Where(m => m.IsActive).Select(m => m.ActiveModInfo).ToList();
 
-            List<ProfileItem> reorderedList = new List<ProfileItem>();
-
-            reorderedList.Add(Sys.ActiveProfile.Items[index]);
-            reorderedList.AddRange(Sys.ActiveProfile.Items.Where(i => i.ModID != mod.ActiveModInfo.ModID));
-
-
-            Sys.ActiveProfile.Items = reorderedList;
-            ReloadModList(mod.ActiveModInfo.ModID);
+                ReloadModList(mod.InstallInfo.CachedDetails.ID);
+            });
         }
 
         internal void ShowConfigureModWindow(InstalledModViewModel modToConfigure)

@@ -16,6 +16,8 @@ namespace SeventhHeavenUI.ViewModels
     /// </summary>
     public class InstalledModViewModel : ViewModelBase
     {
+        public const int defaultSortOrder = 9999;
+
         private string _name;
         private string _author;
         private string _version;
@@ -24,6 +26,7 @@ namespace SeventhHeavenUI.ViewModels
         private ProfileItem _activeModInfo;
         private InstalledItem _installInfo;
         private string _releaseDate;
+        private int _sortOrder;
 
         public delegate void OnActivationChanged(object sender, InstalledModViewModel selected);
         public event OnActivationChanged ActivationChanged;
@@ -152,6 +155,19 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
+        public int SortOrder
+        {
+            get
+            {
+                return _sortOrder;
+            }
+            set
+            {
+                _sortOrder = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public InstalledModViewModel(InstalledItem installedItem, ProfileItem profileItem)
         {
             InstallInfo = installedItem;
@@ -162,6 +178,13 @@ namespace SeventhHeavenUI.ViewModels
             Category = InstallInfo.CachedDetails.Category;
             Version = InstallInfo.CachedDetails.LatestVersion.Version.ToString();
             ReleaseDate = InstallInfo.CachedDetails.LatestVersion.ReleaseDate.ToString(Sys.Settings.DateTimeStringFormat);
+
+            SortOrder = defaultSortOrder;
+        }
+
+        public override string ToString()
+        {
+            return $"{SortOrder}; {InstallInfo?.ModID} = {Name}";
         }
 
     }

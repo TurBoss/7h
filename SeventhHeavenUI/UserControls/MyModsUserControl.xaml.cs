@@ -104,22 +104,12 @@ namespace SeventhHeaven.UserControls
                 return;
             }
 
-            if (!IsActiveModSelected("Mod is not active. Only activated mods can be re-ordered."))
-            {
-                return;
-            }
-
             ViewModel.ReorderProfileItem((lstMods.SelectedItem as InstalledModViewModel), -1);
         }
 
         private void btnMoveDown_Click(object sender, RoutedEventArgs e)
         {
             if (!IsModSelected())
-            {
-                return;
-            }
-
-            if (!IsActiveModSelected("Mod is not active. Only activated mods can be re-ordered."))
             {
                 return;
             }
@@ -134,22 +124,12 @@ namespace SeventhHeaven.UserControls
                 return;
             }
 
-            if (!IsActiveModSelected("Mod is not active. Only activated mods can be re-ordered."))
-            {
-                return;
-            }
-
             ViewModel.SendModToTop((lstMods.SelectedItem as InstalledModViewModel));
         }
 
         private void btnSendBottom_Click(object sender, RoutedEventArgs e)
         {
             if (!IsModSelected())
-            {
-                return;
-            }
-
-            if (!IsActiveModSelected("Mod is not active. Only activated mods can be re-ordered."))
             {
                 return;
             }
