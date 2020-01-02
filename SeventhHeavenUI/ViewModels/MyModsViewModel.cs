@@ -539,16 +539,12 @@ namespace SeventhHeavenUI.ViewModels
             if (newindex < 0 || newindex >= Sys.ActiveProfile.Items.Count)
                 return;
 
-            // find mod to swap with
-            InstalledModViewModel other = ModList.FirstOrDefault(p => p.ActiveModInfo == Sys.ActiveProfile.Items[newindex]);
-
-            // create new list of active mods and swap the two mods
+            // create new list of active mods and insert at new position
             List<ProfileItem> newItems = Sys.ActiveProfile.Items.ToList();
             ProfileItem pitem = newItems[index];
 
-            newItems[index] = newItems[newindex];
-            newItems[newindex] = pitem;
-
+            newItems.RemoveAt(index);
+            newItems.Insert(newindex, pitem);
             Sys.ActiveProfile.Items = newItems;
 
             ReloadModList(mod.InstallInfo.CachedDetails.ID);

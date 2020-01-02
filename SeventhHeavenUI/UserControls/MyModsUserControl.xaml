@@ -13,6 +13,25 @@
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="PreviewDragEnter">
+                    <BeginStoryboard x:Name="DragBeginStoryboard">
+                        <Storyboard>
+                            <ThicknessAnimation Storyboard.TargetProperty="BorderThickness"
+                                                Duration="0:0:0.150"
+                                                From="0, 0, 0, 0"
+                                                To="0, 0, 0, 3"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="PreviewDragLeave">
+                    <StopStoryboard BeginStoryboardName="DragBeginStoryboard"/>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="PreviewDrop">
+                    <StopStoryboard BeginStoryboardName="DragBeginStoryboard"/>
+                </EventTrigger>
+            </Style.Triggers>
         </Style>
 
         <Style x:Key="SmallImageButton"  TargetType="{x:Type Button}" BasedOn="{StaticResource ImageButton}">
@@ -54,7 +73,7 @@
                     </GridViewColumn>
                 </GridView>
             </ListView.View>
-            
+
         </ListView>
 
         <StackPanel Grid.Column="1"
@@ -81,7 +100,7 @@
                     Content="{StaticResource iconUpChevron}"
                     ToolTip="Move Up"
                     Margin="0,0,0,0"/>
-            
+
             <Button x:Name="btnMoveDown"
                     Click="btnMoveDown_Click"
                     Style="{StaticResource SmallImageButton}"
@@ -131,6 +150,6 @@
                     Margin="0,0,0,0"/>
 
         </StackPanel>
-        
+
     </Grid>
 </UserControl>

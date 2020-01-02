@@ -274,7 +274,7 @@ namespace SeventhHeaven.UserControls
                     return; // do not do drag/drop since user is clicking on checkbox to activate mod
                 }
 
-                if ((e.OriginalSource as FrameworkElement).DataContext is InstalledModViewModel)
+                if ((e.OriginalSource as FrameworkElement)?.DataContext is InstalledModViewModel)
                 {
                     ListViewItem lbi = FindVisualParent<ListViewItem>(((DependencyObject)e.OriginalSource));
 
@@ -296,7 +296,7 @@ namespace SeventhHeaven.UserControls
             try
             {
                 InstalledModViewModel droppedData = e.Data.GetData(typeof(InstalledModViewModel)) as InstalledModViewModel;
-                InstalledModViewModel target = ((FrameworkElement)e.OriginalSource).DataContext as InstalledModViewModel;
+                InstalledModViewModel target = ((FrameworkElement)e.OriginalSource)?.DataContext as InstalledModViewModel;
 
                 int removedIdx = lstMods.Items.IndexOf(droppedData);
                 int targetIdx = lstMods.Items.IndexOf(target);
