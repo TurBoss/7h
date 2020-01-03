@@ -1,4 +1,5 @@
-﻿using Iros._7th.Workshop;
+﻿using _7thHeaven.Code;
+using Iros._7th.Workshop;
 using SeventhHeaven.Classes;
 using SeventhHeaven.Windows;
 using System;
@@ -89,6 +90,8 @@ namespace SeventhHeavenUI.ViewModels
                 {
                     ModList = new ObservableCollection<InstalledModViewModel>();
                 }
+
+                RaiseSelectedModChanged(this, null); // raise selected change event so mod preview info panel is cleared
                 return;
             }
 
@@ -689,6 +692,23 @@ namespace SeventhHeavenUI.ViewModels
                 modWindow.ViewModel.CleanUp();
                 modWindow.ViewModel = null;
             }
+        }
+
+        public void AutoSortBasedOnCategory()
+        {
+            List<InstalledModViewModel> sortedList = ModList.Select(s => new { Mod = s, LoadOrder = ModLoadOrder.Get(s.Category) })
+                                                            .OrderBy(s => s.LoadOrder)
+                                                            .Select(s => s.Mod)
+                                                            .ToList();
+
+            ClearModList();
+
+            lock (listLock)
+            {
+                ModList = new ObservableCollection<InstalledModViewModel>(sortedList);
+            }
+
+            ReloadModList(GetSelectedMod()?.InstallInfo?.ModID);
         }
     }
 }

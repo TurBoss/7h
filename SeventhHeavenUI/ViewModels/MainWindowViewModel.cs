@@ -484,25 +484,30 @@ They will be automatically turned off.";
             if (e.OldStatus == ModStatus.Installed && e.Status == ModStatus.NotInstalled && Sys.ActiveProfile.Items.Any(i => i.ModID.Equals(e.ModID)))
                 MyMods.ToggleActivateMod(e.ModID);
 
-            // update mod preview info page if the mod is currently selected
-            if ((TabIndex)SelectedTabIndex == TabIndex.MyMods)
-            {
-                InstalledModViewModel currentlySelected = MyMods.GetSelectedMod();
 
-                if (currentlySelected?.InstallInfo.ModID == e.ModID)
+            if (e.Status == ModStatus.InfoChanged)
+            {
+                // update mod preview info page when a change (e.g. image downloaded) has happeend for selected mod
+                if ((TabIndex)SelectedTabIndex == TabIndex.MyMods)
                 {
-                    UpdateModPreviewInfo(currentlySelected);
+                    InstalledModViewModel currentlySelected = MyMods.GetSelectedMod();
+
+                    if (currentlySelected?.InstallInfo.ModID == e.ModID)
+                    {
+                        UpdateModPreviewInfo(currentlySelected);
+                    }
+                }
+                else
+                {
+                    CatalogModItemViewModel currentlySelected = CatalogMods.GetSelectedMod();
+
+                    if (currentlySelected?.Mod.ID == e.ModID)
+                    {
+                        UpdateModPreviewInfo(currentlySelected);
+                    }
                 }
             }
-            else
-            {
-                CatalogModItemViewModel currentlySelected = CatalogMods.GetSelectedMod();
 
-                if (currentlySelected?.Mod.ID == e.ModID)
-                {
-                    UpdateModPreviewInfo(currentlySelected);
-                }
-            }
         }
 
         /// <summary>
@@ -530,6 +535,7 @@ They will be automatically turned off.";
         {
             if (selected == null)
             {
+                _previewMod = null;
                 PreviewModAuthor = "";
                 PreviewModName = "";
                 PreviewModVersion = "";
@@ -539,6 +545,12 @@ They will be automatically turned off.";
                 PreviewModDescription = "";
                 PreviewModLink = "";
                 PreviewModImageSource = null;
+                return;
+            }
+
+            if (_previewMod?.ID == selected.InstallInfo?.ModID)
+            {
+                // no change in selected
                 return;
             }
 
@@ -573,6 +585,7 @@ They will be automatically turned off.";
         {
             if (selected == null)
             {
+                _previewMod = null;
                 PreviewModAuthor = "";
                 PreviewModName = "";
                 PreviewModVersion = "";
@@ -582,6 +595,12 @@ They will be automatically turned off.";
                 PreviewModDescription = "";
                 PreviewModLink = "";
                 PreviewModImageSource = null;
+                return;
+            }
+
+            if (_previewMod?.ID == selected.Mod?.ID)
+            {
+                // no change in selected
                 return;
             }
 

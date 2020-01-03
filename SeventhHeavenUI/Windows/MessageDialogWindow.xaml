@@ -11,7 +11,8 @@
         Loaded="Window_Loaded"
         ResizeMode="NoResize"
         Height="190"
-        Width="400">
+        Width="475"
+        MaxHeight="400">
     <Grid x:Name="gridMain" KeyDown="gridMain_KeyDown" VerticalAlignment="Stretch">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -23,7 +24,7 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
-        <ContentControl>
+        <ContentControl >
             <ContentControl.Style>
                 <Style TargetType="ContentControl">
                     <Setter Property="Template" Value="{StaticResource iconWarning}"/>
@@ -58,6 +59,7 @@
             <TextBlock x:Name="txtMessage"
                        VerticalAlignment="Stretch"
                        HorizontalAlignment="Stretch"
+                       ScrollViewer.VerticalScrollBarVisibility="Auto"
                        Grid.Row="0"
                        Foreground="{DynamicResource PrimaryControlForeground}"
                        FontSize="14"

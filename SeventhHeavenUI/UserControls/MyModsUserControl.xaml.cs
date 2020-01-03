@@ -64,6 +64,11 @@ namespace SeventhHeaven.UserControls
 
         private void lstMods_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (lstMods.SelectedItem == null)
+            {
+                return;
+            }
+
             ViewModel.RaiseSelectedModChanged(sender, (lstMods.SelectedItem as InstalledModViewModel));
         }
 
@@ -304,6 +309,11 @@ namespace SeventhHeaven.UserControls
                 return parent;
 
             return FindVisualParent<T>(parentObject);
+        }
+
+        private void btnAutoSort_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.AutoSortBasedOnCategory();
         }
     }
 }

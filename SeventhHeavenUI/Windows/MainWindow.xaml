@@ -303,7 +303,7 @@
                  Width="260"
                  Height="24"/>
 
-        <TextBlock Text="Type here and press enter to search ..."
+        <TextBlock Text="Type here to search ..."
                    Foreground="{DynamicResource PrimaryControlDisabledForeground}"
                    Grid.Column="2"
                    IsHitTestVisible="False"

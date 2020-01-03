@@ -147,6 +147,11 @@ namespace Iros._7th.Workshop
             ModStatusEventArgs e = new ModStatusEventArgs() { ModID = modID, Status = st, OldStatus = st };
             StatusChanged?.Invoke(null, e);
         }
+        public static void PingInfoChange(Guid modID)
+        {
+            ModStatusEventArgs e = new ModStatusEventArgs() { ModID = modID, Status = ModStatus.InfoChanged, OldStatus = ModStatus.InfoChanged };
+            StatusChanged?.Invoke(null, e);
+        }
         public static void SetStatus(Guid modID, ModStatus status)
         {
             ModStatus olds;

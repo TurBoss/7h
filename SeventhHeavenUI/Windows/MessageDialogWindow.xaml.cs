@@ -131,6 +131,11 @@ namespace SeventhHeaven.Windows
 
             if (newHeight > this.Height)
             {
+                if (newHeight >= this.MaxHeight)
+                {
+                    newHeight = this.MaxHeight;
+                }
+
                 this.Height = newHeight;
             }
         }

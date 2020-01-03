@@ -155,5 +155,6 @@ namespace Iros._7th.Workshop
         Downloading,
         Installed,
         Updating,
+        InfoChanged
     }
 }

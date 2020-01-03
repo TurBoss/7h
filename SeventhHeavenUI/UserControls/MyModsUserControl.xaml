@@ -135,6 +135,13 @@
                     ToolTip="Deactivate All"
                     Margin="0,0,0,0"/>
 
+            <Button x:Name="btnAutoSort" 
+                    Style="{StaticResource SmallImageButton}"
+                    Content="{StaticResource iconSort}"
+                    Click="btnAutoSort_Click"
+                    ToolTip="Auto Sort Mods Based On Category"
+                    Margin="0,0,0,0"/>
+
             <Button x:Name="btnRefresh" 
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconRefresh}"

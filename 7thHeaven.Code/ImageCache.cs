@@ -106,7 +106,7 @@ namespace Iros._7th.Workshop {
                     System.Diagnostics.Debug.WriteLine("ImageCache:Download error: " + ae.Error.ToString());
                 }
 
-                Sys.Ping(modID);
+                Sys.PingInfoChange(modID);
             }), null);
         }
 
