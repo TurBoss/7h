@@ -1195,9 +1195,20 @@ They will be automatically turned off.";
 
             if (varDump)
             {
+                string turboLogProcName = "TurBoLog.exe";
+
+                // remove from dictionary (and stop other turbolog exe) if exists
+                if (_alsoLaunchProcesses.ContainsKey(turboLogProcName))
+                {
+                    if (!_alsoLaunchProcesses[turboLogProcName].HasExited)
+                    {
+                        _alsoLaunchProcesses[turboLogProcName].Kill();
+                    }
+                    _alsoLaunchProcesses.Remove(turboLogProcName);
+                }
+
                 runtimeProfiles.MonitorVars = _context.VarAliases.Select(kv => new Tuple<string, string>(kv.Key, kv.Value)).ToList();
 
-                string turboLogProcName = "TurBoLog.exe";
                 ProcessStartInfo psi = new ProcessStartInfo(turboLogProcName)
                 {
                     WorkingDirectory = Path.GetDirectoryName(turboLogProcName)
