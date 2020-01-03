@@ -209,6 +209,15 @@ namespace SeventhHeavenUI.ViewModels
                         mod.SortOrder = expectedRowIdx;
                     }
                 }
+
+                // keep track of the sort order in Sys.Library so it can be saved to library.xml (this will be used on startup to reload sorted list)
+                foreach (var installedMod in Sys.Library.Items)
+                {
+                    if (modRowIndexes.TryGetValue(installedMod.ModID, out int expectedRowIdx))
+                    {
+                        installedMod.SavedSortOrder = expectedRowIdx;
+                    }
+                }
             }
         }
 
@@ -696,9 +705,22 @@ namespace SeventhHeavenUI.ViewModels
 
         public void AutoSortBasedOnCategory()
         {
-            List<InstalledModViewModel> sortedList = ModList.Select(s => new { Mod = s, LoadOrder = ModLoadOrder.Get(s.Category) })
-                                                            .OrderBy(s => s.LoadOrder)
-                                                            .Select(s => s.Mod)
+            List<InstalledModViewModel> sortedList = ModList.OrderBy(s => ModLoadOrder.Get(s.Category))
+                                                            .ToList();
+
+            ClearModList();
+
+            lock (listLock)
+            {
+                ModList = new ObservableCollection<InstalledModViewModel>(sortedList);
+            }
+
+            ReloadModList(GetSelectedMod()?.InstallInfo?.ModID);
+        }
+
+        internal void SortBySavedSortOrder()
+        {
+            List<InstalledModViewModel> sortedList = ModList.OrderBy(s => s.InstallInfo.SavedSortOrder)
                                                             .ToList();
 
             ClearModList();

@@ -114,6 +114,8 @@ namespace Iros._7th.Workshop
 
         public List<InstalledVersion> Versions { get; set; }
         public InstalledVersion LatestInstalled { get { return Versions.OrderBy(v => v.VersionDetails.Version).Last(); } }
+
+        public int SavedSortOrder { get; set; }
     }
 
     public class InstalledVersion

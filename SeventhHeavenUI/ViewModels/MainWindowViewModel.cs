@@ -426,6 +426,8 @@ They will be automatically turned off.";
 
             TryAutoImportMods();
 
+            MyMods.SortBySavedSortOrder(); // will sort then reload mod list
+
             CatalogMods.RefreshListRequested += ModList_RefreshRequested;
             MyMods.RefreshListRequested += ModList_RefreshRequested;
 
@@ -753,7 +755,6 @@ They will be automatically turned off.";
             }
 
             Sys.Library.AttemptDeletions();
-            MyMods.ReloadModList(null, SearchText, CheckedCategories, CheckedTags);
         }
 
         public void RefreshProfile()
