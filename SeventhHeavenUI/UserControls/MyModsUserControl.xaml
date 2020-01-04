@@ -64,7 +64,9 @@
                     <GridViewColumn x:Name="colActive" Header="Active" Width="75">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox Style="{StaticResource ToggleSwitchCheckbox}" 
+                                <CheckBox Style="{StaticResource ToggleSwitchCheckbox}"
+                                          MaxWidth="65"
+                                          MinWidth="45"
                                           IsChecked="{Binding IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>

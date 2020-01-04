@@ -17,11 +17,11 @@ namespace SeventhHeavenUI.ViewModels
         private string _author;
         private string _version;
         private string _downloadSize;
+        private int _downloadSizeInBytes;
         private string _releaseDate;
         private string _category;
         private bool _isSelected;
         private Mod _mod;
-
 
         public string Name
         {
@@ -45,6 +45,19 @@ namespace SeventhHeavenUI.ViewModels
             set
             {
                 _downloadSize = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public int DownloadSizeInBytes
+        {
+            get
+            {
+                return _downloadSizeInBytes;
+            }
+            set
+            {
+                _downloadSizeInBytes = value;
                 NotifyPropertyChanged();
             }
         }
@@ -136,7 +149,8 @@ namespace SeventhHeavenUI.ViewModels
             Author = Mod.Author;
             Category = Mod.Category;
             Version = Mod.LatestVersion.Version.ToString();
-            DownloadSize = GetDLSize(Mod.LatestVersion.DownloadSize);
+            DownloadSizeInBytes = Mod.LatestVersion.DownloadSize;
+            DownloadSize = GetDLSize(DownloadSizeInBytes);
             ReleaseDate = Mod.LatestVersion.ReleaseDate.ToString(Sys.Settings.DateTimeStringFormat);
         }
 

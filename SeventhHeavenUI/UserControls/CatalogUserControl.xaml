@@ -31,7 +31,9 @@
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
-        <ListView x:Name="lstCatalogMods" ItemsSource="{Binding CatalogModList}" SelectionChanged="lstCatalogMods_SelectionChanged"
+        <ListView x:Name="lstCatalogMods" ItemsSource="{Binding CatalogModList}" 
+                  SelectionChanged="lstCatalogMods_SelectionChanged"
+                  GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler"
                   ScrollViewer.HorizontalScrollBarVisibility="Auto"
                   ScrollViewer.CanContentScroll="False"
                   VirtualizingStackPanel.IsVirtualizing="False">

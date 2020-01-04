@@ -1,9 +1,12 @@
 ﻿using Iros._7th.Workshop;
+using SeventhHeaven.Classes;
 using SeventhHeavenUI.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 
 namespace SeventhHeaven.UserControls
@@ -16,6 +19,8 @@ namespace SeventhHeaven.UserControls
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         CatalogViewModel ViewModel { get; set; }
+        GridViewColumnHeader _lastHeaderClicked = null;
+        ListSortDirection _lastDirection = ListSortDirection.Ascending;
 
         public CatalogUserControl()
         {
@@ -136,6 +141,81 @@ namespace SeventhHeaven.UserControls
                 }
             }
             return null;
+        }
+
+        private void GridViewColumnHeaderClickedHandler(object sender, RoutedEventArgs e)
+        {
+            GridViewColumnHeader headerClicked = e.OriginalSource as GridViewColumnHeader;
+            ListSortDirection direction;
+
+            if (headerClicked == null || headerClicked?.Role == GridViewColumnHeaderRole.Padding)
+            {
+                return;
+            }
+
+
+            if (headerClicked != _lastHeaderClicked)
+            {
+                direction = ListSortDirection.Ascending;
+            }
+            else
+            {
+                if (_lastDirection == ListSortDirection.Ascending)
+                {
+                    direction = ListSortDirection.Descending;
+                }
+                else
+                {
+                    direction = ListSortDirection.Ascending;
+                }
+            }
+
+            Binding headerBinding = headerClicked.Column.DisplayMemberBinding.ProvideValue(null) as Binding;
+
+            if (headerBinding == null)
+            {
+                return;
+            }
+
+            string propertyNameToSortBy = headerBinding.Path?.Path;
+            Sort(propertyNameToSortBy, direction);
+
+            _lastHeaderClicked = headerClicked;
+            _lastDirection = direction;
+        }
+
+        private void Sort(string sortBy, ListSortDirection direction)
+        {
+            ICollectionView dataView = CollectionViewSource.GetDefaultView(lstCatalogMods.ItemsSource);
+
+            if (dataView == null)
+            {
+                return;
+            }
+
+            dataView.SortDescriptions.Clear();
+            (dataView as ListCollectionView).CustomSort = null;
+
+            if (sortBy == nameof(CatalogModItemViewModel.ReleaseDate))
+            {
+                DateTimeComparer sorter = new DateTimeComparer()
+                {
+                    SortDirection = direction
+                };
+                (dataView as ListCollectionView).CustomSort = sorter;
+            }
+            else if (sortBy == nameof(CatalogModItemViewModel.DownloadSize))
+            {
+                SortDescription sd = new SortDescription(nameof(CatalogModItemViewModel.DownloadSizeInBytes), direction);
+                dataView.SortDescriptions.Add(sd);
+                dataView.Refresh();
+            }
+            else
+            {
+                SortDescription sd = new SortDescription(sortBy, direction);
+                dataView.SortDescriptions.Add(sd);
+                dataView.Refresh();
+            }
         }
     }
 }

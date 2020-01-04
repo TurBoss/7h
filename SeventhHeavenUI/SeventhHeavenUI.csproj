@@ -97,6 +97,7 @@
     </ApplicationDefinition>
     <Compile Include="Classes\ButtonWithImage.cs" />
     <Compile Include="Classes\Constraint.cs" />
+    <Compile Include="Classes\DateTimeComparer.cs" />
     <Compile Include="Classes\FileDialogHelper.cs" />
     <Compile Include="Classes\OpenFolderDialog.cs" />
     <Compile Include="Classes\ReloadListOption.cs" />
