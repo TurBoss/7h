@@ -680,7 +680,7 @@
                     BorderBrush="{DynamicResource SecondaryAppBackground}"
                     BorderThickness="1"/>
 
-            <Border x:Name="bd" Grid.Column="0" Margin="1" BorderThickness="0" Background="{DynamicResource PrimaryControlBackground}"/>
+            <Border x:Name="bd" Grid.Column="0" Margin="1" BorderThickness="0" Background="{TemplateBinding Background}"/>
 
             <Path x:Name="Arrow"
                   Grid.Column="1"
@@ -715,6 +715,7 @@
         <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
         <Setter Property="MinWidth" Value="120" />
         <Setter Property="MinHeight" Value="20" />
+        <Setter Property="Background" Value="{DynamicResource PrimaryControlBackground}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
@@ -738,11 +739,12 @@
                         </VisualStateManager.VisualStateGroups>
 
                         <ToggleButton x:Name="ToggleButton"
-                                          Template="{StaticResource ComboBoxToggleButton}"
-                                          Grid.Column="2"
-                                          Focusable="false"
-                                          ClickMode="Press"
-                                          IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                      Template="{StaticResource ComboBoxToggleButton}"
+                                      Background="{TemplateBinding Background}"
+                                      Grid.Column="2"
+                                      Focusable="false"
+                                      ClickMode="Press"
+                                      IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"/>
 
                         <ContentPresenter x:Name="ContentSite"
                                           IsHitTestVisible="False"

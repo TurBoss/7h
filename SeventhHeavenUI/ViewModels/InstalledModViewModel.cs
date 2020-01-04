@@ -1,4 +1,5 @@
-﻿using Iros._7th;
+﻿using _7thHeaven.Code;
+using Iros._7th;
 using Iros._7th.Workshop;
 using Iros.Mega;
 using System;
@@ -27,6 +28,7 @@ namespace SeventhHeavenUI.ViewModels
         private InstalledItem _installInfo;
         private string _releaseDate;
         private int _sortOrder;
+        private List<string> _categoryList;
 
         public delegate void OnActivationChanged(object sender, InstalledModViewModel selected);
         public event OnActivationChanged ActivationChanged;
@@ -80,9 +82,37 @@ namespace SeventhHeavenUI.ViewModels
             set
             {
                 _category = value;
+                UpdateCategoryInLibrary();
                 NotifyPropertyChanged();
             }
         }
+
+        private void UpdateCategoryInLibrary()
+        {
+            var installedMod = Sys.Library.GetItem(InstallInfo.CachedDetails.ID);
+
+            if (installedMod != null)
+            {
+                installedMod.CachedDetails.Category = Category;
+            }
+        }
+
+        public List<string> CategoryList
+        {
+            get
+            {
+                if (_categoryList == null)
+                    _categoryList = ModLoadOrder.Orders.Keys.ToList();
+
+                return _categoryList;
+            }
+            set
+            {
+                _categoryList = value;
+                NotifyPropertyChanged();
+            }
+        }
+
 
         public string ReleaseDate
         {
@@ -180,6 +210,11 @@ namespace SeventhHeavenUI.ViewModels
             ReleaseDate = InstallInfo.CachedDetails.LatestVersion.ReleaseDate.ToString(Sys.Settings.DateTimeStringFormat);
 
             SortOrder = defaultSortOrder;
+
+            if (string.IsNullOrWhiteSpace(Category))
+            {
+                Category = ModCategory.Unknown.ToString();
+            }
         }
 
         public override string ToString()

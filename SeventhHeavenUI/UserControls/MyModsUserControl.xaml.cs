@@ -3,6 +3,7 @@ using SeventhHeaven.Windows;
 using SeventhHeavenUI.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
 namespace SeventhHeaven.UserControls
@@ -169,7 +170,7 @@ namespace SeventhHeaven.UserControls
 
         internal void RecalculateColumnWidths(double listWidth)
         {
-            double staticColumnWidth = 100 + 75; // sum of columns with static widths
+            double staticColumnWidth = 135 + 75; // sum of columns with static widths
             double padding = 6;
 
             if (listWidth == 0)
@@ -254,9 +255,9 @@ namespace SeventhHeaven.UserControls
         {
             if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
             {
-                if (e.OriginalSource is CheckBox)
+                if (e.OriginalSource is CheckBox || FindVisualParent<ComboBox>((DependencyObject)e.OriginalSource) != null)
                 {
-                    return; // do not do drag/drop since user is clicking on checkbox to activate mod
+                    return; // do not do drag/drop since user is clicking on checkbox to activate mod or selecting category
                 }
 
                 if ((e.OriginalSource as FrameworkElement)?.DataContext is InstalledModViewModel)

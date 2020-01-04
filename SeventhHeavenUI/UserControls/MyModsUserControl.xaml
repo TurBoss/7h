@@ -8,6 +8,19 @@
              d:DesignHeight="500" d:DesignWidth="800">
     <UserControl.Resources>
 
+        <DataTemplate x:Key="dropdownItemTemplate">
+            <Grid x:Name="gd" DataContext="{Binding RelativeSource={RelativeSource AncestorType=ComboBox, Mode=FindAncestor}, Path=DataContext}" Background="Transparent">
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.Category, FallbackValue='Value Name'}" Margin="0,0,15,0" TextWrapping="Wrap"/>
+            </Grid>
+        </DataTemplate>
+
+        <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MainComboBoxStyle}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="ItemTemplate" Value="{StaticResource dropdownItemTemplate}"/>
+            <Setter Property="ItemContainerStyle" Value="{StaticResource TextComboBoxItemStyle}"/>
+        </Style>
+
+
         <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource MainListViewItemStyle}">
             <Setter Property="Height" Value="30"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -60,7 +73,13 @@
                 <GridView>
                     <GridViewColumn x:Name="colName" Header="Name" Width="Auto" DisplayMemberBinding="{Binding Name}"/>
                     <GridViewColumn x:Name="colAuthor" Header="Author" Width="Auto" DisplayMemberBinding="{Binding Author}"/>
-                    <GridViewColumn Header="Category" Width="100" DisplayMemberBinding="{Binding Category}"/>
+                    <GridViewColumn Header="Category" Width="135">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox SelectedItem="{Binding Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding CategoryList}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn x:Name="colActive" Header="Active" Width="75">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>

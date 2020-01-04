@@ -1,4 +1,5 @@
-﻿using Iros._7th;
+﻿using _7thHeaven.Code;
+using Iros._7th;
 using Iros._7th.Workshop;
 using Iros.Mega;
 using System;
@@ -152,6 +153,11 @@ namespace SeventhHeavenUI.ViewModels
             DownloadSizeInBytes = Mod.LatestVersion.DownloadSize;
             DownloadSize = GetDLSize(DownloadSizeInBytes);
             ReleaseDate = Mod.LatestVersion.ReleaseDate.ToString(Sys.Settings.DateTimeStringFormat);
+
+            if (string.IsNullOrWhiteSpace(Category))
+            {
+                Category = ModCategory.Unknown.ToString();
+            }
         }
 
         private string GetDLSize(int size)
