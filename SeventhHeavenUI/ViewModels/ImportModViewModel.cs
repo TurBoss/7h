@@ -243,6 +243,21 @@ namespace SeventhHeaven.ViewModels
 
             if (doc != null)
             {
+                //If mod.xml contains an ID GUID, then use that instead of generating random one
+                string modidstr = doc.SelectSingleNode("/ModInfo/ID").NodeTextS();
+                if (!string.IsNullOrWhiteSpace(modidstr))
+                {
+                    try
+                    {
+                        m.ID = new Guid(modidstr);
+                    }
+                    catch (Exception)
+                    {
+                        Logger.Warn("Invalid GUID found for Mod ID ... Using random guid.");
+                        m.ID = new Guid();
+                    }
+                }
+
                 m.Name = doc.SelectSingleNode("/ModInfo/Name").NodeTextS();
 
                 if (string.IsNullOrWhiteSpace(m.Name))
