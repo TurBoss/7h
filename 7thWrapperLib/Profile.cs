@@ -307,7 +307,7 @@ namespace _7thWrapperLib
                     {
                         string tempLibPath = Path.Combine(libpath, dll);
                         WriteIfNecessary(tempLibPath, _archive.GetBytes(dll));
-                        saved.Add(new ProgramInfo() { PathToProgram = tempLibPath, ProgramArgs = prog.ProgramArgs });
+                        saved.Add(new ProgramInfo() { PathToProgram = tempLibPath, ProgramArgs = prog.ProgramArgs, CloseAllInstances = prog.CloseAllInstances });
                     }
                 }
 
