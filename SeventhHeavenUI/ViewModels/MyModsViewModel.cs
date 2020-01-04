@@ -25,6 +25,11 @@ namespace SeventhHeavenUI.ViewModels
         public event OnRefreshListRequested RefreshListRequested;
 
         private object listLock = new object();
+        
+        /// <summary>
+        /// Keep track of load order (row index) of mods
+        /// </summary>
+        Dictionary<Guid, int> modLoadOrders = new Dictionary<Guid, int>();
 
         private ObservableCollection<InstalledModViewModel> _modList;
 
@@ -162,7 +167,15 @@ namespace SeventhHeavenUI.ViewModels
                 return;
             }
 
-            SetPreviousSortOrder(allMods);
+            int installedModCount = Sys.Library.Items.Count;
+            bool isFilteredBySearch = (allMods.Count != installedModCount);
+
+
+            if (!isFilteredBySearch)
+            {
+                bool storeLoadOrder = (allMods.Count == ModList.Count);
+                SetPreviousLoadOrder(allMods, storeLoadOrder);
+            }
 
             ClearModList();
 
@@ -182,29 +195,19 @@ namespace SeventhHeavenUI.ViewModels
         /// <summary>
         /// Gets sort order for <see cref="ModList"/> and applies the same sort order to <paramref name="allMods"/> based on the Mod ID.
         /// </summary>
-        private void SetPreviousSortOrder(List<InstalledModViewModel> allMods)
+        private void SetPreviousLoadOrder(List<InstalledModViewModel> allMods, bool storeLoadOrder)
         {
-            Dictionary<Guid, int> modRowIndexes = new Dictionary<Guid, int>();
-            int rowIdx = 0;
 
-            lock (listLock)
+            if (storeLoadOrder)
             {
-                foreach (var mod in ModList.ToList())
-                {
-                    if (!modRowIndexes.ContainsKey(mod.InstallInfo.ModID))
-                    {
-                        modRowIndexes.Add(mod.InstallInfo.ModID, rowIdx);
-                    }
-
-                    rowIdx++;
-                }
+                SetModLoadOrders();
             }
 
-            if (modRowIndexes.Count > 0)
+            if (modLoadOrders.Count > 0)
             {
                 foreach (var mod in allMods)
                 {
-                    if (modRowIndexes.TryGetValue(mod.InstallInfo.ModID, out int expectedRowIdx))
+                    if (modLoadOrders.TryGetValue(mod.InstallInfo.ModID, out int expectedRowIdx))
                     {
                         mod.SortOrder = expectedRowIdx;
                     }
@@ -213,10 +216,28 @@ namespace SeventhHeavenUI.ViewModels
                 // keep track of the sort order in Sys.Library so it can be saved to library.xml (this will be used on startup to reload sorted list)
                 foreach (var installedMod in Sys.Library.Items)
                 {
-                    if (modRowIndexes.TryGetValue(installedMod.ModID, out int expectedRowIdx))
+                    if (modLoadOrders.TryGetValue(installedMod.ModID, out int expectedRowIdx))
                     {
                         installedMod.SavedSortOrder = expectedRowIdx;
                     }
+                }
+            }
+        }
+
+        private void SetModLoadOrders()
+        {
+            modLoadOrders = new Dictionary<Guid, int>();
+            int rowIdx = 0;
+            lock (listLock)
+            {
+                foreach (var mod in ModList.ToList())
+                {
+                    if (!modLoadOrders.ContainsKey(mod.InstallInfo.ModID))
+                    {
+                        modLoadOrders.Add(mod.InstallInfo.ModID, rowIdx);
+                    }
+
+                    rowIdx++;
                 }
             }
         }
@@ -729,6 +750,8 @@ namespace SeventhHeavenUI.ViewModels
             {
                 ModList = new ObservableCollection<InstalledModViewModel>(sortedList);
             }
+
+            SetModLoadOrders();
 
             ReloadModList(GetSelectedMod()?.InstallInfo?.ModID);
         }

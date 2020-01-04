@@ -310,7 +310,7 @@
                    Panel.ZIndex="10"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Top"
-                   Margin="0,29,111,0">
+                   Margin="0,29,198,0">
             <TextBlock.Style>
                 <Style TargetType="TextBlock">
                     <Setter Property="Visibility" Value="Hidden"/>
