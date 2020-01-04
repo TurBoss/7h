@@ -169,7 +169,7 @@ namespace SeventhHeaven.UserControls
 
         internal void RecalculateColumnWidths(double listWidth)
         {
-            double staticColumnWidth = 40 + 90 + 100 + 75; // sum of columns with static widths
+            double staticColumnWidth = 100 + 75; // sum of columns with static widths
             double padding = 6;
 
             if (listWidth == 0)
