@@ -216,22 +216,29 @@ namespace SeventhHeaven.ViewModels
             Description = setting.Description;
             Group = setting.Group;
 
-            if (setting is Iros._7th.Workshop.ConfigSettings.Checkbox)
+            Init(settings);
+        }
+
+        private void Init(Settings settings)
+        {
+            if (Setting is Iros._7th.Workshop.ConfigSettings.Checkbox)
             {
                 SettingType = GLSettingType.Checkbox;
-                IsOptionChecked = settings.IsMatched((setting as Checkbox).TrueSetting);
+                IsOptionChecked = settings.IsMatched((Setting as Checkbox).TrueSetting);
             }
-            else if (setting is Iros._7th.Workshop.ConfigSettings.TextEntry)
+            else if (Setting is Iros._7th.Workshop.ConfigSettings.TextEntry)
             {
                 SettingType = GLSettingType.TextEntry;
-                TextEntryOptionName = (setting as TextEntry).Option;
+                TextEntryOptionName = (Setting as TextEntry).Option;
                 TextEntryOptionValue = settings.Get(TextEntryOptionName);
             }
-            else if (setting is Iros._7th.Workshop.ConfigSettings.DropDown)
+            else if (Setting is Iros._7th.Workshop.ConfigSettings.DropDown)
             {
                 SettingType = GLSettingType.Dropdown;
+                DropdownOptions = new List<GLSettingDropdownOptionViewModel>();
+
                 int i = 0;
-                foreach (var item in (setting as DropDown).Options)
+                foreach (var item in (Setting as DropDown).Options)
                 {
                     GLSettingDropdownOptionViewModel ddOption = new GLSettingDropdownOptionViewModel()
                     {
@@ -269,6 +276,12 @@ namespace SeventhHeaven.ViewModels
                 string settingValue = IsOptionChecked ? (Setting as Checkbox).TrueSetting : (Setting as Checkbox).FalseSetting;
                 settings.Apply(settingValue);
             }
+        }
+
+        public void ResetToDefault(Settings settings)
+        {
+            settings.Apply(Setting.DefaultValue);
+            Init(settings);
         }
     }
 

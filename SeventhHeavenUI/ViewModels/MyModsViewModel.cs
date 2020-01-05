@@ -737,6 +737,9 @@ namespace SeventhHeavenUI.ViewModels
                 ModList = new ObservableCollection<InstalledModViewModel>(sortedList);
             }
 
+            // update active profile with new sort order
+            Sys.ActiveProfile.Items = ModList.Where(m => m.IsActive).Select(m => m.ActiveModInfo).ToList();
+
             ReloadModList(GetSelectedMod()?.InstallInfo?.ModID);
         }
 

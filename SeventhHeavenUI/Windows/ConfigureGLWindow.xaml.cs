@@ -37,6 +37,11 @@ namespace SeventhHeaven.Windows
             ViewModels = new List<GLSettingViewModel>();
         }
 
+        public void SetStatusMessage(string message)
+        {
+            txtStatusMessage.Text = message;
+        }
+
 
         public void Init(string cfgSpec, string cfgFile)
         {
@@ -56,20 +61,45 @@ namespace SeventhHeaven.Windows
                     Margin = new Thickness(0, 5, 0, 0)
                 };
 
+                ScrollViewer scrollViewer = new ScrollViewer()
+                {
+                    VerticalScrollBarVisibility = ScrollBarVisibility.Auto
+                };
+
                 foreach (Iros._7th.Workshop.ConfigSettings.Setting setting in items)
                 {
                     GLSettingViewModel settingViewModel = new GLSettingViewModel(setting, _settings);
 
                     ContentControl settingControl = new ContentControl();
                     settingControl.DataContext = settingViewModel;
+                    settingControl.MouseEnter += SettingControl_MouseEnter;
 
                     ViewModels.Add(settingViewModel);
                     stackPanel.Children.Add(settingControl);
                 }
 
-                tab.Content = stackPanel;
+
+                scrollViewer.Content = stackPanel;
+                tab.Content = scrollViewer;
                 tabCtrlMain.Items.Add(tab);
             }
+        }
+
+        private void SettingControl_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (sender == null)
+            {
+                return;
+            }
+
+            GLSettingViewModel viewModel = ((ContentControl)sender)?.DataContext as GLSettingViewModel;
+
+            if (viewModel == null)
+            {
+                return;
+            }
+
+            SetStatusMessage(viewModel.Description);
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -97,8 +127,18 @@ namespace SeventhHeaven.Windows
             catch (Exception ex)
             {
                 Logger.Error(ex);
-                Sys.Message(new WMessage("Unknown error while saving. error has been logged."));
+                SetStatusMessage("Unknown error while saving. error has been logged.");
             }
+        }
+
+        private void btnReset_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in ViewModels)
+            {
+                item.ResetToDefault(_settings);
+            }
+
+            SetStatusMessage("GL settings reset to defaults. Click 'Save' to save changes.");
         }
     }
 }

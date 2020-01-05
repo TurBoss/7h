@@ -56,13 +56,43 @@ namespace Iros._7th.Workshop.ConfigSettings {
         }
 
         public IEnumerable<string> GetOutput() {
+
+            List<string> writtenKeys = new List<string>();
+            List<string> outputLines = new List<string>();
+
+
             foreach (string line in _lines) {
-                string[] parts = line.Split(new[] { " = " }, 2, StringSplitOptions.None);
-                if (parts.Length == 2 && _values.ContainsKey(parts[0]))
-                    yield return parts[0] + " = " + _values[parts[0]];
+                string[] parts = line.Split(new[] { "=" }, 2, StringSplitOptions.None);
+                if (!line.StartsWith("#") && parts.Length == 2)
+                {
+                    string settingName = parts[0].Trim();
+
+                    if (_values.ContainsKey(settingName))
+                    {
+                        outputLines.Add(settingName + " = " + _values[settingName]);
+                        writtenKeys.Add(settingName);
+                    }
+                    else
+                    {
+                        outputLines.Add(line);
+                    }
+                }
                 else
-                    yield return line;
+                {
+                    outputLines.Add(line);
+                }
             }
+
+            // loop over new settings to add to cfg if it does not exist in the file
+            foreach (string key in _values.Keys)
+            {
+                if (!writtenKeys.Contains(key))
+                {
+                    outputLines.Add($"{key} = {_values[key]}");
+                }
+            }
+
+            return outputLines;
         }
     }
 
@@ -76,6 +106,8 @@ namespace Iros._7th.Workshop.ConfigSettings {
         public string Name { get; set; }
         public string Description { get; set; }
         public string Group { get; set; }
+
+        public string DefaultValue { get; set; }
 
         public virtual void Load(System.Windows.Forms.Control container, Settings settings) {
             var lbl = new System.Windows.Forms.Label() { Text = Name };

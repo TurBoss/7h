@@ -53,16 +53,17 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ContentControl">
-                        <Grid Height="60">
+                        <Grid Height="45" Width="425" Margin="0,0,0,0" HorizontalAlignment="Left">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="10"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Text="{Binding DisplayName, FallbackValue='Setting Name:'}"
                                        Margin="0,4,5,0"
-                                       HorizontalAlignment="Right"
+                                       Grid.Column="1"
+                                       HorizontalAlignment="Left"
                                        VerticalAlignment="Top"/>
 
                             <CheckBox Content=""
@@ -70,9 +71,9 @@
                                       IsChecked="{Binding IsOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       VerticalAlignment="Top"
                                       HorizontalAlignment="Left"
-                                      Grid.Column="1"/>
+                                      Grid.Column="2"/>
 
-                            <TextBox Grid.Column="1"
+                            <TextBox Grid.Column="2"
                                      Margin="0,4,0,0"
                                      Text="{Binding TextEntryOptionValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Visibility="{Binding TextBoxVisibility, FallbackValue='Hidden'}"
@@ -80,19 +81,13 @@
                                      HorizontalAlignment="Left"
                                      Width="150"/>
 
-                            <ComboBox Grid.Column="1"
+                            <ComboBox Grid.Column="2"
                                       HorizontalAlignment="Left"
                                       VerticalAlignment="Top"
                                       MinWidth="200"
                                       Visibility="{Binding ComboBoxVisibility}"
                                       ItemsSource="{Binding DropdownOptions}"
                                       SelectedIndex="{Binding SelectedDropdownIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
-                            <TextBlock Grid.Column="2"
-                                       TextWrapping="Wrap"
-                                       HorizontalAlignment="Left"
-                                       Margin="25,0,0,0"
-                                       Text="{Binding Description, FallbackValue='This is a description of what this setting does.'}"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -113,12 +108,30 @@
             </TabItem>-->
         </TabControl>
 
+        <TextBlock x:Name="txtStatusMessage" Grid.Row="1"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   TextWrapping="Wrap"
+                   Margin="5,0,0,5"
+                   MaxWidth="465"
+                   Text="{Binding StatusMessage, FallbackValue='This is a description of a option or message to the user '}"/>
+
+        <Button Grid.Row="1"
+                Click="btnReset_Click"
+                x:Name="btnReset"
+                Content="Reset Defaults"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Margin="0,0,187,5"
+                Width="110"/>
+
         <Button Grid.Row="1"
                 Click="btnSave_Click"
                 x:Name="btnSave"
-                Content="OK"
+                Content="Save"
                 HorizontalAlignment="Right"
-                Margin="0,0,105,5"
+                VerticalAlignment="Bottom"
+                Margin="0,0,96,5"
                 Width="90"/>
 
         <Button Grid.Row="1"
@@ -126,6 +139,7 @@
                 Click="btnCancel_Click"
                 Content="Cancel"
                 HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
                 Margin="0,0,5,5"
                 Width="90"/>
     </Grid>
