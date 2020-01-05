@@ -102,7 +102,7 @@ namespace SeventhHeavenUI.ViewModels
             get
             {
                 if (_categoryList == null)
-                    _categoryList = ModLoadOrder.Orders.Keys.ToList();
+                    _categoryList = ModLoadOrder.Orders.Keys.OrderBy(s => s).ToList();
 
                 return _categoryList;
             }

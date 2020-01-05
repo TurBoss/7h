@@ -193,6 +193,11 @@ namespace SeventhHeavenUI.ViewModels
             Version = Mod.LatestVersion.Version.ToString();
             DownloadSize = GetDLSize(Mod.LatestVersion.DownloadSize);
             ReleaseDate = Mod.LatestVersion.ReleaseDate.ToString(Sys.Settings.DateTimeStringFormat);
+
+            if (string.IsNullOrWhiteSpace(Category))
+            {
+                Category = ModCategory.Unknown.ToString();
+            }
         }
 
     }

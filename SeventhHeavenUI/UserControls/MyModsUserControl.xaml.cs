@@ -75,6 +75,7 @@ namespace SeventhHeaven.UserControls
 
         private void btnRefresh_Click(object sender, System.Windows.RoutedEventArgs e)
         {
+            MainWindowViewModel.ValidateAndRemoveDeletedMods();
             ViewModel.RefreshModList();
             RecalculateColumnWidths();
         }

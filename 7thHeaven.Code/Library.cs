@@ -116,6 +116,12 @@ namespace Iros._7th.Workshop
         public InstalledVersion LatestInstalled { get { return Versions.OrderBy(v => v.VersionDetails.Version).Last(); } }
 
         public int SavedSortOrder { get; set; }
+
+        public bool ModExistsOnFileSystem()
+        {
+            string fn = Path.Combine(Sys.Settings.LibraryLocation, LatestInstalled.InstalledLocation);
+            return Directory.Exists(fn) || File.Exists(fn);
+        }
     }
 
     public class InstalledVersion

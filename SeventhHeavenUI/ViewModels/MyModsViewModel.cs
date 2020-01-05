@@ -533,6 +533,15 @@ namespace SeventhHeavenUI.ViewModels
         /// <param name="change"></param>
         public void ReorderProfileItem(InstalledModViewModel mod, int change)
         {
+            // validate mod has not been removed from filesystem
+            if (!mod.InstallInfo.ModExistsOnFileSystem())
+            {
+                MainWindowViewModel.ValidateAndRemoveDeletedMods();
+                Sys.Message(new WMessage($"Can not re-order mod. It seems {mod.Name} has been removed from the file system.", true));
+                ReloadModListFromUIThread();
+                return;
+            }
+
             int index = ModList.IndexOf(mod);
 
             int newindex = index + change;
@@ -557,6 +566,15 @@ namespace SeventhHeavenUI.ViewModels
 
         public void SendModToBottom(InstalledModViewModel mod)
         {
+            // validate mod has not been removed from filesystem
+            if (!mod.InstallInfo.ModExistsOnFileSystem())
+            {
+                MainWindowViewModel.ValidateAndRemoveDeletedMods();
+                Sys.Message(new WMessage($"Can not re-order mod. It seems {mod.Name} has been removed from the file system.", true));
+                ReloadModListFromUIThread();
+                return;
+            }
+
             int index = ModList.IndexOf(mod);
 
             App.Current.Dispatcher.Invoke(() =>
@@ -576,6 +594,15 @@ namespace SeventhHeavenUI.ViewModels
 
         public void SendModToTop(InstalledModViewModel mod)
         {
+            // validate mod has not been removed from filesystem
+            if (!mod.InstallInfo.ModExistsOnFileSystem())
+            {
+                MainWindowViewModel.ValidateAndRemoveDeletedMods();
+                Sys.Message(new WMessage($"Can not re-order mod. It seems {mod.Name} has been removed from the file system.", true));
+                ReloadModListFromUIThread();
+                return;
+            }
+
             int index = ModList.IndexOf(mod);
 
             App.Current.Dispatcher.Invoke(() =>
@@ -595,6 +622,15 @@ namespace SeventhHeavenUI.ViewModels
 
         internal void ShowConfigureModWindow(InstalledModViewModel modToConfigure)
         {
+            // validate mod has not been removed from filesystem
+            if (!modToConfigure.InstallInfo.ModExistsOnFileSystem())
+            {
+                MainWindowViewModel.ValidateAndRemoveDeletedMods();
+                Sys.Message(new WMessage($"Can not configure mod. It seems {modToConfigure.Name} has been removed from the file system.", true));
+                ReloadModListFromUIThread();
+                return;
+            }
+
             InstalledVersion installed = Sys.Library.GetItem(modToConfigure.InstallInfo.ModID)?.LatestInstalled;
             _7thWrapperLib.ModInfo info = null;
             Func<string, string> imageReader;

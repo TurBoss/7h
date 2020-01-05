@@ -122,6 +122,7 @@ They will be automatically turned off.";
                 {
                     _selectedTabIndex = value;
                     NotifyPropertyChanged();
+                    NotifyPropertyChanged(nameof(ReadmeVisibility));
 
                     ReloadAvailableFilters();
 
@@ -356,6 +357,17 @@ They will be automatically turned off.";
             {
                 _isFlashingStatus = value;
                 NotifyPropertyChanged();
+            }
+        }
+
+        public Visibility ReadmeVisibility
+        {
+            get
+            {
+                if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
+                    return Visibility.Hidden;
+
+                return Visibility.Visible;
             }
         }
 
@@ -743,18 +755,28 @@ They will be automatically turned off.";
             }
 
             // validate imported mod files exist - remove them if they do not exit
-            foreach (InstalledItem mod in Sys.Library.Items.ToArray())
+            ValidateAndRemoveDeletedMods();
+
+            Sys.Library.AttemptDeletions();
+        }
+
+        internal static bool ValidateAndRemoveDeletedMods()
+        {
+            bool deletedInvalidMod = false;
+
+            foreach (InstalledItem mod in Sys.Library.Items.ToList())
             {
-                string fn = Path.Combine(Sys.Settings.LibraryLocation, mod.LatestInstalled.InstalledLocation);
-                if (!File.Exists(fn) && !Directory.Exists(fn))
+                if (!mod.ModExistsOnFileSystem())
                 {
-                    Sys.Library.Items.Remove(mod);
+                    Sys.Library.RemoveInstall(mod);
+                    Sys.ActiveProfile.Items.RemoveAll(p => p.ModID == mod.ModID);
                     Mod details = mod.CachedDetails ?? new Mod();
                     Sys.Message(new WMessage { Text = $"Could not find mod {details.Name} - has it been deleted? Removed." });
+                    deletedInvalidMod = true;
                 }
             }
 
-            Sys.Library.AttemptDeletions();
+            return deletedInvalidMod;
         }
 
         public void RefreshProfile()
@@ -919,6 +941,7 @@ They will be automatically turned off.";
                 hasCode |= modInfo.LoadPlugins.Any();
                 hasCode |= modInfo.LoadLibraries.Any();
                 hasCode |= modInfo.LoadAssemblies.Any();
+                hasCode |= modInfo.LoadPrograms.Any();
             }
 
             if (!hasCode) return true;
