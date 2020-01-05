@@ -113,9 +113,7 @@
                         <MenuItem x:Name="menuItemAaliSettings" Header="Configure OpenGL Driver..." Click="menuItemAaliSettings_Click"/>
                         <MenuItem x:Name="menuItemThemeSettings" Header="Change Color Theme..." Click="menuItemThemeSettings_Click"/>
                         <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
-                        <MenuItem x:Name="menuItemNewProfile" Header="New Profile" Click="menuItemNewProfile_Click"/>
-                        <MenuItem x:Name="menuItemOpenProfile" Header="Open Profile" Click="menuItemOpenProfile_Click"/>
-                        <MenuItem x:Name="menuItemProfileDetails" Header="Profile Details" Click="menuItemProfileDetails_Click"/>
+                        <MenuItem x:Name="menuItemOpenProfile" Header="Profiles..." Click="menuItemOpenProfile_Click"/>
                     </ContextMenu>
                 </cls:ButtonWithImage.ContextMenu>
             </cls:ButtonWithImage>

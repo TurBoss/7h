@@ -1,9 +1,11 @@
-﻿using Iros._7th.Workshop;
+﻿using Iros._7th;
+using Iros._7th.Workshop;
 using Microsoft.Win32;
 using SeventhHeaven.Windows;
 using SeventhHeavenUI.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -75,6 +77,40 @@ namespace SeventhHeaven.ViewModels
             Profiles = profiles;
         }
 
+        /// <summary>
+        /// Opens a window to input a new profile name.
+        /// if new profile is created, then current profile is saved before switching to new profile.
+        /// </summary>
+        internal void CreateNewProfile()
+        {
+            string profileName = InputNewProfileName();
+
+            if (profileName == null)
+            {
+                return; // user canceled inputting a profile name
+            }
+
+            try
+            {
+                MainWindowViewModel.SaveProfile(); // save current profile
+
+                // create new profile and save
+                Sys.ActiveProfile = new Profile();
+                Sys.Settings.CurrentProfile = profileName;
+                MainWindowViewModel.SaveProfile();
+
+
+                ReloadProfiles();
+                SelectedProfile = profileName;
+
+                Sys.Message(new WMessage($"Successfully created new profile {profileName}!", true));
+            }
+            catch (Exception e)
+            {
+                Sys.Message(new WMessage($"Failed to create new profile {profileName}: {e.Message}", true));
+            }
+        }
+
         public void DeleteProfile(string name)
         {
             string pathToProfile = Path.Combine(Sys.PathToProfiles, $"{name}.xml");
@@ -88,12 +124,12 @@ namespace SeventhHeaven.ViewModels
             try
             {
                 File.Delete(pathToProfile);
-                Sys.Message(new WMessage($"Successfully deleted profile {name}"));
+                Sys.Message(new WMessage($"Successfully deleted profile {name}", true));
             }
             catch (Exception e)
             {
                 Logger.Error(e);
-                Sys.Message(new WMessage($"Failed to delete profile: {name}"));
+                Sys.Message(new WMessage($"Failed to delete profile: {name}", true));
             }
 
             ReloadProfiles();
@@ -113,7 +149,7 @@ namespace SeventhHeaven.ViewModels
 
             try
             {
-                newProfileName = OpenProfileViewModel.InputNewProfileName();
+                newProfileName = InputNewProfileName();
 
                 if (newProfileName == null)
                 {
@@ -121,15 +157,43 @@ namespace SeventhHeaven.ViewModels
                 }
 
                 File.Copy(pathToProfile, Path.Combine(Sys.PathToProfiles, $"{newProfileName}.xml"));
-                Sys.Message(new WMessage($"Successfully copied profile {name} to the new profile {newProfileName}"));
+                Sys.Message(new WMessage($"Successfully copied profile {name} to the new profile {newProfileName}", true));
             }
             catch (Exception e)
             {
                 Logger.Error(e);
-                Sys.Message(new WMessage($"Failed to copy profile {name} to {newProfileName}"));
+                Sys.Message(new WMessage($"Failed to copy profile {name} to {newProfileName}", true));
             }
 
             ReloadProfiles();
+        }
+
+        public void ViewProfileDetails(string name)
+        {
+            string pathToProfile = Path.Combine(Sys.PathToProfiles, $"{name}.xml");
+
+            if (!File.Exists(pathToProfile))
+            {
+                Logger.Warn($"profile does not exist: {pathToProfile}");
+                return;
+            }
+
+            try
+            {
+                Profile profileToView = Util.Deserialize<Profile>(pathToProfile);
+
+                string tempFolder = Path.Combine(Sys.PathToTempFolder, "profile_details");
+                string tempFile = Path.Combine(tempFolder, $"{Path.GetRandomFileName()}.txt");
+
+                Directory.CreateDirectory(tempFolder);
+                File.WriteAllLines(tempFile, profileToView.GetDetails());
+
+                Process.Start("notepad.exe", tempFile);
+            }
+            catch (Exception e)
+            {
+                Sys.Message(new WMessage($"Failed to open profile details: {e.Message}", true));
+            }
         }
 
         public static string InputNewProfileName()
@@ -164,6 +228,32 @@ namespace SeventhHeaven.ViewModels
             } while (!isValid);
 
             return profileName;
+        }
+
+        /// <summary>
+        /// Attempts to delete any temp files that were created for viewing profile details
+        /// </summary>
+        public void AttemptDeleteTempFiles()
+        {
+            string tempFolder = Path.Combine(Sys.PathToTempFolder, "profile_details");
+
+            if (!Directory.Exists(tempFolder))
+            {
+                return;
+            }
+
+            foreach (string file in Directory.GetFiles(tempFolder))
+            {
+                try
+                {
+                    File.Delete(file);
+                }
+                catch (Exception e)
+                {
+                    // ignore exception here as it could be from the file still being opened
+                    Logger.Warn($"Could not delete temp file {file} - {e.Message}");
+                }
+            }
         }
 
     }

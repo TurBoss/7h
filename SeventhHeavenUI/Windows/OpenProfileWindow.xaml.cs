@@ -76,5 +76,43 @@ namespace SeventhHeaven.Windows
 
             return true;
         }
+
+        private void menuItemNew_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.CreateNewProfile();
+            lstProfiles.SelectedItem = ViewModel.SelectedProfile;
+        }
+
+        private void ListBoxItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            CloseWindow(true);
+        }
+
+        private void btnClose_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SelectedProfile = null;
+            CloseWindow(false);
+        }
+
+        private void CloseWindow(bool dialogResult)
+        {
+            this.DialogResult = dialogResult;
+            this.Close();
+        }
+
+        private void menuItemDetails_Click(object sender, RoutedEventArgs e)
+        {
+            if (!IsProfileSelected())
+            {
+                return;
+            }
+
+            ViewModel.ViewProfileDetails((string)lstProfiles.SelectedItem);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            ViewModel.AttemptDeleteTempFiles();
+        }
     }
 }

@@ -6,9 +6,16 @@
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         mc:Ignorable="d"
         Style="{StaticResource MainWindowStyle}"
-        Title="Open Profile" 
+        Closing="Window_Closing"
+        Title="Manage Profiles" 
         ResizeMode="NoResize"
         Width="325" Height="400">
+    <Window.Resources>
+        <Style TargetType="ListBoxItem" BasedOn="{StaticResource MainListBoxItemStyle}">
+            <EventSetter Event="MouseDoubleClick" Handler="ListBoxItem_MouseDoubleClick"/>
+        </Style>
+    </Window.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -17,26 +24,38 @@
         </Grid.RowDefinitions>
 
         <TextBlock FontSize="12" TextWrapping="Wrap" Margin="5">
-            Right-click a profile to delete it and other additional options.
+            Right-click below to create, copy, or delete a profile. Double click a profile to load it.
         </TextBlock>
 
         <ListBox Grid.Row="1"
                  x:Name="lstProfiles"
                  ItemsSource="{Binding Profiles}"
-                 ItemContainerStyle="{StaticResource MainListBoxItemStyle}"
                  SelectionChanged="lstProfiles_SelectionChanged">
             <ListBox.ContextMenu>
                 <ContextMenu>
+                    <MenuItem x:Name="menuItemNew" Header="New Profile ..." Click="menuItemNew_Click"/>
                     <MenuItem x:Name="menuItemDelete" Header="Delete Profile ..." Click="menuItemDelete_Click"/>
                     <MenuItem x:Name="menuItemCopy" Header="Copy Profile ..." Click="menuItemCopy_Click"/>
+                    <MenuItem x:Name="menuItemDetails" Header="Profile Details ..." Click="menuItemDetails_Click"/>
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>
 
         <Button x:Name="btnOk"
                 Grid.Row="2"
-                Content="OK"
+                Content="Load Profile"
+                HorizontalAlignment="Center"
+                Margin="0,0,95,0"
+                Width="95"
                 IsEnabled="{Binding OkButtonIsEnabled}"
                 Click="btnOk_Click"/>
+
+        <Button x:Name="btnClose"
+                Grid.Row="2"
+                Content="Close"
+                HorizontalAlignment="Center"
+                Margin="94,0,0,0"
+                Width="95"
+                Click="btnClose_Click"/>
     </Grid>
 </Window>

@@ -244,19 +244,9 @@ namespace SeventhHeavenUI
             ViewModel.ShowGeneralSettingsWindow();
         }
 
-        private void menuItemNewProfile_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.CreateNewProfile();
-        }
-
-        private void menuItemProfileDetails_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void menuItemOpenProfile_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.ShowOpenProfileWindow();
+            ViewModel.ShowProfilesWindow();
         }
 
         private void menuItemChunkTool_Click(object sender, RoutedEventArgs e)

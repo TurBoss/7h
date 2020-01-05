@@ -792,7 +792,7 @@ They will be automatically turned off.";
             MyMods.ReloadModList(null, SearchText, CheckedCategories, CheckedTags);
         }
 
-        internal void SaveProfile()
+        internal static void SaveProfile()
         {
             if (Sys.ActiveProfile != null)
             {
@@ -1453,13 +1453,30 @@ They will be automatically turned off.";
 
         internal void DoSearch()
         {
+            FilterItemViewModel item = AvailableFilters.FirstOrDefault(cat => cat.Name == _showAllText);
+            bool isFilteredBySearchText = false;
+
             if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
             {
+                isFilteredBySearchText = Sys.Catalog.Mods.Any(m => m.SearchRelevance(SearchText) > 0) && !string.IsNullOrWhiteSpace(SearchText);
+
+                if (isFilteredBySearchText && item.IsChecked)
+                {
+                    item.IsChecked = false;
+                }
+
                 CatalogMods.ClearRememberedSearchTextAndCategories();
                 CatalogMods.ReloadModList(CatalogMods.GetSelectedMod()?.Mod?.ID, SearchText, CheckedCategories, CheckedTags);
             }
             else
             {
+                isFilteredBySearchText = Sys.Library.Items.Any(m => m.CachedDetails.SearchRelevance(SearchText) > 0) && !string.IsNullOrWhiteSpace(SearchText);
+
+                if (isFilteredBySearchText && item.IsChecked)
+                {
+                    item.IsChecked = false;
+                }
+
                 MyMods.ClearRememberedSearchTextAndCategories();
                 MyMods.ReloadModList(MyMods.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedCategories, CheckedTags);
             }
@@ -1569,28 +1586,9 @@ They will be automatically turned off.";
         }
 
         /// <summary>
-        /// Opens a window to input a new profile name.
-        /// if new profile is created, then current profile is saved before switching to new profile.
+        /// Opens the 'Profiles' window to manage and switch profiles
         /// </summary>
-        internal void CreateNewProfile()
-        {
-            string profileName = OpenProfileViewModel.InputNewProfileName();
-
-            if (profileName == null)
-            {
-                return; // user canceled inputting a profile name
-            }
-
-            SaveProfile();
-            Sys.ActiveProfile = new Profile();
-            Sys.Settings.CurrentProfile = profileName;
-            RefreshProfile();
-            SaveProfile();
-
-            Sys.Message(new WMessage() { Text = $"Successfully created new profile {profileName}!" });
-        }
-
-        internal void ShowOpenProfileWindow()
+        internal void ShowProfilesWindow()
         {
             OpenProfileWindow profileWindow = new OpenProfileWindow()
             {
@@ -1601,7 +1599,7 @@ They will be automatically turned off.";
 
             if (!dialogResult.GetValueOrDefault(false))
             {
-                // user did not click OK so don't switch profiles
+                // user did not click 'Load Profile' so don't switch profiles
                 return;
             }
 

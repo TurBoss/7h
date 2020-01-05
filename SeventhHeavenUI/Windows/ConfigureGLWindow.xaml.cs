@@ -45,9 +45,19 @@ namespace SeventhHeaven.Windows
 
         public void Init(string cfgSpec, string cfgFile)
         {
-            _settings = new Iros._7th.Workshop.ConfigSettings.Settings(System.IO.File.ReadAllLines(cfgFile));
-            _spec = Util.Deserialize<Iros._7th.Workshop.ConfigSettings.ConfigSpec>(cfgSpec);
-            _file = cfgFile;
+            try
+            {
+                _settings = new Iros._7th.Workshop.ConfigSettings.Settings(System.IO.File.ReadAllLines(cfgFile));
+                _spec = Util.Deserialize<Iros._7th.Workshop.ConfigSettings.ConfigSpec>(cfgSpec);
+                _file = cfgFile;
+
+                txtAdvanceFileEdit.Text = System.IO.File.ReadAllText(_file);
+            }
+            catch (Exception e)
+            {
+                txtAdvanceFileEdit.Text = $"Failed to read ff7_opengl.cfg and/or configSpec file: {e.Message}";
+                txtAdvanceFileEdit.IsEnabled = false;
+            }
 
             foreach (var items in _spec.Settings.GroupBy(s => s.Group))
             {
@@ -81,7 +91,7 @@ namespace SeventhHeaven.Windows
 
                 scrollViewer.Content = stackPanel;
                 tab.Content = scrollViewer;
-                tabCtrlMain.Items.Add(tab);
+                tabCtrlMain.Items.Insert(0, tab);
             }
         }
 
@@ -111,12 +121,21 @@ namespace SeventhHeaven.Windows
         {
             try
             {
-                foreach (GLSettingViewModel item in ViewModels)
+                bool isAdvancedTabSelected = tabCtrlMain.SelectedIndex == tabCtrlMain.Items.Count - 1; // Advanced tab will be the last tab
+                if (isAdvancedTabSelected && txtAdvanceFileEdit.IsEnabled)
                 {
-                    item.Save(_settings);
+                    System.IO.File.WriteAllText(_file, txtAdvanceFileEdit.Text);
+                }
+                else
+                {
+                    foreach (GLSettingViewModel item in ViewModels)
+                    {
+                        item.Save(_settings);
+                    }
+
+                    System.IO.File.WriteAllLines(_file, _settings.GetOutput());
                 }
 
-                System.IO.File.WriteAllLines(_file, _settings.GetOutput());
                 Sys.Message(new WMessage("OpenGL settings saved!"));
                 this.Close();
             }
