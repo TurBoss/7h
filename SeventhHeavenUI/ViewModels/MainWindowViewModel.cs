@@ -508,7 +508,7 @@ They will be automatically turned off.";
 
                     if (currentlySelected?.InstallInfo.ModID == e.ModID)
                     {
-                        UpdateModPreviewInfo(currentlySelected);
+                        UpdateModPreviewInfo(currentlySelected, forceUpdate: true);
                     }
                 }
                 else
@@ -517,7 +517,7 @@ They will be automatically turned off.";
 
                     if (currentlySelected?.Mod.ID == e.ModID)
                     {
-                        UpdateModPreviewInfo(currentlySelected);
+                        UpdateModPreviewInfo(currentlySelected, forceUpdate: true);
                     }
                 }
             }
@@ -545,7 +545,7 @@ They will be automatically turned off.";
             CatalogMods = null;
         }
 
-        private void UpdateModPreviewInfo(InstalledModViewModel selected)
+        private void UpdateModPreviewInfo(InstalledModViewModel selected, bool forceUpdate = false)
         {
             if (selected == null)
             {
@@ -562,7 +562,7 @@ They will be automatically turned off.";
                 return;
             }
 
-            if (_previewMod?.ID == selected.InstallInfo?.ModID)
+            if (_previewMod?.ID == selected.InstallInfo?.ModID && !forceUpdate)
             {
                 // no change in selected
                 return;
@@ -592,10 +592,10 @@ They will be automatically turned off.";
 
             string pathToImage = Sys.ImageCache.GetImagePath(selected.InstallInfo.CachedDetails.LatestVersion.PreviewImage, selected.InstallInfo.CachedDetails.ID);
 
-            SetPreviewImage(pathToImage);
+            SetPreviewImage(pathToImage, forceUpdate);
         }
 
-        private void UpdateModPreviewInfo(CatalogModItemViewModel selected)
+        private void UpdateModPreviewInfo(CatalogModItemViewModel selected, bool forceUpdate = false)
         {
             if (selected == null)
             {
@@ -612,7 +612,7 @@ They will be automatically turned off.";
                 return;
             }
 
-            if (_previewMod?.ID == selected.Mod?.ID)
+            if (_previewMod?.ID == selected.Mod?.ID && !forceUpdate)
             {
                 // no change in selected
                 return;
@@ -632,15 +632,15 @@ They will be automatically turned off.";
 
             string pathToImage = Sys.ImageCache.GetImagePath(selected.Mod.LatestVersion.PreviewImage, selected.Mod.ID);
 
-            SetPreviewImage(pathToImage);
+            SetPreviewImage(pathToImage, forceUpdate);
         }
 
-        private void SetPreviewImage(string pathToImage)
+        private void SetPreviewImage(string pathToImage, bool forceUpdate = false)
         {
             LoadingGifVisibility = Visibility.Visible;
             Uri newImageUri = pathToImage == null ? null : new Uri(pathToImage);
 
-            if (newImageUri != null && newImageUri.AbsolutePath == PreviewModImageSource?.AbsolutePath)
+            if (!forceUpdate && newImageUri?.AbsolutePath == PreviewModImageSource?.AbsolutePath)
             {
                 LoadingGifVisibility = Visibility.Hidden; // image does not have to be changed so hide the loading gif
             }
