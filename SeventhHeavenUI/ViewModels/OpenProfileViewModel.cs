@@ -188,7 +188,7 @@ namespace SeventhHeaven.ViewModels
                 Profile profileToView = Util.Deserialize<Profile>(pathToProfile);
 
                 string tempFolder = Path.Combine(Sys.PathToTempFolder, "profile_details");
-                string tempFile = Path.Combine(tempFolder, $"{Path.GetRandomFileName()}.txt");
+                string tempFile = Path.Combine(tempFolder, $"{name.Replace(" ", "")}_{Path.GetRandomFileName()}.txt");
                 Directory.CreateDirectory(tempFolder);
 
                 var profileDetails = profileToView.GetDetails();

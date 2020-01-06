@@ -1610,6 +1610,17 @@ They will be automatically turned off.";
                 Sys.Settings.CurrentProfile = profileWindow.ViewModel.SelectedProfile;
                 Sys.ActiveProfile = Util.Deserialize<Profile>(Sys.PathToCurrentProfileFile);
 
+                // update LastUsedSettings for installed mods to match the new active profile
+                foreach (ProfileItem item in Sys.ActiveProfile.Items)
+                {
+                    InstalledItem installed = Sys.Library.GetItem(item.ModID);
+
+                    if (installed != null)
+                    {
+                        installed.LastUsedSettings = item.Settings;
+                    }
+                }
+
                 RefreshProfile();
                 Sys.Message(new WMessage($"Loaded profile {CurrentProfile}"));
             }
