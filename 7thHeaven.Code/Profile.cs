@@ -13,6 +13,15 @@ namespace Iros._7th.Workshop {
         public List<ProfileItem> Items { get; set; }
         public string OpenGLConfig { get; set; }
 
+        [System.Xml.Serialization.XmlIgnore]
+        public List<ProfileItem> ActiveItems
+        {
+            get
+            {
+                return Items?.Where(m => m.IsModActive).ToList();
+            }
+        }
+
         public Profile() {
             Items = new List<ProfileItem>();
         }
@@ -29,17 +38,34 @@ namespace Iros._7th.Workshop {
                     } else
                         yield return String.Format("\tModID {0}", mod.ModID.ToString());
 
+                    yield return String.Format("\tIs Active: {0}", item.IsModActive);
+
                     foreach (var config in item.Settings) {
                         yield return String.Format("\t{0} = {1}", config.ID, config.Value.ToString());
                     }
                 }
             }
         }
+
+        public void AddItem(ProfileItem toAdd)
+        {
+            if (!Items.Any(p => p.ModID == toAdd.ModID))
+            {
+                Items.Add(toAdd);
+            }
+        }
+
+        public ProfileItem GetItem(Guid modID)
+        {
+            return Items.FirstOrDefault(m => m.ModID == modID);
+        }
     }
 
     public class ProfileItem {
         public Guid ModID { get; set; }
         public List<ProfileSetting> Settings { get; set; }
+
+        public bool IsModActive { get; set; }
 
         private static string[] _comparison = new[] { "=", "!=", "<", ">", "<=", ">=" };
         private static List<string> _comparisonL = _comparison.ToList();

@@ -27,7 +27,7 @@ namespace SeventhHeaven.Classes
         {
             message = null;
             if (Option == null) return true; //setting no longer exists, constraints are irrelevant?
-            var pItem = Sys.ActiveProfile.Items.Find(pi => pi.ModID.Equals(ModID));
+            var pItem = Sys.ActiveProfile.ActiveItems.Find(pi => pi.ModID.Equals(ModID));
             var inst = Sys.Library.GetItem(pItem.ModID);
             var setting = pItem.Settings.Find(s => s.ID.Equals(Setting, StringComparison.InvariantCultureIgnoreCase));
             if (setting == null)

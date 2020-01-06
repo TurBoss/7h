@@ -117,7 +117,8 @@ namespace SeventhHeaven.ViewModels
 
             if (!File.Exists(pathToProfile))
             {
-                Logger.Warn($"profile does not exist: {pathToProfile}");
+                Sys.Message(new WMessage($"profile does not exist: {pathToProfile}. Has it been deleted already?", true));
+                ReloadProfiles();
                 return;
             }
 
@@ -142,6 +143,7 @@ namespace SeventhHeaven.ViewModels
             if (!File.Exists(pathToProfile))
             {
                 Logger.Warn($"profile does not exist: {pathToProfile}");
+                ReloadProfiles();
                 return;
             }
 
@@ -180,6 +182,7 @@ namespace SeventhHeaven.ViewModels
             if (!File.Exists(pathToProfile))
             {
                 Logger.Warn($"profile does not exist: {pathToProfile}");
+                ReloadProfiles();
                 return;
             }
 
@@ -270,5 +273,35 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        internal bool SwitchToProfile(string selectedProfile)
+        {
+            // ensure profile xml file exists before switching
+            string xmlFile = Path.Combine(Sys.PathToProfiles, $"{SelectedProfile}.xml");
+
+            if (!File.Exists(xmlFile))
+            {
+                Sys.Message(new WMessage($"Warning: profile xml file for {selectedProfile} does not exist. Can not switch profile!", true));
+                ReloadProfiles();
+                return false;
+            }
+
+            MainWindowViewModel.SaveProfile(); // save current profile before switching
+
+            try
+            {
+                Sys.Settings.CurrentProfile = SelectedProfile;
+                Sys.ActiveProfile = Util.Deserialize<Profile>(Sys.PathToCurrentProfileFile);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Sys.Message(new WMessage($"Failed to switch to profile {selectedProfile}", true));
+                Logger.Warn(e);
+                return false;
+            }
+
+
+        }
     }
 }

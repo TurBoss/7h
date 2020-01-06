@@ -438,7 +438,6 @@ They will be automatically turned off.";
 
             TryAutoImportMods();
 
-            MyMods.SortBySavedSortOrder(); // will sort then reload mod list
 
             CatalogMods.RefreshListRequested += ModList_RefreshRequested;
             MyMods.RefreshListRequested += ModList_RefreshRequested;
@@ -779,6 +778,10 @@ They will be automatically turned off.";
             return deletedInvalidMod;
         }
 
+
+        /// <summary>
+        /// Sets <see cref="CurrentProfile"/> to match what is in <see cref="Sys.Settings"/> and Reloads 'My Mods' list for the profile.
+        /// </summary>
         public void RefreshProfile()
         {
             if (Sys.ActiveProfile == null)
@@ -788,7 +791,9 @@ They will be automatically turned off.";
 
             CurrentProfile = Sys.Settings.CurrentProfile;
 
+
             // reload list of active mods for the profile
+            MyMods.ClearModList();
             MyMods.ReloadModList(null, SearchText, CheckedCategories, CheckedTags);
         }
 
@@ -1005,7 +1010,7 @@ They will be automatically turned off.";
         internal static List<Constraint> GetConstraints()
         {
             List<Constraint> constraints = new List<Constraint>();
-            foreach (ProfileItem pItem in Sys.ActiveProfile.Items)
+            foreach (ProfileItem pItem in Sys.ActiveProfile.ActiveItems)
             {
                 InstalledItem inst = Sys.Library.GetItem(pItem.ModID);
                 _7thWrapperLib.ModInfo info = GetModInfo(inst);
@@ -1023,7 +1028,7 @@ They will be automatically turned off.";
                         if ((setting == null) || (setting.Value != cSetting.MyValue)) continue;
                     }
 
-                    ProfileItem oItem = Sys.ActiveProfile.Items.Find(i => i.ModID.Equals(cSetting.ModID));
+                    ProfileItem oItem = Sys.ActiveProfile.ActiveItems.Find(i => i.ModID.Equals(cSetting.ModID));
                     if (oItem == null) continue;
 
                     InstalledItem oInst = Sys.Library.GetItem(cSetting.ModID);
@@ -1065,16 +1070,16 @@ They will be automatically turned off.";
         private bool VerifyOrdering()
         {
             var details = Sys.ActiveProfile
-                             .Items
+                             .ActiveItems
                              .Select(i => Sys.Library.GetItem(i.ModID))
                              .Select(ii => new { Mod = ii, Info = GetModInfo(ii) })
                              .ToDictionary(a => a.Mod.ModID, a => a);
 
             List<string> problems = new List<string>();
 
-            foreach (int i in Enumerable.Range(0, Sys.ActiveProfile.Items.Count))
+            foreach (int i in Enumerable.Range(0, Sys.ActiveProfile.ActiveItems.Count))
             {
-                ProfileItem mod = Sys.ActiveProfile.Items[i];
+                ProfileItem mod = Sys.ActiveProfile.ActiveItems[i];
                 var info = details[mod.ModID].Info;
 
                 if (info == null)
@@ -1084,7 +1089,7 @@ They will be automatically turned off.";
 
                 foreach (Guid after in info.OrderAfter)
                 {
-                    if (Sys.ActiveProfile.Items.Skip(i).Any(pi => pi.ModID.Equals(after)))
+                    if (Sys.ActiveProfile.ActiveItems.Skip(i).Any(pi => pi.ModID.Equals(after)))
                     {
                         problems.Add($"Mod {details[mod.ModID].Mod.CachedDetails.Name} is meant to come BELOW mod {details[after].Mod.CachedDetails.Name} in the load order");
                     }
@@ -1092,7 +1097,7 @@ They will be automatically turned off.";
 
                 foreach (Guid before in info.OrderBefore)
                 {
-                    if (Sys.ActiveProfile.Items.Take(i).Any(pi => pi.ModID.Equals(before)))
+                    if (Sys.ActiveProfile.ActiveItems.Take(i).Any(pi => pi.ModID.Equals(before)))
                     {
                         problems.Add($"Mod {details[mod.ModID].Mod.CachedDetails.Name} is meant to come ABOVE mod {details[before].Mod.CachedDetails.Name} in the load order");
                     }
@@ -1110,7 +1115,7 @@ They will be automatically turned off.";
 
         private bool SanityCheckCompatibility()
         {
-            List<InstalledItem> profInst = Sys.ActiveProfile.Items.Select(pi => Sys.Library.GetItem(pi.ModID)).ToList();
+            List<InstalledItem> profInst = Sys.ActiveProfile.ActiveItems.Select(pi => Sys.Library.GetItem(pi.ModID)).ToList();
 
             foreach (InstalledItem item in profInst)
             {
@@ -1187,7 +1192,7 @@ They will be automatically turned off.";
 
             LaunchAdditionalProgramsToRunPrior();
 
-            if (Sys.ActiveProfile.Items.Count == 0)
+            if (Sys.ActiveProfile.ActiveItems.Count == 0)
             {
                 MessageDialogWindow.Show("No mods have been activated. The game will now launch as 'vanilla'", "Launch Warning");
                 LaunchFF7Exe();
@@ -1208,9 +1213,9 @@ They will be automatically turned off.";
                 OpenGLConfig = Sys.ActiveProfile.OpenGLConfig,
                 FF7Path = ff7Folder,
                 gameFiles = Directory.GetFiles(ff7Folder, "*.*", SearchOption.AllDirectories),
-                Mods = Sys.ActiveProfile.Items.Select(i => i.GetRuntime(_context))
-                                              .Where(i => i != null)
-                                              .ToList()
+                Mods = Sys.ActiveProfile.ActiveItems.Select(i => i.GetRuntime(_context))
+                                                    .Where(i => i != null)
+                                                    .ToList()
             };
 
             runtimeProfiles.MonitorPaths.AddRange(Sys.Settings.ExtraFolders.Where(s => s.Length > 0).Select(s => Path.Combine(ff7Folder, s)));
@@ -1590,40 +1595,18 @@ They will be automatically turned off.";
         /// </summary>
         internal void ShowProfilesWindow()
         {
-            OpenProfileWindow profileWindow = new OpenProfileWindow()
-            {
-                WindowStartupLocation = WindowStartupLocation.CenterScreen
-            };
+            OpenProfileWindow profileWindow = new OpenProfileWindow();
 
             bool? dialogResult = profileWindow.ShowDialog();
 
             if (!dialogResult.GetValueOrDefault(false))
             {
-                // user did not click 'Load Profile' so don't switch profiles
+                // user did not click 'Load Profile' so don't refresh profile
                 return;
             }
 
-            if (!string.IsNullOrWhiteSpace(profileWindow.ViewModel.SelectedProfile))
-            {
-                SaveProfile(); // save current profile before switching
-
-                Sys.Settings.CurrentProfile = profileWindow.ViewModel.SelectedProfile;
-                Sys.ActiveProfile = Util.Deserialize<Profile>(Sys.PathToCurrentProfileFile);
-
-                // update LastUsedSettings for installed mods to match the new active profile
-                foreach (ProfileItem item in Sys.ActiveProfile.Items)
-                {
-                    InstalledItem installed = Sys.Library.GetItem(item.ModID);
-
-                    if (installed != null)
-                    {
-                        installed.LastUsedSettings = item.Settings;
-                    }
-                }
-
-                RefreshProfile();
-                Sys.Message(new WMessage($"Loaded profile {CurrentProfile}"));
-            }
+            RefreshProfile();
+            Sys.Message(new WMessage($"Loaded profile {CurrentProfile}"));
         }
 
         internal void ShowChunkToolWindow()

@@ -302,6 +302,8 @@ namespace SeventhHeaven.ViewModels
                 UpdateType = UpdateType.Ignore,
                 Versions = new List<InstalledVersion>() { new InstalledVersion() { VersionDetails = m.LatestVersion, InstalledLocation = location } },
             });
+
+            Sys.ActiveProfile.AddItem(new ProfileItem() { ModID = m.ID, Settings = new List<ProfileSetting>(), IsModActive = false });
         }
 
         public Task<bool> ImportModFromWindowAsync()

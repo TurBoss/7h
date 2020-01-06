@@ -177,7 +177,7 @@ namespace SeventhHeavenUI.ViewModels
         {
             get
             {
-                return ActiveModInfo != null;
+                return ActiveModInfo != null && ActiveModInfo.IsModActive;
             }
             set
             {

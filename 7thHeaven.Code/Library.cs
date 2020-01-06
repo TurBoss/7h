@@ -115,12 +115,8 @@ namespace Iros._7th.Workshop
         public List<InstalledVersion> Versions { get; set; }
         public InstalledVersion LatestInstalled { get { return Versions.OrderBy(v => v.VersionDetails.Version).Last(); } }
 
+        [System.Xml.Serialization.XmlIgnore]
         public int SavedSortOrder { get; set; }
-        
-        /// <summary>
-        /// Used to store the mod config settings between activation/deactivation of a mod
-        /// </summary>
-        public List<ProfileSetting> LastUsedSettings { get; set; }
 
         public bool ModExistsOnFileSystem()
         {

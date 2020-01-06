@@ -108,7 +108,7 @@ namespace SeventhHeavenUI.ViewModels
 
             List<InstalledModViewModel> allMods = new List<InstalledModViewModel>();
 
-            foreach (ProfileItem item in Sys.ActiveProfile.Items.ToList())
+            foreach (ProfileItem item in Sys.ActiveProfile.Items)
             {
                 InstalledItem mod = Sys.Library.GetItem(item.ModID);
 
@@ -127,14 +127,21 @@ namespace SeventhHeavenUI.ViewModels
 
             foreach (InstalledItem item in Sys.Library.Items.ToList())
             {
-                bool isActive = allMods.Any(m => m.InstallInfo.ModID == item.ModID && m.InstallInfo.LatestInstalled.InstalledLocation == item.LatestInstalled.InstalledLocation);
+                bool isAdded = allMods.Any(m => m.InstallInfo.ModID == item.ModID && m.InstallInfo.LatestInstalled.InstalledLocation == item.LatestInstalled.InstalledLocation);
 
                 bool includeMod = DoesModMatchSearchCriteria(searchText, categories, tags, item.CachedDetails);
 
-                if (!isActive && includeMod)
+                // ensure installed mod is included under the active profile if it is missing so you can toggle activation later
+                ProfileItem profileItem = Sys.ActiveProfile.GetItem(item.ModID);
+                if (profileItem == null)
                 {
+                    profileItem = new ProfileItem() { ModID = item.ModID, Settings = new List<ProfileSetting>(), IsModActive = false };
+                    Sys.ActiveProfile.AddItem(profileItem);
+                }
 
-                    InstalledModViewModel installedMod = new InstalledModViewModel(item, null);
+                if (!isAdded && includeMod)
+                {
+                    InstalledModViewModel installedMod = new InstalledModViewModel(item, profileItem);
                     installedMod.ActivationChanged += ActiveMod_ActivationChanged;
                     allMods.Add(installedMod);
                 }
@@ -291,11 +298,13 @@ namespace SeventhHeavenUI.ViewModels
 
                 ModList.Clear();
             }
+
+            modLoadOrders.Clear();
         }
 
         private void ActiveMod_ActivationChanged(object sender, InstalledModViewModel selected)
         {
-            ToggleActivateMod(selected.InstallInfo.ModID);
+            ToggleActivateMod(selected.InstallInfo.ModID, false);
         }
 
         internal void ShowImportModWindow()
@@ -343,7 +352,7 @@ namespace SeventhHeavenUI.ViewModels
             // item == null - activate mod for current profile
             // item != null - deactivate mod for current profile
 
-            if (item == null)
+            if (item == null || item?.IsModActive == false)
             {
                 HashSet<Guid> examined = new HashSet<Guid>();
                 List<InstalledItem> pulledIn = new List<InstalledItem>();
@@ -375,7 +384,7 @@ namespace SeventhHeavenUI.ViewModels
                                 badVersion.Add(inst);
                             else
                             {
-                                if (Sys.ActiveProfile.Items.Find(pi => pi.ModID.Equals(req.ModID)) == null)
+                                if (Sys.ActiveProfile.ActiveItems.Find(pi => pi.ModID.Equals(req.ModID)) == null)
                                     pulledIn.Add(inst);
                                 toExamine.Push(inst);
                             }
@@ -387,7 +396,7 @@ namespace SeventhHeavenUI.ViewModels
                         if (!examined.Contains(forbid.ModID))
                         {
                             examined.Add(forbid.ModID);
-                            var pItem = Sys.ActiveProfile.Items.Find(i => i.ModID.Equals(forbid.ModID));
+                            var pItem = Sys.ActiveProfile.ActiveItems.Find(i => i.ModID.Equals(forbid.ModID));
                             if (pItem != null)
                             {
                                 if (!forbid.Versions.Any() || forbid.Versions.Contains(Sys.Library.GetItem(pItem.ModID).LatestInstalled.VersionDetails.Version))
@@ -399,7 +408,7 @@ namespace SeventhHeavenUI.ViewModels
                     }
                 }
 
-                foreach (var active in Sys.ActiveProfile.Items.Except(remove))
+                foreach (var active in Sys.ActiveProfile.ActiveItems.Except(remove))
                 {
                     var info = MainWindowViewModel.GetModInfo(Sys.Library.GetItem(active.ModID));
                     if (info != null)
@@ -471,7 +480,7 @@ namespace SeventhHeavenUI.ViewModels
 
         private void DoDeactivate(ProfileItem item, bool reloadList = true)
         {
-            Sys.ActiveProfile.Items.Remove(item);
+            item.IsModActive = false;
 
             if (reloadList)
             {
@@ -483,16 +492,19 @@ namespace SeventhHeavenUI.ViewModels
         {
             if (!MainWindowViewModel.CheckAllowedActivate(modID)) return;
 
-            // get settings from Library if they exist
-            List<ProfileSetting> settings = Sys.Library.GetItem(modID)?.LastUsedSettings;
+            var mod = Sys.ActiveProfile.Items.FirstOrDefault(m => m.ModID == modID);
 
-            if (settings == null)
+            if (mod != null)
             {
-                settings = new List<ProfileSetting>();
+                // already exists in list so just mark as active
+                mod.IsModActive = true;
+            }
+            else
+            {
+                var item = new ProfileItem() { ModID = modID, Settings = new List<ProfileSetting>(), IsModActive = true };
+                Sys.ActiveProfile.Items.Add(item);
             }
 
-            var item = new ProfileItem() { ModID = modID, Settings = settings };
-            Sys.ActiveProfile.Items.Add(item);
 
             if (reloadList)
             {
@@ -566,7 +578,7 @@ namespace SeventhHeavenUI.ViewModels
                     ModList.Insert(newindex, mod);
                 }
 
-                Sys.ActiveProfile.Items = ModList.Where(m => m.IsActive).Select(m => m.ActiveModInfo).ToList();
+                Sys.ActiveProfile.Items = ModList.Select(m => m.ActiveModInfo).ToList();
 
                 ReloadModList(mod.InstallInfo.CachedDetails.ID);
             });
@@ -594,7 +606,7 @@ namespace SeventhHeavenUI.ViewModels
                     ModList.Add(mod);
                 }
 
-                Sys.ActiveProfile.Items = ModList.Where(m => m.IsActive).Select(m => m.ActiveModInfo).ToList();
+                Sys.ActiveProfile.Items = ModList.Select(m => m.ActiveModInfo).ToList();
 
                 ReloadModList(mod.InstallInfo.CachedDetails.ID);
             });
@@ -622,7 +634,7 @@ namespace SeventhHeavenUI.ViewModels
                     ModList.Insert(0, mod);
                 }
 
-                Sys.ActiveProfile.Items = ModList.Where(m => m.IsActive).Select(m => m.ActiveModInfo).ToList();
+                Sys.ActiveProfile.Items = ModList.Select(m => m.ActiveModInfo).ToList();
 
                 ReloadModList(mod.InstallInfo.CachedDetails.ID);
             });
@@ -763,7 +775,6 @@ namespace SeventhHeavenUI.ViewModels
                 if (dialogResult.GetValueOrDefault(false) == true)
                 {
                     modToConfigure.ActiveModInfo.Settings = modWindow.ViewModel.GetSettings();
-                    modToConfigure.InstallInfo.LastUsedSettings = modToConfigure.ActiveModInfo.Settings; // also save mod settings to InstalledItem
 
                     MainWindowViewModel.SanityCheckSettings();
                 }
@@ -787,24 +798,7 @@ namespace SeventhHeavenUI.ViewModels
             }
 
             // update active profile with new sort order
-            Sys.ActiveProfile.Items = ModList.Where(m => m.IsActive).Select(m => m.ActiveModInfo).ToList();
-
-            ReloadModList(GetSelectedMod()?.InstallInfo?.ModID);
-        }
-
-        internal void SortBySavedSortOrder()
-        {
-            List<InstalledModViewModel> sortedList = ModList.OrderBy(s => s.InstallInfo.SavedSortOrder)
-                                                            .ToList();
-
-            ClearModList();
-
-            lock (listLock)
-            {
-                ModList = new ObservableCollection<InstalledModViewModel>(sortedList);
-            }
-
-            SetModLoadOrders();
+            Sys.ActiveProfile.Items = ModList.Select(m => m.ActiveModInfo).ToList();
 
             ReloadModList(GetSelectedMod()?.InstallInfo?.ModID);
         }

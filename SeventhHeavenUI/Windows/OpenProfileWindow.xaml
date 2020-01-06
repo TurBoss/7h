@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         mc:Ignorable="d"
         Style="{StaticResource MainWindowStyle}"
+        WindowStartupLocation="CenterScreen"
         Closing="Window_Closing"
         Title="Manage Profiles" 
         ResizeMode="NoResize"

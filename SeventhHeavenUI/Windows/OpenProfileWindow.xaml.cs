@@ -32,8 +32,13 @@ namespace SeventhHeaven.Windows
 
         private void btnOk_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = true;
-            this.Close();
+            if (!IsProfileSelected())
+            {
+                return;
+            }
+
+            ViewModel.SwitchToProfile((string)lstProfiles.SelectedItem);
+            CloseWindow(true);
         }
 
         private void menuItemDelete_Click(object sender, RoutedEventArgs e)
@@ -85,7 +90,15 @@ namespace SeventhHeaven.Windows
 
         private void ListBoxItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            CloseWindow(true);
+            if (lstProfiles.SelectedItem == null)
+            {
+                return;
+            }
+
+            if (ViewModel.SwitchToProfile((string)lstProfiles.SelectedItem))
+            {
+                CloseWindow(true);
+            }
         }
 
         private void btnClose_Click(object sender, RoutedEventArgs e)
