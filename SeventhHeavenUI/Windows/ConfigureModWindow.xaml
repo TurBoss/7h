@@ -10,6 +10,7 @@
         mc:Ignorable="d"
         Style="{StaticResource MainWindowStyle}"
         Title="{Binding WindowTitle, FallbackValue='Configure Mod'}" 
+        WindowStartupLocation="CenterScreen"
         Closed="Window_Closed"
         Height="600" Width="800"
         ResizeMode="CanResize"

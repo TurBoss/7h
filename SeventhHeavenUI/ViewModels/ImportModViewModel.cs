@@ -254,7 +254,7 @@ namespace SeventhHeaven.ViewModels
                     catch (Exception)
                     {
                         Logger.Warn("Invalid GUID found for Mod ID ... Using random guid.");
-                        m.ID = new Guid();
+                        m.ID = Guid.NewGuid();
                     }
                 }
 

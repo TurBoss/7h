@@ -483,7 +483,15 @@ namespace SeventhHeavenUI.ViewModels
         {
             if (!MainWindowViewModel.CheckAllowedActivate(modID)) return;
 
-            var item = new ProfileItem() { ModID = modID, Settings = new List<ProfileSetting>() };
+            // get settings from Library if they exist
+            List<ProfileSetting> settings = Sys.Library.GetItem(modID)?.LastUsedSettings;
+
+            if (settings == null)
+            {
+                settings = new List<ProfileSetting>();
+            }
+
+            var item = new ProfileItem() { ModID = modID, Settings = settings };
             Sys.ActiveProfile.Items.Add(item);
 
             if (reloadList)
@@ -620,6 +628,10 @@ namespace SeventhHeavenUI.ViewModels
             });
         }
 
+        /// <summary>
+        /// Opens Configure Mod Window to make changes to mod settings.
+        /// </summary>
+        /// <param name="modToConfigure"></param>
         internal void ShowConfigureModWindow(InstalledModViewModel modToConfigure)
         {
             // validate mod has not been removed from filesystem
@@ -639,6 +651,7 @@ namespace SeventhHeavenUI.ViewModels
             string config_temp_folder = Path.Combine(Sys.PathToTempFolder, "configmod");
             string pathToModXml = Path.Combine(Sys.Settings.LibraryLocation, installed.InstalledLocation);
 
+            // wire up the imageReader and audioReader to extract/read files from the .iro archive
             IDisposable arcToDispose = null;
             if (pathToModXml.EndsWith(".iro", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -705,6 +718,7 @@ namespace SeventhHeavenUI.ViewModels
             }
             else
             {
+                // if mod is in a folder than wire up imageReader and audioReader to return path to file and audio file stream
                 string file = Path.Combine(pathToModXml, "mod.xml");
                 if (File.Exists(file))
                     info = new _7thWrapperLib.ModInfo(file, MainWindowViewModel._context);
@@ -738,20 +752,19 @@ namespace SeventhHeavenUI.ViewModels
                     return;
                 }
 
-                ConfigureModWindow modWindow = new ConfigureModWindow()
-                {
-                    WindowStartupLocation = WindowStartupLocation.CenterScreen
-                };
 
                 List<Constraint> modConstraints = MainWindowViewModel.GetConstraints().Where(c => c.ModID.Equals(modToConfigure.InstallInfo.ModID)).ToList();
 
+                ConfigureModWindow modWindow = new ConfigureModWindow();
                 modWindow.ViewModel.Init(info, imageReader, audioReader, modToConfigure.ActiveModInfo, modConstraints, pathToModXml);
 
-
+                // Open dialog for configuring settings - if true is returned then the settings are saved
                 bool? dialogResult = modWindow.ShowDialog();
                 if (dialogResult.GetValueOrDefault(false) == true)
                 {
                     modToConfigure.ActiveModInfo.Settings = modWindow.ViewModel.GetSettings();
+                    modToConfigure.InstallInfo.LastUsedSettings = modToConfigure.ActiveModInfo.Settings; // also save mod settings to InstalledItem
+
                     MainWindowViewModel.SanityCheckSettings();
                 }
 

@@ -168,6 +168,11 @@ namespace SeventhHeaven.ViewModels
             ReloadProfiles();
         }
 
+        /// <summary>
+        /// Writes the active mod details of a profile to a temp .txt file
+        /// and opens the temp file in notepad.exe
+        /// </summary>
+        /// <param name="name">Name of profile to view (without the .xml extension)</param>
         public void ViewProfileDetails(string name)
         {
             string pathToProfile = Path.Combine(Sys.PathToProfiles, $"{name}.xml");
@@ -184,9 +189,18 @@ namespace SeventhHeaven.ViewModels
 
                 string tempFolder = Path.Combine(Sys.PathToTempFolder, "profile_details");
                 string tempFile = Path.Combine(tempFolder, $"{Path.GetRandomFileName()}.txt");
-
                 Directory.CreateDirectory(tempFolder);
-                File.WriteAllLines(tempFile, profileToView.GetDetails());
+
+                var profileDetails = profileToView.GetDetails();
+
+                if (profileDetails.Count() == 0)
+                {
+                    File.WriteAllText(tempFile, $"# Note: {name} has no active mods.\n# When mods are active you can view the details such as the Mod ID, version and the config settings used.");
+                }
+                else
+                {
+                    File.WriteAllLines(tempFile, profileDetails);
+                }
 
                 Process.Start("notepad.exe", tempFile);
             }
