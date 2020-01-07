@@ -360,7 +360,15 @@ namespace SeventhHeavenUI.ViewModels
                 List<string> missing = new List<string>();
                 List<InstalledItem> badVersion = new List<InstalledItem>();
                 Stack<InstalledItem> toExamine = new Stack<InstalledItem>();
-                toExamine.Push(Sys.Library.GetItem(modID));
+
+                // verify the mod in the profile still exists in the library.
+                InstalledItem installedMod = Sys.Library.GetItem(modID);
+                if (installedMod == null)
+                {
+                    return;
+                }
+
+                toExamine.Push(installedMod);
 
                 while (toExamine.Any())
                 {
