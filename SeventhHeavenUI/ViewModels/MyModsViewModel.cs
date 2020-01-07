@@ -168,14 +168,22 @@ namespace SeventhHeavenUI.ViewModels
                 }
             }
 
-            if (allMods.Count == 0)
-            {
-                Sys.Message(new WMessage("No results found", true));
-                return;
-            }
 
             int installedModCount = Sys.Library.Items.Count;
             bool isFilteredBySearch = (allMods.Count != installedModCount);
+
+            if (allMods.Count == 0)
+            {
+                Sys.Message(new WMessage("No results found", true));
+
+                if (isFilteredBySearch && !string.IsNullOrWhiteSpace(searchText))
+                {
+                    // when searching by text clear the list to visually show to the user no results were found
+                    ClearModList();
+                }
+
+                return;
+            }
 
 
             if (!isFilteredBySearch)

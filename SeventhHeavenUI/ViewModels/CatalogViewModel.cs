@@ -220,15 +220,26 @@ It may not work properly unless you find and install the requirements.";
                 if (newList.Count == 0)
                 {
                     Sys.Message(new WMessage("No results found", true));
+
+                    if (!string.IsNullOrWhiteSpace(searchText))
+                    {
+                        SetCatalogList(newList);
+                    }
+
                     return;
                 }
 
-                lock (_listLock)
-                {
-                    CatalogModList.Clear();
-                    CatalogModList = newList;
-                }
+                SetCatalogList(newList);
             });
+        }
+
+        private void SetCatalogList(List<CatalogModItemViewModel> newList)
+        {
+            lock (_listLock)
+            {
+                CatalogModList.Clear();
+                CatalogModList = newList;
+            }
         }
 
         internal void ClearRememberedSearchTextAndCategories()
