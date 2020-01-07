@@ -25,26 +25,12 @@
             <Setter Property="Height" Value="30"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+            <Setter Property="BorderThickness" Value="{Binding BorderThickness}"/>
 
-            <Style.Triggers>
-                <EventTrigger RoutedEvent="PreviewDragEnter">
-                    <BeginStoryboard x:Name="DragBeginStoryboard">
-                        <Storyboard>
-                            <ThicknessAnimation Storyboard.TargetProperty="BorderThickness"
-                                                Duration="0:0:0.150"
-                                                From="0, 0, 0, 0"
-                                                To="0, 0, 0, 3"/>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-                <EventTrigger RoutedEvent="PreviewDragLeave">
-                    <StopStoryboard BeginStoryboardName="DragBeginStoryboard"/>
-                </EventTrigger>
-                <EventTrigger RoutedEvent="PreviewDrop">
-                    <StopStoryboard BeginStoryboardName="DragBeginStoryboard"/>
-                </EventTrigger>
-            </Style.Triggers>
+            <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+            <EventSetter Event="PreviewDragEnter" Handler="ListViewItem_PreviewDragEnter"/>
+            <EventSetter Event="PreviewDragLeave" Handler="ListViewItem_PreviewDragLeave"/>
+            <EventSetter Event="PreviewDragOver" Handler="ListViewItem_PreviewDragOver"/>
         </Style>
 
         <Style x:Key="SmallImageButton"  TargetType="{x:Type Button}" BasedOn="{StaticResource ImageButton}">

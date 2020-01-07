@@ -59,12 +59,35 @@ namespace Iros._7th.Workshop {
         {
             return Items.FirstOrDefault(m => m.ModID == modID);
         }
+
+        public void RemoveDeletedItems(bool doWarn = false)
+        {
+            List<string> removedMods = new List<string>();
+
+            foreach (var item in Items.ToList())
+            {
+                if (Sys.Library.GetItem(item.ModID) == null)
+                {
+                    removedMods.Add(item.Name);
+                    Items.Remove(item);
+                }
+            }
+
+            if (removedMods.Count > 0 && doWarn)
+            {
+                Sys.Message(new WMessage($"The following mod(s) were not found installed and have been removed from the profile: {string.Join(", ", removedMods)}", true));
+            }
+        }
     }
 
     public class ProfileItem {
         public Guid ModID { get; set; }
         public List<ProfileSetting> Settings { get; set; }
 
+        /// <summary>
+        /// Name is only saved for reference in case a mod is not installed (so the name is at least known)
+        /// </summary>
+        public string Name { get; set; }
         public bool IsModActive { get; set; }
 
         private static string[] _comparison = new[] { "=", "!=", "<", ">", "<=", ">=" };

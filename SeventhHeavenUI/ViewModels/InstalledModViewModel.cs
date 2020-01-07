@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SeventhHeavenUI.ViewModels
 {
@@ -29,6 +30,7 @@ namespace SeventhHeavenUI.ViewModels
         private string _releaseDate;
         private int _sortOrder;
         private List<string> _categoryList;
+        private Thickness _borderThickness;
 
         public delegate void OnActivationChanged(object sender, InstalledModViewModel selected);
         public event OnActivationChanged ActivationChanged;
@@ -140,7 +142,6 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
-
         /// <summary>
         /// Returns info about the active mod and its setting 
         /// when the mod is active for the current profile.
@@ -198,6 +199,19 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
+        public Thickness BorderThickness
+        {
+            get
+            {
+                return _borderThickness;
+            }
+            set
+            {
+                _borderThickness = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public InstalledModViewModel(InstalledItem installedItem, ProfileItem profileItem)
         {
             InstallInfo = installedItem;
@@ -215,6 +229,8 @@ namespace SeventhHeavenUI.ViewModels
             {
                 Category = ModCategory.Unknown.ToString();
             }
+
+            BorderThickness = new Thickness(0);
         }
 
         public override string ToString()

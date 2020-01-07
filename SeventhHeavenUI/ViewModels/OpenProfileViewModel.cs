@@ -79,12 +79,18 @@ namespace SeventhHeaven.ViewModels
         }
 
         /// <summary>
-        /// Opens a window to input a new profile name.
-        /// if new profile is created, then current profile is saved before switching to new profile.
+        /// Copies the active profile and saves it with a new name (window opens to input a new profile name.)
         /// </summary>
-        internal void CreateNewProfile()
+        internal void SaveActiveProfileAsNew()
         {
-            string profileName = InputNewProfileName();
+            if (!File.Exists(Sys.PathToCurrentProfileFile))
+            {
+                Sys.Message(new WMessage($"Active profile file does not exist: {Sys.PathToCurrentProfileFile}", true));
+                ReloadProfiles();
+                return;
+            }
+
+            string profileName = InputNewProfileName("Enter profile name:", $"Save Active Profile");
 
             if (profileName == null)
             {
@@ -93,22 +99,19 @@ namespace SeventhHeaven.ViewModels
 
             try
             {
-                MainWindowViewModel.SaveProfile(); // save current profile
+                MainWindowViewModel.SaveActiveProfile(); // save current profile
 
-                // create new profile and save
-                Sys.ActiveProfile = new Profile();
-                Sys.Settings.CurrentProfile = profileName;
-                MainWindowViewModel.SaveProfile();
-
+                // copy active profile to new xml file
+                File.Copy(Sys.PathToCurrentProfileFile, Path.Combine(Sys.PathToProfiles, $"{profileName}.xml"));
 
                 ReloadProfiles();
                 SelectedProfile = profileName;
 
-                Sys.Message(new WMessage($"Successfully created new profile {profileName}!", true));
+                Sys.Message(new WMessage($"Successfully saved {Sys.Settings.CurrentProfile} as new profile {profileName}!", true));
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage($"Failed to create new profile {profileName}: {e.Message}", true));
+                Sys.Message(new WMessage($"Failed to save {Sys.Settings.CurrentProfile} as new profile {profileName}: {e.Message}", true));
             }
         }
 
@@ -219,7 +222,7 @@ namespace SeventhHeaven.ViewModels
         {
             if (string.IsNullOrWhiteSpace(prompt))
             {
-                prompt = "Enter new Profile name:";
+                prompt = "Enter new profile name:";
             }
 
             if (string.IsNullOrWhiteSpace(title))
@@ -296,12 +299,15 @@ namespace SeventhHeaven.ViewModels
                 return false;
             }
 
-            MainWindowViewModel.SaveProfile(); // save current profile before switching
+            MainWindowViewModel.SaveActiveProfile(); // save current profile before switching
 
             try
             {
                 Sys.Settings.CurrentProfile = SelectedProfile;
                 Sys.ActiveProfile = Util.Deserialize<Profile>(Sys.PathToCurrentProfileFile);
+
+                Sys.Message(new WMessage($"Loaded profile {selectedProfile}"));
+                Sys.ActiveProfile.RemoveDeletedItems(doWarn: true);
 
                 return true;
             }

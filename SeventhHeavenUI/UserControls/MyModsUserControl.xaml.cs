@@ -16,6 +16,7 @@ namespace SeventhHeaven.UserControls
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public MyModsViewModel ViewModel { get; set; }
+        public bool IsDragging { get; private set; }
 
         public MyModsUserControl()
         {
@@ -169,6 +170,19 @@ namespace SeventhHeaven.UserControls
             ViewModel.ShowImportModWindow();
         }
 
+        private void btnAutoSort_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.AutoSortBasedOnCategory();
+        }
+
+        private void ListViewItem_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (lstMods.SelectedItem != null)
+            {
+                ViewModel.ToggleActivateMod((lstMods.SelectedItem as InstalledModViewModel).InstallInfo.ModID);
+            }
+        }
+
         internal void RecalculateColumnWidths(double listWidth)
         {
             double staticColumnWidth = 135 + 75; // sum of columns with static widths
@@ -221,12 +235,185 @@ namespace SeventhHeaven.UserControls
             RecalculateColumnWidths(lstMods.ActualWidth);
         }
 
-        private void ListViewItem_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        /// <summary>
+        /// Initiates the Drag/Drop re-ordering of active mods
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void lstMods_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (lstMods.SelectedItem != null)
+            if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
             {
-                ViewModel.ToggleActivateMod((lstMods.SelectedItem as InstalledModViewModel).InstallInfo.ModID);
+                if (e.OriginalSource is CheckBox || FindVisualParent<ComboBox>((DependencyObject)e.OriginalSource) != null)
+                {
+                    return; // do not do drag/drop since user is clicking on checkbox to activate mod or selecting category
+                }
+
+                if ((e.OriginalSource as FrameworkElement)?.DataContext is InstalledModViewModel)
+                {
+                    ListViewItem lbi = GetListViewItemFromObject(e.OriginalSource);
+
+                    if (lbi != null)
+                    {
+                        IsDragging = true;
+                        DragDrop.DoDragDrop(lbi, lbi.DataContext, DragDropEffects.Move);
+                    }
+                }
             }
+        }
+
+        /// <summary>
+        /// Re-orders active mods after Drag/Drop has been "dropped"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void lstMods_Drop(object sender, DragEventArgs e)
+        {
+            try
+            {
+                ListViewItem targetItem = GetListViewItemFromObject(e.OriginalSource);
+
+                if (targetItem == null)
+                {
+                    return;
+                }
+
+                Point mousePos = e.GetPosition(targetItem);
+                double halfHeight = targetItem.ActualHeight / 2.0;
+
+                InstalledModViewModel target = targetItem.DataContext as InstalledModViewModel;
+                InstalledModViewModel droppedData = e.Data.GetData(typeof(InstalledModViewModel)) as InstalledModViewModel;
+
+                int removedIdx = lstMods.Items.IndexOf(droppedData);
+                int targetIdx = lstMods.Items.IndexOf(target);
+
+                if (mousePos.Y >= halfHeight && removedIdx > targetIdx && (targetIdx + 1) < lstMods.Items.Count)
+                {
+                    targetIdx++;
+                }
+                else if (mousePos.Y < halfHeight && removedIdx < targetIdx && (targetIdx - 1) >= 0)
+                {
+                    targetIdx--;
+                }
+
+                if (targetIdx == removedIdx)
+                {
+                    return; // no movement needed
+                }
+
+                int delta = targetIdx - removedIdx;
+
+                ViewModel.ReorderProfileItem(droppedData, delta);
+            }
+            catch (System.Exception ex)
+            {
+                Logger.Warn("Failed to drag/drop mods");
+                Logger.Error(ex);
+            }
+            finally
+            {
+                IsDragging = false;
+            }
+        }
+
+        private void ListViewItem_PreviewDragEnter(object sender, DragEventArgs e)
+        {
+            UpdateDragDropIndicatorLine(sender, e);
+        }
+
+        private void ListViewItem_PreviewDragOver(object sender, DragEventArgs e)
+        {
+            UpdateDragDropIndicatorLine(sender, e);
+        }
+
+        /// <summary>
+        /// Updates the border thickness of a ListViewItem during the drag and drop
+        /// to show visual indicator of where the dragged item will be dropped
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UpdateDragDropIndicatorLine(object sender, DragEventArgs e)
+        {
+            ListViewItem item = GetListViewItemFromObject(sender);
+
+            if (item == null)
+            {
+                return;
+            }
+
+            Point mousePos = e.GetPosition(item);
+            double halfHeight = item.ActualHeight / 2.0;
+
+
+            InstalledModViewModel dataToDrop = e.Data.GetData(typeof(InstalledModViewModel)) as InstalledModViewModel;
+            InstalledModViewModel hoverOver = (item.DataContext as InstalledModViewModel);
+
+            // check if dragging over self - don't show border in this case
+            int removedIdx = lstMods.Items.IndexOf(dataToDrop);
+            int targetIdx = lstMods.Items.IndexOf(hoverOver);
+
+            if (mousePos.Y >= halfHeight && removedIdx > targetIdx && (targetIdx + 1) < lstMods.Items.Count)
+            {
+                targetIdx++;
+            }
+            else if (mousePos.Y < halfHeight && removedIdx < targetIdx && (targetIdx - 1) >= 0)
+            {
+                targetIdx--;
+            }
+
+            if (dataToDrop == hoverOver || targetIdx == removedIdx)
+            {
+                hoverOver.BorderThickness = new Thickness(0);
+                return;
+            }
+
+
+            if (mousePos.Y < halfHeight)
+            {
+                hoverOver.BorderThickness = new Thickness(0, 2, 0, 0);
+            }
+            else
+            {
+                hoverOver.BorderThickness = new Thickness(0, 0, 0, 2);
+            }
+        }
+
+        private void ListViewItem_PreviewDragLeave(object sender, DragEventArgs e)
+        {
+            ListViewItem item = GetListViewItemFromObject(sender);
+
+            if (item == null)
+            {
+                return;
+            }
+
+            (item.DataContext as InstalledModViewModel).BorderThickness = new Thickness(0);
+        }
+
+        private ListViewItem GetListViewItemFromObject(object sender)
+        {
+            ListViewItem item = sender as ListViewItem;
+
+            if (item == null)
+            {
+                item = FindVisualParent<ListViewItem>((DependencyObject)sender);
+            }
+
+            return item;
+        }
+
+        private T FindVisualParent<T>(DependencyObject child)
+            where T : DependencyObject
+        {
+            var parentObject = VisualTreeHelper.GetParent(child);
+            if (parentObject == null)
+                return null;
+
+            T parent = parentObject as T;
+            if (parent != null)
+                return parent;
+
+            return FindVisualParent<T>(parentObject);
         }
 
         private childItem FindVisualChild<childItem>(DependencyObject obj)
@@ -247,75 +434,5 @@ namespace SeventhHeaven.UserControls
             return null;
         }
 
-        /// <summary>
-        /// Initiates the Drag/Drop re-ordering of active mods
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void lstMods_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
-            {
-                if (e.OriginalSource is CheckBox || FindVisualParent<ComboBox>((DependencyObject)e.OriginalSource) != null)
-                {
-                    return; // do not do drag/drop since user is clicking on checkbox to activate mod or selecting category
-                }
-
-                if ((e.OriginalSource as FrameworkElement)?.DataContext is InstalledModViewModel)
-                {
-                    ListViewItem lbi = FindVisualParent<ListViewItem>(((DependencyObject)e.OriginalSource));
-
-                    if (lbi != null)
-                    {
-                        DragDrop.DoDragDrop(lbi, lbi.DataContext, DragDropEffects.Move);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Re-orders active mods after Drag/Drop has been "dropped"
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void lstMods_Drop(object sender, DragEventArgs e)
-        {
-            try
-            {
-                InstalledModViewModel droppedData = e.Data.GetData(typeof(InstalledModViewModel)) as InstalledModViewModel;
-                InstalledModViewModel target = ((FrameworkElement)e.OriginalSource)?.DataContext as InstalledModViewModel;
-
-                int removedIdx = lstMods.Items.IndexOf(droppedData);
-                int targetIdx = lstMods.Items.IndexOf(target);
-
-                int delta = targetIdx - removedIdx;
-
-                ViewModel.ReorderProfileItem(droppedData, delta);
-            }
-            catch (System.Exception ex)
-            {
-                Logger.Warn("Failed to drag/drop mods");
-                Logger.Error(ex);
-            }
-        }
-
-        private T FindVisualParent<T>(DependencyObject child)
-            where T : DependencyObject
-        {
-            var parentObject = VisualTreeHelper.GetParent(child);
-            if (parentObject == null)
-                return null;
-
-            T parent = parentObject as T;
-            if (parent != null)
-                return parent;
-
-            return FindVisualParent<T>(parentObject);
-        }
-
-        private void btnAutoSort_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.AutoSortBasedOnCategory();
-        }
     }
 }

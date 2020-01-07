@@ -529,7 +529,7 @@ They will be automatically turned off.";
         /// </summary>
         internal void CleanUp()
         {
-            SaveProfile();
+            SaveActiveProfile();
             Sys.Save();
 
             MyMods.SelectedModChanged -= ModsViewModel_SelectedModChanged;
@@ -797,35 +797,57 @@ They will be automatically turned off.";
             MyMods.ReloadModList(null, SearchText, CheckedCategories, CheckedTags);
         }
 
-        internal static void SaveProfile()
+        /// <summary>
+        /// Saves <see cref="Sys.ActiveProfile"/> to disk.
+        /// </summary>
+        internal static bool SaveActiveProfile()
         {
-            if (Sys.ActiveProfile != null)
+            if (Sys.ActiveProfile == null)
             {
-                try
+                return false;
+            }
+
+            try
+            {
+                using (FileStream fs = new FileStream(Sys.PathToCurrentProfileFile, FileMode.Create))
                 {
-                    using (FileStream fs = new FileStream(Sys.PathToCurrentProfileFile, FileMode.Create))
-                    {
-                        Util.Serialize(Sys.ActiveProfile, fs);
-                    }
+                    Util.Serialize(Sys.ActiveProfile, fs);
                 }
-                catch (Exception e)
-                {
-                    Logger.Error(e, "Failed to save profile ...");
-                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                return false;
             }
         }
 
         private void Sys_MessageReceived(object sender, MessageEventArgs e)
         {
             string receivedMessage = e.Message.Text;
-
             if (!String.IsNullOrEmpty(e.Message.Link))
             {
                 receivedMessage += $" - {e.Message.Link}";
             }
 
-            StatusMessage = receivedMessage;
+            // log message to app log or status bar
+            if (e.Message.LogLevel != WMessageLogLevel.LogOnly)
+            {
+                StatusMessage = receivedMessage;
+            }
+            else
+            {
+                Logger.Info(receivedMessage);
+            }
 
+            // include exception in logs if it exists in message received
+            if (e.Message.LoggedException != null)
+            {
+                Logger.Error(e.Message.LoggedException);
+            }
+
+            // flash status bar if important
             if (e.Message.IsImportant)
             {
                 FlashStatusBar();
@@ -1595,18 +1617,15 @@ They will be automatically turned off.";
         /// </summary>
         internal void ShowProfilesWindow()
         {
-            OpenProfileWindow profileWindow = new OpenProfileWindow();
+            SaveActiveProfile(); // ensure current profile is saved to disk so it shows in list of profiles
 
+            OpenProfileWindow profileWindow = new OpenProfileWindow();
             bool? dialogResult = profileWindow.ShowDialog();
 
-            if (!dialogResult.GetValueOrDefault(false))
+            if (dialogResult.GetValueOrDefault(false))
             {
-                // user did not click 'Load Profile' so don't refresh profile
-                return;
+                RefreshProfile();
             }
-
-            RefreshProfile();
-            Sys.Message(new WMessage($"Loaded profile {CurrentProfile}"));
         }
 
         internal void ShowChunkToolWindow()

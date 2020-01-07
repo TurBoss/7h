@@ -303,7 +303,7 @@ namespace SeventhHeaven.ViewModels
                 Versions = new List<InstalledVersion>() { new InstalledVersion() { VersionDetails = m.LatestVersion, InstalledLocation = location } },
             });
 
-            Sys.ActiveProfile.AddItem(new ProfileItem() { ModID = m.ID, Settings = new List<ProfileSetting>(), IsModActive = false });
+            Sys.ActiveProfile.AddItem(new ProfileItem() { ModID = m.ID, Name = m.Name, Settings = new List<ProfileSetting>(), IsModActive = false });
         }
 
         public Task<bool> ImportModFromWindowAsync()

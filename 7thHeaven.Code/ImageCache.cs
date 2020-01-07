@@ -96,17 +96,18 @@ namespace Iros._7th.Workshop {
                         if (File.Exists(f)) File.Delete(f);
 
                         File.Move(Path.Combine(_folder, file + ".tmp"), f);
-                    }
-                    catch
-                    {
-                        Sys.Message(new WMessage() { Text = "failed to get preview image" });
-                    }
 
-                } else {
-                    System.Diagnostics.Debug.WriteLine("ImageCache:Download error: " + ae.Error.ToString());
+                        Sys.PingInfoChange(modID);
+                    }
+                    catch (Exception ex)
+                    {
+                        Sys.Message(new WMessage("failed to get preview image", WMessageLogLevel.Error, ex));
+                    }
+                }
+                else {
+                    Sys.Message(new WMessage("ImageCache Download error: " + ae.Error.ToString(), WMessageLogLevel.LogOnly, ae.Error));
                 }
 
-                Sys.PingInfoChange(modID);
             }), null);
         }
 

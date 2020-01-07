@@ -20,22 +20,16 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock FontSize="12" TextWrapping="Wrap" Margin="5">
-            Select a profile in the list below and double click to load it or click 'Load Profile'.
-        </TextBlock>
-
-        <WrapPanel Grid.Row="1"
-                   Margin="5,0,5,0">
-            <Button x:Name="btnNewProfile"
-                    Click="NewProfile_Click"
+        <WrapPanel Margin="5,0,5,0">
+            <Button x:Name="btnSaveActiveProfile"
+                    Click="SaveActiveProfile_Click"
                     Style="{StaticResource ImageButton}"
-                    Content="{StaticResource iconAdd}"
-                    ToolTip="Create New Profile"
+                    Content="{StaticResource iconSave}"
+                    ToolTip="Save Current Profile As ..."
                     Height="32"
                     Width="32"/>
             <Button x:Name="btnCopyProfile"
@@ -61,7 +55,7 @@
                     Width="32"/>
         </WrapPanel>
 
-        <ListBox Grid.Row="2"
+        <ListBox Grid.Row="1"
                  Margin="5,0,5,0"
                  x:Name="lstProfiles"
                  ItemsSource="{Binding Profiles}"
@@ -69,7 +63,7 @@
         </ListBox>
 
         <Button x:Name="btnOk"
-                Grid.Row="3"
+                Grid.Row="2"
                 Content="Load Profile"
                 HorizontalAlignment="Center"
                 Margin="0,0,95,5"
@@ -78,7 +72,7 @@
                 Click="btnOk_Click"/>
 
         <Button x:Name="btnClose"
-                Grid.Row="3"
+                Grid.Row="2"
                 Content="Close"
                 HorizontalAlignment="Center"
                 Margin="94,0,0,5"

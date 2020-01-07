@@ -30,28 +30,49 @@ namespace Iros._7th.Workshop
         public string Link { get; set; }
     }
 
+    public enum WMessageLogLevel
+    {
+        Error,
+        Info,
+        LogOnly
+    }
+
     public class WMessage
     {
         public WMessage()
         {
+            IsImportant = false;
+            LogLevel = WMessageLogLevel.Info;
         }
 
         public WMessage(string message)
         {
             Text = message;
+            IsImportant = false;
+            LogLevel = WMessageLogLevel.Info;
         }
 
         public WMessage(string message, bool isImportant)
         {
             Text = message;
             IsImportant = isImportant;
+            LogLevel = WMessageLogLevel.Info;
         }
 
+        public WMessage(string message, WMessageLogLevel level, Exception exceptionToLog = null)
+        {
+            Text = message;
+            LogLevel = level;
+            IsImportant = false;
+            LoggedException = exceptionToLog;
+        }
 
         public string Text { get; set; }
         public string Link { get; set; }
-        
         public bool IsImportant { get; set; }
+        public WMessageLogLevel LogLevel { get; set; }
+
+        public Exception LoggedException { get; set; }
     }
 
     public interface IDownloader

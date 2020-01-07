@@ -72,9 +72,9 @@ namespace SeventhHeaven.Windows
             ViewModel.CopyProfile((string)lstProfiles.SelectedItem);
         }
 
-        private void NewProfile_Click(object sender, RoutedEventArgs e)
+        private void SaveActiveProfile_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.CreateNewProfile();
+            ViewModel.SaveActiveProfileAsNew();
         }
 
         private void ViewDetails_Click(object sender, RoutedEventArgs e)

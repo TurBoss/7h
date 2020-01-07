@@ -104,7 +104,7 @@ namespace SeventhHeavenUI.ViewModels
             searchText = _previousReloadOptions.SetOrGetPreviousSearchText(searchText);
             tags = _previousReloadOptions.SetOrGetPreviousTags(tags);
 
-            Sys.ActiveProfile.Items.RemoveAll(i => Sys.Library.GetItem(i.ModID) == null);
+            Sys.ActiveProfile.RemoveDeletedItems();
 
             List<InstalledModViewModel> allMods = new List<InstalledModViewModel>();
 
@@ -135,7 +135,7 @@ namespace SeventhHeavenUI.ViewModels
                 ProfileItem profileItem = Sys.ActiveProfile.GetItem(item.ModID);
                 if (profileItem == null)
                 {
-                    profileItem = new ProfileItem() { ModID = item.ModID, Settings = new List<ProfileSetting>(), IsModActive = false };
+                    profileItem = new ProfileItem() { ModID = item.ModID, Name = item.CachedDetails.Name, Settings = new List<ProfileSetting>(), IsModActive = false };
                     Sys.ActiveProfile.AddItem(profileItem);
                 }
 
@@ -509,8 +509,10 @@ namespace SeventhHeavenUI.ViewModels
             }
             else
             {
-                var item = new ProfileItem() { ModID = modID, Settings = new List<ProfileSetting>(), IsModActive = true };
-                Sys.ActiveProfile.Items.Add(item);
+                var installedItem = Sys.Library.GetItem(modID);
+
+                var item = new ProfileItem() { ModID = modID, Name = installedItem?.CachedDetails.Name, Settings = new List<ProfileSetting>(), IsModActive = true };
+                Sys.ActiveProfile.AddItem(item);
             }
 
 
