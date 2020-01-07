@@ -41,7 +41,13 @@ namespace SeventhHeaven.Windows
             CloseWindow(true);
         }
 
-        private void menuItemDelete_Click(object sender, RoutedEventArgs e)
+        private void btnClose_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SelectedProfile = null;
+            CloseWindow(false);
+        }
+
+        private void DeleteProfile_Click(object sender, RoutedEventArgs e)
         {
             if (!IsProfileSelected())
             {
@@ -56,7 +62,7 @@ namespace SeventhHeaven.Windows
             }
         }
 
-        private void menuItemCopy_Click(object sender, RoutedEventArgs e)
+        private void CopyProfile_Click(object sender, RoutedEventArgs e)
         {
             if (!IsProfileSelected())
             {
@@ -66,26 +72,19 @@ namespace SeventhHeaven.Windows
             ViewModel.CopyProfile((string)lstProfiles.SelectedItem);
         }
 
-        private void lstProfiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ViewModel.SelectedProfile = (string)lstProfiles.SelectedItem;
-        }
-
-        private bool IsProfileSelected()
-        {
-            if (lstProfiles.SelectedItem == null)
-            {
-                MessageDialogWindow.Show("Select a Profile first.", "No Profile Selected", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                return false;
-            }
-
-            return true;
-        }
-
-        private void menuItemNew_Click(object sender, RoutedEventArgs e)
+        private void NewProfile_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.CreateNewProfile();
-            lstProfiles.SelectedItem = ViewModel.SelectedProfile;
+        }
+
+        private void ViewDetails_Click(object sender, RoutedEventArgs e)
+        {
+            if (!IsProfileSelected())
+            {
+                return;
+            }
+
+            ViewModel.ViewProfileDetails((string)lstProfiles.SelectedItem);
         }
 
         private void ListBoxItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -101,31 +100,27 @@ namespace SeventhHeaven.Windows
             }
         }
 
-        private void btnClose_Click(object sender, RoutedEventArgs e)
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            ViewModel.SelectedProfile = null;
-            CloseWindow(false);
+            ViewModel.AttemptDeleteTempFiles();
+        }
+
+
+        private bool IsProfileSelected()
+        {
+            if (lstProfiles.SelectedItem == null)
+            {
+                MessageDialogWindow.Show("Select a Profile first.", "No Profile Selected", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return false;
+            }
+
+            return true;
         }
 
         private void CloseWindow(bool dialogResult)
         {
             this.DialogResult = dialogResult;
             this.Close();
-        }
-
-        private void menuItemDetails_Click(object sender, RoutedEventArgs e)
-        {
-            if (!IsProfileSelected())
-            {
-                return;
-            }
-
-            ViewModel.ViewProfileDetails((string)lstProfiles.SelectedItem);
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            ViewModel.AttemptDeleteTempFiles();
         }
     }
 }

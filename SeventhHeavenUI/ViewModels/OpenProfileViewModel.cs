@@ -74,7 +74,8 @@ namespace SeventhHeaven.ViewModels
                 profiles.Add(Path.GetFileNameWithoutExtension(file));
             }
 
-            Profiles = profiles;
+            Profiles = profiles.OrderBy(p => p).ToList();
+            SelectedProfile = null;
         }
 
         /// <summary>
@@ -151,7 +152,7 @@ namespace SeventhHeaven.ViewModels
 
             try
             {
-                newProfileName = InputNewProfileName();
+                newProfileName = InputNewProfileName("Enter a profile name for the copy:", "Copy Profile");
 
                 if (newProfileName == null)
                 {
@@ -160,14 +161,15 @@ namespace SeventhHeaven.ViewModels
 
                 File.Copy(pathToProfile, Path.Combine(Sys.PathToProfiles, $"{newProfileName}.xml"));
                 Sys.Message(new WMessage($"Successfully copied profile {name} to the new profile {newProfileName}", true));
+
+                ReloadProfiles();
+                SelectedProfile = newProfileName;
             }
             catch (Exception e)
             {
                 Logger.Error(e);
                 Sys.Message(new WMessage($"Failed to copy profile {name} to {newProfileName}", true));
             }
-
-            ReloadProfiles();
         }
 
         /// <summary>
@@ -213,16 +215,25 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-        public static string InputNewProfileName()
+        public static string InputNewProfileName(string prompt = null, string title = null)
         {
-            string prompt = "Enter new Profile name:";
+            if (string.IsNullOrWhiteSpace(prompt))
+            {
+                prompt = "Enter new Profile name:";
+            }
+
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                title = "New Profile";
+            }
+
             string profileName = null;
             bool isValid = false;
 
             do
             {
                 isValid = true;
-                InputTextWindow inputBox = new InputTextWindow("New Profile", prompt)
+                InputTextWindow inputBox = new InputTextWindow(title, prompt)
                 {
                     WindowStartupLocation = WindowStartupLocation.CenterScreen
                 };
