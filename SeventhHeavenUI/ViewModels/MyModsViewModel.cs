@@ -106,6 +106,8 @@ namespace SeventhHeavenUI.ViewModels
 
             Sys.ActiveProfile.RemoveDeletedItems();
 
+            Sys.TryAutoImportMods();
+
             List<InstalledModViewModel> allMods = new List<InstalledModViewModel>();
 
             foreach (ProfileItem item in Sys.ActiveProfile.Items)
@@ -574,7 +576,7 @@ namespace SeventhHeavenUI.ViewModels
             // validate mod has not been removed from filesystem
             if (!mod.InstallInfo.ModExistsOnFileSystem())
             {
-                MainWindowViewModel.ValidateAndRemoveDeletedMods();
+                Sys.ValidateAndRemoveDeletedMods();
                 Sys.Message(new WMessage($"Can not re-order mod. It seems {mod.Name} has been removed from the file system.", true));
                 ReloadModListFromUIThread();
                 return;
@@ -607,7 +609,7 @@ namespace SeventhHeavenUI.ViewModels
             // validate mod has not been removed from filesystem
             if (!mod.InstallInfo.ModExistsOnFileSystem())
             {
-                MainWindowViewModel.ValidateAndRemoveDeletedMods();
+                Sys.ValidateAndRemoveDeletedMods();
                 Sys.Message(new WMessage($"Can not re-order mod. It seems {mod.Name} has been removed from the file system.", true));
                 ReloadModListFromUIThread();
                 return;
@@ -635,7 +637,7 @@ namespace SeventhHeavenUI.ViewModels
             // validate mod has not been removed from filesystem
             if (!mod.InstallInfo.ModExistsOnFileSystem())
             {
-                MainWindowViewModel.ValidateAndRemoveDeletedMods();
+                Sys.ValidateAndRemoveDeletedMods();
                 Sys.Message(new WMessage($"Can not re-order mod. It seems {mod.Name} has been removed from the file system.", true));
                 ReloadModListFromUIThread();
                 return;
@@ -667,7 +669,7 @@ namespace SeventhHeavenUI.ViewModels
             // validate mod has not been removed from filesystem
             if (!modToConfigure.InstallInfo.ModExistsOnFileSystem())
             {
-                MainWindowViewModel.ValidateAndRemoveDeletedMods();
+                Sys.ValidateAndRemoveDeletedMods();
                 Sys.Message(new WMessage($"Can not configure mod. It seems {modToConfigure.Name} has been removed from the file system.", true));
                 ReloadModListFromUIThread();
                 return;
@@ -690,7 +692,7 @@ namespace SeventhHeavenUI.ViewModels
                 {
                     var doc = new System.Xml.XmlDocument();
                     doc.Load(arc.GetData("mod.xml"));
-                    info = new _7thWrapperLib.ModInfo(doc, MainWindowViewModel._context);
+                    info = new _7thWrapperLib.ModInfo(doc, Sys._context);
                 }
 
                 imageReader = s =>
@@ -751,7 +753,7 @@ namespace SeventhHeavenUI.ViewModels
                 // if mod is in a folder than wire up imageReader and audioReader to return path to file and audio file stream
                 string file = Path.Combine(pathToModXml, "mod.xml");
                 if (File.Exists(file))
-                    info = new _7thWrapperLib.ModInfo(file, MainWindowViewModel._context);
+                    info = new _7thWrapperLib.ModInfo(file, Sys._context);
 
                 imageReader = s =>
                 {

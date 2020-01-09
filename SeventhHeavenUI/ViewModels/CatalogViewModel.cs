@@ -554,7 +554,7 @@ It may not work properly unless you find and install the requirements.";
             {
                 onError = () =>
                 {
-                    Log.Write($"Downloading {file} - switching to backup url {links.ElementAt(1)}");
+                    Logger.Info($"Downloading {file} - switching to backup url {links.ElementAt(1)}");
                     Download(links.Skip(1), file, description, iproc, onCancel);
                 };
             }

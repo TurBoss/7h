@@ -56,14 +56,26 @@ They will be automatically turned off.";
             @"You cannot activate this mod, because it requires {0} to be active, but {0} is incompatible with {1}. You will have to deactivate {1} before you can enable this mod.";
         internal const string _showAllText = "Select All";
         internal const string _unknownText = "Unknown";
+
+        public List<string> AppHints = new List<string>()
+        {
+            "Did you know? You can drag and drop a mod to reorder your list.",
+            "You can middle-click a mod to activate or deactivate it.",
+            "You can double-click a mod to open the mod configuration window.",
+            "You can double-click a mod in Browse Catalog to start downloading it.",
+            "You can click the Auto Sort button to quickly put your mod list in the recommended order.",
+            "Mod Authors: Did you know you can base64 encode images into your Readme.html?",
+            "You can double-click a profile in the manage profiles window to load the selected profile.",
+            "Right-click My Mods tab to open your Mod Library Folder",
+            "Right-click Browse Catalog tab to open your Catalog settings"
+        };
+
         private string _catFile;
         private string _statusMessage;
         private string _currentProfile;
         private string _searchText;
         private int _selectedTabIndex;
-        private List<string> _statusMessageLog;
         private List<FilterItemViewModel> _availableFilters;
-        internal static _7thWrapperLib.LoaderContext _context;
 
         private Mod _previewMod;
         private string _previewModAuthor;
@@ -388,6 +400,10 @@ They will be automatically turned off.";
         }
 
 
+        /// <summary>
+        /// Initializes the view model and initializes other files/profiles for use with 7th Heaven.
+        /// This should be called first to ensure the app is fully initialized
+        /// </summary>
         public void InitViewModel()
         {
             Sys.MessageReceived += Sys_MessageReceived;
@@ -404,7 +420,7 @@ They will be automatically turned off.";
 
             LoadCatalogXmlFile();
 
-            InitLoaderContext();
+            Sys.InitLoaderContext();
 
             ThemeSettingsViewModel.LoadThemeFromFile();
 
@@ -436,7 +452,7 @@ They will be automatically turned off.";
                 ShowGeneralSettingsWindow();
             }
 
-            TryAutoImportMods();
+            Sys.TryAutoImportMods();
 
 
             CatalogMods.RefreshListRequested += ModList_RefreshRequested;
@@ -455,7 +471,7 @@ They will be automatically turned off.";
             ConfigureModViewModel.DeleteTempFolder();
 
             // TODO: check for app updates
-            StatusMessage = $"{App.GetAppName()} v{App.GetAppVersion().ToString()} started - Click here to view the app log.";
+            StatusMessage = $"{App.GetAppName()} v{App.GetAppVersion().ToString()} started - Click here to view the app log.  |  Hint: {GetRandomHint()}";
 
         }
 
@@ -649,28 +665,6 @@ They will be automatically turned off.";
             }
         }
 
-        private static void InitLoaderContext()
-        {
-            _context = new _7thWrapperLib.LoaderContext()
-            {
-                VarAliases = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
-            };
-
-            string varFile = "7thHeaven.var";
-
-
-            if (File.Exists(varFile))
-            {
-                foreach (string line in File.ReadAllLines(varFile))
-                {
-                    string[] parts = line.Split(new[] { '=' }, 2);
-
-                    if (parts.Length == 2)
-                        _context.VarAliases[parts[0]] = parts[1];
-                }
-            }
-        }
-
         private void InitActiveProfile()
         {
             Sys.ActiveProfile = null;
@@ -699,83 +693,6 @@ They will be automatically turned off.";
 
                 CurrentProfile = Sys.Settings.CurrentProfile;
             }
-        }
-
-        private void TryAutoImportMods()
-        {
-            if (Sys.Settings.HasOption(GeneralOptions.AutoImportMods) && Directory.Exists(Sys.Settings.LibraryLocation))
-            {
-                foreach (string folder in Directory.GetDirectories(Sys.Settings.LibraryLocation))
-                {
-                    string name = Path.GetFileName(folder);
-                    if (!name.EndsWith("temp", StringComparison.InvariantCultureIgnoreCase) && !Sys.Library.PendingDelete.Contains(name, StringComparer.InvariantCultureIgnoreCase))
-                    {
-                        if (!Sys.Library.Items.SelectMany(ii => ii.Versions).Any(v => v.InstalledLocation.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
-                        {
-                            Log.Write("Trying to auto-import file " + folder);
-                            try
-                            {
-                                string modName = ImportModViewModel.ParseNameFromFileOrFolder(Path.GetFileNameWithoutExtension(folder));
-                                ImportModViewModel.ImportMod(folder, modName, false, true);
-                            }
-                            catch (Exception ex)
-                            {
-                                Sys.Message(new WMessage() { Text = "Mod " + name + " failed to import: " + ex.ToString() });
-                                continue;
-                            }
-                            Sys.Message(new WMessage() { Text = "Auto imported mod " + name });
-                        }
-                    }
-                }
-
-                foreach (string iro in Directory.GetFiles(Sys.Settings.LibraryLocation, "*.iro"))
-                {
-                    string name = Path.GetFileName(iro);
-                    if (!name.EndsWith("temp", StringComparison.InvariantCultureIgnoreCase) && !Sys.Library.PendingDelete.Contains(name, StringComparer.InvariantCultureIgnoreCase))
-                    {
-                        if (!Sys.Library.Items.SelectMany(ii => ii.Versions).Any(v => v.InstalledLocation.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
-                        {
-                            Log.Write($"Trying to auto-import file {iro}");
-                            try
-                            {
-                                string modName = ImportModViewModel.ParseNameFromFileOrFolder(Path.GetFileNameWithoutExtension(iro));
-                                ImportModViewModel.ImportMod(iro, modName, true, true);
-                            }
-                            catch (_7thWrapperLib.IrosArcException)
-                            {
-                                Sys.Message(new WMessage() { Text = $"Could not import .iro mod {Path.GetFileNameWithoutExtension(iro)}, file is corrupt" });
-                                continue;
-                            }
-
-                            Sys.Message(new WMessage() { Text = $"Auto imported mod {name}" });
-                        }
-                    }
-                }
-            }
-
-            // validate imported mod files exist - remove them if they do not exit
-            ValidateAndRemoveDeletedMods();
-
-            Sys.Library.AttemptDeletions();
-        }
-
-        internal static bool ValidateAndRemoveDeletedMods()
-        {
-            bool deletedInvalidMod = false;
-
-            foreach (InstalledItem mod in Sys.Library.Items.ToList())
-            {
-                if (!mod.ModExistsOnFileSystem())
-                {
-                    Sys.Library.RemoveInstall(mod);
-                    Sys.ActiveProfile.Items.RemoveAll(p => p.ModID == mod.ModID);
-                    Mod details = mod.CachedDetails ?? new Mod();
-                    Sys.Message(new WMessage { Text = $"Could not find mod {details.Name} - has it been deleted? Removed." });
-                    deletedInvalidMod = true;
-                }
-            }
-
-            return deletedInvalidMod;
         }
 
 
@@ -926,14 +843,14 @@ They will be automatically turned off.";
                         {
                             var doc = new System.Xml.XmlDocument();
                             doc.Load(arc.GetData("mod.xml"));
-                            info = new _7thWrapperLib.ModInfo(doc, _context);
+                            info = new _7thWrapperLib.ModInfo(doc, Sys._context);
                         }
                 }
                 else
                 {
                     string file = Path.Combine(mfile, "mod.xml");
                     if (File.Exists(file))
-                        info = new _7thWrapperLib.ModInfo(file, _context);
+                        info = new _7thWrapperLib.ModInfo(file, Sys._context);
                 }
                 _infoCache.Add(mfile, info);
             }
@@ -1235,7 +1152,7 @@ They will be automatically turned off.";
                 OpenGLConfig = Sys.ActiveProfile.OpenGLConfig,
                 FF7Path = ff7Folder,
                 gameFiles = Directory.GetFiles(ff7Folder, "*.*", SearchOption.AllDirectories),
-                Mods = Sys.ActiveProfile.ActiveItems.Select(i => i.GetRuntime(_context))
+                Mods = Sys.ActiveProfile.ActiveItems.Select(i => i.GetRuntime(Sys._context))
                                                     .Where(i => i != null)
                                                     .ToList()
             };
@@ -1257,7 +1174,7 @@ They will be automatically turned off.";
                     _alsoLaunchProcesses.Remove(turboLogProcName);
                 }
 
-                runtimeProfiles.MonitorVars = _context.VarAliases.Select(kv => new Tuple<string, string>(kv.Key, kv.Value)).ToList();
+                runtimeProfiles.MonitorVars = Sys._context.VarAliases.Select(kv => new Tuple<string, string>(kv.Key, kv.Value)).ToList();
 
                 ProcessStartInfo psi = new ProcessStartInfo(turboLogProcName)
                 {
@@ -1836,6 +1753,17 @@ They will be automatically turned off.";
             };
 
             Process.Start(startInfo);
+        }
+
+        internal string GetRandomHint()
+        {
+            if (AppHints == null)
+            {
+                return "";
+            }
+
+            Random r = new Random();
+            return AppHints[r.Next(0, AppHints.Count)];
         }
     }
 

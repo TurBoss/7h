@@ -76,7 +76,7 @@ namespace SeventhHeaven.UserControls
 
         private void btnRefresh_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            MainWindowViewModel.ValidateAndRemoveDeletedMods();
+            Sys.ValidateAndRemoveDeletedMods();
             ViewModel.RefreshModList();
             RecalculateColumnWidths();
         }
@@ -175,11 +175,38 @@ namespace SeventhHeaven.UserControls
             ViewModel.AutoSortBasedOnCategory();
         }
 
+        /// <summary>
+        /// Opens the configure mod window for selected mod (if mod is active)
+        /// </summary>
         private void ListViewItem_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (lstMods.SelectedItem != null)
+            if ((sender as ListViewItem) != null)
             {
-                ViewModel.ToggleActivateMod((lstMods.SelectedItem as InstalledModViewModel).InstallInfo.ModID);
+                InstalledModViewModel viewModel = (sender as ListViewItem).DataContext as InstalledModViewModel;
+
+                if (viewModel.IsActive)
+                {
+                    ViewModel.ShowConfigureModWindow(viewModel);
+                }
+                else
+                {
+                    Sys.Message(new WMessage("Mod is not active. Only activated mods can be configured.", true));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Activates the selected mod on middle click
+        /// </summary>
+        private void ListViewItem_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == System.Windows.Input.MouseButton.Middle && e.ButtonState == System.Windows.Input.MouseButtonState.Released)
+            {
+                if ((sender as ListViewItem) != null)
+                {
+                    InstalledModViewModel viewModel = (sender as ListViewItem).DataContext as InstalledModViewModel;
+                    ViewModel.ToggleActivateMod(viewModel.InstallInfo.ModID);
+                }
             }
         }
 

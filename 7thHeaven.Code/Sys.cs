@@ -3,6 +3,7 @@
   The original developer is Iros <irosff@outlook.com>
 */
 
+using _7thHeaven.Code;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -85,6 +86,9 @@ namespace Iros._7th.Workshop
     public static class Sys
     {
         private static Dictionary<Type, object> _single = new Dictionary<Type, object>();
+
+        public static _7thWrapperLib.LoaderContext _context;
+
 
         public static object CatalogLock = new object();
 
@@ -312,6 +316,106 @@ namespace Iros._7th.Workshop
                 ProcessStartInfo startInfo = new ProcessStartInfo(Settings.LibraryLocation);
                 Process.Start(startInfo);
             }
+        }
+
+        public static void InitLoaderContext()
+        {
+            _context = new _7thWrapperLib.LoaderContext()
+            {
+                VarAliases = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
+            };
+
+            string varFile = "7thHeaven.var";
+
+
+            if (File.Exists(varFile))
+            {
+                foreach (string line in File.ReadAllLines(varFile))
+                {
+                    string[] parts = line.Split(new[] { '=' }, 2);
+
+                    if (parts.Length == 2)
+                        _context.VarAliases[parts[0]] = parts[1];
+                }
+            }
+        }
+
+        public static void TryAutoImportMods()
+        {
+            if (Sys.Settings.HasOption(GeneralOptions.AutoImportMods) && Directory.Exists(Sys.Settings.LibraryLocation))
+            {
+                foreach (string folder in Directory.GetDirectories(Sys.Settings.LibraryLocation))
+                {
+                    string name = Path.GetFileName(folder);
+                    if (!name.EndsWith("temp", StringComparison.InvariantCultureIgnoreCase) && !Sys.Library.PendingDelete.Contains(name, StringComparer.InvariantCultureIgnoreCase))
+                    {
+                        if (!Sys.Library.Items.SelectMany(ii => ii.Versions).Any(v => v.InstalledLocation.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
+                        {
+                            Sys.Message(new WMessage("Trying to auto-import file " + folder, WMessageLogLevel.LogOnly));
+                            try
+                            {
+                                string modName = ModImporter.ParseNameFromFileOrFolder(Path.GetFileNameWithoutExtension(folder));
+                                ModImporter.ImportMod(folder, modName, false, true);
+                            }
+                            catch (Exception ex)
+                            {
+                                Sys.Message(new WMessage() { Text = "Mod " + name + " failed to import: " + ex.ToString() });
+                                continue;
+                            }
+                            Sys.Message(new WMessage() { Text = "Auto imported mod " + name });
+                        }
+                    }
+                }
+
+                foreach (string iro in Directory.GetFiles(Sys.Settings.LibraryLocation, "*.iro"))
+                {
+                    string name = Path.GetFileName(iro);
+                    if (!name.EndsWith("temp", StringComparison.InvariantCultureIgnoreCase) && !Sys.Library.PendingDelete.Contains(name, StringComparer.InvariantCultureIgnoreCase))
+                    {
+                        if (!Sys.Library.Items.SelectMany(ii => ii.Versions).Any(v => v.InstalledLocation.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
+                        {
+                            Sys.Message(new WMessage($"Trying to auto-import file {iro}", WMessageLogLevel.LogOnly));
+
+                            try
+                            {
+                                string modName = ModImporter.ParseNameFromFileOrFolder(Path.GetFileNameWithoutExtension(iro));
+                                ModImporter.ImportMod(iro, modName, true, true);
+                            }
+                            catch (_7thWrapperLib.IrosArcException)
+                            {
+                                Sys.Message(new WMessage() { Text = $"Could not import .iro mod {Path.GetFileNameWithoutExtension(iro)}, file is corrupt" });
+                                continue;
+                            }
+
+                            Sys.Message(new WMessage() { Text = $"Auto imported mod {name}" });
+                        }
+                    }
+                }
+            }
+
+            // validate imported mod files exist - remove them if they do not exit
+            ValidateAndRemoveDeletedMods();
+
+            Sys.Library.AttemptDeletions();
+        }
+
+        public static bool ValidateAndRemoveDeletedMods()
+        {
+            bool deletedInvalidMod = false;
+
+            foreach (InstalledItem mod in Sys.Library.Items.ToList())
+            {
+                if (!mod.ModExistsOnFileSystem())
+                {
+                    Sys.Library.RemoveInstall(mod);
+                    Sys.ActiveProfile.Items.RemoveAll(p => p.ModID == mod.ModID);
+                    Mod details = mod.CachedDetails ?? new Mod();
+                    Sys.Message(new WMessage { Text = $"Could not find mod {details.Name} - has it been deleted? Removed." });
+                    deletedInvalidMod = true;
+                }
+            }
+
+            return deletedInvalidMod;
         }
     }
 }

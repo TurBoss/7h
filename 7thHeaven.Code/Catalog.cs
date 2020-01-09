@@ -97,6 +97,7 @@ namespace Iros._7th.Workshop
             if (Name.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) >= 0) return 200;
             if (Description.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) >= 0) return 100;
             if (Author.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) >= 0) return 50;
+            if (Category?.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) >= 0) return 25;
             return 0;
         }
 

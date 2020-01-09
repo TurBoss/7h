@@ -15,7 +15,7 @@
         SizeChanged="Window_SizeChanged"
         Closing="Window_Closing"
         Height="600" Width="1100"
-        MinHeight="525" MinWidth="870">
+        MinHeight="560" MinWidth="870">
     <Window.Resources>
 
         <Style x:Key="ModInfoLabelStyle" TargetType="{x:Type TextBlock}">
@@ -91,46 +91,48 @@
         </Grid.ColumnDefinitions>
 
 
+        <Viewbox HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5,0,0" Grid.ColumnSpan="2" Stretch="UniformToFill" StretchDirection="DownOnly">
+            <WrapPanel>
+                <cls:ButtonWithImage x:Name="btnPlay" Content="Play" Margin="5,0,0,0" Click="btnPlay_Click" Padding="0,8,10,0" TemplateSource="{StaticResource iconPlay}"/>
+                <ToggleButton x:Name="btnPlayOptions" Style="{StaticResource DownArrowToggleButton}" Margin="-3,0,0,0" Click="btnPlayOptions_Click" ContextMenuService.Placement="Bottom">
+                    <ToggleButton.ContextMenu>
+                        <ContextMenu x:Name="menuPlayOptions" Closed="menuPlayOptions_Closed">
+                            <MenuItem x:Name="menuPlayWithMods" Header="Play With Mods (default)" Click="menuPlayWithMods_Click"/>
+                            <MenuItem x:Name="menuPlayWithoutMods" Header="Play Without Mods" Click="menuPlayWithoutMods_Click"/>
+                            <MenuItem x:Name="menuPlayVariableDump" Header="Play With Variable Dump" Click="menuPlayVariableDump_Click"/>
+                            <MenuItem x:Name="menuPlayDebugLog" Header="Play With Debug Log" Click="menuPlayDebugLog_Click"/>
+                        </ContextMenu>
+                    </ToggleButton.ContextMenu>
+                </ToggleButton>
 
-        <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5,0,0" Grid.ColumnSpan="2">
-            <cls:ButtonWithImage x:Name="btnPlay" Content="Play" Margin="5,0,0,0" Click="btnPlay_Click" Padding="0,8,10,0" TemplateSource="{StaticResource iconPlay}"/>
-            <ToggleButton x:Name="btnPlayOptions" Style="{StaticResource DownArrowToggleButton}" Margin="-3,0,0,0" Click="btnPlayOptions_Click" ContextMenuService.Placement="Bottom">
-                <ToggleButton.ContextMenu>
-                    <ContextMenu x:Name="menuPlayOptions" Closed="menuPlayOptions_Closed">
-                        <MenuItem x:Name="menuPlayWithMods" Header="Play With Mods (default)" Click="menuPlayWithMods_Click"/>
-                        <MenuItem x:Name="menuPlayWithoutMods" Header="Play Without Mods" Click="menuPlayWithoutMods_Click"/>
-                        <MenuItem x:Name="menuPlayVariableDump" Header="Play With Variable Dump" Click="menuPlayVariableDump_Click"/>
-                        <MenuItem x:Name="menuPlayDebugLog" Header="Play With Debug Log" Click="menuPlayDebugLog_Click"/>
-                    </ContextMenu>
-                </ToggleButton.ContextMenu>
-            </ToggleButton>
 
+                <cls:ButtonWithImage x:Name="btnSettings" Content="Settings" Margin="0,0,0,0" Style="{StaticResource ButtonWithImageAndDownArrow}" TemplateSource="{StaticResource iconSettings}" ContextMenuService.Placement="Bottom" Click="btnSettings_Click">
+                    <cls:ButtonWithImage.ContextMenu>
+                        <ContextMenu x:Name="menuSettings" Closed="menuSettings_Closed">
+                            <MenuItem x:Name="menuItemGeneralSettings" Header="General Settings" Click="menuItemGeneralSettings_Click"/>
+                            <MenuItem x:Name="menuItemAaliSettings" Header="Configure Game Driver..." Click="menuItemAaliSettings_Click"/>
+                            <MenuItem x:Name="menuItemThemeSettings" Header="Change Color Theme..." Click="menuItemThemeSettings_Click"/>
+                            <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
+                            <MenuItem x:Name="menuItemOpenProfile" Header="Profiles..." Click="menuItemOpenProfile_Click"/>
+                        </ContextMenu>
+                    </cls:ButtonWithImage.ContextMenu>
+                </cls:ButtonWithImage>
 
-            <cls:ButtonWithImage x:Name="btnSettings" Content="Settings" Margin="0,0,0,0" Style="{StaticResource ButtonWithImageAndDownArrow}" TemplateSource="{StaticResource iconSettings}" ContextMenuService.Placement="Bottom" Click="btnSettings_Click">
-                <cls:ButtonWithImage.ContextMenu>
-                    <ContextMenu x:Name="menuSettings" Closed="menuSettings_Closed">
-                        <MenuItem x:Name="menuItemGeneralSettings" Header="General Settings" Click="menuItemGeneralSettings_Click"/>
-                        <MenuItem x:Name="menuItemAaliSettings" Header="Configure OpenGL Driver..." Click="menuItemAaliSettings_Click"/>
-                        <MenuItem x:Name="menuItemThemeSettings" Header="Change Color Theme..." Click="menuItemThemeSettings_Click"/>
-                        <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
-                        <MenuItem x:Name="menuItemOpenProfile" Header="Profiles..." Click="menuItemOpenProfile_Click"/>
-                    </ContextMenu>
-                </cls:ButtonWithImage.ContextMenu>
-            </cls:ButtonWithImage>
+                <cls:ButtonWithImage x:Name="btnTools" Content="Tools" Margin="0,0,0,0" Style="{StaticResource ButtonWithImageAndDownArrow}" TemplateSource="{StaticResource iconTools}" ContextMenuService.Placement="Bottom" Click="btnTools_Click">
+                    <cls:ButtonWithImage.ContextMenu>
+                        <ContextMenu x:Name="menuTools" PlacementTarget="{Binding ElementName=btnTools}" Closed="menuTools_Closed">
+                            <MenuItem x:Name="menuItemIroCreation" Header="IRO Tools..." Click="menuItemIroCreation_Click"/>
+                            <MenuItem x:Name="menuItemChunkTool" Header="Chunk Tool..." Click="menuItemChunkTool_Click"/>
+                            <MenuItem x:Name="menuItemCatalogCreation" Header="Catalog/Mod Creation Tool..."/>
+                        </ContextMenu>
+                    </cls:ButtonWithImage.ContextMenu>
+                </cls:ButtonWithImage>
 
-            <cls:ButtonWithImage x:Name="btnTools" Content="Tools" Margin="0,0,0,0" Style="{StaticResource ButtonWithImageAndDownArrow}" TemplateSource="{StaticResource iconTools}" ContextMenuService.Placement="Bottom" Click="btnTools_Click">
-                <cls:ButtonWithImage.ContextMenu>
-                    <ContextMenu x:Name="menuTools" PlacementTarget="{Binding ElementName=btnTools}" Closed="menuTools_Closed">
-                        <MenuItem x:Name="menuItemIroCreation" Header="IRO Tools..." Click="menuItemIroCreation_Click"/>
-                        <MenuItem x:Name="menuItemChunkTool" Header="Chunk Tool..." Click="menuItemChunkTool_Click"/>
-                        <MenuItem x:Name="menuItemCatalogCreation" Header="Catalog/Mod Creation Tool..."/>
-                    </ContextMenu>
-                </cls:ButtonWithImage.ContextMenu>
-            </cls:ButtonWithImage>
+                <cls:ButtonWithImage x:Name="btnHelp" Content="Help" TemplateSource="{StaticResource iconHelp}" Margin="0,0,5,0" Padding="0,8,10,0" Click="btnHelp_Click"/>
 
-            <cls:ButtonWithImage x:Name="btnHelp" Content="Help" TemplateSource="{StaticResource iconHelp}" Margin="0,0,5,0" Padding="0,8,10,0" Click="btnHelp_Click"/>
+            </WrapPanel>
+        </Viewbox>
 
-        </WrapPanel>
 
         <GroupBox Header=" Mod Info "
                   Background="{DynamicResource SecondaryAppBackground}"

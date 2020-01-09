@@ -1,4 +1,5 @@
-﻿using Iros._7th;
+﻿using _7thHeaven.Code;
+using Iros._7th;
 using Iros._7th.Workshop;
 using SeventhHeaven.ViewModels;
 using SeventhHeaven.Windows;
@@ -101,9 +102,9 @@ namespace SeventhHeavenUI
                     {
                         irofile = parm.Substring(9);
                         irofilenoext = System.IO.Path.GetFileNameWithoutExtension(irofile);
-                        Log.Write("Importing IRO from Windows " + irofile);
+                        Logger.Info("Importing IRO from Windows " + irofile);
 
-                        ImportModViewModel.ImportMod(irofile, irofilenoext, true, false);
+                        ModImporter.ImportMod(irofile, irofilenoext, true, false);
                     }
                     catch (Exception ex)
                     {

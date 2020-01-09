@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         mc:Ignorable="d"
         Style="{StaticResource MainWindowStyle}"
-        Title="Configure GL Driver Settings" 
+        Title="Configure Game Driver Settings" 
         ResizeMode="NoResize"
         Height="475" Width="775">
     <Window.Resources>

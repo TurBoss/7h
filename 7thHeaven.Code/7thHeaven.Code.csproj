@@ -55,7 +55,7 @@
     <Compile Include="ImageCache.cs" />
     <Compile Include="Install.cs" />
     <Compile Include="Library.cs" />
-    <Compile Include="Log.cs" />
+    <Compile Include="ModImporter.cs" />
     <Compile Include="ModLoadOrder.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

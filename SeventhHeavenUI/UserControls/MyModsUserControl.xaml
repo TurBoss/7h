@@ -22,20 +22,21 @@
 
 
         <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource MainListViewItemStyle}">
-            <Setter Property="Height" Value="30"/>
+            <Setter Property="Height" Value="34"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <Setter Property="BorderThickness" Value="{Binding BorderThickness}"/>
 
             <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+            <EventSetter Event="MouseUp" Handler="ListViewItem_MouseUp"/>
             <EventSetter Event="PreviewDragEnter" Handler="ListViewItem_PreviewDragEnter"/>
             <EventSetter Event="PreviewDragLeave" Handler="ListViewItem_PreviewDragLeave"/>
             <EventSetter Event="PreviewDragOver" Handler="ListViewItem_PreviewDragOver"/>
         </Style>
 
         <Style x:Key="SmallImageButton"  TargetType="{x:Type Button}" BasedOn="{StaticResource ImageButton}">
-            <Setter Property="Height" Value="44"/>
-            <Setter Property="Width" Value="48"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="44"/>
             <Setter Property="Margin" Value="0,0,0,0"/>
         </Style>
 
@@ -46,7 +47,7 @@
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
-        <ListView x:Name="lstMods" 
+        <ListView x:Name="lstMods"
                   ItemsSource="{Binding ModList}"
                   SelectionChanged="lstMods_SelectionChanged"
                   PreviewMouseMove="lstMods_PreviewMouseMove"
@@ -82,6 +83,7 @@
         </ListView>
 
         <StackPanel Grid.Column="1"
+                    x:Name="stackButtons"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Right">
 
@@ -92,12 +94,6 @@
                     ToolTip="Import Mod"
                     Margin="0,0,0,0"/>
 
-            <Button x:Name="btnAutoSort" 
-                    Style="{StaticResource SmallImageButton}"
-                    Content="{StaticResource iconSort}"
-                    Click="btnAutoSort_Click"
-                    ToolTip="Auto Sort Mods Based On Category Load Order"
-                    Margin="0,0,0,0"/>
 
             <Button x:Name="btnMoveTop" 
                     Style="{StaticResource SmallImageButton}"
@@ -124,6 +120,13 @@
                     Content="{StaticResource iconDownArrow}"
                     Click="btnSendBottom_Click"
                     ToolTip="Send to Bottom"
+                    Margin="0,0,0,0"/>
+            
+            <Button x:Name="btnAutoSort" 
+                    Style="{StaticResource SmallImageButton}"
+                    Content="{StaticResource iconSort}"
+                    Click="btnAutoSort_Click"
+                    ToolTip="Auto Sort Mods Based On Category Load Order"
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnConfigure" 
