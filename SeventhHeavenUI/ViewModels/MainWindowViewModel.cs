@@ -1452,30 +1452,19 @@ They will be automatically turned off.";
 
         internal void DoSearch()
         {
-            FilterItemViewModel item = AvailableFilters.FirstOrDefault(cat => cat.Name == _showAllText);
-            bool isFilteredBySearchText = false;
+            if (!string.IsNullOrWhiteSpace(SearchText))
+            {
+                // user is now searching by text so clear checked filters/tags
+                AvailableFilters.ForEach(a => a.IsChecked = false);
+            }
 
             if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
             {
-                isFilteredBySearchText = Sys.Catalog.Mods.Any(m => m.SearchRelevance(SearchText) > 0) && !string.IsNullOrWhiteSpace(SearchText);
-
-                if (isFilteredBySearchText && item.IsChecked)
-                {
-                    item.IsChecked = false;
-                }
-
                 CatalogMods.ClearRememberedSearchTextAndCategories();
                 CatalogMods.ReloadModList(CatalogMods.GetSelectedMod()?.Mod?.ID, SearchText, CheckedCategories, CheckedTags);
             }
             else
             {
-                isFilteredBySearchText = Sys.Library.Items.Any(m => m.CachedDetails.SearchRelevance(SearchText) > 0) && !string.IsNullOrWhiteSpace(SearchText);
-
-                if (isFilteredBySearchText && item.IsChecked)
-                {
-                    item.IsChecked = false;
-                }
-
                 MyMods.ClearRememberedSearchTextAndCategories();
                 MyMods.ReloadModList(MyMods.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedCategories, CheckedTags);
             }
@@ -1729,12 +1718,20 @@ They will be automatically turned off.";
 
         internal void ApplyFiltersAndReloadList()
         {
+            if (CheckedCategories.Count > 0 || CheckedTags.Count > 0)
+            {
+                //user is now filtering by tags/category so clear search text
+                SearchText = "";
+            }
+
             if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
             {
+                MyMods.ClearRememberedSearchTextAndCategories();
                 CatalogMods.ReloadModList(CatalogMods.GetSelectedMod()?.Mod?.ID, SearchText, CheckedCategories, CheckedTags);
             }
             else
             {
+                MyMods.ClearRememberedSearchTextAndCategories();
                 MyMods.ReloadModList(MyMods.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedCategories, CheckedTags);
             }
 
