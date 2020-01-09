@@ -1224,7 +1224,62 @@ They will be automatically turned off.";
                     ff7CompatKey?.SetValue(Sys.Settings.FF7Exe, "~ 640X480 HIGHDPIAWARE");
                 }
 
-                EasyHook.RemoteHooking.CreateAndInject(Sys.Settings.FF7Exe, String.Empty, 0, lib, null, out pid, parms);
+                // attempt to launch the game a few times in the case of an ApplicationException that can be thrown by EasyHook it seems randomly at times
+                // ... The error tends to go away the second time trying but we will try multiple times before failing
+                // ... if we fail to inject with EasyHook then we will give the user a chance to set the compatibility flag to fix the issue
+                bool didInject = false;
+                int attemptCount = 0;
+                int totalAttempts = 8;
+                pid = -1;
+
+                while (!didInject && attemptCount < totalAttempts)
+                {
+                    try
+                    {
+                        EasyHook.RemoteHooking.CreateAndInject(Sys.Settings.FF7Exe, String.Empty, 0, lib, null, out pid, parms);
+                        didInject = true;
+                    }
+                    catch (ApplicationException aex)
+                    {
+                        if (aex.Message.IndexOf("Unknown error in injected assembler code", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                        {
+                            didInject = false;
+                            attemptCount++;
+                        }
+                    }
+                }
+
+                if (!didInject)
+                {
+                    // give user option to set compat flag and try again
+                    var viewModel = MessageDialogWindow.Show("Failed to inject with EasyHook after trying multiple times. This is usually fixed by setting the 640x480 and High DPI compatibility flags.\n\nDo you want to set the compatibility flags and try again?",
+                                                             "Error - Failed To Start Game",
+                                                             MessageBoxButton.YesNo,
+                                                             MessageBoxImage.Warning);
+
+                    if (viewModel.Result == MessageBoxResult.Yes)
+                    {
+                        RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
+                        ff7CompatKey?.SetValue(Sys.Settings.FF7Exe, "~ 640X480 HIGHDPIAWARE");
+
+                        try
+                        {
+                            EasyHook.RemoteHooking.CreateAndInject(Sys.Settings.FF7Exe, String.Empty, 0, lib, null, out pid, parms);
+                        }
+                        catch (ApplicationException aex)
+                        {
+                            if (aex.Message.IndexOf("Unknown error in injected assembler code", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                            {
+                                MessageDialogWindow.Show("Failed inject with EasyHook even after setting the compatibility flags", "Failed To Start Game", MessageBoxButton.OK, MessageBoxImage.Error);
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
 
                 var ff7Proc = Process.GetProcessById(pid);
                 if (ff7Proc != null)
