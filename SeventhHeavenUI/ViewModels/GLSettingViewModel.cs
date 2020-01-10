@@ -110,9 +110,6 @@ namespace SeventhHeaven.ViewModels
         {
             get
             {
-                if (_dropdownOptions == null)
-                    _dropdownOptions = new List<GLSettingDropdownOptionViewModel>();
-
                 return _dropdownOptions;
             }
             set
@@ -140,7 +137,7 @@ namespace SeventhHeaven.ViewModels
         {
             get
             {
-                if (SelectedDropdownIndex < 0 || SelectedDropdownIndex >= DropdownOptions.Count)
+                if (DropdownOptions == null || SelectedDropdownIndex < 0 || SelectedDropdownIndex >= DropdownOptions.Count)
                     return "";
 
                 return DropdownOptions[SelectedDropdownIndex].DisplayText;
@@ -235,20 +232,20 @@ namespace SeventhHeaven.ViewModels
             else if (Setting is Iros._7th.Workshop.ConfigSettings.DropDown)
             {
                 SettingType = GLSettingType.Dropdown;
-                DropdownOptions = new List<GLSettingDropdownOptionViewModel>();
+                
+                if (DropdownOptions == null)
+                {
+                    DropdownOptions = (Setting as DropDown).Options.Select(item => new GLSettingDropdownOptionViewModel()
+                                                                                    {
+                                                                                        DisplayText = item.Text,
+                                                                                        SettingsValue = item.Settings
+                                                                                    }).ToList();
+                }
 
                 int i = 0;
-                foreach (var item in (Setting as DropDown).Options)
+                foreach (var item in DropdownOptions)
                 {
-                    GLSettingDropdownOptionViewModel ddOption = new GLSettingDropdownOptionViewModel()
-                    {
-                        DisplayText = item.Text,
-                        SettingsValue = item.Settings
-                    };
-
-                    DropdownOptions.Add(ddOption);
-
-                    if (settings.IsMatched(item.Settings))
+                    if (settings.IsMatched(item.SettingsValue))
                     {
                         SelectedDropdownIndex = i;
                     }
@@ -256,7 +253,6 @@ namespace SeventhHeaven.ViewModels
                     i++;
                 }
 
-                NotifyPropertyChanged(nameof(DropdownOptions));
             }
         }
 
