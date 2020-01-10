@@ -15,6 +15,11 @@ namespace Iros._7th.Workshop.ConfigSettings {
         private Dictionary<string, string> _values = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
         private List<string> _lines;
 
+        /// <summary>
+        /// settings not to include in output
+        /// </summary>
+        public List<string> _settingsToExclude = new List<string>() { "vert_source", "frag_source", "yuv_source" };
+
         public string Get(string setting) {
             string s;
             _values.TryGetValue(setting, out s);
@@ -23,11 +28,16 @@ namespace Iros._7th.Workshop.ConfigSettings {
         public bool IsMatched(string spec) {
             string[] parts = spec.Split(',');
             foreach (string p in parts) {
-                string[] set = p.Split('=');
+                string trimmedParts = p.Trim();
+
+                string[] set = trimmedParts.Split('=');
                 if (set.Length == 2) {
+                    string trimmedName = set[0].Trim();
+                    string trimmedVal = set[1].Trim();
+
                     string value;
-                    _values.TryGetValue(set[0], out value);
-                    if (!set[1].Equals(value ?? String.Empty, StringComparison.InvariantCultureIgnoreCase))
+                    _values.TryGetValue(trimmedName, out value);
+                    if (!trimmedVal.Equals(value ?? String.Empty, StringComparison.InvariantCultureIgnoreCase))
                         return false;
                 }                    
             }
@@ -37,9 +47,13 @@ namespace Iros._7th.Workshop.ConfigSettings {
             if (String.IsNullOrWhiteSpace(spec)) return;
             string[] parts = spec.Split(',');
             foreach (string p in parts) {
-                string[] set = p.Split('=');
+                string trimmedParts = p.Trim();
+                string[] set = trimmedParts.Split('=');
+
                 if (set.Length == 2) {
-                    _values[set[0]] = set[1];
+                    string trimmedName = set[0].Trim();
+                    string trimmedVal = set[1].Trim();
+                    _values[trimmedName] = trimmedVal;
                 }
             }
         }
@@ -67,7 +81,7 @@ namespace Iros._7th.Workshop.ConfigSettings {
                 {
                     string settingName = parts[0].Trim();
 
-                    if (_values.ContainsKey(settingName))
+                    if (_values.ContainsKey(settingName) && !_settingsToExclude.Any(s => s == settingName))
                     {
                         outputLines.Add(settingName + " = " + _values[settingName]);
                         writtenKeys.Add(settingName);
@@ -86,7 +100,7 @@ namespace Iros._7th.Workshop.ConfigSettings {
             // loop over new settings to add to cfg if it does not exist in the file
             foreach (string key in _values.Keys)
             {
-                if (!writtenKeys.Contains(key))
+                if (!writtenKeys.Contains(key) && !_settingsToExclude.Any(s => s == key))
                 {
                     outputLines.Add($"{key} = {_values[key]}");
                 }

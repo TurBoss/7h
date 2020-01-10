@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Style="{StaticResource MainWindowStyle}"
         Title="Configure Game Driver Settings" 
+        Closed="Window_Closed"
         ResizeMode="NoResize"
         Height="475" Width="775">
     <Window.Resources>
@@ -106,26 +107,6 @@
                     <ContentControl/>
                 </StackPanel>
             </TabItem>-->
-            <TabItem Header="Advanced">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <TextBlock Text="Use this window to edit the ff7_opengl.cfg directly. 'Reset Defaults' and changes made on other tabs will not reflect below until saved."
-                               TextWrapping="Wrap"
-                               Margin="5,0,5,5"/>
-
-                    <TextBox x:Name="txtAdvanceFileEdit"
-                             Grid.Row="1"
-                             AcceptsReturn="True"
-                             AcceptsTab="True"
-                             VerticalAlignment="Stretch"
-                             VerticalScrollBarVisibility="Auto"/>
-                </Grid>
-
-            </TabItem>
         </TabControl>
 
         <TextBlock x:Name="txtStatusMessage" Grid.Row="1"

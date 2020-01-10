@@ -3,17 +3,11 @@ using Iros._7th.Workshop;
 using SeventhHeaven.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace SeventhHeaven.Windows
 {
@@ -29,6 +23,8 @@ namespace SeventhHeaven.Windows
         private string _file;
 
         private List<GLSettingViewModel> ViewModels { get; set; }
+
+        private Button btnClearTextureCache;
 
         public ConfigureGLWindow()
         {
@@ -50,16 +46,25 @@ namespace SeventhHeaven.Windows
                 _settings = new Iros._7th.Workshop.ConfigSettings.Settings(System.IO.File.ReadAllLines(cfgFile));
                 _spec = Util.Deserialize<Iros._7th.Workshop.ConfigSettings.ConfigSpec>(cfgSpec);
                 _file = cfgFile;
-
-                txtAdvanceFileEdit.Text = System.IO.File.ReadAllText(_file);
             }
             catch (Exception e)
             {
-                txtAdvanceFileEdit.Text = $"Failed to read ff7_opengl.cfg and/or configSpec file: {e.Message}";
-                txtAdvanceFileEdit.IsEnabled = false;
+                Logger.Error(e);
+                MessageDialogWindow.Show("Failed to read cfg/spec file. Closing window.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.Close();
             }
 
-            foreach (var items in _spec.Settings.GroupBy(s => s.Group))
+            Dictionary<string, int> tabOrders = new Dictionary<string, int>()
+            {
+                {"Graphics", 0},
+                {"Rendering", 1},
+                {"Advanced", 3}
+            };
+
+            foreach (var items in _spec.Settings.GroupBy(s => s.Group)
+                                                .Select(g => new { settingGroup = g, SortOrder = tabOrders[g.Key] })
+                                                .OrderBy(g => g.SortOrder)
+                                                .Select(g => g.settingGroup))
             {
                 TabItem tab = new TabItem()
                 {
@@ -88,10 +93,63 @@ namespace SeventhHeaven.Windows
                     stackPanel.Children.Add(settingControl);
                 }
 
+                if (items.Key == "Advanced")
+                {
+                    // add clear texture cache button
+                    btnClearTextureCache = new Button()
+                    {
+                        Content = "Clear Texture Cache",
+                        ToolTip = @"Will delete everything under 'modpath' (in cfg) \Textures\cache\*.* path",
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Top,
+                        Margin = new Thickness(5, 0, 0, 0)
+                    };
+                    btnClearTextureCache.Click += BtnClearTextureCache_Click;
+
+                    stackPanel.Children.Add(btnClearTextureCache);
+                }
+
 
                 scrollViewer.Content = stackPanel;
                 tab.Content = scrollViewer;
-                tabCtrlMain.Items.Insert(0, tab);
+                tabCtrlMain.Items.Add(tab);
+            }
+        }
+
+        private void BtnClearTextureCache_Click(object sender, RoutedEventArgs e)
+        {
+            ClearTextureCache();
+        }
+
+        private void ClearTextureCache()
+        {
+            string pathToCache = Path.Combine(Sys.Settings.AaliFolder, "cache");
+
+            if (!Directory.Exists(pathToCache))
+            {
+                return;
+            }
+
+            try
+            {
+                foreach (string file in Directory.GetFiles(pathToCache))
+                {
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch (IOException ex)
+                    {
+                        Logger.Warn(ex); // add warning to log if fail to delete file but continue deleting other files
+                    }
+                }
+
+                txtStatusMessage.Text = "Texture cache cleared!";
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                txtStatusMessage.Text = $"Failed to clear texture cache: {ex.Message}";
             }
         }
 
@@ -121,22 +179,14 @@ namespace SeventhHeaven.Windows
         {
             try
             {
-                bool isAdvancedTabSelected = tabCtrlMain.SelectedIndex == tabCtrlMain.Items.Count - 1; // Advanced tab will be the last tab
-                if (isAdvancedTabSelected && txtAdvanceFileEdit.IsEnabled)
+                foreach (GLSettingViewModel item in ViewModels)
                 {
-                    System.IO.File.WriteAllText(_file, txtAdvanceFileEdit.Text);
-                }
-                else
-                {
-                    foreach (GLSettingViewModel item in ViewModels)
-                    {
-                        item.Save(_settings);
-                    }
-
-                    System.IO.File.WriteAllLines(_file, _settings.GetOutput());
+                    item.Save(_settings);
                 }
 
-                Sys.Message(new WMessage("OpenGL settings saved!"));
+                System.IO.File.WriteAllLines(_file, _settings.GetOutput());
+
+                Sys.Message(new WMessage("Game Driver settings saved!"));
                 this.Close();
             }
             catch (UnauthorizedAccessException)
@@ -157,7 +207,15 @@ namespace SeventhHeaven.Windows
                 item.ResetToDefault(_settings);
             }
 
-            SetStatusMessage("GL settings reset to defaults. Click 'Save' to save changes.");
+            SetStatusMessage("Game Driver settings reset to defaults. Click 'Save' to save changes.");
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            if (btnClearTextureCache != null)
+            {
+                btnClearTextureCache.Click -= BtnClearTextureCache_Click;
+            }
         }
     }
 }
