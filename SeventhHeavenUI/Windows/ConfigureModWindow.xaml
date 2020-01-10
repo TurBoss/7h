@@ -119,6 +119,7 @@
                         BorderThickness="1"
                         VerticalAlignment="Top"
                         HorizontalAlignment="Left"
+                        Visibility="{Binding ComboBoxVisibility, FallbackValue=''}"
                         BorderBrush="{DynamicResource PrimaryControlBackground}"
                         Margin="5,10,0,10">
                     <ComboBox x:Name="dropdownOption"
