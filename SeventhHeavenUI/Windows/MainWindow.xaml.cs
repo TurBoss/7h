@@ -352,5 +352,10 @@ namespace SeventhHeavenUI
         {
             ViewModel.DoSearch();
         }
+
+        private void menuItemLaunchSettings_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

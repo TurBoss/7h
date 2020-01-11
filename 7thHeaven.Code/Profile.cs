@@ -88,6 +88,12 @@ namespace Iros._7th.Workshop {
         /// Name is only saved for reference in case a mod is not installed (so the name is at least known)
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Custom category saved to a profile
+        /// </summary>
+        public string Category { get; set; }
+
         public bool IsModActive { get; set; }
 
         private static string[] _comparison = new[] { "=", "!=", "<", ">", "<=", ">=" };

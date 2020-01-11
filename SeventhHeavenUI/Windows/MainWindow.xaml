@@ -99,8 +99,9 @@
                         <ContextMenu x:Name="menuPlayOptions" Closed="menuPlayOptions_Closed">
                             <MenuItem x:Name="menuPlayWithMods" Header="Play With Mods (default)" Click="menuPlayWithMods_Click"/>
                             <MenuItem x:Name="menuPlayWithoutMods" Header="Play Without Mods" Click="menuPlayWithoutMods_Click"/>
-                            <MenuItem x:Name="menuPlayVariableDump" Header="Play With Variable Dump" Click="menuPlayVariableDump_Click"/>
+                            <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
                             <MenuItem x:Name="menuPlayDebugLog" Header="Play With Debug Log" Click="menuPlayDebugLog_Click"/>
+                            <MenuItem x:Name="menuPlayVariableDump" Header="Play With Variable Dump" Click="menuPlayVariableDump_Click"/>
                         </ContextMenu>
                     </ToggleButton.ContextMenu>
                 </ToggleButton>
@@ -109,9 +110,11 @@
                 <cls:ButtonWithImage x:Name="btnSettings" Content="Settings" Margin="0,0,0,0" Style="{StaticResource ButtonWithImageAndDownArrow}" TemplateSource="{StaticResource iconSettings}" ContextMenuService.Placement="Bottom" Click="btnSettings_Click">
                     <cls:ButtonWithImage.ContextMenu>
                         <ContextMenu x:Name="menuSettings" Closed="menuSettings_Closed">
-                            <MenuItem x:Name="menuItemGeneralSettings" Header="General Settings" Click="menuItemGeneralSettings_Click"/>
-                            <MenuItem x:Name="menuItemAaliSettings" Header="Configure Game Driver..." Click="menuItemAaliSettings_Click"/>
                             <MenuItem x:Name="menuItemThemeSettings" Header="Change Color Theme..." Click="menuItemThemeSettings_Click"/>
+                            <MenuItem x:Name="menuItemGeneralSettings" Header="General Settings..." Click="menuItemGeneralSettings_Click"/>
+                            <MenuItem x:Name="menuItemAaliSettings" Header="Configure Game Driver..." Click="menuItemAaliSettings_Click"/>
+                            <MenuItem x:Name="menuItemLaunchSettings" Header="Game Launch Settings..." Click="menuItemLaunchSettings_Click"/>
+
                             <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
                             <MenuItem x:Name="menuItemOpenProfile" Header="Profiles..." Click="menuItemOpenProfile_Click"/>
                         </ContextMenu>
@@ -121,9 +124,10 @@
                 <cls:ButtonWithImage x:Name="btnTools" Content="Tools" Margin="0,0,0,0" Style="{StaticResource ButtonWithImageAndDownArrow}" TemplateSource="{StaticResource iconTools}" ContextMenuService.Placement="Bottom" Click="btnTools_Click">
                     <cls:ButtonWithImage.ContextMenu>
                         <ContextMenu x:Name="menuTools" PlacementTarget="{Binding ElementName=btnTools}" Closed="menuTools_Closed">
-                            <MenuItem x:Name="menuItemIroCreation" Header="IRO Tools..." Click="menuItemIroCreation_Click"/>
-                            <MenuItem x:Name="menuItemChunkTool" Header="Chunk Tool..." Click="menuItemChunkTool_Click"/>
                             <MenuItem x:Name="menuItemCatalogCreation" Header="Catalog/Mod Creation Tool..."/>
+                            <MenuItem x:Name="menuItemChunkTool" Header="Chunk Tool..." Click="menuItemChunkTool_Click"/>
+                            <MenuItem x:Name="menuItemConverter" Header="Game Converter..."/>
+                            <MenuItem x:Name="menuItemIroCreation" Header="IRO Tools..." Click="menuItemIroCreation_Click"/>
                         </ContextMenu>
                     </cls:ButtonWithImage.ContextMenu>
                 </cls:ButtonWithImage>

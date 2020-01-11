@@ -84,18 +84,8 @@ namespace SeventhHeavenUI.ViewModels
             set
             {
                 _category = value;
-                UpdateCategoryInLibrary();
+                ActiveModInfo.Category = Category;
                 NotifyPropertyChanged();
-            }
-        }
-
-        private void UpdateCategoryInLibrary()
-        {
-            var installedMod = Sys.Library.GetItem(InstallInfo.CachedDetails.ID);
-
-            if (installedMod != null)
-            {
-                installedMod.CachedDetails.Category = Category;
             }
         }
 
@@ -219,13 +209,19 @@ namespace SeventhHeavenUI.ViewModels
 
             Name = InstallInfo.CachedDetails.Name;
             Author = InstallInfo.CachedDetails.Author;
-            Category = InstallInfo.CachedDetails.Category;
             Version = InstallInfo.CachedDetails.LatestVersion.Version.ToString();
             ReleaseDate = InstallInfo.CachedDetails.LatestVersion.ReleaseDate.ToString(Sys.Settings.DateTimeStringFormat);
 
             SortOrder = defaultSortOrder;
 
-            if (string.IsNullOrWhiteSpace(Category))
+            // check active profile for custom category then default to library installed item
+            _category = profileItem.Category;
+            if (string.IsNullOrWhiteSpace(_category))
+            {
+                _category = InstallInfo.CachedDetails.Category;
+            }
+
+            if (string.IsNullOrWhiteSpace(_category))
             {
                 Category = ModCategory.Unknown.ToString();
             }

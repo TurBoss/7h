@@ -393,7 +393,7 @@ namespace Iros._7th.Workshop
                 }
             }
 
-            // validate imported mod files exist - remove them if they do not exit
+            // validate imported mod files exist - remove them if they do not exist
             ValidateAndRemoveDeletedMods();
 
             Sys.Library.AttemptDeletions();

@@ -138,6 +138,15 @@ namespace SeventhHeaven.Windows
 
                 this.Height = newHeight;
             }
+
+            if (btnOkay.Visibility == Visibility.Visible)
+            {
+                btnOkay.Focus();
+            }
+            else
+            {
+                btnNo.Focus();
+            }
         }
     }
 }

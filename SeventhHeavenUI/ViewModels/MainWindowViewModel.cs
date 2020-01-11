@@ -67,7 +67,9 @@ They will be automatically turned off.";
             "Mod Authors: Did you know you can base64 encode images into your Readme.html?",
             "You can double-click a profile in the manage profiles window to load the selected profile.",
             "Right-click My Mods tab to open your Mod Library Folder",
-            "Right-click Browse Catalog tab to open your Catalog settings"
+            "Right-click Browse Catalog tab to open your Catalog settings",
+            "You can find answers to many questions or problems on the forum at https://forums.qhimm.com.",
+            "You can find answers to many questions or problems from the Help menu."
         };
 
         private string _catFile;
@@ -1133,7 +1135,7 @@ They will be automatically turned off.";
 
             if (Sys.ActiveProfile.ActiveItems.Count == 0)
             {
-                MessageDialogWindow.Show("No mods have been activated. The game will now launch as 'vanilla'", "Launch Warning");
+                Sys.Message(new WMessage("No mods have been activated. The game will now launch as 'vanilla'", true));
                 LaunchFF7Exe();
                 return;
             }
@@ -1252,7 +1254,7 @@ They will be automatically turned off.";
                 if (!didInject)
                 {
                     // give user option to set compat flag and try again
-                    var viewModel = MessageDialogWindow.Show("Failed to inject with EasyHook after trying multiple times. This is usually fixed by setting the 640x480 and High DPI compatibility flags.\n\nDo you want to set the compatibility flags and try again?",
+                    var viewModel = MessageDialogWindow.Show("Failed to inject with EasyHook after trying multiple times. This is usually fixed by setting the 'Code 5 Fix' to 'On' in the Game Launcher Settings.\n\nDo you want to apply the setting and try again?",
                                                              "Error - Failed To Start Game",
                                                              MessageBoxButton.YesNo,
                                                              MessageBoxImage.Warning);
