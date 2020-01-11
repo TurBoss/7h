@@ -1,6 +1,7 @@
 ﻿using _7thHeaven.Code;
 using Iros._7th;
 using Iros._7th.Workshop;
+using SeventhHeaven.Classes;
 using SeventhHeaven.ViewModels;
 using SeventhHeaven.Windows;
 using SeventhHeavenUI.ViewModels;
@@ -150,7 +151,7 @@ namespace SeventhHeavenUI
 
         private void btnPlay_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.LaunchGame(varDump: false, debug: false);
+            ViewModel.LaunchGame(variableDump: false, debugLogging: false);
         }
 
         private void txtSearch_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -208,7 +209,7 @@ namespace SeventhHeavenUI
         {
             if (MessageDialogWindow.Show(_warningMessage, "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning).Result == MessageBoxResult.Yes)
             {
-                ViewModel.LaunchGame(varDump: true, debug: false);
+                ViewModel.LaunchGame(variableDump: true, debugLogging: false);
             }
         }
 
@@ -216,7 +217,7 @@ namespace SeventhHeavenUI
         {
             if (MessageDialogWindow.Show(_warningMessage, "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning).Result == MessageBoxResult.Yes)
             {
-                ViewModel.LaunchGame(varDump: false, debug: true);
+                ViewModel.LaunchGame(variableDump: false, debugLogging: true);
             }
         }
 
@@ -315,13 +316,12 @@ namespace SeventhHeavenUI
 
         private void menuPlayWithMods_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.LaunchGame(varDump: false, debug: false);
+            ViewModel.LaunchGame(false, false);
         }
 
         private void menuPlayWithoutMods_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.LaunchAdditionalProgramsToRunPrior();
-            MainWindowViewModel.LaunchFF7Exe();
+            GameLaunchWindow.Show(false, false, noMods: true);
         }
 
         private void btnOpenAppLog_Click(object sender, RoutedEventArgs e)

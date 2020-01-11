@@ -99,6 +99,7 @@
     <Compile Include="Classes\Constraint.cs" />
     <Compile Include="Classes\DateTimeComparer.cs" />
     <Compile Include="Classes\FileDialogHelper.cs" />
+    <Compile Include="Classes\GameLauncher.cs" />
     <Compile Include="Classes\OpenFolderDialog.cs" />
     <Compile Include="Classes\ReloadListOption.cs" />
     <Compile Include="Classes\Themes\Classic7HTheme.cs" />
@@ -125,6 +126,7 @@
       <DependentUpon>PackIroUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\AllowModToRunViewModel.cs" />
+    <Compile Include="ViewModels\GameLaunchViewModel.cs" />
     <Compile Include="ViewModels\ProgramToRunViewModel.cs" />
     <Compile Include="ViewModels\SubscriptionSettingViewModel.cs" />
     <Compile Include="ViewModels\GLSettingViewModel.cs" />
@@ -155,6 +157,9 @@
     </Compile>
     <Compile Include="Windows\ConfigureModWindow.xaml.cs">
       <DependentUpon>ConfigureModWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\GameLaunchWindow.xaml.cs">
+      <DependentUpon>GameLaunchWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\ImportModWindow.xaml.cs">
       <DependentUpon>ImportModWindow.xaml</DependentUpon>
@@ -202,6 +207,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\ConfigureModWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\GameLaunchWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

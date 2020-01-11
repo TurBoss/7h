@@ -383,7 +383,7 @@ namespace SeventhHeavenUI.ViewModels
                 while (toExamine.Any())
                 {
                     examined.Add(toExamine.Peek().ModID);
-                    var info = MainWindowViewModel.GetModInfo(toExamine.Pop());
+                    var info = GameLauncher.GetModInfo(toExamine.Pop());
 
                     if (info == null)
                     {
@@ -428,7 +428,7 @@ namespace SeventhHeavenUI.ViewModels
 
                 foreach (var active in Sys.ActiveProfile.ActiveItems.Except(remove))
                 {
-                    var info = MainWindowViewModel.GetModInfo(Sys.Library.GetItem(active.ModID));
+                    var info = GameLauncher.GetModInfo(Sys.Library.GetItem(active.ModID));
                     if (info != null)
                     {
                         foreach (Guid mID in pulledIn.Select(ii => ii.ModID).Concat(new[] { modID }))
@@ -485,7 +485,7 @@ namespace SeventhHeavenUI.ViewModels
                         Sys.Ping(pi.ModID);
                 }
 
-                MainWindowViewModel.SanityCheckSettings();
+                GameLauncher.SanityCheckSettings();
             }
             else
             {
@@ -785,7 +785,7 @@ namespace SeventhHeavenUI.ViewModels
                 }
 
 
-                List<Constraint> modConstraints = MainWindowViewModel.GetConstraints().Where(c => c.ModID.Equals(modToConfigure.InstallInfo.ModID)).ToList();
+                List<Constraint> modConstraints = GameLauncher.GetConstraints().Where(c => c.ModID.Equals(modToConfigure.InstallInfo.ModID)).ToList();
 
                 ConfigureModWindow modWindow = new ConfigureModWindow();
                 modWindow.ViewModel.Init(info, imageReader, audioReader, modToConfigure.ActiveModInfo, modConstraints, pathToModXml);
@@ -796,7 +796,7 @@ namespace SeventhHeavenUI.ViewModels
                 {
                     modToConfigure.ActiveModInfo.Settings = modWindow.ViewModel.GetSettings();
 
-                    MainWindowViewModel.SanityCheckSettings();
+                    GameLauncher.SanityCheckSettings();
                 }
 
                 modWindow.ViewModel.CleanUp();
