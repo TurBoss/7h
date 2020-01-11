@@ -164,14 +164,24 @@
                              Click="btnPreview_Click"
                              Content="Preview" />
 
+        <Button x:Name="btnReset"
+                Grid.Row="4"
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Margin="0,0,175,5"
+                Click="btnReset_Click"
+                Content="Reset to Mod Defaults" />
+
         <Button x:Name="btnOk"
                 Grid.Row="4"
                 Grid.Column="1"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
-                Margin="0,0,70,5"
+                Margin="0,0,90,5"
+                Width="85"
                 Click="btnOk_Click"
-                Content="OK" />
+                Content="Save" />
 
         <Button x:Name="btnCancel"
                 Grid.Row="4"
@@ -179,6 +189,7 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
                 Margin="0,0,5,5"
+                Width="85"
                 Click="btnCancel_Click"
                 Content="Cancel" />
 

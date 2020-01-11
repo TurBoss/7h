@@ -1219,11 +1219,11 @@ They will be automatically turned off.";
                 using (var fs = new FileStream(parms.ProfileFile, FileMode.Create))
                     Util.SerializeBinary(runtimeProfiles, fs);
 
-                // Add 640x480 and High DPI compatibility flags if set in settings
+                // Add 640x480 compatibility flag if set in settings
                 if (Sys.Settings.HasOption(GeneralOptions.SetEXECompatFlags))
                 {
                     RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
-                    ff7CompatKey?.SetValue(Sys.Settings.FF7Exe, "~ 640X480 HIGHDPIAWARE");
+                    ff7CompatKey?.SetValue(Sys.Settings.FF7Exe, "~ 640X480");
                 }
 
                 // attempt to launch the game a few times in the case of an ApplicationException that can be thrown by EasyHook it seems randomly at times
@@ -1262,7 +1262,7 @@ They will be automatically turned off.";
                     if (viewModel.Result == MessageBoxResult.Yes)
                     {
                         RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
-                        ff7CompatKey?.SetValue(Sys.Settings.FF7Exe, "~ 640X480 HIGHDPIAWARE");
+                        ff7CompatKey?.SetValue(Sys.Settings.FF7Exe, "~ 640X480");
 
                         try
                         {

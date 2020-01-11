@@ -52,5 +52,10 @@ namespace SeventhHeaven.Windows
         {
             ViewModel.CleanUp();
         }
+
+        private void btnReset_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ResetToModDefaultValues();
+        }
     }
 }

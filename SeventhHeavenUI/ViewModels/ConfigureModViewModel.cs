@@ -21,7 +21,13 @@ namespace SeventhHeaven.ViewModels
         private Func<string, string> _imageReader;
         private Func<string, Stream> _audioReader;
         private List<Constraint> _constraints;
+        
+        /// <summary>
+        /// Dictionary mapping mod settings to their values
+        /// </summary>
         private Dictionary<string, int> _values;
+
+
         private string _windowTitle;
         private string _description;
         private string _compatibilityNote;
@@ -37,12 +43,6 @@ namespace SeventhHeaven.ViewModels
         private Visibility _checkBoxVisibility;
         private Visibility _comboBoxVisibility;
         private Visibility _previewButtonVisibility;
-
-        internal void CleanUp()
-        {
-            StopAudio();
-            ImageOptionSource = null;
-        }
 
         private bool _checkBoxIsEnabled;
         private bool _comboBoxIsEnabled;
@@ -286,11 +286,17 @@ namespace SeventhHeaven.ViewModels
             SelectedOptionIndex = ModOptions.Count > 0 ? 0 : -1;
         }
 
+        /// <summary>
+        /// Returns the mod configuration as list of <see cref="ProfileSetting"/>s to be saved with a <see cref="Iros._7th.Workshop.ProfileItem"/>.
+        /// </summary>
         internal List<ProfileSetting> GetSettings()
         {
             return _values.Select(kv => new ProfileSetting() { ID = kv.Key, Value = kv.Value }).ToList();
         }
 
+        /// <summary>
+        /// Updates the UI with the selected mod option to configure.
+        /// </summary>
         internal void LoadSelectedOptionDetails()
         {
             _selectedOption = ModOptions.ElementAt(SelectedOptionIndex)?.Option;
@@ -565,6 +571,24 @@ namespace SeventhHeaven.ViewModels
             {
                 StopAudio();
             }
+        }
+
+        internal void CleanUp()
+        {
+            StopAudio();
+            ImageOptionSource = null;
+        }
+
+        internal void ResetToModDefaultValues()
+        {
+            // loop through each viewmodel representing a modoption and set the value to the default
+            foreach (ConfigOptionViewModel option in ModOptions)
+            {
+                _values[option.Option.ID] = option.Option.Default;
+            }
+
+            // reload what is selected in the UI to reflect new defaults set
+            LoadSelectedOptionDetails();
         }
     }
 
