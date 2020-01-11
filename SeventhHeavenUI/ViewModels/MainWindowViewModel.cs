@@ -1662,6 +1662,13 @@ They will be automatically turned off.";
                 {
                     tags.AddRange(modTags);
                 }
+
+                // include the name of the catalogs as a tag
+                List<string> catalogNames = Sys.Catalog.Mods.Where(m => !string.IsNullOrWhiteSpace(m.SourceCatalogName))
+                                                            .Select(m => m.SourceCatalogName)
+                                                            .Distinct().ToList();
+
+                tags.AddRange(catalogNames);
             }
             else
             {
@@ -1670,13 +1677,6 @@ They will be automatically turned off.";
                     tags.AddRange(modTags);
                 }
             }
-
-            // include the name of the catalogs as a tag
-            List<string> catalogNames = Sys.Catalog.Mods.Where(m => !string.IsNullOrWhiteSpace(m.SourceCatalogName))
-                                                        .Select(m => m.SourceCatalogName)
-                                                        .Distinct().ToList();
-
-            tags.AddRange(catalogNames);
 
             tags = tags.Select(s => $"{s.Substring(0, 1).ToUpper()}{s.Substring(1)}") // make Tag display as proper case e.g. 'My tag' intead of 'my tag'
                        .Distinct(StringComparer.CurrentCultureIgnoreCase)

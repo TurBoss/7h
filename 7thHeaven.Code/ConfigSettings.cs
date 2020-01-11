@@ -58,6 +58,28 @@ namespace Iros._7th.Workshop.ConfigSettings {
             }
         }
 
+        public bool HasSetting(string spec)
+        {
+            List<bool> exists = new List<bool>();
+
+            string[] parts = spec.Split(',');
+            foreach (string p in parts)
+            {
+                string trimmedParts = p.Trim();
+
+                string[] set = trimmedParts.Split('=');
+                if (set.Length == 2)
+                {
+                    string trimmedName = set[0].Trim();
+                    string trimmedVal = set[1].Trim();
+
+                    exists.Add(_values.ContainsKey(trimmedName));
+                }
+            }
+
+            return exists.Count > 0 && exists.All(s => s);
+        }
+
         public Settings(IEnumerable<string> lines) {
             _lines = lines.ToList();
 
@@ -65,6 +87,20 @@ namespace Iros._7th.Workshop.ConfigSettings {
                 string[] parts = line.Split(new[] { " = " }, 2, StringSplitOptions.None);
                 if (parts.Length == 2 && !parts[0].StartsWith("#")) {
                     _values[parts[0]] = parts[1];
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds any missing default settings
+        /// </summary>
+        public void SetMissingDefaults(List<Setting> settings)
+        {
+            foreach (Setting item in settings)
+            {
+                if (!HasSetting(item.DefaultValue))
+                {
+                    Apply(item.DefaultValue);
                 }
             }
         }

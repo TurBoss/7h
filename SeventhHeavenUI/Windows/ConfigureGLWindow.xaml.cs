@@ -41,18 +41,32 @@ namespace SeventhHeaven.Windows
 
         public void Init(string cfgSpec, string cfgFile)
         {
+            _file = cfgFile;
+
             try
             {
-                _settings = new Iros._7th.Workshop.ConfigSettings.Settings(System.IO.File.ReadAllLines(cfgFile));
                 _spec = Util.Deserialize<Iros._7th.Workshop.ConfigSettings.ConfigSpec>(cfgSpec);
-                _file = cfgFile;
             }
             catch (Exception e)
             {
                 Logger.Error(e);
-                MessageDialogWindow.Show("Failed to read cfg/spec file. Closing window.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show("Failed to read the required spec xml file to display settings. The window mus close.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 this.Close();
+                return;
             }
+
+            if (File.Exists(_file))
+            {
+                _settings = new Iros._7th.Workshop.ConfigSettings.Settings(File.ReadAllLines(_file));
+            }
+            else
+            {
+                // create default .cfg file
+                File.Create(_file);
+                _settings = new Iros._7th.Workshop.ConfigSettings.Settings(new List<string>());
+            }
+
+            _settings.SetMissingDefaults(_spec.Settings);
 
             Dictionary<string, int> tabOrders = new Dictionary<string, int>()
             {
@@ -99,7 +113,7 @@ namespace SeventhHeaven.Windows
                     btnClearTextureCache = new Button()
                     {
                         Content = "Clear Texture Cache",
-                        ToolTip = @"Will delete everything under 'modpath' (in cfg) \Textures\cache\*.* path",
+                        ToolTip = $"Will delete everything under {Path.Combine(Sys.Settings.AaliFolder, "cache")}",
                         HorizontalAlignment = HorizontalAlignment.Left,
                         VerticalAlignment = VerticalAlignment.Top,
                         Margin = new Thickness(5, 0, 0, 0)
@@ -184,7 +198,7 @@ namespace SeventhHeaven.Windows
                     item.Save(_settings);
                 }
 
-                System.IO.File.WriteAllLines(_file, _settings.GetOutput());
+                File.WriteAllLines(_file, _settings.GetOutput());
 
                 Sys.Message(new WMessage("Game Driver settings saved!"));
                 this.Close();

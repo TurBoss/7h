@@ -37,7 +37,7 @@
     <Description>Set the window size (or fullscreen resolution) of FF7. Auto uses game resolution in windowed mode or current desktop resolution in fullscreen mode.</Description>
     <DefaultValue>window_size_x=1280,window_size_y=720</DefaultValue>
     <Option>
-      <Text>Auto (which will set 0x0 in cfg file)</Text>
+      <Text>Auto</Text>
       <Settings>window_size_x=0,window_size_y = 0</Settings>
     </Option>
     <Option>
@@ -102,6 +102,15 @@
   <!--RENDERING TAB-->
   <Setting xsi:type="Checkbox">
     <Group>Rendering</Group>
+    <Name>Transparent Dialogs</Name>
+    <Description>Make all dialog boxes transparent, same effect as the transparent dialog boxes YAMP patch.</Description>
+    <DefaultValue>transparent_dialogs=on</DefaultValue>
+    <TrueSetting>transparent_dialogs=on</TrueSetting>
+    <FalseSetting>transparent_dialogs=off</FalseSetting>
+  </Setting>
+
+  <Setting xsi:type="Checkbox">
+    <Group>Rendering</Group>
     <Name>FPS Counter</Name>
     <Description>Displays the Frames Per Second overlay in the top right corner of the screen.</Description>
     <DefaultValue>show_fps=off</DefaultValue>
@@ -111,22 +120,13 @@
 
   <Setting xsi:type="Checkbox">
     <Group>Rendering</Group>
-    <Name>Skip Frames</Name>
-    <Description>Skip frames when PC is underperforming. May improve performance or help with stuttering on low-end hardware.</Description>
+    <Name>Skip FMV Frames</Name>
+    <Description>Skip frames in movies when PC is underperforming. May improve performance or help with stuttering on low-end hardware.</Description>
     <DefaultValue>skip_frames=no</DefaultValue>
     <TrueSetting>skip_frames=yes</TrueSetting>
     <FalseSetting>skip_frames=no</FalseSetting>
   </Setting>
-
-  <Setting xsi:type="Checkbox">
-    <Group>Rendering</Group>
-    <Name>Transparent Dialogs</Name>
-    <Description>Make all dialog boxes transparent, same effect as the transparent dialog boxes YAMP patch.</Description>
-    <DefaultValue>transparent_dialogs=on</DefaultValue>
-    <TrueSetting>transparent_dialogs=on</TrueSetting>
-    <FalseSetting>transparent_dialogs=off</FalseSetting>
-  </Setting>
-  
+ 
   <Setting xsi:type="Checkbox">
     <Group>Rendering</Group>
     <Name>Linear Filtering</Name>
@@ -149,7 +149,11 @@
     <Group>Rendering</Group>
     <Name>Shader Options</Name>
     <Description>Choose a shader to apply effects. Only effective if Post-Processing is enabled.</Description>
-    <DefaultValue>post_source=shaders/bloom2.post</DefaultValue>
+    <DefaultValue>post_source=</DefaultValue>
+    <Option>
+      <Text>None</Text>
+      <Settings>post_source=</Settings>
+    </Option>
     <Option>
       <Text>All - Bloom2</Text>
       <Settings>post_source=shaders/bloom2.post</Settings>
@@ -186,7 +190,7 @@
       <Settings>texture_cache_size=768</Settings>
     </Option>
     <Option>
-      <Text>1024</Text>
+      <Text>1024 (Recommended)</Text>
       <Settings>texture_cache_size=1024</Settings>
     </Option>
     <Option>
@@ -196,10 +200,25 @@
   </Setting>
   
   <!-- ADVANCED TAB -->
+  <Setting xsi:type="DropDown">
+    <Group>Advanced</Group>
+    <Name>Music Plugin</Name>
+    <Description>Plugin used to play music. VGMstream requires a music mod or set of looping .OGG files in the music\vgmstream folder.</Description>
+    <DefaultValue>music_plugin=plugins/vgmstream_music.fgp</DefaultValue>
+    <Option>
+      <Text>None (MIDI on 1998 version)</Text>
+      <Settings>music_plugin=</Settings>
+    </Option>
+    <Option>
+      <Text>VGMstream (Recommended)</Text>
+      <Settings>music_plugin=plugins/vgmstream_music.fgp</Settings>
+    </Option>
+  </Setting>
+
   <Setting xsi:type="Checkbox">
     <Group>Advanced</Group>
     <Name>Use Mipmaps</Name>
-    <Description>Use mipmaps (anisotropic filtering) for high-res textures. Can improve performance and image quality, but uses more Texture Memory.</Description>
+    <Description>Use mipmaps (anisotropic filtering) for high-res textures. This can improve performance and image quality, but uses more Texture Memory.</Description>
     <DefaultValue>use_mipmaps=yes</DefaultValue>
     <TrueSetting>use_mipmaps=yes</TrueSetting>
     <FalseSetting>use_mipmaps=no</FalseSetting>
@@ -231,22 +250,6 @@
     <TrueSetting>compress_textures=yes</TrueSetting>
     <FalseSetting>compress_textures=no</FalseSetting>
   </Setting>
-
-  <Setting xsi:type="DropDown">
-    <Group>Advanced</Group>
-    <Name>Music Plugin</Name>
-    <Description>Plugin used to play music. VGMstream requires a music mod or set of looping .ogg files in the music\vgmstream folder.</Description>
-    <DefaultValue>music_plugin=plugins/vgmstream_music.fgp</DefaultValue>
-    <Option>
-      <Text>None (MIDI on 1998 version)</Text>
-      <Settings>music_plugin=</Settings>
-    </Option>
-    <Option>
-      <Text>VGMstream (Recommended)</Text>
-      <Settings>music_plugin=plugins/vgmstream_music.fgp</Settings>
-    </Option>
-  </Setting>
-  
 
   <!--FPS GROUP - NOT IN UI-->
   
@@ -497,14 +500,14 @@
       <Settings>battleswirl_framerate=60</Settings>
     </Option>
   </Setting>-->
-  
-  
+
+
   <!--DEFAULT SETTINGS NOT INCLUDED IN UI-->
 
   <!--<Setting xsi:type="Checkbox">
     <Group>Rendering</Group>
-    <Name>New Timer</Name>
-    <Description>Replace the default framelimiter timer source.</Description>
+    <Name>Use QPC Timer</Name>
+    <Description>High resolution framelimiter timer source. Has nothing to do with in-game bomb countdown!</Description>
     <DefaultValue>use_new_timer=yes</DefaultValue>
     <TrueSetting>use_new_timer=yes</TrueSetting>
     <FalseSetting>use_new_timer=no</FalseSetting>
@@ -513,7 +516,7 @@
   <!--<Setting xsi:type="Checkbox">
     <Group>Rendering</Group>
     <Name>Direct Mode</Name>
-    <Description>Read files from the direct folder instead of the LGP archives.</Description>
+    <Description>Read files from the direct folder instead of the LGP archives. Required to be on for most mods!</Description>
     <DefaultValue>direct_mode=on</DefaultValue>
     <TrueSetting>direct_mode=on</TrueSetting>
     <FalseSetting>direct_mode=off</FalseSetting>
@@ -521,9 +524,9 @@
 
   <!--<Setting xsi:type="Checkbox">
     <Group>Graphics</Group>
-    <Name>Mdef Fix</Name>
+    <Name>Magic Defense Fix</Name>
     <DefaultValue>mdef_fix=yes</DefaultValue>
-    <Description>Enable mdef fix</Description>
+    <Description>Fix calculation of armor's magic defense.</Description>
     <TrueSetting>mdef_fix=yes</TrueSetting>
     <FalseSetting>mdef_fix=no</FalseSetting>
   </Setting>-->
@@ -531,7 +534,7 @@
   <!--<Setting xsi:type="Checkbox">
     <Group>Graphics</Group>
     <Name>Fancy Transparency</Name>
-    <Description>Enable fancy_transparency </Description>
+    <Description>Enable alpha blending for textures without an existing blending effect.</Description>
     <DefaultValue>fancy_transparency=yes</DefaultValue>
     <TrueSetting>fancy_transparency=yes</TrueSetting>
     <FalseSetting>fancy_transparency=no</FalseSetting>
@@ -559,7 +562,7 @@
   <!--<Setting xsi:type="Checkbox">
     <Group>Debug</Group>
     <Name>Show Missing Textures</Name>
-    <Description>Enable showing missing textures.</Description>
+    <Description>Show every failed attempt at loading a .png texture.</Description>
     <DefaultValue>show_missing_textures=no</DefaultValue>
     <TrueSetting>show_missing_textures=yes</TrueSetting>
     <FalseSetting>show_missing_textures=no</FalseSetting>
