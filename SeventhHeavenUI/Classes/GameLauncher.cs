@@ -620,6 +620,24 @@ namespace SeventhHeaven.Classes
             return info;
         }
 
+        internal static bool OSHasAutoMountSupport()
+        {
+            Version osVersion = Environment.OSVersion.Version;
+            if (osVersion.Major < 6)
+            {
+                return false;
+            }
+            else if (osVersion.Major == 6)
+            {
+                if (osVersion.Minor < 2)
+                {
+                    return false; // on an OS below Win 8
+                }
+            }
+
+            return true;
+        }
+
 
         /// <summary>
         /// Kills any currently running process found in <see cref="_sideLoadProcesses"/>

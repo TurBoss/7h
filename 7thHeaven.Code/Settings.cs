@@ -3,6 +3,7 @@
   The original developer is Iros <irosff@outlook.com>
 */
 
+using _7thHeaven.Code;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -107,6 +108,8 @@ namespace Iros._7th.Workshop {
         /// </summary>
         public bool IsFirstStart { get; set; }
 
+        public LaunchSettings GameLaunchSettings { get; set; }
+
         public Settings() {
             ExtraFolders = new List<string>();
             ProgramsToLaunchPrior = new List<ProgramLaunchInfo>();
@@ -115,6 +118,7 @@ namespace Iros._7th.Workshop {
             AutoUpdateSource = "#F!yBlHTYiJ!SFpmT2xII7iXcgXAmNYLJg";
             DateTimeStringFormat = "MM/dd/yyyy";
             IsFirstStart = false;
+            GameLaunchSettings = LaunchSettings.DefaultSettings();
         }
 
         public bool HasOption(GeneralOptions option)

@@ -355,7 +355,7 @@ namespace SeventhHeavenUI
 
         private void menuItemLaunchSettings_Click(object sender, RoutedEventArgs e)
         {
-
+            ViewModel.ShowGameLaunchSettingsWindow();
         }
     }
 }

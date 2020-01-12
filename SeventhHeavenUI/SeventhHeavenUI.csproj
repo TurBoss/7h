@@ -126,6 +126,7 @@
       <DependentUpon>PackIroUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\AllowModToRunViewModel.cs" />
+    <Compile Include="ViewModels\GameLaunchSettingsViewModel.cs" />
     <Compile Include="ViewModels\GameLaunchViewModel.cs" />
     <Compile Include="ViewModels\ProgramToRunViewModel.cs" />
     <Compile Include="ViewModels\SubscriptionSettingViewModel.cs" />
@@ -157,6 +158,9 @@
     </Compile>
     <Compile Include="Windows\ConfigureModWindow.xaml.cs">
       <DependentUpon>ConfigureModWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\GameLaunchSettingsWindow.xaml.cs">
+      <DependentUpon>GameLaunchSettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\GameLaunchWindow.xaml.cs">
       <DependentUpon>GameLaunchWindow.xaml</DependentUpon>
@@ -207,6 +211,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\ConfigureModWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\GameLaunchSettingsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

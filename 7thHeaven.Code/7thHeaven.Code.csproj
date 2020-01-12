@@ -54,6 +54,7 @@
     <Compile Include="GDrive.cs" />
     <Compile Include="ImageCache.cs" />
     <Compile Include="Install.cs" />
+    <Compile Include="LaunchSettings.cs" />
     <Compile Include="Library.cs" />
     <Compile Include="ModImporter.cs" />
     <Compile Include="ModLoadOrder.cs" />

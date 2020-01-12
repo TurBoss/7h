@@ -289,7 +289,7 @@
                 Width="80"
                 Click="btnOk_Click"
                 Grid.Row="3" Grid.Column="1"
-                Margin="0,5,100,10"
+                Margin="0,5,90,10"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"/>
 

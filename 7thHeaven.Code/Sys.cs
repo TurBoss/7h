@@ -197,6 +197,9 @@ namespace Iros._7th.Workshop
             return s;
         }
 
+        /// <summary>
+        /// Saves settings.xml, library.xml, and image cache.xml to disk
+        /// </summary>
         public static void Save()
         {
             string lfile = Path.Combine(SysFolder, "library.xml");

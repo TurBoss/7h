@@ -1260,6 +1260,12 @@ They will be automatically turned off.";
             Random r = new Random();
             return AppHints[r.Next(0, AppHints.Count)];
         }
+
+        internal void ShowGameLaunchSettingsWindow()
+        {
+            GameLaunchSettingsWindow launchSettingsWindow = new GameLaunchSettingsWindow();
+            launchSettingsWindow.ShowDialog();
+        }
     }
 
     internal class CatCheckOptions

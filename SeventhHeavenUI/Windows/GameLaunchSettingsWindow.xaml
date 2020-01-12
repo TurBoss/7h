@@ -1,0 +1,310 @@
+﻿<Window x:Class="SeventhHeaven.Windows.GameLaunchSettingsWindow"
+        x:Name="windowSettings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cls="clr-namespace:SeventhHeaven.Classes"
+        xmlns:local="clr-namespace:SeventhHeaven.Windows"
+        mc:Ignorable="d"
+        Style="{StaticResource MainWindowStyle}"
+        WindowStartupLocation="CenterScreen"
+        Title="GameLaunchSettingsWindow" 
+        Width="800"
+        Height="490">
+    <Window.Resources>
+
+        <DataTemplate x:Key="soundItemTemplate">
+            <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedSoundDevice, FallbackValue='Auto-switch (Windows default)'}" Margin="0,0,15,0" TextWrapping="Wrap"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="midiItemTemplate">
+            <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedMidiDevice, FallbackValue='General MIDI'}" Margin="0,0,15,0" TextWrapping="Wrap"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="rendererItemTemplate">
+            <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedRenderer, FallbackValue='Custom Driver'}" Margin="0,0,15,0" TextWrapping="Wrap"/>
+            </Grid>
+        </DataTemplate>
+
+        <Style TargetType="CheckBox" BasedOn="{StaticResource ToggleSwitchCheckbox}">
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Margin" Value="0,3,0,3"/>
+            <Setter Property="ToolTipService.IsEnabled" Value="False"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <GroupBox x:Name="grpOptions"
+                  MinWidth="300"
+                  Header=" Options " Grid.Row="0" Margin="10,10,0,0" 
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top">
+            <StackPanel Margin="3" HorizontalAlignment="Right">
+                <CheckBox Height="25" Content="Auto-Mount Game Disc" 
+                          IsChecked="{Binding AutoMountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          IsEnabled="{Binding IsAutoMountSupported}"
+                          MouseEnter="Control_MouseEnter"
+                          ToolTip="Auto-mount game disc ISO when starting game. Windows 8 and up only. If on Windows 7 or older, you will need to insert disc or mount ISO manually."/>
+                <CheckBox Height="25" Content="Auto-Dismount Game Disc" 
+                          IsChecked="{Binding AutoUnmountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          MouseEnter="Control_MouseEnter"
+                          IsEnabled="{Binding IsAutoMountSupported}"
+                          ToolTip="Auto-dismount game disc ISO when game closes. Windows 8 and up only. If on Windows 7 or older, you will need to eject disc or dismount ISO manually."/>
+                <CheckBox Height="25" Content="Auto-Update Disc Path" 
+                          IsChecked="{Binding AutoUpdatePathChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          MouseEnter="Control_MouseEnter"
+                          ToolTip="Detects if disc has changed drive letters and auto-updates game to point to new location."/>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox x:Name="grpCompat"
+                  Width="{Binding ElementName=grpOptions, Path=ActualWidth}"
+                  Grid.Row="1"
+                  Header=" Compatibility " Margin="10,10,0,0" 
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top">
+            <StackPanel Margin="3" HorizontalAlignment="Right">
+                <CheckBox Height="25" Content="Code 5 Fix" 
+                          IsChecked="{Binding Code5FixChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          MouseEnter="Control_MouseEnter"
+                          ToolTip="May fix problems with 'Code 5' error when clicking 'Play'. Multi-monitor setups may see open programs pushed to the secondary monitor when activated."/>
+                <CheckBox Height="25" Content="High-DPI Scaling Fix" 
+                          IsChecked="{Binding HighDpiFixChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          MouseEnter="Control_MouseEnter"
+                          ToolTip="May fix game screen being cut off and/or not being centered. Use with high-DPI displays. Alternatively, change your Windows Display Settings to 100% scaling."/>
+                <CheckBox Height="25" Content="Temporarily Disable Reunion Driver" 
+                          IsChecked="{Binding DisableReunionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          MouseEnter="Control_MouseEnter"
+                          ToolTip="Temporarily renames ddraw.dll to reunion.dll on game launch, then immediately back again. Does not affect playability of Reunion outside of 7H"/>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox x:Name="grpAudio"
+                  Grid.Row="0"
+                  Grid.Column="1"
+                  Grid.RowSpan="2"
+                  Header=" Audio Output Device " Margin="10,10,10,0" 
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch">
+            <StackPanel>
+                <Grid Margin="3,3,3,30">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Sound Device:"
+                               Grid.Row="0"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Margin="0,0,5,10"/>
+                    <ComboBox x:Name="cboSoundDevices"
+                              Style="{StaticResource MainComboBoxStyle}"
+                              ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
+                              ItemTemplate="{StaticResource soundItemTemplate}"
+                              SelectedItem="{Binding SelectedSoundDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding SoundDevices}"
+                              Grid.Row="0"
+                              Grid.Column="1"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Center"
+                              Margin="0,1,0,10"
+                              MinWidth="250"/>
+
+                    <TextBlock Text="MIDI Device:"
+                               Grid.Row="1"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Margin="0,0,5,10"/>
+                    <ComboBox x:Name="cboMidiDevices"
+                              Grid.Row="1"
+                              Grid.Column="1"
+                              Style="{StaticResource MainComboBoxStyle}"
+                              ItemTemplate="{StaticResource midiItemTemplate}"
+                              ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
+                              SelectedItem="{Binding SelectedMidiDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding MidiDevices}"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Center"
+                              Margin="0,1,0,10"
+                              MinWidth="250"/>
+
+                    
+                    <TextBlock Text="Volume:"
+                               Grid.Row="2"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Margin="0,0,5,10"/>
+                    <Slider x:Name="sliderVolume"
+                            Value="{Binding VolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
+                            Minimum="0"
+                            Maximum="100"
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Margin="0,0,10,10"/>
+
+                    <cls:ButtonWithImage x:Name="btnTestAudio"
+                                         Grid.Row="3"
+                                         HorizontalAlignment="Right"
+                                         VerticalAlignment="Bottom"
+                                         Margin="0,0,22,10"
+                                         TemplateSource="{StaticResource iconPlay}"
+                                         Click="btnTestAudio_Click"
+                                         Width="60"
+                                         Content="Test" />
+                    <ToggleButton x:Name="btnAudioOptions"
+                                  Style="{StaticResource DownArrowToggleButton}"
+                                  Grid.Row="3"
+                                  HorizontalAlignment="Right"
+                                  VerticalAlignment="Stretch"
+                                  Margin="0,0,0,10">
+                        <ToggleButton.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Test Left"/>
+                                <MenuItem Header="Test Right"/>
+                                <MenuItem Header="Test Center"/>
+                            </ContextMenu>
+                        </ToggleButton.ContextMenu>
+                    </ToggleButton>
+                </Grid>
+
+                <CheckBox Height="25" Content="Reverse Speakers" 
+                          Margin="0,3,10,3"
+                          IsChecked="{Binding IsReverseSpeakersChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          MouseEnter="Control_MouseEnter"
+                          ToolTip="Swaps left and right channels when checked."/>
+                <CheckBox Height="25" Content="Logarithmic Volume Control" 
+                          Margin="0,3,10,3"
+                          IsChecked="{Binding IsLogVolumeChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          MouseEnter="Control_MouseEnter"
+                          ToolTip="Uncheck this option if you feel that the volume does not change smoothly."/>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox x:Name="grpVideo"
+                  Grid.Row="2"
+                  Grid.Column="1"
+                  Header=" Graphics Driver Options " Margin="10,10,10,0" 
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Top">
+            <StackPanel>
+
+                <Grid Margin="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!--<TextBlock Text="Display Device:"
+                               Grid.Row="0"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Margin="0,0,5,5"/>
+                    <ComboBox x:Name="cboDisplays"
+                              Style="{StaticResource MainComboBoxStyle}"
+                              ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
+                              SelectedItem="{Binding SelectedDisplayDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding DisplayDevices}"
+                              Grid.Row="0"
+                              Grid.Column="1"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Center"
+                              Margin="0,1,0,5"
+                              MinWidth="250"/>-->
+
+                    <TextBlock Text="Renderer:"
+                               Grid.Row="1"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Margin="0,0,5,5"/>
+                    <ComboBox x:Name="cboRenderers"
+                              Grid.Row="1"
+                              Grid.Column="1"
+                              Style="{StaticResource MainComboBoxStyle}"
+                              ItemTemplate="{StaticResource rendererItemTemplate}"
+                              ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
+                              SelectedItem="{Binding SelectedRenderer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding AvailableRenderers}"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Center"
+                              Margin="0,1,0,5"
+                              MinWidth="250"/>
+                </Grid>
+
+                <WrapPanel HorizontalAlignment="Right" Margin="0,5,10,5"
+                           ToolTip="Only applies when set to 'Direct3D Hardware Acceleration'"
+                           ToolTipService.IsEnabled="False">
+                    <!--<CheckBox Height="25" Content="NVIDIA" 
+                              Margin="10,0,10,2"
+                              IsEnabled="{Binding IsNvidiaOptionEnabled}"
+                              IsChecked="{Binding IsNvidiaOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              ToolTip=""/>-->
+                    <RadioButton Content="RIVA 128" VerticalAlignment="Center" Margin="0,0,10,0"
+                                 IsEnabled="{Binding IsRivaOptionEnabled}"
+                                 IsChecked="{Binding IsRivaOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <RadioButton Content="TNT" VerticalAlignment="Center" Margin="0,0,10,0"
+                                 IsEnabled="{Binding IsRivaOptionEnabled}"
+                                 IsChecked="{Binding IsTntOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    
+
+                </WrapPanel>
+            </StackPanel>
+        </GroupBox>
+
+
+        <TextBlock Grid.Row="3"
+                   Grid.ColumnSpan="2"
+                   VerticalAlignment="Center"
+                   Margin="10,0,190,0"
+                   TextTrimming="CharacterEllipsis"
+                   Text="{Binding StatusMessage, FallbackValue='This is a mouse over description or message to user.'}"/>
+
+        <Button x:Name="btnOk" 
+                Content="Save" 
+                Width="80"
+                Click="btnOk_Click"
+                Grid.Row="3" Grid.Column="1"
+                Margin="0,5,90,10"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"/>
+
+        <Button x:Name="btnCancel" 
+                Content="Cancel"
+                Width="80"
+                Click="btnCancel_Click"
+                Grid.Row="3" Grid.Column="1"
+                Margin="0,5,10,10"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"/>
+
+    </Grid>
+</Window>
