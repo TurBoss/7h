@@ -110,11 +110,11 @@ namespace SeventhHeaven.Classes
             }
 
             Instance.RaiseProgressChanged("Looking for game disc ...");
-            string driveLetter = GetDriveLetter();
+            Instance.DriveLetter = GetDriveLetter();
 
-            if (!string.IsNullOrEmpty(driveLetter))
+            if (!string.IsNullOrEmpty(Instance.DriveLetter))
             {
-                Instance.RaiseProgressChanged($"Found game disc at {driveLetter} ...");
+                Instance.RaiseProgressChanged($"Found game disc at {Instance.DriveLetter} ...");
             }
             else
             {
@@ -139,15 +139,15 @@ namespace SeventhHeaven.Classes
                         }
 
                         Instance.RaiseProgressChanged("Looking for game disc after mounting ...");
-                        driveLetter = GetDriveLetter();
+                        Instance.DriveLetter = GetDriveLetter();
 
-                        if (string.IsNullOrEmpty(driveLetter))
+                        if (string.IsNullOrEmpty(Instance.DriveLetter))
                         {
                             Instance.RaiseProgressChanged($"Failed to find game disc after auto mounting ...");
                             return false;
                         }
 
-                        Instance.RaiseProgressChanged($"Found game disc at {driveLetter} ...");
+                        Instance.RaiseProgressChanged($"Found game disc at {Instance.DriveLetter} ...");
                     }
                 }
             }
