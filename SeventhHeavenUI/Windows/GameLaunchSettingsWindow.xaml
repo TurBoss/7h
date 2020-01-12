@@ -91,6 +91,7 @@
                           ToolTip="May fix game screen being cut off and/or not being centered. Use with high-DPI displays. Alternatively, change your Windows Display Settings to 100% scaling."/>
                 <CheckBox Height="25" Content="Temporarily Disable Reunion Driver" 
                           IsChecked="{Binding DisableReunionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          IsEnabled="{Binding IsReunionInstalled}"
                           MouseEnter="Control_MouseEnter"
                           ToolTip="Temporarily renames ddraw.dll to reunion.dll on game launch, then immediately back again. Does not affect playability of Reunion outside of 7H"/>
             </StackPanel>
@@ -172,20 +173,22 @@
                                          VerticalAlignment="Bottom"
                                          Margin="0,0,22,10"
                                          TemplateSource="{StaticResource iconPlay}"
+                                         IsEnabled="{Binding IsAudioNotPlaying}"
                                          Click="btnTestAudio_Click"
                                          Width="60"
-                                         Content="Test" />
+                                         Content="Test"/>
                     <ToggleButton x:Name="btnAudioOptions"
                                   Style="{StaticResource DownArrowToggleButton}"
                                   Grid.Row="3"
                                   HorizontalAlignment="Right"
                                   VerticalAlignment="Stretch"
-                                  Margin="0,0,0,10">
+                                  Margin="0,0,0,10"
+                                  Click="btnAudioOptions_Click"
+                                  ContextMenuService.Placement="Bottom">
                         <ToggleButton.ContextMenu>
-                            <ContextMenu>
-                                <MenuItem Header="Test Left"/>
-                                <MenuItem Header="Test Right"/>
-                                <MenuItem Header="Test Center"/>
+                            <ContextMenu x:Name="menuAudioTest" Closed="menuAudioTest_Closed">
+                                <MenuItem x:Name="menuItemTestLeft" Header="Test Left Channel" Click="menuItemTestLeft_Click" IsEnabled="{Binding IsAudioNotPlaying}"/>
+                                <MenuItem x:Name="menuItemTestRight" Header="Test Right Channel" Click="menuItemTestRight_Click" IsEnabled="{Binding IsAudioNotPlaying}"/>
                             </ContextMenu>
                         </ToggleButton.ContextMenu>
                     </ToggleButton>
@@ -261,6 +264,7 @@
                 </Grid>
 
                 <WrapPanel HorizontalAlignment="Right" Margin="0,5,10,5"
+                           MouseEnter="Control_MouseEnter"
                            ToolTip="Only applies when set to 'Direct3D Hardware Acceleration'"
                            ToolTipService.IsEnabled="False">
                     <!--<CheckBox Height="25" Content="NVIDIA" 

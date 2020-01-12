@@ -2,15 +2,25 @@
 using Iros._7th.Workshop;
 using NAudio.Wave;
 using SeventhHeaven.Classes;
+using SeventhHeaven.Windows;
 using SeventhHeavenUI.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SeventhHeaven.ViewModels
 {
+    internal enum AudioChannel
+    {
+        Left,
+        Center,
+        Right
+    }
+
     class GameLaunchSettingsViewModel : ViewModelBase
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
@@ -22,19 +32,19 @@ namespace SeventhHeaven.ViewModels
         private bool _code5FixChecked;
         private bool _highDpiFixChecked;
         private bool _disableReunionChecked;
+        private bool _isReunionInstalled;
         private bool _isAutoMountSupported;
         private bool _isReverseSpeakersChecked;
         private bool _isLogVolumeChecked;
-        private bool _isNvidiaOptionChecked;
-        private bool _isNvidiaOptionEnabled;
         private bool _isRivaOptionChecked;
-        private bool _isRivaOptionEnabled;
-        private bool _isTntOptionEnabled;
         private bool _isTntOptionChecked;
         private string _selectedSoundDevice;
         private string _selectedMidiDevice;
         private string _selectedRenderer;
         private int _volumeValue;
+
+        private WaveOut _audioTest;
+
 
         public string StatusMessage
         {
@@ -46,6 +56,22 @@ namespace SeventhHeaven.ViewModels
             {
                 _statusMessage = value;
                 NotifyPropertyChanged();
+            }
+        }
+
+        public bool IsAudioPlaying
+        {
+            get
+            {
+                return _audioTest != null && _audioTest.PlaybackState == PlaybackState.Playing;
+            }
+        }
+
+        public bool IsAudioNotPlaying
+        {
+            get
+            {
+                return _audioTest == null;
             }
         }
 
@@ -137,6 +163,19 @@ namespace SeventhHeaven.ViewModels
             set
             {
                 _disableReunionChecked = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public bool IsReunionInstalled
+        {
+            get
+            {
+                return _isReunionInstalled;
+            }
+            set
+            {
+                _isReunionInstalled = value;
                 NotifyPropertyChanged();
             }
         }
@@ -258,6 +297,7 @@ namespace SeventhHeaven.ViewModels
                 _selectedRenderer = value;
                 NotifyPropertyChanged();
                 NotifyPropertyChanged(nameof(IsRivaOptionEnabled));
+                ShowWarningMessage();
             }
         }
 
@@ -287,6 +327,7 @@ namespace SeventhHeaven.ViewModels
         public GameLaunchSettingsViewModel()
         {
             StatusMessage = "";
+            _audioTest = null;
 
             InitSoundDevices();
             InitRenderers();
@@ -302,6 +343,11 @@ namespace SeventhHeaven.ViewModels
                 Sys.Settings.GameLaunchSettings = LaunchSettings.DefaultSettings();
             }
 
+            AutoUpdatePathChecked = Sys.Settings.GameLaunchSettings.AutoUpdateDiscPath;
+            Code5FixChecked = Sys.Settings.GameLaunchSettings.Code5Fix;
+            HighDpiFixChecked = Sys.Settings.GameLaunchSettings.HighDpiFix;
+
+            // disable options to auto-mount if user OS does not support it
             IsAutoMountSupported = GameLauncher.OSHasAutoMountSupport();
 
             if (IsAutoMountSupported)
@@ -315,11 +361,18 @@ namespace SeventhHeaven.ViewModels
                 AutoUnmountChecked = false;
             }
 
-            AutoUpdatePathChecked = Sys.Settings.GameLaunchSettings.AutoUpdateDiscPath;
+            // Have option look unchecked and disabled when user does not have The Reunion installed
+            IsReunionInstalled = GameLauncher.IsReunionModInstalled();
+            if (IsReunionInstalled)
+            {
+                DisableReunionChecked = Sys.Settings.GameLaunchSettings.DisableReunionOnLaunch;
+            }
+            else
+            {
+                DisableReunionChecked = false;
+                IsReunionInstalled = false;
+            }
 
-            Code5FixChecked = Sys.Settings.GameLaunchSettings.Code5Fix;
-            HighDpiFixChecked = Sys.Settings.GameLaunchSettings.HighDpiFix;
-            DisableReunionChecked = Sys.Settings.GameLaunchSettings.DisableReunionOnLaunch;
 
             SelectedSoundDevice = SoundDeviceGuids.Where(s => s.Value == Sys.Settings.GameLaunchSettings.SelectedSoundDevice)
                                                   .Select(s => s.Key)
@@ -341,29 +394,50 @@ namespace SeventhHeaven.ViewModels
             IsTntOptionChecked = Sys.Settings.GameLaunchSettings.UseTntGraphicsOption;
         }
 
-        internal void SaveSettings()
+        internal bool SaveSettings()
         {
-            Sys.Settings.GameLaunchSettings.AutoMountGameDisc = AutoMountChecked;
-            Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc = AutoUnmountChecked;
-            Sys.Settings.GameLaunchSettings.AutoUpdateDiscPath = AutoUpdatePathChecked;
+            try
+            {
+                Sys.Settings.GameLaunchSettings.AutoMountGameDisc = AutoMountChecked;
+                Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc = AutoUnmountChecked;
+                Sys.Settings.GameLaunchSettings.AutoUpdateDiscPath = AutoUpdatePathChecked;
 
-            Sys.Settings.GameLaunchSettings.Code5Fix = Code5FixChecked;
-            Sys.Settings.GameLaunchSettings.HighDpiFix = HighDpiFixChecked;
-            Sys.Settings.GameLaunchSettings.DisableReunionOnLaunch = DisableReunionChecked;
+                Sys.Settings.GameLaunchSettings.Code5Fix = Code5FixChecked;
+                Sys.Settings.GameLaunchSettings.HighDpiFix = HighDpiFixChecked;
 
-            Sys.Settings.GameLaunchSettings.SelectedSoundDevice = SoundDeviceGuids[SelectedSoundDevice];
-            Sys.Settings.GameLaunchSettings.SelectedMidiDevice = MidiDeviceMap[SelectedMidiDevice];
-            Sys.Settings.GameLaunchSettings.SoundVolume = VolumeValue;
-            Sys.Settings.GameLaunchSettings.ReverseSpeakers = IsReverseSpeakersChecked;
-            Sys.Settings.GameLaunchSettings.LogarithmicVolumeControl = IsLogVolumeChecked;
 
-            Sys.Settings.GameLaunchSettings.SelectedRenderer = RendererMap[SelectedRenderer];
-            Sys.Settings.GameLaunchSettings.UseRiva128GraphicsOption = IsRivaOptionChecked;
-            Sys.Settings.GameLaunchSettings.UseTntGraphicsOption = IsTntOptionChecked;
+                IsReunionInstalled = GameLauncher.IsReunionModInstalled();
+                if (IsReunionInstalled)
+                {
+                    Sys.Settings.GameLaunchSettings.DisableReunionOnLaunch = DisableReunionChecked;
+                }
+                else
+                {
+                    Sys.Settings.GameLaunchSettings.DisableReunionOnLaunch = true; // always have this set to true when Reunion is not installed in case user later installs it
+                }
 
-            Sys.Save();
 
-            Sys.Message(new WMessage("Game Launch settings updated!", true));
+                Sys.Settings.GameLaunchSettings.SelectedSoundDevice = SoundDeviceGuids[SelectedSoundDevice];
+                Sys.Settings.GameLaunchSettings.SelectedMidiDevice = MidiDeviceMap[SelectedMidiDevice];
+                Sys.Settings.GameLaunchSettings.SoundVolume = VolumeValue;
+                Sys.Settings.GameLaunchSettings.ReverseSpeakers = IsReverseSpeakersChecked;
+                Sys.Settings.GameLaunchSettings.LogarithmicVolumeControl = IsLogVolumeChecked;
+
+                Sys.Settings.GameLaunchSettings.SelectedRenderer = RendererMap[SelectedRenderer];
+                Sys.Settings.GameLaunchSettings.UseRiva128GraphicsOption = IsRivaOptionChecked;
+                Sys.Settings.GameLaunchSettings.UseTntGraphicsOption = IsTntOptionChecked;
+
+                Sys.Save();
+
+                Sys.Message(new WMessage("Game Launch settings updated!", true));
+                return true;
+            }
+            catch (Exception e)
+            {
+                StatusMessage = $"Failed to save launch settings: {e.Message}";
+                Logger.Error(e);
+                return false;
+            }
         }
 
         private void InitSoundDevices()
@@ -403,6 +477,140 @@ namespace SeventhHeaven.ViewModels
                 { "Direct3D Hardware Acceleration", 1 },
                 { "Custom Driver", 3 }
             };
+        }
+
+        /// <summary>
+        /// Plays audio_test_file.ogg based on launch settings for testing audio
+        /// </summary>
+        /// <param name="channel"> Where audio will play from: Left,Center,or Right channel</param>
+        internal void TestAudio(AudioChannel channel)
+        {
+            string pathToTestFile = Path.Combine(Sys._7HFolder, "Resources", "audio_test_file.ogg");
+
+
+            if (_audioTest == null)
+            {
+                // reference: https://markheath.net/post/handling-multi-channel-audio-in-naudio
+                // reference: https://stackoverflow.com/questions/22248138/play-sound-on-specific-channel-with-naudio?rq=1
+
+                // input 0 - audio test .ogg
+                // input 1 - silenced wave provider to play silent audio
+                NAudio.Vorbis.VorbisWaveReader waveReader = new NAudio.Vorbis.VorbisWaveReader(pathToTestFile);
+                MultiplexingWaveProvider waveProvider = new MultiplexingWaveProvider(new List<IWaveProvider>() { waveReader, new SilenceWaveProvider(waveReader.WaveFormat) }, 2);
+
+                int leftChannel = 0;
+                int rightChannel = 1;
+
+                if (IsReverseSpeakersChecked)
+                {
+                    leftChannel = 1;
+                    rightChannel = 0;
+                }
+
+                if (channel == AudioChannel.Left)
+                {
+                    // note that the wave reader has 2 input channels so we must route both input channels of the reader to the output channel
+                    waveProvider.ConnectInputToOutput(0, leftChannel);
+                    waveProvider.ConnectInputToOutput(1, leftChannel);
+
+                    waveProvider.ConnectInputToOutput(2, rightChannel);
+                    waveProvider.ConnectInputToOutput(3, rightChannel);
+                }
+                else if (channel == AudioChannel.Right)
+                {
+                    waveProvider.ConnectInputToOutput(0, rightChannel);
+                    waveProvider.ConnectInputToOutput(1, rightChannel);
+
+                    waveProvider.ConnectInputToOutput(2, leftChannel);
+                    waveProvider.ConnectInputToOutput(3, leftChannel);
+                }
+                else
+                {
+                    waveProvider.ConnectInputToOutput(0, leftChannel);
+                    waveProvider.ConnectInputToOutput(1, leftChannel);
+
+                    waveProvider.ConnectInputToOutput(0, rightChannel);
+                    waveProvider.ConnectInputToOutput(1, rightChannel);
+                }
+
+
+
+                _audioTest = new WaveOut
+                {
+                    DeviceNumber = GetSelectedSoundDeviceNumber(),
+                    Volume = (float)VolumeValue / (float)100.0
+                };
+
+                _audioTest.Init(waveProvider);
+                
+                _audioTest.PlaybackStopped += AudioTest_PlaybackStopped;
+                _audioTest.Play();
+
+                NotifyPropertyChanged(nameof(IsAudioPlaying));
+                NotifyPropertyChanged(nameof(IsAudioNotPlaying));
+            }
+        }
+
+        private int GetSelectedSoundDeviceNumber()
+        {
+            Guid selectedGuid = SoundDeviceGuids[SelectedSoundDevice];
+
+            for (int n = -1; n < WaveOut.DeviceCount; n++)
+            {
+                var caps = WaveOut.GetCapabilities(n);
+
+                if (caps.ProductGuid == selectedGuid)
+                    return n;
+            }
+
+            return -1; // if device not found return default device which is -1
+        }
+
+        private void AudioTest_PlaybackStopped(object sender, StoppedEventArgs e)
+        {
+            if (_audioTest != null)
+            {
+                _audioTest.Stop();
+                _audioTest.PlaybackStopped -= AudioTest_PlaybackStopped;
+                _audioTest = null;
+
+                NotifyPropertyChanged(nameof(IsAudioPlaying));
+                NotifyPropertyChanged(nameof(IsAudioNotPlaying));
+            }
+        }
+
+        /// <summary>
+        /// Shows warning message dialog to user if <see cref="SelectedRenderer"/> is not set to "Custom Driver"
+        /// </summary>
+        private void ShowWarningMessage()
+        {
+            if (!SelectedRenderer.Equals("Custom Driver", StringComparison.InvariantCultureIgnoreCase))
+            {
+                MessageDialogWindow.Show("Choosing any other option beside 'Custom Driver' will cause mods installed with 7H not to work anymore.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+    }
+
+    /// <summary>
+    /// A wave provider that plays no sound (used to test audio channels)
+    /// </summary>
+    public class SilenceWaveProvider : IWaveProvider
+    {
+        private WaveFormat _waveFormat;
+
+        public SilenceWaveProvider(WaveFormat waveFormat)
+        {
+            this._waveFormat = waveFormat;
+        }
+
+        public WaveFormat WaveFormat => _waveFormat;
+
+        public int Read(byte[] buffer, int offset, int count)
+        {
+            // the silenced wave provider will return 0 which indicates playback stopped 
+            // ... because PlaybackStopped will be fired once ALL input audio sources are done streaming [which is indicated when Read() returns 0]
+            return 0; 
         }
     }
 }

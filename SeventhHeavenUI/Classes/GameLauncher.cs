@@ -638,6 +638,47 @@ namespace SeventhHeaven.Classes
             return true;
         }
 
+        public static bool IsReunionModInstalled()
+        {
+            string installPath = Path.GetDirectoryName(Sys.Settings.FF7Exe);
+
+
+            if (!Directory.Exists(installPath))
+            {
+                return false;
+            }
+
+            return Directory.GetFiles(installPath).Any(s => s.Contains("ddraw.ddl"));
+        }
+
+        public static bool DisableReunionMod()
+        {
+            string installPath = Path.GetDirectoryName(Sys.Settings.FF7Exe);
+
+            if (!Directory.Exists(installPath))
+            {
+                return true;
+            }
+
+            try
+            {
+                string pathToDll = Path.Combine(installPath, "ddraw.dll");
+                string backupName = Path.Combine(installPath, "Reunion.dll.bak");
+
+                if (File.Exists(pathToDll))
+                {
+                    File.Move(pathToDll, backupName);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return false;
+            }
+        }
+
 
         /// <summary>
         /// Kills any currently running process found in <see cref="_sideLoadProcesses"/>
