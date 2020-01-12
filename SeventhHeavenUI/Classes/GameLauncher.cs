@@ -648,7 +648,7 @@ namespace SeventhHeaven.Classes
                 return false;
             }
 
-            return Directory.GetFiles(installPath).Any(s => s.Contains("ddraw.ddl"));
+            return Directory.GetFiles(installPath).Any(s => s.Contains("ddraw.dll"));
         }
 
         public static bool DisableReunionMod()

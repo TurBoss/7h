@@ -164,6 +164,7 @@ namespace SeventhHeaven.ViewModels
             {
                 _disableReunionChecked = value;
                 NotifyPropertyChanged();
+                ShowWarningMessageAbouReunion();
             }
         }
 
@@ -297,7 +298,7 @@ namespace SeventhHeaven.ViewModels
                 _selectedRenderer = value;
                 NotifyPropertyChanged();
                 NotifyPropertyChanged(nameof(IsRivaOptionEnabled));
-                ShowWarningMessage();
+                ShowWarningMessageAboutRenderer();
             }
         }
 
@@ -377,6 +378,14 @@ namespace SeventhHeaven.ViewModels
             SelectedSoundDevice = SoundDeviceGuids.Where(s => s.Value == Sys.Settings.GameLaunchSettings.SelectedSoundDevice)
                                                   .Select(s => s.Key)
                                                   .FirstOrDefault();
+
+            // switch back to 'Auto' if device not found
+            if (SelectedSoundDevice == null)
+            {
+                SelectedSoundDevice = SoundDeviceGuids.Where(s => s.Value == Guid.Empty)
+                                                      .Select(s => s.Key)
+                                                      .FirstOrDefault();
+            }
 
             SelectedMidiDevice = MidiDeviceMap.Where(s => s.Value == Sys.Settings.GameLaunchSettings.SelectedMidiDevice)
                                               .Select(s => s.Key)
@@ -582,11 +591,26 @@ namespace SeventhHeaven.ViewModels
         /// <summary>
         /// Shows warning message dialog to user if <see cref="SelectedRenderer"/> is not set to "Custom Driver"
         /// </summary>
-        private void ShowWarningMessage()
+        private void ShowWarningMessageAboutRenderer()
         {
             if (!SelectedRenderer.Equals("Custom Driver", StringComparison.InvariantCultureIgnoreCase))
             {
                 MessageDialogWindow.Show("Choosing any other option beside 'Custom Driver' will cause mods installed with 7H not to work anymore.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void ShowWarningMessageAbouReunion()
+        {
+            if (GameLauncher.IsReunionModInstalled() && !DisableReunionChecked)
+            {
+                string warningMsg = "Reunion R06 and newer, even when disabled in Options.ini, forces a custom game driver to load when you run FF7. This conflicts with 7th Heaven's game driver, breaks your graphics settings, and you will experience problems!\n\nIf you wish to play Reunion, do so using a compatible modded version built for 7th Heaven.\n\nAre you sure?";
+                var result = MessageDialogWindow.Show(warningMsg, "You should leave this setting ON!", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+                if (result.Result == MessageBoxResult.No)
+                {
+                    // re-enable option as user selected 'No' in warning message so reverting option
+                    DisableReunionChecked = true;
+                }
             }
         }
 
