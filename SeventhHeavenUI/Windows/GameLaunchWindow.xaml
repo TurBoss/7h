@@ -10,7 +10,7 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Topmost="True"
-        Title="Launching Game" Height="300" Width="600">
+        Title="Launching Game" Height="320" Width="700">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>

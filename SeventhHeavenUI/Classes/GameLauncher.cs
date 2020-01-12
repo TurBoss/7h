@@ -1,4 +1,5 @@
-﻿using _7thWrapperLib;
+﻿using _7thHeaven.Code;
+using _7thWrapperLib;
 using Iros._7th;
 using Iros._7th.Workshop;
 using Microsoft.Win32;
@@ -8,12 +9,21 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace SeventhHeaven.Classes
 {
+    public enum FF7Version
+    {
+        Unknown = -1,
+        Steam,
+        ReRelease,
+        Original98
+    }
+
     /// <summary>
     /// Responsibile for the entire process that happens for launching the game
     /// </summary>
@@ -43,6 +53,9 @@ namespace SeventhHeaven.Classes
 
         public delegate void OnProgressChanged(string message);
         public event OnProgressChanged ProgressChanged;
+
+        public FF7Version InstallVersion { get; set; }
+        public string DriveLetter { get; set; }
 
         #endregion
 
@@ -86,9 +99,61 @@ namespace SeventhHeaven.Classes
                 return false;
             }
 
-            Instance.RaiseProgressChanged($"Launching additional programs to run (if any) ...");
-            Instance.LaunchAdditionalProgramsToRunPrior();
+            Instance.RaiseProgressChanged("Checking if Reunion mod is installed ...");
+            Instance.RaiseProgressChanged($"\tfound: {IsReunionModInstalled()}");
 
+
+            if (IsReunionModInstalled() && Sys.Settings.GameLaunchSettings.DisableReunionOnLaunch)
+            {
+                Instance.RaiseProgressChanged("Disabling Reunion mod by renaming ddraw.dll to Reunion.dll.bak ...");
+                DisableReunionMod();
+            }
+
+            Instance.RaiseProgressChanged("Looking for game disc ...");
+            string driveLetter = GetDriveLetter();
+
+            if (!string.IsNullOrEmpty(driveLetter))
+            {
+                Instance.RaiseProgressChanged($"Found game disc at {driveLetter} ...");
+            }
+            else
+            {
+                Instance.RaiseProgressChanged($"Failed to find game disc ...");
+
+                if (!OSHasAutoMountSupport())
+                {
+                    Instance.RaiseProgressChanged($"OS does not support auto mounting virtual disc. You must mount a virtual disk named FF7DISC.ISO, insert a disk/usb named FF7DISC1, or rename a HDD to FF7DISC1 ...");
+                    return false;
+                }
+                else
+                {
+                    if (Sys.Settings.GameLaunchSettings.AutoMountGameDisc)
+                    {
+                        Instance.RaiseProgressChanged($"Auto mounting virtual game disc ...");
+                        bool didMount = MountIso();
+
+                        if (!didMount)
+                        {
+                            Instance.RaiseProgressChanged($"Failed to auto mount virtual disc at {Path.Combine(Sys._7HFolder, "Resources", "FF7DISC1.ISO")} ...");
+                            return false;
+                        }
+
+                        Instance.RaiseProgressChanged("Looking for game disc after mounting ...");
+                        driveLetter = GetDriveLetter();
+
+                        if (string.IsNullOrEmpty(driveLetter))
+                        {
+                            Instance.RaiseProgressChanged($"Failed to find game disc after auto mounting ...");
+                            return false;
+                        }
+
+                        Instance.RaiseProgressChanged($"Found game disc at {driveLetter} ...");
+                    }
+                }
+            }
+
+            Instance.SetRegistryValues();
+            Instance.SetCompatibilityFlagsInRegistry();
 
             if (Sys.ActiveProfile.ActiveItems.Count == 0)
             {
@@ -128,24 +193,18 @@ namespace SeventhHeaven.Classes
             int pid;
             try
             {
+                Instance.RaiseProgressChanged($"Launching additional programs to run (if any) ...");
+                Instance.LaunchAdditionalProgramsToRunPrior();
+
                 RuntimeParams parms = new RuntimeParams
                 {
                     ProfileFile = Path.GetTempFileName()
                 };
 
-                Instance.RaiseProgressChanged($"Writing tempory runtime profile file to {parms.ProfileFile} ...");
+                Instance.RaiseProgressChanged($"Writing temporary runtime profile file to {parms.ProfileFile} ...");
 
                 using (FileStream fs = new FileStream(parms.ProfileFile, FileMode.Create))
                     Util.SerializeBinary(runtimeProfiles, fs);
-
-
-                // Add 640x480 compatibility flag if set in settings
-                if (Sys.Settings.HasOption(GeneralOptions.SetEXECompatFlags))
-                {
-                    Instance.RaiseProgressChanged("Exe compat flag set, applying 640x480 flag in registry");
-                    RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
-                    ff7CompatKey?.SetValue(Sys.Settings.FF7Exe, "~ 640X480");
-                }
 
                 // attempt to launch the game a few times in the case of an ApplicationException that can be thrown by EasyHook it seems randomly at times
                 // ... The error tends to go away the second time trying but we will try multiple times before failing
@@ -161,7 +220,7 @@ namespace SeventhHeaven.Classes
                 {
                     try
                     {
-                        Instance.RaiseProgressChanged($"Attempting to inject with EasyHook: try # {attemptCount+1} ...");
+                        Instance.RaiseProgressChanged($"Attempting to inject with EasyHook: try # {attemptCount + 1} ...");
 
                         EasyHook.RemoteHooking.CreateAndInject(Sys.Settings.FF7Exe, String.Empty, 0, lib, null, out pid, parms);
                         didInject = true;
@@ -189,9 +248,9 @@ namespace SeventhHeaven.Classes
                     if (viewModel.Result == MessageBoxResult.Yes)
                     {
                         Instance.RaiseProgressChanged($"Setting compatibility fix and trying again ...");
+                        Sys.Settings.GameLaunchSettings.Code5Fix = true;
 
-                        RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
-                        ff7CompatKey?.SetValue(Sys.Settings.FF7Exe, "~ 640X480");
+                        Instance.SetCompatibilityFlagsInRegistry();
 
                         try
                         {
@@ -268,6 +327,11 @@ namespace SeventhHeaven.Classes
                         plugin.Stop();
 
                     Instance.StopAllSideProcessesForMods();
+
+                    if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc)
+                    {
+                        UnmountIso();
+                    }
                 };
 
                 return true;
@@ -679,6 +743,307 @@ namespace SeventhHeaven.Classes
             }
         }
 
+        /// <summary>
+        /// Scans all drives looking for the drive labeled "FF7DISC1" and returns the corresponding drive letter.
+        /// If not found returns empty string.
+        /// </summary>
+        public static string GetDriveLetter()
+        {
+            List<string> labels = new List<string>() { "FF7DISC1" };
+
+            foreach (DriveInfo drive in DriveInfo.GetDrives())
+            {
+                if (drive.IsReady && labels.Any(s => s == drive.VolumeLabel))
+                {
+                    return drive.Name;
+                }
+            }
+
+            return "";
+        }
+
+        /// <summary>
+        /// Updates Registry with new values from <see cref="Sys.Settings.GameLaunchSettings"/>
+        /// </summary>
+        public void SetRegistryValues()
+        {
+            Instance.RaiseProgressChanged("Applying values to registry ...");
+
+            string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII";
+            string virtualStorePath = $"{RegistryHelper.GetKeyPath(FF7RegKey.VirtualStoreKeyPath)}\\Final Fantasy VII";
+
+            string installPath = Path.GetDirectoryName(Sys.Settings.FF7Exe) + @"\";
+
+            // Add registry key values for paths and drive letter
+            Instance.RaiseProgressChanged($"\t {ff7KeyPath}::AppPath = {installPath}");
+            RegistryHelper.SetValue(ff7KeyPath, "AppPath", installPath);
+            RegistryHelper.SetValue(virtualStorePath, "AppPath", installPath);
+
+            string pathToData = Path.Combine(installPath, @"data\");
+            Instance.RaiseProgressChanged($"\t {ff7KeyPath}::DataPath = {pathToData}");
+
+            RegistryHelper.SetValue(ff7KeyPath, "DataPath", pathToData);
+            RegistryHelper.SetValue(virtualStorePath, "DataPath", pathToData);
+
+            string pathToMovies = Path.Combine(installPath, "data", @"movies\");
+            Instance.RaiseProgressChanged($"\t {ff7KeyPath}::MoviePath = {pathToMovies}");
+
+            RegistryHelper.SetValue(ff7KeyPath, "MoviePath", pathToMovies);
+            RegistryHelper.SetValue(virtualStorePath, "MoviePath", pathToMovies);
+
+            // setting the drive letter may not happen if auto update disc path is not set
+            if (Sys.Settings.GameLaunchSettings.AutoUpdateDiscPath && !string.IsNullOrWhiteSpace(DriveLetter))
+            {
+                Instance.RaiseProgressChanged($"\t {ff7KeyPath}::DataDrive = {DriveLetter}");
+                RegistryHelper.SetValue(ff7KeyPath, "DataDrive", DriveLetter);
+                RegistryHelper.SetValue(virtualStorePath, "DataDrive", DriveLetter);
+            }
+
+            Instance.RaiseProgressChanged($"\t {ff7KeyPath}::DiskNo = 0");
+            RegistryHelper.SetValue(ff7KeyPath, "DiskNo", 0, RegistryValueKind.DWord);
+            RegistryHelper.SetValue(virtualStorePath, "DiskNo", 0, RegistryValueKind.DWord);
+
+            Instance.RaiseProgressChanged($"\t {ff7KeyPath}::FullInstall = 1");
+            RegistryHelper.SetValue(ff7KeyPath, "FullInstall", 1, RegistryValueKind.DWord);
+            RegistryHelper.SetValue(virtualStorePath, "FullInstall", 1, RegistryValueKind.DWord);
+
+
+            Instance.RaiseProgressChanged($"\t {RegistryHelper.GetKeyPath(FF7RegKey.FF7AppKeyPath)}::Path = {installPath}");
+            RegistryHelper.SetValue(RegistryHelper.GetKeyPath(FF7RegKey.FF7AppKeyPath), "Path", installPath);
+
+
+            // Add registry key values for Graphics
+            string graphicsKeyPath = $"{ff7KeyPath}\\1.00\\Graphics";
+            string graphicsVirtualKeyPath = $"{virtualStorePath}\\1.00\\Graphics";
+
+            Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::Driver = {Sys.Settings.GameLaunchSettings.SelectedRenderer}");
+            RegistryHelper.SetValue(graphicsKeyPath, "Driver", Sys.Settings.GameLaunchSettings.SelectedRenderer, RegistryValueKind.DWord);
+            RegistryHelper.SetValue(graphicsVirtualKeyPath, "Driver", Sys.Settings.GameLaunchSettings.SelectedRenderer, RegistryValueKind.DWord);
+
+            if (Sys.Settings.GameLaunchSettings.SelectedRenderer == 3)
+            {
+                Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::DriverPath = ff7_opengl.fgd");
+                RegistryHelper.SetValue(graphicsKeyPath, "DriverPath", "ff7_opengl.fgd");
+                RegistryHelper.SetValue(graphicsVirtualKeyPath, "DriverPath", "ff7_opengl.fgd");
+
+                Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::Mode = 2");
+                RegistryHelper.SetValue(graphicsKeyPath, "Mode", 2, RegistryValueKind.DWord);
+                RegistryHelper.SetValue(graphicsVirtualKeyPath, "Mode", 2, RegistryValueKind.DWord);
+
+                Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::Options = 0x12");
+                RegistryHelper.SetValue(graphicsKeyPath, "Options", 0x12, RegistryValueKind.DWord);
+                RegistryHelper.SetValue(graphicsVirtualKeyPath, "Options", 0x12, RegistryValueKind.DWord);
+            }
+            else
+            {
+                Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::DriverPath = ");
+                RegistryHelper.SetValue(graphicsKeyPath, "DriverPath", "");
+                RegistryHelper.SetValue(graphicsVirtualKeyPath, "DriverPath", "");
+
+                Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::Mode = 1");
+                RegistryHelper.SetValue(graphicsKeyPath, "Mode", 1, RegistryValueKind.DWord);
+                RegistryHelper.SetValue(graphicsVirtualKeyPath, "Mode", 1, RegistryValueKind.DWord);
+
+                if (Sys.Settings.GameLaunchSettings.UseRiva128GraphicsOption)
+                {
+                    Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::Options = 0x0000000a");
+                    RegistryHelper.SetValue(graphicsKeyPath, "Options", 0x0000000a, RegistryValueKind.DWord);
+                    RegistryHelper.SetValue(graphicsVirtualKeyPath, "Options", 0x0000000a, RegistryValueKind.DWord);
+                }
+                else if (Sys.Settings.GameLaunchSettings.UseTntGraphicsOption)
+                {
+                    Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::Options = 0x12");
+                    RegistryHelper.SetValue(graphicsKeyPath, "Options", 0x12, RegistryValueKind.DWord);
+                    RegistryHelper.SetValue(graphicsVirtualKeyPath, "Options", 0x12, RegistryValueKind.DWord);
+                }
+                else
+                {
+                    Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::Options = 0");
+                    RegistryHelper.SetValue(graphicsKeyPath, "Options", 0, RegistryValueKind.DWord);
+                    RegistryHelper.SetValue(graphicsVirtualKeyPath, "Options", 0, RegistryValueKind.DWord);
+                }
+            }
+
+            Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::DD_GUID = {Guid.Empty}");
+            RegistryHelper.SetValue(graphicsKeyPath, "DD_GUID", Guid.Empty.ToByteArray(), RegistryValueKind.Binary);
+            RegistryHelper.SetValue(graphicsVirtualKeyPath, "DD_GUID", Guid.Empty.ToByteArray(), RegistryValueKind.Binary);
+
+
+            // Add registry key values for MIDI
+            string midiKeyPath = $"{ff7KeyPath}\\1.00\\MIDI";
+            string midiVirtualKeyPath = $"{virtualStorePath}\\1.00\\MIDI";
+
+            Instance.RaiseProgressChanged($"\t {midiKeyPath}::MIDI_DeviceID = 0");
+            RegistryHelper.SetValue(midiKeyPath, "MIDI_DeviceID", 0x00000000, RegistryValueKind.DWord);
+            RegistryHelper.SetValue(midiVirtualKeyPath, "MIDI_DeviceID", 0x00000000, RegistryValueKind.DWord);
+
+
+            Instance.RaiseProgressChanged($"\t {midiKeyPath}::MIDI_data = {Sys.Settings.GameLaunchSettings.SelectedMidiDevice}");
+            RegistryHelper.SetValue(midiKeyPath, "MIDI_data", Sys.Settings.GameLaunchSettings.SelectedMidiDevice);
+            RegistryHelper.SetValue(midiVirtualKeyPath, "MIDI_data", Sys.Settings.GameLaunchSettings.SelectedMidiDevice);
+
+            Instance.RaiseProgressChanged($"\t {midiKeyPath}::MusicVolume = {Sys.Settings.GameLaunchSettings.SoundVolume}");
+            RegistryHelper.SetValue(midiKeyPath, "MusicVolume", Sys.Settings.GameLaunchSettings.SoundVolume, RegistryValueKind.DWord);
+            RegistryHelper.SetValue(midiVirtualKeyPath, "MusicVolume", Sys.Settings.GameLaunchSettings.SoundVolume, RegistryValueKind.DWord);
+
+            if (Sys.Settings.GameLaunchSettings.LogarithmicVolumeControl)
+            {
+                Instance.RaiseProgressChanged($"\t {midiKeyPath}::Options = 1");
+                RegistryHelper.SetValue(midiKeyPath, "Options", 0x00000001, RegistryValueKind.DWord);
+                RegistryHelper.SetValue(midiVirtualKeyPath, "Options", 0x00000001, RegistryValueKind.DWord);
+            }
+            else
+            {
+                Instance.RaiseProgressChanged($"\t {midiKeyPath}::Options = 0");
+                RegistryHelper.SetValue(midiKeyPath, "Options", 0x00000000, RegistryValueKind.DWord);
+                RegistryHelper.SetValue(midiVirtualKeyPath, "Options", 0x00000000, RegistryValueKind.DWord);
+            }
+
+            // Add registry key values for Sound
+            string soundKeyPath = $"{ff7KeyPath}\\1.00\\Sound";
+            string soundVirtualKeyPath = $"{virtualStorePath}\\1.00\\Sound";
+
+            Instance.RaiseProgressChanged($"\t {soundKeyPath}::Sound_GUID = {Sys.Settings.GameLaunchSettings.SelectedSoundDevice}");
+            RegistryHelper.SetValue(soundKeyPath, "Sound_GUID", Sys.Settings.GameLaunchSettings.SelectedSoundDevice.ToByteArray(), RegistryValueKind.Binary);
+            RegistryHelper.SetValue(soundVirtualKeyPath, "Sound_GUID", Sys.Settings.GameLaunchSettings.SelectedSoundDevice.ToByteArray(), RegistryValueKind.Binary);
+
+            Instance.RaiseProgressChanged($"\t {soundKeyPath}::SFXVolume = {Sys.Settings.GameLaunchSettings.SoundVolume}");
+            RegistryHelper.SetValue(soundKeyPath, "SFXVolume", Sys.Settings.GameLaunchSettings.SoundVolume, RegistryValueKind.DWord);
+            RegistryHelper.SetValue(soundVirtualKeyPath, "SFXVolume", Sys.Settings.GameLaunchSettings.SoundVolume, RegistryValueKind.DWord);
+
+            if (Sys.Settings.GameLaunchSettings.ReverseSpeakers)
+            {
+                Instance.RaiseProgressChanged($"\t {soundKeyPath}::Options = 1");
+                RegistryHelper.SetValue(soundKeyPath, "Options", 0x00000001, RegistryValueKind.DWord);
+                RegistryHelper.SetValue(soundVirtualKeyPath, "Options", 0x00000001, RegistryValueKind.DWord);
+            }
+            else
+            {
+                Instance.RaiseProgressChanged($"\t {soundKeyPath}::Options = 0");
+                RegistryHelper.SetValue(soundKeyPath, "Options", 0x00000000, RegistryValueKind.DWord);
+                RegistryHelper.SetValue(soundVirtualKeyPath, "Options", 0x00000000, RegistryValueKind.DWord);
+            }
+        }
+
+        /// <summary>
+        /// Set/Delete compatibility flags in registry for ~ 640x480 HIGHDPIAWARE
+        /// </summary>
+        public void SetCompatibilityFlagsInRegistry()
+        {
+            Instance.RaiseProgressChanged($"Applying compatibility flags in registry (if any) ...");
+
+            RegistryKey ff7CompatKey;
+            string keyPath = @"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers";
+
+            // delete compatibility flags if set in launch settings
+            if (!Sys.Settings.GameLaunchSettings.Code5Fix && !Sys.Settings.GameLaunchSettings.HighDpiFix)
+            {
+                Instance.RaiseProgressChanged("\t Code 5 fix / High DPI fix set to false - deleting flags if exist ...");
+                ff7CompatKey = Registry.CurrentUser.OpenSubKey(keyPath, true);
+                if (ff7CompatKey.GetValue(Sys.Settings.FF7Exe) != null)
+                {
+                    Instance.RaiseProgressChanged("\t\t compatibility flags found - deleting");
+                    ff7CompatKey.DeleteValue(Sys.Settings.FF7Exe);
+                }
+
+                return;
+            }
+
+
+            string compatString = "~ ";
+            // Add 640x480 compatibility flag if set in settings
+            if (Sys.Settings.GameLaunchSettings.Code5Fix)
+            {
+                Instance.RaiseProgressChanged("\t Code 5 fix set to true - applying 640x480 compatibility flag in registry");
+                compatString += "640x480 ";
+            }
+
+            if (Sys.Settings.GameLaunchSettings.HighDpiFix)
+            {
+                Instance.RaiseProgressChanged("\t High DPI Fix set to true - applying HIGHDPIAWARE compatibility flag in registry");
+                compatString += "HIGHDPIAWARE";
+            }
+
+            Instance.RaiseProgressChanged($"\t {keyPath}::{Sys.Settings.FF7Exe} = {compatString}");
+            ff7CompatKey = Registry.CurrentUser.OpenSubKey(keyPath, true);
+            ff7CompatKey?.SetValue(Sys.Settings.FF7Exe, compatString);
+        }
+
+        /// <summary>
+        /// Mounts FF7DISC1.ISO in 'Resources' folder to virtual drive (if Win 8+)
+        /// </summary>
+        /// <returns></returns>
+        public static bool MountIso()
+        {
+            Version osVersion = Environment.OSVersion.Version;
+            if (osVersion.Major < 6)
+            {
+                return false;
+            }
+            else if (osVersion.Major == 6)
+            {
+                if (osVersion.Minor < 2)
+                {
+                    return false; // on an OS below Win 8
+                }
+            }
+
+            try
+            {
+                string isoPath = Path.Combine(Sys._7HFolder, "Resources", "FF7DISC1.ISO");
+
+                if (!File.Exists(isoPath))
+                {
+                    return false;
+                }
+
+                using (PowerShell ps = PowerShell.Create())
+                {
+                    var result = ps.AddCommand("Mount-DiskImage").AddParameter("ImagePath", isoPath).Invoke();
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Unmounts FF7DISC1
+        /// </summary>
+        /// <returns></returns>
+        public static bool UnmountIso()
+        {
+            if (!OSHasAutoMountSupport())
+            {
+                return false;
+            }
+
+            try
+            {
+                string isoPath = Path.Combine(Sys._7HFolder, "Resources", "FF7DISC1.ISO");
+
+                if (!File.Exists(isoPath))
+                {
+                    return false;
+                }
+
+                using (PowerShell ps = PowerShell.Create())
+                {
+                    var result = ps.AddCommand("Dismount-DiskImage").AddParameter("ImagePath", isoPath).Invoke();
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                return false;
+            }
+        }
 
         /// <summary>
         /// Kills any currently running process found in <see cref="_sideLoadProcesses"/>

@@ -70,8 +70,11 @@ namespace SeventhHeaven.Windows
 
         private void ShowOkButton()
         {
-            btnOk.Visibility = Visibility.Visible;
-            progBar.Visibility = Visibility.Collapsed;
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                btnOk.Visibility = Visibility.Visible;
+                progBar.Visibility = Visibility.Collapsed;
+            });
         }
 
         private void btnOk_Click(object sender, RoutedEventArgs e)
