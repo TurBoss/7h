@@ -183,7 +183,7 @@ namespace SeventhHeaven.Classes
             }
 
             // copy EasyHook.dll to FF7
-            Instance.RaiseProgressChanged("Copying EasyHook.dll to FF7 path (if not found) ...");
+            Instance.RaiseProgressChanged("Copying EasyHook.dll to FF7 path (if not found or older version detected) ...");
             CopyEasyHookDlls();
 
 
@@ -394,13 +394,32 @@ namespace SeventhHeaven.Classes
 
         private static void CopyEasyHookDlls()
         {
-            string dir = Path.GetDirectoryName(Sys.Settings.FF7Exe);
             string source = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
-            string pathToEasyHook = Path.Combine(dir, "EasyHook.dll");
-            if (!File.Exists(pathToEasyHook))
+            string dir = Path.GetDirectoryName(Sys.Settings.FF7Exe);
+            string pathToTargetEasyHook = Path.Combine(dir, "EasyHook.dll");
+            string pathToSourceEasyHook = Path.Combine(source, "EasyHook.dll");
+
+            // compare file versions to determine if file can be skipped
+            bool hasOldVersion = false;
+
+            if (File.Exists(pathToTargetEasyHook))
             {
-                File.Copy(Path.Combine(source, "EasyHook.dll"), pathToEasyHook);
+                FileVersionInfo sourceVersion = FileVersionInfo.GetVersionInfo(pathToSourceEasyHook);
+                FileVersionInfo targetVersion = FileVersionInfo.GetVersionInfo(pathToTargetEasyHook);
+
+                if (new Version(targetVersion.FileVersion).CompareTo(new Version(sourceVersion.FileVersion)) < 0)
+                {
+                    Instance.RaiseProgressChanged("\tEasyHook.dll detected to be older version ...");
+                    hasOldVersion = true;
+                }
+            }
+
+
+
+            if (!File.Exists(pathToTargetEasyHook) || hasOldVersion)
+            {
+                File.Copy(pathToSourceEasyHook, pathToTargetEasyHook, true);
                 Instance.RaiseProgressChanged("\tEasyHook.dll copied ...");
             }
             else
@@ -409,10 +428,28 @@ namespace SeventhHeaven.Classes
 
             }
 
-            string pathToEasyHook32 = Path.Combine(dir, "EasyHook32.dll");
-            if (!File.Exists(pathToEasyHook32))
+
+
+            string pathToTargetEasyHook32 = Path.Combine(dir, "EasyHook32.dll");
+            string pathToSourceEasyHook32 = Path.Combine(source, "EasyHook32.dll");
+            hasOldVersion = false;
+
+            if (File.Exists(pathToTargetEasyHook32))
             {
-                File.Copy(Path.Combine(source, "EasyHook32.dll"), pathToEasyHook32);
+                FileVersionInfo sourceVersion = FileVersionInfo.GetVersionInfo(pathToSourceEasyHook32);
+                FileVersionInfo targetVersion = FileVersionInfo.GetVersionInfo(pathToTargetEasyHook32);
+
+                if (new Version(targetVersion.FileVersion).CompareTo(new Version(sourceVersion.FileVersion)) < 0)
+                {
+                    Instance.RaiseProgressChanged("\tEasyHook32.dll detected to be older version ...");
+                    hasOldVersion = true;
+                }
+            }
+
+
+            if (!File.Exists(pathToTargetEasyHook32) || hasOldVersion)
+            {
+                File.Copy(pathToSourceEasyHook32, pathToTargetEasyHook32, true);
                 Instance.RaiseProgressChanged("\tEasyHook32.dll copied ...");
             }
             else
