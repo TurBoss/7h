@@ -50,6 +50,9 @@ namespace SeventhHeaven.ViewModels
         private string _audioPath;
         private Stream _audioFile;
 
+        private NAudio.Vorbis.VorbisWaveReader _waveReader;
+        private NAudio.Wave.Mp3FileReader _mp3Reader;
+
         public string WindowTitle
         {
             get
@@ -445,7 +448,21 @@ namespace SeventhHeaven.ViewModels
         {
             if (_audio != null)
             {
+                if (_waveReader != null)
+                {
+                    _waveReader.Dispose();
+                    _waveReader = null;
+                }
+
+                if (_mp3Reader != null)
+                {
+                    _mp3Reader.Dispose();
+                    _mp3Reader = null;
+                }
+
+                _audio.PlaybackStopped -= PreviewAudio_PlaybackStopped;
                 _audio.Stop();
+                _audio.Dispose();
                 _audio = null;
             }
         }
@@ -505,13 +522,11 @@ namespace SeventhHeaven.ViewModels
 
         private string ExtractAudioFileFromIro(string iroFile, string path)
         {
-            //bPreview.Enabled = false;
-
             IrosArc iro = new IrosArc(iroFile);
 
 
             string filter = path;
-            string fileName = "";
+            string fullPathToAudioFile = "";
 
             foreach (string file in iro.AllFileNames())
             {
@@ -520,15 +535,14 @@ namespace SeventhHeaven.ViewModels
 
                 byte[] data = iro.GetBytes(file);
 
-                fileName = Path.Combine(Path.GetTempPath(), file);
-                Directory.CreateDirectory(Path.GetDirectoryName(fileName));
+                // ... temp audio files will be deleted on cleanup of the viewmodel
+                fullPathToAudioFile = Path.Combine(Sys.PathToTempFolder, "audio", file);
+                Directory.CreateDirectory(Path.GetDirectoryName(fullPathToAudioFile));
 
-                File.WriteAllBytes(fileName, data); // write audio file to temp location
+                File.WriteAllBytes(fullPathToAudioFile, data); // write audio file to temp location
             }
 
-            //bPreview.Enabled = true;
-
-            return fileName;
+            return fullPathToAudioFile;
         }
 
         internal void PlayPreviewAudio()
@@ -542,22 +556,36 @@ namespace SeventhHeaven.ViewModels
                     if (_audioFileName.EndsWith(".ogg", StringComparison.InvariantCultureIgnoreCase))
                     {
                         if (_audioPath != null)
-                            _audio.Init(new NAudio.Vorbis.VorbisWaveReader(_audioPath));
+                        {
+                            _waveReader = new NAudio.Vorbis.VorbisWaveReader(_audioPath);
+                            _audio.Init(_waveReader);
+                        }
                         else if (_audioFile != null)
-                            _audio.Init(new NAudio.Vorbis.VorbisWaveReader(_audioFile));
+                        {
+                            _waveReader = new NAudio.Vorbis.VorbisWaveReader(_audioFile);
+                            _audio.Init(_waveReader);
+                        }
                     }
                     else if (_audioFileName.EndsWith(".mp3", StringComparison.InvariantCultureIgnoreCase))
                     {
                         if (_audioPath != null)
-                            _audio.Init(new NAudio.Wave.Mp3FileReader(_audioPath));
+                        {
+                            _mp3Reader = new NAudio.Wave.Mp3FileReader(_audioPath);
+                            _audio.Init(_mp3Reader);
+                        }
                         else if (_audioFile != null)
-                            _audio.Init(new NAudio.Wave.Mp3FileReader(_audioFile));
+                        {
+                            _mp3Reader = new NAudio.Wave.Mp3FileReader(_audioFile);
+                            _audio.Init(_mp3Reader);
+                        }
                     }
                     else
                     {
+                        Logger.Warn($"Unsupported audio file: {_audioFileName}");
                         return;
                     }
 
+                    _audio.PlaybackStopped += PreviewAudio_PlaybackStopped;
                     _audio.Play();
                 }
                 catch (Exception e)
@@ -573,10 +601,16 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        private void PreviewAudio_PlaybackStopped(object sender, NAudio.Wave.StoppedEventArgs e)
+        {
+            StopAudio();
+        }
+
         internal void CleanUp()
         {
             StopAudio();
             ImageOptionSource = null;
+            DeleteTempAudioFiles();
         }
 
         internal void ResetToModDefaultValues()
@@ -589,6 +623,26 @@ namespace SeventhHeaven.ViewModels
 
             // reload what is selected in the UI to reflect new defaults set
             LoadSelectedOptionDetails();
+        }
+
+        /// <summary>
+        /// deletes files from temp/audio that may have been extracted from an IRO for audio preview
+        /// </summary>
+        private void DeleteTempAudioFiles()
+        {
+            string pathToTemp = Path.Combine(Sys.PathToTempFolder, "audio");
+
+            foreach (string filePath in Directory.GetFiles(pathToTemp, "*.*", SearchOption.AllDirectories))
+            {
+                try
+                {
+                    File.Delete(filePath);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Warn($"Failed to delete temp audio file at {filePath}");
+                }
+            }
         }
     }
 
