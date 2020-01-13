@@ -105,6 +105,7 @@ It may not work properly unless you find and install the requirements.";
 
         /// <summary>
         /// Loads available mods from catalogs into <see cref="CatalogModList"/> from <see cref="Sys.Catalog.Mods"/>
+        /// Ordered by Catalog Subscription, Category, Name
         /// </summary>
         /// <param name="searchText"> empty string returns all mods </param>
         internal void ReloadModList(Guid? modToSelect = null, string searchText = "", IEnumerable<FilterItemViewModel> categories = null, IEnumerable<FilterItemViewModel> tags = null)
@@ -133,6 +134,13 @@ It may not work properly unless you find and install the requirements.";
             searchText = _previousReloadOptions.SetOrGetPreviousSearchText(searchText);
             tags = _previousReloadOptions.SetOrGetPreviousTags(tags);
 
+            // map the order of the subscriptions so the results can honor the list order when sorting
+            Dictionary<string, int> subscriptionOrder = new Dictionary<string, int>();
+            for (int i = 0; i < Sys.Settings.Subscriptions.Count; i++)
+            {
+                subscriptionOrder[Sys.Settings.Subscriptions[i].Name] = i;
+            }
+
             if (String.IsNullOrEmpty(searchText))
             {
                 results = Sys.Catalog.Mods.Where(m =>
@@ -149,7 +157,10 @@ It may not work properly unless you find and install the requirements.";
                     {
                         return FilterItemViewModel.FilterByTags(m, tags);
                     }
-                }).ToList();
+                }).OrderBy(k => subscriptionOrder[k.SourceCatalogName])
+                  .ThenBy(k => k.Category)
+                  .ThenBy(k => k.Name)
+                  .ToList();
             }
             else
             {
@@ -173,8 +184,9 @@ It may not work properly unless you find and install the requirements.";
                     {
                         return isRelevant;
                     }
-                }).OrderByDescending(a => a.Category)
-                  .ThenByDescending(a => a.Name)
+                }).OrderBy(k => subscriptionOrder[k.SourceCatalogName])
+                  .ThenBy(a => a.Category)
+                  .ThenBy(a => a.Name)
                   .ToList();
             }
 
@@ -184,12 +196,6 @@ It may not work properly unless you find and install the requirements.";
             {
                 CatalogModItemViewModel item = new CatalogModItemViewModel(m);
                 newList.Add(item);
-            }
-
-            if (categories.Count() > 0)
-            {
-                // order by category then relevance
-                newList = newList.OrderBy(m => m.Category).ThenByDescending(m => m.Mod.SearchRelevance(searchText)).ToList();
             }
 
             if (modToSelect != null)
@@ -251,7 +257,6 @@ It may not work properly unless you find and install the requirements.";
         {
             ClearRememberedSearchTextAndCategories();
             ForceCheckCatalogUpdateAsync();
-            RefreshListRequested?.Invoke();
         }
 
         /// <summary>
@@ -406,6 +411,7 @@ It may not work properly unless you find and install the requirements.";
                             {
                                 ReloadModList(GetSelectedMod()?.Mod.ID);
                                 ScanForModUpdates();
+                                RefreshListRequested?.Invoke();
                             }
 
                         }), null);
