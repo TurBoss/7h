@@ -71,6 +71,7 @@
     </Compile>
     <Compile Include="RuntimeVar.cs" />
     <Compile Include="Util.cs" />
+    <Compile Include="VariableAliasNotFoundException.cs" />
     <Compile Include="VFile.cs" />
     <Compile Include="VStreamFile.cs" />
     <Compile Include="Win32.cs" />

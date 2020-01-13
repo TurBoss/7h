@@ -167,13 +167,19 @@ namespace SeventhHeaven.Classes
 
 
             Instance.RaiseProgressChanged("Creating Runtime Profile ...");
-            RuntimeProfile runtimeProfiles = CreateRuntimeProfile();
+            RuntimeProfile runtimeProfile = CreateRuntimeProfile();
+
+            if (runtimeProfile == null)
+            {
+                Instance.RaiseProgressChanged("\tfailed to create Runtime Profile for active mods ...");
+                return false;
+            }
 
 
             if (varDump)
             {
                 Instance.RaiseProgressChanged("Variable Dump set to true. Starting TurBoLog ...");
-                StartTurboLogForVariableDump(runtimeProfiles);
+                StartTurboLogForVariableDump(runtimeProfile);
             }
 
             // copy EasyHook.dll to FF7
@@ -184,10 +190,10 @@ namespace SeventhHeaven.Classes
             // setup log file if debugging
             if (debug)
             {
-                runtimeProfiles.Options |= _7thWrapperLib.RuntimeOptions.DetailedLog;
-                runtimeProfiles.LogFile = Path.Combine(Sys.SysFolder, "log.txt");
+                runtimeProfile.Options |= RuntimeOptions.DetailedLog;
+                runtimeProfile.LogFile = Path.Combine(Sys.SysFolder, "log.txt");
 
-                Instance.RaiseProgressChanged($"Debug Logging set to true. Detailed logging will be written to {runtimeProfiles.LogFile} ...");
+                Instance.RaiseProgressChanged($"Debug Logging set to true. Detailed logging will be written to {runtimeProfile.LogFile} ...");
             }
 
             int pid;
@@ -204,7 +210,7 @@ namespace SeventhHeaven.Classes
                 Instance.RaiseProgressChanged($"Writing temporary runtime profile file to {parms.ProfileFile} ...");
 
                 using (FileStream fs = new FileStream(parms.ProfileFile, FileMode.Create))
-                    Util.SerializeBinary(runtimeProfiles, fs);
+                    Util.SerializeBinary(runtimeProfile, fs);
 
                 // attempt to launch the game a few times in the case of an ApplicationException that can be thrown by EasyHook it seems randomly at times
                 // ... The error tends to go away the second time trying but we will try multiple times before failing
@@ -284,14 +290,14 @@ namespace SeventhHeaven.Classes
                         Instance.RaiseProgressChanged("debug logging set to true. wiring up turbolog file to open after game exit ...");
                         ff7Proc.Exited += (o, e) =>
                         {
-                            Process.Start(runtimeProfiles.LogFile);
+                            Process.Start(runtimeProfile.LogFile);
                         };
                     }
                 }
 
                 /// load plugins and sideload other programs for mods
                 Instance.RaiseProgressChanged("Starting plugins and programs for mods ...");
-                foreach (RuntimeMod mod in runtimeProfiles.Mods)
+                foreach (RuntimeMod mod in runtimeProfile.Mods)
                 {
                     if (mod.LoadPlugins.Any())
                     {
@@ -352,6 +358,20 @@ namespace SeventhHeaven.Classes
         {
             string ff7Folder = Path.GetDirectoryName(Sys.Settings.FF7Exe);
             string pathToDataFolder = Path.Combine(ff7Folder, "data");
+            List<RuntimeMod> runtimeMods = null;
+
+            try
+            {
+                runtimeMods = Sys.ActiveProfile.ActiveItems.Select(i => i.GetRuntime(Sys._context))
+                                                           .Where(i => i != null)
+                                                           .ToList();
+            }
+            catch (VariableAliasNotFoundException aex)
+            {
+                Instance.RaiseProgressChanged($"\tfailed to get list of Runtime Mods due to a missing variable for a mod: {aex.Message}");
+                return null;
+            }
+
 
             RuntimeProfile runtimeProfiles = new RuntimeProfile()
             {
@@ -364,12 +384,10 @@ namespace SeventhHeaven.Classes
                 OpenGLConfig = Sys.ActiveProfile.OpenGLConfig,
                 FF7Path = ff7Folder,
                 gameFiles = Directory.GetFiles(ff7Folder, "*.*", SearchOption.AllDirectories),
-                Mods = Sys.ActiveProfile.ActiveItems.Select(i => i.GetRuntime(Sys._context))
-                                                    .Where(i => i != null)
-                                                    .ToList()
+                Mods = runtimeMods
             };
 
-            Instance.RaiseProgressChanged("Adding paths to monitor ...");
+            Instance.RaiseProgressChanged("\tadding paths to monitor ...");
             runtimeProfiles.MonitorPaths.AddRange(Sys.Settings.ExtraFolders.Where(s => s.Length > 0).Select(s => Path.Combine(ff7Folder, s)));
             return runtimeProfiles;
         }
@@ -600,7 +618,7 @@ namespace SeventhHeaven.Classes
             foreach (Iros._7th.Workshop.ProfileItem pItem in Sys.ActiveProfile.ActiveItems)
             {
                 InstalledItem inst = Sys.Library.GetItem(pItem.ModID);
-                _7thWrapperLib.ModInfo info = GetModInfo(inst);
+                ModInfo info = GetModInfo(inst);
 
                 if (info == null)
                 {
@@ -659,28 +677,38 @@ namespace SeventhHeaven.Classes
             InstalledVersion inst = ii.LatestInstalled;
             string mfile = Path.Combine(Sys.Settings.LibraryLocation, inst.InstalledLocation);
 
-            _7thWrapperLib.ModInfo info;
+            ModInfo info = null;
 
-            if (!_infoCache.TryGetValue(mfile, out info))
+            try
             {
-                if (mfile.EndsWith(".iro", StringComparison.InvariantCultureIgnoreCase))
+                if (!_infoCache.TryGetValue(mfile, out info))
                 {
-                    using (var arc = new _7thWrapperLib.IrosArc(mfile))
-                        if (arc.HasFile("mod.xml"))
-                        {
-                            var doc = new System.Xml.XmlDocument();
-                            doc.Load(arc.GetData("mod.xml"));
-                            info = new _7thWrapperLib.ModInfo(doc, Sys._context);
-                        }
+                    if (mfile.EndsWith(".iro", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        using (var arc = new IrosArc(mfile))
+                            if (arc.HasFile("mod.xml"))
+                            {
+                                var doc = new System.Xml.XmlDocument();
+                                doc.Load(arc.GetData("mod.xml"));
+                                info = new ModInfo(doc, Sys._context);
+                            }
+                    }
+                    else
+                    {
+                        string file = Path.Combine(mfile, "mod.xml");
+                        if (File.Exists(file))
+                            info = new ModInfo(file, Sys._context);
+                    }
+                    _infoCache.Add(mfile, info);
                 }
-                else
-                {
-                    string file = Path.Combine(mfile, "mod.xml");
-                    if (File.Exists(file))
-                        info = new _7thWrapperLib.ModInfo(file, Sys._context);
-                }
-                _infoCache.Add(mfile, info);
             }
+            catch (VariableAliasNotFoundException aex)
+            {
+                // this exception occurrs when the variable alias is not found in .var file which causes ModInfo not to be captured completely. warn user and return null
+                Sys.Message(new WMessage($"WARNING: failed to get mod info due to a missing variable which can cause problems: {aex.Message}", true));
+                return null;
+            }
+
             return info;
         }
 

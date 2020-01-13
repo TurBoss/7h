@@ -941,9 +941,18 @@ namespace _7thWrapperLib
 
         protected override void Init(XmlNode source, LoaderContext ctx)
         {
-            _var = source.Attributes["Var"].InnerText;
-            string s;
-            if (ctx.VarAliases.TryGetValue(_var, out s)) _var = s;
+            _var = source.Attributes["Var"].InnerText; // get friendly name of variable from xml e.g. "Time"
+
+            if (ctx.VarAliases.TryGetValue(_var, out string varAlias))
+            {
+                // replace friendly name of variable with alias if found e.g. "Byte:0xDC08EB"
+                _var = varAlias;
+            }
+            else
+            {
+                throw new VariableAliasNotFoundException($"The variable {_var} was not found in the 7thHeaven.var file");
+            }
+
             _values = source.Attributes["Values"].InnerText;
             _eval = RuntimeVar.MakeRuntimeVar(_var, _values);
         }
