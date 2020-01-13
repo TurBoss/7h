@@ -98,10 +98,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\BoolWithMessage.cs" />
     <Compile Include="Classes\ButtonWithImage.cs" />
     <Compile Include="Classes\Constraint.cs" />
     <Compile Include="Classes\DateTimeComparer.cs" />
     <Compile Include="Classes\FileDialogHelper.cs" />
+    <Compile Include="Classes\FileUtils.cs" />
+    <Compile Include="Classes\GameConverter.cs" />
     <Compile Include="Classes\GameLauncher.cs" />
     <Compile Include="Classes\OpenFolderDialog.cs" />
     <Compile Include="Classes\ReloadListOption.cs" />
@@ -162,6 +165,9 @@
     <Compile Include="Windows\ConfigureModWindow.xaml.cs">
       <DependentUpon>ConfigureModWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\GameConverterWindow.xaml.cs">
+      <DependentUpon>GameConverterWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\GameLaunchSettingsWindow.xaml.cs">
       <DependentUpon>GameLaunchSettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -214,6 +220,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\ConfigureModWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\GameConverterWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

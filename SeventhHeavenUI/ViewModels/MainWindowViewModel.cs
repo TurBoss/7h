@@ -97,6 +97,7 @@ They will be automatically turned off.";
 
         private Visibility _loadingGifVisibility;
         private bool _isFlashingStatus;
+        private Visibility _noImageTextVisibility;
 
         public string WindowTitle
         {
@@ -361,6 +362,22 @@ They will be automatically turned off.";
             }
         }
 
+        public Visibility NoImageTextVisibility
+        {
+            get
+            {
+                return _noImageTextVisibility;
+            }
+            set
+            {
+                if (_noImageTextVisibility != value)
+                {
+                    _noImageTextVisibility = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         public bool IsFlashingStatus
         {
             get
@@ -606,10 +623,18 @@ They will be automatically turned off.";
                 PreviewModHasReadMe = false;
             }
 
-
-            string pathToImage = Sys.ImageCache.GetImagePath(selected.InstallInfo.CachedDetails.LatestVersion.PreviewImage, selected.InstallInfo.CachedDetails.ID);
-
-            SetPreviewImage(pathToImage, forceUpdate);
+            if (!string.IsNullOrWhiteSpace(selected.InstallInfo.CachedDetails.LatestVersion.PreviewImage))
+            {
+                string pathToImage = Sys.ImageCache.GetImagePath(selected.InstallInfo.CachedDetails.LatestVersion.PreviewImage, selected.InstallInfo.CachedDetails.ID);
+                SetPreviewImage(pathToImage, forceUpdate);
+            }
+            else
+            {
+                // no preview image found cached for mod
+                NoImageTextVisibility = Visibility.Visible;
+                LoadingGifVisibility = Visibility.Hidden;
+                PreviewModImageSource = null;
+            }
         }
 
         private void UpdateModPreviewInfo(CatalogModItemViewModel selected, bool forceUpdate = false)
@@ -654,6 +679,7 @@ They will be automatically turned off.";
 
         private void SetPreviewImage(string pathToImage, bool forceUpdate = false)
         {
+            NoImageTextVisibility = Visibility.Hidden;
             LoadingGifVisibility = Visibility.Visible;
             Uri newImageUri = pathToImage == null ? null : new Uri(pathToImage);
 

@@ -259,6 +259,13 @@
                     </Image.Style>
                 </Image>
 
+                <TextBlock Grid.Row="1"
+                           Foreground="{DynamicResource PrimaryControlDisabledForeground}"
+                           Visibility="{Binding NoImageTextVisibility}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Text="No Preview Image"/>
+
 
             </Grid>
         </GroupBox>

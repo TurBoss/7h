@@ -688,8 +688,8 @@ It may not work properly unless you find and install the requirements.";
             {
                 item.OnError?.Invoke();
                 RemoveFromDownloadList(item);
-                string msg = $"Error {item.ItemName} - {e.Error.Message}";
-                Sys.Message(new WMessage() { Text = msg });
+                string msg = $"Error {item.ItemName} - {e.Error.GetBaseException().Message}";
+                Sys.Message(new WMessage(msg, WMessageLogLevel.Error, e.Error.GetBaseException()));
             }
             else
             {

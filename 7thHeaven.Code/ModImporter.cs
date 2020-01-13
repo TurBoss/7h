@@ -125,6 +125,7 @@ namespace _7thHeaven.Code
                 var pv = doc.SelectSingleNode("/ModInfo/PreviewFile");
                 if (pv != null)
                 {
+                    // add the preview file to image cache and set the url prefixed with iros://Preview/Auto since it came from auto-import
                     byte[] data = getData(pv.InnerText);
                     if (data != null)
                     {

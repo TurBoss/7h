@@ -44,6 +44,8 @@ namespace Iros._7th.Workshop {
 
             _usedFiles = new HashSet<string>(_entries.Select(e => e.Value.File), StringComparer.InvariantCultureIgnoreCase);
             _folder = folder;
+
+            DeleteUnusedCacheFiles();
         }
 
         public void Save() {
@@ -60,11 +62,14 @@ namespace Iros._7th.Workshop {
             }
         }
 
-        private void TriggerDownload(string url, Guid modID) {
+        private void TriggerDownload(string url, Guid modID)
+        {
             ImageCacheEntry e;
 
-            lock (_entryLock) {
-                if (!_entries.TryGetValue(url, out e)) {
+            lock (_entryLock)
+            {
+                if (!_entries.TryGetValue(url, out e))
+                {
                     e = new ImageCacheEntry();
                     e.Url = url;
                     _entries[url] = e;
@@ -73,42 +78,80 @@ namespace Iros._7th.Workshop {
 
             e.Updated = DateTime.Now;
             string file = e.File;
-            if (String.IsNullOrEmpty(file)) {
-                string prefix = url.GetHashCode().ToString("x");
-                int count = 0;
-                do {
-                    file = prefix + count.ToString();
-                    count++;
-                } while(_usedFiles.Contains(file));
-                _usedFiles.Add(file);
+
+            if (string.IsNullOrWhiteSpace(file))
+            {
+                file = GetCacheFileName(url);
             }
 
-            Sys.Downloads.Download("iros://Url/" + url.Replace("://", "$"), Path.Combine(_folder, file + ".tmp"), "Downloading preview image", new Install.InstallProcedureCallback(ae => {
-                if (ae.Error == null) {
-                    lock (_entryLock) {
+            string pathToTempDownload = Path.Combine(_folder, file + ".tmp");
+
+            Sys.Downloads.Download("iros://Url/" + url.Replace("://", "$"), pathToTempDownload, "Downloading preview image", new Install.InstallProcedureCallback(ae =>
+            {
+                if (ae.Error == null)
+                {
+                    lock (_entryLock)
+                    {
                         e.File = file;
                     }
 
                     try
                     {
-                        string f = Path.Combine(_folder, file);
+                        try
+                        {
+                            // delete existing cache file and rename .tmp file to match cache file name
+                            string f = Path.Combine(_folder, file);
 
-                        if (File.Exists(f)) File.Delete(f);
+                            if (File.Exists(f)) File.Delete(f);
 
-                        File.Move(Path.Combine(_folder, file + ".tmp"), f);
+                            File.Move(pathToTempDownload, f);
+
+                        }
+                        catch (IOException ioex)
+                        {
+                            // this happens while the file is in-use. the file will be renamed and image cache entry updated to point to new file instead
+                            file = GetCacheFileName(url);
+                            File.Move(pathToTempDownload, file);
+                            e.File = file;
+                        }
 
                         Sys.PingInfoChange(modID);
+
                     }
                     catch (Exception ex)
                     {
                         Sys.Message(new WMessage("failed to get preview image", WMessageLogLevel.Error, ex));
                     }
+
                 }
-                else {
+                else
+                {
                     Sys.Message(new WMessage("ImageCache Download error: " + ae.Error.ToString(), WMessageLogLevel.LogOnly, ae.Error));
                 }
 
             }), null);
+        }
+
+        /// <summary>
+        /// Generates a file name based on the hash code of the url.
+        /// file name is added to <see cref="_usedFiles"/> to keep track of file names already generated
+        /// </summary>
+        private string GetCacheFileName(string url)
+        {
+            string file = "";
+            if (String.IsNullOrEmpty(file))
+            {
+                string prefix = url.GetHashCode().ToString("x");
+                int count = 0;
+                do
+                {
+                    file = prefix + count.ToString();
+                    count++;
+                } while (_usedFiles.Contains(file));
+                _usedFiles.Add(file);
+            }
+
+            return file;
         }
 
         public void InsertManual(string url, byte[] data) {
@@ -134,30 +177,6 @@ namespace Iros._7th.Workshop {
             }
 
             File.WriteAllBytes(Path.Combine(_folder, e.File), data);
-        }
-
-        public System.Drawing.Image Get(string url, Guid modID) {
-            if (String.IsNullOrWhiteSpace(url)) return null;
-            System.Drawing.Image img = null;
-            ImageCacheEntry e;
-            lock (_entryLock) {
-                if (_entries.TryGetValue(url, out e) && e.File != null) {
-                    string file = System.IO.Path.Combine(_folder, e.File);
-                    if (System.IO.File.Exists(file)) {
-                        try {
-                            img = new System.Drawing.Bitmap(new System.IO.MemoryStream(System.IO.File.ReadAllBytes(file)));
-                        } catch {
-                            img = null;
-                        }
-                    }
-                    if (e.Updated < DateTime.Now.AddDays(-1)) {
-                        TriggerDownload(url, modID);
-                    } else if (img == null) return null;
-                } else
-                    TriggerDownload(url, modID);
-            }
-            if (img == null) img = _7thHeaven.Code.Workshop.Loader;
-            return img;
         }
 
         /// <summary>
@@ -187,8 +206,8 @@ namespace Iros._7th.Workshop {
                     pathToImage = file;
                 }
 
-                // re-download image if older than a day to keep cache updated
-                if (e.Updated < DateTime.Now.AddDays(-1))
+                // re-download image if older than a day to keep cache updated (exlude images that came from auto import)
+                if ((!File.Exists(file) || e.Updated < DateTime.Now.AddDays(-5)) && !url.StartsWith("iros://Preview/Auto", StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerDownload(url, modID);
                 }
@@ -199,6 +218,32 @@ namespace Iros._7th.Workshop {
             }
 
             return pathToImage;
+        }
+
+        /// <summary>
+        /// Deletes any files in cache folder that are not referenced by <see cref="_entries"/>
+        /// </summary>
+        public void DeleteUnusedCacheFiles()
+        {
+            foreach (string file in Directory.GetFiles(_folder))
+            {
+                FileInfo info = new FileInfo(file);
+
+                if (info.Name == "cache.xml" || info.Extension != "")
+                    continue; // skip the xml file or files with extensions (image cache files have no extension)
+
+                if (!_entries.Values.Any(c => c.File == info.Name))
+                {
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch (Exception ex)
+                    {
+                        Sys.Message(new WMessage($"Failed to delete old image cache entry {file}", WMessageLogLevel.LogOnly, ex));
+                    }
+                }
+            }
         }
     }
 }
