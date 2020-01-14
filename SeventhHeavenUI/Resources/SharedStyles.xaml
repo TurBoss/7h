@@ -349,7 +349,7 @@
                 <ControlTemplate TargetType="Button">
 
                     <Viewbox Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Stretch="UniformToFill">
-                        <Border x:Name="bd" BorderThickness="0" Background="{TemplateBinding Background}">
+                        <Border x:Name="bd" BorderThickness="0" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
                             <ContentControl Template="{TemplateBinding Content}" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </Viewbox>
@@ -367,7 +367,21 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <Style x:Key="FileEllipsisImageButton" TargetType="Button" BasedOn="{StaticResource ImageButton}">
+        <Setter Property="Content" Value="{StaticResource iconFolderEllipsis}"/>
+        <Setter Property="Width" Value="26"/>
+        <Setter Property="Height" Value="24"/>
+        <Setter Property="Padding" Value="3"/>
+    </Style>
+
+    <Style x:Key="FolderImageButton" TargetType="Button" BasedOn="{StaticResource ImageButton}">
+        <Setter Property="Content" Value="{StaticResource iconFolder}"/>
+        <Setter Property="Width" Value="26"/>
+        <Setter Property="Height" Value="22"/>
+        <Setter Property="Padding" Value="3"/>
+    </Style>
+
     <Style TargetType="{x:Type GroupBox}">
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
         <Setter Property="FontSize" Value="15"/>

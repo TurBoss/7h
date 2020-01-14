@@ -8,7 +8,7 @@
         Title="Chunk Tool" 
         Style="{StaticResource MainWindowStyle}"
         ResizeMode="NoResize"
-        Height="310" Width="450">
+        Height="320" Width="450">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -31,7 +31,7 @@
         <TextBlock Text="Output Folder:"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Top"
-                   Margin="10,35,0,0"/>
+                   Margin="10,38,0,0"/>
 
         <TextBox x:Name="txtFlevel"
                  Text="{Binding PathToFlevelFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -47,9 +47,8 @@
                 Grid.Column="2"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
-                Padding="10,1,10,1"
-                Margin="3,9,10,0"
-                Content="..."/>
+                Margin="0,7,25,0"
+                Style="{StaticResource FileEllipsisImageButton}"/>
 
         <Button x:Name="btnBrowseOutput"
                 Click="btnBrowseOutput_Click"
@@ -57,9 +56,8 @@
                 Grid.Column="2"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
-                Padding="10,1,10,1"
-                Margin="3,34,10,0"
-                Content="..."/>
+                Margin="0,36,25,0"
+                Style="{StaticResource FolderImageButton}"/>
 
         <TextBox x:Name="txtOutput"
                  IsEnabled="{Binding IsNotExtracting}"
@@ -67,7 +65,7 @@
                  HorizontalAlignment="Stretch"
                  VerticalAlignment="Top"
                  Grid.Column="1"
-                 Margin="5,35,0,0"/>
+                 Margin="5,38,0,0"/>
 
 
         <GroupBox Header=" Section # "

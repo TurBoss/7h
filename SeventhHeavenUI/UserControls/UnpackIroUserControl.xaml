@@ -75,8 +75,7 @@
                 Grid.Column="2"
                 VerticalAlignment="Top"
                 Margin="0,10,5,0"
-                Padding="10,0,10,0"
-                Content="..."/>
+                Style="{StaticResource FileEllipsisImageButton}"/>
 
 
 
@@ -101,8 +100,7 @@
                 Grid.Row="1"
                 VerticalAlignment="Top"
                 Margin="0,10,5,0"
-                Padding="10,0,10,0"
-                Content="..."/>
+                Style="{StaticResource FolderImageButton}"/>
 
 
 

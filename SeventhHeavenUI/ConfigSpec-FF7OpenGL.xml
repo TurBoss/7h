@@ -149,11 +149,7 @@
     <Group>Rendering</Group>
     <Name>Shader Options</Name>
     <Description>Choose a shader to apply effects. Only effective if Post-Processing is enabled.</Description>
-    <DefaultValue>post_source=</DefaultValue>
-    <Option>
-      <Text>None</Text>
-      <Settings>post_source=</Settings>
-    </Option>
+    <DefaultValue>post_source=shaders/bloom2.post</DefaultValue>
     <Option>
       <Text>All - Bloom2</Text>
       <Settings>post_source=shaders/bloom2.post</Settings>

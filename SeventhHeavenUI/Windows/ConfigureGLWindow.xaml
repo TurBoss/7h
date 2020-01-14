@@ -114,8 +114,8 @@
                    VerticalAlignment="Top"
                    TextWrapping="Wrap"
                    Margin="5,0,0,5"
-                   MaxWidth="465"
-                   Text="{Binding StatusMessage, FallbackValue='This is a description of a option or message to the user '}"/>
+                   MaxWidth="455"
+                   Text="{Binding StatusMessage, FallbackValue='This is a description of a option or message to the user'}"/>
 
         <Button Grid.Row="1"
                 Click="btnReset_Click"

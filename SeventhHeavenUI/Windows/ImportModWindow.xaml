@@ -33,12 +33,11 @@
                              Margin="15,10,5,10"/>
                     <Button x:Name="btnBrowseIro"
                             Click="btnBrowseIro_Click"
+                            Style="{StaticResource FileEllipsisImageButton}"
                             Grid.Column="1"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Padding="10,1,10,1"
-                            Margin="0,0,15,0"
-                            Content="..."/>
+                            Margin="0,0,15,0"/>
                 </Grid>
             </TabItem>
             <TabItem Header="From Folder">
@@ -55,12 +54,11 @@
                              Margin="15,10,5,10"/>
                     <Button x:Name="btnBrowseModFolder"
                             Click="btnBrowseModFolder_Click"
+                            Style="{StaticResource FolderImageButton}"
                             Grid.Column="1"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Padding="10,1,10,1"
-                            Margin="0,0,15,0"
-                            Content="..."/>
+                            Margin="0,0,15,0"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Batch Import">
@@ -77,12 +75,11 @@
                              Margin="15,10,5,10"/>
                     <Button x:Name="btnBrowseBatchFolder"
                             Click="btnBrowseBatchFolder_Click"
+                            Style="{StaticResource FolderImageButton}"
                             Grid.Column="1"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Padding="10,1,10,1"
-                            Margin="0,0,15,0"
-                            Content="..."/>
+                            Margin="0,0,15,0"/>
                 </Grid>
             </TabItem>
         </TabControl>
