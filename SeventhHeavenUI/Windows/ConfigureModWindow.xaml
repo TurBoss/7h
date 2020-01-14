@@ -160,9 +160,21 @@
                              VerticalAlignment="Bottom"
                              Margin="5,0,0,5"
                              Visibility="{Binding PreviewButtonVisibility, FallbackValue='Visible'}"
-                             TemplateSource="{StaticResource iconPlay}"
-                             Click="btnPreview_Click"
-                             Content="Preview" />
+                             Click="btnPreview_Click">
+            <cls:ButtonWithImage.Style>
+                <Style TargetType="cls:ButtonWithImage" BasedOn="{StaticResource MainButtonWithImageStyle}">
+                    <Setter Property="TemplateSource" Value="{StaticResource iconPlay}"/>
+                    <Setter Property="Content" Value="Preview"/>
+
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsPlayingAudio}" Value="True">
+                            <Setter Property="TemplateSource" Value="{StaticResource iconStopAudio}"/>
+                            <Setter Property="Content" Value="Stop"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </cls:ButtonWithImage.Style>
+        </cls:ButtonWithImage>
 
         <Button x:Name="btnReset"
                 Grid.Row="4"

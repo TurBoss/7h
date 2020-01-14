@@ -121,7 +121,7 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type cls:ButtonWithImage}">
+    <Style x:Key="MainButtonWithImageStyle" TargetType="{x:Type cls:ButtonWithImage}">
         <Setter Property="Background" Value="{DynamicResource PrimaryControlBackground}"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
         <Setter Property="Padding" Value="0,8,3,8"/>
@@ -137,6 +137,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="5"/>
                             </Grid.ColumnDefinitions>
 
                             <Viewbox Width="28" Height="28" Stretch="UniformToFill">
@@ -169,6 +170,8 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="{x:Type cls:ButtonWithImage}" BasedOn="{StaticResource MainButtonWithImageStyle}"/>
 
     <Style x:Key="ButtonWithImageAndDownArrow" TargetType="{x:Type cls:ButtonWithImage}">
         <Setter Property="Background" Value="{DynamicResource PrimaryControlBackground}"/>

@@ -66,6 +66,14 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public bool IsPlayingAudio
+        {
+            get
+            {
+                return _audio != null;
+            }
+        }
+
         public string Description
         {
             get
@@ -464,6 +472,8 @@ namespace SeventhHeaven.ViewModels
                 _audio.Stop();
                 _audio.Dispose();
                 _audio = null;
+
+                NotifyPropertyChanged(nameof(IsPlayingAudio));
             }
         }
 
@@ -587,6 +597,8 @@ namespace SeventhHeaven.ViewModels
 
                     _audio.PlaybackStopped += PreviewAudio_PlaybackStopped;
                     _audio.Play();
+
+                    NotifyPropertyChanged(nameof(IsPlayingAudio));
                 }
                 catch (Exception e)
                 {
@@ -631,6 +643,11 @@ namespace SeventhHeaven.ViewModels
         private void DeleteTempAudioFiles()
         {
             string pathToTemp = Path.Combine(Sys.PathToTempFolder, "audio");
+
+            if (!Directory.Exists(pathToTemp))
+            {
+                return;
+            }
 
             foreach (string filePath in Directory.GetFiles(pathToTemp, "*.*", SearchOption.AllDirectories))
             {
