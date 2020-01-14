@@ -506,12 +506,18 @@ They will be automatically turned off.";
 
         private void CatalogViewModel_SelectedModChanged(object sender, CatalogModItemViewModel selected)
         {
-            UpdateModPreviewInfo(selected);
+            if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
+            {
+                UpdateModPreviewInfo(selected);
+            }
         }
 
         private void ModsViewModel_SelectedModChanged(object sender, InstalledModViewModel selected)
         {
-            UpdateModPreviewInfo(selected);
+            if ((TabIndex)SelectedTabIndex == TabIndex.MyMods)
+            {
+                UpdateModPreviewInfo(selected);
+            }
         }
 
         private void Sys_StatusChanged(object sender, ModStatusEventArgs e)

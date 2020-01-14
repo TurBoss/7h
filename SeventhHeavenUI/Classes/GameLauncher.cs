@@ -371,6 +371,10 @@ namespace SeventhHeaven.Classes
                 Instance.RaiseProgressChanged($"\tfailed to get list of Runtime Mods due to a missing variable for a mod: {aex.Message}");
                 return null;
             }
+            catch (Exception e)
+            {
+                throw;
+            }
 
 
             RuntimeProfile runtimeProfiles = new RuntimeProfile()

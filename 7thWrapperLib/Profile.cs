@@ -751,6 +751,7 @@ namespace _7thWrapperLib
             LoadLibraries = new List<string>();
             LoadAssemblies = new List<string>();
             LoadPlugins = new List<string>();
+            LoadPrograms = new List<ProgramInfo>();
             PreviewFile = Author = Description = Link = String.Empty;
             Version = 0.00m;
             OrderAfter = new List<Guid>();
