@@ -219,24 +219,80 @@ namespace SeventhHeaven.Classes
 
                 bool didInject = false;
                 int attemptCount = 0;
-                int totalAttempts = 20;
+                int totalAttempts = 7;
                 pid = -1;
 
                 while (!didInject && attemptCount < totalAttempts)
                 {
+                    didInject = false;
+
                     try
                     {
                         Instance.RaiseProgressChanged($"Attempting to inject with EasyHook: try # {attemptCount + 1} ...");
 
-                        EasyHook.RemoteHooking.CreateAndInject(Sys.Settings.FF7Exe, String.Empty, 0, lib, null, out pid, parms);
-                        didInject = true;
-                    }
-                    catch (ApplicationException aex)
-                    {
-                        if (aex.Message.IndexOf("Unknown error in injected assembler code", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                        // attempt to inject on background thread so we can have a timeout if the process does not return in 10 seconds
+                        // a successful injection should only take ~3 seconds
+                        var waitTask = Task.Factory.StartNew(() =>
                         {
-                            didInject = false;
-                            attemptCount++;
+                            EasyHook.RemoteHooking.CreateAndInject(Sys.Settings.FF7Exe, String.Empty, 0, lib, null, out pid, parms);
+                        }).ContinueWith((taskResult) =>
+                        {
+                            if (taskResult.IsFaulted)
+                            {
+                                // an error occurred when injecting so concatenate all errors to display in output
+                                didInject = false;
+                                string errors = "";
+                                foreach (Exception ex in taskResult.Exception.InnerExceptions)
+                                {
+                                    if (ex is AggregateException)
+                                    {
+                                        errors += string.Join("; ", (ex as AggregateException).InnerExceptions.Select(s => s.Message));
+                                    }
+                                    else
+                                    {
+                                        errors += $"{ex.Message}; ";
+                                    }
+                                }
+
+                                Instance.RaiseProgressChanged($"\treceived errors: {errors} ...");
+                            }
+                            else
+                            {
+                                didInject = true;
+                            }
+                        }).ConfigureAwait(false);
+
+                        // Wait 10 seconds for the injection to complete
+                        DateTime startTime = DateTime.Now;
+                        while (!waitTask.GetAwaiter().IsCompleted)
+                        {
+                            TimeSpan elapsed = DateTime.Now.Subtract(startTime);
+                            if (elapsed.Seconds > 10)
+                            {
+                                Instance.RaiseProgressChanged($"\treached timeout waiting for injection ...");
+                                didInject = false;
+                                break;
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Instance.RaiseProgressChanged($"\treceived unknown error: {e.Message} ...");
+                    }
+                    finally
+                    {
+                        attemptCount++;
+                    }
+
+                    // If the CreateAndInject() process fails to inject it will attempt to kill the process it started...
+                    // ... this could fail and leave the process open which causes problems for the next attempt so make sure the process is killed on failure
+                    if (!didInject)
+                    {
+                        var openProcs = Process.GetProcessesByName("ff7");
+                        foreach (Process proc in openProcs)
+                        {
+                            if (!proc.HasExited)
+                                proc.Kill();
                         }
                     }
                 }
@@ -339,6 +395,17 @@ namespace SeventhHeaven.Classes
                         UnmountIso();
                     }
                 };
+
+
+                Instance.RaiseProgressChanged("Waiting for FF7 .exe to respond ...");
+                DateTime start = DateTime.Now;
+                int secondsToWait = 10;
+                while (ff7Proc.Responding == false)
+                {
+                    TimeSpan elapsed = DateTime.Now.Subtract(start);
+                    if (elapsed.Seconds > secondsToWait)
+                        break;
+                }
 
                 return true;
             }

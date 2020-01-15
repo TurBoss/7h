@@ -8,6 +8,7 @@
         Title="{Binding WindowTitle, FallbackValue='MessageBox With Checkbox'}" 
         Style="{StaticResource MainWindowStyle}"
         WindowStartupLocation="CenterScreen"
+        Topmost="True"
         Loaded="Window_Loaded"
         ResizeMode="NoResize"
         Height="190"

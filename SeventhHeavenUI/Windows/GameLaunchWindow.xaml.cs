@@ -1,5 +1,4 @@
-﻿using SeventhHeaven.Classes;
-using SeventhHeaven.ViewModels;
+﻿using SeventhHeaven.ViewModels;
 using SeventhHeavenUI;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,8 +37,25 @@ namespace SeventhHeaven.Windows
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.LogStatus("### Launching Final Fantasy VII ###");
+            GameLaunchViewModel.ForceUpdateUI();
 
-            // starts the game launch process asynchronously when window loads
+            // Wait 1 second before starting actual launch process so the window is fully loaded
+            var sleepTask = Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep(1000);
+            });
+
+            sleepTask.ContinueWith((result) =>
+            {
+                StartGameLaunchProcessAsync();
+            });
+        }
+
+        /// <summary>
+        /// starts the game launch process asynchronously when window loads
+        /// </summary>
+        private Task<bool> StartGameLaunchProcessAsync()
+        {
             Task<bool> task = ViewModel.BeginLaunchProcessAsync();
 
             // setup async task to closing window after completion or keeping window open after error
@@ -59,13 +75,16 @@ namespace SeventhHeaven.Windows
                 }
                 else
                 {
-                    Thread.Sleep(4000); // wait a few seconds before closing window on success
+                    ViewModel.LogStatus("Successfully launched FF7!");
+                    Thread.Sleep(2000); // wait a few seconds before closing window on success
                     App.Current.Dispatcher.Invoke(() =>
                     {
                         this.Close();
                     });
                 }
             });
+
+            return task;
         }
 
         private void ShowOkButton()
@@ -88,6 +107,7 @@ namespace SeventhHeaven.Windows
         private void txtLog_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             txtLog.ScrollToEnd();
+            GameLaunchViewModel.ForceUpdateUI();
         }
     }
 }

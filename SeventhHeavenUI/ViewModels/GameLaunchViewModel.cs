@@ -3,6 +3,7 @@ using SeventhHeavenUI;
 using SeventhHeavenUI.ViewModels;
 using System;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace SeventhHeaven.ViewModels
 {
@@ -80,7 +81,22 @@ namespace SeventhHeaven.ViewModels
             App.Current.Dispatcher.Invoke(() =>
             {
                 StatusLog += $"{message}\n";
-            }, System.Windows.Threading.DispatcherPriority.Background);
+            }, DispatcherPriority.Background);
+
+            ForceUpdateUI();
+        }
+
+        public static void ForceUpdateUI()
+        {
+            DispatcherFrame frame = new DispatcherFrame();
+
+            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Render, new DispatcherOperationCallback(delegate (object parameter)
+            {
+                frame.Continue = false;
+                return null;
+            }), null);
+
+            Dispatcher.PushFrame(frame);
         }
     }
 }
