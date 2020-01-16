@@ -8,11 +8,22 @@
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         mc:Ignorable="d"
         Style="{StaticResource MainWindowStyle}"
+        LocationChanged="Window_LocationChanged"
+        Deactivated="Window_Deactivated"
         WindowStartupLocation="CenterScreen"
-        Title="GameLaunchSettingsWindow" 
+        Title="Game Launcher Settings" 
         Width="800"
-        Height="490">
+        Height="600">
     <Window.Resources>
+
+        <DataTemplate x:Key="programItem">
+            <TextBlock Text="{Binding DisplayName, FallbackValue='Program Name And Args'}"/>
+        </DataTemplate>
+
+        <Style x:Key="programItemStyle" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MainListBoxItemStyle}">
+            <Setter Property="ContentTemplate" Value="{StaticResource programItem}"/>
+        </Style>
+
 
         <DataTemplate x:Key="soundItemTemplate">
             <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
@@ -47,65 +58,68 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <GroupBox x:Name="grpOptions"
-                  MinWidth="300"
-                  Header=" Options " Grid.Row="0" Margin="10,10,0,0" 
-                  HorizontalAlignment="Left"
-                  VerticalAlignment="Top">
-            <StackPanel Margin="3" HorizontalAlignment="Right">
-                <CheckBox Height="25" Content="Auto-Mount Game Disc" 
-                          IsChecked="{Binding AutoMountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          IsEnabled="{Binding IsAutoMountSupported}"
-                          MouseEnter="Control_MouseEnter"
-                          ToolTip="Auto-mount game disc ISO when starting game. Windows 8 and up only. If on Windows 7 or older, you will need to insert disc or mount ISO manually."/>
-                <CheckBox Height="25" Content="Auto-Dismount Game Disc" 
-                          IsChecked="{Binding AutoUnmountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          MouseEnter="Control_MouseEnter"
-                          IsEnabled="{Binding IsAutoMountSupported}"
-                          ToolTip="Auto-dismount game disc ISO when game closes. Windows 8 and up only. If on Windows 7 or older, you will need to eject disc or dismount ISO manually."/>
-                <CheckBox Height="25" Content="Auto-Update Disc Path" 
-                          IsChecked="{Binding AutoUpdatePathChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          MouseEnter="Control_MouseEnter"
-                          ToolTip="Detects if disc has changed drive letters and auto-updates game to point to new location."/>
-            </StackPanel>
-        </GroupBox>
+        <StackPanel Grid.Row="0"
+                    Grid.RowSpan="4">
+            
+            <GroupBox x:Name="grpOptions"
+                      MinWidth="300"
+                      Header=" Options " Grid.Row="0" Margin="10,10,0,0" 
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top">
+                <StackPanel Margin="3" HorizontalAlignment="Right">
+                    <CheckBox Height="25" Content="Auto-Mount Game Disc" 
+                              IsChecked="{Binding AutoMountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              IsEnabled="{Binding IsAutoMountSupported}"
+                              MouseEnter="Control_MouseEnter"
+                              ToolTip="Auto-mount game disc ISO when starting game. Windows 8 and up only. If on Windows 7 or older, you will need to insert disc or mount ISO manually."/>
+                    <CheckBox Height="25" Content="Auto-Dismount Game Disc" 
+                              IsChecked="{Binding AutoUnmountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              MouseEnter="Control_MouseEnter"
+                              IsEnabled="{Binding IsAutoMountSupported}"
+                              ToolTip="Auto-dismount game disc ISO when game closes. Windows 8 and up only. If on Windows 7 or older, you will need to eject disc or dismount ISO manually."/>
+                    <CheckBox Height="25" Content="Auto-Update Disc Path" 
+                              IsChecked="{Binding AutoUpdatePathChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              MouseEnter="Control_MouseEnter"
+                              ToolTip="Detects if disc has changed drive letters and auto-updates game to point to new location."/>
+                </StackPanel>
+            </GroupBox>
 
-        <GroupBox x:Name="grpCompat"
-                  Width="{Binding ElementName=grpOptions, Path=ActualWidth}"
-                  Grid.Row="1"
-                  Header=" Compatibility " Margin="10,10,0,0" 
-                  HorizontalAlignment="Left"
-                  VerticalAlignment="Top">
-            <StackPanel Margin="3" HorizontalAlignment="Right">
-                <CheckBox Height="25" Content="Code 5 Fix" 
-                          IsChecked="{Binding Code5FixChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          MouseEnter="Control_MouseEnter"
-                          ToolTip="May fix problems with 'Code 5' error when clicking 'Play'. Multi-monitor setups may see open programs pushed to the secondary monitor when activated."/>
-                <CheckBox Height="25" Content="High-DPI Scaling Fix" 
-                          IsChecked="{Binding HighDpiFixChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          MouseEnter="Control_MouseEnter"
-                          ToolTip="May fix game screen being cut off and/or not being centered. Use with high-DPI displays. Alternatively, change your Windows Display Settings to 100% scaling."/>
-                <CheckBox Height="25" Content="Temporarily Disable Reunion Driver" 
-                          IsChecked="{Binding DisableReunionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          IsEnabled="{Binding IsReunionInstalled}"
-                          MouseEnter="Control_MouseEnter"
-                          ToolTip="Temporarily renames ddraw.dll to reunion.dll on game launch, then immediately back again. Does not affect playability of Reunion outside of 7H"/>
-            </StackPanel>
-        </GroupBox>
+            <GroupBox x:Name="grpCompat"
+                      Width="{Binding ElementName=grpOptions, Path=ActualWidth}"
+                      Header=" Compatibility " Margin="10,10,0,0" 
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top">
+                <StackPanel Margin="3" HorizontalAlignment="Right">
+                    <CheckBox Height="25" Content="Code 5 Fix" 
+                              IsChecked="{Binding Code5FixChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              MouseEnter="Control_MouseEnter"
+                              ToolTip="May fix problems with 'Code 5' error when clicking 'Play'. Multi-monitor setups may see open programs pushed to the secondary monitor when activated."/>
+                    <CheckBox Height="25" Content="High-DPI Scaling Fix" 
+                              IsChecked="{Binding HighDpiFixChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              MouseEnter="Control_MouseEnter"
+                              ToolTip="May fix game screen being cut off and/or not being centered. Use with high-DPI displays. Alternatively, change your Windows Display Settings to 100% scaling."/>
+                    <CheckBox Height="25" Content="Temporarily Disable Reunion Driver" 
+                              IsChecked="{Binding DisableReunionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              IsEnabled="{Binding IsReunionInstalled}"
+                              MouseEnter="Control_MouseEnter"
+                              ToolTip="Temporarily renames ddraw.dll to reunion.dll on game launch, then immediately back again. Does not affect playability of Reunion outside of 7H"/>
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+        
 
         <GroupBox x:Name="grpAudio"
                   Grid.Row="0"
                   Grid.Column="1"
-                  Grid.RowSpan="2"
                   Header=" Audio Output Device " Margin="10,10,10,0" 
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch">
             <StackPanel>
-                <Grid Margin="3,3,3,30">
+                <Grid Margin="3,3,3,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
@@ -208,7 +222,7 @@
         </GroupBox>
 
         <GroupBox x:Name="grpVideo"
-                  Grid.Row="2"
+                  Grid.Row="1"
                   Grid.Column="1"
                   Header=" Graphics Driver Options " Margin="10,10,10,0" 
                   HorizontalAlignment="Stretch"
@@ -284,10 +298,64 @@
             </StackPanel>
         </GroupBox>
 
+        <GroupBox Grid.Row="2" 
+                  Grid.Column="1" 
+                  Height="{Binding ElementName=grpShell, Path=ActualHeight}"
+                  Header=" Programs to Run Prior to FF7: " 
+                  Margin="10,10,10,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Margin="3,3,0,3">
+                    <Button x:Name="btnAddProgram"
+                            Click="btnAddProgram_Click"
+                            ToolTip="Add Program to run"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="28"
+                            Width="28"
+                            Margin="0,0,0,0"
+                            Content="{StaticResource iconAdd}"/>
+
+                    <Button x:Name="btnRemoveProgram"
+                            Click="btnRemoveProgram_Click"
+                            ToolTip="Remove Program"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="28"
+                            Width="28"
+                            Margin="0,0,0,0"
+                            Content="{StaticResource iconMinus}"/>
+
+                    <Button x:Name="btnEditProgram"
+                            ToolTip="Edit Program and Arguments"
+                            Click="btnEditProgram_Click"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="28"
+                            Width="28"
+                            Content="{StaticResource iconEdit}"/>
+
+                </StackPanel>
+
+
+                <ListBox x:Name="lstPrograms" Grid.Column="1"
+                          ItemsSource="{Binding ProgramList}" 
+                          VirtualizingPanel.IsVirtualizing="false"
+                          ItemContainerStyle="{StaticResource programItemStyle}"
+                          Margin="3">
+
+                </ListBox>
+            </Grid>
+        </GroupBox>
 
         <TextBlock Grid.Row="3"
                    Grid.ColumnSpan="2"
                    VerticalAlignment="Center"
+                   TextWrapping="Wrap"
                    Margin="10,0,190,0"
                    TextTrimming="CharacterEllipsis"
                    Text="{Binding StatusMessage, FallbackValue='This is a mouse over description or message to user.'}"/>
@@ -310,5 +378,99 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"/>
 
+
+        <Popup x:Name="popupProgram"
+               IsOpen="{Binding IsProgramPopupOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+               StaysOpen="True"
+               Placement="Right"
+               HorizontalOffset="3"
+               PlacementTarget="{Binding ElementName=btnAddProgram}">
+            <Grid Width="{Binding ElementName=lstPrograms, Path=ActualWidth}" Height="90" 
+                  Background="{DynamicResource PrimaryControlBackground}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox Text="{Binding NewProgramPathText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                         FontSize="14"
+                         VerticalContentAlignment="Center"
+                         Margin="25,3,5,0"/>
+
+                <TextBlock Text="Enter full path to program to run"
+                           Foreground="{DynamicResource PrimaryControlDisabledForeground}"
+                           IsHitTestVisible="False"
+                           FontSize="14"
+                           Margin="30,3,5,0">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding NewProgramPathText, FallbackValue=''}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <Button x:Name="btnBrowseProgram"
+                        Click="btnBrowseProgram_Click"
+                        Style="{StaticResource FileEllipsisImageButton}"
+                        ToolTip="Browse for program to run"
+                        Grid.Column="1"
+                        Margin="0,3,25,0"
+                        VerticalAlignment="Center"/>
+
+
+                <TextBox x:Name="txtProgramPath"
+                         Text="{Binding NewProgramArgsText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Grid.Row="1"
+                         FontSize="14"
+                         VerticalContentAlignment="Center"
+                         Margin="25,3,5,0"/>
+
+                <TextBlock x:Name="txtProgramArgs"
+                           Text="Enter program arguments"
+                           Grid.Row="1"
+                           Foreground="{DynamicResource PrimaryControlDisabledForeground}"
+                           IsHitTestVisible="False"
+                           FontSize="14"
+                           Margin="30,3,5,0">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding NewProgramArgsText, FallbackValue=''}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <Button x:Name="btnSaveProgram"
+                        Click="btnSaveProgram_Click"
+                        Grid.Row="2"
+                        HorizontalAlignment="Center"
+                        Width="80"
+                        Margin="0,3,90,3"
+                        Content="Save"/>
+
+                <Button x:Name="btnCancelProgramAction"
+                        Click="btnCancelProgramAction_Click"
+                        Grid.Row="2"
+                        HorizontalAlignment="Center"
+                        Width="80"
+                        Margin="90,3,0,3"
+                        Content="Cancel"/>
+
+            </Grid>
+        </Popup>
     </Grid>
 </Window>

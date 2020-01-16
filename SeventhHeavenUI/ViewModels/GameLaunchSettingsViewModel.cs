@@ -6,6 +6,7 @@ using SeventhHeaven.Windows;
 using SeventhHeavenUI.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -45,6 +46,10 @@ namespace SeventhHeaven.ViewModels
 
         private WaveOut _audioTest;
 
+        private ObservableCollection<ProgramToRunViewModel> _programList;
+        private string _newProgramPathText;
+        private string _newProgramArgsText;
+        private bool _isProgramPopupOpen;
 
         public string StatusMessage
         {
@@ -325,9 +330,67 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public bool IsProgramPopupOpen
+        {
+            get
+            {
+                return _isProgramPopupOpen;
+            }
+            set
+            {
+                _isProgramPopupOpen = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<ProgramToRunViewModel> ProgramList
+        {
+            get
+            {
+                if (_programList == null)
+                    _programList = new ObservableCollection<ProgramToRunViewModel>();
+
+                return _programList;
+            }
+            set
+            {
+                _programList = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string NewProgramPathText
+        {
+            get
+            {
+                return _newProgramPathText;
+            }
+            set
+            {
+                _newProgramPathText = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string NewProgramArgsText
+        {
+            get
+            {
+                return _newProgramArgsText;
+            }
+            set
+            {
+                _newProgramArgsText = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public GameLaunchSettingsViewModel()
         {
             StatusMessage = "";
+            NewProgramPathText = "";
+            NewProgramArgsText = "";
+            IsProgramPopupOpen = false;
             _audioTest = null;
 
             InitSoundDevices();
@@ -343,6 +406,8 @@ namespace SeventhHeaven.ViewModels
                 Logger.Warn("No game launch settings found, initializing to defaults.");
                 Sys.Settings.GameLaunchSettings = LaunchSettings.DefaultSettings();
             }
+
+            ProgramList = new ObservableCollection<ProgramToRunViewModel>(Sys.Settings.ProgramsToLaunchPrior.Select(s => new ProgramToRunViewModel(s.PathToProgram, s.ProgramArgs)));
 
             AutoUpdatePathChecked = Sys.Settings.GameLaunchSettings.AutoUpdateDiscPath;
             Code5FixChecked = Sys.Settings.GameLaunchSettings.Code5Fix;
@@ -407,6 +472,8 @@ namespace SeventhHeaven.ViewModels
         {
             try
             {
+                Sys.Settings.ProgramsToLaunchPrior = GetUpdatedProgramsToRun();
+
                 Sys.Settings.GameLaunchSettings.AutoMountGameDisc = AutoMountChecked;
                 Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc = AutoUnmountChecked;
                 Sys.Settings.GameLaunchSettings.AutoUpdateDiscPath = AutoUpdatePathChecked;
@@ -614,27 +681,79 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-    }
-
-    /// <summary>
-    /// A wave provider that plays no sound (used to test audio channels)
-    /// </summary>
-    public class SilenceWaveProvider : IWaveProvider
-    {
-        private WaveFormat _waveFormat;
-
-        public SilenceWaveProvider(WaveFormat waveFormat)
+        internal void EditSelectedProgram(ProgramToRunViewModel selected)
         {
-            this._waveFormat = waveFormat;
+            IsProgramPopupOpen = true;
+            NewProgramPathText = selected.ProgramPath;
+            NewProgramArgsText = selected.ProgramArguments ?? "";
         }
 
-        public WaveFormat WaveFormat => _waveFormat;
-
-        public int Read(byte[] buffer, int offset, int count)
+        internal void AddNewProgram()
         {
-            // the silenced wave provider will return 0 which indicates playback stopped 
-            // ... because PlaybackStopped will be fired once ALL input audio sources are done streaming [which is indicated when Read() returns 0]
-            return 0; 
+            IsProgramPopupOpen = true;
+        }
+
+        /// <summary>
+        /// Adds or Edits program to run and closes programs popup
+        /// </summary>
+        internal bool SaveProgramToRun()
+        {
+            if (!File.Exists(NewProgramPathText))
+            {
+                StatusMessage = "Program to run not found";
+                return false;
+            }
+
+            if (!ProgramList.Any(s => s.ProgramPath == NewProgramPathText))
+            {
+                ProgramList.Add(new ProgramToRunViewModel(NewProgramPathText, NewProgramArgsText));
+            }
+            else
+            {
+                ProgramToRunViewModel toEdit = ProgramList.FirstOrDefault(s => s.ProgramPath == NewProgramPathText);
+                toEdit.ProgramArguments = NewProgramArgsText;
+            }
+
+            CloseProgramPopup();
+            return true;
+        }
+
+        internal void CloseProgramPopup()
+        {
+            IsProgramPopupOpen = false;
+            NewProgramPathText = "";
+            NewProgramArgsText = "";
+        }
+
+        internal void RemoveSelectedProgram(ProgramToRunViewModel selected)
+        {
+            ProgramList.Remove(selected);
+        }
+
+        /// <summary>
+        /// Returns list of <see cref="ProgramLaunchInfo"/> objects based on the current input in <see cref="ProgramList"/>
+        /// </summary>
+        private List<ProgramLaunchInfo> GetUpdatedProgramsToRun()
+        {
+            List<ProgramLaunchInfo> updatedPrograms = new List<ProgramLaunchInfo>();
+
+            foreach (ProgramToRunViewModel item in ProgramList.ToList())
+            {
+                ProgramLaunchInfo existingProg = Sys.Settings.ProgramsToLaunchPrior.FirstOrDefault(s => s.PathToProgram == item.ProgramPath);
+
+                if (existingProg == null)
+                {
+                    existingProg = new ProgramLaunchInfo() { PathToProgram = item.ProgramPath, ProgramArgs = item.ProgramArguments };
+                }
+                else
+                {
+                    existingProg.ProgramArgs = item.ProgramArguments;
+                }
+
+                updatedPrograms.Add(existingProg);
+            }
+
+            return updatedPrograms;
         }
     }
 }

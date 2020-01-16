@@ -361,67 +361,10 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-        public bool IsProgramPopupOpen
-        {
-            get
-            {
-                return _isProgramPopupOpen;
-            }
-            set
-            {
-                _isProgramPopupOpen = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public ObservableCollection<ProgramToRunViewModel> ProgramList
-        {
-            get
-            {
-                if (_programList == null)
-                    _programList = new ObservableCollection<ProgramToRunViewModel>();
-
-                return _programList;
-            }
-            set
-            {
-                _programList = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public string NewProgramPathText
-        {
-            get
-            {
-                return _newProgramPathText;
-            }
-            set
-            {
-                _newProgramPathText = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public string NewProgramArgsText
-        {
-            get
-            {
-                return _newProgramArgsText;
-            }
-            set
-            {
-                _newProgramArgsText = value;
-                NotifyPropertyChanged();
-            }
-        }
-
         public GeneralSettingsViewModel()
         {
             NewUrlText = "";
             NewNameText = "";
-            NewProgramPathText = "";
-            NewProgramArgsText = "";
             SubscriptionsChanged = false;
             IsResolvingName = false;
             SubscriptionNameTextBoxIsEnabled = true;
@@ -434,7 +377,6 @@ namespace SeventhHeaven.ViewModels
 
             SubscriptionList = new ObservableCollection<SubscriptionSettingViewModel>(Sys.Settings.Subscriptions.Select(s => new SubscriptionSettingViewModel(s.Url, s.Name)));
             ExtraFolderList = new ObservableCollection<string>(Sys.Settings.ExtraFolders.ToList());
-            ProgramList = new ObservableCollection<ProgramToRunViewModel>(Sys.Settings.ProgramsToLaunchPrior.Select(s => new ProgramToRunViewModel(s.PathToProgram, s.ProgramArgs)));
 
             FF7ExePathInput = Sys.Settings.FF7Exe;
             LibraryPathInput = Sys.Settings.LibraryLocation;
@@ -495,7 +437,6 @@ namespace SeventhHeaven.ViewModels
             }
 
             Sys.Settings.Subscriptions = GetUpdatedSubscriptions();
-            Sys.Settings.ProgramsToLaunchPrior = GetUpdatedProgramsToRun();
             Sys.Settings.ExtraFolders = ExtraFolderList.Distinct().ToList();
 
             // ensure 'direct' and 'music' folders are always in ExtraFolders list
@@ -621,32 +562,6 @@ namespace SeventhHeaven.ViewModels
             }
 
             return updatedSubscriptions;
-        }
-
-        /// <summary>
-        /// Returns list of <see cref="ProgramLaunchInfo"/> objects based on the current input in <see cref="ProgramList"/>
-        /// </summary>
-        private List<ProgramLaunchInfo> GetUpdatedProgramsToRun()
-        {
-            List<ProgramLaunchInfo> updatedPrograms = new List<ProgramLaunchInfo>();
-
-            foreach (ProgramToRunViewModel item in ProgramList.ToList())
-            {
-                ProgramLaunchInfo existingProg = Sys.Settings.ProgramsToLaunchPrior.FirstOrDefault(s => s.PathToProgram == item.ProgramPath);
-
-                if (existingProg == null)
-                {
-                    existingProg = new ProgramLaunchInfo() { PathToProgram = item.ProgramPath, ProgramArgs = item.ProgramArguments };
-                }
-                else
-                {
-                    existingProg.ProgramArgs = item.ProgramArguments;
-                }
-
-                updatedPrograms.Add(existingProg);
-            }
-
-            return updatedPrograms;
         }
 
         private bool ValidateSettings(bool showMessage = true)
@@ -989,6 +904,26 @@ namespace SeventhHeaven.ViewModels
             SubscriptionNameHintText = "Enter name for catalog";
         }
 
+        internal void MoveSelectedSubscription(SubscriptionSettingViewModel selected, int toAdd)
+        {
+            int currentIndex = SubscriptionList.IndexOf(selected);
+
+            if (currentIndex < 0 )
+            {
+                // not found in  list
+                return;
+            }
+
+            int newIndex = currentIndex + toAdd;
+
+            if (newIndex < 0 || newIndex >= SubscriptionList.Count)
+            {
+                return;
+            }
+
+            SubscriptionList.Move(currentIndex, newIndex);
+        }
+
         internal void RemoveSelectedSubscription(SubscriptionSettingViewModel selected)
         {
             SubscriptionsChanged = true;
@@ -1056,55 +991,6 @@ namespace SeventhHeaven.ViewModels
             downloadCallback.Error = onError;
 
             Sys.Downloads.Download(catalogUrl, path, $"Resolving catalog name for {catalogUrl}", downloadCallback, onCancel);
-        }
-
-        internal void EditSelectedProgram(ProgramToRunViewModel selected)
-        {
-            IsProgramPopupOpen = true;
-            NewProgramPathText = selected.ProgramPath;
-            NewProgramArgsText = selected.ProgramArguments ?? "";
-        }
-
-        internal void AddNewProgram()
-        {
-            IsProgramPopupOpen = true;
-        }
-
-        /// <summary>
-        /// Adds or Edits program to run and closes programs popup
-        /// </summary>
-        internal bool SaveProgramToRun()
-        {
-            if (!File.Exists(NewProgramPathText))
-            {
-                StatusMessage = "Program to run not found";
-                return false;
-            }
-
-            if (!ProgramList.Any(s => s.ProgramPath == NewProgramPathText))
-            {
-                ProgramList.Add(new ProgramToRunViewModel(NewProgramPathText, NewProgramArgsText));
-            }
-            else
-            {
-                ProgramToRunViewModel toEdit = ProgramList.FirstOrDefault(s => s.ProgramPath == NewProgramPathText);
-                toEdit.ProgramArguments = NewProgramArgsText;
-            }
-
-            CloseProgramPopup();
-            return true;
-        }
-
-        internal void CloseProgramPopup()
-        {
-            IsProgramPopupOpen = false;
-            NewProgramPathText = "";
-            NewProgramArgsText = "";
-        }
-
-        internal void RemoveSelectedProgram(ProgramToRunViewModel selected)
-        {
-            ProgramList.Remove(selected);
         }
 
         internal void AddExtraFolder()

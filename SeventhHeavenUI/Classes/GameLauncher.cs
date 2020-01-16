@@ -102,10 +102,12 @@ namespace SeventhHeaven.Classes
             Instance.RaiseProgressChanged($"\tfound: {IsReunionModInstalled()}");
 
 
+            bool didDisableReunion = false;
             if (IsReunionModInstalled() && Sys.Settings.GameLaunchSettings.DisableReunionOnLaunch)
             {
-                Instance.RaiseProgressChanged("Disabling Reunion mod by renaming ddraw.dll to Reunion.dll.bak ...");
-                DisableReunionMod();
+                Instance.RaiseProgressChanged("Disabling Reunion mod (rename ddraw.dll -> Reunion.dll.bak) ...");
+                EnableOrDisableReunionMod(doEnable: false);
+                didDisableReunion = true;
             }
 
             Instance.RaiseProgressChanged("Looking for game disc ...");
@@ -398,12 +400,18 @@ namespace SeventhHeaven.Classes
 
                 Instance.RaiseProgressChanged("Waiting for FF7 .exe to respond ...");
                 DateTime start = DateTime.Now;
-                int secondsToWait = 10;
+                int secondsToWait = 30;
                 while (ff7Proc.Responding == false)
                 {
                     TimeSpan elapsed = DateTime.Now.Subtract(start);
                     if (elapsed.Seconds > secondsToWait)
                         break;
+                }
+
+                if (didDisableReunion)
+                {
+                    Instance.RaiseProgressChanged("Re-enabling Reunion mod (rename Reunion.dll.bak -> ddraw.dll) ...");
+                    EnableOrDisableReunionMod(doEnable: true);
                 }
 
                 return true;
@@ -802,7 +810,7 @@ namespace SeventhHeaven.Classes
             return Directory.GetFiles(installPath).Any(s => s.Contains("ddraw.dll"));
         }
 
-        public static bool DisableReunionMod()
+        public static bool EnableOrDisableReunionMod(bool doEnable)
         {
             string installPath = Path.GetDirectoryName(Sys.Settings.FF7Exe);
 
@@ -816,12 +824,34 @@ namespace SeventhHeaven.Classes
                 string pathToDll = Path.Combine(installPath, "ddraw.dll");
                 string backupName = Path.Combine(installPath, "Reunion.dll.bak");
 
-                if (File.Exists(pathToDll))
+                // disable Reunion by renaming ddraw.dll to Reunion.dll.bak
+                if (!doEnable)
                 {
-                    File.Move(pathToDll, backupName);
+                    if (File.Exists(pathToDll))
+                    {
+                        File.Move(pathToDll, backupName);
+                        return true;
+                    }
+                    else
+                    {
+                        Instance.RaiseProgressChanged($"\tcould not find ddraw.dll at {pathToDll}");
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (File.Exists(backupName))
+                    {
+                        File.Move(backupName, pathToDll);
+                        return true;
+                    }
+                    else
+                    {
+                        Instance.RaiseProgressChanged($"\tcould not find Reunion.dll.bak at {backupName}");
+                        return false;
+                    }
                 }
 
-                return true;
             }
             catch (Exception ex)
             {

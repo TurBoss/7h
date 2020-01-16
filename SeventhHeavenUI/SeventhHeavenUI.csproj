@@ -135,6 +135,7 @@
     <Compile Include="ViewModels\GameLaunchSettingsViewModel.cs" />
     <Compile Include="ViewModels\GameLaunchViewModel.cs" />
     <Compile Include="ViewModels\ProgramToRunViewModel.cs" />
+    <Compile Include="Classes\SilenceWaveProvider.cs" />
     <Compile Include="ViewModels\SubscriptionSettingViewModel.cs" />
     <Compile Include="ViewModels\GLSettingViewModel.cs" />
     <Compile Include="ViewModels\MessageDialogViewModel.cs" />

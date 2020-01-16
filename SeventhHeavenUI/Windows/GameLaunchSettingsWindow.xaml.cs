@@ -1,4 +1,6 @@
-﻿using SeventhHeaven.ViewModels;
+﻿using SeventhHeaven.Classes;
+using SeventhHeaven.ViewModels;
+using SeventhHeavenUI.ViewModels;
 using System.Windows;
 
 namespace SeventhHeaven.Windows
@@ -68,6 +70,75 @@ namespace SeventhHeaven.Windows
                 menuAudioTest.IsOpen = true;
                 btnAudioOptions.IsEnabled = false; // disable the button while the menu is open until context menu is closed
             }
+        }
+
+        private void btnAddProgram_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.IsProgramPopupOpen)
+            {
+                return; // dont do anything if popup opened already
+            }
+
+            ViewModel.AddNewProgram();
+        }
+
+        private void btnRemoveProgram_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstPrograms.SelectedItem == null)
+            {
+                ViewModel.StatusMessage = "Selet a program to remove first.";
+                return;
+            }
+
+            ViewModel.RemoveSelectedProgram((lstPrograms.SelectedItem as ProgramToRunViewModel));
+        }
+
+        private void btnEditProgram_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.IsProgramPopupOpen)
+            {
+                return; // dont do anything if popup opened already
+            }
+
+            if (lstPrograms.SelectedItem == null)
+            {
+                ViewModel.StatusMessage = "Select a program to edit first.";
+                return;
+            }
+
+            ViewModel.EditSelectedProgram((lstPrograms.SelectedItem as ProgramToRunViewModel));
+        }
+
+        private void btnCancelProgramAction_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.CloseProgramPopup();
+        }
+
+        private void btnSaveProgram_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SaveProgramToRun();
+        }
+
+        private void btnBrowseProgram_Click(object sender, RoutedEventArgs e)
+        {
+            string pathToProgram = FileDialogHelper.BrowseForFile("All files|*.*", "Select a program to run such as an .exe or script", ViewModel.NewProgramPathText);
+
+            ViewModel.IsProgramPopupOpen = true; // opening file dialog closes popup so re-open it
+
+            if (!string.IsNullOrWhiteSpace(pathToProgram))
+            {
+                ViewModel.NewProgramPathText = pathToProgram;
+            }
+        }
+
+        private void Window_LocationChanged(object sender, System.EventArgs e)
+        {
+            ViewModel.IsProgramPopupOpen = false;
+        }
+
+        private void Window_Deactivated(object sender, System.EventArgs e)
+        {
+            ViewModel.IsProgramPopupOpen = false;
         }
     }
 }
