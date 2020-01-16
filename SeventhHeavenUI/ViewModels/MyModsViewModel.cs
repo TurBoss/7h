@@ -229,15 +229,6 @@ namespace SeventhHeavenUI.ViewModels
                         mod.SortOrder = expectedRowIdx;
                     }
                 }
-
-                // keep track of the sort order in Sys.Library so it can be saved to library.xml (this will be used on startup to reload sorted list)
-                foreach (var installedMod in Sys.Library.Items)
-                {
-                    if (modLoadOrders.TryGetValue(installedMod.ModID, out int expectedRowIdx))
-                    {
-                        installedMod.SavedSortOrder = expectedRowIdx;
-                    }
-                }
             }
         }
 
@@ -383,7 +374,7 @@ namespace SeventhHeavenUI.ViewModels
                 while (toExamine.Any())
                 {
                     examined.Add(toExamine.Peek().ModID);
-                    var info = GameLauncher.GetModInfo(toExamine.Pop());
+                    var info = toExamine.Pop().GetModInfo();
 
                     if (info == null)
                     {
@@ -428,7 +419,7 @@ namespace SeventhHeavenUI.ViewModels
 
                 foreach (var active in Sys.ActiveProfile.ActiveItems.Except(remove))
                 {
-                    var info = GameLauncher.GetModInfo(Sys.Library.GetItem(active.ModID));
+                    var info = Sys.Library.GetItem(active.ModID)?.GetModInfo();
                     if (info != null)
                     {
                         foreach (Guid mID in pulledIn.Select(ii => ii.ModID).Concat(new[] { modID }))

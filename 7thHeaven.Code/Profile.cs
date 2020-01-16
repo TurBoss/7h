@@ -3,6 +3,7 @@
   The original developer is Iros <irosff@outlook.com>
 */
 
+using _7thWrapperLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,25 +27,75 @@ namespace Iros._7th.Workshop {
             Items = new List<ProfileItem>();
         }
 
-        public IEnumerable<string> GetDetails() {
-            foreach (var item in Items) {
-                var mod = Sys.Library.GetItem(item.ModID);
-                if (mod != null) {
-                    var details = mod.CachedDetails;
-                    if (details != null) {
-                        yield return String.Format("# {0}", details.Name);
-                        yield return String.Format("\tID: {0}", details.ID.ToString());
-                        yield return String.Format("\tVersion: {0}", mod.LatestInstalled.VersionDetails.Version.ToString());
-                    } else
-                        yield return String.Format("\tModID {0}", mod.ModID.ToString());
+        public IEnumerable<string> GetDetails() 
+        {
+            List<string> profileDetails = new List<string>();
 
-                    yield return String.Format("\tIs Active: {0}", item.IsModActive);
+            foreach (ProfileItem item in Items) 
+            {
+                InstalledItem mod = Sys.Library.GetItem(item.ModID);
 
-                    foreach (var config in item.Settings) {
-                        yield return String.Format("\t{0} = {1}", config.ID, config.Value.ToString());
+                if (mod != null) 
+                {
+                    Mod details = mod.CachedDetails;
+
+                    if (details != null) 
+                    {
+                        profileDetails.Add(String.Format("# {0}", details.Name));
+                        profileDetails.Add(String.Format("\tID: {0}", details.ID));
+                        profileDetails.Add(String.Format("\tVersion: {0}", mod.LatestInstalled.VersionDetails.Version));
+                    } 
+                    else
+                    {
+                        profileDetails.Add(String.Format("\tModID {0}", mod.ModID));
+                    }
+
+                    profileDetails.Add(String.Format("\tIs Active: {0}", item.IsModActive));
+
+
+
+
+                    ModInfo info = mod.GetModInfo();
+                    string detailFormat = "";
+
+                    if (info != null)
+                    {
+                        detailFormat = item.GetFormatString(info);
+                    }
+
+                    foreach (ProfileSetting config in item.Settings) 
+                    {
+                        if (info != null)
+                        {
+                            // extract configuration variable name and name of the selected value from Mod Info
+                            ConfigOption configOption = info.Options.FirstOrDefault(o => o.ID == config.ID);
+                            string optionValue = "";
+
+                            if (configOption.Type == OptionType.Bool)
+                            {
+                                optionValue = (config.Value == 1).ToString();
+                            }
+                            else
+                            {
+                                optionValue = $"\"{configOption.Values.Where(o => o.Value == config.Value).Select(o => o.Name).FirstOrDefault()}\"";
+                            }
+
+
+                            string name = $"\"{configOption.Name}\"";
+                            string id = $"({config.ID})";
+                            string value = $"({config.Value})";
+
+                            profileDetails.Add(string.Format(detailFormat, name, id, "=", optionValue, value)); // "=" is passed into string.Format() so all equal signs are aligned using the {2, 2} syntax
+                        }
+                        else
+                        {
+                            profileDetails.Add(String.Format("\t{0} = {1}", config.ID, config.Value));
+                        }
                     }
                 }
             }
+
+            return profileDetails;
         }
 
         public void AddItem(ProfileItem toAdd)
@@ -166,6 +217,43 @@ namespace Iros._7th.Workshop {
                 modinfo.ModFolders.Where(f => IsActive(f.ActiveWhen)).Select(f => f.Folder),
                 modinfo
                 );
+        }
+
+        /// <summary>
+        /// returns a string that can be used with String.Format() for displaying ConfigOption values and names in tabbed columns.
+        /// Calculates what indendation to use for each column by looking at the max length of the variable names/values
+        /// </summary>
+        /// <returns>a string in the format "\t{0, -XX} {1, -XX} {2, 2} {3, -XX} {4, -10}" where XX is calculated</returns>
+        internal string GetFormatString(ModInfo info)
+        {
+            int longestNameLength = 0;
+            int longestVarLength = Settings.Count > 0 ? Settings.Select(s => s.ID.Length).Max() + 3 : 0; // use LINQ to get max length of a setting variable ID
+            int longestValueNameLength = 4; // length of 'True' 
+
+            // loop over each setting and get the max length of the variable name and variables value name
+            foreach (var config in Settings)
+            {
+                ConfigOption configOption = info.Options.FirstOrDefault(o => o.ID == config.ID);
+                if (configOption?.Name.Length > longestNameLength)
+                {
+                    longestNameLength = configOption.Name.Length;
+                }
+
+                if (configOption?.Type == OptionType.List)
+                {
+                    string value = configOption.Values.Where(o => o.Value == config.Value).Select(o => o.Name).FirstOrDefault();
+                    if (value?.Length > longestValueNameLength)
+                    {
+                        longestValueNameLength = value.Length;
+                    }
+                }
+            }
+
+            longestNameLength += 3; // add 3 to account for the quotes wrapping name and space e.g. "Aerith" 
+            longestValueNameLength += 3;
+
+            string format = "\t{0, -" + longestNameLength.ToString() + "} {1, -" + longestVarLength + "} {2, 2} {3, -" + longestValueNameLength + "} {4, -10}";
+            return format;
         }
     }
 

@@ -529,7 +529,7 @@ They will be automatically turned off.";
                 // remove newly installed mod from info cache incase it is stale or the install location changed
                 InstalledItem mod = Sys.Library.GetItem(e.ModID);
                 string mfile = mod.LatestInstalled.InstalledLocation;
-                GameLauncher.RemoveFromInfoCache(mfile);
+                InstalledItem.RemoveFromInfoCache(mfile);
                 MyMods.ReloadModListFromUIThread(MyMods.GetSelectedMod()?.InstallInfo.ModID, SearchText, CheckedCategories, CheckedTags);
             }
 
@@ -867,7 +867,7 @@ They will be automatically turned off.";
             InstalledVersion inst = mod.LatestInstalled;
             string mfile = Path.Combine(Sys.Settings.LibraryLocation, inst.InstalledLocation);
             bool hasCode;
-            var modInfo = GameLauncher.GetModInfo(mod);
+            var modInfo = mod.GetModInfo();
 
             if (mfile.EndsWith(".iro", StringComparison.InvariantCultureIgnoreCase))
             {

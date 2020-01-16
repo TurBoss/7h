@@ -33,7 +33,6 @@ namespace SeventhHeaven.Classes
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private static Dictionary<string, _7thWrapperLib.ModInfo> _infoCache = new Dictionary<string, _7thWrapperLib.ModInfo>(StringComparer.InvariantCultureIgnoreCase);
         private static GameLauncher _instance;
 
         public static GameLauncher Instance
@@ -589,14 +588,6 @@ namespace SeventhHeaven.Classes
             }
         }
 
-        internal static void RemoveFromInfoCache(string mfile)
-        {
-            if (_infoCache.ContainsKey(mfile))
-            {
-                _infoCache.Remove(mfile);
-            }
-        }
-
         internal static bool SanityCheckSettings()
         {
             List<string> changes = new List<string>();
@@ -628,7 +619,7 @@ namespace SeventhHeaven.Classes
 
             foreach (InstalledItem item in profInst)
             {
-                var info = GetModInfo(item);
+                ModInfo info = item.GetModInfo();
 
                 if (info == null)
                 {
@@ -679,7 +670,7 @@ namespace SeventhHeaven.Classes
             var details = Sys.ActiveProfile
                              .ActiveItems
                              .Select(i => Sys.Library.GetItem(i.ModID))
-                             .Select(ii => new { Mod = ii, Info = GetModInfo(ii) })
+                             .Select(ii => new { Mod = ii, Info = ii.GetModInfo() })
                              .ToDictionary(a => a.Mod.ModID, a => a);
 
             List<string> problems = new List<string>();
@@ -726,7 +717,7 @@ namespace SeventhHeaven.Classes
             foreach (Iros._7th.Workshop.ProfileItem pItem in Sys.ActiveProfile.ActiveItems)
             {
                 InstalledItem inst = Sys.Library.GetItem(pItem.ModID);
-                ModInfo info = GetModInfo(inst);
+                ModInfo info = inst.GetModInfo();
 
                 if (info == null)
                 {
@@ -778,46 +769,6 @@ namespace SeventhHeaven.Classes
             }
 
             return constraints;
-        }
-
-        internal static ModInfo GetModInfo(InstalledItem ii)
-        {
-            InstalledVersion inst = ii.LatestInstalled;
-            string mfile = Path.Combine(Sys.Settings.LibraryLocation, inst.InstalledLocation);
-
-            ModInfo info = null;
-
-            try
-            {
-                if (!_infoCache.TryGetValue(mfile, out info))
-                {
-                    if (mfile.EndsWith(".iro", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        using (var arc = new IrosArc(mfile))
-                            if (arc.HasFile("mod.xml"))
-                            {
-                                var doc = new System.Xml.XmlDocument();
-                                doc.Load(arc.GetData("mod.xml"));
-                                info = new ModInfo(doc, Sys._context);
-                            }
-                    }
-                    else
-                    {
-                        string file = Path.Combine(mfile, "mod.xml");
-                        if (File.Exists(file))
-                            info = new ModInfo(file, Sys._context);
-                    }
-                    _infoCache.Add(mfile, info);
-                }
-            }
-            catch (VariableAliasNotFoundException aex)
-            {
-                // this exception occurrs when the variable alias is not found in .var file which causes ModInfo not to be captured completely. warn user and return null
-                Sys.Message(new WMessage($"WARNING: failed to get mod info due to a missing variable which can cause problems: {aex.Message}", true));
-                return null;
-            }
-
-            return info;
         }
 
         internal static bool OSHasAutoMountSupport()

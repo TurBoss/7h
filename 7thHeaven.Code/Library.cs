@@ -3,6 +3,7 @@
   The original developer is Iros <irosff@outlook.com>
 */
 
+using _7thWrapperLib;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -107,6 +108,12 @@ namespace Iros._7th.Workshop
 
     public class InstalledItem
     {
+        /// <summary>
+        /// Dictionary to cache ModInfo instances during runtime. This is to avoid having to open .iro or mod.xml file from disk everytime
+        /// </summary>
+        [System.Xml.Serialization.XmlIgnore]
+        private static Dictionary<string, ModInfo> _infoCache = new Dictionary<string, _7thWrapperLib.ModInfo>(StringComparer.InvariantCultureIgnoreCase);
+
         public Guid ModID { get; set; }
         public Mod CachedDetails { get; set; }
         public string CachePreview { get; set; }
@@ -115,13 +122,61 @@ namespace Iros._7th.Workshop
         public List<InstalledVersion> Versions { get; set; }
         public InstalledVersion LatestInstalled { get { return Versions.OrderBy(v => v.VersionDetails.Version).Last(); } }
 
-        [System.Xml.Serialization.XmlIgnore]
-        public int SavedSortOrder { get; set; }
 
         public bool ModExistsOnFileSystem()
         {
             string fn = Path.Combine(Sys.Settings.LibraryLocation, LatestInstalled.InstalledLocation);
             return Directory.Exists(fn) || File.Exists(fn);
+        }
+
+        public ModInfo GetModInfo()
+        {
+            ModInfo info;
+            string pathToModFileOrFolder = Path.Combine(Sys.Settings.LibraryLocation, LatestInstalled.InstalledLocation);
+
+            try
+            {
+                if (!_infoCache.TryGetValue(pathToModFileOrFolder, out info))
+                {
+                    if (pathToModFileOrFolder.EndsWith(".iro", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        using (IrosArc arc = new IrosArc(pathToModFileOrFolder))
+                        {
+                            if (arc.HasFile("mod.xml"))
+                            {
+                                var doc = new System.Xml.XmlDocument();
+                                doc.Load(arc.GetData("mod.xml"));
+                                info = new ModInfo(doc, Sys._context);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        string file = Path.Combine(pathToModFileOrFolder, "mod.xml");
+                        if (File.Exists(file))
+                        {
+                            info = new ModInfo(file, Sys._context);
+                        }
+                    }
+                    _infoCache.Add(pathToModFileOrFolder, info);
+                }
+            }
+            catch (VariableAliasNotFoundException aex)
+            {
+                // this exception occurrs when the variable alias is not found in .var file which causes ModInfo not to be captured completely. warn user and return null
+                Sys.Message(new WMessage($"WARNING: failed to get mod info due to a missing variable which can cause problems: {aex.Message}", true));
+                return null;
+            }
+
+            return info;
+        }
+
+        public static void RemoveFromInfoCache(string mfile)
+        {
+            if (_infoCache.ContainsKey(mfile))
+            {
+                _infoCache.Remove(mfile);
+            }
         }
     }
 
