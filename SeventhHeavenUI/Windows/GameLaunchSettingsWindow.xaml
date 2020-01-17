@@ -11,9 +11,10 @@
         LocationChanged="Window_LocationChanged"
         Deactivated="Window_Deactivated"
         WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
         Title="Game Launcher Settings" 
         Width="800"
-        Height="600">
+        Height="515">
     <Window.Resources>
 
         <DataTemplate x:Key="programItem">
@@ -59,14 +60,14 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0"
                     Grid.RowSpan="4">
             
             <GroupBox x:Name="grpOptions"
-                      MinWidth="300"
+                      MinWidth="235"
                       Header=" Options " Grid.Row="0" Margin="10,10,0,0" 
                       HorizontalAlignment="Left"
                       VerticalAlignment="Top">
@@ -85,6 +86,19 @@
                               IsChecked="{Binding AutoUpdatePathChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               MouseEnter="Control_MouseEnter"
                               ToolTip="Detects if disc has changed drive letters and auto-updates game to point to new location."/>
+                    <CheckBox Height="25" Content="Show Game Launcher" 
+                              IsChecked="{Binding IsShowLauncherChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              MouseEnter="Control_MouseEnter"
+                              ToolTip="Shows the Game Launcher window when starting FF7 for detailed output of the launch process"/>
+
+                    <RadioButton Content="Standard Keyboard" VerticalAlignment="Center" Margin="0,8,11,0"
+                                 HorizontalAlignment="Right"
+                                 GroupName="KeyboardInput"
+                                 IsChecked="{Binding IsStandardKeyboardChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <RadioButton Content="Laptop/No Numpad" VerticalAlignment="Center" Margin="0,3,3,0"
+                                 HorizontalAlignment="Right"
+                                 GroupName="KeyboardInput"
+                                 IsChecked="{Binding IsLaptopKeyboardChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
             </GroupBox>
 
@@ -94,15 +108,16 @@
                       HorizontalAlignment="Left"
                       VerticalAlignment="Top">
                 <StackPanel Margin="3" HorizontalAlignment="Right">
-                    <CheckBox Height="25" Content="Code 5 Fix" 
-                              IsChecked="{Binding Code5FixChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              MouseEnter="Control_MouseEnter"
-                              ToolTip="May fix problems with 'Code 5' error when clicking 'Play'. Multi-monitor setups may see open programs pushed to the secondary monitor when activated."/>
                     <CheckBox Height="25" Content="High-DPI Scaling Fix" 
                               IsChecked="{Binding HighDpiFixChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               MouseEnter="Control_MouseEnter"
                               ToolTip="May fix game screen being cut off and/or not being centered. Use with high-DPI displays. Alternatively, change your Windows Display Settings to 100% scaling."/>
-                    <CheckBox Height="25" Content="Temporarily Disable Reunion Driver" 
+                    <CheckBox Height="25" Content="Code 5 Fix" 
+                              IsEnabled="{Binding HasCode5Error}"
+                              IsChecked="{Binding Code5FixChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              MouseEnter="Control_MouseEnter"
+                              ToolTip="May fix problems with 'Code 5' error when clicking 'Play'. Multi-monitor setups may see open programs pushed to the secondary monitor when activated."/>
+                    <CheckBox Height="25" Content="Reunion Driver Fix" 
                               IsChecked="{Binding DisableReunionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding IsReunionInstalled}"
                               MouseEnter="Control_MouseEnter"
@@ -129,6 +144,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Text="Sound Device:"
@@ -136,18 +152,49 @@
                                HorizontalAlignment="Right"
                                VerticalAlignment="Center"
                                Margin="0,0,5,10"/>
-                    <ComboBox x:Name="cboSoundDevices"
-                              Style="{StaticResource MainComboBoxStyle}"
-                              ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
-                              ItemTemplate="{StaticResource soundItemTemplate}"
-                              SelectedItem="{Binding SelectedSoundDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              ItemsSource="{Binding SoundDevices}"
-                              Grid.Row="0"
-                              Grid.Column="1"
-                              HorizontalAlignment="Left"
-                              VerticalAlignment="Center"
-                              Margin="0,1,0,10"
-                              MinWidth="250"/>
+
+                    <WrapPanel Grid.Row="0"
+                               Grid.Column="1">
+                        <ComboBox x:Name="cboSoundDevices"
+                                  Style="{StaticResource MainComboBoxStyle}"
+                                  ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
+                                  ItemTemplate="{StaticResource soundItemTemplate}"
+                                  SelectedItem="{Binding SelectedSoundDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  ItemsSource="{Binding SoundDevices}"
+                                  Grid.Row="0"
+                                  Grid.Column="1"
+                                  HorizontalAlignment="Left"
+                                  VerticalAlignment="Center"
+                                  Margin="0,1,0,10"
+                                  MinWidth="250"/>
+
+                        <cls:ButtonWithImage x:Name="btnTestAudio"
+                                         Grid.Row="0"
+                                         Grid.Column="2"
+                                         HorizontalAlignment="Left"
+                                         VerticalAlignment="Bottom"
+                                         Margin="3,0,2,10"
+                                         TemplateSource="{StaticResource iconPlay}"
+                                         IsEnabled="{Binding IsAudioNotPlaying}"
+                                         Click="btnTestAudio_Click"
+                                         Width="60"
+                                         Content="Test"/>
+                        <ToggleButton x:Name="btnAudioOptions"
+                                  Style="{StaticResource DownArrowToggleButton}"
+                                  Grid.Row="0"
+                                  Grid.Column="2"
+                                  VerticalAlignment="Stretch"
+                                  Margin="0,0,0,10"
+                                  Click="btnAudioOptions_Click"
+                                  ContextMenuService.Placement="Bottom">
+                            <ToggleButton.ContextMenu>
+                                <ContextMenu x:Name="menuAudioTest" Closed="menuAudioTest_Closed">
+                                    <MenuItem x:Name="menuItemTestLeft" Header="Test Left Channel" Click="menuItemTestLeft_Click" IsEnabled="{Binding IsAudioNotPlaying}"/>
+                                    <MenuItem x:Name="menuItemTestRight" Header="Test Right Channel" Click="menuItemTestRight_Click" IsEnabled="{Binding IsAudioNotPlaying}"/>
+                                </ContextMenu>
+                            </ToggleButton.ContextMenu>
+                        </ToggleButton>
+                    </WrapPanel>
 
                     <TextBlock Text="MIDI Device:"
                                Grid.Row="1"
@@ -167,57 +214,52 @@
                               Margin="0,1,0,10"
                               MinWidth="250"/>
 
-                    
-                    <TextBlock Text="Volume:"
-                               Grid.Row="2"
-                               HorizontalAlignment="Right"
-                               VerticalAlignment="Center"
-                               Margin="0,0,5,10"/>
-                    <Slider x:Name="sliderVolume"
-                            Value="{Binding VolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
-                            Minimum="0"
-                            Maximum="100"
-                            Grid.Row="2"
-                            Grid.Column="1"
-                            Margin="0,0,10,10"/>
 
-                    <cls:ButtonWithImage x:Name="btnTestAudio"
-                                         Grid.Row="3"
-                                         HorizontalAlignment="Right"
-                                         VerticalAlignment="Bottom"
-                                         Margin="0,0,22,10"
-                                         TemplateSource="{StaticResource iconPlay}"
-                                         IsEnabled="{Binding IsAudioNotPlaying}"
-                                         Click="btnTestAudio_Click"
-                                         Width="60"
-                                         Content="Test"/>
-                    <ToggleButton x:Name="btnAudioOptions"
-                                  Style="{StaticResource DownArrowToggleButton}"
-                                  Grid.Row="3"
-                                  HorizontalAlignment="Right"
-                                  VerticalAlignment="Stretch"
-                                  Margin="0,0,0,10"
-                                  Click="btnAudioOptions_Click"
-                                  ContextMenuService.Placement="Bottom">
-                        <ToggleButton.ContextMenu>
-                            <ContextMenu x:Name="menuAudioTest" Closed="menuAudioTest_Closed">
-                                <MenuItem x:Name="menuItemTestLeft" Header="Test Left Channel" Click="menuItemTestLeft_Click" IsEnabled="{Binding IsAudioNotPlaying}"/>
-                                <MenuItem x:Name="menuItemTestRight" Header="Test Right Channel" Click="menuItemTestRight_Click" IsEnabled="{Binding IsAudioNotPlaying}"/>
-                            </ContextMenu>
-                        </ToggleButton.ContextMenu>
-                    </ToggleButton>
+                    <WrapPanel Grid.Row="2"
+                               Grid.ColumnSpan="3">
+                        <TextBlock Text="Music Volume:"
+                                   Grid.Row="2"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,5,10"/>
+                        <Slider x:Name="sliderVolume"
+                                Value="{Binding MusicVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
+                                Minimum="0"
+                                Maximum="100"
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                MinWidth="105"
+                                Margin="0,0,10,7"/>
+
+                        <TextBlock Text="SFX Volume:"
+                                   Grid.Row="2"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Center"
+                                   Margin="10,0,5,10"/>
+                        <Slider x:Name="sliderSfxVolume"
+                                Value="{Binding SfxVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
+                                Minimum="0"
+                                Maximum="100"
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                MinWidth="105"
+                                Margin="0,0,10,7"/>
+
+                    </WrapPanel>
                 </Grid>
 
-                <CheckBox Height="25" Content="Reverse Speakers" 
-                          Margin="0,3,10,3"
-                          IsChecked="{Binding IsReverseSpeakersChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          MouseEnter="Control_MouseEnter"
-                          ToolTip="Swaps left and right channels when checked."/>
-                <CheckBox Height="25" Content="Logarithmic Volume Control" 
-                          Margin="0,3,10,3"
-                          IsChecked="{Binding IsLogVolumeChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          MouseEnter="Control_MouseEnter"
-                          ToolTip="Uncheck this option if you feel that the volume does not change smoothly."/>
+                <WrapPanel Margin="3,3,3,0" HorizontalAlignment="Left">
+                    <CheckBox Height="25" Content="Logarithmic Volume Control" 
+                              Margin="0,3,10,3"
+                              IsChecked="{Binding IsLogVolumeChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              MouseEnter="Control_MouseEnter"
+                              ToolTip="Uncheck this option if you feel that the volume does not change smoothly."/> 
+                    <CheckBox Height="25" Content="Reverse Speakers" 
+                              Margin="4,3,10,3"
+                              IsChecked="{Binding IsReverseSpeakersChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              MouseEnter="Control_MouseEnter"
+                              ToolTip="Swaps left and right channels when checked."/>
+                </WrapPanel>
             </StackPanel>
         </GroupBox>
 
@@ -232,31 +274,11 @@
                 <Grid Margin="3">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-
-                    <!--<TextBlock Text="Display Device:"
-                               Grid.Row="0"
-                               HorizontalAlignment="Right"
-                               VerticalAlignment="Center"
-                               Margin="0,0,5,5"/>
-                    <ComboBox x:Name="cboDisplays"
-                              Style="{StaticResource MainComboBoxStyle}"
-                              ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
-                              SelectedItem="{Binding SelectedDisplayDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              ItemsSource="{Binding DisplayDevices}"
-                              Grid.Row="0"
-                              Grid.Column="1"
-                              HorizontalAlignment="Left"
-                              VerticalAlignment="Center"
-                              Margin="0,1,0,5"
-                              MinWidth="250"/>-->
 
                     <TextBlock Text="Renderer:"
                                Grid.Row="1"
@@ -274,22 +296,28 @@
                               HorizontalAlignment="Left"
                               VerticalAlignment="Center"
                               Margin="0,1,0,5"
-                              MinWidth="250"/>
+                              MinWidth="345"/>
                 </Grid>
 
-                <WrapPanel HorizontalAlignment="Right" Margin="0,5,10,5"
+                <WrapPanel HorizontalAlignment="Stretch" Margin="4,3,10,6"
                            MouseEnter="Control_MouseEnter"
                            ToolTip="Only applies when set to 'Direct3D Hardware Acceleration'"
                            ToolTipService.IsEnabled="False">
-                    <!--<CheckBox Height="25" Content="NVIDIA" 
-                              Margin="10,0,10,2"
-                              IsEnabled="{Binding IsNvidiaOptionEnabled}"
-                              IsChecked="{Binding IsNvidiaOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              ToolTip=""/>-->
+                    <RadioButton Content="Quarter Screen" VerticalAlignment="Center" Margin="0,0,10,0"
+                                 GroupName="ScreenMode"
+                                 IsEnabled="{Binding IsScreenModeEnabled}"
+                                 IsChecked="{Binding IsQuarterScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <RadioButton Content="Full Screen" VerticalAlignment="Center" Margin="0,0,40,0"
+                                 GroupName="ScreenMode"
+                                 IsEnabled="{Binding IsScreenModeEnabled}"
+                                 IsChecked="{Binding IsFullScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    
                     <RadioButton Content="RIVA 128" VerticalAlignment="Center" Margin="0,0,10,0"
+                                 GroupName="GraphicsOption"
                                  IsEnabled="{Binding IsRivaOptionEnabled}"
                                  IsChecked="{Binding IsRivaOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <RadioButton Content="TNT" VerticalAlignment="Center" Margin="0,0,10,0"
+                                 GroupName="GraphicsOption"
                                  IsEnabled="{Binding IsRivaOptionEnabled}"
                                  IsChecked="{Binding IsTntOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     

@@ -1,8 +1,11 @@
-﻿using SeventhHeaven.ViewModels;
+﻿using Iros._7th.Workshop;
+using SeventhHeaven.Classes;
+using SeventhHeaven.ViewModels;
 using SeventhHeavenUI;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace SeventhHeaven.Windows
 {
@@ -29,9 +32,21 @@ namespace SeventhHeaven.Windows
             GameLaunchWindow launchWindow = new GameLaunchWindow(variableDump, debugLogging);
             launchWindow.ViewModel.IsLaunchingWithNoMods = noMods;
 
+            if (!Sys.Settings.GameLaunchSettings.ShowLauncherWindow)
+            {
+                launchWindow.WindowState = WindowState.Minimized;
+                launchWindow.ShowInTaskbar = false;
+                
+                GameLauncher.Instance.ProgressChanged += LauncherInstance_ProgressChanged;
+            }
 
             launchWindow.ShowDialog();
             return launchWindow.ViewModel;
+        }
+
+        private static void LauncherInstance_ProgressChanged(string message)
+        {
+            Sys.Message(new WMessage(message, WMessageLogLevel.StatusOnly));
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -75,7 +90,7 @@ namespace SeventhHeaven.Windows
                 }
                 else
                 {
-                    ViewModel.LogStatus("Successfully launched FF7!");
+                    Sys.Message(new WMessage("Successfully launched FF7!"));
                     Thread.Sleep(2000); // wait a few seconds before closing window on success
                     App.Current.Dispatcher.Invoke(() =>
                     {
@@ -93,6 +108,13 @@ namespace SeventhHeaven.Windows
             {
                 btnOk.Visibility = Visibility.Visible;
                 progBar.Visibility = Visibility.Collapsed;
+
+                if (Sys.Settings.GameLaunchSettings.ShowLauncherWindow == false)
+                {
+                    // display the launcher window when showing the 'OK' button so it is visible to use that an error occurred
+                    this.WindowState = WindowState.Normal;
+                    this.ShowInTaskbar = true;
+                }
             });
         }
 

@@ -188,6 +188,15 @@ namespace SeventhHeaven.Classes
             CopyEasyHookDlls();
 
 
+            Instance.RaiseProgressChanged("Copying ff7input.cfg to FF7 path ...");
+            bool didCopyCfg = CopyKeyboardInputCfg();
+
+            if (!didCopyCfg)
+            {
+                return false;
+            }
+
+
             // setup log file if debugging
             if (debug)
             {
@@ -252,6 +261,11 @@ namespace SeventhHeaven.Classes
                                     else
                                     {
                                         errors += $"{ex.Message}; ";
+                                    }
+
+                                    if (ex.Message.IndexOf("Unknown error in injected assembler code", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                                    {
+                                        Sys.Settings.GameLaunchSettings.HasReceivedCode5Error = true; // update launch settings to notify that user has received a code 5 error in the code
                                     }
                                 }
 
@@ -807,7 +821,7 @@ namespace SeventhHeaven.Classes
                 return false;
             }
 
-            return Directory.GetFiles(installPath).Any(s => s.Contains("ddraw.dll"));
+            return Directory.GetFiles(installPath).Any(s => s.EndsWith("ddraw.dll"));
         }
 
         public static bool EnableOrDisableReunionMod(bool doEnable)
@@ -890,22 +904,27 @@ namespace SeventhHeaven.Classes
             string virtualStorePath = $"{RegistryHelper.GetKeyPath(FF7RegKey.VirtualStoreKeyPath)}\\Final Fantasy VII";
 
             string installPath = Path.GetDirectoryName(Sys.Settings.FF7Exe) + @"\";
+            string pathToData = Path.Combine(installPath, @"data\");
+            string pathToMovies = Path.Combine(installPath, "data", @"movies\");
 
             // Add registry key values for paths and drive letter
             Instance.RaiseProgressChanged($"\t {ff7KeyPath}::AppPath = {installPath}");
             RegistryHelper.SetValue(ff7KeyPath, "AppPath", installPath);
+
+            Instance.RaiseProgressChanged($"\t {virtualStorePath}::AppPath = {installPath}");
             RegistryHelper.SetValue(virtualStorePath, "AppPath", installPath);
 
-            string pathToData = Path.Combine(installPath, @"data\");
-            Instance.RaiseProgressChanged($"\t {ff7KeyPath}::DataPath = {pathToData}");
 
+            Instance.RaiseProgressChanged($"\t {ff7KeyPath}::DataPath = {pathToData}");
             RegistryHelper.SetValue(ff7KeyPath, "DataPath", pathToData);
+
+            Instance.RaiseProgressChanged($"\t {virtualStorePath}::DataPath = {pathToData}");
             RegistryHelper.SetValue(virtualStorePath, "DataPath", pathToData);
 
-            string pathToMovies = Path.Combine(installPath, "data", @"movies\");
             Instance.RaiseProgressChanged($"\t {ff7KeyPath}::MoviePath = {pathToMovies}");
-
             RegistryHelper.SetValue(ff7KeyPath, "MoviePath", pathToMovies);
+
+            Instance.RaiseProgressChanged($"\t {virtualStorePath}::MoviePath = {pathToMovies}");
             RegistryHelper.SetValue(virtualStorePath, "MoviePath", pathToMovies);
 
             // setting the drive letter may not happen if auto update disc path is not set
@@ -913,15 +932,21 @@ namespace SeventhHeaven.Classes
             {
                 Instance.RaiseProgressChanged($"\t {ff7KeyPath}::DataDrive = {DriveLetter}");
                 RegistryHelper.SetValue(ff7KeyPath, "DataDrive", DriveLetter);
+
+                Instance.RaiseProgressChanged($"\t {virtualStorePath}::DataDrive = {DriveLetter}");
                 RegistryHelper.SetValue(virtualStorePath, "DataDrive", DriveLetter);
             }
 
             Instance.RaiseProgressChanged($"\t {ff7KeyPath}::DiskNo = 0");
             RegistryHelper.SetValue(ff7KeyPath, "DiskNo", 0, RegistryValueKind.DWord);
+
+            Instance.RaiseProgressChanged($"\t {virtualStorePath}::DiskNo = 0");
             RegistryHelper.SetValue(virtualStorePath, "DiskNo", 0, RegistryValueKind.DWord);
 
             Instance.RaiseProgressChanged($"\t {ff7KeyPath}::FullInstall = 1");
             RegistryHelper.SetValue(ff7KeyPath, "FullInstall", 1, RegistryValueKind.DWord);
+
+            Instance.RaiseProgressChanged($"\t {virtualStorePath}::FullInstall = 1");
             RegistryHelper.SetValue(virtualStorePath, "FullInstall", 1, RegistryValueKind.DWord);
 
 
@@ -935,54 +960,76 @@ namespace SeventhHeaven.Classes
 
             Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::Driver = {Sys.Settings.GameLaunchSettings.SelectedRenderer}");
             RegistryHelper.SetValue(graphicsKeyPath, "Driver", Sys.Settings.GameLaunchSettings.SelectedRenderer, RegistryValueKind.DWord);
+
+            Instance.RaiseProgressChanged($"\t {graphicsVirtualKeyPath}::Driver = {Sys.Settings.GameLaunchSettings.SelectedRenderer}");
             RegistryHelper.SetValue(graphicsVirtualKeyPath, "Driver", Sys.Settings.GameLaunchSettings.SelectedRenderer, RegistryValueKind.DWord);
 
             if (Sys.Settings.GameLaunchSettings.SelectedRenderer == 3)
             {
                 Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::DriverPath = ff7_opengl.fgd");
                 RegistryHelper.SetValue(graphicsKeyPath, "DriverPath", "ff7_opengl.fgd");
+
+                Instance.RaiseProgressChanged($"\t {graphicsVirtualKeyPath}::DriverPath = ff7_opengl.fgd");
                 RegistryHelper.SetValue(graphicsVirtualKeyPath, "DriverPath", "ff7_opengl.fgd");
 
                 Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::Mode = 2");
                 RegistryHelper.SetValue(graphicsKeyPath, "Mode", 2, RegistryValueKind.DWord);
+
+                Instance.RaiseProgressChanged($"\t {graphicsVirtualKeyPath}::Mode = 2");
                 RegistryHelper.SetValue(graphicsVirtualKeyPath, "Mode", 2, RegistryValueKind.DWord);
 
                 Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::Options = 0x12");
                 RegistryHelper.SetValue(graphicsKeyPath, "Options", 0x12, RegistryValueKind.DWord);
+
+                Instance.RaiseProgressChanged($"\t {graphicsVirtualKeyPath}::Options = 0x12");
                 RegistryHelper.SetValue(graphicsVirtualKeyPath, "Options", 0x12, RegistryValueKind.DWord);
             }
             else
             {
                 Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::DriverPath = ");
                 RegistryHelper.SetValue(graphicsKeyPath, "DriverPath", "");
+
+                Instance.RaiseProgressChanged($"\t {graphicsVirtualKeyPath}::DriverPath = ");
                 RegistryHelper.SetValue(graphicsVirtualKeyPath, "DriverPath", "");
 
-                Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::Mode = 1");
-                RegistryHelper.SetValue(graphicsKeyPath, "Mode", 1, RegistryValueKind.DWord);
-                RegistryHelper.SetValue(graphicsVirtualKeyPath, "Mode", 1, RegistryValueKind.DWord);
+                int mode = Sys.Settings.GameLaunchSettings.FullScreenMode ? 2 : 1;
+
+                Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::Mode = {mode}");
+                RegistryHelper.SetValue(graphicsKeyPath, "Mode", mode, RegistryValueKind.DWord);
+
+                Instance.RaiseProgressChanged($"\t {graphicsVirtualKeyPath}::Mode = {mode}");
+                RegistryHelper.SetValue(graphicsVirtualKeyPath, "Mode", mode, RegistryValueKind.DWord);
 
                 if (Sys.Settings.GameLaunchSettings.UseRiva128GraphicsOption)
                 {
                     Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::Options = 0x0000000a");
                     RegistryHelper.SetValue(graphicsKeyPath, "Options", 0x0000000a, RegistryValueKind.DWord);
+
+                    Instance.RaiseProgressChanged($"\t {graphicsVirtualKeyPath}::Options = 0x0000000a");
                     RegistryHelper.SetValue(graphicsVirtualKeyPath, "Options", 0x0000000a, RegistryValueKind.DWord);
                 }
                 else if (Sys.Settings.GameLaunchSettings.UseTntGraphicsOption)
                 {
                     Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::Options = 0x12");
                     RegistryHelper.SetValue(graphicsKeyPath, "Options", 0x12, RegistryValueKind.DWord);
+
+                    Instance.RaiseProgressChanged($"\t {graphicsVirtualKeyPath}::Options = 0x12");
                     RegistryHelper.SetValue(graphicsVirtualKeyPath, "Options", 0x12, RegistryValueKind.DWord);
                 }
                 else
                 {
                     Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::Options = 0");
                     RegistryHelper.SetValue(graphicsKeyPath, "Options", 0, RegistryValueKind.DWord);
+
+                    Instance.RaiseProgressChanged($"\t {graphicsVirtualKeyPath}::Options = 0");
                     RegistryHelper.SetValue(graphicsVirtualKeyPath, "Options", 0, RegistryValueKind.DWord);
                 }
             }
 
             Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::DD_GUID = {Guid.Empty}");
             RegistryHelper.SetValue(graphicsKeyPath, "DD_GUID", Guid.Empty.ToByteArray(), RegistryValueKind.Binary);
+
+            Instance.RaiseProgressChanged($"\t {graphicsVirtualKeyPath}::DD_GUID = {Guid.Empty}");
             RegistryHelper.SetValue(graphicsVirtualKeyPath, "DD_GUID", Guid.Empty.ToByteArray(), RegistryValueKind.Binary);
 
 
@@ -992,27 +1039,37 @@ namespace SeventhHeaven.Classes
 
             Instance.RaiseProgressChanged($"\t {midiKeyPath}::MIDI_DeviceID = 0");
             RegistryHelper.SetValue(midiKeyPath, "MIDI_DeviceID", 0x00000000, RegistryValueKind.DWord);
+
+            Instance.RaiseProgressChanged($"\t {midiVirtualKeyPath}::MIDI_DeviceID = 0");
             RegistryHelper.SetValue(midiVirtualKeyPath, "MIDI_DeviceID", 0x00000000, RegistryValueKind.DWord);
 
 
             Instance.RaiseProgressChanged($"\t {midiKeyPath}::MIDI_data = {Sys.Settings.GameLaunchSettings.SelectedMidiDevice}");
             RegistryHelper.SetValue(midiKeyPath, "MIDI_data", Sys.Settings.GameLaunchSettings.SelectedMidiDevice);
+
+            Instance.RaiseProgressChanged($"\t {midiVirtualKeyPath}::MIDI_data = {Sys.Settings.GameLaunchSettings.SelectedMidiDevice}");
             RegistryHelper.SetValue(midiVirtualKeyPath, "MIDI_data", Sys.Settings.GameLaunchSettings.SelectedMidiDevice);
 
-            Instance.RaiseProgressChanged($"\t {midiKeyPath}::MusicVolume = {Sys.Settings.GameLaunchSettings.SoundVolume}");
-            RegistryHelper.SetValue(midiKeyPath, "MusicVolume", Sys.Settings.GameLaunchSettings.SoundVolume, RegistryValueKind.DWord);
-            RegistryHelper.SetValue(midiVirtualKeyPath, "MusicVolume", Sys.Settings.GameLaunchSettings.SoundVolume, RegistryValueKind.DWord);
+            Instance.RaiseProgressChanged($"\t {midiKeyPath}::MusicVolume = {Sys.Settings.GameLaunchSettings.MusicVolume}");
+            RegistryHelper.SetValue(midiKeyPath, "MusicVolume", Sys.Settings.GameLaunchSettings.MusicVolume, RegistryValueKind.DWord);
+
+            Instance.RaiseProgressChanged($"\t {midiVirtualKeyPath}::MusicVolume = {Sys.Settings.GameLaunchSettings.MusicVolume}");
+            RegistryHelper.SetValue(midiVirtualKeyPath, "MusicVolume", Sys.Settings.GameLaunchSettings.MusicVolume, RegistryValueKind.DWord);
 
             if (Sys.Settings.GameLaunchSettings.LogarithmicVolumeControl)
             {
                 Instance.RaiseProgressChanged($"\t {midiKeyPath}::Options = 1");
                 RegistryHelper.SetValue(midiKeyPath, "Options", 0x00000001, RegistryValueKind.DWord);
+
+                Instance.RaiseProgressChanged($"\t {midiVirtualKeyPath}::Options = 1");
                 RegistryHelper.SetValue(midiVirtualKeyPath, "Options", 0x00000001, RegistryValueKind.DWord);
             }
             else
             {
                 Instance.RaiseProgressChanged($"\t {midiKeyPath}::Options = 0");
                 RegistryHelper.SetValue(midiKeyPath, "Options", 0x00000000, RegistryValueKind.DWord);
+
+                Instance.RaiseProgressChanged($"\t {midiVirtualKeyPath}::Options = 0");
                 RegistryHelper.SetValue(midiVirtualKeyPath, "Options", 0x00000000, RegistryValueKind.DWord);
             }
 
@@ -1022,22 +1079,30 @@ namespace SeventhHeaven.Classes
 
             Instance.RaiseProgressChanged($"\t {soundKeyPath}::Sound_GUID = {Sys.Settings.GameLaunchSettings.SelectedSoundDevice}");
             RegistryHelper.SetValue(soundKeyPath, "Sound_GUID", Sys.Settings.GameLaunchSettings.SelectedSoundDevice.ToByteArray(), RegistryValueKind.Binary);
+
+            Instance.RaiseProgressChanged($"\t {soundVirtualKeyPath}::Sound_GUID = {Sys.Settings.GameLaunchSettings.SelectedSoundDevice}");
             RegistryHelper.SetValue(soundVirtualKeyPath, "Sound_GUID", Sys.Settings.GameLaunchSettings.SelectedSoundDevice.ToByteArray(), RegistryValueKind.Binary);
 
-            Instance.RaiseProgressChanged($"\t {soundKeyPath}::SFXVolume = {Sys.Settings.GameLaunchSettings.SoundVolume}");
-            RegistryHelper.SetValue(soundKeyPath, "SFXVolume", Sys.Settings.GameLaunchSettings.SoundVolume, RegistryValueKind.DWord);
-            RegistryHelper.SetValue(soundVirtualKeyPath, "SFXVolume", Sys.Settings.GameLaunchSettings.SoundVolume, RegistryValueKind.DWord);
+            Instance.RaiseProgressChanged($"\t {soundKeyPath}::SFXVolume = {Sys.Settings.GameLaunchSettings.SfxVolume}");
+            RegistryHelper.SetValue(soundKeyPath, "SFXVolume", Sys.Settings.GameLaunchSettings.SfxVolume, RegistryValueKind.DWord);
+
+            Instance.RaiseProgressChanged($"\t {soundVirtualKeyPath}::SFXVolume = {Sys.Settings.GameLaunchSettings.SfxVolume}");
+            RegistryHelper.SetValue(soundVirtualKeyPath, "SFXVolume", Sys.Settings.GameLaunchSettings.SfxVolume, RegistryValueKind.DWord);
 
             if (Sys.Settings.GameLaunchSettings.ReverseSpeakers)
             {
                 Instance.RaiseProgressChanged($"\t {soundKeyPath}::Options = 1");
                 RegistryHelper.SetValue(soundKeyPath, "Options", 0x00000001, RegistryValueKind.DWord);
+
+                Instance.RaiseProgressChanged($"\t {soundVirtualKeyPath}::Options = 1");
                 RegistryHelper.SetValue(soundVirtualKeyPath, "Options", 0x00000001, RegistryValueKind.DWord);
             }
             else
             {
                 Instance.RaiseProgressChanged($"\t {soundKeyPath}::Options = 0");
                 RegistryHelper.SetValue(soundKeyPath, "Options", 0x00000000, RegistryValueKind.DWord);
+
+                Instance.RaiseProgressChanged($"\t {soundVirtualKeyPath}::Options = 0");
                 RegistryHelper.SetValue(soundVirtualKeyPath, "Options", 0x00000000, RegistryValueKind.DWord);
             }
         }
@@ -1160,6 +1225,38 @@ namespace SeventhHeaven.Classes
                 Logger.Error(e);
                 return false;
             }
+        }
+
+        public static bool CopyKeyboardInputCfg()
+        {
+            string pathToCfg = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "Resources", "KBinputs", "ff7input.cfg" });
+            if (Sys.Settings.GameLaunchSettings.UseLaptopKeyboardIni)
+            {
+                Instance.RaiseProgressChanged($"\tusing laptop .cfg file ff7input-Laptop.cfg ...");
+                pathToCfg = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "Resources", "KBinputs", "ff7input-Laptop.cfg" });
+            }
+
+            if (!File.Exists(pathToCfg))
+            {
+                Instance.RaiseProgressChanged($"\tinput cfg file not found at {pathToCfg}");
+                return false;
+            }
+
+            try
+            {
+                string targetPath = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "ff7input.cfg");
+
+                Instance.RaiseProgressChanged($"\tcopying {pathToCfg} to {targetPath} ...");
+                File.Copy(pathToCfg, targetPath, true);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                Instance.RaiseProgressChanged($"\tfailed to copy .cfg file: {e.Message}");
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>

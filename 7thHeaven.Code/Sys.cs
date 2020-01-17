@@ -35,7 +35,8 @@ namespace Iros._7th.Workshop
     {
         Error,
         Info,
-        LogOnly
+        LogOnly,
+        StatusOnly
     }
 
     public class WMessage

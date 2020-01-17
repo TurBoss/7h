@@ -783,13 +783,27 @@ They will be automatically turned off.";
             }
 
             // log message to app log or status bar
-            if (e.Message.LogLevel != WMessageLogLevel.LogOnly)
+            switch (e.Message.LogLevel)
             {
-                StatusMessage = receivedMessage;
-            }
-            else
-            {
-                Logger.Info(receivedMessage);
+                case WMessageLogLevel.Error:
+                    StatusMessage = receivedMessage; // this will set the status bar and log to app log
+                    break;
+
+                case WMessageLogLevel.Info:
+                    StatusMessage = receivedMessage; // this will set the status bar and log to app log
+                    break;
+
+                case WMessageLogLevel.LogOnly: // only display in app log and not status bar
+                    Logger.Info(receivedMessage);
+                    break;
+
+                case WMessageLogLevel.StatusOnly: // only display in status bar and not in app log
+                    _statusMessage = receivedMessage;
+                    NotifyPropertyChanged(nameof(StatusMessage));
+                    break;
+
+                default:
+                    break;
             }
 
             // include exception in logs if it exists in message received

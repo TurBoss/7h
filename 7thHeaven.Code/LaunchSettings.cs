@@ -17,11 +17,18 @@ namespace _7thHeaven.Code
         public bool LogarithmicVolumeControl { get; set; }
         public Guid SelectedSoundDevice { get; set; }
         public string SelectedMidiDevice { get; set; }
-        public int SoundVolume { get; set; }
-        
+        public int MusicVolume { get; set; }
+        public int SfxVolume { get; set; }
+
         public int SelectedRenderer { get; set; }
         public bool UseRiva128GraphicsOption { get; set; }
         public bool UseTntGraphicsOption { get; set; }
+        public bool QuarterScreenMode { get; set; }
+        public bool FullScreenMode { get; set; }
+        public bool HasReceivedCode5Error { get; set; }
+        public bool ShowLauncherWindow { get; set; }
+
+        public bool UseLaptopKeyboardIni { get; set; }
 
         public static LaunchSettings DefaultSettings()
         {
@@ -35,12 +42,18 @@ namespace _7thHeaven.Code
                 DisableReunionOnLaunch = true,
                 SelectedSoundDevice = Guid.Empty,
                 ReverseSpeakers = false,
-                LogarithmicVolumeControl = false,
+                LogarithmicVolumeControl = true,
                 SelectedMidiDevice = "GENERAL_MIDI",
                 SelectedRenderer = 3,
-                SoundVolume = 100,
+                MusicVolume = 100,
+                SfxVolume = 100,
                 UseRiva128GraphicsOption = false,
-                UseTntGraphicsOption = false
+                UseTntGraphicsOption = false,
+                QuarterScreenMode = false,
+                FullScreenMode = false,
+                HasReceivedCode5Error = false,
+                ShowLauncherWindow = true,
+                UseLaptopKeyboardIni = false
             };
         }
     }

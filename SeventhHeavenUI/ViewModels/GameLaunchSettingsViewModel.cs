@@ -50,6 +50,12 @@ namespace SeventhHeaven.ViewModels
         private string _newProgramPathText;
         private string _newProgramArgsText;
         private bool _isProgramPopupOpen;
+        private int _sfxVolumeValue;
+        private bool _isQuarterScreenChecked;
+        private bool _isFullScreenChecked;
+        private bool _isShowLauncherChecked;
+        private bool _isStandardKeyboardChecked;
+        private bool _isLaptopKeyboardChecked;
 
         public string StatusMessage
         {
@@ -119,7 +125,6 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-
         public bool AutoUpdatePathChecked
         {
             get
@@ -130,6 +135,28 @@ namespace SeventhHeaven.ViewModels
             {
                 _autoUpdatePathChecked = value;
                 NotifyPropertyChanged();
+            }
+        }
+
+        public bool IsShowLauncherChecked
+        {
+            get
+            {
+                return _isShowLauncherChecked;
+            }
+            set
+            {
+                _isShowLauncherChecked = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+
+        public bool HasCode5Error
+        {
+            get
+            {
+                return Sys.Settings.GameLaunchSettings.HasReceivedCode5Error;
             }
         }
 
@@ -246,6 +273,66 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public bool IsScreenModeEnabled
+        {
+            get
+            {
+                return SelectedRenderer != "Custom Driver";
+            }
+        }
+
+        public bool IsQuarterScreenChecked
+        {
+            get
+            {
+                return _isQuarterScreenChecked;
+            }
+            set
+            {
+                _isQuarterScreenChecked = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public bool IsFullScreenChecked
+        {
+            get
+            {
+                return _isFullScreenChecked;
+            }
+            set
+            {
+                _isFullScreenChecked = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public bool IsStandardKeyboardChecked
+        {
+            get
+            {
+                return _isStandardKeyboardChecked;
+            }
+            set
+            {
+                _isStandardKeyboardChecked = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public bool IsLaptopKeyboardChecked
+        {
+            get
+            {
+                return _isLaptopKeyboardChecked;
+            }
+            set
+            {
+                _isLaptopKeyboardChecked = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public string SelectedSoundDevice
         {
             get
@@ -300,9 +387,18 @@ namespace SeventhHeaven.ViewModels
             }
             set
             {
+                if (_selectedRenderer == "Direct3D Hardware Acceleration" && value != _selectedRenderer)
+                {
+                    // clear these options when changing from 3D Hardware Renderer to a different value
+                    IsTntOptionChecked = false;
+                    IsRivaOptionChecked = false;
+                }
+
                 _selectedRenderer = value;
                 NotifyPropertyChanged();
                 NotifyPropertyChanged(nameof(IsRivaOptionEnabled));
+                NotifyPropertyChanged(nameof(IsScreenModeEnabled));
+
                 ShowWarningMessageAboutRenderer();
             }
         }
@@ -317,7 +413,7 @@ namespace SeventhHeaven.ViewModels
 
         public Dictionary<string, int> RendererMap { get; set; }
 
-        public int VolumeValue
+        public int MusicVolumeValue
         {
             get
             {
@@ -329,6 +425,20 @@ namespace SeventhHeaven.ViewModels
                 NotifyPropertyChanged();
             }
         }
+
+        public int SfxVolumeValue
+        {
+            get
+            {
+                return _sfxVolumeValue;
+            }
+            set
+            {
+                _sfxVolumeValue = value;
+                NotifyPropertyChanged();
+            }
+        }
+
 
         public bool IsProgramPopupOpen
         {
@@ -413,6 +523,11 @@ namespace SeventhHeaven.ViewModels
             Code5FixChecked = Sys.Settings.GameLaunchSettings.Code5Fix;
             HighDpiFixChecked = Sys.Settings.GameLaunchSettings.HighDpiFix;
 
+            IsShowLauncherChecked = Sys.Settings.GameLaunchSettings.ShowLauncherWindow;
+            IsStandardKeyboardChecked = Sys.Settings.GameLaunchSettings.UseLaptopKeyboardIni == false;
+            IsLaptopKeyboardChecked = Sys.Settings.GameLaunchSettings.UseLaptopKeyboardIni;
+
+
             // disable options to auto-mount if user OS does not support it
             IsAutoMountSupported = GameLauncher.OSHasAutoMountSupport();
 
@@ -456,7 +571,8 @@ namespace SeventhHeaven.ViewModels
                                               .Select(s => s.Key)
                                               .FirstOrDefault();
 
-            VolumeValue = Sys.Settings.GameLaunchSettings.SoundVolume;
+            MusicVolumeValue = Sys.Settings.GameLaunchSettings.MusicVolume;
+            SfxVolumeValue = Sys.Settings.GameLaunchSettings.SfxVolume;
             IsReverseSpeakersChecked = Sys.Settings.GameLaunchSettings.ReverseSpeakers;
             IsLogVolumeChecked = Sys.Settings.GameLaunchSettings.LogarithmicVolumeControl;
 
@@ -466,6 +582,8 @@ namespace SeventhHeaven.ViewModels
 
             IsRivaOptionChecked = Sys.Settings.GameLaunchSettings.UseRiva128GraphicsOption;
             IsTntOptionChecked = Sys.Settings.GameLaunchSettings.UseTntGraphicsOption;
+            IsQuarterScreenChecked = Sys.Settings.GameLaunchSettings.QuarterScreenMode;
+            IsFullScreenChecked = Sys.Settings.GameLaunchSettings.FullScreenMode;
         }
 
         internal bool SaveSettings()
@@ -477,6 +595,9 @@ namespace SeventhHeaven.ViewModels
                 Sys.Settings.GameLaunchSettings.AutoMountGameDisc = AutoMountChecked;
                 Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc = AutoUnmountChecked;
                 Sys.Settings.GameLaunchSettings.AutoUpdateDiscPath = AutoUpdatePathChecked;
+                Sys.Settings.GameLaunchSettings.ShowLauncherWindow = IsShowLauncherChecked;
+
+                Sys.Settings.GameLaunchSettings.UseLaptopKeyboardIni = IsLaptopKeyboardChecked;
 
                 Sys.Settings.GameLaunchSettings.Code5Fix = Code5FixChecked;
                 Sys.Settings.GameLaunchSettings.HighDpiFix = HighDpiFixChecked;
@@ -495,13 +616,16 @@ namespace SeventhHeaven.ViewModels
 
                 Sys.Settings.GameLaunchSettings.SelectedSoundDevice = SoundDeviceGuids[SelectedSoundDevice];
                 Sys.Settings.GameLaunchSettings.SelectedMidiDevice = MidiDeviceMap[SelectedMidiDevice];
-                Sys.Settings.GameLaunchSettings.SoundVolume = VolumeValue;
+                Sys.Settings.GameLaunchSettings.MusicVolume = MusicVolumeValue;
+                Sys.Settings.GameLaunchSettings.SfxVolume = SfxVolumeValue;
                 Sys.Settings.GameLaunchSettings.ReverseSpeakers = IsReverseSpeakersChecked;
                 Sys.Settings.GameLaunchSettings.LogarithmicVolumeControl = IsLogVolumeChecked;
 
                 Sys.Settings.GameLaunchSettings.SelectedRenderer = RendererMap[SelectedRenderer];
                 Sys.Settings.GameLaunchSettings.UseRiva128GraphicsOption = IsRivaOptionChecked;
                 Sys.Settings.GameLaunchSettings.UseTntGraphicsOption = IsTntOptionChecked;
+                Sys.Settings.GameLaunchSettings.QuarterScreenMode = IsQuarterScreenChecked;
+                Sys.Settings.GameLaunchSettings.FullScreenMode = IsFullScreenChecked;
 
                 Sys.Save();
 
@@ -540,8 +664,8 @@ namespace SeventhHeaven.ViewModels
             MidiDeviceMap = new Dictionary<string, string>()
             {
                 { "General MIDI", "GENERAL_MIDI" },
-                { "Yamaha XG MIDI", "YAMAHA_XG" },
-                { "Soundfont MIDI (Creative AWE32/AWE64)", "SOUNDFONT_MIDI" }
+                { "Soundfont MIDI (Creative AWE32/AWE64)", "SOUNDFONT_MIDI" },
+                { "Yamaha XG MIDI", "YAMAHA_XG" }
             };
         }
 
@@ -614,11 +738,11 @@ namespace SeventhHeaven.ViewModels
                 _audioTest = new WaveOut
                 {
                     DeviceNumber = GetSelectedSoundDeviceNumber(),
-                    Volume = (float)VolumeValue / (float)100.0
+                    Volume = (float)MusicVolumeValue / (float)100.0
                 };
 
                 _audioTest.Init(waveProvider);
-                
+
                 _audioTest.PlaybackStopped += AudioTest_PlaybackStopped;
                 _audioTest.Play();
 
