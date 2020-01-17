@@ -1,5 +1,6 @@
 ﻿using Iros._7th;
 using Iros._7th.Workshop;
+using SeventhHeaven.Classes;
 using SeventhHeaven.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -141,12 +142,13 @@ namespace SeventhHeaven.Windows
 
             if (!Directory.Exists(pathToCache))
             {
+                SetStatusMessage("Path to cache folder does not exist.");
                 return;
             }
 
             try
             {
-                foreach (string file in Directory.GetFiles(pathToCache))
+                foreach (string file in Directory.GetFiles(pathToCache, "*.ctx", SearchOption.AllDirectories))
                 {
                     try
                     {
@@ -158,12 +160,15 @@ namespace SeventhHeaven.Windows
                     }
                 }
 
-                txtStatusMessage.Text = "Texture cache cleared!";
+                // delete empty folders recursively
+                FileUtils.DeleteEmptyFolders(pathToCache);
+
+                SetStatusMessage("Texture cache cleared!");
             }
             catch (Exception ex)
             {
                 Logger.Error(ex);
-                txtStatusMessage.Text = $"Failed to clear texture cache: {ex.Message}";
+                SetStatusMessage($"Failed to clear texture cache: {ex.Message}");
             }
         }
 

@@ -87,6 +87,11 @@ namespace SeventhHeavenUI.ViewModels
         /// </summary>
         internal void ReloadModList(Guid? modToSelect = null, string searchText = "", IEnumerable<FilterItemViewModel> categories = null, IEnumerable<FilterItemViewModel> tags = null)
         {
+            // make sure to remove any deleted items and auto import mods first
+            Sys.ActiveProfile.RemoveDeletedItems();
+            Sys.TryAutoImportMods();
+
+
             // if there are no mods installed then just clear the list and return since no extra filtering work needs to be done
             if (Sys.Library.Items.Count == 0)
             {
@@ -103,10 +108,6 @@ namespace SeventhHeavenUI.ViewModels
             categories = _previousReloadOptions.SetOrGetPreviousCategories(categories);
             searchText = _previousReloadOptions.SetOrGetPreviousSearchText(searchText);
             tags = _previousReloadOptions.SetOrGetPreviousTags(tags);
-
-            Sys.ActiveProfile.RemoveDeletedItems();
-
-            Sys.TryAutoImportMods();
 
             List<InstalledModViewModel> allMods = new List<InstalledModViewModel>();
 

@@ -192,6 +192,33 @@ namespace SeventhHeaven.Classes
             }
         }
 
+        internal static void DeleteEmptyFolders(string pathToCache)
+        {
+            if (!Directory.Exists(pathToCache))
+            {
+                return;
+            }
+
+            string[] childDirs = Directory.GetDirectories(pathToCache);
+
+            if (childDirs.Length == 0)
+            {
+                return;
+            }
+
+            // recurse to each child directory to delete
+            foreach (string child in childDirs)
+            {
+                DeleteEmptyFolders(child);
+
+                // delete the child if it is empty
+                if (Directory.GetFileSystemEntries(child).Length == 0)
+                {
+                    Directory.Delete(child);
+                }
+            }
+        }
+
         public static List<string> GetAllFilesInDirectory(string directoryPath)
         {
             List<string> allFiles = new List<string>();

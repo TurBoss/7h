@@ -468,11 +468,20 @@ namespace SeventhHeaven.ViewModels
                     _mp3Reader = null;
                 }
 
-                _audio.PlaybackStopped -= PreviewAudio_PlaybackStopped;
-                _audio.Stop();
-                _audio.Dispose();
-                _audio = null;
 
+                try
+                {
+                    _audio.PlaybackStopped -= PreviewAudio_PlaybackStopped;
+                    _audio.Stop();
+                    _audio.Dispose();
+                }
+                catch (Exception e)
+                {
+                    Logger.Warn($"Error stopping audio: {e.Message}");
+                }
+
+
+                _audio = null;
                 NotifyPropertyChanged(nameof(IsPlayingAudio));
             }
         }
@@ -561,30 +570,33 @@ namespace SeventhHeaven.ViewModels
             {
                 try
                 {
-                    _audio = new NAudio.Wave.WaveOut();
 
                     if (_audioFileName.EndsWith(".ogg", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        if (_audioPath != null)
+                        if (!string.IsNullOrWhiteSpace(_audioPath))
                         {
+                            _audio = new NAudio.Wave.WaveOut();
                             _waveReader = new NAudio.Vorbis.VorbisWaveReader(_audioPath);
                             _audio.Init(_waveReader);
                         }
                         else if (_audioFile != null)
                         {
+                            _audio = new NAudio.Wave.WaveOut();
                             _waveReader = new NAudio.Vorbis.VorbisWaveReader(_audioFile);
                             _audio.Init(_waveReader);
                         }
                     }
                     else if (_audioFileName.EndsWith(".mp3", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        if (_audioPath != null)
+                        if (!string.IsNullOrWhiteSpace(_audioPath))
                         {
+                            _audio = new NAudio.Wave.WaveOut();
                             _mp3Reader = new NAudio.Wave.Mp3FileReader(_audioPath);
                             _audio.Init(_mp3Reader);
                         }
                         else if (_audioFile != null)
                         {
+                            _audio = new NAudio.Wave.WaveOut();
                             _mp3Reader = new NAudio.Wave.Mp3FileReader(_audioFile);
                             _audio.Init(_mp3Reader);
                         }
@@ -595,15 +607,22 @@ namespace SeventhHeaven.ViewModels
                         return;
                     }
 
-                    _audio.PlaybackStopped += PreviewAudio_PlaybackStopped;
-                    _audio.Play();
+                    if (_waveReader != null || _mp3Reader != null)
+                    {
+                        _audio.PlaybackStopped += PreviewAudio_PlaybackStopped;
+                        _audio.Play();
+                    }
+                    else
+                    {
+                        Sys.Message(new WMessage($"Failed to play preview audio {_audioFileName}"));
+                    }
 
                     NotifyPropertyChanged(nameof(IsPlayingAudio));
                 }
                 catch (Exception e)
                 {
                     Logger.Error(e);
-                    Sys.Message(new WMessage($"Failed to play preview audio {_audioFileName}"));
+                    Sys.Message(new WMessage($"Failed to play preview audio {_audioFileName}: {e.Message}"));
                 }
 
             }

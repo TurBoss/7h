@@ -201,7 +201,7 @@ namespace SeventhHeaven.Classes
             if (debug)
             {
                 runtimeProfile.Options |= RuntimeOptions.DetailedLog;
-                runtimeProfile.LogFile = Path.Combine(Sys.SysFolder, "log.txt");
+                runtimeProfile.LogFile = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "log.txt");
 
                 Instance.RaiseProgressChanged($"Debug Logging set to true. Detailed logging will be written to {runtimeProfile.LogFile} ...");
             }
@@ -303,7 +303,8 @@ namespace SeventhHeaven.Classes
                     // ... this could fail and leave the process open which causes problems for the next attempt so make sure the process is killed on failure
                     if (!didInject)
                     {
-                        var openProcs = Process.GetProcessesByName("ff7");
+                        string procName = Path.GetFileNameWithoutExtension(Sys.Settings.FF7Exe);
+                        var openProcs = Process.GetProcessesByName(procName);
                         foreach (Process proc in openProcs)
                         {
                             if (!proc.HasExited)
@@ -552,7 +553,8 @@ namespace SeventhHeaven.Classes
 
         private static void StartTurboLogForVariableDump(RuntimeProfile runtimeProfiles)
         {
-            string turboLogProcName = "TurBoLog.exe";
+            string turboLogProcName = Path.Combine(Sys._7HFolder, "TurBoLog.exe");
+
             // remove from dictionary (and stop other turbolog exe) if exists
             if (Instance._alsoLaunchProcesses.ContainsKey(turboLogProcName))
             {
@@ -567,7 +569,7 @@ namespace SeventhHeaven.Classes
 
             ProcessStartInfo psi = new ProcessStartInfo(turboLogProcName)
             {
-                WorkingDirectory = Path.GetDirectoryName(turboLogProcName)
+                WorkingDirectory = Path.GetDirectoryName(Sys.Settings.FF7Exe)
             };
             Process aproc = Process.Start(psi);
 
