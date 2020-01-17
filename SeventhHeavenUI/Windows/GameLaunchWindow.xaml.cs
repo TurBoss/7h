@@ -67,7 +67,7 @@ namespace SeventhHeaven.Windows
         }
 
         /// <summary>
-        /// starts the game launch process asynchronously when window loads
+        /// starts the game launcher process asynchronously when window loads
         /// </summary>
         private Task<bool> StartGameLaunchProcessAsync()
         {

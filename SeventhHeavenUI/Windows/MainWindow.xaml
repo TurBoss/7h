@@ -112,8 +112,8 @@
                         <ContextMenu x:Name="menuSettings" Closed="menuSettings_Closed">
                             <MenuItem x:Name="menuItemThemeSettings" Header="Change Color Theme..." Click="menuItemThemeSettings_Click"/>
                             <MenuItem x:Name="menuItemGeneralSettings" Header="General Settings..." Click="menuItemGeneralSettings_Click"/>
-                            <MenuItem x:Name="menuItemAaliSettings" Header="Configure Game Driver..." Click="menuItemAaliSettings_Click"/>
-                            <MenuItem x:Name="menuItemLaunchSettings" Header="Game Launch Settings..." Click="menuItemLaunchSettings_Click"/>
+                            <MenuItem x:Name="menuItemAaliSettings" Header="Game Driver..." Click="menuItemAaliSettings_Click"/>
+                            <MenuItem x:Name="menuItemLaunchSettings" Header="Game Launcher..." Click="menuItemLaunchSettings_Click"/>
 
                             <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
                             <MenuItem x:Name="menuItemOpenProfile" Header="Profiles..." Click="menuItemOpenProfile_Click"/>

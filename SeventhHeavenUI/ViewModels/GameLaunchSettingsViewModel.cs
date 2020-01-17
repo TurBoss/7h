@@ -513,7 +513,7 @@ namespace SeventhHeaven.ViewModels
         {
             if (Sys.Settings.GameLaunchSettings == null)
             {
-                Logger.Warn("No game launch settings found, initializing to defaults.");
+                Logger.Warn("No game launcher settings found, initializing to defaults.");
                 Sys.Settings.GameLaunchSettings = LaunchSettings.DefaultSettings();
             }
 
@@ -629,7 +629,7 @@ namespace SeventhHeaven.ViewModels
 
                 Sys.Save();
 
-                Sys.Message(new WMessage("Game Launch settings updated!", true));
+                Sys.Message(new WMessage("Game Launcher settings updated!"));
                 return true;
             }
             catch (Exception e)
@@ -794,7 +794,7 @@ namespace SeventhHeaven.ViewModels
         {
             if (GameLauncher.IsReunionModInstalled() && !DisableReunionChecked)
             {
-                string warningMsg = "Reunion R06 and newer, even when disabled in Options.ini, forces a custom game driver to load when you run FF7. This conflicts with 7th Heaven's game driver, breaks your graphics settings, and you will experience problems!\n\nIf you wish to play Reunion, do so using a compatible modded version built for 7th Heaven.\n\nAre you sure?";
+                string warningMsg = "Reunion R06 and newer, even when disabled in Options.ini, forces a custom game driver to load when you run FF7. This conflicts with 7th Heaven's game driver, breaks your graphics settings, and you will experience problems.\n\nIf you wish to play Reunion, do so using a compatible modded version built for 7th Heaven.\n\nAre you sure?";
                 var result = MessageDialogWindow.Show(warningMsg, "You should leave this setting ON!", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
                 if (result.Result == MessageBoxResult.No)
