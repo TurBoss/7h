@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,6 +23,13 @@ namespace SeventhHeaven.Classes
         Steam,
         ReRelease,
         Original98
+    }
+
+    internal enum GraphicsRenderer
+    {
+        SoftwareRenderer = 0,
+        D3DHardwareAccelerated = 1,
+        CustomDriver = 3
     }
 
     /// <summary>
@@ -58,7 +66,10 @@ namespace SeventhHeaven.Classes
 
         #endregion
 
-        public static bool LaunchGame(bool varDump, bool debug)
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        public static bool LaunchGame(bool varDump, bool debug, bool launchWithNoMods = false)
         {
             Instance.RaiseProgressChanged("Checking mod compatibility requirements ...");
             if (!SanityCheckCompatibility())
@@ -98,18 +109,9 @@ namespace SeventhHeaven.Classes
                 return false;
             }
 
-            Instance.RaiseProgressChanged("Checking if Reunion mod is installed ...");
-            Instance.RaiseProgressChanged($"\tfound: {IsReunionModInstalled()}");
-
-
-            bool didDisableReunion = false;
-            if (IsReunionModInstalled() && Sys.Settings.GameLaunchSettings.DisableReunionOnLaunch)
-            {
-                Instance.RaiseProgressChanged("Disabling Reunion mod (rename ddraw.dll -> Reunion.dll.bak) ...");
-                EnableOrDisableReunionMod(doEnable: false);
-                didDisableReunion = true;
-            }
-
+            //
+            // Get Drive Letter and auto mount if needed
+            //
             Instance.RaiseProgressChanged("Looking for game disc ...");
             Instance.DriveLetter = GetDriveLetter();
 
@@ -153,41 +155,73 @@ namespace SeventhHeaven.Classes
                 }
             }
 
+            //
+            // Update Registry with new launch settings
+            // 
             Instance.SetRegistryValues();
             Instance.SetCompatibilityFlagsInRegistry();
 
-            if (Sys.ActiveProfile.ActiveItems.Count == 0)
-            {
-                string vanillaMsg = "No mods have been activated. The game will now launch as 'vanilla'";
-                Instance.RaiseProgressChanged(vanillaMsg);
-                Sys.Message(new WMessage(vanillaMsg, true));
 
-                LaunchFF7Exe();
-                return true;
+            //
+            // Determine if game will be ran as 'vanilla' with mods so don't have to inject with EasyHook
+            //
+            bool runAsVanilla = false;
+            string vanillaMsg = "";
+
+            if (launchWithNoMods)
+            {
+                vanillaMsg = "User requested to play with no mods. Launching game as 'vanilla' ...";
+                runAsVanilla = true;
+            }
+            else if (Sys.ActiveProfile.ActiveItems.Count == 0)
+            {
+                vanillaMsg = "No mods have been activated. Launching game as 'vanilla' ...";
+                runAsVanilla = true;
+            }
+            else if (Sys.Settings.GameLaunchSettings.SelectedRenderer != (int)GraphicsRenderer.CustomDriver)
+            {
+                vanillaMsg = "Selected Renderer is not set to 'Custom Driver'. Launching game as 'vanilla' ...";
+                runAsVanilla = true;
             }
 
 
-            Instance.RaiseProgressChanged("Creating Runtime Profile ...");
-            RuntimeProfile runtimeProfile = CreateRuntimeProfile();
 
-            if (runtimeProfile == null)
+            RuntimeProfile runtimeProfile = null;
+
+            if (!runAsVanilla)
             {
-                Instance.RaiseProgressChanged("\tfailed to create Runtime Profile for active mods ...");
-                return false;
+                //
+                // Create Runtime Profile for Active Mods
+                //
+                Instance.RaiseProgressChanged("Creating Runtime Profile ...");
+                runtimeProfile = CreateRuntimeProfile();
+
+                if (runtimeProfile == null)
+                {
+                    Instance.RaiseProgressChanged("\tfailed to create Runtime Profile for active mods ...");
+                    return false;
+                }
+
+                //
+                // Start Turbolog for Variable Dump
+                //
+                if (varDump)
+                {
+                    Instance.RaiseProgressChanged("Variable Dump set to true. Starting TurBoLog ...");
+                    StartTurboLogForVariableDump(runtimeProfile);
+                }
+
+                //
+                // Copy EasyHook.dll to FF7
+                //
+                Instance.RaiseProgressChanged("Copying EasyHook.dll to FF7 path (if not found or older version detected) ...");
+                CopyEasyHookDlls();
             }
 
 
-            if (varDump)
-            {
-                Instance.RaiseProgressChanged("Variable Dump set to true. Starting TurBoLog ...");
-                StartTurboLogForVariableDump(runtimeProfile);
-            }
-
-            // copy EasyHook.dll to FF7
-            Instance.RaiseProgressChanged("Copying EasyHook.dll to FF7 path (if not found or older version detected) ...");
-            CopyEasyHookDlls();
-
-
+            //
+            // Copy input.cfg to FF7
+            //
             Instance.RaiseProgressChanged("Copying ff7input.cfg to FF7 path ...");
             bool didCopyCfg = CopyKeyboardInputCfg();
 
@@ -197,7 +231,9 @@ namespace SeventhHeaven.Classes
             }
 
 
-            // setup log file if debugging
+            //
+            // Setup log file if debugging
+            //
             if (debug)
             {
                 runtimeProfile.Options |= RuntimeOptions.DetailedLog;
@@ -206,6 +242,43 @@ namespace SeventhHeaven.Classes
                 Instance.RaiseProgressChanged($"Debug Logging set to true. Detailed logging will be written to {runtimeProfile.LogFile} ...");
             }
 
+            //
+            // Check/Disable Reunion Mod
+            //
+            Instance.RaiseProgressChanged("Checking if Reunion mod is installed ...");
+            Instance.RaiseProgressChanged($"\tfound: {IsReunionModInstalled()}");
+
+            bool didDisableReunion = false;
+            if (IsReunionModInstalled() && Sys.Settings.GameLaunchSettings.DisableReunionOnLaunch)
+            {
+                Instance.RaiseProgressChanged("Disabling Reunion mod (rename ddraw.dll -> Reunion.dll.bak) ...");
+                EnableOrDisableReunionMod(doEnable: false);
+                didDisableReunion = true;
+            }
+
+            // start FF7 proc as normal and return true when running the game as vanilla
+            if (runAsVanilla)
+            {
+                Instance.RaiseProgressChanged(vanillaMsg);
+                Sys.Message(new WMessage(vanillaMsg, true));
+                LaunchFF7Exe();
+
+                if (didDisableReunion)
+                {
+                    Task.Factory.StartNew(() =>
+                    {
+                        System.Threading.Thread.Sleep(5000); // wait 5 seconds before renaming the dll so the game and gl driver can fully initialize
+                        Instance.RaiseProgressChanged("Re-enabling Reunion mod (rename Reunion.dll.bak -> ddraw.dll) ...");
+                        EnableOrDisableReunionMod(doEnable: true);
+                    });
+                }
+
+                return true;
+            }
+
+            //
+            // Attempt to Create FF7 Proc and Inject with EasyHook
+            //
             int pid;
             try
             {
@@ -352,7 +425,7 @@ namespace SeventhHeaven.Classes
                 }
 
 
-                Instance.RaiseProgressChanged("Getting ff7 proc ...");
+                Instance.RaiseProgressChanged("Getting FF7 proc ...");
                 var ff7Proc = Process.GetProcessById(pid);
                 if (ff7Proc != null)
                 {
@@ -404,10 +477,12 @@ namespace SeventhHeaven.Classes
                     foreach (var plugin in Instance._plugins.Values)
                         plugin.Stop();
 
+                    Instance.RaiseProgressChanged("Stopping other programs for mods started by 7H ...");
                     Instance.StopAllSideProcessesForMods();
 
                     if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc)
                     {
+                        Instance.RaiseProgressChanged("Auto unmounting game disc ...");
                         UnmountIso();
                     }
                 };
@@ -427,6 +502,12 @@ namespace SeventhHeaven.Classes
                 {
                     Instance.RaiseProgressChanged("Re-enabling Reunion mod (rename Reunion.dll.bak -> ddraw.dll) ...");
                     EnableOrDisableReunionMod(doEnable: true);
+                }
+
+                // ensure ff7 window is active at end of launching
+                if (ff7Proc.MainWindowHandle != IntPtr.Zero)
+                {
+                    SetForegroundWindow(ff7Proc.MainWindowHandle);
                 }
 
                 return true;
@@ -584,24 +665,20 @@ namespace SeventhHeaven.Classes
         /// </summary>
         internal static bool LaunchFF7Exe()
         {
-            // remove the flag for 640x480 when playing vanilla since Easy Hook is not being used
-            if (Sys.Settings.HasOption(GeneralOptions.SetEXECompatFlags))
-            {
-                RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
-
-                try
-                {
-                    ff7CompatKey?.DeleteValue(Sys.Settings.FF7Exe);
-                }
-                catch (Exception e)
-                {
-                    // will fail if already deleted
-                }
-            }
-
             try
             {
-                Process.Start(Sys.Settings.FF7Exe);
+                Process ff7Proc = Process.Start(Sys.Settings.FF7Exe);
+
+                ff7Proc.EnableRaisingEvents = true;
+                ff7Proc.Exited += (o, e) =>
+                {
+                    if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc)
+                    {
+                        Instance.RaiseProgressChanged("Auto unmounting game disc ...");
+                        UnmountIso();
+                    }
+                };
+
                 return true;
             }
             catch (Exception ex)
@@ -823,7 +900,7 @@ namespace SeventhHeaven.Classes
                 return false;
             }
 
-            return Directory.GetFiles(installPath).Any(s => s.EndsWith("ddraw.dll"));
+            return Directory.GetFiles(installPath).Any(s => new FileInfo(s).Name.Equals("ddraw.dll", StringComparison.InvariantCultureIgnoreCase));
         }
 
         public static bool EnableOrDisableReunionMod(bool doEnable)
@@ -952,8 +1029,8 @@ namespace SeventhHeaven.Classes
             RegistryHelper.SetValue(virtualStorePath, "FullInstall", 1, RegistryValueKind.DWord);
 
 
-            Instance.RaiseProgressChanged($"\t {RegistryHelper.GetKeyPath(FF7RegKey.FF7AppKeyPath)}::Path = {installPath}");
-            RegistryHelper.SetValue(RegistryHelper.GetKeyPath(FF7RegKey.FF7AppKeyPath), "Path", installPath);
+            Instance.RaiseProgressChanged($"\t {RegistryHelper.GetKeyPath(FF7RegKey.FF7AppKeyPath)}::Path = {installPath.TrimEnd('\\')}");
+            RegistryHelper.SetValue(RegistryHelper.GetKeyPath(FF7RegKey.FF7AppKeyPath), "Path", installPath.TrimEnd('\\'));
 
 
             // Add registry key values for Graphics
@@ -1028,11 +1105,13 @@ namespace SeventhHeaven.Classes
                 }
             }
 
-            Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::DD_GUID = {Guid.Empty}");
-            RegistryHelper.SetValue(graphicsKeyPath, "DD_GUID", Guid.Empty.ToByteArray(), RegistryValueKind.Binary);
+            byte[] emptyGuidBytes = Guid.Empty.ToByteArray();
 
-            Instance.RaiseProgressChanged($"\t {graphicsVirtualKeyPath}::DD_GUID = {Guid.Empty}");
-            RegistryHelper.SetValue(graphicsVirtualKeyPath, "DD_GUID", Guid.Empty.ToByteArray(), RegistryValueKind.Binary);
+            Instance.RaiseProgressChanged($"\t {graphicsKeyPath}::DD_GUID = {BitConverter.ToString(emptyGuidBytes).Replace("-", ",")}");
+            RegistryHelper.SetValue(graphicsKeyPath, "DD_GUID", emptyGuidBytes, RegistryValueKind.Binary);
+
+            Instance.RaiseProgressChanged($"\t {graphicsVirtualKeyPath}::DD_GUID = {BitConverter.ToString(emptyGuidBytes).Replace("-", ",")}");
+            RegistryHelper.SetValue(graphicsVirtualKeyPath, "DD_GUID", emptyGuidBytes, RegistryValueKind.Binary);
 
 
             // Add registry key values for MIDI
@@ -1079,11 +1158,13 @@ namespace SeventhHeaven.Classes
             string soundKeyPath = $"{ff7KeyPath}\\1.00\\Sound";
             string soundVirtualKeyPath = $"{virtualStorePath}\\1.00\\Sound";
 
-            Instance.RaiseProgressChanged($"\t {soundKeyPath}::Sound_GUID = {Sys.Settings.GameLaunchSettings.SelectedSoundDevice}");
-            RegistryHelper.SetValue(soundKeyPath, "Sound_GUID", Sys.Settings.GameLaunchSettings.SelectedSoundDevice.ToByteArray(), RegistryValueKind.Binary);
+            byte[] soundGuidBytes = Sys.Settings.GameLaunchSettings.SelectedSoundDevice.ToByteArray();
 
-            Instance.RaiseProgressChanged($"\t {soundVirtualKeyPath}::Sound_GUID = {Sys.Settings.GameLaunchSettings.SelectedSoundDevice}");
-            RegistryHelper.SetValue(soundVirtualKeyPath, "Sound_GUID", Sys.Settings.GameLaunchSettings.SelectedSoundDevice.ToByteArray(), RegistryValueKind.Binary);
+            Instance.RaiseProgressChanged($"\t {soundKeyPath}::Sound_GUID = {BitConverter.ToString(soundGuidBytes).Replace("-", ",")}");
+            RegistryHelper.SetValue(soundKeyPath, "Sound_GUID", soundGuidBytes, RegistryValueKind.Binary);
+
+            Instance.RaiseProgressChanged($"\t {soundVirtualKeyPath}::Sound_GUID = {BitConverter.ToString(soundGuidBytes).Replace("-", ",")}");
+            RegistryHelper.SetValue(soundVirtualKeyPath, "Sound_GUID", soundGuidBytes, RegistryValueKind.Binary);
 
             Instance.RaiseProgressChanged($"\t {soundKeyPath}::SFXVolume = {Sys.Settings.GameLaunchSettings.SfxVolume}");
             RegistryHelper.SetValue(soundKeyPath, "SFXVolume", Sys.Settings.GameLaunchSettings.SfxVolume, RegistryValueKind.DWord);

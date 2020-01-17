@@ -121,7 +121,7 @@
                               IsChecked="{Binding DisableReunionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding IsReunionInstalled}"
                               MouseEnter="Control_MouseEnter"
-                              ToolTip="Temporarily renames ddraw.dll to reunion.dll on game launch, then immediately back again. Does not affect playability of Reunion outside of 7H"/>
+                              ToolTip="Temporarily renames ddraw.dll to Reunion.dll.bak on game launch, then immediately back again. Does not affect playability of Reunion outside of 7H"/>
                 </StackPanel>
             </GroupBox>
         </StackPanel>
@@ -305,20 +305,20 @@
                            ToolTipService.IsEnabled="False">
                     <RadioButton Content="Quarter Screen" VerticalAlignment="Center" Margin="0,0,10,0"
                                  GroupName="ScreenMode"
-                                 IsEnabled="{Binding IsScreenModeEnabled}"
+                                 Visibility="{Binding ScreenModesVisibility}"
                                  IsChecked="{Binding IsQuarterScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <RadioButton Content="Full Screen" VerticalAlignment="Center" Margin="0,0,40,0"
                                  GroupName="ScreenMode"
-                                 IsEnabled="{Binding IsScreenModeEnabled}"
+                                 Visibility="{Binding ScreenModesVisibility}"
                                  IsChecked="{Binding IsFullScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     
                     <RadioButton Content="RIVA 128" VerticalAlignment="Center" Margin="0,0,10,0"
                                  GroupName="GraphicsOption"
-                                 IsEnabled="{Binding IsRivaOptionEnabled}"
+                                 Visibility="{Binding RivaOptionsVisibility}"
                                  IsChecked="{Binding IsRivaOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <RadioButton Content="TNT" VerticalAlignment="Center" Margin="0,0,10,0"
                                  GroupName="GraphicsOption"
-                                 IsEnabled="{Binding IsRivaOptionEnabled}"
+                                 Visibility="{Binding RivaOptionsVisibility}"
                                  IsChecked="{Binding IsTntOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     
 

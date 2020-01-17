@@ -252,11 +252,14 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-        public bool IsRivaOptionEnabled
+        public Visibility RivaOptionsVisibility
         {
             get
             {
-                return SelectedRenderer == "Direct3D Hardware Acceleration";
+                if (SelectedRenderer == "Direct3D Hardware Acceleration")
+                    return Visibility.Visible;
+
+                return Visibility.Hidden;
             }
         }
 
@@ -273,11 +276,14 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-        public bool IsScreenModeEnabled
+        public Visibility ScreenModesVisibility
         {
             get
             {
-                return SelectedRenderer != "Custom Driver";
+                if (SelectedRenderer != "Custom Driver")
+                    return Visibility.Visible;
+
+                return Visibility.Hidden;
             }
         }
 
@@ -387,17 +393,10 @@ namespace SeventhHeaven.ViewModels
             }
             set
             {
-                if (_selectedRenderer == "Direct3D Hardware Acceleration" && value != _selectedRenderer)
-                {
-                    // clear these options when changing from 3D Hardware Renderer to a different value
-                    IsTntOptionChecked = false;
-                    IsRivaOptionChecked = false;
-                }
-
                 _selectedRenderer = value;
                 NotifyPropertyChanged();
-                NotifyPropertyChanged(nameof(IsRivaOptionEnabled));
-                NotifyPropertyChanged(nameof(IsScreenModeEnabled));
+                NotifyPropertyChanged(nameof(RivaOptionsVisibility));
+                NotifyPropertyChanged(nameof(ScreenModesVisibility));
 
                 ShowWarningMessageAboutRenderer();
             }
@@ -495,6 +494,8 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        private bool HasLoaded { get; set; }
+
         public GameLaunchSettingsViewModel()
         {
             StatusMessage = "";
@@ -502,6 +503,7 @@ namespace SeventhHeaven.ViewModels
             NewProgramArgsText = "";
             IsProgramPopupOpen = false;
             _audioTest = null;
+            HasLoaded = false;
 
             InitSoundDevices();
             InitRenderers();
@@ -511,6 +513,8 @@ namespace SeventhHeaven.ViewModels
 
         private void LoadSettings()
         {
+            HasLoaded = false;
+
             if (Sys.Settings.GameLaunchSettings == null)
             {
                 Logger.Warn("No game launcher settings found, initializing to defaults.");
@@ -584,6 +588,8 @@ namespace SeventhHeaven.ViewModels
             IsTntOptionChecked = Sys.Settings.GameLaunchSettings.UseTntGraphicsOption;
             IsQuarterScreenChecked = Sys.Settings.GameLaunchSettings.QuarterScreenMode;
             IsFullScreenChecked = Sys.Settings.GameLaunchSettings.FullScreenMode;
+
+            HasLoaded = true;
         }
 
         internal bool SaveSettings()
@@ -784,6 +790,12 @@ namespace SeventhHeaven.ViewModels
         /// </summary>
         private void ShowWarningMessageAboutRenderer()
         {
+            if (!HasLoaded)
+            {
+                // prevent warning from showing when loading settings
+                return;
+            }
+
             if (!SelectedRenderer.Equals("Custom Driver", StringComparison.InvariantCultureIgnoreCase))
             {
                 MessageDialogWindow.Show("Choosing any other option beside 'Custom Driver' will cause mods installed with 7H not to work anymore.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -792,6 +804,12 @@ namespace SeventhHeaven.ViewModels
 
         private void ShowWarningMessageAbouReunion()
         {
+            if (!HasLoaded)
+            {
+                // prevent warning from showing when loading settings
+                return;
+            }
+
             if (GameLauncher.IsReunionModInstalled() && !DisableReunionChecked)
             {
                 string warningMsg = "Reunion R06 and newer, even when disabled in Options.ini, forces a custom game driver to load when you run FF7. This conflicts with 7th Heaven's game driver, breaks your graphics settings, and you will experience problems.\n\nIf you wish to play Reunion, do so using a compatible modded version built for 7th Heaven.\n\nAre you sure?";

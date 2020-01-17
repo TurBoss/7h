@@ -45,16 +45,7 @@ namespace SeventhHeaven.ViewModels
             {
                 GameLauncher.Instance.ProgressChanged += LaunchGame_ProgressChanged;
 
-                if (IsLaunchingWithNoMods)
-                {
-                    LogStatus("Launching 'vanilla' FF7 - with no mods ...");
-                    GameLauncher.Instance.LaunchAdditionalProgramsToRunPrior();
-                    didLaunch = GameLauncher.LaunchFF7Exe();
-                }
-                else
-                {
-                    didLaunch = GameLauncher.LaunchGame(variableDump, debugLogging);
-                }
+                didLaunch = GameLauncher.LaunchGame(variableDump, debugLogging, IsLaunchingWithNoMods);
             }
             finally
             {

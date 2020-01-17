@@ -91,7 +91,7 @@ namespace SeventhHeaven.Windows
                 else
                 {
                     Sys.Message(new WMessage("Successfully launched FF7!"));
-                    Thread.Sleep(2000); // wait a few seconds before closing window on success
+                    Thread.Sleep(500); // wait a few seconds before closing window on success
                     App.Current.Dispatcher.Invoke(() =>
                     {
                         this.Close();
