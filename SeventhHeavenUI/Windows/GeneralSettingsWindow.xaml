@@ -203,7 +203,12 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox Grid.Row="2" Grid.Column="1" Header=" Additional Folders to Monitor: " Margin="25,5,10,0">
+        <GroupBox Grid.Row="2" 
+                  Grid.Column="1"
+                  Height="{Binding ElementName=grpShell, Path=ActualHeight}"
+                  VerticalAlignment="Bottom"
+                  Header=" Additional Folders to Monitor: " 
+                  Margin="25,5,10,0">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>

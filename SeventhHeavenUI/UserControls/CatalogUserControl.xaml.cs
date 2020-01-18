@@ -76,7 +76,7 @@ namespace SeventhHeaven.UserControls
 
         internal void RecalculateColumnWidths(double listWidth)
         {
-            double padding = 6;
+            double padding = 8;
             double staticColumnWidth = 90 + 100 + 60; // sum of columns with static widths
 
             if (listWidth == 0)
@@ -90,7 +90,7 @@ namespace SeventhHeaven.UserControls
 
             if (scrollVis.GetValueOrDefault() == Visibility.Visible)
             {
-                padding = 24;
+                padding = 26;
             }
 
 

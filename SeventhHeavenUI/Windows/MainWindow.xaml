@@ -126,7 +126,6 @@
                         <ContextMenu x:Name="menuTools" PlacementTarget="{Binding ElementName=btnTools}" Closed="menuTools_Closed">
                             <MenuItem x:Name="menuItemCatalogCreation" Header="Catalog/Mod Creation Tool..."/>
                             <MenuItem x:Name="menuItemChunkTool" Header="Chunk Tool..." Click="menuItemChunkTool_Click"/>
-                            <MenuItem x:Name="menuItemConverter" Header="Game Converter..."/>
                             <MenuItem x:Name="menuItemIroCreation" Header="IRO Tools..." Click="menuItemIroCreation_Click"/>
                         </ContextMenu>
                     </cls:ButtonWithImage.ContextMenu>
