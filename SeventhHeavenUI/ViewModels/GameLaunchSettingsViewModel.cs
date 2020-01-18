@@ -56,6 +56,8 @@ namespace SeventhHeaven.ViewModels
         private bool _isShowLauncherChecked;
         private bool _isStandardKeyboardChecked;
         private bool _isLaptopKeyboardChecked;
+        private List<string> _keyboardOptions;
+        private string _selectedKeyboardOption;
 
         public string StatusMessage
         {
@@ -313,32 +315,6 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-        public bool IsStandardKeyboardChecked
-        {
-            get
-            {
-                return _isStandardKeyboardChecked;
-            }
-            set
-            {
-                _isStandardKeyboardChecked = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public bool IsLaptopKeyboardChecked
-        {
-            get
-            {
-                return _isLaptopKeyboardChecked;
-            }
-            set
-            {
-                _isLaptopKeyboardChecked = value;
-                NotifyPropertyChanged();
-            }
-        }
-
         public string SelectedSoundDevice
         {
             get
@@ -496,6 +472,38 @@ namespace SeventhHeaven.ViewModels
 
         private bool HasLoaded { get; set; }
 
+        public List<string> KeyboardOptions
+        {
+            get
+            {
+                if (_keyboardOptions == null)
+                {
+                    _keyboardOptions = new List<string>()
+                    {
+                        "Standard Keyboard",
+                        "Laptop/No Numpad",
+                        "Remember My Controls",
+                    };
+                }
+
+                return _keyboardOptions;
+            }
+        }
+
+        public string SelectedKeyboardOption
+        {
+            get
+            {
+                return _selectedKeyboardOption;
+            }
+            set
+            {
+                _selectedKeyboardOption = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+
         public GameLaunchSettingsViewModel()
         {
             StatusMessage = "";
@@ -528,8 +536,7 @@ namespace SeventhHeaven.ViewModels
             HighDpiFixChecked = Sys.Settings.GameLaunchSettings.HighDpiFix;
 
             IsShowLauncherChecked = Sys.Settings.GameLaunchSettings.ShowLauncherWindow;
-            IsStandardKeyboardChecked = Sys.Settings.GameLaunchSettings.UseLaptopKeyboardIni == false;
-            IsLaptopKeyboardChecked = Sys.Settings.GameLaunchSettings.UseLaptopKeyboardIni;
+            SelectedKeyboardOption = KeyboardOptions[Sys.Settings.GameLaunchSettings.KeyboardOption];
 
 
             // disable options to auto-mount if user OS does not support it
@@ -603,7 +610,12 @@ namespace SeventhHeaven.ViewModels
                 Sys.Settings.GameLaunchSettings.AutoUpdateDiscPath = AutoUpdatePathChecked;
                 Sys.Settings.GameLaunchSettings.ShowLauncherWindow = IsShowLauncherChecked;
 
-                Sys.Settings.GameLaunchSettings.UseLaptopKeyboardIni = IsLaptopKeyboardChecked;
+                Sys.Settings.GameLaunchSettings.KeyboardOption = KeyboardOptions.IndexOf(SelectedKeyboardOption);
+                if (Sys.Settings.GameLaunchSettings.KeyboardOption == (int)KeyboardOptionIndex.RememberCurrentKeyboard)
+                {
+                    // create copy of ff7input.cfg to custom.cfg if does not exist
+                    CopyInputCfgToCustomCfg(forceCopy: false);
+                }
 
                 Sys.Settings.GameLaunchSettings.Code5Fix = Code5FixChecked;
                 Sys.Settings.GameLaunchSettings.HighDpiFix = HighDpiFixChecked;
@@ -643,6 +655,29 @@ namespace SeventhHeaven.ViewModels
                 StatusMessage = $"Failed to save launch settings: {e.Message}";
                 Logger.Error(e);
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Copies ff7input.cfg from FF7 game folder to ./Resources/Controls/custom.cfg
+        /// </summary>
+        /// <param name="forceCopy"> copies ff7input.cfg if it already exists; overwriting the current custom.cfg </param>
+        public static void CopyInputCfgToCustomCfg(bool forceCopy)
+        {
+            string pathToCustomCfg = Path.Combine(new string[] { Sys._7HFolder, "Resources", "Controls", "custom.cfg" });
+
+            if (!File.Exists(pathToCustomCfg) || forceCopy)
+            {
+                string pathToInputCfg = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "ff7input.cfg");
+
+                if (File.Exists(pathToInputCfg))
+                {
+                    File.Copy(pathToInputCfg, pathToCustomCfg, true);
+                }
+                else
+                {
+                    Logger.Info($"No ff7input.cfg found at {pathToInputCfg}");
+                }
             }
         }
 

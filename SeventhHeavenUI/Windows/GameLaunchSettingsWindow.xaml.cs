@@ -140,5 +140,11 @@ namespace SeventhHeaven.Windows
         {
             ViewModel.IsProgramPopupOpen = false;
         }
+
+        private void btnRefreshKeyboard_Click(object sender, RoutedEventArgs e)
+        {
+            GameLaunchSettingsViewModel.CopyInputCfgToCustomCfg(forceCopy: true);
+            ViewModel.StatusMessage = "Successfully remembered current input control configuration.";
+        }
     }
 }

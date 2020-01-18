@@ -155,25 +155,6 @@ namespace SeventhHeaven.Classes
                 return BoolWithMessage.False("Failed to copy open gl drivers to install path");
             }
 
-            // copy keyboard input cfg to install folder
-            bool copiedCfg = converter.CopyKeyboardInputCfg();
-
-            if (!copiedCfg)
-            {
-                return BoolWithMessage.False("Failed to copy ff7input.cfg to install path");
-            }
-
-            // set registry values for patched game
-            try
-            {
-                converter.SetRegistryValues();
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-                return BoolWithMessage.False("Failed to set required registry values for patched game");
-            }
-
             return BoolWithMessage.True();
         }
 
@@ -550,79 +531,6 @@ namespace SeventhHeaven.Classes
             }
         }
 
-        public bool CopyKeyboardInputCfg()
-        {
-            string pathToCfg = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "KBinputs", "ff7input.cfg");
-            if (Settings.UseLaptopKeyboardCfg)
-            {
-                pathToCfg = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "KBinputs", "ff7input-Laptop.cfg");
-            }
-
-            if (!File.Exists(pathToCfg))
-            {
-                Logger.Warn($"input cfg file not found at {pathToCfg}");
-                return false;
-            }
-
-            try
-            {
-                File.Copy(pathToCfg, Path.Combine(InstallPath, "ff7input.cfg"));
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-                return false;
-            }
-
-            return true;
-        }
-
-        public void SetRegistryValues()
-        {
-            // Add registry key values to store information about the Game Converter
-            string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII";
-            string converterKeyPath = $"{ff7KeyPath}\\GameConverter2020Keys";
-
-            string steam_release = RegistryHelper.GetValue(converterKeyPath, "Steam-Release_Path", "") as string;
-            string steam_movie_path = RegistryHelper.GetValue(converterKeyPath, "Steam-Release_Movie_Path", "") as string;
-
-            string re_release = RegistryHelper.GetValue(converterKeyPath, "Re-Release_Path", "") as string;
-            string rerelease_movie_path = RegistryHelper.GetValue(converterKeyPath, "Re-Release_Movie_Path", "") as string;
-
-            string old_release = RegistryHelper.GetValue(converterKeyPath, "Old-Release_Path", "") as string;
-            string old_movie_path = RegistryHelper.GetValue(converterKeyPath, "Old-Release_Movie_Path", "") as string;
-
-            switch (Settings.Version)
-            {
-                case FF7Version.Steam:
-                    steam_release = Settings.InstallPath;
-                    steam_movie_path = Path.Combine(Settings.InstallPath, "data", @"movies\");
-                    break;
-
-                case FF7Version.ReRelease:
-                    re_release = Settings.InstallPath;
-                    rerelease_movie_path = Path.Combine(Settings.InstallPath, "data", @"movies\");
-                    break;
-
-                case FF7Version.Original98:
-                    old_release = Settings.InstallPath;
-                    old_movie_path = Path.Combine(Settings.InstallPath, "data", @"movies\");
-                    break;
-            }
-
-
-            RegistryHelper.SetValue(converterKeyPath, "Running_GameConverter_From", AppDomain.CurrentDomain.BaseDirectory);
-            RegistryHelper.SetValue(converterKeyPath, "Destination_Path", Settings.InstallPath);
-            RegistryHelper.SetValue(converterKeyPath, "Steam-Release_installed", (Settings.Version == FF7Version.Steam).ToString());
-            RegistryHelper.SetValue(converterKeyPath, "Steam-Release_Path", steam_release);
-            RegistryHelper.SetValue(converterKeyPath, "Steam-Release_Movie_Path", steam_movie_path);
-            RegistryHelper.SetValue(converterKeyPath, "Re-Release_installed", (Settings.Version == FF7Version.ReRelease).ToString());
-            RegistryHelper.SetValue(converterKeyPath, "Re-Release_Path", re_release);
-            RegistryHelper.SetValue(converterKeyPath, "Re-Release_Movie_Path", rerelease_movie_path);
-            RegistryHelper.SetValue(converterKeyPath, "Old-Release_installed", (Settings.Version == FF7Version.Original98).ToString());
-            RegistryHelper.SetValue(converterKeyPath, "Old-Release_Path", old_release);
-            RegistryHelper.SetValue(converterKeyPath, "Old-Release_Movie_Path", old_movie_path);
-        }
 
     }
 

@@ -2,6 +2,17 @@
 
 namespace _7thHeaven.Code
 {
+    /// <summary>
+    /// Corresponds to the int value in <see cref="LaunchSettings.KeyboardOption"/>
+    /// </summary>
+    public enum KeyboardOptionIndex
+    {
+        StandardKeyboard,
+        LaptopKeyboard,
+        RememberCurrentKeyboard
+    }
+
+
     [Serializable]
     public class LaunchSettings
     {
@@ -28,7 +39,7 @@ namespace _7thHeaven.Code
         public bool HasReceivedCode5Error { get; set; }
         public bool ShowLauncherWindow { get; set; }
 
-        public bool UseLaptopKeyboardIni { get; set; }
+        public int KeyboardOption { get; set; }
 
         public static LaunchSettings DefaultSettings()
         {
@@ -53,7 +64,7 @@ namespace _7thHeaven.Code
                 FullScreenMode = false,
                 HasReceivedCode5Error = false,
                 ShowLauncherWindow = true,
-                UseLaptopKeyboardIni = false
+                KeyboardOption = (int)KeyboardOptionIndex.StandardKeyboard
             };
         }
     }

@@ -14,7 +14,7 @@
         ResizeMode="NoResize"
         Title="Game Launcher Settings" 
         Width="800"
-        Height="515">
+        Height="525">
     <Window.Resources>
 
         <DataTemplate x:Key="programItem">
@@ -24,6 +24,12 @@
         <Style x:Key="programItemStyle" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MainListBoxItemStyle}">
             <Setter Property="ContentTemplate" Value="{StaticResource programItem}"/>
         </Style>
+
+        <DataTemplate x:Key="keyboardItemTemplate">
+            <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedKeyboardOption, FallbackValue='Remember My Controls'}" Margin="0,0,15,0" TextWrapping="Wrap"/>
+            </Grid>
+        </DataTemplate>
 
 
         <DataTemplate x:Key="soundItemTemplate">
@@ -71,7 +77,7 @@
                       Header=" Options " Grid.Row="0" Margin="10,10,0,0" 
                       HorizontalAlignment="Left"
                       VerticalAlignment="Top">
-                <StackPanel Margin="3" HorizontalAlignment="Right">
+                <StackPanel Margin="3" HorizontalAlignment="Center">
                     <CheckBox Height="25" Content="Auto-Mount Game Disc" 
                               IsChecked="{Binding AutoMountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding IsAutoMountSupported}"
@@ -91,14 +97,39 @@
                               MouseEnter="Control_MouseEnter"
                               ToolTip="Shows the Game Launcher window when starting FF7 for detailed output of the launch process"/>
 
-                    <RadioButton Content="Standard Keyboard" VerticalAlignment="Center" Margin="0,8,11,0"
-                                 HorizontalAlignment="Right"
-                                 GroupName="KeyboardInput"
-                                 IsChecked="{Binding IsStandardKeyboardChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <RadioButton Content="Laptop/No Numpad" VerticalAlignment="Center" Margin="0,3,3,0"
-                                 HorizontalAlignment="Right"
-                                 GroupName="KeyboardInput"
-                                 IsChecked="{Binding IsLaptopKeyboardChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Grid Margin="0,3,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Controls:"
+                                   FontSize="13"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Top"
+                                   Margin="0,4,1,0"/>
+                        <ComboBox Name="cboKeyboards"
+                                  FontSize="13"
+                                  Grid.Column="1"
+                                  MinWidth="165"
+                                  ToolTip="Set your desired control input configuration."
+                                  ToolTipService.IsEnabled="false"
+                                  MouseEnter="Control_MouseEnter"
+                                  Style="{StaticResource MainComboBoxStyle}"
+                                  ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
+                                  ItemTemplate="{StaticResource keyboardItemTemplate}"
+                                  SelectedItem="{Binding SelectedKeyboardOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  ItemsSource="{Binding KeyboardOptions}"/>
+                        <Button x:Name="btnRefreshKeyboard"
+                                Click="btnRefreshKeyboard_Click"
+                                Grid.Column="2"
+                                Style="{StaticResource ImageButton}"
+                                Content="{StaticResource iconRefresh}"
+                                ToolTip="Click to have 7th Heaven update remembered control settings with your currently set FF7 controls."
+                                MouseEnter="Control_MouseEnter"
+                                Width="25"
+                                Height="25"/>
+                    </Grid>
                 </StackPanel>
             </GroupBox>
 
@@ -130,6 +161,7 @@
         <GroupBox x:Name="grpAudio"
                   Grid.Row="0"
                   Grid.Column="1"
+                  Height="{Binding ElementName=grpOptions, Path=ActualHeight}"
                   Header=" Audio Output Device " Margin="10,10,10,0" 
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch">
@@ -151,42 +183,45 @@
                                Grid.Row="0"
                                HorizontalAlignment="Right"
                                VerticalAlignment="Center"
-                               Margin="0,0,5,10"/>
+                               Margin="2,0,0,10"/>
 
-                    <WrapPanel Grid.Row="0"
-                               Grid.Column="1">
+                    <Grid Grid.Row="0"
+                          Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
                         <ComboBox x:Name="cboSoundDevices"
                                   Style="{StaticResource MainComboBoxStyle}"
                                   ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
                                   ItemTemplate="{StaticResource soundItemTemplate}"
                                   SelectedItem="{Binding SelectedSoundDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   ItemsSource="{Binding SoundDevices}"
-                                  Grid.Row="0"
-                                  Grid.Column="1"
-                                  HorizontalAlignment="Left"
+                                  HorizontalAlignment="Stretch"
                                   VerticalAlignment="Center"
-                                  Margin="0,1,0,10"
-                                  MinWidth="250"/>
+                                  Margin="4,1,0,10"/>
 
                         <cls:ButtonWithImage x:Name="btnTestAudio"
-                                         Grid.Row="0"
-                                         Grid.Column="2"
-                                         HorizontalAlignment="Left"
-                                         VerticalAlignment="Bottom"
-                                         Margin="3,0,2,10"
-                                         TemplateSource="{StaticResource iconPlay}"
-                                         IsEnabled="{Binding IsAudioNotPlaying}"
-                                         Click="btnTestAudio_Click"
-                                         Width="60"
-                                         Content="Test"/>
+                                             Grid.Column="1"
+                                             HorizontalAlignment="Left"
+                                             VerticalAlignment="Bottom"
+                                             Margin="3,0,0,10"
+                                             TemplateSource="{StaticResource iconPlay}"
+                                             IsEnabled="{Binding IsAudioNotPlaying}"
+                                             Click="btnTestAudio_Click"
+                                             ToolTipService.IsEnabled="false"
+                                             ToolTip="Test the selected sound device and music volume. Test sound provided by Enrico Deiana."
+                                             MouseEnter="Control_MouseEnter"
+                                             Width="60"
+                                             Content="Test"/>
                         <ToggleButton x:Name="btnAudioOptions"
-                                  Style="{StaticResource DownArrowToggleButton}"
-                                  Grid.Row="0"
-                                  Grid.Column="2"
-                                  VerticalAlignment="Stretch"
-                                  Margin="0,0,0,10"
-                                  Click="btnAudioOptions_Click"
-                                  ContextMenuService.Placement="Bottom">
+                                      Style="{StaticResource DownArrowToggleButton}"
+                                      Grid.Column="2"
+                                      VerticalAlignment="Stretch"
+                                      Margin="0,0,3,10"
+                                      Click="btnAudioOptions_Click"
+                                      ContextMenuService.Placement="Bottom">
                             <ToggleButton.ContextMenu>
                                 <ContextMenu x:Name="menuAudioTest" Closed="menuAudioTest_Closed">
                                     <MenuItem x:Name="menuItemTestLeft" Header="Test Left Channel" Click="menuItemTestLeft_Click" IsEnabled="{Binding IsAudioNotPlaying}"/>
@@ -194,13 +229,13 @@
                                 </ContextMenu>
                             </ToggleButton.ContextMenu>
                         </ToggleButton>
-                    </WrapPanel>
+                    </Grid>
 
                     <TextBlock Text="MIDI Device:"
                                Grid.Row="1"
                                HorizontalAlignment="Right"
                                VerticalAlignment="Center"
-                               Margin="0,0,5,10"/>
+                               Margin="2,0,0,10"/>
                     <ComboBox x:Name="cboMidiDevices"
                               Grid.Row="1"
                               Grid.Column="1"
@@ -211,70 +246,82 @@
                               ItemsSource="{Binding MidiDevices}"
                               HorizontalAlignment="Left"
                               VerticalAlignment="Center"
-                              Margin="0,1,0,10"
-                              MinWidth="250"/>
+                              Margin="4,1,0,10"
+                              MinWidth="250"
+                              Width="{Binding ElementName=cboSoundDevices, Path=ActualWidth}"/>
 
 
-                    <WrapPanel Grid.Row="2"
-                               Grid.ColumnSpan="3">
-                        <TextBlock Text="Music Volume:"
-                                   Grid.Row="2"
-                                   HorizontalAlignment="Right"
-                                   VerticalAlignment="Center"
-                                   Margin="0,0,5,10"/>
-                        <Slider x:Name="sliderVolume"
-                                Value="{Binding MusicVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
-                                Minimum="0"
-                                Maximum="100"
-                                Grid.Row="2"
-                                Grid.Column="1"
-                                MinWidth="105"
-                                Margin="0,0,10,7"/>
+                    <Grid Grid.Row="2"
+                          Grid.ColumnSpan="3"
+                          HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="SFX Volume:"
-                                   Grid.Row="2"
-                                   HorizontalAlignment="Right"
-                                   VerticalAlignment="Center"
-                                   Margin="10,0,5,10"/>
-                        <Slider x:Name="sliderSfxVolume"
-                                Value="{Binding SfxVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
-                                Minimum="0"
-                                Maximum="100"
-                                Grid.Row="2"
-                                Grid.Column="1"
-                                MinWidth="105"
-                                Margin="0,0,10,7"/>
+                        <WrapPanel>
+                            <TextBlock Text="Music Volume:"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,3,10"/>
+                            <Slider x:Name="sliderVolume"
+                                    Value="{Binding MusicVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
+                                    Minimum="0"
+                                    Maximum="100"
+                                    MinWidth="115"
+                                    Margin="1,0,0,7"/>
+                        </WrapPanel>
 
-                    </WrapPanel>
+                        <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
+                            <TextBlock Text="SFX Volume:"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,3,10"/>
+                            <Slider x:Name="sliderSfxVolume"
+                                    HorizontalAlignment="Right"
+                                    Value="{Binding SfxVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
+                                    Minimum="0"
+                                    Maximum="100"
+                                    MinWidth="105"
+                                    Margin="0,0,3,7"/>
+                        </WrapPanel>
+
+                    </Grid>
                 </Grid>
 
-                <WrapPanel Margin="3,3,3,0" HorizontalAlignment="Left">
-                    <CheckBox Height="25" Content="Logarithmic Volume Control" 
-                              Margin="0,3,10,3"
+                <Grid Margin="3,10,3,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <CheckBox Content="Logarithmic Volume Control" 
+                              Height="25" 
+                              Margin="0,0,10,0"
+                              HorizontalAlignment="Left"
                               IsChecked="{Binding IsLogVolumeChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               MouseEnter="Control_MouseEnter"
                               ToolTip="Uncheck this option if you feel that the volume does not change smoothly."/> 
-                    <CheckBox Height="25" Content="Reverse Speakers" 
-                              Margin="4,3,10,3"
+                    <CheckBox Content="Reverse Speakers" 
+                              Height="25" 
+                              HorizontalAlignment="Right"
+                              Grid.Column="1"
+                              Margin="4,0,0,0"
                               IsChecked="{Binding IsReverseSpeakersChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               MouseEnter="Control_MouseEnter"
                               ToolTip="Swaps left and right channels when checked."/>
-                </WrapPanel>
+                </Grid>
             </StackPanel>
         </GroupBox>
 
         <GroupBox x:Name="grpVideo"
                   Grid.Row="1"
                   Grid.Column="1"
-                  Header=" Graphics Driver Options " Margin="10,10,10,0" 
+                  Header=" Graphics Driver Options " Margin="10,10,10,0"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Top">
             <StackPanel>
 
                 <Grid Margin="3">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="*"/>
@@ -293,36 +340,46 @@
                               ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
                               SelectedItem="{Binding SelectedRenderer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               ItemsSource="{Binding AvailableRenderers}"
-                              HorizontalAlignment="Left"
+                              HorizontalAlignment="Stretch"
                               VerticalAlignment="Center"
-                              Margin="0,1,0,5"
-                              MinWidth="345"/>
+                              Margin="0,1,4,5"
+                              MinWidth="390"/>
                 </Grid>
 
-                <WrapPanel HorizontalAlignment="Stretch" Margin="4,3,10,6"
-                           MouseEnter="Control_MouseEnter"
-                           ToolTip="Only applies when set to 'Direct3D Hardware Acceleration'"
-                           ToolTipService.IsEnabled="False">
-                    <RadioButton Content="Quarter Screen" VerticalAlignment="Center" Margin="0,0,10,0"
-                                 GroupName="ScreenMode"
-                                 Visibility="{Binding ScreenModesVisibility}"
-                                 IsChecked="{Binding IsQuarterScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <RadioButton Content="Full Screen" VerticalAlignment="Center" Margin="0,0,40,0"
-                                 GroupName="ScreenMode"
-                                 Visibility="{Binding ScreenModesVisibility}"
-                                 IsChecked="{Binding IsFullScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    
-                    <RadioButton Content="RIVA 128" VerticalAlignment="Center" Margin="0,0,10,0"
-                                 GroupName="GraphicsOption"
-                                 Visibility="{Binding RivaOptionsVisibility}"
-                                 IsChecked="{Binding IsRivaOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <RadioButton Content="TNT" VerticalAlignment="Center" Margin="0,0,10,0"
-                                 GroupName="GraphicsOption"
-                                 Visibility="{Binding RivaOptionsVisibility}"
-                                 IsChecked="{Binding IsTntOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <WrapPanel HorizontalAlignment="Stretch" Margin="4,3,10,6"
+                               MouseEnter="Control_MouseEnter"
+                               ToolTip="Only applies when set to 'Software Renderer' or 'Direct3D Hardware Acceleration'">
+                        <RadioButton Content="Quarter Screen" VerticalAlignment="Center" Margin="0,0,10,0"
+                                     GroupName="ScreenMode"
+                                     Visibility="{Binding ScreenModesVisibility}"
+                                     IsChecked="{Binding IsQuarterScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RadioButton Content="Full Screen" VerticalAlignment="Center" Margin="0,0,0,0"
+                                     GroupName="ScreenMode"
+                                     Visibility="{Binding ScreenModesVisibility}"
+                                     IsChecked="{Binding IsFullScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </WrapPanel>
 
-                </WrapPanel>
+                    <WrapPanel Grid.Column="1"
+                               HorizontalAlignment="Right"
+                               MouseEnter="Control_MouseEnter"
+                               Margin="0,0,-3,0"
+                               ToolTip="Only applies when set to 'Direct3D Hardware Acceleration'">
+                        <RadioButton Content="RIVA 128" VerticalAlignment="Center" Margin="0,0,10,0"
+                                     GroupName="GraphicsOption"
+                                     Visibility="{Binding RivaOptionsVisibility}"
+                                     IsChecked="{Binding IsRivaOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <RadioButton Content="TNT" VerticalAlignment="Center" Margin="0,0,10,0"
+                                     GroupName="GraphicsOption"
+                                     Visibility="{Binding RivaOptionsVisibility}"
+                                     IsChecked="{Binding IsTntOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </WrapPanel>
+                </Grid>
+                
             </StackPanel>
         </GroupBox>
 

@@ -1312,11 +1312,16 @@ namespace SeventhHeaven.Classes
 
         public static bool CopyKeyboardInputCfg()
         {
-            string pathToCfg = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "Resources", "KBinputs", "ff7input.cfg" });
-            if (Sys.Settings.GameLaunchSettings.UseLaptopKeyboardIni)
+            string pathToCfg = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "Resources", "Controls", "ff7input.cfg" });
+            if (Sys.Settings.GameLaunchSettings.KeyboardOption == (int)KeyboardOptionIndex.LaptopKeyboard)
             {
                 Instance.RaiseProgressChanged($"\tusing laptop .cfg file ff7input-Laptop.cfg ...");
-                pathToCfg = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "Resources", "KBinputs", "ff7input-Laptop.cfg" });
+                pathToCfg = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "Resources", "Controls", "ff7input-Laptop.cfg" });
+            }
+            else if (Sys.Settings.GameLaunchSettings.KeyboardOption == (int)KeyboardOptionIndex.RememberCurrentKeyboard)
+            {
+                Instance.RaiseProgressChanged($"\tusing custom.cfg ...");
+                pathToCfg = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "Resources", "Controls", "custom.cfg" });
             }
 
             if (!File.Exists(pathToCfg))
