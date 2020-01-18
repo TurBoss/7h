@@ -796,11 +796,48 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
+        /// <summary>
+        /// This will sort <see cref="ModList"/> by categories based on <see cref="ModLoadOrder"/>.
+        /// Mod order constraints in mod.xml is taken into account and takes precedence over the cateogry load sort
+        /// </summary>
         public void AutoSortBasedOnCategory()
         {
             List<InstalledModViewModel> sortedList = ModList.OrderBy(s => ModLoadOrder.Get(s.Category))
                                                             .ThenBy(m => m.Name)
                                                             .ToList();
+
+            // loop over and check mod info for ordering of before/after other mods
+            int i = 0;
+            foreach (var installedMod in sortedList.ToList())
+            {
+                _7thWrapperLib.ModInfo info = installedMod.InstallInfo.GetModInfo();
+
+                foreach (Guid after in info.OrderAfter)
+                {
+                    int afterIndex = sortedList.FindIndex(m => m.InstallInfo.ModID.Equals(after));
+
+                    if (afterIndex > i)
+                    {
+                        // move mod to come after this guid
+                        sortedList.RemoveAt(i);
+                        sortedList.Insert(afterIndex, installedMod);
+                    }
+                }
+
+                foreach (Guid before in info.OrderBefore)
+                {
+                    int beforeIndex = sortedList.FindIndex(m => m.InstallInfo.ModID.Equals(before));
+
+                    if (beforeIndex < i)
+                    {
+                        // move mod to come before this guid
+                        sortedList.RemoveAt(i);
+                        sortedList.Insert(beforeIndex-1, installedMod);
+                    }
+                }
+
+                i++;
+            }
 
             ClearModList();
 
