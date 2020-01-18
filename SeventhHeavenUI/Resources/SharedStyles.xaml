@@ -124,6 +124,7 @@
     <Style x:Key="MainButtonWithImageStyle" TargetType="{x:Type cls:ButtonWithImage}">
         <Setter Property="Background" Value="{DynamicResource PrimaryControlBackground}"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
+        <Setter Property="ImageForeground" Value="{DynamicResource PrimaryControlForeground}"/>
         <Setter Property="Padding" Value="0,8,3,8"/>
         <Setter Property="FontSize" Value="14"/>
 
@@ -141,7 +142,7 @@
                             </Grid.ColumnDefinitions>
 
                             <Viewbox Width="28" Height="28" Stretch="UniformToFill">
-                                <ContentControl Template="{TemplateBinding TemplateSource}" Foreground="Green"/>
+                                <ContentControl Template="{TemplateBinding TemplateSource}" Foreground="{TemplateBinding ImageForeground}"/>
                             </Viewbox>
                             <TextBlock x:Name="txtContent"
                                        Grid.Column="1"
@@ -176,6 +177,7 @@
     <Style x:Key="ButtonWithImageAndDownArrow" TargetType="{x:Type cls:ButtonWithImage}">
         <Setter Property="Background" Value="{DynamicResource PrimaryControlBackground}"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
+        <Setter Property="ImageForeground" Value="{DynamicResource PrimaryControlForeground}"/>
         <Setter Property="Padding" Value="0,8,5,8"/>
         <Setter Property="FontSize" Value="14"/>
 
@@ -186,7 +188,7 @@
                     <Border x:Name="bd" BorderThickness="0" Background="{TemplateBinding Background}">
                         <WrapPanel>
                             <Viewbox Width="28" Height="28" Stretch="UniformToFill">
-                                <ContentControl Template="{TemplateBinding TemplateSource}" Foreground="Green"/>
+                                <ContentControl Template="{TemplateBinding TemplateSource}" Foreground="{TemplateBinding ImageForeground}"/>
                             </Viewbox>
                             
                             <TextBlock x:Name="txtContent"
@@ -350,7 +352,7 @@
 
                     <Viewbox Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Stretch="UniformToFill">
                         <Border x:Name="bd" BorderThickness="0" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
-                            <ContentControl Template="{TemplateBinding Content}" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
+                            <ContentControl Template="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </Viewbox>
 
@@ -361,6 +363,10 @@
 
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="bd" Property="Background" Value="{DynamicResource PrimaryControlPressed}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource PrimaryControlDisabledForeground}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

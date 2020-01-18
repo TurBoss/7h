@@ -54,10 +54,7 @@ namespace SeventhHeaven.ViewModels
         private bool _isQuarterScreenChecked;
         private bool _isFullScreenChecked;
         private bool _isShowLauncherChecked;
-        private bool _isStandardKeyboardChecked;
-        private bool _isLaptopKeyboardChecked;
-        private List<string> _keyboardOptions;
-        private string _selectedKeyboardOption;
+        private string _selectedGameConfigOption;
 
         public string StatusMessage
         {
@@ -472,37 +469,37 @@ namespace SeventhHeaven.ViewModels
 
         private bool HasLoaded { get; set; }
 
-        public List<string> KeyboardOptions
+        public List<string> InGameConfigOptions
         {
             get
             {
-                if (_keyboardOptions == null)
-                {
-                    _keyboardOptions = new List<string>()
-                    {
-                        "Standard Keyboard",
-                        "Laptop/No Numpad",
-                        "Remember My Controls",
-                    };
-                }
-
-                return _keyboardOptions;
+                return InGameConfigurationMap.Keys.ToList();
             }
         }
 
-        public string SelectedKeyboardOption
+        public Dictionary<string, string> InGameConfigurationMap { get; set; }
+
+        public string SelectedGameConfigOption
         {
             get
             {
-                return _selectedKeyboardOption;
+                return _selectedGameConfigOption;
             }
             set
             {
-                _selectedKeyboardOption = value;
+                _selectedGameConfigOption = value;
                 NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(IsCustomConfigOptionSelected));
             }
         }
 
+        public bool IsCustomConfigOptionSelected
+        {
+            get
+            {
+                return SelectedGameConfigOption == "Custom";
+            }
+        }
 
         public GameLaunchSettingsViewModel()
         {
@@ -513,6 +510,7 @@ namespace SeventhHeaven.ViewModels
             _audioTest = null;
             HasLoaded = false;
 
+            InitInGameConfigOptions();
             InitSoundDevices();
             InitRenderers();
             InitMidiDevices();
@@ -536,7 +534,15 @@ namespace SeventhHeaven.ViewModels
             HighDpiFixChecked = Sys.Settings.GameLaunchSettings.HighDpiFix;
 
             IsShowLauncherChecked = Sys.Settings.GameLaunchSettings.ShowLauncherWindow;
-            SelectedKeyboardOption = KeyboardOptions[Sys.Settings.GameLaunchSettings.KeyboardOption];
+            SelectedGameConfigOption = InGameConfigurationMap.Where(s => s.Value == Sys.Settings.GameLaunchSettings.InGameConfigOption)
+                                                             .Select(c => c.Key)
+                                                             .FirstOrDefault();
+
+            if (string.IsNullOrWhiteSpace(SelectedGameConfigOption))
+            {
+                // default to first option if there previous option is missing
+                SelectedGameConfigOption = InGameConfigOptions[0]; 
+            }
 
 
             // disable options to auto-mount if user OS does not support it
@@ -610,8 +616,8 @@ namespace SeventhHeaven.ViewModels
                 Sys.Settings.GameLaunchSettings.AutoUpdateDiscPath = AutoUpdatePathChecked;
                 Sys.Settings.GameLaunchSettings.ShowLauncherWindow = IsShowLauncherChecked;
 
-                Sys.Settings.GameLaunchSettings.KeyboardOption = KeyboardOptions.IndexOf(SelectedKeyboardOption);
-                if (Sys.Settings.GameLaunchSettings.KeyboardOption == (int)KeyboardOptionIndex.RememberCurrentKeyboard)
+                Sys.Settings.GameLaunchSettings.InGameConfigOption = InGameConfigurationMap[SelectedGameConfigOption];
+                if (Sys.Settings.GameLaunchSettings.InGameConfigOption == "Custom")
                 {
                     // create copy of ff7input.cfg to custom.cfg if does not exist
                     CopyInputCfgToCustomCfg(forceCopy: false);
@@ -659,12 +665,12 @@ namespace SeventhHeaven.ViewModels
         }
 
         /// <summary>
-        /// Copies ff7input.cfg from FF7 game folder to ./Resources/Controls/custom.cfg
+        /// Copies ff7input.cfg from FF7 game folder to ./Resources/In-Game Config/custom.cfg
         /// </summary>
         /// <param name="forceCopy"> copies ff7input.cfg if it already exists; overwriting the current custom.cfg </param>
         public static void CopyInputCfgToCustomCfg(bool forceCopy)
         {
-            string pathToCustomCfg = Path.Combine(new string[] { Sys._7HFolder, "Resources", "Controls", "custom.cfg" });
+            string pathToCustomCfg = Path.Combine(Sys.PathToInGameConfigFolder, "custom.cfg" );
 
             if (!File.Exists(pathToCustomCfg) || forceCopy)
             {
@@ -679,6 +685,32 @@ namespace SeventhHeaven.ViewModels
                     Logger.Info($"No ff7input.cfg found at {pathToInputCfg}");
                 }
             }
+        }
+
+        private void InitInGameConfigOptions()
+        {
+            Dictionary<string, string> configOptions = new Dictionary<string, string>();
+
+            if (!Directory.Exists(Sys.PathToInGameConfigFolder))
+            {
+                Logger.Warn($"Can not load configuration options because the directory does not exist: {Sys.PathToInGameConfigFolder}");
+                return;
+            }
+
+            foreach (string filePath in Directory.GetFiles(Sys.PathToInGameConfigFolder, "*.cfg").OrderBy(s => s))
+            {
+                FileInfo info = new FileInfo(filePath);
+
+                if (info.Name.Equals("custom.cfg", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    continue; // skip adding custom.cfg if found since it is always added at the end
+                }
+                configOptions.Add(Path.GetFileNameWithoutExtension(filePath), info.Name);
+            }
+
+            configOptions.Add("Custom", "custom.cfg"); // have 'Custom' always be the last option
+
+            InGameConfigurationMap = configOptions;
         }
 
         private void InitSoundDevices()

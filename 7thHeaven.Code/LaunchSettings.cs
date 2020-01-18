@@ -2,17 +2,6 @@
 
 namespace _7thHeaven.Code
 {
-    /// <summary>
-    /// Corresponds to the int value in <see cref="LaunchSettings.KeyboardOption"/>
-    /// </summary>
-    public enum KeyboardOptionIndex
-    {
-        StandardKeyboard,
-        LaptopKeyboard,
-        RememberCurrentKeyboard
-    }
-
-
     [Serializable]
     public class LaunchSettings
     {
@@ -39,7 +28,11 @@ namespace _7thHeaven.Code
         public bool HasReceivedCode5Error { get; set; }
         public bool ShowLauncherWindow { get; set; }
 
-        public int KeyboardOption { get; set; }
+        /// <summary>
+        /// File name of the ff7input.cfg file to copy to ff7 game dir 
+        /// e.g. "stock game.cfg" or "custom.cfg"
+        /// </summary>
+        public string InGameConfigOption { get; set; }
 
         public static LaunchSettings DefaultSettings()
         {
@@ -64,7 +57,7 @@ namespace _7thHeaven.Code
                 FullScreenMode = false,
                 HasReceivedCode5Error = false,
                 ShowLauncherWindow = true,
-                KeyboardOption = (int)KeyboardOptionIndex.StandardKeyboard
+                InGameConfigOption = "stock game.cfg"
             };
         }
     }

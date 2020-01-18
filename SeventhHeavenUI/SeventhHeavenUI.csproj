@@ -340,11 +340,11 @@
     <None Include="Resources\FF7DISC1.ISO">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Content Include="Resources\Controls\ff7input-Laptop.cfg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Resources\In-Game Config\No Numpad.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Controls\ff7input.cfg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Resources\In-Game Config\Stock Game.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="7H.ico" />
     <Content Include="7thHeaven.var">

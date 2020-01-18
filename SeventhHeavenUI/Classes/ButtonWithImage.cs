@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
@@ -32,6 +33,14 @@ namespace SeventhHeaven.Classes
             set { SetValue(TemplateSourceProperty, value); }
         }
 
+
+        public SolidColorBrush ImageForeground
+        {
+            get { return (SolidColorBrush)GetValue(ImageForegroundProperty); }
+            set { SetValue(ImageForegroundProperty, value); }
+        }
+
+
         #endregion
 
 
@@ -49,6 +58,13 @@ namespace SeventhHeaven.Classes
             DependencyProperty.Register(
             "TemplateSource",
             typeof(ControlTemplate),
+            typeof(ButtonWithImage),
+            new FrameworkPropertyMetadata(null));
+
+        public static readonly DependencyProperty ImageForegroundProperty =
+            DependencyProperty.Register(
+            "ImageForeground",
+            typeof(SolidColorBrush),
             typeof(ButtonWithImage),
             new FrameworkPropertyMetadata(null));
 

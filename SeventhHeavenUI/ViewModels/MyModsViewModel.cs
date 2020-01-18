@@ -812,6 +812,12 @@ namespace SeventhHeavenUI.ViewModels
             {
                 _7thWrapperLib.ModInfo info = installedMod.InstallInfo.GetModInfo();
 
+                if (info == null)
+                {
+                    i++;
+                    continue;
+                }
+
                 foreach (Guid after in info.OrderAfter)
                 {
                     int afterIndex = sortedList.FindIndex(m => m.InstallInfo.ModID.Equals(after));

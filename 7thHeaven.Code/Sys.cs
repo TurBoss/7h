@@ -133,6 +133,14 @@ namespace Iros._7th.Workshop
             }
         }
 
+        public static string PathToInGameConfigFolder
+        {
+            get
+            {
+                return Path.Combine(_7HFolder, "Resources", "In-Game Config");
+            }
+        }
+
         public static Catalog Catalog { get; set; }
         public static Library Library { get; set; }
         public static ImageCache ImageCache { get; private set; }

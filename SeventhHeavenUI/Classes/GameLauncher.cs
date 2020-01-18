@@ -69,6 +69,10 @@ namespace SeventhHeaven.Classes
         [DllImport("user32.dll")]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
+        private const int SW_FORCEMINIMIZE = 11;
+        [DllImport("User32")]
+        private static extern int ShowWindow(int hwnd, int nCmdShow);
+
         public static bool LaunchGame(bool varDump, bool debug, bool launchWithNoMods = false)
         {
             Instance.RaiseProgressChanged("Checking mod compatibility requirements ...");
@@ -125,7 +129,7 @@ namespace SeventhHeaven.Classes
 
                 if (!OSHasAutoMountSupport())
                 {
-                    Instance.RaiseProgressChanged($"OS does not support auto mounting virtual disc. You must mount a virtual disk named FF7DISC.ISO, insert a disk/usb named FF7DISC1, or rename a HDD to FF7DISC1 ...");
+                    Instance.RaiseProgressChanged($"OS does not support auto mounting virtual disc. You must mount a virtual disk named FF7DISC1.ISO, insert a USB flash drive named FF7DISC1, or rename a Hard Drive to FF7DISC1 ...");
                     return false;
                 }
                 else
@@ -260,7 +264,6 @@ namespace SeventhHeaven.Classes
             if (runAsVanilla)
             {
                 Instance.RaiseProgressChanged(vanillaMsg);
-                Sys.Message(new WMessage(vanillaMsg, true));
                 LaunchFF7Exe();
 
                 if (didDisableReunion)
@@ -954,16 +957,24 @@ namespace SeventhHeaven.Classes
         }
 
         /// <summary>
-        /// Scans all drives looking for the drive labeled "FF7DISC1" and returns the corresponding drive letter.
-        /// If not found returns empty string.
+        /// Scans all drives looking for the drive labeled "FF7DISC1", "FF7DISC2", or "FF7DISC3" and returns the corresponding drive letter.
+        /// If not found returns empty string. Returns the drive letter for <paramref name="labelToFind"/> if not null
         /// </summary>
-        public static string GetDriveLetter()
+        public static string GetDriveLetter(string labelToFind = null)
         {
-            List<string> labels = new List<string>() { "FF7DISC1" };
+            List<string> labels = null;
+            if (string.IsNullOrWhiteSpace(labelToFind))
+            {
+                labels = new List<string>() { "FF7DISC1", "FF7DISC2", "FF7DISC3" };
+            }
+            else
+            {
+                labels = new List<string>() { labelToFind };
+            }
 
             foreach (DriveInfo drive in DriveInfo.GetDrives())
             {
-                if (drive.IsReady && labels.Any(s => s == drive.VolumeLabel))
+                if (drive.IsReady && labels.Any(s => s.Equals(drive.VolumeLabel, StringComparison.InvariantCultureIgnoreCase)))
                 {
                     return drive.Name;
                 }
@@ -1229,7 +1240,7 @@ namespace SeventhHeaven.Classes
                 compatString += "HIGHDPIAWARE";
             }
 
-            Instance.RaiseProgressChanged($"\t {keyPath}::{Sys.Settings.FF7Exe} = {compatString}");
+            Instance.RaiseProgressChanged($"\t HKEY_CURRENT_USER\\{keyPath}::{Sys.Settings.FF7Exe} = {compatString}");
             ff7CompatKey = Registry.CurrentUser.OpenSubKey(keyPath, true);
             ff7CompatKey?.SetValue(Sys.Settings.FF7Exe, compatString);
         }
@@ -1312,22 +1323,13 @@ namespace SeventhHeaven.Classes
 
         public static bool CopyKeyboardInputCfg()
         {
-            string pathToCfg = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "Resources", "Controls", "ff7input.cfg" });
-            if (Sys.Settings.GameLaunchSettings.KeyboardOption == (int)KeyboardOptionIndex.LaptopKeyboard)
-            {
-                Instance.RaiseProgressChanged($"\tusing laptop .cfg file ff7input-Laptop.cfg ...");
-                pathToCfg = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "Resources", "Controls", "ff7input-Laptop.cfg" });
-            }
-            else if (Sys.Settings.GameLaunchSettings.KeyboardOption == (int)KeyboardOptionIndex.RememberCurrentKeyboard)
-            {
-                Instance.RaiseProgressChanged($"\tusing custom.cfg ...");
-                pathToCfg = Path.Combine(new string[] { AppDomain.CurrentDomain.BaseDirectory, "Resources", "Controls", "custom.cfg" });
-            }
+            string pathToCfg = Path.Combine(Sys.PathToInGameConfigFolder, Sys.Settings.GameLaunchSettings.InGameConfigOption);
 
+            Instance.RaiseProgressChanged($"\tusing in-game configuration file {Sys.Settings.GameLaunchSettings.InGameConfigOption} ...");
             if (!File.Exists(pathToCfg))
             {
-                Instance.RaiseProgressChanged($"\tinput cfg file not found at {pathToCfg}");
-                return false;
+                Instance.RaiseProgressChanged($"\tWARNING: input cfg file not found at {pathToCfg}");
+                return true;
             }
 
             try
@@ -1388,12 +1390,13 @@ namespace SeventhHeaven.Classes
             {
                 if (!_sideLoadProcesses.ContainsKey(program))
                 {
+                    Instance.RaiseProgressChanged($"\tstarting program: {program.PathToProgram}");
                     ProcessStartInfo psi = new ProcessStartInfo()
                     {
                         WorkingDirectory = Path.GetDirectoryName(program.PathToProgram),
                         FileName = program.PathToProgram,
                         Arguments = program.ProgramArgs,
-                        UseShellExecute = false
+                        UseShellExecute = false,
                     };
                     Process aproc = Process.Start(psi);
 
@@ -1401,7 +1404,14 @@ namespace SeventhHeaven.Classes
                     aproc.Exited += (_o, _e) => _sideLoadProcesses.Remove(program);
 
                     _sideLoadProcesses.Add(program, aproc);
-                    Instance.RaiseProgressChanged($"\tstarted program: {program.PathToProgram}");
+                    Instance.RaiseProgressChanged($"\t\tstarted ...");
+                    System.Threading.Thread.Sleep(1500); // add a small delay to after a process is started so it has time to initialize/load (hopefully before ff7 is started)
+
+                    // force the process to become minimized
+                    if (aproc.MainWindowHandle != IntPtr.Zero)
+                    {
+                        ShowWindow(aproc.MainWindowHandle.ToInt32(), SW_FORCEMINIMIZE);
+                    }
                 }
                 else
                 {

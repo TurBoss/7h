@@ -14,7 +14,7 @@
         ResizeMode="NoResize"
         Title="Game Launcher Settings" 
         Width="800"
-        Height="525">
+        Height="540">
     <Window.Resources>
 
         <DataTemplate x:Key="programItem">
@@ -27,7 +27,7 @@
 
         <DataTemplate x:Key="keyboardItemTemplate">
             <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
-                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedKeyboardOption, FallbackValue='Remember My Controls'}" Margin="0,0,15,0" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedGameConfigOption, FallbackValue='Stock Game'}" Margin="0,0,15,0" TextWrapping="Wrap"/>
             </Grid>
         </DataTemplate>
 
@@ -103,8 +103,10 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Controls:"
+                        <TextBlock Text="In-Game Config:"
                                    FontSize="13"
+                                   ToolTip="Sets your in-game config (controls, ATB, menu colors, battle speed, etc.) on game start. Select 'Custom', to use customized settings."
+                                   ToolTipService.IsEnabled="false"
                                    HorizontalAlignment="Right"
                                    VerticalAlignment="Top"
                                    Margin="0,4,1,0"/>
@@ -112,20 +114,22 @@
                                   FontSize="13"
                                   Grid.Column="1"
                                   MinWidth="165"
-                                  ToolTip="Set your desired control input configuration."
+                                  ToolTip="Sets your in-game config (controls, ATB, menu colors, battle speed, etc.) on game start. Select 'Custom', to use customized settings."
                                   ToolTipService.IsEnabled="false"
                                   MouseEnter="Control_MouseEnter"
                                   Style="{StaticResource MainComboBoxStyle}"
                                   ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
                                   ItemTemplate="{StaticResource keyboardItemTemplate}"
-                                  SelectedItem="{Binding SelectedKeyboardOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  ItemsSource="{Binding KeyboardOptions}"/>
+                                  SelectedItem="{Binding SelectedGameConfigOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  ItemsSource="{Binding InGameConfigOptions}"/>
                         <Button x:Name="btnRefreshKeyboard"
                                 Click="btnRefreshKeyboard_Click"
                                 Grid.Column="2"
                                 Style="{StaticResource ImageButton}"
                                 Content="{StaticResource iconRefresh}"
-                                ToolTip="Click to have 7th Heaven update remembered control settings with your currently set FF7 controls."
+                                IsEnabled="{Binding IsCustomConfigOptionSelected}"
+                                ToolTipService.IsEnabled="False"
+                                ToolTip="Retrieve or refresh current in-game config for 7H to remember."
                                 MouseEnter="Control_MouseEnter"
                                 Width="25"
                                 Height="25"/>
@@ -135,7 +139,7 @@
 
             <GroupBox x:Name="grpCompat"
                       Width="{Binding ElementName=grpOptions, Path=ActualWidth}"
-                      Header=" Compatibility " Margin="10,10,0,0" 
+                      Header=" Compatibility " Margin="10,5,0,0" 
                       HorizontalAlignment="Left"
                       VerticalAlignment="Top">
                 <StackPanel Margin="3" HorizontalAlignment="Right">
@@ -207,6 +211,7 @@
                                              HorizontalAlignment="Left"
                                              VerticalAlignment="Bottom"
                                              Margin="3,0,0,10"
+                                             ImageForeground="ForestGreen"
                                              TemplateSource="{StaticResource iconPlay}"
                                              IsEnabled="{Binding IsAudioNotPlaying}"
                                              Click="btnTestAudio_Click"
@@ -316,7 +321,9 @@
         <GroupBox x:Name="grpVideo"
                   Grid.Row="1"
                   Grid.Column="1"
-                  Header=" Graphics Driver Options " Margin="10,10,10,0"
+                  Header=" Graphics Driver Options " 
+                  Height="{Binding ElementName=grpCompat, Path=ActualHeight}"
+                  Margin="10,5,10,0"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Top">
             <StackPanel>
@@ -387,7 +394,7 @@
                   Grid.Column="1" 
                   Height="{Binding ElementName=grpShell, Path=ActualHeight}"
                   Header=" Programs to Run Prior to FF7: " 
-                  Margin="10,10,10,0">
+                  Margin="10,5,10,0">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>

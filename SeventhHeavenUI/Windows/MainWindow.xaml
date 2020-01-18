@@ -93,7 +93,7 @@
 
         <Viewbox HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5,0,0" Grid.ColumnSpan="2" Stretch="UniformToFill" StretchDirection="DownOnly">
             <WrapPanel>
-                <cls:ButtonWithImage x:Name="btnPlay" Content="Play" Margin="5,0,0,0" Click="btnPlay_Click" Padding="0,8,10,0" TemplateSource="{StaticResource iconPlay}"/>
+                <cls:ButtonWithImage x:Name="btnPlay" Content="Play" Margin="5,0,0,0" Click="btnPlay_Click" Padding="0,8,10,0" TemplateSource="{StaticResource iconPlay}" ImageForeground="ForestGreen"/>
                 <ToggleButton x:Name="btnPlayOptions" Style="{StaticResource DownArrowToggleButton}" Margin="-3,0,0,0" Click="btnPlayOptions_Click" ContextMenuService.Placement="Bottom">
                     <ToggleButton.ContextMenu>
                         <ContextMenu x:Name="menuPlayOptions" Closed="menuPlayOptions_Closed">
