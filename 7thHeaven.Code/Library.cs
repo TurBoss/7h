@@ -114,6 +114,9 @@ namespace Iros._7th.Workshop
         [System.Xml.Serialization.XmlIgnore]
         private static Dictionary<string, ModInfo> _infoCache = new Dictionary<string, _7thWrapperLib.ModInfo>(StringComparer.InvariantCultureIgnoreCase);
 
+        [System.Xml.Serialization.XmlIgnore]
+        private bool? _hasReadMe;
+
         public Guid ModID { get; set; }
         public Mod CachedDetails { get; set; }
         public string CachePreview { get; set; }
@@ -122,6 +125,21 @@ namespace Iros._7th.Workshop
         public List<InstalledVersion> Versions { get; set; }
         public InstalledVersion LatestInstalled { get { return Versions.OrderBy(v => v.VersionDetails.Version).Last(); } }
 
+        [System.Xml.Serialization.XmlIgnore]
+        public bool HasReadmeFile
+        {
+            get
+            {
+                if (_hasReadMe == null && LatestInstalled != null)
+                    _hasReadMe = LatestInstalled.HasFile("readme.md") || LatestInstalled.HasFile("readme.html") || LatestInstalled.HasFile("readme.txt");
+
+                return _hasReadMe.GetValueOrDefault(false);
+            }
+            set
+            {
+                _hasReadMe = value;
+            }
+        }
 
         public bool ModExistsOnFileSystem()
         {

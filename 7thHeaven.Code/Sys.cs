@@ -133,11 +133,11 @@ namespace Iros._7th.Workshop
             }
         }
 
-        public static string PathToInGameConfigFolder
+        public static string PathToControlsFolder
         {
             get
             {
-                return Path.Combine(_7HFolder, "Resources", "In-Game Config");
+                return Path.Combine(_7HFolder, "Resources", "Controls");
             }
         }
 

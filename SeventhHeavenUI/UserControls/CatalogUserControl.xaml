@@ -44,6 +44,21 @@
                     <GridViewColumn Header="Released" Width="90" DisplayMemberBinding="{Binding ReleaseDate}"/>
                     <GridViewColumn Header="Category" Width="100" DisplayMemberBinding="{Binding Category}"/>
                     <GridViewColumn Header="Size" Width="60" DisplayMemberBinding="{Binding DownloadSize}"/>
+                    <GridViewColumn Header="Inst." Width="40">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Viewbox Height="20" Width="20">
+                                    <ContentControl Template="{StaticResource iconNewStar}" Margin="5" HorizontalContentAlignment="Center"/>
+                                </Viewbox>
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding IsInstalled}" Value="False">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
                 </GridView>
             </ListView.View>
         </ListView>

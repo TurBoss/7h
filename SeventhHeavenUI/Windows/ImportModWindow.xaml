@@ -94,7 +94,18 @@
                  FontSize="14"
                  IsEnabled="{Binding ModNameInputIsEnabled}"
                  Text="{Binding ModNameInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 Margin="15,10,15,10"/>
+                 Margin="15,10,15,10">
+            <TextBox.Style>
+                <Style TargetType="TextBox" BasedOn="{StaticResource PrimaryTextBoxStyle}">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ProgressValue, FallbackValue='0'}" Value="0">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBox.Style>
+        </TextBox>
 
         <TextBlock Grid.Row="2"
                    FontSize="14"
@@ -113,6 +124,12 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
+
+        <ProgressBar Value="{Binding ProgressValue, FallbackValue='50'}"
+                     Visibility="{Binding ProgressBarVisibility, FallbackValue='Hidden'}"
+                     Grid.Row="2"
+                     Margin="10,10,10,10"/>
+
 
         <Button x:Name="btnOk"
                 Click="btnOk_Click"

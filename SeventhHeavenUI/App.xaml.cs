@@ -5,6 +5,7 @@ using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace SeventhHeavenUI
 {
@@ -75,10 +76,18 @@ namespace SeventhHeavenUI
             }
         }
 
-        //private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-        //{
-        //    Logger.Warn($"! Unhandled exception ! App Closing...");
-        //    Logger.Error(e.Exception);
-        //}
+        public static void ForceUpdateUI()
+        {
+            DispatcherFrame frame = new DispatcherFrame();
+
+            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Render, new DispatcherOperationCallback(delegate (object parameter)
+            {
+                frame.Continue = false;
+                return null;
+            }), null);
+
+            Dispatcher.PushFrame(frame);
+        }
+
     }
 }

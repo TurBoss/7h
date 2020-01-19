@@ -619,7 +619,7 @@ They will be automatically turned off.";
             PreviewModDescription = selected.InstallInfo.CachedDetails.Description;
             PreviewModLink = selected.InstallInfo.CachedDetails.Link;
 
-            PreviewModHasReadMe = selected.HasReadMe.GetValueOrDefault(false); // checks if mod .iro or folder has a readme file and caches the result since the disc lookup is slow on larger mods
+            PreviewModHasReadMe = selected.HasReadMe; // checks if mod .iro or folder has a readme file and caches the result since the disc lookup is slow on larger mods
 
             if (!string.IsNullOrWhiteSpace(selected.InstallInfo.CachedDetails.LatestVersion.PreviewImage))
             {

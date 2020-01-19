@@ -1440,9 +1440,9 @@ namespace SeventhHeaven.Classes
 
         public static bool CopyKeyboardInputCfg()
         {
-            string pathToCfg = Path.Combine(Sys.PathToInGameConfigFolder, Sys.Settings.GameLaunchSettings.InGameConfigOption);
+            string pathToCfg = Path.Combine(Sys.PathToControlsFolder, Sys.Settings.GameLaunchSettings.InGameConfigOption);
 
-            Instance.RaiseProgressChanged($"\tusing in-game configuration file {Sys.Settings.GameLaunchSettings.InGameConfigOption} ...");
+            Instance.RaiseProgressChanged($"\tusing control configuration file {Sys.Settings.GameLaunchSettings.InGameConfigOption} ...");
             if (!File.Exists(pathToCfg))
             {
                 Instance.RaiseProgressChanged($"\tWARNING: input cfg file not found at {pathToCfg}");

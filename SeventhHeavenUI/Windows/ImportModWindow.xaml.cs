@@ -33,12 +33,20 @@ namespace SeventhHeaven.Windows
         private void btnOk_Click(object sender, RoutedEventArgs e)
         {
             Task<bool> t = ViewModel.ImportModFromWindowAsync();
+            this.Cursor = System.Windows.Input.Cursors.Wait;
+            App.ForceUpdateUI();
 
             t.ContinueWith((taskResult) =>
             {
                 if (taskResult.IsFaulted)
                 {
                     Sys.Message(new WMessage($"Failed to import - {taskResult.Exception.GetBaseException()?.Message}", true));
+
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        this.Cursor = System.Windows.Input.Cursors.Arrow;
+                    });
+
                     return;
                 }
 

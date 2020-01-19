@@ -31,7 +31,6 @@ namespace SeventhHeavenUI.ViewModels
         private int _sortOrder;
         private List<string> _categoryList;
         private Thickness _borderThickness;
-        private bool? _hasReadMe;
 
         public delegate void OnActivationChanged(object sender, InstalledModViewModel selected);
         public event OnActivationChanged ActivationChanged;
@@ -203,18 +202,11 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
-        public bool? HasReadMe
+        public bool HasReadMe
         {
             get
             {
-                if (_hasReadMe == null && InstallInfo.LatestInstalled != null)
-                    _hasReadMe = InstallInfo.LatestInstalled.HasFile("readme.md") || InstallInfo.LatestInstalled.HasFile("readme.html") || InstallInfo.LatestInstalled.HasFile("readme.txt");
-
-                return _hasReadMe;
-            }
-            set
-            {
-                _hasReadMe = value;
+                return InstallInfo.HasReadmeFile;
             }
         }
 

@@ -74,20 +74,7 @@ namespace SeventhHeaven.ViewModels
                 StatusLog += $"{message}\n";
             }, DispatcherPriority.Background);
 
-            ForceUpdateUI();
-        }
-
-        public static void ForceUpdateUI()
-        {
-            DispatcherFrame frame = new DispatcherFrame();
-
-            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Render, new DispatcherOperationCallback(delegate (object parameter)
-            {
-                frame.Continue = false;
-                return null;
-            }), null);
-
-            Dispatcher.PushFrame(frame);
+            App.ForceUpdateUI();
         }
     }
 }

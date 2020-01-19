@@ -277,7 +277,7 @@ namespace _7thWrapperLib {
             return true;
         }
 
-        public IrosArc(string filename, bool patchable = false) {
+        public IrosArc(string filename, bool patchable = false, Action<int, int> progressAction = null) {
             _source = filename;
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
@@ -300,6 +300,7 @@ namespace _7thWrapperLib {
             _lookup = new Dictionary<string, DirectoryEntry>(StringComparer.InvariantCultureIgnoreCase);
             _folderNames = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
             for (int i = 0; i < numfiles; i++) {
+                progressAction?.Invoke(i, numfiles);
                 DirectoryEntry e = new DirectoryEntry();
                 e.Open(_data, _header.Version);
 #if !RUDE

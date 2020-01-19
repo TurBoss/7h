@@ -14,7 +14,7 @@
         ResizeMode="NoResize"
         Title="Game Launcher Settings" 
         Width="800"
-        Height="540">
+        Height="560">
     <Window.Resources>
 
         <DataTemplate x:Key="programItem">
@@ -27,20 +27,26 @@
 
         <DataTemplate x:Key="keyboardItemTemplate">
             <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
-                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedGameConfigOption, FallbackValue='Stock Game'}" Margin="0,0,15,0" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedGameConfigOption, FallbackValue='1998 KB+Std Gamepad'}" 
+                           Margin="0,0,15,0" 
+                           TextWrapping="Wrap"/>
             </Grid>
         </DataTemplate>
 
 
         <DataTemplate x:Key="soundItemTemplate">
             <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
-                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedSoundDevice, FallbackValue='Auto-switch (Windows default)'}" Margin="0,0,15,0" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedSoundDevice, FallbackValue='Auto-switch (Windows default)'}" Margin="0,0,15,0" 
+                           TextWrapping="NoWrap"
+                           TextTrimming="CharacterEllipsis"/>
             </Grid>
         </DataTemplate>
 
         <DataTemplate x:Key="midiItemTemplate">
             <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
-                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedMidiDevice, FallbackValue='General MIDI'}" Margin="0,0,15,0" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedMidiDevice, FallbackValue='General MIDI'}" Margin="0,0,15,0" 
+                           TextWrapping="NoWrap"
+                           TextTrimming="CharacterEllipsis"/>
             </Grid>
         </DataTemplate>
 
@@ -65,8 +71,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0"
@@ -95,7 +101,7 @@
                     <CheckBox Height="25" Content="Show Game Launcher" 
                               IsChecked="{Binding IsShowLauncherChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               MouseEnter="Control_MouseEnter"
-                              ToolTip="Shows the Game Launcher window when starting FF7 for detailed output of the launch process"/>
+                              ToolTip="Shows the Game Launcher window when starting FF7 for detailed output of the launch process."/>
 
                     <Grid Margin="0,3,0,0">
                         <Grid.ColumnDefinitions>
@@ -103,9 +109,9 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="In-Game Config:"
+                        <TextBlock Text="Controls:"
                                    FontSize="13"
-                                   ToolTip="Sets your in-game config (controls, ATB, menu colors, battle speed, etc.) on game start. Select 'Custom', to use customized settings."
+                                   ToolTip="Sets your in-game keyboard and gamepad controls. Select 'Custom' to use your own settings."
                                    ToolTipService.IsEnabled="false"
                                    HorizontalAlignment="Right"
                                    VerticalAlignment="Top"
@@ -114,7 +120,8 @@
                                   FontSize="13"
                                   Grid.Column="1"
                                   MinWidth="165"
-                                  ToolTip="Sets your in-game config (controls, ATB, menu colors, battle speed, etc.) on game start. Select 'Custom', to use customized settings."
+                                  MaxWidth="165"
+                                  ToolTip="Sets your in-game keyboard and gamepad controls. Select 'Custom' to use your own settings."
                                   ToolTipService.IsEnabled="false"
                                   MouseEnter="Control_MouseEnter"
                                   Style="{StaticResource MainComboBoxStyle}"
@@ -129,7 +136,7 @@
                                 Content="{StaticResource iconRefresh}"
                                 IsEnabled="{Binding IsCustomConfigOptionSelected}"
                                 ToolTipService.IsEnabled="False"
-                                ToolTip="Retrieve or refresh current in-game config for 7H to remember."
+                                ToolTip="Retrieve your settings currently set in-game. Click refresh if you change your custom controls later."
                                 MouseEnter="Control_MouseEnter"
                                 Width="25"
                                 Height="25"/>
@@ -156,7 +163,7 @@
                               IsChecked="{Binding DisableReunionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding IsReunionInstalled}"
                               MouseEnter="Control_MouseEnter"
-                              ToolTip="Temporarily renames ddraw.dll to Reunion.dll.bak on game launch, then immediately back again. Does not affect playability of Reunion outside of 7H"/>
+                              ToolTip="Temporarily renames ddraw.dll to Reunion.dll.bak on game launch, then immediately back again. Does not affect playability of Reunion outside of 7H."/>
                 </StackPanel>
             </GroupBox>
         </StackPanel>
@@ -184,6 +191,9 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Text="Sound Device:"
+                               ToolTipService.IsEnabled="False"
+                               ToolTip="Select an output audio device for FF7."
+                               MouseEnter="Control_MouseEnter"
                                Grid.Row="0"
                                HorizontalAlignment="Right"
                                VerticalAlignment="Center"
@@ -197,6 +207,9 @@
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
                         <ComboBox x:Name="cboSoundDevices"
+                                  ToolTip="Select an output audio device for FF7."
+                                  ToolTipService.IsEnabled="False"
+                                  MouseEnter="Control_MouseEnter"
                                   Style="{StaticResource MainComboBoxStyle}"
                                   ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
                                   ItemTemplate="{StaticResource soundItemTemplate}"
@@ -229,8 +242,20 @@
                                       ContextMenuService.Placement="Bottom">
                             <ToggleButton.ContextMenu>
                                 <ContextMenu x:Name="menuAudioTest" Closed="menuAudioTest_Closed">
-                                    <MenuItem x:Name="menuItemTestLeft" Header="Test Left Channel" Click="menuItemTestLeft_Click" IsEnabled="{Binding IsAudioNotPlaying}"/>
-                                    <MenuItem x:Name="menuItemTestRight" Header="Test Right Channel" Click="menuItemTestRight_Click" IsEnabled="{Binding IsAudioNotPlaying}"/>
+                                    <MenuItem x:Name="menuItemTestLeft" 
+                                              Header="Test Left Channel" 
+                                              Click="menuItemTestLeft_Click" 
+                                              ToolTip="Test the selected sound device and music volume for the Left channel. Test sound provided by Enrico Deiana."
+                                              ToolTipService.IsEnabled="false"
+                                              MouseEnter="Control_MouseEnter"
+                                              IsEnabled="{Binding IsAudioNotPlaying}"/>
+                                    <MenuItem x:Name="menuItemTestRight" 
+                                              Header="Test Right Channel" 
+                                              Click="menuItemTestRight_Click" 
+                                              ToolTip="Test the selected sound device and music volume for the Right channel. Test sound provided by Enrico Deiana."
+                                              ToolTipService.IsEnabled="false"
+                                              MouseEnter="Control_MouseEnter"
+                                              IsEnabled="{Binding IsAudioNotPlaying}"/>
                                 </ContextMenu>
                             </ToggleButton.ContextMenu>
                         </ToggleButton>
@@ -238,6 +263,9 @@
 
                     <TextBlock Text="MIDI Device:"
                                Grid.Row="1"
+                               ToolTip="Select an output midi device for FF7."
+                               ToolTipService.IsEnabled="False"
+                               MouseEnter="Control_MouseEnter"
                                HorizontalAlignment="Right"
                                VerticalAlignment="Center"
                                Margin="2,0,0,10"/>
@@ -253,6 +281,9 @@
                               VerticalAlignment="Center"
                               Margin="4,1,0,10"
                               MinWidth="250"
+                              ToolTip="Select an output midi device for FF7."
+                              ToolTipService.IsEnabled="False"
+                              MouseEnter="Control_MouseEnter"
                               Width="{Binding ElementName=cboSoundDevices, Path=ActualWidth}"/>
 
 
@@ -268,9 +299,14 @@
                             <TextBlock Text="Music Volume:"
                                        HorizontalAlignment="Right"
                                        VerticalAlignment="Center"
+                                       ToolTip="Set the in-game music volume."
+                                       ToolTipService.IsEnabled="False"
+                                       MouseEnter="Control_MouseEnter"
                                        Margin="0,0,3,10"/>
                             <Slider x:Name="sliderVolume"
                                     Value="{Binding MusicVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
+                                    ToolTip="{Binding MusicVolumeDisplayText}"
+                                    ToolTipService.InitialShowDelay="100"
                                     Minimum="0"
                                     Maximum="100"
                                     MinWidth="115"
@@ -281,10 +317,15 @@
                             <TextBlock Text="SFX Volume:"
                                        HorizontalAlignment="Right"
                                        VerticalAlignment="Center"
+                                       ToolTip="Set the in-game SFX volume."
+                                       ToolTipService.IsEnabled="False"
+                                       MouseEnter="Control_MouseEnter"
                                        Margin="0,0,3,10"/>
                             <Slider x:Name="sliderSfxVolume"
                                     HorizontalAlignment="Right"
                                     Value="{Binding SfxVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
+                                    ToolTip="{Binding SfxVolumeDisplayText}"
+                                    ToolTipService.InitialShowDelay="100"
                                     Minimum="0"
                                     Maximum="100"
                                     MinWidth="105"
@@ -360,7 +401,8 @@
                     </Grid.ColumnDefinitions>
                     <WrapPanel HorizontalAlignment="Stretch" Margin="4,3,10,6"
                                MouseEnter="Control_MouseEnter"
-                               ToolTip="Only applies when set to 'Software Renderer' or 'Direct3D Hardware Acceleration'">
+                               ToolTip="Only applies when set to 'Software Renderer' or 'Direct3D Hardware Acceleration'."
+                               ToolTipService.IsEnabled="False">
                         <RadioButton Content="Quarter Screen" VerticalAlignment="Center" Margin="0,0,10,0"
                                      GroupName="ScreenMode"
                                      Visibility="{Binding ScreenModesVisibility}"
@@ -375,7 +417,8 @@
                                HorizontalAlignment="Right"
                                MouseEnter="Control_MouseEnter"
                                Margin="0,0,-3,0"
-                               ToolTip="Only applies when set to 'Direct3D Hardware Acceleration'">
+                               ToolTip="Only applies when set to 'Direct3D Hardware Acceleration'."
+                               ToolTipService.IsEnabled="False">
                         <RadioButton Content="RIVA 128" VerticalAlignment="Center" Margin="0,0,10,0"
                                      GroupName="GraphicsOption"
                                      Visibility="{Binding RivaOptionsVisibility}"
@@ -404,7 +447,9 @@
                 <StackPanel Margin="3,3,0,3">
                     <Button x:Name="btnAddProgram"
                             Click="btnAddProgram_Click"
-                            ToolTip="Add Program to run"
+                            ToolTip="Add a program to run prior to FF7 starting."
+                            ToolTipService.IsEnabled="False"
+                            MouseEnter="Control_MouseEnter"
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"
                             Height="28"
@@ -414,7 +459,9 @@
 
                     <Button x:Name="btnRemoveProgram"
                             Click="btnRemoveProgram_Click"
-                            ToolTip="Remove Program"
+                            ToolTipService.IsEnabled="False"
+                            MouseEnter="Control_MouseEnter"
+                            ToolTip="Remove selected program."
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"
                             Height="28"
@@ -423,7 +470,9 @@
                             Content="{StaticResource iconMinus}"/>
 
                     <Button x:Name="btnEditProgram"
-                            ToolTip="Edit Program and Arguments"
+                            ToolTip="Edit selected program and arguments."
+                            ToolTipService.IsEnabled="False"
+                            MouseEnter="Control_MouseEnter"
                             Click="btnEditProgram_Click"
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"

@@ -174,7 +174,7 @@
                             VerticalAlignment="Top"
                             Height="28"
                             Width="28"
-                            Content="{StaticResource iconUpArrow}"/>
+                            Content="{StaticResource iconUpChevron}"/>
 
                     <Button x:Name="btnMoveUrlDown"
                             ToolTip="Move Subscription Down"
@@ -183,7 +183,7 @@
                             VerticalAlignment="Top"
                             Height="28"
                             Width="28"
-                            Content="{StaticResource iconDownArrow}"/>
+                            Content="{StaticResource iconDownChevron}"/>
 
                 </StackPanel>
                 

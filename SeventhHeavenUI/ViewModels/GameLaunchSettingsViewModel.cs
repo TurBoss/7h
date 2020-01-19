@@ -1,5 +1,6 @@
 ﻿using _7thHeaven.Code;
 using Iros._7th.Workshop;
+using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using SeventhHeaven.Classes;
 using SeventhHeaven.Windows;
@@ -371,6 +372,17 @@ namespace SeventhHeaven.ViewModels
                 NotifyPropertyChanged(nameof(RivaOptionsVisibility));
                 NotifyPropertyChanged(nameof(ScreenModesVisibility));
 
+                // ensure atleast one radio button is checked when changing renderer
+                if (!IsTntOptionChecked && !IsRivaOptionChecked)
+                {
+                    IsTntOptionChecked = true;
+                }
+
+                if (!IsQuarterScreenChecked && !IsFullScreenChecked)
+                {
+                    IsFullScreenChecked = true;
+                }
+
                 ShowWarningMessageAboutRenderer();
             }
         }
@@ -395,6 +407,12 @@ namespace SeventhHeaven.ViewModels
             {
                 _volumeValue = value;
                 NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(MusicVolumeDisplayText));
+
+                if (IsAudioPlaying)
+                {
+                    _audioTest.Volume = (float)_volumeValue / (float)100.0;
+                }
             }
         }
 
@@ -408,9 +426,25 @@ namespace SeventhHeaven.ViewModels
             {
                 _sfxVolumeValue = value;
                 NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(SfxVolumeDisplayText));
             }
         }
 
+        public string SfxVolumeDisplayText
+        {
+            get
+            {
+                return $"Volume: {SfxVolumeValue}";
+            }
+        }
+
+        public string MusicVolumeDisplayText
+        {
+            get
+            {
+                return $"Volume: {MusicVolumeValue}";
+            }
+        }
 
         public bool IsProgramPopupOpen
         {
@@ -541,7 +575,7 @@ namespace SeventhHeaven.ViewModels
             if (string.IsNullOrWhiteSpace(SelectedGameConfigOption))
             {
                 // default to first option if there previous option is missing
-                SelectedGameConfigOption = InGameConfigOptions[0]; 
+                SelectedGameConfigOption = InGameConfigOptions[0];
             }
 
 
@@ -670,7 +704,7 @@ namespace SeventhHeaven.ViewModels
         /// <param name="forceCopy"> copies ff7input.cfg if it already exists; overwriting the current custom.cfg </param>
         public static void CopyInputCfgToCustomCfg(bool forceCopy)
         {
-            string pathToCustomCfg = Path.Combine(Sys.PathToInGameConfigFolder, "custom.cfg" );
+            string pathToCustomCfg = Path.Combine(Sys.PathToControlsFolder, "custom.cfg");
 
             if (!File.Exists(pathToCustomCfg) || forceCopy)
             {
@@ -691,13 +725,13 @@ namespace SeventhHeaven.ViewModels
         {
             Dictionary<string, string> configOptions = new Dictionary<string, string>();
 
-            if (!Directory.Exists(Sys.PathToInGameConfigFolder))
+            if (!Directory.Exists(Sys.PathToControlsFolder))
             {
-                Logger.Warn($"Can not load configuration options because the directory does not exist: {Sys.PathToInGameConfigFolder}");
+                Logger.Warn($"Can not load configuration options because the directory does not exist: {Sys.PathToControlsFolder}");
                 return;
             }
 
-            foreach (string filePath in Directory.GetFiles(Sys.PathToInGameConfigFolder, "*.cfg").OrderBy(s => s))
+            foreach (string filePath in Directory.GetFiles(Sys.PathToControlsFolder, "*.cfg").OrderBy(s => s))
             {
                 FileInfo info = new FileInfo(filePath);
 
@@ -726,7 +760,16 @@ namespace SeventhHeaven.ViewModels
                 if (caps.ProductGuid == Guid.Empty)
                     continue;
 
-                deviceGuids.Add(caps.ProductName, caps.ProductGuid);
+                // reference: https://stackoverflow.com/questions/1449162/get-the-full-name-of-a-wavein-device
+                MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
+                foreach (MMDevice device in enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active))
+                {
+                    if (device.FriendlyName.StartsWith(caps.ProductName))
+                    {
+                        deviceGuids.Add(device.FriendlyName, new Guid(device.Properties[PropertyKeys.PKEY_AudioEndpoint_GUID].Value as string));
+                        break;
+                    }
+                }
             }
 
             SoundDeviceGuids = deviceGuids;
@@ -832,8 +875,19 @@ namespace SeventhHeaven.ViewModels
             {
                 var caps = WaveOut.GetCapabilities(n);
 
-                if (caps.ProductGuid == selectedGuid)
-                    return n;
+                MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
+                foreach (MMDevice device in enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active))
+                {
+                    if (device.FriendlyName.StartsWith(caps.ProductName))
+                    {
+                        Guid soundGuid = new Guid(device.Properties[PropertyKeys.PKEY_AudioEndpoint_GUID].Value as string);
+                        
+                        if (soundGuid == selectedGuid)
+                        {
+                            return n;
+                        }
+                    }
+                }
             }
 
             return -1; // if device not found return default device which is -1

@@ -52,7 +52,7 @@ namespace SeventhHeaven.Windows
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.LogStatus("### Launching Final Fantasy VII ###");
-            GameLaunchViewModel.ForceUpdateUI();
+            App.ForceUpdateUI();
 
             // Wait 1 second before starting actual launch process so the window is fully loaded
             var sleepTask = Task.Factory.StartNew(() =>
@@ -135,7 +135,7 @@ namespace SeventhHeaven.Windows
         private void txtLog_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             txtLog.ScrollToEnd();
-            GameLaunchViewModel.ForceUpdateUI();
+            App.ForceUpdateUI();
         }
     }
 }

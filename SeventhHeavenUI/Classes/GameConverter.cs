@@ -247,33 +247,109 @@ namespace SeventhHeaven.Classes
 
         public bool IsGamePirated()
         {
-            List<string> pirateKeyWords = new List<string>() { "crack", "warez", "torrent", "skidrow", "goodies" }; // folders and keywords usually found in files when the game is pirated
-            List<string> pirateExtensions = new List<string>() { ".nfo" };                                          // file extensions that indicate the game could be pirated
-            List<string> pirateExactKeywords = new List<string>() { "ali213.ini", "rld.dll", "gameservices.dll" };  // files that indicate the game is pirated
+            string[] foldersToExclude = new string[] { "The_Reunion", "mods", "direct" }; // folders to skip in check
 
-            foreach (string file in Directory.GetFileSystemEntries(InstallPath, "*", SearchOption.AllDirectories))
+            // check all folders at root of InstallPath (excluding some)
+            foreach (string subfolder in Directory.GetDirectories(InstallPath))
             {
-                FileInfo info = new FileInfo(file);
+                DirectoryInfo dirInfo = new DirectoryInfo(subfolder);
 
-                if (file.IndexOf("torrent", StringComparison.InvariantCultureIgnoreCase) >= 0 && file.IndexOf("Reunion", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                if (foldersToExclude.Any(f => dirInfo.Name.Equals(f, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    continue; // don't check these folders for signs of pirated files
+                }
+
+                bool isPirated = DirectoryHasPirates(subfolder);
+                if (isPirated)
+                {
+                    return true;
+                }
+            }
+
+            // check files at root of InstallPath
+            foreach (string file in Directory.GetFiles(InstallPath))
+            {
+                bool isPirated = IsFileOrFolderAPirate(file);
+                if (isPirated)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks all files, folders, and sub-folders for signs of pirated files 
+        /// </summary>
+        /// <param name="folderPath"> folder to loop over and check </param>
+        private bool DirectoryHasPirates(string folderPath)
+        {
+
+            string[] filesToAllow = new string[] { "00422 [F - Crackling fire, looped].ogg" };
+
+            foreach (string fileEntry in Directory.GetFileSystemEntries(folderPath, "*", SearchOption.AllDirectories))
+            {
+                FileInfo info = new FileInfo(fileEntry);
+
+                if (fileEntry.IndexOf("torrent", StringComparison.InvariantCultureIgnoreCase) >= 0 && fileEntry.IndexOf("Reunion", StringComparison.InvariantCultureIgnoreCase) >= 0)
                 {
                     continue; // allow Reunion torrent files
                 }
 
-                if (pirateExactKeywords.Any(s => s.Equals(info.Name, StringComparison.InvariantCultureIgnoreCase)))
+                if (filesToAllow.Any(f => info.Name.Equals(f, StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    return true;
+                    continue; // this file has been marked as allowed by us so we skip the file
                 }
 
-                if (pirateExtensions.Any(s => s == info.Extension))
-                {
-                    return true;
-                }
+                bool isPirated = IsFileOrFolderAPirate(fileEntry);
 
-                if (pirateKeyWords.Any(s => file.IndexOf(s, StringComparison.InvariantCultureIgnoreCase) >= 0))
+                if (isPirated)
                 {
                     return true;
                 }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determines if the given folder or file is pirated by checking against specific keywords.
+        /// </summary>
+        private bool IsFileOrFolderAPirate(string pathToFileOrFolder)
+        {
+            string[] pirateKeyWords = new string[] { "crack", "warez", "torrent", "skidrow", "goodies" }; // folders and keywords usually found in files when the game is pirated
+            string[] pirateExtensions = new string[] { ".nfo" };                                          // file extensions that indicate the game could be pirated
+            string[] pirateExactKeywords = new string[] { "ali213.ini", "rld.dll", "gameservices.dll" };  // files that indicate the game is pirated
+
+            string name;
+            string ext;
+
+            if (Directory.Exists(pathToFileOrFolder))
+            {
+                name = new DirectoryInfo(pathToFileOrFolder).Name;
+                ext = new DirectoryInfo(pathToFileOrFolder).Extension;
+            }
+            else
+            {
+                name = new FileInfo(pathToFileOrFolder).Name;
+                ext = new FileInfo(pathToFileOrFolder).Extension;
+            }
+
+
+            if (pirateExactKeywords.Any(s => s.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                return true;
+            }
+
+            if (pirateExtensions.Any(s => s == ext))
+            {
+                return true;
+            }
+
+            if (pirateKeyWords.Any(s => pathToFileOrFolder.IndexOf(s, StringComparison.InvariantCultureIgnoreCase) >= 0))
+            {
+                return true;
             }
 
             return false;

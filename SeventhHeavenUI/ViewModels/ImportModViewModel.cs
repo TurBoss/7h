@@ -35,6 +35,7 @@ namespace SeventhHeaven.ViewModels
         private string _modNameInput;
         private int _selectedTabIndex;
         private bool _isImporting;
+        private int _progressValue;
 
         public string PathToIroArchiveInput
         {
@@ -146,9 +147,35 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public int ProgressValue
+        {
+            get
+            {
+                return _progressValue;
+            }
+            set
+            {
+                _progressValue = value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(ProgressBarVisibility));
+            }
+        }
+
+        public Visibility ProgressBarVisibility
+        {
+            get
+            {
+                if (ProgressValue == 0)
+                    return Visibility.Hidden;
+
+                return Visibility.Visible;
+            }
+        }
+
         public ImportModViewModel()
         {
             SelectedTabIndex = 0;
+            ProgressValue = 0;
             ModNameInput = "";
             UpdateHelpText();
         }
@@ -173,6 +200,7 @@ namespace SeventhHeaven.ViewModels
         public Task<bool> ImportModFromWindowAsync()
         {
             IsImporting = true;
+            ProgressValue = 10;
             Sys.Message(new WMessage("Importing mod(s)... Please wait ..."));
 
             Task<bool> t = Task.Factory.StartNew(() =>
@@ -219,9 +247,13 @@ namespace SeventhHeaven.ViewModels
                 return false;
             }
 
+            ModImporter importer = null;
             try
             {
-                ModImporter.ImportMod(PathToIroArchiveInput, ModNameInput, true, false);
+                importer = new ModImporter();
+                importer.ImportProgressChanged += Importer_ImportProgressChanged;
+                importer.Import(PathToIroArchiveInput, ModNameInput, true, false);
+
                 Sys.Message(new WMessage($"Successfully imported {ModNameInput}!"));
                 return true;
             }
@@ -231,7 +263,18 @@ namespace SeventhHeaven.ViewModels
                 MessageDialogWindow.Show("Failed to import mod. The error has been logged", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
+            finally
+            {
+                importer.ImportProgressChanged -= Importer_ImportProgressChanged;
+            }
 
+        }
+
+        private void Importer_ImportProgressChanged(string message, double percentComplete)
+        {
+            HelpText = message;
+            ProgressValue = (int)percentComplete;
+            App.ForceUpdateUI();
         }
 
         private bool TryImportFromFolder()
@@ -254,9 +297,13 @@ namespace SeventhHeaven.ViewModels
                 return false;
             }
 
+            ModImporter importer = null;
             try
             {
-                ModImporter.ImportMod(PathToModFolderInput, ModNameInput, false, false);
+                importer = new ModImporter();
+                importer.ImportProgressChanged += Importer_ImportProgressChanged;
+                importer.Import(PathToModFolderInput, ModNameInput, false, false);
+
                 Sys.Message(new WMessage($"Successfully imported {ModNameInput}!", true));
                 return true;
             }
@@ -265,6 +312,10 @@ namespace SeventhHeaven.ViewModels
                 Logger.Error(e);
                 MessageDialogWindow.Show("Failed to import mod. The error has been logged", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
+            }
+            finally
+            {
+                importer.ImportProgressChanged -= Importer_ImportProgressChanged;
             }
         }
 
@@ -282,21 +333,26 @@ namespace SeventhHeaven.ViewModels
                 return false;
             }
 
+            ModImporter importer = null;
+
             try
             {
+                importer = new ModImporter();
+                importer.ImportProgressChanged += Importer_ImportProgressChanged;
+
                 int modImportCount = 0;
 
                 foreach (string iro in Directory.GetFiles(PathToBatchFolderInput, "*.iro"))
                 {
                     string modName = ModImporter.ParseNameFromFileOrFolder(Path.GetFileNameWithoutExtension(iro));
-                    ModImporter.ImportMod(iro, modName, true, false);
+                    importer.Import(iro, modName, true, false);
                     modImportCount++;
                 }
 
                 foreach (string dir in Directory.GetDirectories(PathToBatchFolderInput))
                 {
                     string modName = ModImporter.ParseNameFromFileOrFolder(Path.GetFileNameWithoutExtension(dir));
-                    ModImporter.ImportMod(dir, modName, false, false);
+                    importer.Import(dir, modName, false, false);
                     modImportCount++;
                 }
 
@@ -308,6 +364,10 @@ namespace SeventhHeaven.ViewModels
                 Logger.Error(e);
                 MessageDialogWindow.Show("Failed to import mod(s). The error has been logged", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
+            }
+            finally
+            {
+                importer.ImportProgressChanged -= Importer_ImportProgressChanged;
             }
         }
     }

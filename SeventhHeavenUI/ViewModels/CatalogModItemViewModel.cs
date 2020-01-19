@@ -128,6 +128,13 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
+        public bool IsInstalled
+        {
+            get
+            {
+                return Sys.GetStatus(Mod.ID) == ModStatus.Installed;
+            }
+        }
 
         public Mod Mod
         {
@@ -198,6 +205,8 @@ namespace SeventhHeavenUI.ViewModels
             {
                 Category = ModCategory.Unknown.ToString();
             }
+
+            NotifyPropertyChanged(nameof(IsInstalled));
         }
 
     }

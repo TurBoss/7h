@@ -77,7 +77,7 @@ namespace SeventhHeaven.UserControls
         internal void RecalculateColumnWidths(double listWidth)
         {
             double padding = 8;
-            double staticColumnWidth = 90 + 100 + 60; // sum of columns with static widths
+            double staticColumnWidth = 90 + 100 + 60 + 40; // sum of columns with static widths
 
             if (listWidth == 0)
             {
@@ -170,14 +170,33 @@ namespace SeventhHeaven.UserControls
                 }
             }
 
-            Binding headerBinding = headerClicked.Column.DisplayMemberBinding.ProvideValue(null) as Binding;
+            string propertyNameToSortBy = "";
 
-            if (headerBinding == null)
+            if (headerClicked.Column.DisplayMemberBinding != null)
             {
-                return;
+                Binding headerBinding = headerClicked.Column.DisplayMemberBinding.ProvideValue(null) as Binding;
+                
+                if (headerBinding == null)
+                {
+                    return;
+                }
+
+                propertyNameToSortBy = headerBinding.Path?.Path;
+            }
+            else
+            {
+                switch (headerClicked.Column.Header)
+                {
+                    case "Inst.":
+                        propertyNameToSortBy = "IsInstalled";
+                        break;
+
+                    default:
+                        return; // exit if unknown
+                }
             }
 
-            string propertyNameToSortBy = headerBinding.Path?.Path;
+
             Sort(propertyNameToSortBy, direction);
 
             _lastHeaderClicked = headerClicked;
