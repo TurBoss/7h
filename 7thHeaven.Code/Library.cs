@@ -211,6 +211,22 @@ namespace Iros._7th.Workshop
                 return s != null;
             }
         }
+
+        public bool HasFile(string name)
+        {
+            string path = Path.Combine(Sys.Settings.LibraryLocation, InstalledLocation);
+
+            if (InstalledLocation.EndsWith(".iro", StringComparison.InvariantCultureIgnoreCase) && File.Exists(path))
+            {
+                using (var arc = new _7thWrapperLib.IrosArc(path))
+                    return arc.HasFile(name);
+            }
+            else
+            {
+                path = Path.Combine(path, name);
+                return File.Exists(path);
+            }
+        }
     }
 
     public enum ModStatus

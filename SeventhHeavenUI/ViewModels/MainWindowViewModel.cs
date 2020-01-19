@@ -619,15 +619,7 @@ They will be automatically turned off.";
             PreviewModDescription = selected.InstallInfo.CachedDetails.Description;
             PreviewModLink = selected.InstallInfo.CachedDetails.Link;
 
-            InstalledVersion latestVersion = selected.InstallInfo.LatestInstalled;
-            if (latestVersion != null)
-            {
-                PreviewModHasReadMe = latestVersion.HasData("readme.md") || latestVersion.HasData("readme.html") || latestVersion.HasData("readme.txt");
-            }
-            else
-            {
-                PreviewModHasReadMe = false;
-            }
+            PreviewModHasReadMe = selected.HasReadMe.GetValueOrDefault(false); // checks if mod .iro or folder has a readme file and caches the result since the disc lookup is slow on larger mods
 
             if (!string.IsNullOrWhiteSpace(selected.InstallInfo.CachedDetails.LatestVersion.PreviewImage))
             {
@@ -1007,17 +999,17 @@ They will be automatically turned off.";
 
             Directory.CreateDirectory(tempDirPath);
 
-            if (inst.HasData("readme.html"))
+            if (inst.HasFile("readme.html"))
             {
                 tempFileName = "readme.html";
                 hasReadmeFile = true;
             }
-            else if (inst.HasData("readme.md"))
+            else if (inst.HasFile("readme.md"))
             {
                 tempFileName = "readme.md";
                 hasReadmeFile = true;
             }
-            else if (inst.HasData("readme.txt"))
+            else if (inst.HasFile("readme.txt"))
             {
                 tempFileName = "readme.txt";
                 hasReadmeFile = true;
