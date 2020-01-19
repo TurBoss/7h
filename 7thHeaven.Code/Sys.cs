@@ -141,6 +141,23 @@ namespace Iros._7th.Workshop
             }
         }
 
+        public static string PathToGameDriverFolder
+        {
+            get
+            {
+                return Path.Combine(_7HFolder, "Resources", "Game Driver");
+            }
+        }
+
+        public static string PathToProvidedExe
+        {
+            get
+            {
+                return Path.Combine(_7HFolder, "Resources", "FF7_1.02_Eng_Patch");
+            }
+        }
+
+
         public static Catalog Catalog { get; set; }
         public static Library Library { get; set; }
         public static ImageCache ImageCache { get; private set; }

@@ -75,43 +75,151 @@ namespace SeventhHeaven.Classes
 
         public static bool LaunchGame(bool varDump, bool debug, bool launchWithNoMods = false)
         {
+            Instance.RaiseProgressChanged($"Checking FF7 .exe exists at {Sys.Settings.FF7Exe} ...");
+            if (!File.Exists(Sys.Settings.FF7Exe))
+            {
+                Instance.RaiseProgressChanged("\tfile not found. Aborting ...");
+                Instance.RaiseProgressChanged("FF7.exe not found. You may need to configure 7H using the Settings>General Settings menu.");
+                return false;
+            }
+
+            //
+            // GAME CONVERTER - Make sure game is ready for mods
+            // 
+            GameConverter converter = new GameConverter(new ConversionSettings()
+            {
+                InstallPath = Path.GetDirectoryName(Sys.Settings.FF7Exe)
+            });
+            converter.MessageSent += GameConverter_MessageSent;
+
+
+            Instance.RaiseProgressChanged("Verifying installed game is compatible ...");
+            if (converter.IsGamePirated())
+            {
+                Instance.RaiseProgressChanged("Incompatible game files found. Unable to continue.");
+                Logger.Info(FileUtils.ListAllFiles(converter.InstallPath));
+                return false;
+            }
+
+            Instance.RaiseProgressChanged("Verifying game is full/max install ...");
+            if (!converter.VerifyFullInstallation())
+            {
+                string messageToUser = "Your FF7 installation folder is missing critical file(s). When you installed FF7, you may have accidentally chosen to install the 'Standard Install', but the 'Maximum Install' is required.\n\n7th Heaven can repair this for you automatically. Simply insert one of your game discs and try again.";
+                Instance.RaiseProgressChanged(messageToUser);
+                return false;
+            }
+
+            Instance.RaiseProgressChanged("Verifying addtional files for battle,kernel,movies exist ...");
+            if (!converter.VerifyAdditionalFilesExist())
+            {
+                Instance.RaiseProgressChanged("Failed to verify/copy missing additional files. Aborting...");
+                return false;
+            }
+
+            Instance.RaiseProgressChanged("Verifying movie files exist ...");
+            if (!converter.AllMovieFilesExist(Sys.Settings.MovieFolder))
+            {
+                Instance.RaiseProgressChanged($"\tcould not find all movie files at {Sys.Settings.MovieFolder}");
+
+                string otherMovieFolder = Path.Combine(converter.InstallPath, "data", "movies");
+                if (converter.AllMovieFilesExist(otherMovieFolder))
+                {
+                    Instance.RaiseProgressChanged($"\tall files found at {otherMovieFolder}. Updating movie path setting.");
+                    Sys.Settings.MovieFolder = otherMovieFolder;
+                }
+                else
+                {
+                    Instance.RaiseProgressChanged($"\tmovie files also not found at {otherMovieFolder}");
+                    Instance.RaiseProgressChanged($"\tattempting to copy movie files from disc(s) ...");
+
+                    if (!converter.CopyMovieFilesToFolder(Sys.Settings.MovieFolder))
+                    {
+                        Instance.RaiseProgressChanged("7th Heaven was unable to locate one or more movie files (view above details for missing files). 7th Heaven can repair this for you automatically. Simply insert the corresponding disc # and try again.\n\nIf you do not have your game disc(s) or you have an alternate location where your movie files are stored, then please go to Settings>General Settings and correct your Movies Path.");
+                        return false;
+                    }
+                }
+            }
+
+            Instance.RaiseProgressChanged("Verifying music files exist ...");
+            if (!converter.AllMusicFilesExist())
+            {
+                converter.CopyMusicFiles();
+
+                if (!converter.AllMusicFilesExist())
+                {
+                    Instance.RaiseProgressChanged($"WARNING: .ogg music files are missing under '{converter.InstallPath}\\music\\vgmstream\\'. You will need to use a music mod in order to hear game music, or select the MIDI option in the Game Driver settings.");
+                }
+            }
+
+            Instance.RaiseProgressChanged("Verifying additional folders exist ...");
+            converter.CreateMissingFolders();
+
+
+            Instance.RaiseProgressChanged("Verifying latest game driver is installed ...");
+            string backupFolderPath = Path.Combine(converter.InstallPath, "7H2.0-BACKUP", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            if (!converter.InstallLatestGameDriver(backupFolderPath))
+            {
+                Instance.RaiseProgressChanged("Something went wrong trying to detect/install game driver. Aborting ...");
+                return false;
+            }
+
+            Instance.RaiseProgressChanged("Verifying game driver plugins/shaders folders exist ...");
+            converter.CopyMissingPluginsAndShaders();
+
+
+            Instance.RaiseProgressChanged("Verifying ff7 exe ...");
+            if (converter.IsExeDifferent())
+            {
+                Instance.RaiseProgressChanged("\tff7.exe detected to be different. creating backup and copying correct .exe...");
+                if (converter.BackupExe(backupFolderPath))
+                {
+                    bool didCopy = converter.CopyFF7ExeToGame();
+                    if (!didCopy)
+                    {
+                        Instance.RaiseProgressChanged("\tfailed to copy ff7.exe and/or ff7config.exe. Aborting ...");
+                        return false;
+                    }
+                }
+                else
+                {
+                    Instance.RaiseProgressChanged("\tfailed to create backup of ff7.exe and/or ff7config.exe. Aborting ...");
+                    return false;
+                }
+            }
+
+
+            //
+            //
+            //
+            Instance.RaiseProgressChanged("Checking a profile is active ...");
+            if (Sys.ActiveProfile == null)
+            {
+                Instance.RaiseProgressChanged("\tactive profile not found. Aborting ...");
+                Instance.RaiseProgressChanged("Create a profile first in Settings>Profiles and try again.");
+                return false;
+            }
+
             Instance.RaiseProgressChanged("Checking mod compatibility requirements ...");
             if (!SanityCheckCompatibility())
             {
-                Instance.RaiseProgressChanged("\tfailed mod compatibility check. aborting ...");
+                Instance.RaiseProgressChanged("\tfailed mod compatibility check. Aborting ...");
                 return false;
             }
 
             Instance.RaiseProgressChanged("Checking mod constraints for compatibility ...");
             if (!SanityCheckSettings())
             {
-                Instance.RaiseProgressChanged("\tfailed mod constraint check. aborting ...");
+                Instance.RaiseProgressChanged("\tfailed mod constraint check. Aborting ...");
                 return false;
             }
 
             Instance.RaiseProgressChanged("Checking mod load order requirements ...");
             if (!VerifyOrdering())
             {
-                Instance.RaiseProgressChanged("\tfailed mod load order check. aborting ...");
+                Instance.RaiseProgressChanged("\tfailed mod load order check. Aborting ...");
                 return false;
             }
 
-            Instance.RaiseProgressChanged("Checking a profile is active ...");
-            if (Sys.ActiveProfile == null)
-            {
-                Instance.RaiseProgressChanged("\tactive profile not found. aborting ...");
-                MessageDialogWindow.Show("Create a profile first", "Missing Profile");
-                return false;
-            }
-
-
-            Instance.RaiseProgressChanged($"Checking FF7 .exe exists at {Sys.Settings.FF7Exe} ...");
-            if (!File.Exists(Sys.Settings.FF7Exe))
-            {
-                Instance.RaiseProgressChanged("\tfile not found. aborting ...");
-                MessageDialogWindow.Show("FF7.exe not found. You may need to configure 7H using the Workshop/Settings menu.", "FF7.exe Missing", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return false;
-            }
 
             //
             // Get Drive Letter and auto mount if needed
@@ -414,7 +522,7 @@ namespace SeventhHeaven.Classes
                         {
                             if (aex.Message.IndexOf("Unknown error in injected assembler code", StringComparison.InvariantCultureIgnoreCase) >= 0)
                             {
-                                Instance.RaiseProgressChanged($"Still failed to inject with EasyHook after setting compatibility fix. aborting ...");
+                                Instance.RaiseProgressChanged($"Still failed to inject with EasyHook after setting compatibility fix. Aborting ...");
                                 MessageDialogWindow.Show("Failed inject with EasyHook even after setting the compatibility flags", "Failed To Start Game", MessageBoxButton.OK, MessageBoxImage.Error);
                                 return false;
                             }
@@ -422,7 +530,7 @@ namespace SeventhHeaven.Classes
                     }
                     else
                     {
-                        Instance.RaiseProgressChanged($"\tuser chose not to set compatibility fix. aborting ...");
+                        Instance.RaiseProgressChanged($"\tuser chose not to set compatibility fix. Aborting ...");
                         return false;
                     }
                 }
@@ -525,6 +633,15 @@ namespace SeventhHeaven.Classes
 
                 return false;
             }
+            finally
+            {
+                converter.MessageSent -= GameConverter_MessageSent;
+            }
+        }
+
+        private static void GameConverter_MessageSent(string message)
+        {
+            Instance.RaiseProgressChanged(message);
         }
 
         internal static RuntimeProfile CreateRuntimeProfile()

@@ -1,10 +1,12 @@
 ﻿using _7thHeaven.Code;
+using Iros._7th.Workshop;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,6 +18,9 @@ namespace SeventhHeaven.Classes
     public class GameConverter
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
+        public delegate void OnMessageSent(string message);
+        public event OnMessageSent MessageSent;
 
         public const string BackupFolderName = "BackupGC2020";
 
@@ -246,9 +251,14 @@ namespace SeventhHeaven.Classes
             List<string> pirateExtensions = new List<string>() { ".nfo" };                                          // file extensions that indicate the game could be pirated
             List<string> pirateExactKeywords = new List<string>() { "ali213.ini", "rld.dll", "gameservices.dll" };  // files that indicate the game is pirated
 
-            foreach (string file in Directory.GetFiles(InstallPath, "*", SearchOption.AllDirectories))
+            foreach (string file in Directory.GetFileSystemEntries(InstallPath, "*", SearchOption.AllDirectories))
             {
                 FileInfo info = new FileInfo(file);
+
+                if (file.IndexOf("torrent", StringComparison.InvariantCultureIgnoreCase) >= 0 && file.IndexOf("Reunion", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                {
+                    continue; // allow Reunion torrent files
+                }
 
                 if (pirateExactKeywords.Any(s => s.Equals(info.Name, StringComparison.InvariantCultureIgnoreCase)))
                 {
@@ -260,15 +270,7 @@ namespace SeventhHeaven.Classes
                     return true;
                 }
 
-                if (pirateKeyWords.Any(s => file.Contains(s)))
-                {
-                    return true;
-                }
-            }
-
-            foreach (string dir in Directory.GetDirectories(InstallPath, "*", SearchOption.AllDirectories))
-            {
-                if (pirateKeyWords.Any(s => dir.Contains(s)))
+                if (pirateKeyWords.Any(s => file.IndexOf(s, StringComparison.InvariantCultureIgnoreCase) >= 0))
                 {
                     return true;
                 }
@@ -314,6 +316,34 @@ namespace SeventhHeaven.Classes
         }
 
         #region Backup And Cleanup Related Methods
+
+        internal bool BackupExe(string backupFolderPath)
+        {
+            Directory.CreateDirectory(backupFolderPath);
+
+            string ff7ExePath = Path.Combine(InstallPath, "ff7.exe");
+            string ff7ConfigPath = Path.Combine(InstallPath, "FF7Config.exe");
+
+            try
+            {
+                if (File.Exists(ff7ExePath))
+                {
+                    File.Copy(ff7ExePath, Path.Combine(backupFolderPath, "ff7.exe"), true);
+                }
+
+                if (File.Exists(ff7ConfigPath))
+                {
+                    File.Copy(ff7ConfigPath, Path.Combine(backupFolderPath, "FF7Config.exe"), true);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return false;
+            }
+        }
 
         /// <summary>
         /// Backup registry keys to .reg files in 'BackupGC2020' folder
@@ -422,7 +452,7 @@ namespace SeventhHeaven.Classes
         }
 
         /// <summary>
-        /// Delete all cache files (S*D.P and T*D.P files) in given folder
+        /// Delete all cache files (S*D.P and T*D.P files) in <see cref="InstallPath"/>
         /// </summary>
         public bool DeleteCacheFiles()
         {
@@ -478,13 +508,13 @@ namespace SeventhHeaven.Classes
                 return false;
             }
 
-            string ff7ExePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ff7_1.02_eng", "ff7.exe");
-            string ff7ConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ff7_1.02_eng", "FF7Config.exe");
+            string ff7ExePath = Path.Combine(Sys.PathToProvidedExe, "ff7.exe");
+            string ff7ConfigPath = Path.Combine(Sys.PathToProvidedExe, "FF7Config.exe");
 
             try
             {
-                File.Copy(ff7ExePath, Path.Combine(InstallPath, "ff7.exe"));
-                File.Copy(ff7ConfigPath, Path.Combine(InstallPath, "FF7Config.exe"));
+                File.Copy(ff7ExePath, Path.Combine(InstallPath, "ff7.exe"), true);
+                File.Copy(ff7ConfigPath, Path.Combine(InstallPath, "FF7Config.exe"), true);
                 return true;
             }
             catch (Exception ex)
@@ -531,7 +561,647 @@ namespace SeventhHeaven.Classes
             }
         }
 
+        /// <summary>
+        /// Verifies a FF7 install is a Full/Max install by checking if specific files are in the game dir.
+        /// They will automatically be copied from discs if not found. 
+        /// Returns false if failed to find/copy all files
+        /// </summary>
+        /// <returns> Returns true if all files found and/or copied; false otherwise </returns>
+        public bool VerifyFullInstallation()
+        {
+            bool foundAllFiles = true;
 
+            string[] expectedFiles = new string[]
+            {
+                @"data\wm\world_us.lgp",
+                @"data\field\char.lgp",
+                @"data\field\flevel.lgp",
+                @"data\minigame\chocobo.lgp",
+                @"data\minigame\coaster.lgp",
+                @"data\minigame\condor.lgp",
+                @"data\minigame\high-us.lgp",
+                @"data\minigame\snowboard-us.lgp",
+                @"data\minigame\sub.lgp"
+            };
+
+            string[] volumeLabels = new string[]
+            {
+                "ff7install",
+                "ff7disc1",
+                "ff7disc2",
+                "ff7disc3"
+            };
+
+
+            foreach (string file in expectedFiles)
+            {
+                string fullTargetPath = Path.Combine(InstallPath, file);
+
+
+                SendMessage($"... checking if file exists: {fullTargetPath}");
+                if (File.Exists(fullTargetPath))
+                {
+                    // file already exists at install path so continue
+                    continue;
+                }
+
+                SendMessage($"... \t file not found. Scanning discs for files ...");
+
+                // search all drives for the file
+                bool foundFileOnDrive = false;
+                foreach (string label in volumeLabels)
+                {
+                    string driveLetter = GameLauncher.GetDriveLetter(label);
+
+                    if (!string.IsNullOrWhiteSpace(driveLetter))
+                    {
+                        string fullSourcePath = Path.Combine(driveLetter, "FF7", file);
+                        if (File.Exists(fullSourcePath))
+                        {
+                            SendMessage($"... \t found file on {label} at {driveLetter}. Copying file ...");
+                            File.Copy(fullSourcePath, fullTargetPath, true);
+                            foundFileOnDrive = true;
+                        }
+                    }
+
+                    if (foundFileOnDrive)
+                    {
+                        break; // done searching drives as file found/copied
+                    }
+                }
+
+                // at this point if file not found/copied on any drive then failed verification
+                if (!foundFileOnDrive)
+                {
+                    SendMessage($"... \t failed to find {file} on any disc ...");
+                    foundAllFiles = false;
+                }
+            }
+
+            return foundAllFiles;
+        }
+
+        /// <summary>
+        /// Verifies specific files exist in /data/[subfolder] where [subfolder] is battle, kernel, and movies.
+        /// If files not found then they are copied from /data/lang-en/[subfolder
+        /// </summary>
+        /// <returns></returns>
+        internal bool VerifyAdditionalFilesExist()
+        {
+            string[] expectedFiles = new string[]
+            {
+                @"battle\camdat0.bin",
+                @"battle\camdat1.bin",
+                @"battle\camdat2.bin",
+                @"battle\co.bin",
+                @"battle\scene.bin",
+                @"kernel\KERNEL.BIN",
+                @"kernel\kernel2.bin",
+                @"kernel\WINDOW.BIN",
+                @"movies\ending2.avi",
+                @"movies\jenova_e.avi",
+            };
+
+            foreach (string file in expectedFiles)
+            {
+                string fullTargetPath = Path.Combine(InstallPath, "data", file);
+
+                SendMessage($"... checking if file exists: {fullTargetPath}");
+                if (File.Exists(fullTargetPath))
+                {
+                    continue; // file exists as expected
+                }
+
+                SendMessage($"... \tfile not found");
+
+                string fullSourcePath = Path.Combine(InstallPath, "data", "lang-en", file);
+                if (!File.Exists(fullSourcePath))
+                {
+                    SendMessage($"... \tcannot copy source file because it is missing at {fullSourcePath}");
+                    return false;
+                }
+
+
+                try
+                {
+                    SendMessage($"... \tcopying file from {fullSourcePath}");
+                    File.Copy(fullSourcePath, fullTargetPath, true);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e);
+                    SendMessage($"... \tfailed to copy: {e.Message}");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Returns true if all movies exist at 
+        /// </summary>
+        /// <returns></returns>
+        internal bool AllMovieFilesExist(string rootFolder)
+        {
+            foreach (string file in GetMovieFiles().Keys)
+            {
+                string fullPath = Path.Combine(rootFolder, file);
+
+                if (!File.Exists(fullPath))
+                {
+                    if (file == "ending2.avi" || file == "jenova_e.avi")
+                    {
+                        // special exception for two files check if they exist at other location
+                        string otherPath = Path.Combine(new string[] { rootFolder, "data", "lang-en", "movies", file });
+                        if (!File.Exists(otherPath))
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        internal bool CopyMovieFilesToFolder(string movieFolder)
+        {
+            var movieFiles = GetMovieFiles();
+
+            List<string> missingFiles = new List<string>();
+            bool copiedAllFiles = true;
+
+            foreach (string file in movieFiles.Keys)
+            {
+                string fullPath = Path.Combine(movieFolder, file);
+
+                if (File.Exists(fullPath))
+                {
+                    continue; // no need to copy file as it exists as expected
+                }
+
+                // at this point file does not exist in movies folder so check disc(s) for file
+
+                if (file == "ending2.avi" || file == "jenova_e.avi")
+                {
+                    // special exception for these two files; check if they exist at other location and copy them 
+                    string otherPath = Path.Combine(new string[] { InstallPath, "data", "lang-en", "movies", file });
+                    if (File.Exists(otherPath))
+                    {
+                        SendMessage($"\tcopying {otherPath} to {fullPath}");
+                        File.Copy(otherPath, fullPath, true);
+                        continue;
+                    }
+                }
+
+                // check for all possible discs for file and copy if found
+                bool copiedFile = false;
+                foreach (string disc in movieFiles[file])
+                {
+                    string driveLetter = GameLauncher.GetDriveLetter(disc);
+
+                    if (string.IsNullOrEmpty(driveLetter))
+                    {
+                        continue;
+                    }
+
+                    string sourceFilePath = Path.Combine(driveLetter, "ff7", "movies", file);
+                    if (File.Exists(sourceFilePath))
+                    {
+                        SendMessage($"\tcopying {sourceFilePath} to {fullPath}");
+                        File.Copy(sourceFilePath, fullPath, true);
+                        copiedFile = true;
+                        break;
+                    }
+                }
+
+                if (!copiedFile)
+                {
+                    missingFiles.Add($"\t - {file} on {string.Join(",", movieFiles[file])}");
+                    copiedAllFiles = false; // fail to find/copy file from disc(s); continue to search/copy other files so all missing files can be listed
+                }
+            }
+
+            if (!copiedAllFiles)
+            {
+                SendMessage("\tThe following movie files are missing and can not be copied:");
+                SendMessage(string.Join("\n", missingFiles));
+            }
+
+            return copiedAllFiles;
+        }
+
+        public void SendMessage(string message)
+        {
+            MessageSent?.Invoke(message);
+        }
+
+        public bool AllMusicFilesExist()
+        {
+            bool allFilesExist = true;
+
+            Directory.CreateDirectory(Path.Combine(InstallPath, "music", "vgmstream")); // ensure music and music/vgmstream folders exist
+
+            foreach (string file in GetMusicFiles())
+            {
+                string fullPath = Path.Combine(InstallPath, "music", "vgmstream", file);
+
+                if (!File.Exists(fullPath))
+                {
+                    SendMessage($"\tmissing music file at {fullPath}");
+                    allFilesExist = false;
+                }
+            }
+
+            return allFilesExist;
+        }
+
+        public void CopyMusicFiles()
+        {
+            Directory.CreateDirectory(Path.Combine(InstallPath, "music", "vgmstream")); // ensure music and music/vgmstream folders exist
+
+            foreach (string file in GetMusicFiles())
+            {
+                string fullTargetPath = Path.Combine(InstallPath, "music", "vgmstream", file);
+
+                if (File.Exists(fullTargetPath))
+                {
+                    continue;
+                }
+
+                string sourcePath = Path.Combine(InstallPath, "data", "music_ogg", file);
+
+                if (!File.Exists(sourcePath))
+                {
+                    continue; // source music file so skip over copying
+                }
+
+                try
+                {
+                    SendMessage($"\tcopying music file {sourcePath} to {fullTargetPath}");
+                    File.Copy(sourcePath, fullTargetPath, true);
+                }
+                catch (Exception e)
+                {
+                    Logger.Warn(e); // log error but don't halt copying of files
+                }
+            }
+        }
+
+        public void CreateMissingFolders()
+        {
+            string[] directSubFolders = new string[]
+            {
+                "battle",
+                "char",
+                "chocobo",
+                "coaster",
+                "condor",
+                "cr",
+                "disc",
+                "flevel",
+                "high",
+                "magic",
+                "menu",
+                "midi",
+                "moviecam",
+                "snowboard",
+                "sub",
+                "world"
+            };
+
+            string modsFolder = Path.Combine(InstallPath, "mods");
+            if (!Directory.Exists(modsFolder))
+            {
+                SendMessage($"\tcreating missing directory {modsFolder}");
+                Directory.CreateDirectory(modsFolder);
+            }
+
+            string heavenFolder = Path.Combine(modsFolder, "7th Heaven");
+            if (!Directory.Exists(heavenFolder))
+            {
+                SendMessage($"\tcreating missing directory {heavenFolder}");
+                Directory.CreateDirectory(heavenFolder);
+            }
+
+            string textureFolder = Path.Combine(modsFolder, "Textures");
+            if (!Directory.Exists(textureFolder))
+            {
+                SendMessage($"\tcreating missing directory {textureFolder}");
+                Directory.CreateDirectory(textureFolder);
+            }
+
+
+            foreach (string subfolder in directSubFolders)
+            {
+                string fullPath = Path.Combine(InstallPath, "direct", subfolder);
+                if (!Directory.Exists(fullPath))
+                {
+                    SendMessage($"\tcreating missing directory {fullPath}");
+                    Directory.CreateDirectory(fullPath);
+                }
+            }
+        }
+
+        public string[] GetMusicFiles()
+        {
+            return new string[]
+            {
+                "aseri.ogg",
+                "aseri2.ogg",
+                "ayasi.ogg",
+                "barret.ogg",
+                "bat.ogg",
+                "bee.ogg",
+                "bokujo.ogg",
+                "boo.ogg",
+                "cannon.ogg",
+                "canyon.ogg",
+                "cephiros.ogg",
+                "chase.ogg",
+                "chu.ogg",
+                "chu2.ogg",
+                "cinco.ogg",
+                "cintro.ogg",
+                "comical.ogg",
+                "condor.ogg",
+                "corel.ogg",
+                "corneo.ogg",
+                "costa.ogg",
+                "crlost.ogg",
+                "crwin.ogg",
+                "date.ogg",
+                "dokubo.ogg",
+                "dun2.ogg",
+                "earis.ogg",
+                "earislo.ogg",
+                "elec.ogg",
+                "fan2.ogg",
+                "fanfare.ogg",
+                "fiddle.ogg",
+                "fin.ogg",
+                "geki.ogg",
+                "gold1.ogg",
+                "guitar2.ogg",
+                "gun.ogg",
+                "hen.ogg",
+                "hiku.ogg",
+                "horror.ogg",
+                "iseki.ogg",
+                "jukai.ogg",
+                "junon.ogg",
+                "jyro.ogg",
+                "ketc.ogg",
+                "kita.ogg",
+                "kurai.ogg",
+                "lb1.ogg",
+                "lb2.ogg",
+                "ld.ogg",
+                "makoro.ogg",
+                "mati.ogg",
+                "mekyu.ogg",
+                "mogu.ogg",
+                "mura1.ogg",
+                "nointro.ogg",
+                "oa.ogg",
+                "ob.ogg",
+                "odds.ogg",
+                "over2.ogg",
+                "parade.ogg",
+                "pj.ogg",
+                "pre.ogg",
+                "red.ogg",
+                "rhythm.ogg",
+                "riku.ogg",
+                "ro.ogg",
+                "rocket.ogg",
+                "roll.ogg",
+                "rukei.ogg",
+                "sadbar.ogg",
+                "sadsid.ogg",
+                "sea.ogg",
+                "seto.ogg",
+                "si.ogg",
+                "sid2.ogg",
+                "sido.ogg",
+                "siera.ogg",
+                "sinra.ogg",
+                "sinraslo.ogg",
+                "snow.ogg",
+                "ta.ogg",
+                "tb.ogg",
+                "tender.ogg",
+                "tifa.ogg",
+                "tm.ogg",
+                "utai.ogg",
+                "vincent.ogg",
+                "walz.ogg",
+                "weapon.ogg",
+                "yado.ogg",
+                "yufi.ogg",
+                "yufi2.ogg",
+                "yume.ogg"
+            };
+        }
+
+        public Dictionary<string, string[]> GetMovieFiles()
+        {
+            string[] disc1 = new string[] { "ff7disc1" };
+            string[] disc2 = new string[] { "ff7disc2" };
+            string[] disc3 = new string[] { "ff7disc3" };
+            string[] allDiscs = new string[] { "ff7disc1", "ff7disc2", "ff7disc3" };
+
+            return new Dictionary<string, string[]>()
+            {
+                { "biglight.avi", disc2},
+                { "bike.avi", disc1},
+                { "biskdead.avi", disc1},
+                { "boogdemo.avi", disc1},
+                { "boogdown.avi", allDiscs},
+                { "boogstar.avi", disc1},
+                { "boogup.avi", allDiscs},
+                { "brgnvl.avi", disc1},
+                { "c_scene1.avi", disc2},
+                { "c_scene2.avi", disc2},
+                { "c_scene3.avi", disc2},
+                { "canon.avi", disc2},
+                { "canonh1p.avi", disc2},
+                { "canonh3f.avi", disc2},
+                { "canonht0.avi", disc2},
+                { "canonht1.avi", disc2},
+                { "canonht2.avi", disc2},
+                { "canonon.avi", disc2},
+                { "car_1209.avi", disc1},
+                { "d_ropego.avi", allDiscs},
+                { "d_ropein.avi", allDiscs},
+                { "dumcrush.avi", disc2},
+                { "earithdd.avi", disc1},
+                { "eidoslogo.avi", allDiscs},
+                { "ending1.avi", disc3},
+                { "ending2.avi", disc3},
+                { "ending3.avi", disc3},
+                { "Explode.avi", allDiscs},
+                { "fallpl.avi", disc1},
+                { "fcar.avi", disc3},
+                { "feelwin0.avi", disc2},
+                { "feelwin1.avi", disc2},
+                { "fship2.avi", allDiscs},
+                { "funeral.avi", disc1},
+                { "gelnica.avi", disc2},
+                { "gold1.avi", disc1},
+                { "gold2.avi", allDiscs},
+                { "gold3.avi", allDiscs},
+                { "gold4.avi", allDiscs},
+                { "gold5.avi", allDiscs},
+                { "gold6.avi", allDiscs},
+                { "gold7.avi", disc1},
+                { "gold7_2.avi", disc1},
+                { "greatpit.avi", disc2},
+                { "hiwind0.avi", disc1},
+                { "hwindfly.avi", disc2},
+                { "hwindjet.avi", disc2},
+                { "jairofal.avi", disc1},
+                { "jairofly.avi", disc1},
+                { "jenova_e.avi", disc1},
+                { "junair_d.avi", allDiscs},
+                { "junair_u.avi", allDiscs},
+                { "junelego.avi", allDiscs},
+                { "junelein.avi", allDiscs},
+                { "junin_go.avi", allDiscs},
+                { "junin_in.avi", allDiscs},
+                { "junon.avi", disc1},
+                { "junsea.avi", disc2},
+                { "last4_2.avi", disc3},
+                { "last4_3.avi", disc3},
+                { "last4_4.avi", disc3},
+                { "lastflor.avi", disc3},
+                { "lastmap.avi", disc3},
+                { "loslake1.avi", disc2},
+                { "lslmv.avi", disc2},
+                { "mainplr.avi", disc1},
+                { "meteofix.avi", disc2},
+                { "meteosky.avi", disc2},
+                { "mk8.avi", disc1},
+                { "mkup.avi", disc1},
+                { "monitor.avi", new string[] { "ff7disc1", "ff7disc2" } },
+                { "moviecam.lgp", allDiscs},
+                { "mtcrl.avi", disc1},
+                { "mtnvl.avi", disc1},
+                { "mtnvl2.avi", disc1},
+                { "nivlsfs.avi", disc1},
+                { "northmk.avi", disc1},
+                { "nrcrl.avi", disc2},
+                { "nrcrl_b.avi", disc2},
+                { "nvlmk.avi", disc1},
+                { "ontrain.avi", disc1},
+                { "opening.avi", disc1},
+                { "parashot.avi", disc2},
+                { "phoenix.avi", disc2},
+                { "plrexp.avi", disc1},
+                { "rckethit0.avi", disc2},
+                { "rckethit1.avi", disc2},
+                { "rcketoff.avi", disc2},
+                { "rcktfail.avi", disc1},
+                { "setogake.avi", disc1},
+                { "smk.avi", disc1},
+                { "southmk.avi", disc1},
+                { "sqlogo.avi", allDiscs},
+                { "u_ropego.avi", allDiscs},
+                { "u_ropein.avi", allDiscs},
+                { "weapon0.avi", disc2},
+                { "weapon1.avi", disc2},
+                { "weapon2.avi", disc2},
+                { "weapon3.avi", disc2},
+                { "weapon4.avi", disc2},
+                { "weapon5.avi", disc2},
+                { "wh2e2.avi", disc2},
+                { "white2.avi", new string[] { "ff7disc2", "ff7disc3" } },
+                { "zmind01.avi", disc2},
+                { "zmind02.avi", disc2},
+                { "zmind03.avi", disc2}
+            };
+        }
+
+        /// <summary>
+        /// Checks ff7_opengl.fgd is up to date and matches file in Resources/Game Driver/ folder.
+        /// If files are different then backup is taken and game driver files are copied to ff7 install path
+        /// </summary>
+        /// <returns>returns false if error occurred</returns>
+        internal bool InstallLatestGameDriver(string backupFolderPath)
+        {
+            string pathToGameDriver = Path.Combine(Sys._7HFolder, "Resources", "Game Driver");
+            string pathToCurrentFile = Path.Combine(InstallPath, "ff7_opengl.fgd");
+            string pathToLatestFile = Path.Combine(pathToGameDriver, "ff7_opengl.fgd");
+
+
+            if (FileUtils.AreFilesEqual(pathToCurrentFile, pathToLatestFile))
+            {
+                SendMessage("\tff7_opengl.fgd file is up to date.");
+                return true; // file exist and matches what is in /Game Driver folder
+            }
+
+            try
+            {
+                SendMessage($"\tattempting backup of files to {backupFolderPath} ...");
+
+                MoveOriginalConverterFilesToBackup(backupFolderPath);
+                MoveOriginalAppFilesToBackup(backupFolderPath);
+                DeleteCacheFiles();
+                DeleteOriginalConverterAndAppFiles();
+
+                SendMessage($"\tcopying all files in {pathToGameDriver} to {InstallPath} ...");
+                FileUtils.CopyDirectoryRecursively(pathToGameDriver, InstallPath);
+
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return false;
+            }
+
+            return true;
+        }
+
+        internal void CopyMissingPluginsAndShaders()
+        {
+            string pathToPlugins = Path.Combine(InstallPath, "plugins");
+            string pathToNoLight = Path.Combine(InstallPath, "shaders", "nolight");
+            string pathToShaders = Path.Combine(InstallPath, "shaders");
+
+            if (!Directory.Exists(pathToNoLight))
+            {
+                SendMessage("\tmissing shaders/nolight folder. Copying from Resources/Game Driver/ ...");
+                Directory.CreateDirectory(pathToNoLight);
+                FileUtils.CopyDirectoryRecursively(Path.Combine(Sys.PathToGameDriverFolder, "shaders", "nolight"), pathToNoLight);
+            }
+
+            if (!Directory.Exists(pathToShaders))
+            {
+                SendMessage("\tmissing shaders folder. Copying from Resources/Game Driver/ ...");
+                Directory.CreateDirectory(pathToShaders);
+                FileUtils.CopyDirectoryRecursively(Path.Combine(Sys.PathToGameDriverFolder, "shaders"), pathToShaders);
+            }
+
+            if (!Directory.Exists(pathToPlugins))
+            {
+                SendMessage("\tmissing plugins folder. Copying from Resources/Game Driver/ ...");
+                Directory.CreateDirectory(pathToPlugins);
+                FileUtils.CopyDirectoryRecursively(Path.Combine(Sys.PathToGameDriverFolder, "plugins"), pathToPlugins);
+            }
+        }
+
+        internal bool IsExeDifferent()
+        {
+            string ff7ExePath = Path.Combine(Sys.PathToProvidedExe, "ff7.exe");
+            string ff7ConfigPath = Path.Combine(Sys.PathToProvidedExe, "FF7Config.exe");
+
+            return !FileUtils.AreFilesEqual(ff7ExePath, Path.Combine(InstallPath, "ff7.exe")) || !FileUtils.AreFilesEqual(ff7ConfigPath, Path.Combine(InstallPath, "FF7Config.exe"));
+        }
     }
 
     public class ConversionSettings

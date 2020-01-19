@@ -1,0 +1,213 @@
+#version 110
+/*
+  Smart AA - High Dynamic Range GLSL shader - rewritten by Asmodean(Kieranh7) for HDR, Refraction, Chromatic dispersion, & Fresnel Effect.
+		original bloom filter code:  - Copyright (C) 2008 guest(r) - guest.r@gmail.com
+           - License: GNU-GPL  
+
+*/
+
+uniform sampler2D tex00;
+/*uniform float width;
+uniform float height;*/
+
+const float   a = 1.00 ;              //  saturation 
+const float   b = 1.00 ;              //  brightness 
+const float   c = 1.80 ;              //  contrast   
+
+const vec3 dt = vec3(1.4,1.4,1.4);
+
+uniform bool normal_map;
+uniform int vertextype;
+uniform bool fb_texture;
+uniform int blend_mode;
+
+uniform mat4 d3dprojection_matrix;
+uniform mat4 d3dviewport_matrix;
+
+uniform vec4 matColor;
+uniform samplerCube env;
+uniform float reflectionFactor;
+
+varying vec3 R, TRed, TGreen, TBlue;
+uniform vec3 eyePos;
+uniform vec3 etaRatioRGB;
+
+uniform sampler2D Pass0;
+uniform sampler2D Pass1;
+uniform sampler2D Pass2;
+uniform sampler2D Pass3;
+uniform sampler2D Scene;
+
+uniform sampler2D bloom;
+uniform sampler2DShadow shadowBias;
+uniform float exposure;
+uniform float bloomFactor;
+uniform float brightMax;
+uniform float fresnelBias, fresnelScale, fresnelPower, refFactor;
+uniform float coefficients[25];
+uniform float offset;
+uniform sampler2D source;
+uniform vec4 bkgd;
+
+void main()
+{
+    // Calculating texel coordinates
+    float width = 16640.0;
+	float height = 12480.0;
+    vec2 size     = vec2(width,height);
+    vec2 inv_size = vec2(0.5/width, 0.5/height);
+
+    vec2 OGL2Pos = vec2(gl_TexCoord[0])*size;
+    vec2 fp  = fract(OGL2Pos);
+    vec2 dx  = vec2(inv_size.x,0.0);
+    vec2 dy  = vec2(0.0,inv_size.y);
+    vec2 g1  = vec2( inv_size.x,inv_size.y);
+    vec2 g2  = vec2(-inv_size.x,inv_size.y);
+
+    vec2 pC4 = floor(OGL2Pos)/size;
+    vec2 pC8 = pC4 + g1;
+	vec2 st = gl_TexCoord[0].st;
+	
+	gl_FragColor = mix(matColor, textureCube(env, R), reflectionFactor);
+
+	float d = 0.1;
+    float left = gl_TexCoord[0].s - offset - offset;
+    float top = gl_TexCoord[0].t - offset - offset;
+    vec2 tc = vec2(left, top);
+    vec4 c = vec4(0, 0, 0, 0);
+
+    c += coefficients[ 0] * texture2D(source, tc); tc.x += offset;
+    c += coefficients[ 1] * texture2D(source, tc); tc.x += offset;
+    c += coefficients[ 2] * texture2D(source, tc); tc.x += offset;
+    c += coefficients[ 3] * texture2D(source, tc); tc.x += offset;
+    c += coefficients[ 4] * texture2D(source, tc); tc.y += offset;
+    tc.x = left;
+    c += coefficients[ 5] * texture2D(source, tc); tc.x += offset;
+    c += coefficients[ 6] * texture2D(source, tc); tc.x += offset;
+    c += coefficients[ 7] * texture2D(source, tc); tc.x += offset;
+    c += coefficients[ 8] * texture2D(source, tc); tc.x += offset;
+    c += coefficients[ 9] * texture2D(source, tc); tc.y += offset;
+    tc.x = left;
+    c += coefficients[10] * texture2D(source, tc); tc.x += offset;
+    c += coefficients[11] * texture2D(source, tc); tc.x += offset;
+    c += coefficients[12] * texture2D(source, tc); tc.x += offset;
+    c += coefficients[13] * texture2D(source, tc); tc.x += offset;
+    c += coefficients[14] * texture2D(source, tc); tc.y += offset;
+    tc.x = left;
+    c += coefficients[15] * texture2D(source, tc); tc.x += offset;
+    c += coefficients[16] * texture2D(source, tc); tc.x += offset;
+    c += coefficients[17] * texture2D(source, tc); tc.x += offset;
+    c += coefficients[18] * texture2D(source, tc); tc.x += offset;
+    c += coefficients[19] * texture2D(source, tc); tc.y += offset;
+    tc.x = left;
+    c += coefficients[20] * texture2D(source, tc); tc.x += offset;
+    c += coefficients[21] * texture2D(source, tc); tc.x += offset;
+    c += coefficients[22] * texture2D(source, tc); tc.x += offset;
+    c += coefficients[23] * texture2D(source, tc); tc.x += offset;
+    c += coefficients[24] * texture2D(source, tc);
+    
+    // Reading the texels
+    vec3 C0 = texture2D(tex00,pC4-g1).xyz; 
+    vec3 C1 = texture2D(tex00,pC4-dy).xyz;
+    vec3 C2 = texture2D(tex00,pC4-g2).xyz;
+    vec3 D3 = texture2D(tex00,pC8-dy-dy).xyz;
+    vec3 C3 = texture2D(tex00,pC4-dx).xyz;
+    vec3 C4 = texture2D(tex00,pC4).xyz;
+    vec3 C5 = texture2D(tex00,pC4+dx).xyz;
+    vec3 D4 = texture2D(tex00,pC8-g2).xyz;
+    vec3 C6 = texture2D(tex00,pC4+g2).xyz;
+    vec3 C7 = texture2D(tex00,pC4+dy).xyz;
+    vec3 C8 = texture2D(tex00,pC8).xyz;
+    vec3 D5 = texture2D(tex00,pC8+dx).xyz;
+    vec3 D0 = texture2D(tex00,pC4+g2+dy).xyz;
+    vec3 D1 = texture2D(tex00,pC8+g2).xyz;
+    vec3 D2 = texture2D(tex00,pC8+dy).xyz;
+    vec3 D6 = texture2D(tex00,pC8+g1).xyz;
+	vec4 rgb = texture2DProj(tex00, gl_TexCoord[0].xyz);
+	vec3 RGBcolor = texture2DProj(tex00, gl_TexCoord[0]).rgb;
+	vec4 color = texture2D(tex00, st);
+	vec4 colorBloom = texture2D(bloom, st);
+	vec4 intens = smoothstep(0.2,0.8,rgb) + normalize(vec4(rgb.xyz,1.0));
+	vec4 t = texture2D(source, gl_TexCoord[0].st);
+	vec4 reflectedColor = textureCube(env, R);
+	vec4 refractedColor;
+	
+	vec4 tt0 = texture2D(Pass0, gl_TexCoord[0].st);
+    vec4 tt1 = texture2D(Pass1, gl_TexCoord[0].st);
+    vec4 tt2 = texture2D(Pass2, gl_TexCoord[0].st);
+    vec4 tt3 = texture2D(Pass3, gl_TexCoord[0].st);
+    vec4 tt4 = texture2D(Scene, gl_TexCoord[0].st);
+	
+	/*d3dviewport_matrix = width;
+	d3dprojection_matrix = height;
+	gl_ModelViewMatrix = size;*/
+	
+	refractedColor.r = textureCube(env, TRed).r;
+	refractedColor.g = textureCube(env, TGreen).g;
+	refractedColor.b = textureCube(env, TBlue).b;
+	gl_FragColor = mix(refractedColor, reflectedColor, refFactor);
+	
+	const float gauss0 = 1.0/32.0;
+    const float gauss1 = 5.0/32.0;
+    const float gauss2 =15.0/32.0;
+    const float gauss3 =22.0/32.0;
+    const float gauss4 =15.0/32.0;
+    const float gauss5 = 5.0/32.0;
+    const float gauss6 = 1.0/32.0; 
+	
+	color += colorBloom * bloomFactor;
+	float x = sqrt(dot(RGBcolor,RGBcolor));
+	clamp(0.866 + c*(x-0.866),0.05, 1.73);
+	
+	float Y = dot(vec4(0.30, 0.59, 0.11, 0.0), color);
+	float YD = exposure * (exposure/brightMax + 1.0) / (exposure + 1.0);
+	color *= YD;
+
+    vec3 ul,ur,dl,dr,t1,t2;   float hl,vl,d1,d2;
+
+// C0 C1 C2 D3
+// C3 C4 C5 D4
+// C6 C7 C8 D5
+// D0 D1 D2 D6 
+
+    d1=dot(abs(C0-C8),dt)+0.001;
+    d2=dot(abs(C2-C6),dt)+0.001;
+    hl=dot(abs(C3-C5),dt)+0.001;
+    vl=dot(abs(C1-C7),dt)+0.001;
+
+    ul =(hl*(C1+C7)+vl*(C3+C5)+(hl+vl)*C4)/(6.0*(hl+vl));
+    ul+=(d1*(C2+C6)+d2*(C0+C8)+(d1+d2)*C4)/(6.0*(d1+d2));
+
+    d1=dot(abs(C1-D5),dt)+0.001;
+    d2=dot(abs(C7-D3),dt)+0.001;
+    hl=dot(abs(C4-D4),dt)+0.001;
+    vl=dot(abs(C2-C8),dt)+0.001;
+
+    ur =(hl*(C2+C8)+vl*(C4+D4)+(hl+vl)*C5)/(6.0*(hl+vl));
+    ur+=(d1*(C7+D3)+d2*(C1+D5)+(d1+d2)*C5)/(6.0*(d1+d2));
+
+    d1=dot(abs(C3-D2),dt)+0.001;
+    d2=dot(abs(C5-D0),dt)+0.001;
+    hl=dot(abs(C6-C8),dt)+0.001;
+    vl=dot(abs(C4-D1),dt)+0.001;
+
+    dl =(hl*(C4+D1)+vl*(C6+C8)+(hl+vl)*C7)/(6.0*(hl+vl));
+    dl+=(d1*(C5+D0)+d2*(C3+D2)+(d1+d2)*C7)/(6.0*(d1+d2));
+
+    d1=dot(abs(C4-D6),dt)+0.001;
+    d2=dot(abs(D1-D4),dt)+0.001;
+    hl=dot(abs(C7-D5),dt)+0.001;
+    vl=dot(abs(C5-D2),dt)+0.001;
+
+    dr =(hl*(C5+D2)+vl*(C7+D5)+(hl+vl)*C8)/(6.0*(hl+vl));
+    dr+=(d1*(D1+D4)+d2*(C4+D6)+(d1+d2)*C8)/(6.0*(d1+d2));
+
+    C1 =((dr*fp.x+dl*(1.0-fp.x))*fp.y+(ur*fp.x+ul*(1.0-fp.x))*(1.0-fp.y));
+    d1 = length(C1);
+	
+	gl_FragColor = color;
+	gl_FragColor.rgb = vec3(c)+mix(d1,1.75*normalize(vec2(d1*d1,0.82)).x,0.577*d1)*normalize(C1);
+	//gl_FragColor.rgb = mix(d1,1.75*normalize(vec2(d1*d1,0.82)).x,0.577*d1)*normalize(C1);
+	
+
+}

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace SeventhHeaven.Classes
 {
@@ -92,6 +94,33 @@ namespace SeventhHeaven.Classes
             {
                 Logger.Error(e);
             }
+        }
+
+        internal static string ListAllFiles(string rootPath, int indentLevel = 0)
+        {
+            StringBuilder allFiles = new StringBuilder();
+            string tabs = new String(' ', indentLevel * 4);
+            string dashes = new String('-', indentLevel * 4); 
+
+            if (indentLevel == 0)
+            {
+                // have the string start on a new line
+                allFiles.AppendLine();
+            }
+
+            foreach (string file in Directory.GetFiles(rootPath))
+            {
+                allFiles.AppendLine($"{tabs} {file}");
+            }
+
+
+            foreach (string dir in Directory.GetDirectories(rootPath).OrderByDescending(s => s)) // order by descending due to recursive nature; output will be ascending order
+            {
+                allFiles.AppendLine($"{dashes} {dir}");
+                allFiles.Append(ListAllFiles(dir, indentLevel + 1));
+            }
+
+            return allFiles.ToString();
         }
 
         internal static void MoveDirectoryRecursively(string sourceDirName, string destDirName)
@@ -263,6 +292,25 @@ namespace SeventhHeaven.Classes
             catch (Exception e)
             {
                 return BoolWithMessage.False($"Failed to delete files: {e.Message}");
+            }
+        }
+
+        public static bool AreFilesEqual(string source, string dest)
+        {
+            return GetMD5Checksum(source).SequenceEqual(GetMD5Checksum(dest)) ? true : false;
+        }
+
+        public static string GetMD5Checksum(string s)
+        {
+            if (!File.Exists(s))
+                return "";
+
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(s))
+                {
+                    return BitConverter.ToString(md5.ComputeHash(stream)).Replace("-", string.Empty);
+                }
             }
         }
 

@@ -83,6 +83,12 @@ namespace SeventhHeaven.Windows
                     return;
                 }
 
+                if (taskResult.IsCanceled)
+                {
+                    ViewModel.LogStatus("game launch process canceled");
+                    return;
+                }
+
                 if (!taskResult.Result)
                 {
                     ViewModel.LogStatus("Failed to launch FF7. View the above log for details.");
