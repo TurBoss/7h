@@ -202,14 +202,9 @@ namespace SeventhHeaven.Classes
             return FF7Version.Unknown;
         }
 
-        public static string GetInstallLocation()
+        public static string GetInstallLocation(FF7Version installedVersion)
         {
-            FF7Version installedVersion = GetInstalledVersion();
-
-            if (installedVersion == FF7Version.Unknown)
-            {
-                return "";
-            }
+            string installPath = null;
 
             switch (installedVersion)
             {
@@ -217,29 +212,38 @@ namespace SeventhHeaven.Classes
                     return "";
 
                 case FF7Version.Steam:
-                    string installPath = null;
 
                     if (Environment.Is64BitOperatingSystem)
                     {
                         // on 64-bit OS, Steam release registry key could be at 64bit path or 32bit path so check both
-                        installPath = RegistryHelper.GetValue(RegistryHelper.SteamKeyPath64Bit, "InstallLocation", "") as string;
+                        installPath = RegistryHelper.GetValue(RegistryHelper.SteamKeyPath32Bit, "InstallLocation", "") as string;
 
                         if (string.IsNullOrEmpty(installPath))
                         {
-                            installPath = RegistryHelper.GetValue(RegistryHelper.SteamKeyPath32Bit, "InstallLocation", "") as string;
+                            installPath = RegistryHelper.GetValue(RegistryHelper.SteamKeyPath64Bit, "InstallLocation", "") as string;
                         }
                     }
                     else
                     {
-                        installPath = RegistryHelper.GetValue(FF7RegKey.SteamKeyPath, "InstallLocation", "") as string;
+                        installPath = RegistryHelper.GetValue(RegistryHelper.SteamKeyPath32Bit, "InstallLocation", "") as string;
                     }
 
                     return installPath;
 
                 case FF7Version.ReRelease:
-                    return RegistryHelper.GetValue(FF7RegKey.RereleaseKeyPath, "InstallLocation", "") as string;
+                    // check 32-bit then 64-bit registry if not exists
+                    installPath = RegistryHelper.GetValue(RegistryHelper.RereleaseKeyPath32Bit, "InstallLocation", "") as string;
+
+                    if (string.IsNullOrWhiteSpace(installPath))
+                    {
+                        installPath = RegistryHelper.GetValue(RegistryHelper.RereleaseKeyPath64Bit, "InstallLocation", "") as string;
+                    }
+
+                    return installPath;
+
                 case FF7Version.Original98:
                     return RegistryHelper.GetValue(FF7RegKey.FF7AppKeyPath, "Path", "") as string;
+
                 default:
                     return "";
             }

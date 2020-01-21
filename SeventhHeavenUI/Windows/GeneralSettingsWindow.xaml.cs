@@ -63,6 +63,16 @@ namespace SeventhHeaven.Windows
 
             if (!string.IsNullOrEmpty(exePath))
             {
+                FileInfo fileSelected = new FileInfo(exePath);
+                if (fileSelected.Name.Equals("ff7_en.exe", System.StringComparison.InvariantCultureIgnoreCase))
+                {
+                    MessageDialogWindow.Show("This exe is used for the Steam release of FF7, which 7th Heaven does not support. Please select a different FF7 EXE file.",
+                                             "Error - Incorrect Exe",
+                                             MessageBoxButton.OK,
+                                             MessageBoxImage.Error);
+                    return;
+                }
+
                 ViewModel.FF7ExePathInput = exePath;
             }
         }

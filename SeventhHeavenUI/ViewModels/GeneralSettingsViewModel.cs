@@ -396,36 +396,111 @@ namespace SeventhHeaven.ViewModels
 
         public static void AutoDetectSystemPaths()
         {
-            if (String.IsNullOrEmpty(Sys.Settings.FF7Exe))
+            if (string.IsNullOrEmpty(Sys.Settings.FF7Exe) || !File.Exists(Sys.Settings.FF7Exe))
             {
-                Logger.Info("FF7 Exe path is empty. Auto detecting paths ...");
+                Logger.Info("FF7 Exe path is empty or ff7.exe is missing. Auto detecting paths ...");
 
-                string registry_path = null;
+                string registry_path = @"HKEY_LOCAL_MACHINE\SOFTWARE\Square Soft, Inc.\Final Fantasy VII";
                 string ff7 = null;
+                FF7Version foundVersion = FF7Version.Unknown;
 
                 try
                 {
-                    registry_path = @"HKEY_LOCAL_MACHINE\SOFTWARE\Square Soft, Inc.\Final Fantasy VII";
+                    // first try to detect 1998 game or a "converted" game from the old 7H game converter
                     ff7 = (string)Registry.GetValue(registry_path, "AppPath", null);
+                    foundVersion = !string.IsNullOrWhiteSpace(ff7) ? FF7Version.Original98 : FF7Version.Unknown;
+
+                    if (foundVersion == FF7Version.Unknown)
+                    {
+                        // next check Steam registry keys and then Re-Release registry keys for installation path
+                        ff7 = GameConverter.GetInstallLocation(FF7Version.Steam);
+                        foundVersion = !string.IsNullOrWhiteSpace(ff7) ? FF7Version.Steam : FF7Version.Unknown;
+
+
+                        if (foundVersion == FF7Version.Unknown)
+                        {
+                            ff7 = GameConverter.GetInstallLocation(FF7Version.ReRelease);
+                            foundVersion = !string.IsNullOrWhiteSpace(ff7) ? FF7Version.ReRelease : FF7Version.Unknown;
+                        }
+                    }
+
+                    Logger.Info($"FF7Version Detected: {foundVersion.ToString()} with installation path: {ff7}");
                 }
                 catch
                 {
                     // could fail if game not installed
                 }
 
-                if (!string.IsNullOrEmpty(ff7))
+                if (foundVersion != FF7Version.Unknown)
                 {
-                    Sys.Settings.AaliFolder = ff7 + @"mods\Textures\";
-                    Sys.Settings.FF7Exe = ff7 + @"FF7.exe";
+                    Sys.Settings.FF7Exe = Path.Combine(ff7, "FF7.exe");
+                    Sys.Settings.AaliFolder = Path.Combine(ff7, "mods", @"Textures\");
+                    Sys.Settings.LibraryLocation = Path.Combine(ff7, "mods", @"7th Heaven\");
+                    Sys.Settings.MovieFolder = Path.Combine(ff7, "data", @"movies\");
 
-                    Sys.Settings.MovieFolder = (string)Registry.GetValue(registry_path, "MoviePath", null);
+                    VerifyRequiredFoldersExist();
 
-                    Sys.Settings.LibraryLocation = ff7 + @"mods\7th Heaven\";
+                    // copy ff7.exe to install path if not found and is a Steam release since Steam installation does not provide a ff7.exe
+                    if (foundVersion == FF7Version.Steam && !File.Exists(Sys.Settings.FF7Exe))
+                    {
+                        File.Copy(Path.Combine(Sys.PathToProvidedExe, "ff7.exe"), Sys.Settings.FF7Exe, true);
+                    }
                 }
                 else
                 {
-                    Logger.Warn("Auto detect paths failed - could not determine ff7.exe path from Windows Registry.");
+                    Logger.Warn("Auto detect paths failed - could not get ff7.exe path from Windows Registry.");
                 }
+
+
+            }
+        }
+
+        /// <summary>
+        /// Checks that required folders such as "mods/Textures" and "/data/movies" exist.
+        /// Folders will be created if they do not exist
+        /// </summary>
+        private static void VerifyRequiredFoldersExist()
+        {
+            string installPath = Path.GetDirectoryName(Sys.Settings.FF7Exe);
+
+            string[] requiredFolders = new string[]
+            {
+                Sys.Settings.AaliFolder,
+                Sys.Settings.LibraryLocation,
+                Sys.Settings.MovieFolder,
+                Path.Combine(installPath, "direct"),
+                Path.Combine(installPath, "direct", "battle"),
+                Path.Combine(installPath, "direct", "char"),
+                Path.Combine(installPath, "direct", "chocobo"),
+                Path.Combine(installPath, "direct", "coaster"),
+                Path.Combine(installPath, "direct", "condor"),
+                Path.Combine(installPath, "direct", "cr"),
+                Path.Combine(installPath, "direct", "disc"),
+                Path.Combine(installPath, "direct", "flevel"),
+                Path.Combine(installPath, "direct", "high"),
+                Path.Combine(installPath, "direct", "magic"),
+                Path.Combine(installPath, "direct", "menu"),
+                Path.Combine(installPath, "direct", "midi"),
+                Path.Combine(installPath, "direct", "moviecam"),
+                Path.Combine(installPath, "direct", "snowboard"),
+                Path.Combine(installPath, "direct", "sub"),
+                Path.Combine(installPath, "direct", "world"),
+                Path.Combine(installPath, "music"),
+                Path.Combine(installPath, "music", "vgmstream"),
+            };
+
+            foreach (string dir in requiredFolders)
+            {
+                LogAndCreateFolderIfNotExists(dir);
+            }
+        }
+
+        private static void LogAndCreateFolderIfNotExists(string pathToFolder)
+        {
+            if (!Directory.Exists(pathToFolder))
+            {
+                Logger.Info($"directory missing. creating {pathToFolder}");
+                Directory.CreateDirectory(pathToFolder);
             }
         }
 

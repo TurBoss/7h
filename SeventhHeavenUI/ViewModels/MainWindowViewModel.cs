@@ -458,10 +458,9 @@ They will be automatically turned off.";
                 IEnumerable<string> errors = Sys.Settings.VerifySettings();
                 if (errors.Any())
                 {
-                    string msg = "The following errors were found in your configuration:\n" +
-                                 string.Join("\n", errors) + "\n" +
-                                 "The settings window will now be displayed so you can fix them.";
-                    MessageDialogWindow.Show(msg, "Config Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    string msg = "The following errors were found in your configuration:\n" + string.Join("\n", errors);
+                    Logger.Warn(msg);
+                    Sys.Message(new WMessage("Errors found in general settings. View app.log for details on error(s)."));
                     showSettings = true;
                 }
             }

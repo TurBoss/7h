@@ -49,7 +49,7 @@ namespace _7thHeaven.Code
         /// Returns the path to the Registry Key associated with the given <paramref name="regKey"/>.
         /// The returned path can be for 32-bit or 64-bit OS depending on <paramref name="use32BitKey"/>
         /// </summary>
-        public static string GetKeyPath(FF7RegKey regKey, bool use32BitKey = true)
+        public static string GetKeyPath(FF7RegKey regKey, bool use32BitKey)
         {
             if (regKey == FF7RegKey.SteamKeyPath)
             {
