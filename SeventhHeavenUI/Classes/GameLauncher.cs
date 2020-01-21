@@ -3,6 +3,7 @@ using _7thWrapperLib;
 using Iros._7th;
 using Iros._7th.Workshop;
 using Microsoft.Win32;
+using SeventhHeaven.ViewModels;
 using SeventhHeaven.Windows;
 using System;
 using System.Collections.Generic;
@@ -75,6 +76,13 @@ namespace SeventhHeaven.Classes
 
         public static bool LaunchGame(bool varDump, bool debug, bool launchWithNoMods = false)
         {
+            Instance.RaiseProgressChanged($"Checking FF7 is not running ...");
+            if (IsFF7Running())
+            {
+                Instance.RaiseProgressChanged("\tFF7 is already running. Only 1 instance is allowed. Aborting ...");
+                return false;
+            }
+
             Instance.RaiseProgressChanged($"Checking FF7 .exe exists at {Sys.Settings.FF7Exe} ...");
             if (!File.Exists(Sys.Settings.FF7Exe))
             {
@@ -82,6 +90,7 @@ namespace SeventhHeaven.Classes
                 Instance.RaiseProgressChanged("FF7.exe not found. You may need to configure 7H using the Settings>General Settings menu.");
                 return false;
             }
+
 
             //
             // GAME CONVERTER - Make sure game is ready for mods
@@ -155,37 +164,67 @@ namespace SeventhHeaven.Classes
             converter.CreateMissingFolders();
 
 
-            Instance.RaiseProgressChanged("Verifying latest game driver is installed ...");
             string backupFolderPath = Path.Combine(converter.InstallPath, "7H2.0-BACKUP", DateTime.Now.ToString("yyyyMMddHHmmss"));
+
+
+            converter.CheckAndCopyOldGameConverterFiles(backupFolderPath);
+
+            Instance.RaiseProgressChanged("Verifying latest game driver is installed ...");
             if (!converter.InstallLatestGameDriver(backupFolderPath))
             {
                 Instance.RaiseProgressChanged("Something went wrong trying to detect/install game driver. Aborting ...");
                 return false;
             }
 
+
             Instance.RaiseProgressChanged("Verifying game driver plugins/shaders folders exist ...");
             converter.CopyMissingPluginsAndShaders();
 
 
             Instance.RaiseProgressChanged("Verifying ff7 exe ...");
-            if (converter.IsExeDifferent())
+            if (new FileInfo(Sys.Settings.FF7Exe).Name.Equals("ff7.exe", StringComparison.InvariantCultureIgnoreCase))
             {
-                Instance.RaiseProgressChanged("\tff7.exe detected to be different. creating backup and copying correct .exe...");
-                if (converter.BackupExe(backupFolderPath))
+                // only compare exes are different if ff7.exe set in Settings (and not something like ff7_bc.exe)
+                if (converter.IsExeDifferent())
                 {
-                    bool didCopy = converter.CopyFF7ExeToGame();
+                    Instance.RaiseProgressChanged("\tff7.exe detected to be different. creating backup and copying correct .exe...");
+                    if (converter.BackupExe(backupFolderPath))
+                    {
+                        bool didCopy = converter.CopyFF7ExeToGame();
+                        if (!didCopy)
+                        {
+                            Instance.RaiseProgressChanged("\tfailed to copy ff7.exe. Aborting ...");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        Instance.RaiseProgressChanged("\tfailed to create backup of ff7.exe. Aborting ...");
+                        return false;
+                    }
+                }
+            }
+
+            if (converter.IsConfigExeDifferent())
+            {
+                Instance.RaiseProgressChanged("\tFF7Config.exe detected to be different. creating backup and copying correct .exe...");
+                if (converter.BackupFF7ConfigExe(backupFolderPath))
+                {
+                    bool didCopy = converter.CopyFF7ConfigExeToGame();
                     if (!didCopy)
                     {
-                        Instance.RaiseProgressChanged("\tfailed to copy ff7.exe and/or ff7config.exe. Aborting ...");
+                        Instance.RaiseProgressChanged("\tfailed to copy FF7Config.exe. Aborting ...");
                         return false;
                     }
                 }
                 else
                 {
-                    Instance.RaiseProgressChanged("\tfailed to create backup of ff7.exe and/or ff7config.exe. Aborting ...");
+                    Instance.RaiseProgressChanged("\tfailed to create backup of FF7Config.exe. Aborting ...");
                     return false;
                 }
             }
+
+
 
 
             //
@@ -446,11 +485,6 @@ namespace SeventhHeaven.Classes
                                     {
                                         errors += $"{ex.Message}; ";
                                     }
-
-                                    if (ex.Message.IndexOf("Unknown error in injected assembler code", StringComparison.InvariantCultureIgnoreCase) >= 0)
-                                    {
-                                        Sys.Settings.GameLaunchSettings.HasReceivedCode5Error = true; // update launch settings to notify that user has received a code 5 error in the code
-                                    }
                                 }
 
                                 Instance.RaiseProgressChanged($"\treceived errors: {errors} ...");
@@ -500,6 +534,7 @@ namespace SeventhHeaven.Classes
                 if (!didInject)
                 {
                     Instance.RaiseProgressChanged($"Failed to inject after max amount of tries ({totalAttempts}) ...");
+                    Sys.Settings.GameLaunchSettings.HasReceivedCode5Error = true; // update launch settings to notify that user has received a code 5 error in the code
 
                     // give user option to set compat flag and try again
                     var viewModel = MessageDialogWindow.Show("Failed to inject with EasyHook after trying multiple times. This is usually fixed by setting the 'Code 5 Fix' to 'On' in the Game Launcher Settings.\n\nDo you want to apply the setting and try again?",
@@ -595,6 +630,12 @@ namespace SeventhHeaven.Classes
                     {
                         Instance.RaiseProgressChanged("Auto unmounting game disc ...");
                         UnmountIso();
+                    }
+
+                    // ensure Reunion is re-enabled when ff7 process exists in case it failed above for any reason
+                    if (didDisableReunion && File.Exists(Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "Reunion.dll.bak")))
+                    {
+                        EnableOrDisableReunionMod(doEnable: true); 
                     }
                 };
 
@@ -1056,6 +1097,7 @@ namespace SeventhHeaven.Classes
                     if (File.Exists(backupName))
                     {
                         File.Move(backupName, pathToDll);
+                        Instance.RaiseProgressChanged($"\trenamed {backupName} to {pathToDll}");
                         return true;
                     }
                     else
@@ -1440,6 +1482,16 @@ namespace SeventhHeaven.Classes
 
         public static bool CopyKeyboardInputCfg()
         {
+            // ensure a custom.cfg file exists in Controls folder
+            string pathToCustomCfg = Path.Combine(Sys.PathToControlsFolder, "custom.cfg");
+            Directory.CreateDirectory(Sys.PathToControlsFolder);
+
+            if (!File.Exists(pathToCustomCfg))
+            {
+                Instance.RaiseProgressChanged("\tno custom.cfg file found in /Resources/Controls folder. Creating copy of ff7input.cfg");
+                GameLaunchSettingsViewModel.CopyInputCfgToCustomCfg(forceCopy: false);
+            }
+
             string pathToCfg = Path.Combine(Sys.PathToControlsFolder, Sys.Settings.GameLaunchSettings.InGameConfigOption);
 
             Instance.RaiseProgressChanged($"\tusing control configuration file {Sys.Settings.GameLaunchSettings.InGameConfigOption} ...");
@@ -1464,6 +1516,12 @@ namespace SeventhHeaven.Classes
             }
 
             return true;
+        }
+
+        public static bool IsFF7Running()
+        {
+            string fileName = Path.GetFileNameWithoutExtension(Sys.Settings.FF7Exe);
+            return Process.GetProcessesByName(fileName).Length > 0;
         }
 
         /// <summary>

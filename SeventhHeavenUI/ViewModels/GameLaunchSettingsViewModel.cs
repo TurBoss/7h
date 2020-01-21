@@ -705,6 +705,8 @@ namespace SeventhHeaven.ViewModels
         public static void CopyInputCfgToCustomCfg(bool forceCopy)
         {
             string pathToCustomCfg = Path.Combine(Sys.PathToControlsFolder, "custom.cfg");
+            Directory.CreateDirectory(Sys.PathToControlsFolder);
+
 
             if (!File.Exists(pathToCustomCfg) || forceCopy)
             {
@@ -727,8 +729,8 @@ namespace SeventhHeaven.ViewModels
 
             if (!Directory.Exists(Sys.PathToControlsFolder))
             {
-                Logger.Warn($"Can not load configuration options because the directory does not exist: {Sys.PathToControlsFolder}");
-                return;
+                Logger.Warn($"Controls folder missing. creating {Sys.PathToControlsFolder}");
+                Directory.CreateDirectory(Sys.PathToControlsFolder);
             }
 
             foreach (string filePath in Directory.GetFiles(Sys.PathToControlsFolder, "*.cfg").OrderBy(s => s))
@@ -745,6 +747,11 @@ namespace SeventhHeaven.ViewModels
             configOptions.Add("Custom", "custom.cfg"); // have 'Custom' always be the last option
 
             InGameConfigurationMap = configOptions;
+
+            if (InGameConfigurationMap == null)
+            {
+                InGameConfigurationMap = new Dictionary<string, string>();
+            }
         }
 
         private void InitSoundDevices()

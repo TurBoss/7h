@@ -57,7 +57,7 @@ namespace _7thHeaven.Code
                 FullScreenMode = false,
                 HasReceivedCode5Error = false,
                 ShowLauncherWindow = true,
-                InGameConfigOption = "stock game.cfg"
+                InGameConfigOption = "custom.cfg"
             };
         }
     }

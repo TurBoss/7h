@@ -1,5 +1,6 @@
 ﻿using _7thHeaven.Code;
 using Iros._7th.Workshop;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -402,7 +403,6 @@ namespace SeventhHeaven.Classes
             Directory.CreateDirectory(backupFolderPath);
 
             string ff7ExePath = Path.Combine(InstallPath, "ff7.exe");
-            string ff7ConfigPath = Path.Combine(InstallPath, "FF7Config.exe");
 
             try
             {
@@ -411,6 +411,23 @@ namespace SeventhHeaven.Classes
                     File.Copy(ff7ExePath, Path.Combine(backupFolderPath, "ff7.exe"), true);
                 }
 
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return false;
+            }
+        }
+
+        internal bool BackupFF7ConfigExe(string backupFolderPath)
+        {
+            Directory.CreateDirectory(backupFolderPath);
+
+            string ff7ConfigPath = Path.Combine(InstallPath, "FF7Config.exe");
+
+            try
+            {
                 if (File.Exists(ff7ConfigPath))
                 {
                     File.Copy(ff7ConfigPath, Path.Combine(backupFolderPath, "FF7Config.exe"), true);
@@ -473,7 +490,7 @@ namespace SeventhHeaven.Classes
         {
             Directory.CreateDirectory(pathToBackup);
 
-            List<string> filesToMove = new List<string>() { "app.log", "ff7.exe", "ff7config.exe", "RunFFVIIConfig.bat", "RunFFVIIConfig.exe", "ff7_mo.exe", "ff7_nt.exe", "ff7_ss.exe", "ff7_ss_safer.exe", "ff7_bc.exe", "ff7input.cfg", "Multi_Readme.txt", "cfg.log", "Hext.log", "FF7_GC.log", "eax.dll", "Hext.dll", "multi.dll", "ff7_opengl.cfg", "ff7_opengl.fgd", @"\plugins\ff7music.fgp", @"\plugins\ffmpeg_movies.fgp", @"\plugins\vgmstream_music.fgp" };
+            List<string> filesToMove = new List<string>() { "app.log", "ff7.exe", "ff7config.exe", "RunFFVIIConfig.bat", "RunFFVIIConfig.exe", "ff7_mo.exe", "ff7_nt.exe", "ff7_ss.exe", "ff7_ss_safer.exe", "ff7_bc.exe", "ff7input.cfg", "Multi_Readme.txt", "cfg.log", "Hext.log", "FF7_GC.log", "eax.dll", "Hext.dll", "multi.dll", "ff7_opengl.cfg", "ff7_opengl.pdb", "ff7_opengl.reg", "crash.dmp", "ff7_opengl.fgd", @"\plugins\ff7music.fgp", @"\plugins\ffmpeg_movies.fgp", @"\plugins\vgmstream_music.fgp" };
 
             foreach (string file in filesToMove)
             {
@@ -589,11 +606,30 @@ namespace SeventhHeaven.Classes
             }
 
             string ff7ExePath = Path.Combine(Sys.PathToProvidedExe, "ff7.exe");
-            string ff7ConfigPath = Path.Combine(Sys.PathToProvidedExe, "FF7Config.exe");
 
             try
             {
                 File.Copy(ff7ExePath, Path.Combine(InstallPath, "ff7.exe"), true);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return false;
+            }
+        }
+
+        public bool CopyFF7ConfigExeToGame()
+        {
+            if (!Directory.Exists(InstallPath))
+            {
+                return false;
+            }
+
+            string ff7ConfigPath = Path.Combine(Sys.PathToProvidedExe, "FF7Config.exe");
+
+            try
+            {
                 File.Copy(ff7ConfigPath, Path.Combine(InstallPath, "FF7Config.exe"), true);
                 return true;
             }
@@ -1209,15 +1245,13 @@ namespace SeventhHeaven.Classes
 
         /// <summary>
         /// Checks ff7_opengl.fgd is up to date and matches file in Resources/Game Driver/ folder.
-        /// If files are different then backup is taken and game driver files are copied to ff7 install path
+        /// If files are different then game driver files are copied to ff7 install path
         /// </summary>
         /// <returns>returns false if error occurred</returns>
         internal bool InstallLatestGameDriver(string backupFolderPath)
         {
-            string pathToGameDriver = Path.Combine(Sys._7HFolder, "Resources", "Game Driver");
             string pathToCurrentFile = Path.Combine(InstallPath, "ff7_opengl.fgd");
-            string pathToLatestFile = Path.Combine(pathToGameDriver, "ff7_opengl.fgd");
-
+            string pathToLatestFile = Path.Combine(Sys.PathToGameDriverFolder, "ff7_opengl.fgd");
 
             if (FileUtils.AreFilesEqual(pathToCurrentFile, pathToLatestFile))
             {
@@ -1227,16 +1261,13 @@ namespace SeventhHeaven.Classes
 
             try
             {
-                SendMessage($"\tattempting backup of files to {backupFolderPath} ...");
+                Directory.CreateDirectory(backupFolderPath);
+                SendMessage($"\tbacking up existing game driver to {backupFolderPath} ...");
+                File.Copy(pathToCurrentFile, Path.Combine(backupFolderPath, "ff7_opengl.fgd"), true);
 
-                MoveOriginalConverterFilesToBackup(backupFolderPath);
-                MoveOriginalAppFilesToBackup(backupFolderPath);
-                DeleteCacheFiles();
-                DeleteOriginalConverterAndAppFiles();
 
-                SendMessage($"\tcopying all files in {pathToGameDriver} to {InstallPath} ...");
-                FileUtils.CopyDirectoryRecursively(pathToGameDriver, InstallPath);
-
+                SendMessage($"\tcopying {pathToLatestFile} to {pathToCurrentFile} ...");
+                File.Copy(pathToLatestFile, pathToCurrentFile, true);
             }
             catch (Exception ex)
             {
@@ -1245,6 +1276,30 @@ namespace SeventhHeaven.Classes
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Checks registry for old game converter registry values. If found then backup of original game converter files and registry is taken.
+        /// The old game converter registry key is also deleted.
+        /// </summary>
+        /// <param name="pathToBackup"></param>
+        internal void CheckAndCopyOldGameConverterFiles(string pathToBackup)
+        {
+            string converterKeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII\\GameConverterkeys";
+
+
+            string regValue = RegistryHelper.GetValue(converterKeyPath, "Manipulated_by_GameConverter", "") as string;
+
+            if (!string.IsNullOrWhiteSpace(regValue))
+            {
+                SendMessage("Old Game Converter registry keys found. Backing up old converter files and registry ...");
+                MoveOriginalAppFilesToBackup(pathToBackup);
+                MoveOriginalConverterFilesToBackup(pathToBackup);
+                BackupRegistry(pathToBackup);
+                DeleteCacheFiles();
+
+                RegistryHelper.DeleteKey(converterKeyPath);
+            }
         }
 
         internal void CopyMissingPluginsAndShaders()
@@ -1278,9 +1333,13 @@ namespace SeventhHeaven.Classes
         internal bool IsExeDifferent()
         {
             string ff7ExePath = Path.Combine(Sys.PathToProvidedExe, "ff7.exe");
-            string ff7ConfigPath = Path.Combine(Sys.PathToProvidedExe, "FF7Config.exe");
+            return !FileUtils.AreFilesEqual(ff7ExePath, Path.Combine(InstallPath, "ff7.exe"));
+        }
 
-            return !FileUtils.AreFilesEqual(ff7ExePath, Path.Combine(InstallPath, "ff7.exe")) || !FileUtils.AreFilesEqual(ff7ConfigPath, Path.Combine(InstallPath, "FF7Config.exe"));
+        internal bool IsConfigExeDifferent()
+        {
+            string ff7ExePath = Path.Combine(Sys.PathToProvidedExe, "FF7Config.exe");
+            return !FileUtils.AreFilesEqual(ff7ExePath, Path.Combine(InstallPath, "FF7Config.exe"));
         }
     }
 
