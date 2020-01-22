@@ -118,7 +118,7 @@ namespace SeventhHeaven.Classes
                 return false;
             }
 
-            Instance.RaiseProgressChanged("Verifying addtional files for battle,kernel,movies exist ...");
+            Instance.RaiseProgressChanged("Verifying additional files for 'battle' & 'kernel' folders exist ...");
             if (!converter.VerifyAdditionalFilesExist())
             {
                 Instance.RaiseProgressChanged("Failed to verify/copy missing additional files. Aborting...");
@@ -139,7 +139,7 @@ namespace SeventhHeaven.Classes
                 else
                 {
                     Instance.RaiseProgressChanged($"\tmovie files also not found at {otherMovieFolder}");
-                    Instance.RaiseProgressChanged($"\tattempting to copy movie files from disc(s) ...");
+                    Instance.RaiseProgressChanged($"\tattempting to copy movie files ...");
 
                     if (!converter.CopyMovieFilesToFolder(Sys.Settings.MovieFolder))
                     {
@@ -160,14 +160,15 @@ namespace SeventhHeaven.Classes
                 }
             }
 
-            Instance.RaiseProgressChanged("Verifying additional folders exist ...");
-            converter.CreateMissingFolders();
+            Instance.RaiseProgressChanged("Creating missing required directories ...");
+            converter.CreateMissingDirectories();
 
 
             string backupFolderPath = Path.Combine(converter.InstallPath, "7H2.0-BACKUP", DateTime.Now.ToString("yyyyMMddHHmmss"));
 
 
             converter.CheckAndCopyOldGameConverterFiles(backupFolderPath);
+
 
             Instance.RaiseProgressChanged("Verifying latest game driver is installed ...");
             if (!converter.InstallLatestGameDriver(backupFolderPath))

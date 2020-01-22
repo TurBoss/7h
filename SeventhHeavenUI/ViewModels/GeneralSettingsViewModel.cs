@@ -434,11 +434,12 @@ namespace SeventhHeaven.ViewModels
                 if (foundVersion != FF7Version.Unknown)
                 {
                     Sys.Settings.FF7Exe = Path.Combine(ff7, "FF7.exe");
-                    Sys.Settings.AaliFolder = Path.Combine(ff7, "mods", @"Textures\");
-                    Sys.Settings.LibraryLocation = Path.Combine(ff7, "mods", @"7th Heaven\");
-                    Sys.Settings.MovieFolder = Path.Combine(ff7, "data", @"movies\");
+                    Sys.Settings.AaliFolder = Path.Combine(ff7, "mods", @"Textures");
+                    Sys.Settings.LibraryLocation = Path.Combine(ff7, "mods", @"7th Heaven");
+                    Sys.Settings.MovieFolder = Path.Combine(ff7, "data", @"movies");
 
-                    VerifyRequiredFoldersExist();
+                    LogAndCreateFolderIfNotExists(Sys.Settings.LibraryLocation);
+                    LogAndCreateFolderIfNotExists(Sys.Settings.MovieFolder);
 
                     // copy ff7.exe to install path if not found and is a Steam release since Steam installation does not provide a ff7.exe
                     if (foundVersion == FF7Version.Steam && !File.Exists(Sys.Settings.FF7Exe))
@@ -452,46 +453,6 @@ namespace SeventhHeaven.ViewModels
                 }
 
 
-            }
-        }
-
-        /// <summary>
-        /// Checks that required folders such as "mods/Textures" and "/data/movies" exist.
-        /// Folders will be created if they do not exist
-        /// </summary>
-        private static void VerifyRequiredFoldersExist()
-        {
-            string installPath = Path.GetDirectoryName(Sys.Settings.FF7Exe);
-
-            string[] requiredFolders = new string[]
-            {
-                Sys.Settings.AaliFolder,
-                Sys.Settings.LibraryLocation,
-                Sys.Settings.MovieFolder,
-                Path.Combine(installPath, "direct"),
-                Path.Combine(installPath, "direct", "battle"),
-                Path.Combine(installPath, "direct", "char"),
-                Path.Combine(installPath, "direct", "chocobo"),
-                Path.Combine(installPath, "direct", "coaster"),
-                Path.Combine(installPath, "direct", "condor"),
-                Path.Combine(installPath, "direct", "cr"),
-                Path.Combine(installPath, "direct", "disc"),
-                Path.Combine(installPath, "direct", "flevel"),
-                Path.Combine(installPath, "direct", "high"),
-                Path.Combine(installPath, "direct", "magic"),
-                Path.Combine(installPath, "direct", "menu"),
-                Path.Combine(installPath, "direct", "midi"),
-                Path.Combine(installPath, "direct", "moviecam"),
-                Path.Combine(installPath, "direct", "snowboard"),
-                Path.Combine(installPath, "direct", "sub"),
-                Path.Combine(installPath, "direct", "world"),
-                Path.Combine(installPath, "music"),
-                Path.Combine(installPath, "music", "vgmstream"),
-            };
-
-            foreach (string dir in requiredFolders)
-            {
-                LogAndCreateFolderIfNotExists(dir);
             }
         }
 

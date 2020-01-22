@@ -689,15 +689,15 @@ namespace SeventhHeaven.Classes
 
             string[] expectedFiles = new string[]
             {
-                @"data\wm\world_us.lgp",
-                @"data\field\char.lgp",
-                @"data\field\flevel.lgp",
-                @"data\minigame\chocobo.lgp",
-                @"data\minigame\coaster.lgp",
-                @"data\minigame\condor.lgp",
-                @"data\minigame\high-us.lgp",
-                @"data\minigame\snowboard-us.lgp",
-                @"data\minigame\sub.lgp"
+                @"wm\world_us.lgp",
+                @"field\char.lgp",
+                @"field\flevel.lgp",
+                @"minigame\chocobo.lgp",
+                @"minigame\coaster.lgp",
+                @"minigame\condor.lgp",
+                @"minigame\high-us.lgp",
+                @"minigame\snowboard-us.lgp",
+                @"minigame\sub.lgp"
             };
 
             string[] volumeLabels = new string[]
@@ -711,8 +711,7 @@ namespace SeventhHeaven.Classes
 
             foreach (string file in expectedFiles)
             {
-                string fullTargetPath = Path.Combine(InstallPath, file);
-
+                string fullTargetPath = Path.Combine(InstallPath, "data", file);
 
                 SendMessage($"... checking if file exists: {fullTargetPath}");
                 if (File.Exists(fullTargetPath))
@@ -721,7 +720,7 @@ namespace SeventhHeaven.Classes
                     continue;
                 }
 
-                SendMessage($"... \t file not found. Scanning discs for files ...");
+                SendMessage($"...\t file not found. Scanning disc(s) for files ...");
 
                 // search all drives for the file
                 bool foundFileOnDrive = false;
@@ -731,12 +730,28 @@ namespace SeventhHeaven.Classes
 
                     if (!string.IsNullOrWhiteSpace(driveLetter))
                     {
-                        string fullSourcePath = Path.Combine(driveLetter, "FF7", file);
+                        string fullSourcePath = Path.Combine(driveLetter, "ff7", file);
+                        if (label == "ff7install")
+                        {
+                            fullSourcePath = Path.Combine(driveLetter, "data", file); // ff7install disc has a different path then disc1-3
+                        }
+
+
                         if (File.Exists(fullSourcePath))
                         {
-                            SendMessage($"... \t found file on {label} at {driveLetter}. Copying file ...");
-                            File.Copy(fullSourcePath, fullTargetPath, true);
                             foundFileOnDrive = true;
+                            SendMessage($"... \t found file on {label} at {driveLetter}. Copying file ...");
+                            try
+                            {
+                                Directory.CreateDirectory(Path.GetDirectoryName(fullTargetPath)); // ensure all subfolders are created
+                                File.Copy(fullSourcePath, fullTargetPath, true);
+                                SendMessage($"... \t\t copied!");
+                            }
+                            catch (Exception e)
+                            {
+                                Logger.Error(e);
+                                SendMessage($"... \t\t failed to copy. Error has been logged");
+                            }
                         }
                     }
 
@@ -773,16 +788,14 @@ namespace SeventhHeaven.Classes
                 @"battle\scene.bin",
                 @"kernel\KERNEL.BIN",
                 @"kernel\kernel2.bin",
-                @"kernel\WINDOW.BIN",
-                @"movies\ending2.avi",
-                @"movies\jenova_e.avi",
+                @"kernel\WINDOW.BIN"
             };
 
             foreach (string file in expectedFiles)
             {
                 string fullTargetPath = Path.Combine(InstallPath, "data", file);
 
-                SendMessage($"... checking if file exists: {fullTargetPath}");
+                Logger.Info($"... checking if file exists: {fullTargetPath}");
                 if (File.Exists(fullTargetPath))
                 {
                     continue; // file exists as expected
@@ -889,7 +902,7 @@ namespace SeventhHeaven.Classes
                     string sourceFilePath = Path.Combine(driveLetter, "ff7", "movies", file);
                     if (File.Exists(sourceFilePath))
                     {
-                        SendMessage($"\tcopying {sourceFilePath} to {fullPath}");
+                        SendMessage($"\tcopying from disc '{disc}': {sourceFilePath} to {fullPath}");
                         File.Copy(sourceFilePath, fullPath, true);
                         copiedFile = true;
                         break;
@@ -965,61 +978,6 @@ namespace SeventhHeaven.Classes
                 catch (Exception e)
                 {
                     Logger.Warn(e); // log error but don't halt copying of files
-                }
-            }
-        }
-
-        public void CreateMissingFolders()
-        {
-            string[] directSubFolders = new string[]
-            {
-                "battle",
-                "char",
-                "chocobo",
-                "coaster",
-                "condor",
-                "cr",
-                "disc",
-                "flevel",
-                "high",
-                "magic",
-                "menu",
-                "midi",
-                "moviecam",
-                "snowboard",
-                "sub",
-                "world"
-            };
-
-            string modsFolder = Path.Combine(InstallPath, "mods");
-            if (!Directory.Exists(modsFolder))
-            {
-                SendMessage($"\tcreating missing directory {modsFolder}");
-                Directory.CreateDirectory(modsFolder);
-            }
-
-            string heavenFolder = Path.Combine(modsFolder, "7th Heaven");
-            if (!Directory.Exists(heavenFolder))
-            {
-                SendMessage($"\tcreating missing directory {heavenFolder}");
-                Directory.CreateDirectory(heavenFolder);
-            }
-
-            string textureFolder = Path.Combine(modsFolder, "Textures");
-            if (!Directory.Exists(textureFolder))
-            {
-                SendMessage($"\tcreating missing directory {textureFolder}");
-                Directory.CreateDirectory(textureFolder);
-            }
-
-
-            foreach (string subfolder in directSubFolders)
-            {
-                string fullPath = Path.Combine(InstallPath, "direct", subfolder);
-                if (!Directory.Exists(fullPath))
-                {
-                    SendMessage($"\tcreating missing directory {fullPath}");
-                    Directory.CreateDirectory(fullPath);
                 }
             }
         }
@@ -1252,6 +1210,7 @@ namespace SeventhHeaven.Classes
         {
             string pathToCurrentFile = Path.Combine(InstallPath, "ff7_opengl.fgd");
             string pathToLatestFile = Path.Combine(Sys.PathToGameDriverFolder, "ff7_opengl.fgd");
+            string pathToCurrentCfg = Path.Combine(InstallPath, "ff7_opengl.cfg");
 
             if (FileUtils.AreFilesEqual(pathToCurrentFile, pathToLatestFile))
             {
@@ -1261,13 +1220,21 @@ namespace SeventhHeaven.Classes
 
             try
             {
-                Directory.CreateDirectory(backupFolderPath);
-                SendMessage($"\tbacking up existing game driver to {backupFolderPath} ...");
-                File.Copy(pathToCurrentFile, Path.Combine(backupFolderPath, "ff7_opengl.fgd"), true);
+                if (File.Exists(pathToCurrentFile))
+                {
+                    Directory.CreateDirectory(backupFolderPath);
+                    SendMessage($"\tbacking up existing game driver to {backupFolderPath} ...");
+                    File.Copy(pathToCurrentFile, Path.Combine(backupFolderPath, "ff7_opengl.fgd"), true);
+                }
 
+                if (File.Exists(pathToCurrentCfg))
+                {
+                    SendMessage($"\tbacking up existing game driver .cfg to {backupFolderPath} ...");
+                    File.Copy(pathToCurrentCfg, Path.Combine(backupFolderPath, "ff7_opengl.cfg"), true);
+                }
 
-                SendMessage($"\tcopying {pathToLatestFile} to {pathToCurrentFile} ...");
-                File.Copy(pathToLatestFile, pathToCurrentFile, true);
+                SendMessage($"\tcopying contents of {Sys.PathToGameDriverFolder} to {InstallPath} ...");
+                FileUtils.CopyDirectoryRecursively(Sys.PathToGameDriverFolder, InstallPath);
             }
             catch (Exception ex)
             {
@@ -1276,6 +1243,48 @@ namespace SeventhHeaven.Classes
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Creates 'mods/Textures', 'direct' and subfolders, 'music', 'music/vgmstream' folders if missing
+        /// </summary>
+        public void CreateMissingDirectories()
+        {
+            string[] requiredFolders = new string[]
+            {
+                Sys.Settings.AaliFolder,
+                Path.Combine(InstallPath, "direct"),
+                Path.Combine(InstallPath, "direct", "battle"),
+                Path.Combine(InstallPath, "direct", "char"),
+                Path.Combine(InstallPath, "direct", "chocobo"),
+                Path.Combine(InstallPath, "direct", "coaster"),
+                Path.Combine(InstallPath, "direct", "condor"),
+                Path.Combine(InstallPath, "direct", "cr"),
+                Path.Combine(InstallPath, "direct", "disc"),
+                Path.Combine(InstallPath, "direct", "flevel"),
+                Path.Combine(InstallPath, "direct", "high"),
+                Path.Combine(InstallPath, "direct", "magic"),
+                Path.Combine(InstallPath, "direct", "menu"),
+                Path.Combine(InstallPath, "direct", "midi"),
+                Path.Combine(InstallPath, "direct", "moviecam"),
+                Path.Combine(InstallPath, "direct", "snowboard"),
+                Path.Combine(InstallPath, "direct", "sub"),
+                Path.Combine(InstallPath, "direct", "world"),
+                Path.Combine(InstallPath, "music"),
+                Path.Combine(InstallPath, "music", "vgmstream"),
+                Path.Combine(InstallPath, "shaders"),
+                Path.Combine(InstallPath, "shaders", "nolight"),
+                Path.Combine(InstallPath, "plugins")
+            };
+
+            foreach (string dir in requiredFolders)
+            {
+                if (!Directory.Exists(dir))
+                {
+                    Logger.Info($"\tdirectory missing. creating {dir}");
+                    Directory.CreateDirectory(dir);
+                }
+            }
         }
 
         /// <summary>
