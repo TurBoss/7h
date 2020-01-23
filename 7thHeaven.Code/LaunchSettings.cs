@@ -28,6 +28,10 @@ namespace _7thHeaven.Code
         public bool HasReceivedCode5Error { get; set; }
         public bool ShowLauncherWindow { get; set; }
 
+        public bool HasDisplayedOggMusicWarning { get; set; }
+        public bool HasDisplayedMovieWarning { get; set; }
+
+
         /// <summary>
         /// File name of the ff7input.cfg file to copy to ff7 game dir 
         /// e.g. "stock game.cfg" or "custom.cfg"
@@ -57,7 +61,9 @@ namespace _7thHeaven.Code
                 FullScreenMode = false,
                 HasReceivedCode5Error = false,
                 ShowLauncherWindow = true,
-                InGameConfigOption = "custom.cfg"
+                InGameConfigOption = "custom.cfg",
+                HasDisplayedOggMusicWarning = false,
+                HasDisplayedMovieWarning = false
             };
         }
     }

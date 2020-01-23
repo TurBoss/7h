@@ -143,8 +143,16 @@ namespace SeventhHeaven.Classes
 
                     if (!converter.CopyMovieFilesToFolder(Sys.Settings.MovieFolder))
                     {
-                        Instance.RaiseProgressChanged("7th Heaven was unable to locate one or more movie files (view above details for missing files). 7th Heaven can repair this for you automatically. Simply insert the corresponding disc # and try again.\n\nIf you do not have your game disc(s) or you have an alternate location where your movie files are stored, then please go to Settings>General Settings and correct your Movies Path.");
-                        return false;
+                        string title = "Movie files are missing!";
+                        string message = "In order to see in-game movies, you will need to download and activate a movie mod.\n\nAlternatively, you can import your movie files from disc by going to Settings>Game Launcher... > Import Movies from Disc.\n\nLastly, you can set your movie path in 'General Settings' to point to your\ngame disc's 'FF7\\Movies' folder, but you will be required to change discs while playing the game.";
+                        if (!Sys.Settings.GameLaunchSettings.HasDisplayedMovieWarning)
+                        {
+                            Sys.Settings.GameLaunchSettings.HasDisplayedMovieWarning = true;
+                            MessageDialogWindow.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+
+                        Instance.RaiseProgressChanged(title);
+                        Instance.RaiseProgressChanged(message);
                     }
                 }
             }
@@ -156,7 +164,16 @@ namespace SeventhHeaven.Classes
 
                 if (!converter.AllMusicFilesExist())
                 {
-                    Instance.RaiseProgressChanged($"WARNING: .ogg music files are missing under '{converter.InstallPath}\\music\\vgmstream\\'. You will need to use a music mod in order to hear game music, or select the MIDI option in the Game Driver settings.");
+                    string title = ".OGG music files are missing!";
+                    string message = "In order to hear high quality background music, you will need to download and activate a music mod.\n\nAlternatively, you can listen to the game's original low quality MIDI music, but you will need to select 'None' for your 'Music Plugin' which can be found under Settings>Game Driver... > Advanced tab.\n\nLater, if you wish to use high quality .OGG files, switch the setting back to 'VGMstream'.";
+                    if (!Sys.Settings.GameLaunchSettings.HasDisplayedOggMusicWarning)
+                    {
+                        Sys.Settings.GameLaunchSettings.HasDisplayedOggMusicWarning = true;
+                        MessageDialogWindow.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+
+                    Instance.RaiseProgressChanged(title);
+                    Instance.RaiseProgressChanged(message);
                 }
             }
 
@@ -633,8 +650,8 @@ namespace SeventhHeaven.Classes
                         UnmountIso();
                     }
 
-                    // ensure Reunion is re-enabled when ff7 process exists in case it failed above for any reason
-                    if (didDisableReunion && File.Exists(Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "Reunion.dll.bak")))
+                    // ensure Reunion is re-enabled when ff7 process exits in case it failed above for any reason
+                    if (File.Exists(Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "Reunion.dll.bak")))
                     {
                         EnableOrDisableReunionMod(doEnable: true); 
                     }
@@ -838,6 +855,12 @@ namespace SeventhHeaven.Classes
                     {
                         Instance.RaiseProgressChanged("Auto unmounting game disc ...");
                         UnmountIso();
+                    }
+
+                    // ensure Reunion is re-enabled when ff7 process exits in case it failed above for any reason
+                    if (File.Exists(Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "Reunion.dll.bak")))
+                    {
+                        EnableOrDisableReunionMod(doEnable: true);
                     }
                 };
 
@@ -1161,47 +1184,44 @@ namespace SeventhHeaven.Classes
             Instance.RaiseProgressChanged($"\t {ff7KeyPath}::AppPath = {installPath}");
             RegistryHelper.SetValue(ff7KeyPath, "AppPath", installPath);
 
-            Instance.RaiseProgressChanged($"\t {virtualStorePath}::AppPath = {installPath}");
-            RegistryHelper.SetValue(virtualStorePath, "AppPath", installPath);
 
 
             Instance.RaiseProgressChanged($"\t {ff7KeyPath}::DataPath = {pathToData}");
             RegistryHelper.SetValue(ff7KeyPath, "DataPath", pathToData);
 
-            Instance.RaiseProgressChanged($"\t {virtualStorePath}::DataPath = {pathToData}");
-            RegistryHelper.SetValue(virtualStorePath, "DataPath", pathToData);
 
             Instance.RaiseProgressChanged($"\t {ff7KeyPath}::MoviePath = {pathToMovies}");
             RegistryHelper.SetValue(ff7KeyPath, "MoviePath", pathToMovies);
 
-            Instance.RaiseProgressChanged($"\t {virtualStorePath}::MoviePath = {pathToMovies}");
-            RegistryHelper.SetValue(virtualStorePath, "MoviePath", pathToMovies);
 
             // setting the drive letter may not happen if auto update disc path is not set
             if (Sys.Settings.GameLaunchSettings.AutoUpdateDiscPath && !string.IsNullOrWhiteSpace(DriveLetter))
             {
                 Instance.RaiseProgressChanged($"\t {ff7KeyPath}::DataDrive = {DriveLetter}");
                 RegistryHelper.SetValue(ff7KeyPath, "DataDrive", DriveLetter);
-
-                Instance.RaiseProgressChanged($"\t {virtualStorePath}::DataDrive = {DriveLetter}");
-                RegistryHelper.SetValue(virtualStorePath, "DataDrive", DriveLetter);
             }
 
             Instance.RaiseProgressChanged($"\t {ff7KeyPath}::DiskNo = 0");
             RegistryHelper.SetValue(ff7KeyPath, "DiskNo", 0, RegistryValueKind.DWord);
 
-            Instance.RaiseProgressChanged($"\t {virtualStorePath}::DiskNo = 0");
-            RegistryHelper.SetValue(virtualStorePath, "DiskNo", 0, RegistryValueKind.DWord);
 
             Instance.RaiseProgressChanged($"\t {ff7KeyPath}::FullInstall = 1");
             RegistryHelper.SetValue(ff7KeyPath, "FullInstall", 1, RegistryValueKind.DWord);
 
-            Instance.RaiseProgressChanged($"\t {virtualStorePath}::FullInstall = 1");
-            RegistryHelper.SetValue(virtualStorePath, "FullInstall", 1, RegistryValueKind.DWord);
 
+            if (Environment.Is64BitOperatingSystem)
+            {
+                Instance.RaiseProgressChanged($"\t {RegistryHelper.FF7AppKeyPath64Bit}::Path = {installPath.TrimEnd('\\')}");
+                RegistryHelper.SetValue(RegistryHelper.FF7AppKeyPath64Bit, "Path", installPath.TrimEnd('\\'));
 
-            Instance.RaiseProgressChanged($"\t {RegistryHelper.GetKeyPath(FF7RegKey.FF7AppKeyPath)}::Path = {installPath.TrimEnd('\\')}");
-            RegistryHelper.SetValue(RegistryHelper.GetKeyPath(FF7RegKey.FF7AppKeyPath), "Path", installPath.TrimEnd('\\'));
+                Instance.RaiseProgressChanged($"\t {RegistryHelper.FF7AppKeyPath32Bit}::Path = {installPath.TrimEnd('\\')}");
+                RegistryHelper.SetValue(RegistryHelper.FF7AppKeyPath32Bit, "Path", installPath.TrimEnd('\\'));
+            }
+            else
+            {
+                Instance.RaiseProgressChanged($"\t {RegistryHelper.FF7AppKeyPath32Bit}::Path = {installPath.TrimEnd('\\')}");
+                RegistryHelper.SetValue(RegistryHelper.FF7AppKeyPath32Bit, "Path", installPath.TrimEnd('\\'));
+            }
 
 
             // Add registry key values for Graphics

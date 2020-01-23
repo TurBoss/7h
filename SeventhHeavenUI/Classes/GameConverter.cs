@@ -710,6 +710,23 @@ namespace SeventhHeaven.Classes
             };
 
 
+            // copy moviecam.lgp file
+            string targetPath = Path.Combine(InstallPath, "data", "movies", "moviecam.lgp");
+            if (!File.Exists(targetPath))
+            {
+                string sourcePath = Path.Combine(InstallPath, "data", "cd", "moviecam.lgp");
+                if (File.Exists(sourcePath))
+                {
+                    SendMessage($"...\t copying moviecam.lgp from {sourcePath} to {targetPath} ...");
+                    File.Copy(sourcePath, targetPath, true);
+                }
+                else
+                {
+                    SendMessage($"...\t could not find moviecam.lgp file at {sourcePath} ...");
+                }
+            }
+
+
             foreach (string file in expectedFiles)
             {
                 string fullTargetPath = Path.Combine(InstallPath, "data", file);
@@ -840,19 +857,7 @@ namespace SeventhHeaven.Classes
 
                 if (!File.Exists(fullPath))
                 {
-                    if (file == "ending2.avi" || file == "jenova_e.avi")
-                    {
-                        // special exception for two files check if they exist at other location
-                        string otherPath = Path.Combine(new string[] { rootFolder, "data", "lang-en", "movies", file });
-                        if (!File.Exists(otherPath))
-                        {
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
 
@@ -1164,7 +1169,6 @@ namespace SeventhHeaven.Classes
                 { "mk8.avi", disc1},
                 { "mkup.avi", disc1},
                 { "monitor.avi", new string[] { "ff7disc1", "ff7disc2" } },
-                { "moviecam.lgp", allDiscs},
                 { "mtcrl.avi", disc1},
                 { "mtnvl.avi", disc1},
                 { "mtnvl2.avi", disc1},
