@@ -9,6 +9,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SeventhHeaven.Classes
@@ -1212,7 +1213,7 @@ namespace SeventhHeaven.Classes
             string pathToLatestFile = Path.Combine(Sys.PathToGameDriverFolder, "ff7_opengl.fgd");
             string pathToCurrentCfg = Path.Combine(InstallPath, "ff7_opengl.cfg");
 
-            if (FileUtils.AreFilesEqual(pathToCurrentFile, pathToLatestFile))
+            if (CompareOpenGlDriverVersions(pathToCurrentFile, pathToLatestFile) >= 0)
             {
                 SendMessage("\tff7_opengl.fgd file is up to date.");
                 return true; // file exist and matches what is in /Game Driver folder
@@ -1243,6 +1244,86 @@ namespace SeventhHeaven.Classes
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Does a regex on the ff7_opengl.fgd file to find the opengl driver version.
+        /// Returns -1 if <paramref name="fileOne"/> version is older than <paramref name="fileTwo"/> version.
+        /// Returns 0 if versions are equal.
+        /// Returns 1 if <paramref name="fileOne"/> version is newer than <paramref name="fileTwo"/> version.
+        /// </summary>
+        /// <param name="fileOne"></param>
+        /// <param name="fileTwo"></param>
+        /// <returns></returns>
+        private int CompareOpenGlDriverVersions(string fileOne, string fileTwo)
+        {
+            Regex regex = new Regex(@"FF7\/FF8 OpenGL driver version [0-9].[0-9].[0-9].*\n");
+
+            if (!File.Exists(fileOne) && File.Exists(fileTwo))
+            {
+                return -1;
+            }
+            else if (File.Exists(fileOne) && !File.Exists(fileTwo))
+            {
+                return 1;
+            }
+
+            try
+            {
+                string fileOneContents = File.ReadAllText(fileOne);
+                string fileTwoContents = File.ReadAllText(fileTwo);
+
+                Match fileOneMatch = regex.Match(fileOneContents);
+                Match fileTwoMatch = regex.Match(fileTwoContents);
+
+                string fileOneVersion = "";
+                string fileTwoVersion = "";
+
+                if (fileOneMatch.Success)
+                {
+                    fileOneVersion = fileOneMatch.Value.TrimEnd('\n').Split(' ').LastOrDefault();
+                    fileOneVersion = Regex.Replace(fileOneVersion, "[^0-9.]", ""); // we must strip alpha characters from the version since we can't compare against that. e.g. "0.8.1b" becomes "0.8.1"
+
+                    if (fileOneVersion.Count(c => c == '.') < 3) // we must ensure all four parts of a Version are there so "0.8.1" becomes "0.8.1.0"
+                    {
+                        fileOneVersion += ".0";
+                    }
+                }
+
+                if (fileTwoMatch.Success)
+                {
+                    fileTwoVersion = fileTwoMatch.Value.TrimEnd('\n').Split(' ').LastOrDefault();
+                    fileTwoVersion = Regex.Replace(fileTwoVersion, "[^0-9.]", "");
+
+                    if (fileTwoVersion.Count(c => c == '.') < 3)
+                    {
+                        fileTwoVersion += ".0";
+                    }
+                }
+
+                Version parsedVersionOne = new Version("0.0.0.0");
+                Version parsedVersionTwo = new Version("0.0.0.0");
+
+                if (!string.IsNullOrEmpty(fileOneVersion))
+                {
+                    parsedVersionOne = new Version(fileOneVersion);
+                }
+
+                if (!string.IsNullOrEmpty(fileTwoVersion))
+                {
+                    parsedVersionTwo = new Version(fileTwoVersion);
+                }
+
+
+                return parsedVersionOne.CompareTo(parsedVersionTwo);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                SendMessage("\tfailed to get game driver version from files. Error has been logged.");
+                return 0;
+            }
+
         }
 
         /// <summary>
