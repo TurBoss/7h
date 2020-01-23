@@ -713,7 +713,7 @@ namespace SeventhHeaven.Classes
             {
                 string fullTargetPath = Path.Combine(InstallPath, "data", file);
 
-                SendMessage($"... checking if file exists: {fullTargetPath}");
+                Logger.Info($"... checking if file exists: {fullTargetPath}");
                 if (File.Exists(fullTargetPath))
                 {
                     // file already exists at install path so continue
@@ -801,7 +801,7 @@ namespace SeventhHeaven.Classes
                     continue; // file exists as expected
                 }
 
-                SendMessage($"... \tfile not found");
+                SendMessage($"... \t{file} file not found");
 
                 string fullSourcePath = Path.Combine(InstallPath, "data", "lang-en", file);
                 if (!File.Exists(fullSourcePath))

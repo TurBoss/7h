@@ -441,8 +441,8 @@ namespace SeventhHeaven.ViewModels
                     LogAndCreateFolderIfNotExists(Sys.Settings.LibraryLocation);
                     LogAndCreateFolderIfNotExists(Sys.Settings.MovieFolder);
 
-                    // copy ff7.exe to install path if not found and is a Steam release since Steam installation does not provide a ff7.exe
-                    if (foundVersion == FF7Version.Steam && !File.Exists(Sys.Settings.FF7Exe))
+                    // copy ff7.exe to install path if not found since Steam & Re-Release installation does not provide a ff7.exe
+                    if (!File.Exists(Sys.Settings.FF7Exe))
                     {
                         File.Copy(Path.Combine(Sys.PathToProvidedExe, "ff7.exe"), Sys.Settings.FF7Exe, true);
                     }
