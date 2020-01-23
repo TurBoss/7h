@@ -35,13 +35,23 @@ namespace SeventhHeaven.Windows
             if (buttons == MessageBoxButton.YesNo)
             {
                 btnOkay.Visibility = Visibility.Hidden;
-                btnOkay.Focus();
+                btnCancel.Visibility = Visibility.Hidden;
+                btnNo.Focus();
             }
-            else
+            else if (buttons == MessageBoxButton.OKCancel)
             {
                 btnYes.Visibility = Visibility.Hidden;
                 btnNo.Visibility = Visibility.Hidden;
-                btnYes.Focus();
+                btnOkay.Focus();
+            }
+            else if (buttons == MessageBoxButton.OK)
+            {
+                btnYes.Visibility = Visibility.Hidden;
+                btnNo.Visibility = Visibility.Hidden;
+                btnCancel.Visibility = Visibility.Hidden;
+
+                btnOkay.Margin = new Thickness(0, 0, 0, 10); // change Margin so the 'OK' button is center
+                btnOkay.Focus();
             }
 
             this.DataContext = ViewModel;
@@ -111,6 +121,13 @@ namespace SeventhHeaven.Windows
         private void btnNo_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.Result = MessageBoxResult.No;
+            this.DialogResult = false;
+            this.Close();
+        }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Result = MessageBoxResult.Cancel;
             this.DialogResult = false;
             this.Close();
         }

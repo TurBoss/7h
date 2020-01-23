@@ -14,7 +14,7 @@
         ResizeMode="NoResize"
         Title="Game Launcher Settings" 
         Width="800"
-        Height="560">
+        Height="575">
     <Window.Resources>
 
         <DataTemplate x:Key="programItem">
@@ -165,6 +165,53 @@
                               MouseEnter="Control_MouseEnter"
                               ToolTip="Temporarily renames ddraw.dll to Reunion.dll.bak on game launch, then immediately back again. Does not affect playability of Reunion outside of 7H."/>
                 </StackPanel>
+            </GroupBox>
+
+            <GroupBox x:Name="grpImport"
+                      Width="{Binding ElementName=grpOptions, Path=ActualWidth}"
+                      Height="{Binding ElementName=grpPrograms, Path=ActualHeight}"
+                      Header=" Import Movies From Disc " Margin="10,5,0,0" 
+                      ToolTip="Import missing movies from disc."
+                      MouseEnter="Control_MouseEnter"
+                      ToolTipService.IsEnabled="False"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top">
+                <Grid Margin="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               VerticalAlignment="Top"
+                               Margin="0,5,0,0"
+                               TextWrapping="Wrap"
+                               TextAlignment="Center"
+                               FontSize="13"
+                               MinHeight="40"
+                               MaxHeight="60"
+                               TextTrimming="CharacterEllipsis"
+                               Text="{Binding ImportStatusMessage, FallbackValue='Copying some movie to this path and this will wrap to test wrapping  '}"/>
+
+                    <cls:ButtonWithImage x:Name="btnImportMovies"
+                                         IsEnabled="{Binding ImportButtonIsEnabled}"
+                                         Click="btnImportMovies_Click"
+                                         Grid.Row="1"
+                                         FontSize="15"
+                                         TemplateSource="{StaticResource iconCD}"
+                                         ImageHeight="40"
+                                         ImageWidth="40"
+                                         HorizontalAlignment="Center"
+                                         Margin="0,3,0,0"
+                                         Content="Import"/>
+
+                    <ProgressBar Value="{Binding ImportProgressValue}"
+                                 Visibility="{Binding ImportProgressVisibility}"
+                                 Grid.Row="2"
+                                 HorizontalAlignment="Stretch"
+                                 Height="20"/>
+                </Grid>
             </GroupBox>
         </StackPanel>
         
@@ -433,7 +480,8 @@
             </StackPanel>
         </GroupBox>
 
-        <GroupBox Grid.Row="2" 
+        <GroupBox x:Name="grpPrograms"
+                  Grid.Row="2" 
                   Grid.Column="1" 
                   Height="{Binding ElementName=grpShell, Path=ActualHeight}"
                   Header=" Programs to Run Prior to FF7: " 
@@ -452,8 +500,8 @@
                             MouseEnter="Control_MouseEnter"
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"
-                            Height="28"
-                            Width="28"
+                            Height="24"
+                            Width="24"
                             Margin="0,0,0,0"
                             Content="{StaticResource iconAdd}"/>
 
@@ -464,8 +512,8 @@
                             ToolTip="Remove selected program."
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"
-                            Height="28"
-                            Width="28"
+                            Height="24"
+                            Width="24"
                             Margin="0,0,0,0"
                             Content="{StaticResource iconMinus}"/>
 
@@ -476,9 +524,31 @@
                             Click="btnEditProgram_Click"
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"
-                            Height="28"
-                            Width="28"
+                            Height="24"
+                            Width="24"
                             Content="{StaticResource iconEdit}"/>
+
+                    <Button x:Name="btnMoveProgramUp"
+                            ToolTip="Move selected program up in the list."
+                            ToolTipService.IsEnabled="False"
+                            MouseEnter="Control_MouseEnter"
+                            Click="btnMoveProgramUp_Click"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="24"
+                            Width="24"
+                            Content="{StaticResource iconUpChevron}"/>
+
+                    <Button x:Name="btnMoveProgramDown"
+                            ToolTip="Move selected program down in the list."
+                            ToolTipService.IsEnabled="False"
+                            MouseEnter="Control_MouseEnter"
+                            Click="btnMoveProgramDown_Click"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="24"
+                            Width="24"
+                            Content="{StaticResource iconDownChevron}"/>
 
                 </StackPanel>
 
@@ -526,7 +596,7 @@
                Placement="Right"
                HorizontalOffset="3"
                PlacementTarget="{Binding ElementName=btnAddProgram}">
-            <Grid Width="{Binding ElementName=lstPrograms, Path=ActualWidth}" Height="90" 
+            <Grid Width="{Binding ElementName=lstPrograms, Path=ActualWidth}" Height="{Binding ElementName=lstPrograms, Path=ActualHeight}" 
                   Background="{DynamicResource PrimaryControlBackground}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
@@ -540,14 +610,16 @@
 
                 <TextBox Text="{Binding NewProgramPathText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                          FontSize="14"
+                         Height="24"
                          VerticalContentAlignment="Center"
                          Margin="25,3,5,0"/>
 
                 <TextBlock Text="Enter full path to program to run"
                            Foreground="{DynamicResource PrimaryControlDisabledForeground}"
                            IsHitTestVisible="False"
+                           VerticalAlignment="Top"
                            FontSize="14"
-                           Margin="30,3,5,0">
+                           Margin="30,6,5,0">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="Visibility" Value="Hidden"/>
@@ -573,6 +645,7 @@
                          Text="{Binding NewProgramArgsText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          Grid.Row="1"
                          FontSize="14"
+                         Height="24"
                          VerticalContentAlignment="Center"
                          Margin="25,3,5,0"/>
 
@@ -582,7 +655,8 @@
                            Foreground="{DynamicResource PrimaryControlDisabledForeground}"
                            IsHitTestVisible="False"
                            FontSize="14"
-                           Margin="30,3,5,0">
+                           VerticalAlignment="Top"
+                           Margin="30,6,5,0">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
                             <Setter Property="Visibility" Value="Hidden"/>
@@ -600,7 +674,7 @@
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         Width="80"
-                        Margin="0,3,90,3"
+                        Margin="0,3,60,3"
                         Content="Save"/>
 
                 <Button x:Name="btnCancelProgramAction"
@@ -608,7 +682,7 @@
                         Grid.Row="2"
                         HorizontalAlignment="Center"
                         Width="80"
-                        Margin="90,3,0,3"
+                        Margin="100,3,0,3"
                         Content="Cancel"/>
 
             </Grid>

@@ -61,7 +61,7 @@ namespace _7thHeaven.Code
                 FullScreenMode = false,
                 HasReceivedCode5Error = false,
                 ShowLauncherWindow = true,
-                InGameConfigOption = "custom.cfg",
+                InGameConfigOption = "1998 KB+Std Gamepad.cfg",
                 HasDisplayedOggMusicWarning = false,
                 HasDisplayedMovieWarning = false
             };

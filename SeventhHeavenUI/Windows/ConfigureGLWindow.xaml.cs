@@ -56,17 +56,13 @@ namespace SeventhHeaven.Windows
                 return;
             }
 
-            if (File.Exists(_file))
+            if (!File.Exists(_file))
             {
-                _settings = new Iros._7th.Workshop.ConfigSettings.Settings(File.ReadAllLines(_file));
-            }
-            else
-            {
-                // create default .cfg file
-                File.Create(_file);
-                _settings = new Iros._7th.Workshop.ConfigSettings.Settings(new List<string>());
+                // copy default .cfg file if missing
+                File.Copy(Path.Combine(Sys.PathToGameDriverFolder, "ff7_opengl.cfg"), _file, true);
             }
 
+            _settings = new Iros._7th.Workshop.ConfigSettings.Settings(File.ReadAllLines(_file));
             _settings.SetMissingDefaults(_spec.Settings);
 
             Dictionary<string, int> tabOrders = new Dictionary<string, int>()

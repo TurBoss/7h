@@ -143,8 +143,44 @@ namespace SeventhHeaven.Windows
 
         private void btnRefreshKeyboard_Click(object sender, RoutedEventArgs e)
         {
-            GameLaunchSettingsViewModel.CopyInputCfgToCustomCfg(forceCopy: true);
-            ViewModel.StatusMessage = "Successfully remembered current input control configuration.";
+            ViewModel.CopyInputCfgToCustomCfg(forceCopy: true);
+        }
+
+        private void btnMoveProgramDown_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.IsProgramPopupOpen)
+            {
+                return; // dont do anything if popup opened already
+            }
+
+            if (lstPrograms.SelectedItem == null)
+            {
+                ViewModel.StatusMessage = "Select a program to move first.";
+                return;
+            }
+
+            ViewModel.ChangeProgramOrder((lstPrograms.SelectedItem as ProgramToRunViewModel), +1);
+        }
+
+        private void btnMoveProgramUp_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.IsProgramPopupOpen)
+            {
+                return; // dont do anything if popup opened already
+            }
+
+            if (lstPrograms.SelectedItem == null)
+            {
+                ViewModel.StatusMessage = "Select a program to move first.";
+                return;
+            }
+
+            ViewModel.ChangeProgramOrder((lstPrograms.SelectedItem as ProgramToRunViewModel), -1);
+        }
+
+        private void btnImportMovies_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ImportMissingMovies();
         }
     }
 }

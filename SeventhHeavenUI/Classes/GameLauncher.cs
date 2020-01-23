@@ -126,25 +126,30 @@ namespace SeventhHeaven.Classes
             }
 
             Instance.RaiseProgressChanged("Verifying movie files exist ...");
-            if (!converter.AllMovieFilesExist(Sys.Settings.MovieFolder))
+            if (!GameConverter.AllMovieFilesExist(Sys.Settings.MovieFolder))
             {
                 Instance.RaiseProgressChanged($"\tcould not find all movie files at {Sys.Settings.MovieFolder}");
 
                 string otherMovieFolder = Path.Combine(converter.InstallPath, "data", "movies");
-                if (converter.AllMovieFilesExist(otherMovieFolder))
+                bool pathsAreSame = Sys.Settings.MovieFolder.Equals(otherMovieFolder);
+                if (!pathsAreSame && GameConverter.AllMovieFilesExist(otherMovieFolder)) // only check other location if different then what is already set in General Settings
                 {
                     Instance.RaiseProgressChanged($"\tall files found at {otherMovieFolder}. Updating movie path setting.");
                     Sys.Settings.MovieFolder = otherMovieFolder;
                 }
                 else
                 {
-                    Instance.RaiseProgressChanged($"\tmovie files also not found at {otherMovieFolder}");
+                    if (!pathsAreSame)
+                    {
+                        Instance.RaiseProgressChanged($"\tmovie files also not found at {otherMovieFolder}");
+                    }
+
                     Instance.RaiseProgressChanged($"\tattempting to copy movie files ...");
 
                     if (!converter.CopyMovieFilesToFolder(Sys.Settings.MovieFolder))
                     {
                         string title = "Movie files are missing!";
-                        string message = "In order to see in-game movies, you will need to download and activate a movie mod.\n\nAlternatively, you can import your movie files from disc by going to Settings>Game Launcher... > Import Movies from Disc.\n\nLastly, you can set your movie path in 'General Settings' to point to your\ngame disc's 'FF7\\Movies' folder, but you will be required to change discs while playing the game.";
+                        string message = "In order to see in-game movies, you will need to download and activate a movie mod.\n\nAlternatively, you can import your movie files from disc by going to Settings>Game Launcher... > Import Movies from Disc.\n\nLastly, you can set your movie path in 'General Settings' to point to your game disc's 'FF7\\Movies' folder, but you will be required to change discs while playing the game.";
                         if (!Sys.Settings.GameLaunchSettings.HasDisplayedMovieWarning)
                         {
                             Sys.Settings.GameLaunchSettings.HasDisplayedMovieWarning = true;
@@ -225,7 +230,7 @@ namespace SeventhHeaven.Classes
 
             if (converter.IsConfigExeDifferent())
             {
-                Instance.RaiseProgressChanged("\tFF7Config.exe detected to be different. creating backup and copying correct .exe...");
+                Instance.RaiseProgressChanged("\tFF7Config.exe missing or detected to be different. creating backup (if exists) and copying correct .exe...");
                 if (converter.BackupFF7ConfigExe(backupFolderPath))
                 {
                     bool didCopy = converter.CopyFF7ConfigExeToGame();
@@ -246,7 +251,7 @@ namespace SeventhHeaven.Classes
 
 
             //
-            //
+            // GAME SHOULD BE FULLY 'CONVERTED' AND READY TO LAUNCH FOR MODS AT THIS POINT
             //
             Instance.RaiseProgressChanged("Checking a profile is active ...");
             if (Sys.ActiveProfile == null)
@@ -639,7 +644,16 @@ namespace SeventhHeaven.Classes
                 ff7Proc.Exited += (o, e) =>
                 {
                     foreach (var plugin in Instance._plugins.Values)
-                        plugin.Stop();
+                    {
+                        try
+                        {
+                            plugin.Stop();
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex);
+                        }
+                    }
 
                     Instance.RaiseProgressChanged("Stopping other programs for mods started by 7H ...");
                     Instance.StopAllSideProcessesForMods();
@@ -1510,7 +1524,7 @@ namespace SeventhHeaven.Classes
             if (!File.Exists(pathToCustomCfg))
             {
                 Instance.RaiseProgressChanged("\tno custom.cfg file found in /Resources/Controls folder. Creating copy of ff7input.cfg");
-                GameLaunchSettingsViewModel.CopyInputCfgToCustomCfg(forceCopy: false);
+                GameLaunchSettingsViewModel.CopyInputCfgToCustomCfg();
             }
 
             string pathToCfg = Path.Combine(Sys.PathToControlsFolder, Sys.Settings.GameLaunchSettings.InGameConfigOption);

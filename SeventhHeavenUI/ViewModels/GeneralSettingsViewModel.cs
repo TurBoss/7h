@@ -424,7 +424,9 @@ namespace SeventhHeaven.ViewModels
                         }
                     }
 
-                    Logger.Info($"FF7Version Detected: {foundVersion.ToString()} with installation path: {ff7}");
+                    string versionStr = foundVersion == FF7Version.Original98 ? $"{foundVersion.ToString()} (or Game Converted)" : foundVersion.ToString();
+
+                    Logger.Info($"FF7Version Detected: {versionStr} with installation path: {ff7}");
                 }
                 catch
                 {
@@ -440,12 +442,23 @@ namespace SeventhHeaven.ViewModels
 
                     LogAndCreateFolderIfNotExists(Sys.Settings.LibraryLocation);
                     LogAndCreateFolderIfNotExists(Sys.Settings.MovieFolder);
+                    LogAndCreateFolderIfNotExists(Sys.Settings.AaliFolder);
+
 
                     // copy ff7.exe to install path if not found since Steam & Re-Release installation does not provide a ff7.exe
                     if (!File.Exists(Sys.Settings.FF7Exe) && Path.GetFileName(Sys.Settings.FF7Exe).Equals("ff7.exe", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        Logger.Info($"ff7.exe was not found");
-                        File.Copy(Path.Combine(Sys.PathToProvidedExe, "ff7.exe"), Sys.Settings.FF7Exe, true);
+                        Logger.Info($"Copying ff7.exe from {Sys.PathToProvidedExe} to {Sys.Settings.FF7Exe}");
+
+                        try
+                        {
+                            File.Copy(Path.Combine(Sys.PathToProvidedExe, "ff7.exe"), Sys.Settings.FF7Exe, true);
+                            Logger.Info($"\tcopied succesfully.");
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex);
+                        }
                     }
                 }
                 else

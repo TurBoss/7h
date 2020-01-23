@@ -423,14 +423,13 @@ namespace SeventhHeaven.Classes
 
         internal bool BackupFF7ConfigExe(string backupFolderPath)
         {
-            Directory.CreateDirectory(backupFolderPath);
-
             string ff7ConfigPath = Path.Combine(InstallPath, "FF7Config.exe");
 
             try
             {
                 if (File.Exists(ff7ConfigPath))
                 {
+                    Directory.CreateDirectory(backupFolderPath);
                     File.Copy(ff7ConfigPath, Path.Combine(backupFolderPath, "FF7Config.exe"), true);
                 }
 
@@ -483,6 +482,7 @@ namespace SeventhHeaven.Classes
                 if (Directory.Exists(fullPath))
                 {
                     FileUtils.MoveDirectoryRecursively(fullPath, Path.Combine(pathToBackup, folder));
+                    Directory.Delete(fullPath, true);
                 }
             }
         }
@@ -849,7 +849,7 @@ namespace SeventhHeaven.Classes
         /// Returns true if all movies exist at 
         /// </summary>
         /// <returns></returns>
-        internal bool AllMovieFilesExist(string rootFolder)
+        internal static bool AllMovieFilesExist(string rootFolder)
         {
             foreach (string file in GetMovieFiles().Keys)
             {
@@ -862,6 +862,23 @@ namespace SeventhHeaven.Classes
             }
 
             return true;
+        }
+
+        internal static Dictionary<string, string[]> GetMissingMovieFiles(string rootFolder)
+        {
+            Dictionary<string, string[]> missingMovies = new Dictionary<string, string[]>();
+
+            foreach (var movie in GetMovieFiles())
+            {
+                string fullPath = Path.Combine(rootFolder, movie.Key);
+
+                if (!File.Exists(fullPath))
+                {
+                    missingMovies.Add(movie.Key, movie.Value);
+                }
+            }
+
+            return missingMovies;
         }
 
         internal bool CopyMovieFilesToFolder(string movieFolder)
@@ -1089,7 +1106,7 @@ namespace SeventhHeaven.Classes
             };
         }
 
-        public Dictionary<string, string[]> GetMovieFiles()
+        public static Dictionary<string, string[]> GetMovieFiles()
         {
             string[] disc1 = new string[] { "ff7disc1" };
             string[] disc2 = new string[] { "ff7disc2" };
@@ -1217,6 +1234,14 @@ namespace SeventhHeaven.Classes
             string pathToLatestFile = Path.Combine(Sys.PathToGameDriverFolder, "ff7_opengl.fgd");
             string pathToCurrentCfg = Path.Combine(InstallPath, "ff7_opengl.cfg");
 
+            // copy default .cfg if it is missing
+            if (!File.Exists(pathToCurrentCfg))
+            {
+                SendMessage($"\tff7_opengl.cfg file is missing. Copying default from {Sys.PathToGameDriverFolder} ...");
+                File.Copy(Path.Combine(Sys.PathToGameDriverFolder, "ff7_opengl.cfg"), pathToCurrentCfg, true);
+            }
+
+
             if (CompareOpenGlDriverVersions(pathToCurrentFile, pathToLatestFile) >= 0)
             {
                 SendMessage("\tff7_opengl.fgd file is up to date.");
@@ -1237,6 +1262,14 @@ namespace SeventhHeaven.Classes
                     SendMessage($"\tbacking up existing game driver .cfg to {backupFolderPath} ...");
                     File.Copy(pathToCurrentCfg, Path.Combine(backupFolderPath, "ff7_opengl.cfg"), true);
                 }
+
+                SendMessage($"\tbacking up existing plugins folder to {backupFolderPath} ...");
+                Directory.CreateDirectory(Path.Combine(backupFolderPath, "plugins"));
+                FileUtils.CopyDirectoryRecursively(Path.Combine(InstallPath, "plugins"), Path.Combine(backupFolderPath, "plugins"));
+
+                SendMessage($"\tbacking up existing shaders folder to {backupFolderPath} ...");
+                Directory.CreateDirectory(Path.Combine(backupFolderPath, "shaders"));
+                FileUtils.CopyDirectoryRecursively(Path.Combine(InstallPath, "shaders"), Path.Combine(backupFolderPath, "shaders"));
 
                 SendMessage($"\tcopying contents of {Sys.PathToGameDriverFolder} to {InstallPath} ...");
                 FileUtils.CopyDirectoryRecursively(Sys.PathToGameDriverFolder, InstallPath);
@@ -1359,6 +1392,7 @@ namespace SeventhHeaven.Classes
                 Path.Combine(InstallPath, "music", "vgmstream"),
                 Path.Combine(InstallPath, "shaders"),
                 Path.Combine(InstallPath, "shaders", "nolight"),
+                Path.Combine(InstallPath, "shaders", "ComplexMultiShader_Nvidia"),
                 Path.Combine(InstallPath, "plugins")
             };
 
@@ -1399,28 +1433,65 @@ namespace SeventhHeaven.Classes
         internal void CopyMissingPluginsAndShaders()
         {
             string pathToPlugins = Path.Combine(InstallPath, "plugins");
-            string pathToNoLight = Path.Combine(InstallPath, "shaders", "nolight");
             string pathToShaders = Path.Combine(InstallPath, "shaders");
+            string pathToNoLight = Path.Combine(InstallPath, "shaders", "nolight");
+            string pathToNvidia = Path.Combine(InstallPath, "shaders", "ComplexMultiShader_Nvidia");
 
+
+            // create missing directories
             if (!Directory.Exists(pathToNoLight))
             {
-                SendMessage("\tmissing shaders/nolight folder. Copying from Resources/Game Driver/ ...");
+                SendMessage("\tmissing shaders/nolight folder. Creating directory ...");
                 Directory.CreateDirectory(pathToNoLight);
-                FileUtils.CopyDirectoryRecursively(Path.Combine(Sys.PathToGameDriverFolder, "shaders", "nolight"), pathToNoLight);
+            }
+
+            if (!Directory.Exists(pathToNvidia))
+            {
+                SendMessage("\tmissing shaders/ComplexMultiShader_Nvidia folder. Creating directory ...");
+                Directory.CreateDirectory(pathToNvidia);
             }
 
             if (!Directory.Exists(pathToShaders))
             {
                 SendMessage("\tmissing shaders folder. Copying from Resources/Game Driver/ ...");
                 Directory.CreateDirectory(pathToShaders);
-                FileUtils.CopyDirectoryRecursively(Path.Combine(Sys.PathToGameDriverFolder, "shaders"), pathToShaders);
             }
 
             if (!Directory.Exists(pathToPlugins))
             {
-                SendMessage("\tmissing plugins folder. Copying from Resources/Game Driver/ ...");
+                SendMessage("\tmissing plugins folder. Creating directory ...");
                 Directory.CreateDirectory(pathToPlugins);
-                FileUtils.CopyDirectoryRecursively(Path.Combine(Sys.PathToGameDriverFolder, "plugins"), pathToPlugins);
+            }
+
+            // copy files from plugins and/or shaders folder if files are missing
+            string sourcePath = Path.Combine(Sys.PathToGameDriverFolder, "shaders");
+            string[] sourceFiles = Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories);
+
+            foreach (string shaderFile in sourceFiles)
+            {
+                string targetPath = shaderFile.Replace(sourcePath, pathToShaders);
+
+                if (!File.Exists(targetPath))
+                {
+                    SendMessage($"\tmissing shader file: {targetPath}. Copying from {sourcePath} ...");
+                    Directory.CreateDirectory(Path.GetDirectoryName(targetPath)); // ensure any missing sub folders are created
+                    File.Copy(shaderFile, targetPath, true);
+                }
+            }
+
+
+            sourcePath = Path.Combine(Sys.PathToGameDriverFolder, "plugins");
+            sourceFiles = Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories);
+
+            foreach (string pluginFile in sourceFiles)
+            {
+                string targetPath = pluginFile.Replace(sourcePath, pathToPlugins);
+
+                if (!File.Exists(targetPath))
+                {
+                    SendMessage($"\tmissing plugin file: {targetPath}. Copying from {sourcePath} ...");
+                    File.Copy(pluginFile, targetPath, true);
+                }
             }
         }
 

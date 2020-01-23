@@ -439,6 +439,12 @@
     <Content Include="Resources\Game Driver\shaders\yuvAdvanced.frag">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\Game Driver\shaders\ComplexMultiShader_Nvidia\ComplexMultiShader_Nvidia.post">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Game Driver\shaders\ComplexMultiShader_Nvidia\main.vert">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="7H.ico" />
     <Content Include="7thHeaven.var">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

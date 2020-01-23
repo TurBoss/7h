@@ -40,6 +40,18 @@ namespace SeventhHeaven.Classes
             set { SetValue(ImageForegroundProperty, value); }
         }
 
+        public double ImageHeight
+        {
+            get { return (double)GetValue(ImageHeightProperty); }
+            set { SetValue(ImageHeightProperty, value); }
+        }
+
+        public double ImageWidth
+        {
+            get { return (double)GetValue(ImageWidthProperty); }
+            set { SetValue(ImageWidthProperty, value); }
+        }
+
 
         #endregion
 
@@ -65,6 +77,20 @@ namespace SeventhHeaven.Classes
             DependencyProperty.Register(
             "ImageForeground",
             typeof(SolidColorBrush),
+            typeof(ButtonWithImage),
+            new FrameworkPropertyMetadata(null));
+
+        public static readonly DependencyProperty ImageHeightProperty =
+            DependencyProperty.Register(
+            "ImageHeight",
+            typeof(double),
+            typeof(ButtonWithImage),
+            new FrameworkPropertyMetadata(null));
+
+        public static readonly DependencyProperty ImageWidthProperty =
+            DependencyProperty.Register(
+            "ImageWidth",
+            typeof(double),
             typeof(ButtonWithImage),
             new FrameworkPropertyMetadata(null));
 

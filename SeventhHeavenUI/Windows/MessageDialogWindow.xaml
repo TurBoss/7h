@@ -29,6 +29,7 @@
             <ContentControl.Style>
                 <Style TargetType="ContentControl">
                     <Setter Property="Template" Value="{StaticResource iconWarning}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
                     <Setter Property="Visibility" Value="Visible"/>
                     <Setter Property="Margin" Value="0,0,-10,0"/>
 
@@ -82,9 +83,19 @@
                 Grid.ColumnSpan="2"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Bottom"
-                Margin="0,0,0,10"
+                Margin="0,0,90,10"
                 Width="80"
                 Content="OK"/>
+
+        <Button x:Name="btnCancel"
+                Click="btnCancel_Click"
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Margin="90,0,0,10"
+                Width="80"
+                Content="Cancel"/>
 
         <Button x:Name="btnYes"
                 Click="btnYes_Click"

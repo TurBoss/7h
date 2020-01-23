@@ -127,6 +127,8 @@
         <Setter Property="ImageForeground" Value="{DynamicResource PrimaryControlForeground}"/>
         <Setter Property="Padding" Value="0,8,3,8"/>
         <Setter Property="FontSize" Value="14"/>
+        <Setter Property="ImageWidth" Value="28"/>
+        <Setter Property="ImageHeight" Value="28"/>
 
         <Setter Property="Template">
             <Setter.Value>
@@ -141,7 +143,7 @@
                                 <ColumnDefinition Width="5"/>
                             </Grid.ColumnDefinitions>
 
-                            <Viewbox Width="28" Height="28" Stretch="UniformToFill">
+                            <Viewbox Width="{TemplateBinding ImageWidth}" Height="{TemplateBinding ImageHeight}" Stretch="UniformToFill">
                                 <ContentControl Template="{TemplateBinding TemplateSource}" Foreground="{TemplateBinding ImageForeground}"/>
                             </Viewbox>
                             <TextBlock x:Name="txtContent"
@@ -165,6 +167,7 @@
 
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="txtContent" Property="Foreground" Value="{DynamicResource PrimaryControlDisabledForeground}"/>
+                            <Setter Property="ImageForeground" Value="{DynamicResource PrimaryControlDisabledForeground}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
