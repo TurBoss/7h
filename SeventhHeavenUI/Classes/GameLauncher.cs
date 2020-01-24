@@ -1206,9 +1206,20 @@ namespace SeventhHeaven.Classes
             string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII";
             string virtualStorePath = $"{RegistryHelper.GetKeyPath(FF7RegKey.VirtualStoreKeyPath)}\\Final Fantasy VII";
 
-            string installPath = Path.GetDirectoryName(Sys.Settings.FF7Exe) + @"\";
+            string installPath = Path.GetDirectoryName(Sys.Settings.FF7Exe);
             string pathToData = Path.Combine(installPath, @"data\");
             string pathToMovies = Sys.Settings.MovieFolder;
+
+            if (!installPath.EndsWith(@"\"))
+            {
+                installPath += @"\";
+            }
+
+            if (!pathToMovies.EndsWith(@"\"))
+            {
+                pathToMovies += @"\";
+            }
+
 
             // Add registry key values for paths and drive letter
             SetValueIfChanged(ff7KeyPath, "AppPath", installPath);
