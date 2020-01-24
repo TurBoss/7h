@@ -327,10 +327,7 @@
     <Content Include="Resources\audio_test_file.ogg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\FF7_1.02_Eng_Patch\ff7.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\FF7_1.02_Eng_Patch\FF7Config.exe">
+    <Content Include="Resources\FF7_1.02_Eng_Patch\readme.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Game Driver\shaders\pixel.hlsl">
@@ -443,6 +440,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Game Driver\shaders\ComplexMultiShader_Nvidia\main.vert">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\FF7_1.02_Eng_Patch\readme.doc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\FF7_1.02_Eng_Patch\readme.rtf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="7H.ico" />
