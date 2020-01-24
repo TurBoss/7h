@@ -896,6 +896,7 @@
     <Style x:Key="ToggleSwitchCheckbox" TargetType="{x:Type CheckBox}">
         <Setter Property="Height" Value="28"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
+        <Setter Property="FontSize" Value="28"/>
 
         <Setter Property="Template">
             <Setter.Value>
@@ -913,7 +914,7 @@
                                        Style="{StaticResource PrimaryTextBlockStyle}"
                                        Foreground="{TemplateBinding Foreground}"
                                        Text="{TemplateBinding Content}"
-                                       FontSize="28"
+                                       FontSize="{TemplateBinding FontSize}"
                                        Margin="0,0,15,10"
                                        VerticalAlignment="Center"/>
 
@@ -1121,11 +1122,11 @@
 
             <Border x:Name="TrackBackground"
                     Margin="0"
-                    CornerRadius="2"
-                    Height="4"
+                    CornerRadius="0"
+                    Height="6"
                     Grid.Row="1"
-                    BorderThickness="1"
-                    BorderBrush="{DynamicResource SecondaryAppBackground}"
+                    BorderThickness="1.5"
+                    BorderBrush="{DynamicResource PrimaryControlPressed}"
                     Background="{DynamicResource PrimaryControlBackground}"/>
 
             <Track Grid.Row="1" x:Name="PART_Track">

@@ -353,6 +353,7 @@
                                        Margin="0,0,3,10"/>
                             <Slider x:Name="sliderSfxVolume"
                                     HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
                                     Value="{Binding SfxVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
                                     ToolTipService.InitialShowDelay="100"
                                     ValueChanged="sliderSfxVolume_ValueChanged"
@@ -360,7 +361,7 @@
                                     Minimum="0"
                                     Maximum="100"
                                     MinWidth="90"
-                                    Margin="0,0,0,7">
+                                    Margin="0,0,0,5">
                                 <Slider.ToolTip>
                                     <ToolTip Content="{Binding SfxVolumeDisplayText}"/>
                                 </Slider.ToolTip>
@@ -383,7 +384,8 @@
                                     Minimum="0"
                                     Maximum="100"
                                     MinWidth="90"
-                                    Margin="1,0,4,7">
+                                    VerticalAlignment="Center"
+                                    Margin="1,0,4,5">
                                 <Slider.ToolTip>
                                     <ToolTip Content="{Binding MusicVolumeDisplayText}"/>
                                 </Slider.ToolTip>
@@ -397,7 +399,7 @@
 
                 <Grid Margin="3,10,3,0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <CheckBox Content="Logarithmic Volume Control" 

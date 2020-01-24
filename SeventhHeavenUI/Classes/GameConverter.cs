@@ -953,11 +953,6 @@ namespace SeventhHeaven.Classes
                 }
             }
 
-            if (!allFilesExist)
-            {
-                SendMessage("\tOne or more music files are missing.", NLog.LogLevel.Warn);
-            }
-
             return allFilesExist;
         }
 
