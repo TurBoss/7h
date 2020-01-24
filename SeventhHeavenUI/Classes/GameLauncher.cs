@@ -79,14 +79,14 @@ namespace SeventhHeaven.Classes
             Instance.RaiseProgressChanged($"Checking FF7 is not running ...");
             if (IsFF7Running())
             {
-                Instance.RaiseProgressChanged("\tFF7 is already running. Only 1 instance is allowed. Aborting ...");
+                Instance.RaiseProgressChanged("\tFF7 is already running. Only 1 instance is allowed. Aborting ...", NLog.LogLevel.Error);
                 return false;
             }
 
             Instance.RaiseProgressChanged($"Checking FF7 .exe exists at {Sys.Settings.FF7Exe} ...");
             if (!File.Exists(Sys.Settings.FF7Exe))
             {
-                Instance.RaiseProgressChanged("\tfile not found. Aborting ...");
+                Instance.RaiseProgressChanged("\tfile not found. Aborting ...", NLog.LogLevel.Error);
                 Instance.RaiseProgressChanged("FF7.exe not found. You may need to configure 7H using the Settings>General Settings menu.");
                 return false;
             }
@@ -105,7 +105,7 @@ namespace SeventhHeaven.Classes
             Instance.RaiseProgressChanged("Verifying installed game is compatible ...");
             if (converter.IsGamePirated())
             {
-                Instance.RaiseProgressChanged("Incompatible game files found. Unable to continue.");
+                Instance.RaiseProgressChanged("Incompatible game files found. Unable to continue.", NLog.LogLevel.Error);
                 Logger.Info(FileUtils.ListAllFiles(converter.InstallPath));
                 return false;
             }
@@ -114,21 +114,21 @@ namespace SeventhHeaven.Classes
             if (!converter.VerifyFullInstallation())
             {
                 string messageToUser = "Your FF7 installation folder is missing critical file(s). When you installed FF7, you may have accidentally chosen to install the 'Standard Install', but the 'Maximum Install' is required.\n\n7th Heaven can repair this for you automatically. Simply insert one of your game discs and try again.";
-                Instance.RaiseProgressChanged(messageToUser);
+                Instance.RaiseProgressChanged(messageToUser, NLog.LogLevel.Error);
                 return false;
             }
 
             Instance.RaiseProgressChanged("Verifying additional files for 'battle' & 'kernel' folders exist ...");
             if (!converter.VerifyAdditionalFilesExist())
             {
-                Instance.RaiseProgressChanged("Failed to verify/copy missing additional files. Aborting...");
+                Instance.RaiseProgressChanged("Failed to verify/copy missing additional files. Aborting...", NLog.LogLevel.Error);
                 return false;
             }
 
             Instance.RaiseProgressChanged("Verifying movie files exist ...");
             if (!GameConverter.AllMovieFilesExist(Sys.Settings.MovieFolder))
             {
-                Instance.RaiseProgressChanged($"\tcould not find all movie files at {Sys.Settings.MovieFolder}");
+                Instance.RaiseProgressChanged($"\tcould not find all movie files at {Sys.Settings.MovieFolder}", NLog.LogLevel.Warn);
 
                 string otherMovieFolder = Path.Combine(converter.InstallPath, "data", "movies");
                 bool pathsAreSame = Sys.Settings.MovieFolder.Equals(otherMovieFolder);
@@ -141,7 +141,7 @@ namespace SeventhHeaven.Classes
                 {
                     if (!pathsAreSame)
                     {
-                        Instance.RaiseProgressChanged($"\tmovie files also not found at {otherMovieFolder}");
+                        Instance.RaiseProgressChanged($"\tmovie files also not found at {otherMovieFolder}", NLog.LogLevel.Warn);
                     }
 
                     Instance.RaiseProgressChanged($"\tattempting to copy movie files ...");
@@ -156,8 +156,8 @@ namespace SeventhHeaven.Classes
                             MessageDialogWindow.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
                         }
 
-                        Instance.RaiseProgressChanged(title);
-                        Instance.RaiseProgressChanged(message);
+                        Instance.RaiseProgressChanged(title, NLog.LogLevel.Warn);
+                        Instance.RaiseProgressChanged(message, NLog.LogLevel.Warn);
                     }
                 }
             }
@@ -177,8 +177,8 @@ namespace SeventhHeaven.Classes
                         MessageDialogWindow.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
 
-                    Instance.RaiseProgressChanged(title);
-                    Instance.RaiseProgressChanged(message);
+                    Instance.RaiseProgressChanged(title, NLog.LogLevel.Warn);
+                    Instance.RaiseProgressChanged(message, NLog.LogLevel.Warn);
                 }
             }
 
@@ -195,7 +195,7 @@ namespace SeventhHeaven.Classes
             Instance.RaiseProgressChanged("Verifying latest game driver is installed ...");
             if (!converter.InstallLatestGameDriver(backupFolderPath))
             {
-                Instance.RaiseProgressChanged("Something went wrong trying to detect/install game driver. Aborting ...");
+                Instance.RaiseProgressChanged("Something went wrong trying to detect/install game driver. Aborting ...", NLog.LogLevel.Error);
                 return false;
             }
 
@@ -216,13 +216,13 @@ namespace SeventhHeaven.Classes
                         bool didCopy = converter.CopyFF7ExeToGame();
                         if (!didCopy)
                         {
-                            Instance.RaiseProgressChanged("\tfailed to copy ff7.exe. Aborting ...");
+                            Instance.RaiseProgressChanged("\tfailed to copy ff7.exe. Aborting ...", NLog.LogLevel.Error);
                             return false;
                         }
                     }
                     else
                     {
-                        Instance.RaiseProgressChanged("\tfailed to create backup of ff7.exe. Aborting ...");
+                        Instance.RaiseProgressChanged("\tfailed to create backup of ff7.exe. Aborting ...", NLog.LogLevel.Error);
                         return false;
                     }
                 }
@@ -236,13 +236,13 @@ namespace SeventhHeaven.Classes
                     bool didCopy = converter.CopyFF7ConfigExeToGame();
                     if (!didCopy)
                     {
-                        Instance.RaiseProgressChanged("\tfailed to copy FF7Config.exe. Aborting ...");
+                        Instance.RaiseProgressChanged("\tfailed to copy FF7Config.exe. Aborting ...", NLog.LogLevel.Error);
                         return false;
                     }
                 }
                 else
                 {
-                    Instance.RaiseProgressChanged("\tfailed to create backup of FF7Config.exe. Aborting ...");
+                    Instance.RaiseProgressChanged("\tfailed to create backup of FF7Config.exe. Aborting ...", NLog.LogLevel.Error);
                     return false;
                 }
             }
@@ -256,7 +256,7 @@ namespace SeventhHeaven.Classes
             Instance.RaiseProgressChanged("Checking a profile is active ...");
             if (Sys.ActiveProfile == null)
             {
-                Instance.RaiseProgressChanged("\tactive profile not found. Aborting ...");
+                Instance.RaiseProgressChanged("\tactive profile not found. Aborting ...", NLog.LogLevel.Error);
                 Instance.RaiseProgressChanged("Create a profile first in Settings>Profiles and try again.");
                 return false;
             }
@@ -264,21 +264,21 @@ namespace SeventhHeaven.Classes
             Instance.RaiseProgressChanged("Checking mod compatibility requirements ...");
             if (!SanityCheckCompatibility())
             {
-                Instance.RaiseProgressChanged("\tfailed mod compatibility check. Aborting ...");
+                Instance.RaiseProgressChanged("\tfailed mod compatibility check. Aborting ...", NLog.LogLevel.Error);
                 return false;
             }
 
             Instance.RaiseProgressChanged("Checking mod constraints for compatibility ...");
             if (!SanityCheckSettings())
             {
-                Instance.RaiseProgressChanged("\tfailed mod constraint check. Aborting ...");
+                Instance.RaiseProgressChanged("\tfailed mod constraint check. Aborting ...", NLog.LogLevel.Error);
                 return false;
             }
 
             Instance.RaiseProgressChanged("Checking mod load order requirements ...");
             if (!VerifyOrdering())
             {
-                Instance.RaiseProgressChanged("\tfailed mod load order check. Aborting ...");
+                Instance.RaiseProgressChanged("\tfailed mod load order check. Aborting ...", NLog.LogLevel.Error);
                 return false;
             }
 
@@ -295,11 +295,11 @@ namespace SeventhHeaven.Classes
             }
             else
             {
-                Instance.RaiseProgressChanged($"Failed to find game disc ...");
+                Instance.RaiseProgressChanged($"Failed to find game disc ...", NLog.LogLevel.Warn);
 
                 if (!OSHasAutoMountSupport())
                 {
-                    Instance.RaiseProgressChanged($"OS does not support auto mounting virtual disc. You must mount a virtual disk named FF7DISC1.ISO, insert a USB flash drive named FF7DISC1, or rename a Hard Drive to FF7DISC1 ...");
+                    Instance.RaiseProgressChanged($"OS does not support auto mounting virtual disc. You must mount a virtual disc named FF7DISC1.ISO, insert a USB flash drive named FF7DISC1, or rename a Hard Drive to FF7DISC1 ...", NLog.LogLevel.Error);
                     return false;
                 }
                 else
@@ -311,7 +311,7 @@ namespace SeventhHeaven.Classes
 
                         if (!didMount)
                         {
-                            Instance.RaiseProgressChanged($"Failed to auto mount virtual disc at {Path.Combine(Sys._7HFolder, "Resources", "FF7DISC1.ISO")} ...");
+                            Instance.RaiseProgressChanged($"Failed to auto mount virtual disc at {Path.Combine(Sys._7HFolder, "Resources", "FF7DISC1.ISO")} ...", NLog.LogLevel.Error);
                             return false;
                         }
 
@@ -320,7 +320,7 @@ namespace SeventhHeaven.Classes
 
                         if (string.IsNullOrEmpty(Instance.DriveLetter))
                         {
-                            Instance.RaiseProgressChanged($"Failed to find game disc after auto mounting ...");
+                            Instance.RaiseProgressChanged($"Failed to find game disc after auto mounting ...", NLog.LogLevel.Error);
                             return false;
                         }
 
@@ -372,7 +372,7 @@ namespace SeventhHeaven.Classes
 
                 if (runtimeProfile == null)
                 {
-                    Instance.RaiseProgressChanged("\tfailed to create Runtime Profile for active mods ...");
+                    Instance.RaiseProgressChanged("\tfailed to create Runtime Profile for active mods ...", NLog.LogLevel.Error);
                     return false;
                 }
 
@@ -484,7 +484,7 @@ namespace SeventhHeaven.Classes
 
                     try
                     {
-                        Instance.RaiseProgressChanged($"Attempting to inject with EasyHook: try # {attemptCount + 1} ...");
+                        Instance.RaiseProgressChanged($"Attempting to inject with EasyHook: try # {attemptCount + 1} (of {totalAttempts}) ...");
 
                         // attempt to inject on background thread so we can have a timeout if the process does not return in 10 seconds
                         // a successful injection should only take ~3 seconds
@@ -510,7 +510,7 @@ namespace SeventhHeaven.Classes
                                     }
                                 }
 
-                                Instance.RaiseProgressChanged($"\treceived errors: {errors} ...");
+                                Instance.RaiseProgressChanged($"\treceived errors: {errors} ...", NLog.LogLevel.Warn);
                             }
                             else
                             {
@@ -525,7 +525,7 @@ namespace SeventhHeaven.Classes
                             TimeSpan elapsed = DateTime.Now.Subtract(startTime);
                             if (elapsed.Seconds > 10)
                             {
-                                Instance.RaiseProgressChanged($"\treached timeout waiting for injection ...");
+                                Instance.RaiseProgressChanged($"\treached timeout waiting for injection ...", NLog.LogLevel.Warn);
                                 didInject = false;
                                 break;
                             }
@@ -533,7 +533,7 @@ namespace SeventhHeaven.Classes
                     }
                     catch (Exception e)
                     {
-                        Instance.RaiseProgressChanged($"\treceived unknown error: {e.Message} ...");
+                        Instance.RaiseProgressChanged($"\treceived unknown error: {e.Message} ...", NLog.LogLevel.Warn);
                     }
                     finally
                     {
@@ -556,7 +556,7 @@ namespace SeventhHeaven.Classes
 
                 if (!didInject)
                 {
-                    Instance.RaiseProgressChanged($"Failed to inject after max amount of tries ({totalAttempts}) ...");
+                    Instance.RaiseProgressChanged($"Failed to inject after max amount of tries ({totalAttempts}) ...", NLog.LogLevel.Warn);
                     Sys.Settings.GameLaunchSettings.HasReceivedCode5Error = true; // update launch settings to notify that user has received a code 5 error in the code
 
                     // give user option to set compat flag and try again
@@ -580,7 +580,7 @@ namespace SeventhHeaven.Classes
                         {
                             if (aex.Message.IndexOf("Unknown error in injected assembler code", StringComparison.InvariantCultureIgnoreCase) >= 0)
                             {
-                                Instance.RaiseProgressChanged($"Still failed to inject with EasyHook after setting compatibility fix. Aborting ...");
+                                Instance.RaiseProgressChanged($"Still failed to inject with EasyHook after setting compatibility fix. Aborting ...", NLog.LogLevel.Error);
                                 MessageDialogWindow.Show("Failed inject with EasyHook even after setting the compatibility flags", "Failed To Start Game", MessageBoxButton.OK, MessageBoxImage.Error);
                                 return false;
                             }
@@ -701,7 +701,7 @@ namespace SeventhHeaven.Classes
                 Logger.Error(e);
 
 
-                Instance.RaiseProgressChanged("Exception occurred while trying to start FF7 ...");
+                Instance.RaiseProgressChanged("Exception occurred while trying to start FF7 ...", NLog.LogLevel.Error);
                 MessageDialogWindow.Show(e.ToString(), "Error starting FF7", MessageBoxButton.OK, MessageBoxImage.Error);
 
                 return false;
@@ -712,9 +712,9 @@ namespace SeventhHeaven.Classes
             }
         }
 
-        private static void GameConverter_MessageSent(string message)
+        private static void GameConverter_MessageSent(string message, NLog.LogLevel logLevel)
         {
-            Instance.RaiseProgressChanged(message);
+            Instance.RaiseProgressChanged(message, logLevel);
         }
 
         internal static RuntimeProfile CreateRuntimeProfile()
@@ -1659,9 +1659,14 @@ namespace SeventhHeaven.Classes
             }
         }
 
-        internal void RaiseProgressChanged(string messageToLog)
+        internal void RaiseProgressChanged(string messageToLog, NLog.LogLevel logLevel = null)
         {
-            Logger.Info(messageToLog);
+            if (logLevel == null)
+            {
+                logLevel = NLog.LogLevel.Info;
+            }
+
+            Logger.Log(logLevel, messageToLog);
             ProgressChanged?.Invoke(messageToLog);
         }
     }

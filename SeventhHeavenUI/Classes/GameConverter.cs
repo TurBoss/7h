@@ -21,7 +21,7 @@ namespace SeventhHeaven.Classes
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public delegate void OnMessageSent(string message);
+        public delegate void OnMessageSent(string message, NLog.LogLevel logLevel);
         public event OnMessageSent MessageSent;
 
         public const string BackupFolderName = "BackupGC2020";
@@ -722,7 +722,7 @@ namespace SeventhHeaven.Classes
                 }
                 else
                 {
-                    SendMessage($"...\t could not find moviecam.lgp file at {sourcePath} ...");
+                    SendMessage($"...\t could not find moviecam.lgp file at {sourcePath} ...", NLog.LogLevel.Warn);
                 }
             }
 
@@ -731,14 +731,13 @@ namespace SeventhHeaven.Classes
             {
                 string fullTargetPath = Path.Combine(InstallPath, "data", file);
 
-                Logger.Info($"... checking if file exists: {fullTargetPath}");
                 if (File.Exists(fullTargetPath))
                 {
                     // file already exists at install path so continue
                     continue;
                 }
 
-                SendMessage($"...\t file not found. Scanning disc(s) for files ...");
+                SendMessage($"...\t {file} not found. Scanning disc(s) for files ...", NLog.LogLevel.Warn);
 
                 // search all drives for the file
                 bool foundFileOnDrive = false;
@@ -768,7 +767,7 @@ namespace SeventhHeaven.Classes
                             catch (Exception e)
                             {
                                 Logger.Error(e);
-                                SendMessage($"... \t\t failed to copy. Error has been logged");
+                                SendMessage($"... \t\t failed to copy. Error has been logged", NLog.LogLevel.Warn);
                             }
                         }
                     }
@@ -782,7 +781,7 @@ namespace SeventhHeaven.Classes
                 // at this point if file not found/copied on any drive then failed verification
                 if (!foundFileOnDrive)
                 {
-                    SendMessage($"... \t failed to find {file} on any disc ...");
+                    SendMessage($"... \t failed to find {file} on any disc ...", NLog.LogLevel.Warn);
                     foundAllFiles = false;
                 }
             }
@@ -813,18 +812,17 @@ namespace SeventhHeaven.Classes
             {
                 string fullTargetPath = Path.Combine(InstallPath, "data", file);
 
-                Logger.Info($"... checking if file exists: {fullTargetPath}");
                 if (File.Exists(fullTargetPath))
                 {
                     continue; // file exists as expected
                 }
 
-                SendMessage($"... \t{file} file not found");
+                SendMessage($"... \t{file} file not found", NLog.LogLevel.Warn);
 
                 string fullSourcePath = Path.Combine(InstallPath, "data", "lang-en", file);
                 if (!File.Exists(fullSourcePath))
                 {
-                    SendMessage($"... \tcannot copy source file because it is missing at {fullSourcePath}");
+                    SendMessage($"... \tcannot copy source file because it is missing at {fullSourcePath}", NLog.LogLevel.Warn);
                     return false;
                 }
 
@@ -837,7 +835,7 @@ namespace SeventhHeaven.Classes
                 catch (Exception e)
                 {
                     Logger.Error(e);
-                    SendMessage($"... \tfailed to copy: {e.Message}");
+                    SendMessage($"... \tfailed to copy: {e.Message}", NLog.LogLevel.Warn);
                     return false;
                 }
             }
@@ -941,16 +939,20 @@ namespace SeventhHeaven.Classes
 
             if (!copiedAllFiles)
             {
-                SendMessage("\tThe following movie files are missing and can not be copied:");
-                SendMessage(string.Join("\n", missingFiles));
+                SendMessage("\tOne or more movie files were not found", NLog.LogLevel.Warn);
             }
 
             return copiedAllFiles;
         }
 
-        public void SendMessage(string message)
+        public void SendMessage(string message, NLog.LogLevel logLevel = null)
         {
-            MessageSent?.Invoke(message);
+            if (logLevel == null)
+            {
+                logLevel = NLog.LogLevel.Info;
+            }
+
+            MessageSent?.Invoke(message, logLevel);
         }
 
         public bool AllMusicFilesExist()
@@ -965,9 +967,13 @@ namespace SeventhHeaven.Classes
 
                 if (!File.Exists(fullPath))
                 {
-                    SendMessage($"\tmissing music file at {fullPath}");
                     allFilesExist = false;
                 }
+            }
+
+            if (!allFilesExist)
+            {
+                SendMessage("\tOne or more music files are missing.", NLog.LogLevel.Warn);
             }
 
             return allFilesExist;
@@ -1237,7 +1243,7 @@ namespace SeventhHeaven.Classes
             // copy default .cfg if it is missing
             if (!File.Exists(pathToCurrentCfg))
             {
-                SendMessage($"\tff7_opengl.cfg file is missing. Copying default from {Sys.PathToGameDriverFolder} ...");
+                SendMessage($"\tff7_opengl.cfg file is missing. Copying default from {Sys.PathToGameDriverFolder} ...", NLog.LogLevel.Warn);
                 File.Copy(Path.Combine(Sys.PathToGameDriverFolder, "ff7_opengl.cfg"), pathToCurrentCfg, true);
             }
 
@@ -1357,7 +1363,7 @@ namespace SeventhHeaven.Classes
             catch (Exception ex)
             {
                 Logger.Error(ex);
-                SendMessage("\tfailed to get game driver version from files. Error has been logged.");
+                SendMessage("\tfailed to get game driver version from files. Error has been logged.", NLog.LogLevel.Warn);
                 return 0;
             }
 
