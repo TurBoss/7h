@@ -24,7 +24,7 @@ namespace SeventhHeaven.Classes
         public delegate void OnMessageSent(string message, NLog.LogLevel logLevel);
         public event OnMessageSent MessageSent;
 
-        public const string BackupFolderName = "BackupGC2020";
+        public const string BackupFolderName = "7H2.0-BACKUP";
 
         public string InstallPath { get; set; }
 

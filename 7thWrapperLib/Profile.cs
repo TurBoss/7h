@@ -197,6 +197,9 @@ namespace _7thWrapperLib
             System.Diagnostics.Debug.WriteLine("    Finished scan for chunks, found " + String.Join(",", _chunkFiles));
         }
 
+        /// <summary>
+        /// Ensure the <see cref="_archive"/> is loaded if mod is an .iro
+        /// </summary>
         public void Startup()
         {
             if (BaseFolder.EndsWith(".iro", StringComparison.InvariantCultureIgnoreCase) && _archive == null)
@@ -307,7 +310,15 @@ namespace _7thWrapperLib
                     {
                         string tempLibPath = Path.Combine(libpath, dll);
                         WriteIfNecessary(tempLibPath, _archive.GetBytes(dll));
-                        saved.Add(new ProgramInfo() { PathToProgram = tempLibPath, ProgramArgs = prog.ProgramArgs, CloseAllInstances = prog.CloseAllInstances });
+                        saved.Add(new ProgramInfo()
+                        {
+                            PathToProgram = tempLibPath,
+                            ProgramArgs = prog.ProgramArgs,
+                            CloseAllInstances = prog.CloseAllInstances,
+                            WaitForWindowToShow = prog.WaitForWindowToShow,
+                            WaitTimeOutInSeconds = prog.WaitTimeOutInSeconds,
+                            WindowTitle = prog.WindowTitle
+                        });
                     }
                 }
 
@@ -721,7 +732,21 @@ namespace _7thWrapperLib
                     string programArgs = pi.SelectSingleNode("ProgramArgs").NodeText();
                     bool closeAll = pi.SelectSingleNode("CloseAllInstances").NodeText().Equals("true", StringComparison.InvariantCultureIgnoreCase);
 
-                    LoadPrograms.Add(new ProgramInfo() { PathToProgram = programPath, ProgramArgs = programArgs, CloseAllInstances = closeAll });
+                    string windowTitle = pi.SelectSingleNode("WindowTitle").NodeText();
+                    bool waitToShow = pi.SelectSingleNode("WaitForWindowToShow").NodeText().Equals("true", StringComparison.InvariantCultureIgnoreCase);
+                    string waitTimeoutTxt = pi.SelectSingleNode("WaitTimeOutInSeconds").NodeText();
+                    int.TryParse(waitTimeoutTxt, out int waitTimeout);
+
+
+                    LoadPrograms.Add(new ProgramInfo()
+                    {
+                        PathToProgram = programPath,
+                        ProgramArgs = programArgs,
+                        CloseAllInstances = closeAll,
+                        WindowTitle = windowTitle,
+                        WaitForWindowToShow = waitToShow,
+                        WaitTimeOutInSeconds = waitTimeout
+                    });
                 }
             }
 
@@ -780,7 +805,37 @@ namespace _7thWrapperLib
     {
         public string PathToProgram { get; set; }
         public string ProgramArgs { get; set; }
+
+        /// <summary>
+        /// If set to true then all Processes with the same name as the <see cref="PathToProgram"/>
+        /// will be closed.
+        /// </summary>
         public bool CloseAllInstances { get; set; }
+
+        /// <summary>
+        /// If set to true then the launch process wil wait until the program window is visible
+        /// and will force minimize it.
+        /// </summary>
+        public bool WaitForWindowToShow { get; set; }
+
+        /// <summary>
+        /// This will be the Main Window Title of the Window displayed.
+        /// Used to find the window handle and wait for it before closing
+        /// </summary>
+        public string WindowTitle { get; set; }
+
+        /// <summary>
+        /// Defaults to 0 if missing from mod.xml; If set to 0, then no time out. 
+        /// Otherwise will wait for this amount of time before continuing the launch process
+        /// </summary>
+        public int WaitTimeOutInSeconds { get; set; }
+
+        public ProgramInfo()
+        {
+            WaitForWindowToShow = false;
+            WaitTimeOutInSeconds = 0;
+            CloseAllInstances = false;
+        }
 
         // override object.Equals
         public override bool Equals(object obj)

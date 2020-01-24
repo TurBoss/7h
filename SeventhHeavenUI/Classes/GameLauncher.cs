@@ -74,6 +74,9 @@ namespace SeventhHeaven.Classes
         [DllImport("User32")]
         private static extern int ShowWindow(int hwnd, int nCmdShow);
 
+        [DllImport("user32.dll", EntryPoint = "FindWindow")]
+        private extern static IntPtr FindWindow(string lpClassName, string lpWindowName);
+
         public static bool LaunchGame(bool varDump, bool debug, bool launchWithNoMods = false)
         {
             Instance.RaiseProgressChanged($"Checking FF7 is not running ...");
@@ -186,7 +189,7 @@ namespace SeventhHeaven.Classes
             converter.CreateMissingDirectories();
 
 
-            string backupFolderPath = Path.Combine(converter.InstallPath, "7H2.0-BACKUP", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            string backupFolderPath = Path.Combine(converter.InstallPath, GameConverter.BackupFolderName, DateTime.Now.ToString("yyyyMMddHHmmss"));
 
 
             converter.CheckAndCopyOldGameConverterFiles(backupFolderPath);
@@ -449,6 +452,14 @@ namespace SeventhHeaven.Classes
                 return true;
             }
 
+            /// sideload programs for mods before starting FF7 because FF7 losing focus while initializing can cause the intro movies to stop playing
+            /// ... Thus we load programs first so they don't steal window focus
+            Instance.RaiseProgressChanged("Starting plugins for mods ...");
+            foreach (RuntimeMod mod in runtimeProfile.Mods)
+            {
+                Instance.LaunchProgramsForMod(mod);
+            }
+
             //
             // Attempt to Create FF7 Proc and Inject with EasyHook
             //
@@ -609,34 +620,11 @@ namespace SeventhHeaven.Classes
                     }
                 }
 
-                /// load plugins and sideload other programs for mods
-                Instance.RaiseProgressChanged("Starting plugins and programs for mods ...");
+                /// load plugins for mods
+                Instance.RaiseProgressChanged("Starting plugins for mods ...");
                 foreach (RuntimeMod mod in runtimeProfile.Mods)
                 {
-                    if (mod.LoadPlugins.Any())
-                    {
-                        mod.Startup();
-                        foreach (string dll in mod.GetLoadPlugins())
-                        {
-                            _7HPlugin plugin;
-                            if (!Instance._plugins.TryGetValue(dll, out plugin))
-                            {
-                                System.Reflection.Assembly asm = System.Reflection.Assembly.LoadFrom(dll);
-
-                                plugin = asm.GetType("_7thHeaven.Plugin")
-                                            .GetConstructor(Type.EmptyTypes)
-                                            .Invoke(null) as _7HPlugin;
-
-                                Instance._plugins.Add(dll, plugin);
-                                Instance.RaiseProgressChanged($"\tplugin added: {dll}");
-                            }
-
-                            Instance.RaiseProgressChanged($"\tstarting plugin: {dll}");
-                            plugin.Start(mod);
-                        }
-                    }
-
-                    Instance.LaunchProgramsForMod(mod);
+                    StartPluginsForMod(mod);
                 }
 
                 // wire up process to stop plugins and side processes when proc has exited
@@ -667,7 +655,7 @@ namespace SeventhHeaven.Classes
                     // ensure Reunion is re-enabled when ff7 process exits in case it failed above for any reason
                     if (File.Exists(Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "Reunion.dll.bak")))
                     {
-                        EnableOrDisableReunionMod(doEnable: true); 
+                        EnableOrDisableReunionMod(doEnable: true);
                     }
                 };
 
@@ -709,6 +697,34 @@ namespace SeventhHeaven.Classes
             finally
             {
                 converter.MessageSent -= GameConverter_MessageSent;
+            }
+        }
+
+        private static void StartPluginsForMod(RuntimeMod mod)
+        {
+            if (!mod.LoadPlugins.Any())
+            {
+                return; // no plugins to load
+            }
+
+            mod.Startup();
+            foreach (string dll in mod.GetLoadPlugins())
+            {
+                _7HPlugin plugin;
+                if (!Instance._plugins.TryGetValue(dll, out plugin))
+                {
+                    System.Reflection.Assembly asm = System.Reflection.Assembly.LoadFrom(dll);
+
+                    plugin = asm.GetType("_7thHeaven.Plugin")
+                                .GetConstructor(Type.EmptyTypes)
+                                .Invoke(null) as _7HPlugin;
+
+                    Instance._plugins.Add(dll, plugin);
+                    Instance.RaiseProgressChanged($"\tplugin added: {dll}");
+                }
+
+                Instance.RaiseProgressChanged($"\tstarting plugin: {dll}");
+                plugin.Start(mod);
             }
         }
 
@@ -1192,7 +1208,7 @@ namespace SeventhHeaven.Classes
 
             string installPath = Path.GetDirectoryName(Sys.Settings.FF7Exe) + @"\";
             string pathToData = Path.Combine(installPath, @"data\");
-            string pathToMovies = Path.Combine(installPath, "data", @"movies\");
+            string pathToMovies = Sys.Settings.MovieFolder;
 
             // Add registry key values for paths and drive letter
             SetValueIfChanged(ff7KeyPath, "AppPath", installPath);
@@ -1333,7 +1349,7 @@ namespace SeventhHeaven.Classes
             object currentValue = RegistryHelper.GetValue(regKeyPath, regValueName, null);
             string valueFormatted = newValue.ToString(); // used to display the object value correctly in the log e.g. for a byte[] convert it to readable string
             bool isValuesEqual;
-            
+
             if (newValue is byte[])
             {
                 isValuesEqual = BitConverter.ToString(currentValue as byte[]).Equals(BitConverter.ToString(newValue as byte[]));
@@ -1571,12 +1587,43 @@ namespace SeventhHeaven.Classes
 
                     _sideLoadProcesses.Add(program, aproc);
                     Instance.RaiseProgressChanged($"\t\tstarted ...");
-                    System.Threading.Thread.Sleep(1500); // add a small delay to after a process is started so it has time to initialize/load (hopefully before ff7 is started)
+
+                    IntPtr mainWindowHandle = IntPtr.Zero;
+
+                    if (program.WaitForWindowToShow)
+                    {
+                        Instance.RaiseProgressChanged($"\t\twaiting for program to initialize and show ...");
+
+                        DateTime startTime = DateTime.Now;
+
+                        while (aproc.MainWindowHandle == IntPtr.Zero && mainWindowHandle == IntPtr.Zero)
+                        {
+                            if (program.WaitTimeOutInSeconds != 0 && DateTime.Now.Subtract(startTime).TotalSeconds > program.WaitTimeOutInSeconds)
+                            {
+                                Instance.RaiseProgressChanged($"\t\ttimeout (of {program.WaitTimeOutInSeconds} seconds) reached waiting for program to show. Continuing... ", NLog.LogLevel.Warn);
+                                break;
+                            }
+
+                            aproc.Refresh();
+
+                            if (!string.IsNullOrWhiteSpace(program.WindowTitle))
+                            {
+                                // attempt to find main window handle based on the Window Title of the process
+                                // ... necessary because some programs (Speed Hack) will open multiple processes and the Main Window Handle needs to be found since it is different from the original process started
+                                mainWindowHandle = FindWindow(null, program.WindowTitle);
+                            }
+
+                        };
+                    }
 
                     // force the process to become minimized
-                    if (aproc.MainWindowHandle != IntPtr.Zero)
+                    if (aproc.MainWindowHandle != IntPtr.Zero || mainWindowHandle != IntPtr.Zero)
                     {
-                        ShowWindow(aproc.MainWindowHandle.ToInt32(), SW_FORCEMINIMIZE);
+                        Logger.Info($"\t\tforce minimizing program ...");
+                        IntPtr handleToMinimize = aproc.MainWindowHandle != IntPtr.Zero ? aproc.MainWindowHandle : mainWindowHandle;
+
+                        System.Threading.Thread.Sleep(1500); // add a small delay to ensure the program is showing in taskbar before force minimizing;
+                        ShowWindow(handleToMinimize.ToInt32(), SW_FORCEMINIMIZE);
                     }
                 }
                 else
