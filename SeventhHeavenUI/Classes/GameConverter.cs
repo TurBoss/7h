@@ -709,24 +709,6 @@ namespace SeventhHeaven.Classes
                 "ff7disc3"
             };
 
-
-            // copy moviecam.lgp file
-            string targetPath = Path.Combine(InstallPath, "data", "movies", "moviecam.lgp");
-            if (!File.Exists(targetPath))
-            {
-                string sourcePath = Path.Combine(InstallPath, "data", "cd", "moviecam.lgp");
-                if (File.Exists(sourcePath))
-                {
-                    SendMessage($"...\t copying moviecam.lgp from {sourcePath} to {targetPath} ...");
-                    File.Copy(sourcePath, targetPath, true);
-                }
-                else
-                {
-                    SendMessage($"...\t could not find moviecam.lgp file at {sourcePath} ...", NLog.LogLevel.Warn);
-                }
-            }
-
-
             foreach (string file in expectedFiles)
             {
                 string fullTargetPath = Path.Combine(InstallPath, "data", file);
@@ -1238,15 +1220,29 @@ namespace SeventhHeaven.Classes
         {
             string pathToCurrentFile = Path.Combine(InstallPath, "ff7_opengl.fgd");
             string pathToLatestFile = Path.Combine(Sys.PathToGameDriverFolder, "ff7_opengl.fgd");
+            string pathToLatestCfg = Path.Combine(Sys.PathToGameDriverFolder, "ff7_opengl.cfg");
             string pathToCurrentCfg = Path.Combine(InstallPath, "ff7_opengl.cfg");
 
             // copy default .cfg if it is missing
             if (!File.Exists(pathToCurrentCfg))
             {
-                SendMessage($"\tff7_opengl.cfg file is missing. Copying default from {Sys.PathToGameDriverFolder} ...", NLog.LogLevel.Warn);
-                File.Copy(Path.Combine(Sys.PathToGameDriverFolder, "ff7_opengl.cfg"), pathToCurrentCfg, true);
+                if (File.Exists(pathToLatestCfg))
+                {
+                    SendMessage($"\tff7_opengl.cfg file is missing. Copying default from {Sys.PathToGameDriverFolder} ...", NLog.LogLevel.Warn);
+                    File.Copy(pathToLatestCfg, pathToCurrentCfg, true);
+                }
+                else
+                {
+                    SendMessage($"\tcannot create default .cfg due to missing file: {pathToLatestCfg} ...", NLog.LogLevel.Error);
+                    return false;
+                }
             }
 
+            if (!File.Exists(pathToLatestFile))
+            {
+                SendMessage($"cannot check if latest driver is installed due to missing file: {pathToLatestFile}", NLog.LogLevel.Warn);
+                return true; // return true so it does not halt process
+            }
 
             if (CompareOpenGlDriverVersions(pathToCurrentFile, pathToLatestFile) >= 0)
             {
