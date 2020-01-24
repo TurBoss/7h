@@ -1261,6 +1261,7 @@ namespace SeventhHeaven.Classes
 
                 if (File.Exists(pathToCurrentCfg))
                 {
+                    Directory.CreateDirectory(backupFolderPath);
                     SendMessage($"\tbacking up existing game driver .cfg to {backupFolderPath} ...");
                     File.Copy(pathToCurrentCfg, Path.Combine(backupFolderPath, "ff7_opengl.cfg"), true);
                 }
