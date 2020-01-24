@@ -1040,7 +1040,7 @@ namespace SeventhHeaven.ViewModels
 
             if (!SelectedRenderer.Equals("Custom Driver", StringComparison.InvariantCultureIgnoreCase))
             {
-                MessageDialogWindow.Show("Choosing any other option beside 'Custom Driver' will cause mods installed with 7H not to work anymore.", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show("Choosing any other option besides 'Custom Driver' will cause mods installed with 7H not to work anymore!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 

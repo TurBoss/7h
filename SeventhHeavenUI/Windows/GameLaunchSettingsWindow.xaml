@@ -27,9 +27,10 @@
 
         <DataTemplate x:Key="keyboardItemTemplate">
             <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
-                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedGameConfigOption, FallbackValue='1998 KB+Std Gamepad'}" 
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedGameConfigOption, FallbackValue='No Numpad+Swap AB-XO Gamepad'}" 
                            Margin="0,0,15,0" 
-                           TextWrapping="Wrap"/>
+                           TextTrimming="CharacterEllipsis"
+                           TextWrapping="NoWrap"/>
             </Grid>
         </DataTemplate>
 
@@ -119,8 +120,8 @@
                         <ComboBox Name="cboKeyboards"
                                   FontSize="13"
                                   Grid.Column="1"
-                                  MinWidth="165"
-                                  MaxWidth="165"
+                                  MinWidth="240"
+                                  MaxWidth="240"
                                   ToolTip="Sets your in-game keyboard and gamepad controls. Select 'Custom' to use your own settings."
                                   ToolTipService.IsEnabled="false"
                                   MouseEnter="Control_MouseEnter"
@@ -338,29 +339,11 @@
                           Grid.ColumnSpan="3"
                           HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <WrapPanel>
-                            <TextBlock Text="Music Volume:"
-                                       HorizontalAlignment="Right"
-                                       VerticalAlignment="Center"
-                                       ToolTip="Set the in-game music volume."
-                                       ToolTipService.IsEnabled="False"
-                                       MouseEnter="Control_MouseEnter"
-                                       Margin="0,0,3,10"/>
-                            <Slider x:Name="sliderVolume"
-                                    Value="{Binding MusicVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
-                                    ToolTip="{Binding MusicVolumeDisplayText}"
-                                    ToolTipService.InitialShowDelay="100"
-                                    Minimum="0"
-                                    Maximum="100"
-                                    MinWidth="115"
-                                    Margin="1,0,0,7"/>
-                        </WrapPanel>
-
-                        <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
+                        <WrapPanel HorizontalAlignment="Left" Margin="15,0,0,0">
                             <TextBlock Text="SFX Volume:"
                                        HorizontalAlignment="Right"
                                        VerticalAlignment="Center"
@@ -371,13 +354,43 @@
                             <Slider x:Name="sliderSfxVolume"
                                     HorizontalAlignment="Right"
                                     Value="{Binding SfxVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
-                                    ToolTip="{Binding SfxVolumeDisplayText}"
                                     ToolTipService.InitialShowDelay="100"
+                                    ValueChanged="sliderSfxVolume_ValueChanged"
+                                    PreviewMouseLeftButtonUp="sliderSfxVolume_MouseLeftButtonUp"
                                     Minimum="0"
                                     Maximum="100"
-                                    MinWidth="105"
-                                    Margin="0,0,3,7"/>
+                                    MinWidth="90"
+                                    Margin="0,0,0,7">
+                                <Slider.ToolTip>
+                                    <ToolTip Content="{Binding SfxVolumeDisplayText}"/>
+                                </Slider.ToolTip>
+                            </Slider>
                         </WrapPanel>
+
+                        <WrapPanel Grid.Column="1" HorizontalAlignment="Right" Margin="18,0,0,0">
+                            <TextBlock Text="Music Volume:"
+                                       HorizontalAlignment="Right"
+                                       VerticalAlignment="Center"
+                                       ToolTip="Set the in-game music volume."
+                                       ToolTipService.IsEnabled="False"
+                                       MouseEnter="Control_MouseEnter"
+                                       Margin="0,0,3,10"/>
+                            <Slider x:Name="sliderVolume"
+                                    Value="{Binding MusicVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
+                                    ToolTipService.InitialShowDelay="100"
+                                    ValueChanged="sliderVolume_ValueChanged"
+                                    PreviewMouseLeftButtonUp="sliderVolume_PreviewMouseLeftButtonUp"
+                                    Minimum="0"
+                                    Maximum="100"
+                                    MinWidth="90"
+                                    Margin="1,0,4,7">
+                                <Slider.ToolTip>
+                                    <ToolTip Content="{Binding MusicVolumeDisplayText}"/>
+                                </Slider.ToolTip>
+                            </Slider>
+                        </WrapPanel>
+
+
 
                     </Grid>
                 </Grid>
@@ -424,12 +437,18 @@
 
                     <TextBlock Text="Renderer:"
                                Grid.Row="1"
+                               ToolTip="Select the graphics driver to use for rendering FF7. Mods will only work when set to 'Custom Driver'"
+                               ToolTipService.IsEnabled="False"
+                               MouseEnter="Control_MouseEnter"
                                HorizontalAlignment="Right"
                                VerticalAlignment="Center"
                                Margin="0,0,5,5"/>
                     <ComboBox x:Name="cboRenderers"
                               Grid.Row="1"
                               Grid.Column="1"
+                              ToolTip="Select the graphics driver to use for rendering FF7. Mods will only work when set to 'Custom Driver'"
+                              ToolTipService.IsEnabled="False"
+                              MouseEnter="Control_MouseEnter"
                               Style="{StaticResource MainComboBoxStyle}"
                               ItemTemplate="{StaticResource rendererItemTemplate}"
                               ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
@@ -437,46 +456,42 @@
                               ItemsSource="{Binding AvailableRenderers}"
                               HorizontalAlignment="Stretch"
                               VerticalAlignment="Center"
-                              Margin="0,1,4,5"
-                              MinWidth="390"/>
+                              Margin="0,1,4,5"/>
                 </Grid>
 
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <WrapPanel HorizontalAlignment="Stretch" Margin="4,3,10,6"
-                               MouseEnter="Control_MouseEnter"
-                               ToolTip="Only applies when set to 'Software Renderer' or 'Direct3D Hardware Acceleration'."
-                               ToolTipService.IsEnabled="False">
-                        <RadioButton Content="Quarter Screen" VerticalAlignment="Center" Margin="0,0,10,0"
-                                     GroupName="ScreenMode"
-                                     Visibility="{Binding ScreenModesVisibility}"
-                                     IsChecked="{Binding IsQuarterScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RadioButton Content="Full Screen" VerticalAlignment="Center" Margin="0,0,0,0"
-                                     GroupName="ScreenMode"
-                                     Visibility="{Binding ScreenModesVisibility}"
-                                     IsChecked="{Binding IsFullScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    </WrapPanel>
+                <WrapPanel HorizontalAlignment="Stretch" Margin="4,30,3,0">
+                    
+                    <RadioButton Content="Quarter Screen" VerticalAlignment="Center" Margin="0,0,0,0"
+                                 GroupName="ScreenMode"
+                                 ToolTip="Launch the game windowed (quarter screen). Only applies when set to 'Software Renderer' or 'Direct3D Hardware Acceleration'."
+                                 ToolTipService.IsEnabled="False"
+                                 MouseEnter="Control_MouseEnter"
+                                 Visibility="{Binding ScreenModesVisibility}"
+                                 IsChecked="{Binding IsQuarterScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <RadioButton Content="Full Screen" VerticalAlignment="Center" Margin="8,0,0,0"
+                                 GroupName="ScreenMode"
+                                 ToolTip="Launch the game in full screen. Only applies when set to 'Software Renderer' or 'Direct3D Hardware Acceleration'."
+                                 ToolTipService.IsEnabled="False"
+                                 MouseEnter="Control_MouseEnter"
+                                 Visibility="{Binding ScreenModesVisibility}"
+                                 IsChecked="{Binding IsFullScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <WrapPanel Grid.Column="1"
-                               HorizontalAlignment="Right"
-                               MouseEnter="Control_MouseEnter"
-                               Margin="0,0,-3,0"
-                               ToolTip="Only applies when set to 'Direct3D Hardware Acceleration'."
-                               ToolTipService.IsEnabled="False">
-                        <RadioButton Content="RIVA 128" VerticalAlignment="Center" Margin="0,0,10,0"
-                                     GroupName="GraphicsOption"
-                                     Visibility="{Binding RivaOptionsVisibility}"
-                                     IsChecked="{Binding IsRivaOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <RadioButton Content="TNT" VerticalAlignment="Center" Margin="0,0,10,0"
-                                     GroupName="GraphicsOption"
-                                     Visibility="{Binding RivaOptionsVisibility}"
-                                     IsChecked="{Binding IsTntOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    </WrapPanel>
-                </Grid>
-                
+                    <RadioButton Content="RIVA 128" VerticalAlignment="Center" Margin="28,0,0,0"
+                                 GroupName="GraphicsOption"
+                                 ToolTip="Sets the option to use for Hardware Acceleration. Only applies when set to 'Direct3D Hardware Acceleration'."
+                                 ToolTipService.IsEnabled="False"
+                                 MouseEnter="Control_MouseEnter"
+                                 Visibility="{Binding RivaOptionsVisibility}"
+                                 IsChecked="{Binding IsRivaOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <RadioButton Content="TNT" VerticalAlignment="Center" Margin="8,0,0,0"
+                                 GroupName="GraphicsOption"
+                                 ToolTip="Sets the option to use for Hardware Acceleration. Only applies when set to 'Direct3D Hardware Acceleration'."
+                                 ToolTipService.IsEnabled="False"
+                                 MouseEnter="Control_MouseEnter"
+                                 Visibility="{Binding RivaOptionsVisibility}"
+                                 IsChecked="{Binding IsTntOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </WrapPanel>
+
             </StackPanel>
         </GroupBox>
 

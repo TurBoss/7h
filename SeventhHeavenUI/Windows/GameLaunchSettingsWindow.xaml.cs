@@ -2,6 +2,7 @@
 using SeventhHeaven.ViewModels;
 using SeventhHeavenUI.ViewModels;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace SeventhHeaven.Windows
 {
@@ -181,6 +182,34 @@ namespace SeventhHeaven.Windows
         private void btnImportMovies_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.ImportMissingMovies();
+        }
+
+        private void sliderSfxVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            ShowOrHideToolTip(sliderSfxVolume.ToolTip as ToolTip, true);
+        }
+
+        private void sliderSfxVolume_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ShowOrHideToolTip(sliderSfxVolume.ToolTip as ToolTip, false);
+        }
+
+        private void ShowOrHideToolTip(ToolTip controlToolTip, bool isOpen)
+        {
+            if (controlToolTip != null && controlToolTip.Content != null)
+            {
+                controlToolTip.IsOpen = isOpen;
+            }
+        }
+
+        private void sliderVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            ShowOrHideToolTip(sliderVolume.ToolTip as ToolTip, true);
+        }
+
+        private void sliderVolume_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ShowOrHideToolTip(sliderVolume.ToolTip as ToolTip, false);
         }
     }
 }

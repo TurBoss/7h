@@ -34,9 +34,11 @@
 
         <Style x:Key="ReadMeStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource HyperlinkButton}">
             <Setter Property="Content" Value="Click Here"/>
+            <Setter Property="Padding" Value="5,2,2,2"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding PreviewModHasReadMe}" Value="False">
                     <Setter Property="Content" Value="None"/>
+                    <Setter Property="Padding" Value="2"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -195,9 +197,11 @@
                         <WrapPanel Margin="3,0,3,0" Grid.Row="4">
                             <TextBlock Text="Link:" Style="{StaticResource ModInfoLabelStyle}" Margin="0,0,0,3"/>
                             <Button x:Name="btnOpenModLink" 
+                                    Width="80"
                                     Background="Transparent"
                                     Margin="2,0,5,0"
                                     Click="btnOpenModLink_Click"
+                                    ToolTip="{Binding PreviewModLink}"
                                     Style="{StaticResource HyperlinkButton}"
                                     Content="Click Here"/>
 
@@ -205,8 +209,10 @@
                                        Visibility="{Binding ReadmeVisibility, FallbackValue='Visible'}"/>
                             <Button x:Name="btnOpenModReadme"
                                     Background="Transparent"
+                                    Width="80"
                                     Margin="2,0,10,0"
                                     Click="btnOpenModReadme_Click"
+                                    Content="Click Here"
                                     Visibility="{Binding ReadmeVisibility, FallbackValue='Visible'}"
                                     IsEnabled="{Binding PreviewModHasReadMe, FallbackValue='False'}"
                                     Style="{StaticResource ReadMeStyle}"/>

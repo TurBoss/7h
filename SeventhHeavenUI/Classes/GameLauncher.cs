@@ -108,7 +108,7 @@ namespace SeventhHeaven.Classes
             Instance.RaiseProgressChanged("Verifying installed game is compatible ...");
             if (converter.IsGamePirated())
             {
-                Instance.RaiseProgressChanged("Incompatible game files found. Unable to continue.", NLog.LogLevel.Error);
+                Instance.RaiseProgressChanged("Error code: YARR! Unable to continue. Please report this error on the Qhimm forums.", NLog.LogLevel.Error);
                 Logger.Info(FileUtils.ListAllFiles(converter.InstallPath));
                 return false;
             }
@@ -452,14 +452,6 @@ namespace SeventhHeaven.Classes
                 return true;
             }
 
-            /// sideload programs for mods before starting FF7 because FF7 losing focus while initializing can cause the intro movies to stop playing
-            /// ... Thus we load programs first so they don't steal window focus
-            Instance.RaiseProgressChanged("Starting plugins for mods ...");
-            foreach (RuntimeMod mod in runtimeProfile.Mods)
-            {
-                Instance.LaunchProgramsForMod(mod);
-            }
-
             //
             // Attempt to Create FF7 Proc and Inject with EasyHook
             //
@@ -468,6 +460,14 @@ namespace SeventhHeaven.Classes
             {
                 Instance.RaiseProgressChanged($"Launching additional programs to run (if any) ...");
                 Instance.LaunchAdditionalProgramsToRunPrior();
+
+                /// sideload programs for mods before starting FF7 because FF7 losing focus while initializing can cause the intro movies to stop playing
+                /// ... Thus we load programs first so they don't steal window focus
+                Instance.RaiseProgressChanged("Starting plugins for mods ...");
+                foreach (RuntimeMod mod in runtimeProfile.Mods)
+                {
+                    Instance.LaunchProgramsForMod(mod);
+                }
 
                 RuntimeParams parms = new RuntimeParams
                 {
@@ -1265,7 +1265,12 @@ namespace SeventhHeaven.Classes
                 SetValueIfChanged(graphicsKeyPath, "Mode", mode, RegistryValueKind.DWord);
                 SetValueIfChanged(graphicsVirtualKeyPath, "Mode", mode, RegistryValueKind.DWord);
 
-                if (Sys.Settings.GameLaunchSettings.UseRiva128GraphicsOption)
+                if (mode == 1)
+                {
+                    SetValueIfChanged(graphicsKeyPath, "Options", 0x12, RegistryValueKind.DWord);
+                    SetValueIfChanged(graphicsVirtualKeyPath, "Options", 0x12, RegistryValueKind.DWord);
+                }
+                else if (Sys.Settings.GameLaunchSettings.UseRiva128GraphicsOption)
                 {
                     SetValueIfChanged(graphicsKeyPath, "Options", 0x0000000a, RegistryValueKind.DWord);
                     SetValueIfChanged(graphicsVirtualKeyPath, "Options", 0x0000000a, RegistryValueKind.DWord);
@@ -1357,7 +1362,7 @@ namespace SeventhHeaven.Classes
             }
             else
             {
-                isValuesEqual = currentValue.Equals(newValue);
+                isValuesEqual = currentValue != null && currentValue.Equals(newValue);
             }
 
             if (!isValuesEqual)

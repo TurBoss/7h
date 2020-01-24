@@ -1020,7 +1020,14 @@ They will be automatically turned off.";
                 return;
             }
 
-            pathToTempFile = Path.Combine(tempDirPath, tempFileName);
+            if (tempFileName.Equals("readme.md", StringComparison.InvariantCultureIgnoreCase))
+            {
+                pathToTempFile = Path.Combine(tempDirPath, "readme.html"); // save .md file as .html so it can open in browser
+            }
+            else
+            {
+                pathToTempFile = Path.Combine(tempDirPath, tempFileName);
+            }
 
             try
             {
