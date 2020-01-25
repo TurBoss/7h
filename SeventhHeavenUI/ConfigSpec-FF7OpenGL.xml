@@ -203,15 +203,15 @@
   <Setting xsi:type="DropDown">
     <Group>Advanced</Group>
     <Name>Music Plugin</Name>
-    <Description>Plugin used to play music. VGMstream requires a music mod or set of looping .OGG files in the music\vgmstream folder.</Description>
-    <DefaultValue>music_plugin=plugins/vgmstream_music.fgp</DefaultValue>
+    <Description>Plugin used to play music. 7H VGMstream requires a music mod or set of looping .OGG files in the music\vgmstream folder.</Description>
+    <DefaultValue>music_plugin=plugins/7H_vgmstream_music.fgp</DefaultValue>
     <Option>
       <Text>None (MIDI on 1998 version)</Text>
       <Settings>music_plugin=</Settings>
     </Option>
     <Option>
-      <Text>VGMstream (Recommended)</Text>
-      <Settings>music_plugin=plugins/vgmstream_music.fgp</Settings>
+      <Text>7H VGMstream (Recommended)</Text>
+      <Settings>music_plugin=plugins/7H_vgmstream_music.fgp</Settings>
     </Option>
   </Setting>
 

@@ -357,7 +357,7 @@ namespace SeventhHeaven.Classes
             }
             else if (Sys.Settings.GameLaunchSettings.SelectedRenderer != (int)GraphicsRenderer.CustomDriver)
             {
-                vanillaMsg = "Selected Renderer is not set to 'Custom Driver'. Launching game as 'vanilla' ...";
+                vanillaMsg = "Selected Renderer is not set to 'Custom 7H Game Driver'. Launching game as 'vanilla' ...";
                 runAsVanilla = true;
             }
 
@@ -460,14 +460,6 @@ namespace SeventhHeaven.Classes
             {
                 Instance.RaiseProgressChanged($"Launching additional programs to run (if any) ...");
                 Instance.LaunchAdditionalProgramsToRunPrior();
-
-                /// sideload programs for mods before starting FF7 because FF7 losing focus while initializing can cause the intro movies to stop playing
-                /// ... Thus we load programs first so they don't steal window focus
-                Instance.RaiseProgressChanged("Starting plugins for mods ...");
-                foreach (RuntimeMod mod in runtimeProfile.Mods)
-                {
-                    Instance.LaunchProgramsForMod(mod);
-                }
 
                 RuntimeParams parms = new RuntimeParams
                 {
@@ -618,6 +610,14 @@ namespace SeventhHeaven.Classes
                             Process.Start(runtimeProfile.LogFile);
                         };
                     }
+                }
+
+                /// sideload programs for mods before starting FF7 because FF7 losing focus while initializing can cause the intro movies to stop playing
+                /// ... Thus we load programs first so they don't steal window focus
+                Instance.RaiseProgressChanged("Starting programs for mods ...");
+                foreach (RuntimeMod mod in runtimeProfile.Mods)
+                {
+                    Instance.LaunchProgramsForMod(mod);
                 }
 
                 /// load plugins for mods
@@ -1257,8 +1257,8 @@ namespace SeventhHeaven.Classes
 
             if (Sys.Settings.GameLaunchSettings.SelectedRenderer == 3)
             {
-                SetValueIfChanged(graphicsKeyPath, "DriverPath", "ff7_opengl.fgd");
-                SetValueIfChanged(graphicsVirtualKeyPath, "DriverPath", "ff7_opengl.fgd");
+                SetValueIfChanged(graphicsKeyPath, "DriverPath", "7H_GameDriver.fgd");
+                SetValueIfChanged(graphicsVirtualKeyPath, "DriverPath", "7H_GameDriver.fgd");
 
                 SetValueIfChanged(graphicsKeyPath, "Mode", 2, RegistryValueKind.DWord);
                 SetValueIfChanged(graphicsVirtualKeyPath, "Mode", 2, RegistryValueKind.DWord);

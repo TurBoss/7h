@@ -59,7 +59,7 @@ namespace SeventhHeaven.Windows
             if (!File.Exists(_file))
             {
                 // copy default .cfg file if missing
-                File.Copy(Path.Combine(Sys.PathToGameDriverFolder, "ff7_opengl.cfg"), _file, true);
+                File.Copy(Path.Combine(Sys.PathToGameDriverFolder, "7H_GameDriver.cfg"), _file, true);
             }
 
             _settings = new Iros._7th.Workshop.ConfigSettings.Settings(File.ReadAllLines(_file));
@@ -206,7 +206,7 @@ namespace SeventhHeaven.Windows
             }
             catch (UnauthorizedAccessException)
             {
-                MessageDialogWindow.Show("Could not write to ff7_opengl.cfg file. Check that it is not set to read only, and that FF7 is installed in a folder you have full write access to.", "Save Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show("Could not write to 7H_GameDriver.cfg file. Check that it is not set to read only, and that FF7 is installed in a folder you have full write access to.", "Save Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             catch (Exception ex)
             {

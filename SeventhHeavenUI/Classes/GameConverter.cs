@@ -1207,23 +1207,23 @@ namespace SeventhHeaven.Classes
         }
 
         /// <summary>
-        /// Checks ff7_opengl.fgd is up to date and matches file in Resources/Game Driver/ folder.
+        /// Checks 7H_GameDriver.fgd is up to date and matches file in Resources/Game Driver/ folder.
         /// If files are different then game driver files are copied to ff7 install path
         /// </summary>
         /// <returns>returns false if error occurred</returns>
         internal bool InstallLatestGameDriver(string backupFolderPath)
         {
-            string pathToCurrentFile = Path.Combine(InstallPath, "ff7_opengl.fgd");
-            string pathToLatestFile = Path.Combine(Sys.PathToGameDriverFolder, "ff7_opengl.fgd");
-            string pathToLatestCfg = Path.Combine(Sys.PathToGameDriverFolder, "ff7_opengl.cfg");
-            string pathToCurrentCfg = Path.Combine(InstallPath, "ff7_opengl.cfg");
+            string pathToCurrentFile = Path.Combine(InstallPath, "7H_GameDriver.fgd");
+            string pathToLatestFile = Path.Combine(Sys.PathToGameDriverFolder, "7H_GameDriver.fgd");
+            string pathToLatestCfg = Path.Combine(Sys.PathToGameDriverFolder, "7H_GameDriver.cfg");
+            string pathToCurrentCfg = Path.Combine(InstallPath, "7H_GameDriver.cfg");
 
             // copy default .cfg if it is missing
             if (!File.Exists(pathToCurrentCfg))
             {
                 if (File.Exists(pathToLatestCfg))
                 {
-                    SendMessage($"\tff7_opengl.cfg file is missing. Copying default from {Sys.PathToGameDriverFolder} ...", NLog.LogLevel.Warn);
+                    SendMessage($"\t7H_GameDriver.cfg file is missing. Copying default from {Sys.PathToGameDriverFolder} ...", NLog.LogLevel.Warn);
                     File.Copy(pathToLatestCfg, pathToCurrentCfg, true);
                 }
                 else
@@ -1241,7 +1241,7 @@ namespace SeventhHeaven.Classes
 
             if (CompareOpenGlDriverVersions(pathToCurrentFile, pathToLatestFile) >= 0)
             {
-                SendMessage("\tff7_opengl.fgd file is up to date.");
+                SendMessage("\t7H_GameDriver.fgd file is up to date.");
                 return true; // file exist and matches what is in /Game Driver folder
             }
 
@@ -1251,14 +1251,14 @@ namespace SeventhHeaven.Classes
                 {
                     Directory.CreateDirectory(backupFolderPath);
                     SendMessage($"\tbacking up existing game driver to {backupFolderPath} ...");
-                    File.Copy(pathToCurrentFile, Path.Combine(backupFolderPath, "ff7_opengl.fgd"), true);
+                    File.Copy(pathToCurrentFile, Path.Combine(backupFolderPath, "7H_GameDriver.fgd"), true);
                 }
 
                 if (File.Exists(pathToCurrentCfg))
                 {
                     Directory.CreateDirectory(backupFolderPath);
                     SendMessage($"\tbacking up existing game driver .cfg to {backupFolderPath} ...");
-                    File.Copy(pathToCurrentCfg, Path.Combine(backupFolderPath, "ff7_opengl.cfg"), true);
+                    File.Copy(pathToCurrentCfg, Path.Combine(backupFolderPath, "7H_GameDriver.cfg"), true);
                 }
 
                 SendMessage($"\tbacking up existing plugins folder to {backupFolderPath} ...");
@@ -1282,7 +1282,7 @@ namespace SeventhHeaven.Classes
         }
 
         /// <summary>
-        /// Does a regex on the ff7_opengl.fgd file to find the opengl driver version.
+        /// Does a regex on the 7H_GameDriver.fgd file to find the opengl driver version.
         /// Returns -1 if <paramref name="fileOne"/> version is older than <paramref name="fileTwo"/> version.
         /// Returns 0 if versions are equal.
         /// Returns 1 if <paramref name="fileOne"/> version is newer than <paramref name="fileTwo"/> version.
@@ -1292,7 +1292,7 @@ namespace SeventhHeaven.Classes
         /// <returns></returns>
         private int CompareOpenGlDriverVersions(string fileOne, string fileTwo)
         {
-            Regex regex = new Regex(@"FF7\/FF8 OpenGL driver version [0-9].[0-9].[0-9].*\n");
+            Regex regex = new Regex(@"Custom 7th Heaven FF7 Game Driver version [0-9].[0-9].[0-9].*\n");
 
             if (!File.Exists(fileOne) && File.Exists(fileTwo))
             {

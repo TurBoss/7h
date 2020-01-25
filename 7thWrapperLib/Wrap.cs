@@ -655,10 +655,10 @@ namespace _7thWrapperLib {
                     }
                 }
 
-                if (System.IO.Path.GetFileName(lpFileName).Equals("FF7_OpenGL.cfg", StringComparison.InvariantCultureIgnoreCase) && !String.IsNullOrWhiteSpace(_profile.OpenGLConfig))
+                if (System.IO.Path.GetFileName(lpFileName).Equals("7H_GameDriver.cfg", StringComparison.InvariantCultureIgnoreCase) && !String.IsNullOrWhiteSpace(_profile.OpenGLConfig))
                 {
                     _streamFiles[handle] = new VStreamFile(System.Text.Encoding.UTF8.GetBytes(_profile.OpenGLConfig));
-                    System.Diagnostics.Debug.WriteLine("Overriding FF7_OpenGL.cfg with replacement data");
+                    System.Diagnostics.Debug.WriteLine("Overriding 7H_GameDriver.cfg with replacement data");
                 }
 
                 

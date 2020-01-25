@@ -285,7 +285,7 @@ namespace SeventhHeaven.ViewModels
         {
             get
             {
-                if (SelectedRenderer != "Custom Driver")
+                if (SelectedRenderer != "Custom 7H Game Driver")
                     return Visibility.Visible;
 
                 return Visibility.Hidden;
@@ -912,7 +912,7 @@ namespace SeventhHeaven.ViewModels
             {
                 { "Software Renderer", 0 },
                 { "Direct3D Hardware Acceleration", 1 },
-                { "Custom Driver", 3 }
+                { "Custom 7H Game Driver", 3 }
             };
         }
 
@@ -1028,7 +1028,7 @@ namespace SeventhHeaven.ViewModels
         }
 
         /// <summary>
-        /// Shows warning message dialog to user if <see cref="SelectedRenderer"/> is not set to "Custom Driver"
+        /// Shows warning message dialog to user if <see cref="SelectedRenderer"/> is not set to "Custom 7H Game Driver"
         /// </summary>
         private void ShowWarningMessageAboutRenderer()
         {
@@ -1038,9 +1038,9 @@ namespace SeventhHeaven.ViewModels
                 return;
             }
 
-            if (!SelectedRenderer.Equals("Custom Driver", StringComparison.InvariantCultureIgnoreCase))
+            if (!SelectedRenderer.Equals("Custom 7H Game Driver", StringComparison.InvariantCultureIgnoreCase))
             {
-                MessageDialogWindow.Show("Choosing any other option besides 'Custom Driver' will cause mods installed with 7H not to work anymore!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show("Choosing any other option besides 'Custom 7H Game Driver' will cause mods installed with 7H not to work anymore!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 

@@ -1111,7 +1111,7 @@ They will be automatically turned off.";
         internal void ShowGLConfigWindow()
         {
             string spec = Path.Combine(Sys._7HFolder, "ConfigSpec-FF7OpenGL.xml");
-            string cfg = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "ff7_opengl.cfg");
+            string cfg = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "7H_GameDriver.cfg");
 
             ConfigureGLWindow gLWindow = new ConfigureGLWindow() { WindowStartupLocation = WindowStartupLocation.CenterScreen };
             gLWindow.Init(spec, cfg);

@@ -53,7 +53,7 @@
 
         <DataTemplate x:Key="rendererItemTemplate">
             <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
-                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedRenderer, FallbackValue='Custom Driver'}" Margin="0,0,15,0" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedRenderer, FallbackValue='Custom 7H Game Driver'}" Margin="0,0,15,0" TextWrapping="Wrap"/>
             </Grid>
         </DataTemplate>
 
@@ -439,7 +439,7 @@
 
                     <TextBlock Text="Renderer:"
                                Grid.Row="1"
-                               ToolTip="Select the graphics driver to use for rendering FF7. Mods will only work when set to 'Custom Driver'"
+                               ToolTip="Select the graphics driver to use for rendering FF7. Mods will only work when set to 'Custom 7H Game Driver'"
                                ToolTipService.IsEnabled="False"
                                MouseEnter="Control_MouseEnter"
                                HorizontalAlignment="Right"
@@ -448,7 +448,7 @@
                     <ComboBox x:Name="cboRenderers"
                               Grid.Row="1"
                               Grid.Column="1"
-                              ToolTip="Select the graphics driver to use for rendering FF7. Mods will only work when set to 'Custom Driver'"
+                              ToolTip="Select the graphics driver to use for rendering FF7. Mods will only work when set to 'Custom 7H Game Driver'"
                               ToolTipService.IsEnabled="False"
                               MouseEnter="Control_MouseEnter"
                               Style="{StaticResource MainComboBoxStyle}"
