@@ -1370,8 +1370,11 @@ namespace SeventhHeaven.Classes
 
             if (newValue is byte[])
             {
-                isValuesEqual = BitConverter.ToString(currentValue as byte[]).Equals(BitConverter.ToString(newValue as byte[]));
-                valueFormatted = BitConverter.ToString(newValue as byte[]);
+                string currentConverted = currentValue == null ? "" : BitConverter.ToString(currentValue as byte[]);
+                string newConverted = newValue == null ? "" : BitConverter.ToString(newValue as byte[]);
+
+                isValuesEqual = currentConverted != null && currentConverted.Equals(newConverted);
+                valueFormatted = newConverted;
             }
             else
             {
