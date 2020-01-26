@@ -874,9 +874,19 @@ namespace SeventhHeaven.ViewModels
 
             deviceGuids.Add("Auto-Switch (Windows Default)", Guid.Empty);
 
-            for (int n = -1; n < WaveOut.DeviceCount; n++)
+            for (int n = 0; n < WaveOut.DeviceCount; n++)
             {
-                var caps = WaveOut.GetCapabilities(n);
+                WaveOutCapabilities caps;
+
+                try
+                {
+                    caps = WaveOut.GetCapabilities(n);
+                }
+                catch (Exception e)
+                {
+                    Logger.Warn(e);
+                    continue;
+                }
 
                 if (caps.ProductGuid == Guid.Empty)
                     continue;

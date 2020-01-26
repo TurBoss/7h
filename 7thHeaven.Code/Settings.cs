@@ -20,7 +20,6 @@ namespace Iros._7th.Workshop {
         AutoImportMods,
         CheckForUpdates,
         BypassCompatibility,
-        SetEXECompatFlags,
         OpenIrosLinksWith7H,
         OpenModFilesWith7H,
         Show7HInFileExplorerContextMenu,
