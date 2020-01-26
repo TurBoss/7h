@@ -525,8 +525,19 @@ namespace SeventhHeaven.ViewModels
             // Clear EXE compatibility flags if user opts out
             if (!Sys.Settings.HasOption(GeneralOptions.SetEXECompatFlags))
             {
-                RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
-                if (ff7CompatKey.GetValue(Sys.Settings.FF7Exe) != null) ff7CompatKey.DeleteValue(Sys.Settings.FF7Exe);
+                try
+                {
+                    RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
+                    if (ff7CompatKey?.GetValue(Sys.Settings.FF7Exe) != null)
+                    {
+                        ff7CompatKey.DeleteValue(Sys.Settings.FF7Exe);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e);
+                    Logger.Warn("Failed to delete exe compatibility flag from registry");
+                }
             }
 
             if (Sys.Settings.HasOption(GeneralOptions.OpenIrosLinksWith7H))
