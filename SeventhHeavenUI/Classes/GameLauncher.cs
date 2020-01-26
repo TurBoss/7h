@@ -128,7 +128,9 @@ namespace SeventhHeaven.Classes
                 return false;
             }
 
-            Instance.RaiseProgressChanged("Verifying movie files exist ...");
+            converter.CopyMovieFilesToFolder(Sys.Settings.MovieFolder);
+
+            Instance.RaiseProgressChanged("Verifying all movie files exist ...");
             if (!GameConverter.AllMovieFilesExist(Sys.Settings.MovieFolder))
             {
                 Instance.RaiseProgressChanged($"\tcould not find all movie files at {Sys.Settings.MovieFolder}", NLog.LogLevel.Warn);
@@ -1210,12 +1212,12 @@ namespace SeventhHeaven.Classes
             string pathToData = Path.Combine(installPath, @"data\");
             string pathToMovies = Sys.Settings.MovieFolder;
 
-            if (!installPath.EndsWith(@"\"))
+            if (installPath != null && !installPath.EndsWith(@"\"))
             {
                 installPath += @"\";
             }
 
-            if (!pathToMovies.EndsWith(@"\"))
+            if (pathToMovies != null && !pathToMovies.EndsWith(@"\"))
             {
                 pathToMovies += @"\";
             }
@@ -1363,7 +1365,7 @@ namespace SeventhHeaven.Classes
         private void SetValueIfChanged(string regKeyPath, string regValueName, object newValue, RegistryValueKind valueKind = RegistryValueKind.String)
         {
             object currentValue = RegistryHelper.GetValue(regKeyPath, regValueName, null);
-            string valueFormatted = newValue.ToString(); // used to display the object value correctly in the log e.g. for a byte[] convert it to readable string
+            string valueFormatted = newValue?.ToString(); // used to display the object value correctly in the log e.g. for a byte[] convert it to readable string
             bool isValuesEqual;
 
             if (newValue is byte[])

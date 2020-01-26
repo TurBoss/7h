@@ -861,14 +861,15 @@ namespace SeventhHeaven.Classes
             return missingMovies;
         }
 
+        /// <summary>
+        /// Copies ending2.avi and jenova_e.avi to movies folder if they dont exist
+        /// </summary>
         internal bool CopyMovieFilesToFolder(string movieFolder)
         {
-            var movieFiles = GetMovieFiles();
-
-            List<string> missingFiles = new List<string>();
+            string[] movieFiles = new string[] { "ending2.avi", "jenova_e.avi" };
             bool copiedAllFiles = true;
 
-            foreach (string file in movieFiles.Keys)
+            foreach (string file in movieFiles)
             {
                 string fullPath = Path.Combine(movieFolder, file);
 
@@ -877,51 +878,18 @@ namespace SeventhHeaven.Classes
                     continue; // no need to copy file as it exists as expected
                 }
 
-                // at this point file does not exist in movies folder so check disc(s) for file
-
-                if (file == "ending2.avi" || file == "jenova_e.avi")
+                // check if they exist at data/lang-en/movies location and copy them 
+                string otherPath = Path.Combine(new string[] { InstallPath, "data", "lang-en", "movies", file });
+                if (File.Exists(otherPath))
                 {
-                    // special exception for these two files; check if they exist at other location and copy them 
-                    string otherPath = Path.Combine(new string[] { InstallPath, "data", "lang-en", "movies", file });
-                    if (File.Exists(otherPath))
-                    {
-                        SendMessage($"\tcopying {otherPath} to {fullPath}");
-                        File.Copy(otherPath, fullPath, true);
-                        continue;
-                    }
+                    SendMessage($"\tcopying {otherPath} to {fullPath}");
+                    File.Copy(otherPath, fullPath, true);
+                    continue;
                 }
-
-                // check for all possible discs for file and copy if found
-                bool copiedFile = false;
-                foreach (string disc in movieFiles[file])
+                else
                 {
-                    string driveLetter = GameLauncher.GetDriveLetter(disc);
-
-                    if (string.IsNullOrEmpty(driveLetter))
-                    {
-                        continue;
-                    }
-
-                    string sourceFilePath = Path.Combine(driveLetter, "ff7", "movies", file);
-                    if (File.Exists(sourceFilePath))
-                    {
-                        SendMessage($"\tcopying from disc '{disc}': {sourceFilePath} to {fullPath}");
-                        File.Copy(sourceFilePath, fullPath, true);
-                        copiedFile = true;
-                        break;
-                    }
+                    copiedAllFiles = false;
                 }
-
-                if (!copiedFile)
-                {
-                    missingFiles.Add($"\t - {file} on {string.Join(",", movieFiles[file])}");
-                    copiedAllFiles = false; // fail to find/copy file from disc(s); continue to search/copy other files so all missing files can be listed
-                }
-            }
-
-            if (!copiedAllFiles)
-            {
-                SendMessage("\tOne or more movie files were not found", NLog.LogLevel.Warn);
             }
 
             return copiedAllFiles;

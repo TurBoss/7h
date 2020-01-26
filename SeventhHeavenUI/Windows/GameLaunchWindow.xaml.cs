@@ -14,6 +14,8 @@ namespace SeventhHeaven.Windows
     /// </summary>
     public partial class GameLaunchWindow : Window
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         public GameLaunchViewModel ViewModel { get; set; }
 
 
@@ -78,6 +80,7 @@ namespace SeventhHeaven.Windows
             {
                 if (taskResult.IsFaulted)
                 {
+                    Logger.Error(taskResult.Exception);
                     ViewModel.LogStatus($"Unknown error when launching the game: {taskResult.Exception.GetBaseException().Message}");
                     ShowOkButton();
                     return;
