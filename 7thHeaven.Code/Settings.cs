@@ -109,6 +109,8 @@ namespace Iros._7th.Workshop {
 
         public LaunchSettings GameLaunchSettings { get; set; }
 
+        public ColumnSettings UserColumnSettings { get; set; }
+
         public Settings() {
             ExtraFolders = new List<string>();
             ProgramsToLaunchPrior = new List<ProgramLaunchInfo>();
@@ -118,6 +120,7 @@ namespace Iros._7th.Workshop {
             DateTimeStringFormat = "MM/dd/yyyy";
             IsFirstStart = false;
             GameLaunchSettings = LaunchSettings.DefaultSettings();
+            UserColumnSettings = new ColumnSettings();
         }
 
         public bool HasOption(GeneralOptions option)
@@ -148,6 +151,8 @@ namespace Iros._7th.Workshop {
 
             defaultSettings.ExtraFolders.Add("direct");
             defaultSettings.ExtraFolders.Add("music");
+
+            defaultSettings.UserColumnSettings = ColumnSettings.GetDefaultSettings();
 
             return defaultSettings;
         }

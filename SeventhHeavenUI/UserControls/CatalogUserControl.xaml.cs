@@ -1,9 +1,11 @@
-﻿using Iros._7th.Workshop;
+﻿using _7thHeaven.Code;
+using Iros._7th.Workshop;
 using SeventhHeaven.Classes;
 using SeventhHeavenUI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -21,6 +23,16 @@ namespace SeventhHeaven.UserControls
         CatalogViewModel ViewModel { get; set; }
         GridViewColumnHeader _lastHeaderClicked = null;
         ListSortDirection _lastDirection = ListSortDirection.Ascending;
+
+        Dictionary<string, double> MinColumnWidths = new Dictionary<string, double>()
+        {
+            { "Name", 100 },
+            { "Author", 60 },
+            { "Released", 90 },
+            { "Category", 100 },
+            { "Size", 70 },
+            { "Inst.", 30 }
+        };
 
         public CatalogUserControl()
         {
@@ -76,8 +88,10 @@ namespace SeventhHeaven.UserControls
 
         internal void RecalculateColumnWidths(double listWidth)
         {
+            var currentColumnSettings = GetColumnSettings();
+
+            double staticColumnWidth = currentColumnSettings.Where(c => !c.AutoResize).Sum(s => s.Width); // sum of columns with static widths
             double padding = 8;
-            double staticColumnWidth = 90 + 100 + 60 + 40; // sum of columns with static widths
 
             if (listWidth == 0)
             {
@@ -117,6 +131,14 @@ namespace SeventhHeaven.UserControls
             catch (Exception e)
             {
                 Logger.Warn(e, "failed to resize columns");
+            }
+        }
+
+        internal void SetSortColumn(string sortColumn, ListSortDirection sortDirection)
+        {
+            if (sortColumn != null && MinColumnWidths.ContainsKey(sortColumn))
+            {
+                Sort(sortColumn, sortDirection);
             }
         }
 
@@ -185,7 +207,7 @@ namespace SeventhHeaven.UserControls
             }
             else
             {
-                switch (headerClicked.Column.Header)
+                switch (headerClicked.Content)
                 {
                     case "Inst.":
                         propertyNameToSortBy = "IsInstalled";
@@ -215,7 +237,7 @@ namespace SeventhHeaven.UserControls
             dataView.SortDescriptions.Clear();
             (dataView as ListCollectionView).CustomSort = null;
 
-            if (sortBy == nameof(CatalogModItemViewModel.ReleaseDate))
+            if (sortBy == nameof(CatalogModItemViewModel.ReleaseDate) || sortBy == "Released")
             {
                 DateTimeComparer sorter = new DateTimeComparer()
                 {
@@ -223,7 +245,7 @@ namespace SeventhHeaven.UserControls
                 };
                 (dataView as ListCollectionView).CustomSort = sorter;
             }
-            else if (sortBy == nameof(CatalogModItemViewModel.DownloadSize))
+            else if (sortBy == nameof(CatalogModItemViewModel.DownloadSize) || sortBy == "Size")
             {
                 SortDescription sd = new SortDescription(nameof(CatalogModItemViewModel.DownloadSizeInBytes), direction);
                 dataView.SortDescriptions.Add(sd);
@@ -235,6 +257,80 @@ namespace SeventhHeaven.UserControls
                 dataView.SortDescriptions.Add(sd);
                 dataView.Refresh();
             }
+
+        }
+
+        internal List<ColumnInfo> GetColumnSettings()
+        {
+            GridViewColumnCollection columns = (lstCatalogMods.View as GridView).Columns;
+
+            if (columns == null)
+            {
+                return null;
+            }
+
+            List<string> columnsThatAutoResize = new List<string>() { "Name", "Author" };
+
+            return columns.Select(c => new ColumnInfo()
+            {
+                Name = (c.Header as GridViewColumnHeader).Content as string,
+                Width = c.ActualWidth,
+                AutoResize = columnsThatAutoResize.Contains((c.Header as GridViewColumnHeader).Content as string)
+            }).ToList();
+        }
+
+        /// <summary>
+        /// Ensure column is not resized to less than the defined minimum width.
+        /// Sets width to minimum width if less than minimum.
+        /// </summary>
+        private void GridViewColumnHeader_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            string columnName = (e.OriginalSource as GridViewColumnHeader).Content as string;
+
+            if (e.NewSize.Width < MinColumnWidths[columnName])
+            {
+                e.Handled = true;
+                ((GridViewColumnHeader)sender).Column.Width = MinColumnWidths[columnName];
+            }
+        }
+
+        internal void SaveUsersColumnSettings()
+        {
+            Sys.Settings.UserColumnSettings.BrowseCatalogColumns = GetColumnSettings();
+
+            if (_lastHeaderClicked != null)
+            {
+                Sys.Settings.UserColumnSettings.SortColumn = _lastHeaderClicked.Content as string;
+            }
+            Sys.Settings.UserColumnSettings.SortDirection = (int)_lastDirection;
+        }
+
+        private void btnResetColumns_Click(object sender, RoutedEventArgs e)
+        {
+            List<ColumnInfo> defaultColumns = ColumnSettings.GetDefaultSettings().BrowseCatalogColumns;
+            ApplyColumnSettings(defaultColumns);
+        }
+
+        internal void ApplyColumnSettings(List<ColumnInfo> newColumns)
+        {
+            GridViewColumnCollection columns = (lstCatalogMods.View as GridView).Columns;
+
+            for (int i = 0; i < newColumns.Count; i++)
+            {
+                // get the current index of the column
+                int colIndex = columns.ToList().FindIndex(c => ((c.Header as GridViewColumnHeader).Content as string) == newColumns[i].Name);
+
+                // apply the new width if the column does not auto resize
+                if (!newColumns[i].AutoResize)
+                {
+                    columns[colIndex].Width = newColumns[i].Width;
+                }
+
+                // move the column to expected index
+                columns.Move(colIndex, i);
+            }
+
+            RecalculateColumnWidths(); // call this to have auto resize columns recalculate
         }
     }
 }

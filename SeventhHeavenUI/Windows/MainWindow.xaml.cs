@@ -6,6 +6,7 @@ using SeventhHeaven.ViewModels;
 using SeventhHeaven.Windows;
 using SeventhHeavenUI.ViewModels;
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,8 +27,6 @@ namespace SeventhHeavenUI
         internal MainWindowViewModel ViewModel { get; set; }
 
         private int _currentTabIndex = 0;
-
-        private string previousStatusMessage;
 
         public MainWindow()
         {
@@ -59,7 +58,28 @@ namespace SeventhHeavenUI
                 return;
             }
 
-            ctrlMyMods.RecalculateColumnWidths();
+            InitColumnSettings();
+        }
+
+        private void InitColumnSettings()
+        {
+            // ensure no column settings are null before loading them
+            if (Sys.Settings.UserColumnSettings == null)
+            {
+                Sys.Settings.UserColumnSettings = ColumnSettings.GetDefaultSettings();
+            }
+            else if (Sys.Settings.UserColumnSettings.MyModsColumns == null)
+            {
+                Sys.Settings.UserColumnSettings.MyModsColumns = ColumnSettings.GetDefaultSettings().MyModsColumns;
+            }
+            else if (Sys.Settings.UserColumnSettings.BrowseCatalogColumns == null)
+            {
+                Sys.Settings.UserColumnSettings.BrowseCatalogColumns = ColumnSettings.GetDefaultSettings().BrowseCatalogColumns;
+            }
+
+            ctrlMyMods.ApplyColumnSettings(Sys.Settings.UserColumnSettings.MyModsColumns);
+            ctrlCatalog.ApplyColumnSettings(Sys.Settings.UserColumnSettings.BrowseCatalogColumns);
+            ctrlCatalog.SetSortColumn(Sys.Settings.UserColumnSettings.SortColumn, (ListSortDirection)Sys.Settings.UserColumnSettings.SortDirection);
         }
 
         /// <summary>
@@ -145,6 +165,9 @@ namespace SeventhHeavenUI
                 H = (int)ActualHeight,
                 State = WindowState
             };
+
+            Sys.Settings.UserColumnSettings.MyModsColumns = ctrlMyMods.GetColumnSettings();
+            ctrlCatalog.SaveUsersColumnSettings();
 
             ViewModel.CleanUp();
         }

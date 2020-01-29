@@ -58,16 +58,24 @@
                   VirtualizingStackPanel.IsVirtualizing="False">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn x:Name="colName" Header="Name" Width="Auto" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn x:Name="colAuthor" Header="Author" Width="Auto" DisplayMemberBinding="{Binding Author}"/>
-                    <GridViewColumn Header="Category" Width="135">
+                    <GridViewColumn x:Name="colName" Width="Auto" DisplayMemberBinding="{Binding Name}">
+                        <GridViewColumnHeader Content="Name" SizeChanged="GridViewColumnHeader_SizeChanged"/>
+                    </GridViewColumn>
+                    <GridViewColumn x:Name="colAuthor" Width="Auto" DisplayMemberBinding="{Binding Author}">
+                        <GridViewColumnHeader Content="Author" SizeChanged="GridViewColumnHeader_SizeChanged"/>
+                    </GridViewColumn>
+                    <GridViewColumn x:Name="colCategory" Width="135">
+                        <GridViewColumnHeader Content="Category" SizeChanged="GridViewColumnHeader_SizeChanged"/>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <ComboBox SelectedItem="{Binding Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding CategoryList}"/>
+                                <Grid Width="{Binding ElementName=colCategory, Path=ActualWidth}">
+                                    <ComboBox SelectedItem="{Binding Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding CategoryList}" Margin="0,0,20,0"/>
+                                </Grid>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn x:Name="colActive" Header="Active" Width="75">
+                    <GridViewColumn x:Name="colActive" Width="75">
+                        <GridViewColumnHeader Content="Active" SizeChanged="GridViewColumnHeader_SizeChanged"/>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <CheckBox Style="{StaticResource ToggleSwitchCheckbox}"
@@ -91,77 +99,71 @@
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconImport}"
                     Click="btnImport_Click"
-                    ToolTip="Import Mod"
-                    Margin="0,0,0,0"/>
-
-
-            <Button x:Name="btnMoveTop" 
-                    Style="{StaticResource SmallImageButton}"
-                    Content="{StaticResource iconUpArrow}"
-                    Click="btnMoveTop_Click"
-                    ToolTip="Move to Top"
+                    ToolTip="Import Mod."
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnMoveUp"
                     Click="btnMoveUp_Click"
+                    MouseRightButtonUp="btnMoveTop_Click"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconUpChevron}"
-                    ToolTip="Move Up"
+                    ToolTip="Move Up. Right-Click to Move to Top."
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnMoveDown"
                     Click="btnMoveDown_Click"
+                    MouseRightButtonDown="btnSendBottom_Click"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconDownChevron}"
-                    ToolTip="Move Down"/>
+                    ToolTip="Move Down. Right-Click to Move to Bottom."/>
 
-            <Button x:Name="btnSendBottom" 
-                    Style="{StaticResource SmallImageButton}"
-                    Content="{StaticResource iconDownArrow}"
-                    Click="btnSendBottom_Click"
-                    ToolTip="Send to Bottom"
-                    Margin="0,0,0,0"/>
-            
             <Button x:Name="btnAutoSort" 
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconSort}"
                     Click="btnAutoSort_Click"
-                    ToolTip="Auto Sort Mods Based On Category Load Order"
+                    ToolTip="Auto Sort Mods Based On Category Load Order."
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnConfigure" 
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconSettings}"
                     Click="btnConfigure_Click"
-                    ToolTip="Configure Mod"
+                    ToolTip="Configure Mod."
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnActivateAll" 
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconCheckmark}"
                     Click="btnActivateAll_Click"
-                    ToolTip="Activate All"
+                    ToolTip="Activate All Mods."
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnDeactivateAll" 
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconCancel}"
                     Click="btnDeactivateAll_Click"
-                    ToolTip="Deactivate All"
+                    ToolTip="Deactivate All."
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnRefresh" 
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconRefresh}"
                     Click="btnRefresh_Click"
-                    ToolTip="Refresh List"
+                    ToolTip="Refresh List."
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnUninstall" 
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconDelete}"
                     Click="btnUninstall_Click"
-                    ToolTip="Uninstall Mod"
+                    ToolTip="Uninstall Mod."
+                    Margin="0,0,0,0"/>
+
+            <Button x:Name="btnResetColumns" 
+                    Style="{StaticResource SmallImageButton}"
+                    Content="{StaticResource iconHeader}"
+                    Click="btnResetColumns_Click"
+                    ToolTip="Reset Columns."
                     Margin="0,0,0,0"/>
 
         </StackPanel>

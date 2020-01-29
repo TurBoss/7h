@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Catalog.cs" />
+    <Compile Include="ColumnSettings.cs" />
     <Compile Include="ConfigSettings.cs" />
     <Compile Include="GDrive.cs" />
     <Compile Include="ImageCache.cs" />

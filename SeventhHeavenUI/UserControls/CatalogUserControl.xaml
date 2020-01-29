@@ -31,7 +31,7 @@
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
-        <ListView x:Name="lstCatalogMods" ItemsSource="{Binding CatalogModList}" 
+        <ListView x:Name="lstCatalogMods" ItemsSource="{Binding CatalogModList}"
                   SelectionChanged="lstCatalogMods_SelectionChanged"
                   GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler"
                   ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -39,17 +39,31 @@
                   VirtualizingStackPanel.IsVirtualizing="False">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn x:Name="colName" Header="Name" Width="Auto" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn x:Name="colAuthor" Header="Author" Width="Auto" DisplayMemberBinding="{Binding Author}"/>
-                    <GridViewColumn Header="Released" Width="90" DisplayMemberBinding="{Binding ReleaseDate}"/>
-                    <GridViewColumn Header="Category" Width="100" DisplayMemberBinding="{Binding Category}"/>
-                    <GridViewColumn Header="Size" Width="60" DisplayMemberBinding="{Binding DownloadSize}"/>
-                    <GridViewColumn Header="Inst." Width="40">
+                    <GridViewColumn x:Name="colName" Width="Auto" DisplayMemberBinding="{Binding Name}">
+                        <GridViewColumnHeader Content="Name" SizeChanged="GridViewColumnHeader_SizeChanged"/>
+                    </GridViewColumn>
+                    <GridViewColumn x:Name="colAuthor" Width="Auto" DisplayMemberBinding="{Binding Author}">
+                        <GridViewColumnHeader Content="Author" SizeChanged="GridViewColumnHeader_SizeChanged"/>
+                    </GridViewColumn>
+                    <GridViewColumn Width="90" DisplayMemberBinding="{Binding ReleaseDate}">
+                        <GridViewColumnHeader Content="Released" SizeChanged="GridViewColumnHeader_SizeChanged"/>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Category}">
+                        <GridViewColumnHeader Content="Category" SizeChanged="GridViewColumnHeader_SizeChanged"/>
+                    </GridViewColumn>
+                    <GridViewColumn Width="60" DisplayMemberBinding="{Binding DownloadSize}">
+                        <GridViewColumnHeader Content="Size" SizeChanged="GridViewColumnHeader_SizeChanged"/>
+                    </GridViewColumn>
+                    <GridViewColumn x:Name="colInstalled" Width="40">
+                        <GridViewColumnHeader Content="Inst." SizeChanged="GridViewColumnHeader_SizeChanged"/>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Viewbox Height="20" Width="20">
-                                    <ContentControl Template="{StaticResource iconNewStar}" Margin="5" HorizontalContentAlignment="Center"/>
-                                </Viewbox>
+                                <Grid HorizontalAlignment="Center" Margin="5,0,5,0" Width="{Binding ElementName=colInstalled, Path=ActualWidth}">
+                                    <Viewbox Height="20" Width="20" HorizontalAlignment="Center" Margin="0,0,0,0">
+                                        <ContentControl Template="{StaticResource iconNewStar}" Margin="5" HorizontalAlignment="Center"/>
+                                    </Viewbox>
+                                </Grid>
+
                                 <DataTemplate.Triggers>
                                     <DataTrigger Binding="{Binding IsInstalled}" Value="False">
                                         <Setter Property="Visibility" Value="Hidden"/>
@@ -79,6 +93,13 @@
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconDownload}"
                     Click="btnDownload_Click"/>
+
+            <Button x:Name="btnResetColumns"
+                    ToolTip="Reset Columns"
+                    Style="{StaticResource SmallImageButton}"
+                    Content="{StaticResource iconHeader}"
+                    Click="btnResetColumns_Click"/>
+
         </StackPanel>
 
         <ListView x:Name="lstDownloads" 
