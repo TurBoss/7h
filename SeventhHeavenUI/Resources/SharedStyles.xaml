@@ -564,6 +564,34 @@
         </Setter>
     </Style>
 
+    <Style x:Key="MenuItemImage" TargetType="{x:Type MenuItem}">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="MenuItem">
+                    <Viewbox Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
+                        <Border x:Name="bd" Background="{DynamicResource PrimaryControlBackground}">
+                            <ContentControl Template="{TemplateBinding Header}" Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                    </Viewbox>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="{DynamicResource PrimaryControlPressed}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="{DynamicResource PrimaryControlDisabledForeground}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- This style is used to make a MenuItem look like a Seperator in a Context Menu (the MenuItem is not clickable)-->
     <Style x:Key="ContextMenuSeperator" TargetType="{x:Type MenuItem}">
         <Setter Property="IsEnabled" Value="False"/>

@@ -1294,7 +1294,7 @@ namespace SeventhHeaven.ViewModels
             int currentIndex = ProgramList.IndexOf(program);
             int targetIndex = currentIndex + delta;
 
-            if (targetIndex < 0 || targetIndex >= ProgramList.Count)
+            if (targetIndex == currentIndex || targetIndex < 0 || targetIndex >= ProgramList.Count)
             {
                 return;
             }

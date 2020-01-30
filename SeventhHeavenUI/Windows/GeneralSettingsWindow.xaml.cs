@@ -287,5 +287,83 @@ namespace SeventhHeaven.Windows
 
             ViewModel.ExtraFolderList.Remove((lstExtraFolders.SelectedItem as string));
         }
+
+        private void btnMoveUrlUp_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (ViewModel.IsSubscriptionPopupOpen)
+            {
+                return; // dont do anything if popup is opened
+            }
+
+            if (lstSubscriptions.SelectedItem == null)
+            {
+                ViewModel.StatusMessage = "Selet a subscription to move first.";
+                return;
+            }
+
+            ViewModel.MoveSelectedSubscription((lstSubscriptions.SelectedItem as SubscriptionSettingViewModel), 0 - lstSubscriptions.SelectedIndex);
+
+        }
+
+        private void btnMoveUrlDown_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (ViewModel.IsSubscriptionPopupOpen)
+            {
+                return; // dont do anything if popup is opened
+            }
+
+            if (lstSubscriptions.SelectedItem == null)
+            {
+                ViewModel.StatusMessage = "Selet a subscription to move first.";
+                return;
+            }
+
+            ViewModel.MoveSelectedSubscription((lstSubscriptions.SelectedItem as SubscriptionSettingViewModel), (ViewModel.SubscriptionList.Count - 1) - lstSubscriptions.SelectedIndex);
+
+        }
+
+        private void btnMoveFolderUp_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstExtraFolders.SelectedItem == null)
+            {
+                ViewModel.StatusMessage = "Select a folder to move first.";
+                return;
+            }
+
+            ViewModel.MoveSelectedFolder((lstExtraFolders.SelectedItem as string), -1);
+        }
+
+        private void btnMoveFolderDown_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstExtraFolders.SelectedItem == null)
+            {
+                ViewModel.StatusMessage = "Select a folder to move first.";
+                return;
+            }
+
+            ViewModel.MoveSelectedFolder((lstExtraFolders.SelectedItem as string), +1);
+        }
+
+        private void btnMoveFolderUp_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (lstExtraFolders.SelectedItem == null)
+            {
+                ViewModel.StatusMessage = "Select a folder to move first.";
+                return;
+            }
+
+            ViewModel.MoveSelectedFolder((lstExtraFolders.SelectedItem as string), 0 - lstExtraFolders.SelectedIndex);
+        }
+
+        private void btnMoveFolderDown_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (lstExtraFolders.SelectedItem == null)
+            {
+                ViewModel.StatusMessage = "Select a folder to move first.";
+                return;
+            }
+
+            ViewModel.MoveSelectedFolder((lstExtraFolders.SelectedItem as string), (ViewModel.ExtraFolderList.Count - 1) - lstExtraFolders.SelectedIndex);
+        }
     }
 }

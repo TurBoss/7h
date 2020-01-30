@@ -165,7 +165,7 @@
                 <Style TargetType="cls:ButtonWithImage" BasedOn="{StaticResource MainButtonWithImageStyle}">
                     <Setter Property="TemplateSource" Value="{StaticResource iconPlay}"/>
                     <Setter Property="Content" Value="Preview"/>
-
+                    <Setter Property="ImageForeground" Value="ForestGreen"/>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsPlayingAudio}" Value="True">
                             <Setter Property="TemplateSource" Value="{StaticResource iconStopAudio}"/>

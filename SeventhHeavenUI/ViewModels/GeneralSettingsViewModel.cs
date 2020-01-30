@@ -959,7 +959,7 @@ namespace SeventhHeaven.ViewModels
 
             int newIndex = currentIndex + toAdd;
 
-            if (newIndex < 0 || newIndex >= SubscriptionList.Count)
+            if (newIndex == currentIndex || newIndex < 0 || newIndex >= SubscriptionList.Count)
             {
                 return;
             }
@@ -1053,5 +1053,24 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        internal void MoveSelectedFolder(string selected, int toAdd)
+        {
+            int currentIndex = ExtraFolderList.IndexOf(selected);
+
+            if (currentIndex < 0)
+            {
+                // not found in  list
+                return;
+            }
+
+            int newIndex = currentIndex + toAdd;
+
+            if (newIndex == currentIndex || newIndex < 0 || newIndex >= ExtraFolderList.Count)
+            {
+                return;
+            }
+
+            ExtraFolderList.Move(currentIndex, newIndex);
+        }
     }
 }

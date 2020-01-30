@@ -12,7 +12,7 @@
         ResizeMode="NoResize"
         Deactivated="Window_Deactivated"
         LocationChanged="Window_LocationChanged"
-        Height="590" Width="825">
+        Height="600" Width="825">
     <Window.Resources>
 
         <Style x:Key="MultiLineTextBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource PrimaryTextBoxStyle}">
@@ -121,6 +121,7 @@
         <GroupBox x:Name="grpShell"
                   Header=" Shell Integration " Grid.Row="2" Margin="10,10,0,0" 
                   Width="{Binding ElementName=grpOptions, Path=ActualWidth}"
+                  Height="{Binding ElementName=grpFolders, Path=ActualHeight}"
                   HorizontalAlignment="Left"
                   VerticalAlignment="Top">
             <StackPanel Margin="3" HorizontalAlignment="Right">
@@ -168,8 +169,9 @@
                             Content="{StaticResource iconEdit}"/>
 
                     <Button x:Name="btnMoveUrlUp"
-                            ToolTip="Move Subscription Up"
+                            ToolTip="Move Subscription Up. Right-click to move to top.)"
                             Click="btnMoveUrlUp_Click"
+                            MouseRightButtonUp="btnMoveUrlUp_MouseRightButtonUp"
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"
                             Height="28"
@@ -177,8 +179,9 @@
                             Content="{StaticResource iconUpChevron}"/>
 
                     <Button x:Name="btnMoveUrlDown"
-                            ToolTip="Move Subscription Down"
+                            ToolTip="Move Subscription Down. Right-click to move to bottom"
                             Click="btnMoveUrlDown_Click"
+                            MouseRightButtonUp="btnMoveUrlDown_MouseRightButtonUp"
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"
                             Height="28"
@@ -203,9 +206,9 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox Grid.Row="2" 
+        <GroupBox x:Name="grpFolders"
+                  Grid.Row="2" 
                   Grid.Column="1"
-                  Height="{Binding ElementName=grpShell, Path=ActualHeight}"
                   VerticalAlignment="Bottom"
                   Header=" Additional Folders to Monitor: " 
                   Margin="25,5,10,0">
@@ -221,8 +224,8 @@
                             ToolTip="Add Folder"
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"
-                            Height="28"
-                            Width="28"
+                            Height="24"
+                            Width="24"
                             Margin="0,0,0,0"
                             Content="{StaticResource iconAdd}"/>
 
@@ -231,10 +234,30 @@
                             ToolTip="Remove Folder"
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"
-                            Height="28"
-                            Width="28"
+                            Height="24"
+                            Width="24"
                             Margin="0,0,0,0"
                             Content="{StaticResource iconMinus}"/>
+
+                    <Button x:Name="btnMoveFolderUp"
+                            ToolTip="Move Folder Up. Right-click to move to top."
+                            Click="btnMoveFolderUp_Click"
+                            MouseRightButtonUp="btnMoveFolderUp_MouseRightButtonUp"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="24"
+                            Width="24"
+                            Content="{StaticResource iconUpChevron}"/>
+
+                    <Button x:Name="btnMoveFolderDown"
+                            ToolTip="Move Folder Down. Right-click to move to bottom."
+                            Click="btnMoveFolderDown_Click"
+                            MouseRightButtonUp="btnMoveFolderDown_MouseRightButtonUp"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="24"
+                            Width="24"
+                            Content="{StaticResource iconDownChevron}"/>
 
                 </StackPanel>
 

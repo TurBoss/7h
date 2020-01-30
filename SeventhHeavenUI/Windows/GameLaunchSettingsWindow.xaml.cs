@@ -211,5 +211,37 @@ namespace SeventhHeaven.Windows
         {
             ShowOrHideToolTip(sliderVolume.ToolTip as ToolTip, false);
         }
+
+        private void btnMoveProgramUp_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (ViewModel.IsProgramPopupOpen)
+            {
+                return; // dont do anything if popup opened already
+            }
+
+            if (lstPrograms.SelectedItem == null)
+            {
+                ViewModel.StatusMessage = "Select a program to move first.";
+                return;
+            }
+
+            ViewModel.ChangeProgramOrder((lstPrograms.SelectedItem as ProgramToRunViewModel), 0 - lstPrograms.SelectedIndex);
+        }
+
+        private void btnMoveProgramDown_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (ViewModel.IsProgramPopupOpen)
+            {
+                return; // dont do anything if popup opened already
+            }
+
+            if (lstPrograms.SelectedItem == null)
+            {
+                ViewModel.StatusMessage = "Select a program to move first.";
+                return;
+            }
+
+            ViewModel.ChangeProgramOrder((lstPrograms.SelectedItem as ProgramToRunViewModel), (lstPrograms.Items.Count - 1) - lstPrograms.SelectedIndex);
+        }
     }
 }
