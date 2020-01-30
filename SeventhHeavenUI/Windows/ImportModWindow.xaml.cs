@@ -74,7 +74,6 @@ namespace SeventhHeaven.Windows
             if (!string.IsNullOrEmpty(selectedFile))
             {
                 ViewModel.PathToIroArchiveInput = selectedFile;
-                ViewModel.ModNameInput = Path.GetFileNameWithoutExtension(selectedFile);
             }
         }
 
@@ -85,7 +84,6 @@ namespace SeventhHeaven.Windows
             if (!string.IsNullOrEmpty(selectedFolder))
             {
                 ViewModel.PathToModFolderInput = selectedFolder;
-                ViewModel.ModNameInput = Path.GetFileName(selectedFolder);
             }
         }
 

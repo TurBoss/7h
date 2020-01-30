@@ -14,24 +14,37 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <TabControl SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     BorderThickness="0,1,0,0"
                     Margin="0,1,0,0">
-            <TabItem Header="From IRO Archive">
+            <TabItem Header="From IRO File">
                 <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="70"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               Grid.ColumnSpan="2"
+                               HorizontalAlignment="Stretch"
+                               Text="{Binding HelpText, FallbackValue='The selected mod file(s) will be copied into the library folder.'}"
+                               TextWrapping="Wrap"
+                               Margin="15,5,15,5"/>
+
                     <TextBox x:Name="txtIro"
+                             Grid.Row="1"
                              FontSize="14"
                              HorizontalAlignment="Stretch"
                              VerticalAlignment="Center"
                              Text="{Binding PathToIroArchiveInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Margin="15,10,5,10"/>
+                             Margin="15,5,5,5"/>
                     <Button x:Name="btnBrowseIro"
+                            Grid.Row="1"
                             Click="btnBrowseIro_Click"
                             Style="{StaticResource FileEllipsisImageButton}"
                             Grid.Column="1"
@@ -42,17 +55,31 @@
             </TabItem>
             <TabItem Header="From Folder">
                 <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="65"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               Grid.ColumnSpan="2"
+                               HorizontalAlignment="Stretch"
+                               Text="{Binding HelpText, FallbackValue='The selected mod file(s) will be copied into the library folder.'}"
+                               TextWrapping="Wrap"
+                               Margin="15,5,15,5"/>
+                    
                     <TextBox x:Name="txtModFolder"
+                             Grid.Row="1"
                              FontSize="14"
                              HorizontalAlignment="Stretch"
                              VerticalAlignment="Center"
                              Text="{Binding PathToModFolderInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Margin="15,10,5,10"/>
                     <Button x:Name="btnBrowseModFolder"
+                            Grid.Row="1"
                             Click="btnBrowseModFolder_Click"
                             Style="{StaticResource FolderImageButton}"
                             Grid.Column="1"
@@ -63,17 +90,31 @@
             </TabItem>
             <TabItem Header="Batch Import">
                 <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="65"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               Grid.ColumnSpan="2"
+                               HorizontalAlignment="Stretch"
+                               Text="{Binding HelpText, FallbackValue='The selected mod file(s) will be copied into the library folder.'}"
+                               TextWrapping="Wrap"
+                               Margin="15,5,15,5"/>
+                    
                     <TextBox x:Name="txtBatchFolder"
+                             Grid.Row="1"
                              FontSize="14"
                              HorizontalAlignment="Stretch"
                              VerticalAlignment="Center"
                              Text="{Binding PathToBatchFolderInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Margin="15,10,5,10"/>
                     <Button x:Name="btnBrowseBatchFolder"
+                            Grid.Row="1"
                             Click="btnBrowseBatchFolder_Click"
                             Style="{StaticResource FolderImageButton}"
                             Grid.Column="1"
@@ -83,58 +124,19 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        
-        <TextBlock Grid.Row="1"
-                   Text="{Binding HelpText, FallbackValue='The selected mod file(s) will be copied into the library folder.'}"
-                   TextWrapping="Wrap"
-                   Margin="15,5,5,5"/>
-
-        <TextBox x:Name="txtName"
-                 Grid.Row="2"
-                 FontSize="14"
-                 IsEnabled="{Binding ModNameInputIsEnabled}"
-                 Text="{Binding ModNameInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 Margin="15,10,15,10">
-            <TextBox.Style>
-                <Style TargetType="TextBox" BasedOn="{StaticResource PrimaryTextBoxStyle}">
-                    <Setter Property="Visibility" Value="Hidden"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ProgressValue, FallbackValue='0'}" Value="0">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBox.Style>
-        </TextBox>
-
-        <TextBlock Grid.Row="2"
-                   FontSize="14"
-                   Margin="20,10,15,10"
-                   IsHitTestVisible="False"
-                   Foreground="{DynamicResource PrimaryControlDisabledForeground}"
-                   Text="Enter Custom Mod Name Here">
-            <TextBlock.Style>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Visibility" Value="Hidden"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ModNameInput, FallbackValue=''}" Value="">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
-        </TextBlock>
 
         <ProgressBar Value="{Binding ProgressValue, FallbackValue='50'}"
-                     Visibility="{Binding ProgressBarVisibility, FallbackValue='Hidden'}"
-                     Grid.Row="2"
-                     Margin="10,10,10,10"/>
+                     Visibility="{Binding ProgressBarVisibility, FallbackValue='Visible'}"
+                     VerticalAlignment="Center"
+                     Height="10"
+                     Grid.Row="1"
+                     Margin="15,10,15,10"/>
 
 
         <Button x:Name="btnOk"
                 Click="btnOk_Click"
                 IsEnabled="{Binding IsNotImporting}"
-                Grid.Row="3"
+                Grid.Row="2"
                 HorizontalAlignment="Right"
                 Margin="0,0,80,5"
                 Content="OK"/>
@@ -142,7 +144,7 @@
         <Button x:Name="btnCancel"
                 Click="btnCancel_Click"
                 IsEnabled="{Binding IsNotImporting}"
-                Grid.Row="3"
+                Grid.Row="2"
                 HorizontalAlignment="Right"
                 Margin="0,0,15,5"
                 Content="Cancel"/>

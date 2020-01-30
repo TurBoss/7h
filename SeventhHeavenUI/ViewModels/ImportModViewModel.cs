@@ -89,27 +89,6 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-        public string ModNameInput
-        {
-            get
-            {
-                return _modNameInput;
-            }
-            set
-            {
-                _modNameInput = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public bool ModNameInputIsEnabled
-        {
-            get
-            {
-                return (ImportTabIndex)SelectedTabIndex != ImportTabIndex.BatchImport;
-            }
-        }
-
         public bool IsImporting
         {
             get
@@ -142,7 +121,6 @@ namespace SeventhHeaven.ViewModels
             {
                 _selectedTabIndex = value;
                 NotifyPropertyChanged();
-                NotifyPropertyChanged(nameof(ModNameInputIsEnabled));
                 UpdateHelpText();
             }
         }
@@ -176,7 +154,6 @@ namespace SeventhHeaven.ViewModels
         {
             SelectedTabIndex = 0;
             ProgressValue = 0;
-            ModNameInput = "";
             UpdateHelpText();
         }
 
@@ -184,7 +161,7 @@ namespace SeventhHeaven.ViewModels
         {
             if ((ImportTabIndex)SelectedTabIndex == ImportTabIndex.FromIro)
             {
-                HelpText = "Select a .iro archive file to import into the library folder.";
+                HelpText = "Select an .iro file to import into the library folder.";
             }
             else if ((ImportTabIndex)SelectedTabIndex == ImportTabIndex.FromFolder)
             {
@@ -235,12 +212,6 @@ namespace SeventhHeaven.ViewModels
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(ModNameInput))
-            {
-                MessageDialogWindow.Show("Enter a name for the mod.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
-
             if (!File.Exists(PathToIroArchiveInput))
             {
                 MessageDialogWindow.Show(".iro archive file does not exist", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -250,11 +221,13 @@ namespace SeventhHeaven.ViewModels
             ModImporter importer = null;
             try
             {
+                string fileName = Path.GetFileNameWithoutExtension(PathToIroArchiveInput);
+
                 importer = new ModImporter();
                 importer.ImportProgressChanged += Importer_ImportProgressChanged;
-                importer.Import(PathToIroArchiveInput, ModNameInput, true, false);
+                importer.Import(PathToIroArchiveInput, fileName, true, false);
 
-                Sys.Message(new WMessage($"Successfully imported {ModNameInput}!"));
+                Sys.Message(new WMessage($"Successfully imported {fileName}!"));
                 return true;
             }
             catch (Exception e)
@@ -285,12 +258,6 @@ namespace SeventhHeaven.ViewModels
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(ModNameInput))
-            {
-                MessageDialogWindow.Show("Enter a name for the mod", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
-
             if (!Directory.Exists(PathToModFolderInput))
             {
                 MessageDialogWindow.Show("Directory does not exist", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -300,11 +267,13 @@ namespace SeventhHeaven.ViewModels
             ModImporter importer = null;
             try
             {
+                string folderName = new DirectoryInfo(PathToModFolderInput).Name;
+
                 importer = new ModImporter();
                 importer.ImportProgressChanged += Importer_ImportProgressChanged;
-                importer.Import(PathToModFolderInput, ModNameInput, false, false);
+                importer.Import(PathToModFolderInput, folderName, false, false);
 
-                Sys.Message(new WMessage($"Successfully imported {ModNameInput}!", true));
+                Sys.Message(new WMessage($"Successfully imported {folderName}!", true));
                 return true;
             }
             catch (Exception e)
