@@ -38,15 +38,14 @@ namespace SeventhHeaven.Windows
 
             t.ContinueWith((taskResult) =>
             {
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    this.Cursor = System.Windows.Input.Cursors.Arrow;
+                }); 
+                
                 if (taskResult.IsFaulted)
                 {
                     Sys.Message(new WMessage($"Failed to import - {taskResult.Exception.GetBaseException()?.Message}", true));
-
-                    App.Current.Dispatcher.Invoke(() =>
-                    {
-                        this.Cursor = System.Windows.Input.Cursors.Arrow;
-                    });
-
                     return;
                 }
 
@@ -56,6 +55,7 @@ namespace SeventhHeaven.Windows
                     CloseWindow();
                 }
 
+                ViewModel.ProgressValue = 0;
             });
         }
 

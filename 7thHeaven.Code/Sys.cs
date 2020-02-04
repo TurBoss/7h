@@ -162,8 +162,9 @@ namespace Iros._7th.Workshop
         public static Library Library { get; set; }
         public static ImageCache ImageCache { get; private set; }
         public static IDownloader Downloads { get; set; }
-
         public static Profile ActiveProfile { get; set; }
+        public static Version AppVersion { get; set; }
+
 
         public static event EventHandler<ModStatusEventArgs> StatusChanged;
         public static event EventHandler<MessageEventArgs> MessageReceived;
@@ -198,6 +199,7 @@ namespace Iros._7th.Workshop
             ModStatusEventArgs e = new ModStatusEventArgs() { ModID = modID, Status = st, OldStatus = st };
             StatusChanged?.Invoke(null, e);
         }
+
         public static void PingInfoChange(Guid modID)
         {
             ModStatusEventArgs e = new ModStatusEventArgs() { ModID = modID, Status = ModStatus.InfoChanged, OldStatus = ModStatus.InfoChanged };
@@ -321,6 +323,8 @@ namespace Iros._7th.Workshop
             _statuses = Library.Items.ToDictionary(i => i.ModID, _ => ModStatus.Installed);
 
             ImageCache = new ImageCache(System.IO.Path.Combine(SysFolder, "cache"));
+
+            AppVersion = new Version();
         }
 
         /// <summary>

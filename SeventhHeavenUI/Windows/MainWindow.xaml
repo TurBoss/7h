@@ -15,7 +15,7 @@
         SizeChanged="Window_SizeChanged"
         Closing="Window_Closing"
         Height="600" Width="1100"
-        MinHeight="560" MinWidth="870">
+        MinHeight="520" MinWidth="870">
     <Window.Resources>
 
         <Style x:Key="ModInfoLabelStyle" TargetType="{x:Type TextBlock}">
@@ -37,6 +37,17 @@
             <Setter Property="Padding" Value="5,2,2,2"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding PreviewModHasReadMe}" Value="False">
+                    <Setter Property="Content" Value="None"/>
+                    <Setter Property="Padding" Value="2"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="OpenLinkStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource HyperlinkButton}">
+            <Setter Property="Content" Value="Click Here"/>
+            <Setter Property="Padding" Value="5,2,2,2"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding PreviewModHasLink, FallbackValue='False'}" Value="False">
                     <Setter Property="Content" Value="None"/>
                     <Setter Property="Padding" Value="2"/>
                 </DataTrigger>
@@ -95,8 +106,20 @@
 
         <Viewbox HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,5,0,0" Grid.ColumnSpan="2" Stretch="UniformToFill" StretchDirection="DownOnly">
             <WrapPanel>
-                <cls:ButtonWithImage x:Name="btnPlay" Content="Play" Margin="5,0,0,0" Click="btnPlay_Click" Padding="0,8,10,0" TemplateSource="{StaticResource iconPlay}" ImageForeground="ForestGreen"/>
-                <ToggleButton x:Name="btnPlayOptions" Style="{StaticResource DownArrowToggleButton}" Margin="-3,0,0,0" Click="btnPlayOptions_Click" ContextMenuService.Placement="Bottom">
+                <cls:ButtonWithImage x:Name="btnPlay" 
+                                     Click="btnPlay_Click" 
+                                     Content="Play" 
+                                     Margin="5,0,0,0"
+                                     Padding="0,8,10,0"
+                                     IsEnabled="{Binding IsPlayButtonEnabled}"
+                                     TemplateSource="{StaticResource iconPlay}" 
+                                     ImageForeground="ForestGreen"/>
+                <ToggleButton x:Name="btnPlayOptions" 
+                              Click="btnPlayOptions_Click" 
+                              Style="{StaticResource DownArrowToggleButton}" 
+                              IsEnabled="{Binding IsPlayToggleButtonEnabled}"
+                              Margin="0,0,0,0" 
+                              ContextMenuService.Placement="Bottom">
                     <ToggleButton.ContextMenu>
                         <ContextMenu x:Name="menuPlayOptions" Closed="menuPlayOptions_Closed">
                             <MenuItem x:Name="menuPlayWithMods" Header="Play With Mods (default)" Click="menuPlayWithMods_Click"/>
@@ -202,8 +225,8 @@
                                     Margin="2,0,5,0"
                                     Click="btnOpenModLink_Click"
                                     ToolTip="{Binding PreviewModLink}"
-                                    Style="{StaticResource HyperlinkButton}"
-                                    Content="Click Here"/>
+                                    IsEnabled="{Binding PreviewModHasLink, FallbackValue='False'}"
+                                    Style="{StaticResource OpenLinkStyle}"/>
 
                             <TextBlock Text="Readme:" Style="{StaticResource ModInfoLabelStyle}" Margin="0,0,0,3"
                                        Visibility="{Binding ReadmeVisibility, FallbackValue='Visible'}"/>
@@ -212,7 +235,6 @@
                                     Width="80"
                                     Margin="2,0,10,0"
                                     Click="btnOpenModReadme_Click"
-                                    Content="Click Here"
                                     Visibility="{Binding ReadmeVisibility, FallbackValue='Visible'}"
                                     IsEnabled="{Binding PreviewModHasReadMe, FallbackValue='False'}"
                                     Style="{StaticResource ReadMeStyle}"/>

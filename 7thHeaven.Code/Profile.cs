@@ -31,6 +31,8 @@ namespace Iros._7th.Workshop {
         {
             List<string> profileDetails = new List<string>();
 
+            profileDetails.Add($"7th Heaven Version: {Sys.AppVersion}\n");
+
             foreach (ProfileItem item in Items) 
             {
                 InstalledItem mod = Sys.Library.GetItem(item.ModID);

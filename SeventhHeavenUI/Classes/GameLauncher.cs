@@ -62,6 +62,9 @@ namespace SeventhHeaven.Classes
         public delegate void OnProgressChanged(string message);
         public event OnProgressChanged ProgressChanged;
 
+        public delegate void OnLaunchCompleted(bool wasSuccessful);
+        public event OnLaunchCompleted LaunchCompleted;
+
         public FF7Version InstallVersion { get; set; }
         public string DriveLetter { get; set; }
 
@@ -878,7 +881,12 @@ namespace SeventhHeaven.Classes
         {
             try
             {
-                Process ff7Proc = Process.Start(Sys.Settings.FF7Exe);
+                ProcessStartInfo startInfo = new ProcessStartInfo(Sys.Settings.FF7Exe)
+                {
+                    WorkingDirectory = Path.GetDirectoryName(Sys.Settings.FF7Exe)
+                };
+
+                Process ff7Proc = Process.Start(startInfo);
 
                 ff7Proc.EnableRaisingEvents = true;
                 ff7Proc.Exited += (o, e) =>
@@ -1693,5 +1701,11 @@ namespace SeventhHeaven.Classes
             Logger.Log(logLevel, messageToLog);
             ProgressChanged?.Invoke(messageToLog);
         }
+
+        internal void RaiseLaunchCompleted(bool didLaunch)
+        {
+            LaunchCompleted?.Invoke(didLaunch);
+        }
+
     }
 }

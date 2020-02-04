@@ -63,6 +63,7 @@ namespace SeventhHeaven.ViewModels
         public OpenProfileViewModel()
         {
             ReloadProfiles();
+            SelectedProfile = Profiles.Where(p => p.Equals(Sys.Settings.CurrentProfile, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
         }
 
         public void ReloadProfiles()
@@ -201,14 +202,7 @@ namespace SeventhHeaven.ViewModels
 
                 var profileDetails = profileToView.GetDetails();
 
-                if (profileDetails.Count() == 0)
-                {
-                    File.WriteAllText(tempFile, $"# Note: {name} has no active mods.\n# When mods are active you can view the details such as the Mod ID, version and the config settings used.");
-                }
-                else
-                {
-                    File.WriteAllLines(tempFile, profileDetails);
-                }
+                File.WriteAllLines(tempFile, profileDetails);
 
                 Process.Start("notepad.exe", tempFile);
             }

@@ -1,9 +1,9 @@
-﻿using SeventhHeaven.Classes;
+﻿using Iros._7th.Workshop;
+using SeventhHeaven.Classes;
 using SeventhHeaven.ViewModels;
 using SeventhHeavenUI.ViewModels;
 using System.IO;
 using System.Windows;
-using System.Windows.Forms;
 
 namespace SeventhHeaven.Windows
 {
@@ -25,7 +25,7 @@ namespace SeventhHeaven.Windows
 
             this.DataContext = ViewModel;
 
-            ViewModel.LoadSettings();
+            ViewModel.LoadSettings(Sys.Settings);
         }
 
         private void ViewModel_ListDataChanged()
@@ -64,9 +64,18 @@ namespace SeventhHeaven.Windows
             if (!string.IsNullOrEmpty(exePath))
             {
                 FileInfo fileSelected = new FileInfo(exePath);
-                if (fileSelected.Name.Equals("ff7_en.exe", System.StringComparison.InvariantCultureIgnoreCase))
+                if (fileSelected.Name.Equals("ff7_en.exe", System.StringComparison.InvariantCultureIgnoreCase) || fileSelected.Name.Equals("FF7_Launcher.exe", System.StringComparison.InvariantCultureIgnoreCase))
                 {
                     MessageDialogWindow.Show("This exe is used for the Steam release of FF7, which 7th Heaven does not support. Please select a different FF7 EXE file.",
+                                             "Error - Incorrect Exe",
+                                             MessageBoxButton.OK,
+                                             MessageBoxImage.Error);
+                    return;
+                }
+
+                if (fileSelected.Name.Equals("FF7Config.exe", System.StringComparison.InvariantCultureIgnoreCase))
+                {
+                    MessageDialogWindow.Show("This exe is used for configuring FF7 settings and is not the correct game exe. Please select a different FF7 EXE file.",
                                              "Error - Incorrect Exe",
                                              MessageBoxButton.OK,
                                              MessageBoxImage.Error);
@@ -364,6 +373,11 @@ namespace SeventhHeaven.Windows
             }
 
             ViewModel.MoveSelectedFolder((lstExtraFolders.SelectedItem as string), (ViewModel.ExtraFolderList.Count - 1) - lstExtraFolders.SelectedIndex);
+        }
+
+        private void btnDefaults_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ResetToDefaults();
         }
     }
 }

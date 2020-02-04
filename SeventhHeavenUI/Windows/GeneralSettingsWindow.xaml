@@ -194,6 +194,7 @@
                 <ListView x:Name="lstSubscriptions" Grid.Column="1" 
                           ItemsSource="{Binding SubscriptionList}" 
                           VirtualizingPanel.IsVirtualizing="false"
+                          MaxHeight="166"
                           ItemContainerStyle="{StaticResource MainListViewItemStyle}"
                           Margin="3">
                     <ListView.View>
@@ -265,6 +266,7 @@
                 <ListBox x:Name="lstExtraFolders" Grid.Column="1"
                           ItemsSource="{Binding ExtraFolderList}" 
                           VirtualizingPanel.IsVirtualizing="false"
+                         MaxHeight="95"
                           ItemContainerStyle="{StaticResource MainListBoxItemStyle}"
                           Margin="3">
 
@@ -275,9 +277,17 @@
         <TextBlock Grid.Row="3"
                    Grid.ColumnSpan="2"
                    VerticalAlignment="Center"
-                   Margin="10,0,190,0"
+                   Margin="10,0,290,0"
                    TextTrimming="CharacterEllipsis"
                    Text="{Binding StatusMessage, FallbackValue='Select a subscription to edit.'}"/>
+
+        <Button x:Name="btnDefaults" 
+                Content="Reset Defaults" 
+                Click="btnDefaults_Click"
+                Grid.Row="3" Grid.Column="1"
+                Margin="0,5,170,10"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"/>
 
         <Button x:Name="btnOk" 
                 Content="Save" 

@@ -146,7 +146,7 @@ namespace SeventhHeavenUI
                 }
                 else if (parm.Equals("/LAUNCH", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    ViewModel.LaunchGame(false, false);
+                    ViewModel.LaunchGame();
                 }
                 else if (parm.Equals("/QUIT", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -224,7 +224,7 @@ namespace SeventhHeavenUI
                 menuPlayOptions.PlacementTarget = btnPlayOptions;
                 menuPlayOptions.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
                 menuPlayOptions.IsOpen = true;
-                btnPlayOptions.IsEnabled = false;
+                ViewModel.IsPlayToggleButtonEnabled = false;
             }
         }
 
@@ -246,7 +246,7 @@ namespace SeventhHeavenUI
 
         private void menuPlayOptions_Closed(object sender, RoutedEventArgs e)
         {
-            btnPlayOptions.IsEnabled = true;
+            ViewModel.IsPlayToggleButtonEnabled = true;
         }
 
         private void btnHelp_Click(object sender, RoutedEventArgs e)
@@ -344,7 +344,7 @@ namespace SeventhHeavenUI
 
         private void menuPlayWithoutMods_Click(object sender, RoutedEventArgs e)
         {
-            GameLaunchWindow.Show(false, false, noMods: true);
+            ViewModel.LaunchGame(false, false, noMods: true);
         }
 
         private void btnOpenAppLog_Click(object sender, RoutedEventArgs e)

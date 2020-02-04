@@ -24,6 +24,12 @@ namespace SeventhHeaven.ViewModels
         Right
     }
 
+    internal enum VolumeSlider
+    {
+        Music,
+        Sfx
+    }
+
     class GameLaunchSettingsViewModel : ViewModelBase
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
@@ -61,6 +67,7 @@ namespace SeventhHeaven.ViewModels
         private bool _importButtonIsEnabled;
         private Visibility _importProgressVisibility;
         private double _importProgressValue;
+        private VolumeSlider _lastVolumeSliderChanged;
 
         public string StatusMessage
         {
@@ -413,8 +420,9 @@ namespace SeventhHeaven.ViewModels
                 _volumeValue = value;
                 NotifyPropertyChanged();
                 NotifyPropertyChanged(nameof(MusicVolumeDisplayText));
+                LastVolumeSliderChanged = VolumeSlider.Music;
 
-                if (IsAudioPlaying)
+                if (IsAudioPlaying && LastVolumeSliderChanged == VolumeSlider.Music)
                 {
                     _audioTest.Volume = (float)_volumeValue / (float)100.0;
                 }
@@ -432,6 +440,12 @@ namespace SeventhHeaven.ViewModels
                 _sfxVolumeValue = value;
                 NotifyPropertyChanged();
                 NotifyPropertyChanged(nameof(SfxVolumeDisplayText));
+                LastVolumeSliderChanged = VolumeSlider.Sfx;
+
+                if (IsAudioPlaying && LastVolumeSliderChanged == VolumeSlider.Sfx)
+                {
+                    _audioTest.Volume = (float)_sfxVolumeValue / (float)100.0;
+                }
             }
         }
 
@@ -596,6 +610,18 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public VolumeSlider LastVolumeSliderChanged
+        {
+            get
+            {
+                return _lastVolumeSliderChanged;
+            }
+            set
+            {
+                _lastVolumeSliderChanged = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         public GameLaunchSettingsViewModel()
         {
@@ -605,13 +631,14 @@ namespace SeventhHeaven.ViewModels
             IsProgramPopupOpen = false;
             _audioTest = null;
             HasLoaded = false;
+            LastVolumeSliderChanged = VolumeSlider.Music;
 
             InitImportMovieOption();
             InitInGameConfigOptions();
             InitSoundDevices();
             InitRenderers();
             InitMidiDevices();
-            LoadSettings();
+            LoadSettings(Sys.Settings.GameLaunchSettings);
         }
 
         private void InitImportMovieOption()
@@ -644,7 +671,7 @@ namespace SeventhHeaven.ViewModels
             return discsToInsert;
         }
 
-        private void LoadSettings()
+        private void LoadSettings(LaunchSettings launchSettings)
         {
             HasLoaded = false;
 
@@ -652,16 +679,17 @@ namespace SeventhHeaven.ViewModels
             {
                 Logger.Warn("No game launcher settings found, initializing to defaults.");
                 Sys.Settings.GameLaunchSettings = LaunchSettings.DefaultSettings();
+                launchSettings = Sys.Settings.GameLaunchSettings;
             }
 
             ProgramList = new ObservableCollection<ProgramToRunViewModel>(Sys.Settings.ProgramsToLaunchPrior.Select(s => new ProgramToRunViewModel(s.PathToProgram, s.ProgramArgs)));
 
-            AutoUpdatePathChecked = Sys.Settings.GameLaunchSettings.AutoUpdateDiscPath;
-            Code5FixChecked = Sys.Settings.GameLaunchSettings.Code5Fix;
-            HighDpiFixChecked = Sys.Settings.GameLaunchSettings.HighDpiFix;
+            AutoUpdatePathChecked = launchSettings.AutoUpdateDiscPath;
+            Code5FixChecked = launchSettings.Code5Fix;
+            HighDpiFixChecked = launchSettings.HighDpiFix;
 
-            IsShowLauncherChecked = Sys.Settings.GameLaunchSettings.ShowLauncherWindow;
-            SelectedGameConfigOption = InGameConfigurationMap.Where(s => s.Value == Sys.Settings.GameLaunchSettings.InGameConfigOption)
+            IsShowLauncherChecked = launchSettings.ShowLauncherWindow;
+            SelectedGameConfigOption = InGameConfigurationMap.Where(s => s.Value == launchSettings.InGameConfigOption)
                                                              .Select(c => c.Key)
                                                              .FirstOrDefault();
 
@@ -677,8 +705,8 @@ namespace SeventhHeaven.ViewModels
 
             if (IsAutoMountSupported)
             {
-                AutoMountChecked = Sys.Settings.GameLaunchSettings.AutoMountGameDisc;
-                AutoUnmountChecked = Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc;
+                AutoMountChecked = launchSettings.AutoMountGameDisc;
+                AutoUnmountChecked = launchSettings.AutoUnmountGameDisc;
             }
             else
             {
@@ -690,7 +718,7 @@ namespace SeventhHeaven.ViewModels
             IsReunionInstalled = GameLauncher.IsReunionModInstalled();
             if (IsReunionInstalled)
             {
-                DisableReunionChecked = Sys.Settings.GameLaunchSettings.DisableReunionOnLaunch;
+                DisableReunionChecked = launchSettings.DisableReunionOnLaunch;
             }
             else
             {
@@ -699,7 +727,7 @@ namespace SeventhHeaven.ViewModels
             }
 
 
-            SelectedSoundDevice = SoundDeviceGuids.Where(s => s.Value == Sys.Settings.GameLaunchSettings.SelectedSoundDevice)
+            SelectedSoundDevice = SoundDeviceGuids.Where(s => s.Value == launchSettings.SelectedSoundDevice)
                                                   .Select(s => s.Key)
                                                   .FirstOrDefault();
 
@@ -711,23 +739,23 @@ namespace SeventhHeaven.ViewModels
                                                       .FirstOrDefault();
             }
 
-            SelectedMidiDevice = MidiDeviceMap.Where(s => s.Value == Sys.Settings.GameLaunchSettings.SelectedMidiDevice)
+            SelectedMidiDevice = MidiDeviceMap.Where(s => s.Value == launchSettings.SelectedMidiDevice)
                                               .Select(s => s.Key)
                                               .FirstOrDefault();
 
-            MusicVolumeValue = Sys.Settings.GameLaunchSettings.MusicVolume;
-            SfxVolumeValue = Sys.Settings.GameLaunchSettings.SfxVolume;
-            IsReverseSpeakersChecked = Sys.Settings.GameLaunchSettings.ReverseSpeakers;
-            IsLogVolumeChecked = Sys.Settings.GameLaunchSettings.LogarithmicVolumeControl;
+            MusicVolumeValue = launchSettings.MusicVolume;
+            SfxVolumeValue = launchSettings.SfxVolume;
+            IsReverseSpeakersChecked = launchSettings.ReverseSpeakers;
+            IsLogVolumeChecked = launchSettings.LogarithmicVolumeControl;
 
-            SelectedRenderer = RendererMap.Where(s => s.Value == Sys.Settings.GameLaunchSettings.SelectedRenderer)
+            SelectedRenderer = RendererMap.Where(s => s.Value == launchSettings.SelectedRenderer)
                                           .Select(s => s.Key)
                                           .FirstOrDefault();
 
-            IsRivaOptionChecked = Sys.Settings.GameLaunchSettings.UseRiva128GraphicsOption;
-            IsTntOptionChecked = Sys.Settings.GameLaunchSettings.UseTntGraphicsOption;
-            IsQuarterScreenChecked = Sys.Settings.GameLaunchSettings.QuarterScreenMode;
-            IsFullScreenChecked = Sys.Settings.GameLaunchSettings.FullScreenMode;
+            IsRivaOptionChecked = launchSettings.UseRiva128GraphicsOption;
+            IsTntOptionChecked = launchSettings.UseTntGraphicsOption;
+            IsQuarterScreenChecked = launchSettings.QuarterScreenMode;
+            IsFullScreenChecked = launchSettings.FullScreenMode;
 
             HasLoaded = true;
         }
@@ -980,12 +1008,16 @@ namespace SeventhHeaven.ViewModels
                     waveProvider.ConnectInputToOutput(1, rightChannel);
                 }
 
-
+                float outVolume = (float)MusicVolumeValue / (float)100.0;
+                if (LastVolumeSliderChanged == VolumeSlider.Sfx)
+                {
+                    outVolume = (float)SfxVolumeValue / (float)100.0;
+                }
 
                 _audioTest = new WaveOut
                 {
                     DeviceNumber = GetSelectedSoundDeviceNumber(),
-                    Volume = (float)MusicVolumeValue / (float)100.0
+                    Volume = outVolume
                 };
 
                 _audioTest.Init(waveProvider);
@@ -1300,6 +1332,12 @@ namespace SeventhHeaven.ViewModels
             }
 
             ProgramList.Move(currentIndex, targetIndex);
+        }
+
+        internal void ResetToDefaults()
+        {
+            Logger.Info("Resetting game launcher settings to defaults.");
+            LoadSettings(LaunchSettings.DefaultSettings());
         }
     }
 }

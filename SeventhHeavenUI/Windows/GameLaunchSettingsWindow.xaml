@@ -279,7 +279,7 @@
                                 IsEnabled="{Binding IsAudioNotPlaying}"
                                 Click="btnTestAudio_Click"
                                 ToolTipService.IsEnabled="false"
-                                ToolTip="Test the selected sound device and music volume. Test sound provided by Enrico Deiana."
+                                ToolTip="Test the selected sound device and music/sfx volume. Test sound provided by Enrico Deiana."
                                 MouseEnter="Control_MouseEnter"/>
                         <ToggleButton x:Name="btnAudioOptions"
                                       Style="{StaticResource DownArrowToggleButton}"
@@ -297,7 +297,7 @@
                                               Height="34"
                                               Width="34"
                                               Click="menuItemTestLeft_Click" 
-                                              ToolTip="Test the selected sound device and music volume for the Left channel. Test sound provided by Enrico Deiana."
+                                              ToolTip="Test the selected sound device and music/sfx volume for the Left channel. Test sound provided by Enrico Deiana."
                                               ToolTipService.IsEnabled="false"
                                               MouseEnter="Control_MouseEnter"
                                               IsEnabled="{Binding IsAudioNotPlaying}"/>
@@ -307,7 +307,7 @@
                                               Height="34"
                                               Width="34"
                                               Click="menuItemTestRight_Click" 
-                                              ToolTip="Test the selected sound device and music volume for the Right channel. Test sound provided by Enrico Deiana."
+                                              ToolTip="Test the selected sound device and music/sfx volume for the Right channel. Test sound provided by Enrico Deiana."
                                               ToolTipService.IsEnabled="false"
                                               MouseEnter="Control_MouseEnter"
                                               IsEnabled="{Binding IsAudioNotPlaying}"/>
@@ -593,9 +593,20 @@
                    Grid.ColumnSpan="2"
                    VerticalAlignment="Center"
                    TextWrapping="Wrap"
-                   Margin="10,0,190,0"
+                   Margin="10,0,290,0"
                    TextTrimming="CharacterEllipsis"
                    Text="{Binding StatusMessage, FallbackValue='This is a mouse over description or message to user.'}"/>
+
+        <Button x:Name="btnDefaults" 
+                Content="Reset Defaults" 
+                ToolTip="Reset game launcher settings to the default values."
+                ToolTipService.IsEnabled="False"
+                MouseEnter="Control_MouseEnter"
+                Click="btnDefaults_Click"
+                Grid.Row="3" Grid.Column="1"
+                Margin="0,5,170,10"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"/>
 
         <Button x:Name="btnOk" 
                 Content="Save" 

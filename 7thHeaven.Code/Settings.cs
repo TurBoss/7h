@@ -136,7 +136,7 @@ namespace Iros._7th.Workshop {
             }
         }
 
-        internal static Settings UseDefaultSettings()
+        public static Settings UseDefaultSettings()
         {
             Settings defaultSettings = new Settings();
 

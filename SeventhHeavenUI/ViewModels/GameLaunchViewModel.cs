@@ -50,6 +50,7 @@ namespace SeventhHeaven.ViewModels
             finally
             {
                 GameLauncher.Instance.ProgressChanged -= LaunchGame_ProgressChanged;
+                GameLauncher.Instance.RaiseLaunchCompleted(didLaunch);
             }
 
             return didLaunch;

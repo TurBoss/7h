@@ -98,6 +98,8 @@ They will be automatically turned off.";
         private Visibility _loadingGifVisibility;
         private bool _isFlashingStatus;
         private Visibility _noImageTextVisibility;
+        private bool _isGameLaunching;
+        private bool _isPlayToggleButtonEnabled;
 
         public string WindowTitle
         {
@@ -146,11 +148,6 @@ They will be automatically turned off.";
                     }
                 }
             }
-        }
-
-        internal void LaunchGame(bool variableDump = false, bool debugLogging = false)
-        {
-            GameLaunchWindow.Show(variableDump, debugLogging);
         }
 
         public string StatusMessage
@@ -282,6 +279,15 @@ They will be automatically turned off.";
             {
                 _previewModLink = value;
                 NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(PreviewModHasLink));
+            }
+        }
+
+        public bool PreviewModHasLink
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(PreviewModLink);
             }
         }
 
@@ -402,12 +408,51 @@ They will be automatically turned off.";
             }
         }
 
+        public bool IsPlayButtonEnabled
+        {
+            get
+            {
+                return !IsGameLaunching;
+            }
+        }
+
+        public bool IsPlayToggleButtonEnabled
+        {
+            get
+            {
+                return !IsGameLaunching && _isPlayToggleButtonEnabled;
+            }
+            set
+            {
+                _isPlayToggleButtonEnabled = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+
+        public bool IsGameLaunching
+        {
+            get
+            {
+                return _isGameLaunching;
+            }
+            private set
+            {
+                _isGameLaunching = value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(IsPlayButtonEnabled));
+                NotifyPropertyChanged(nameof(IsPlayToggleButtonEnabled));
+            }
+        }
+
 
         #endregion
 
         public MainWindowViewModel()
         {
             SearchText = "";
+            IsGameLaunching = false;
+            IsPlayToggleButtonEnabled = true;
 
             MyMods = new MyModsViewModel();
             MyMods.SelectedModChanged += ModsViewModel_SelectedModChanged;
@@ -433,7 +478,7 @@ They will be automatically turned off.";
 
             MegaIros.Logger = Logger.Info;
 
-            GeneralSettingsViewModel.AutoDetectSystemPaths();
+            GeneralSettingsViewModel.AutoDetectSystemPaths(Sys.Settings);
 
             CopyDllAndUpdaterExe(); // TODO: change or fix app updater process
 
@@ -490,7 +535,7 @@ They will be automatically turned off.";
 
             // TODO: check for app updates
             StatusMessage = $"{App.GetAppName()} v{App.GetAppVersion().ToString()} started - Click here to view the app log.  |  Hint: {GetRandomHint()}";
-
+            Sys.AppVersion = App.GetAppVersion();
         }
 
         /// <summary>
@@ -810,7 +855,7 @@ They will be automatically turned off.";
             }
         }
 
-        private void FlashStatusBar(int timeToFlashInMilliseconds = 500)
+        private void FlashStatusBar(int timeToFlashInMilliseconds = 1400)
         {
             IsFlashingStatus = true;
 
@@ -1309,6 +1354,19 @@ They will be automatically turned off.";
         {
             GameLaunchSettingsWindow launchSettingsWindow = new GameLaunchSettingsWindow();
             launchSettingsWindow.ShowDialog();
+        }
+
+        internal void LaunchGame(bool variableDump = false, bool debugLogging = false, bool noMods = false)
+        {
+            IsGameLaunching = true;
+            GameLauncher.Instance.LaunchCompleted += GameLauncher_LaunchCompleted;
+            GameLaunchWindow.Show(variableDump, debugLogging, noMods);
+        }
+
+        private void GameLauncher_LaunchCompleted(bool wasSuccessful)
+        {
+            GameLauncher.Instance.LaunchCompleted -= GameLauncher_LaunchCompleted;
+            IsGameLaunching = false;
         }
     }
 

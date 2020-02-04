@@ -41,9 +41,13 @@ namespace SeventhHeaven.Windows
                 launchWindow.ShowInTaskbar = false;
                 
                 GameLauncher.Instance.ProgressChanged += LauncherInstance_ProgressChanged;
+                launchWindow.Show();
+            }
+            else 
+            { 
+                launchWindow.ShowDialog();
             }
 
-            launchWindow.ShowDialog();
             return launchWindow.ViewModel;
         }
 
@@ -52,6 +56,9 @@ namespace SeventhHeaven.Windows
             Sys.Message(new WMessage(message, WMessageLogLevel.StatusOnly));
         }
 
+        /// <summary>
+        /// Begin the game launch process once Window is loaded
+        /// </summary>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ViewModel.LogStatus("### Launching Final Fantasy VII ###");
@@ -70,7 +77,7 @@ namespace SeventhHeaven.Windows
         }
 
         /// <summary>
-        /// starts the game launcher process asynchronously when window loads
+        /// starts the game launcher process asynchronously
         /// </summary>
         private Task<bool> StartGameLaunchProcessAsync()
         {
@@ -121,9 +128,8 @@ namespace SeventhHeaven.Windows
 
                 if (Sys.Settings.GameLaunchSettings.ShowLauncherWindow == false)
                 {
-                    // display the launcher window when showing the 'OK' button so it is visible to use that an error occurred
-                    this.WindowState = WindowState.Normal;
-                    this.ShowInTaskbar = true;
+                    // ensure window is closed if user has setting not to show launcher window
+                    this.Close();
                 }
             });
         }

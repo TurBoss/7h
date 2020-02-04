@@ -371,32 +371,37 @@ namespace SeventhHeaven.ViewModels
             SubscriptionNameHintText = "Enter name for catalog";
         }
 
-        internal void LoadSettings()
+        internal void ResetToDefaults()
         {
-            AutoDetectSystemPaths();
-
-            SubscriptionList = new ObservableCollection<SubscriptionSettingViewModel>(Sys.Settings.Subscriptions.Select(s => new SubscriptionSettingViewModel(s.Url, s.Name)));
-            ExtraFolderList = new ObservableCollection<string>(Sys.Settings.ExtraFolders.ToList());
-
-            FF7ExePathInput = Sys.Settings.FF7Exe;
-            LibraryPathInput = Sys.Settings.LibraryLocation;
-            MoviesPathInput = Sys.Settings.MovieFolder;
-            TexturesPathInput = Sys.Settings.AaliFolder;
-
-            KeepOldModsAfterUpdating = Sys.Settings.HasOption(GeneralOptions.KeepOldVersions);
-            ActivateInstalledModsAuto = Sys.Settings.HasOption(GeneralOptions.AutoActiveNewMods);
-            ImportLibraryFolderAuto = Sys.Settings.HasOption(GeneralOptions.AutoImportMods);
-            CheckForUpdatesAuto = Sys.Settings.HasOption(GeneralOptions.CheckForUpdates);
-            BypassCompatibilityLocks = Sys.Settings.HasOption(GeneralOptions.BypassCompatibility);
-            OpenIrosLinks = Sys.Settings.HasOption(GeneralOptions.OpenIrosLinksWith7H);
-            OpenModFilesWith7H = Sys.Settings.HasOption(GeneralOptions.OpenModFilesWith7H);
-            WarnAboutModCode = Sys.Settings.HasOption(GeneralOptions.WarnAboutModCode);
-            ShowContextMenuInExplorer = Sys.Settings.HasOption(GeneralOptions.Show7HInFileExplorerContextMenu);
+            LoadSettings(Settings.UseDefaultSettings());
         }
 
-        public static void AutoDetectSystemPaths()
+        internal void LoadSettings(Settings settings)
         {
-            if (string.IsNullOrEmpty(Sys.Settings.FF7Exe) || !File.Exists(Sys.Settings.FF7Exe))
+            AutoDetectSystemPaths(settings);
+
+            SubscriptionList = new ObservableCollection<SubscriptionSettingViewModel>(settings.Subscriptions.Select(s => new SubscriptionSettingViewModel(s.Url, s.Name)));
+            ExtraFolderList = new ObservableCollection<string>(settings.ExtraFolders.ToList());
+
+            FF7ExePathInput = settings.FF7Exe;
+            LibraryPathInput = settings.LibraryLocation;
+            MoviesPathInput = settings.MovieFolder;
+            TexturesPathInput = settings.AaliFolder;
+
+            KeepOldModsAfterUpdating = settings.HasOption(GeneralOptions.KeepOldVersions);
+            ActivateInstalledModsAuto = settings.HasOption(GeneralOptions.AutoActiveNewMods);
+            ImportLibraryFolderAuto = settings.HasOption(GeneralOptions.AutoImportMods);
+            CheckForUpdatesAuto = settings.HasOption(GeneralOptions.CheckForUpdates);
+            BypassCompatibilityLocks = settings.HasOption(GeneralOptions.BypassCompatibility);
+            OpenIrosLinks = settings.HasOption(GeneralOptions.OpenIrosLinksWith7H);
+            OpenModFilesWith7H = settings.HasOption(GeneralOptions.OpenModFilesWith7H);
+            WarnAboutModCode = settings.HasOption(GeneralOptions.WarnAboutModCode);
+            ShowContextMenuInExplorer = settings.HasOption(GeneralOptions.Show7HInFileExplorerContextMenu);
+        }
+
+        public static void AutoDetectSystemPaths(Settings settings)
+        {
+            if (string.IsNullOrEmpty(settings.FF7Exe) || !File.Exists(settings.FF7Exe))
             {
                 Logger.Info("FF7 Exe path is empty or ff7.exe is missing. Auto detecting paths ...");
 
@@ -435,24 +440,24 @@ namespace SeventhHeaven.ViewModels
 
                 if (foundVersion != FF7Version.Unknown)
                 {
-                    Sys.Settings.FF7Exe = Path.Combine(ff7, "FF7.exe");
-                    Sys.Settings.AaliFolder = Path.Combine(ff7, "mods", @"Textures");
-                    Sys.Settings.LibraryLocation = Path.Combine(ff7, "mods", @"7th Heaven");
-                    Sys.Settings.MovieFolder = Path.Combine(ff7, "data", @"movies");
+                    settings.FF7Exe = Path.Combine(ff7, "FF7.exe");
+                    settings.AaliFolder = Path.Combine(ff7, "mods", @"Textures");
+                    settings.LibraryLocation = Path.Combine(ff7, "mods", @"7th Heaven");
+                    settings.MovieFolder = Path.Combine(ff7, "data", @"movies");
 
-                    LogAndCreateFolderIfNotExists(Sys.Settings.LibraryLocation);
-                    LogAndCreateFolderIfNotExists(Sys.Settings.MovieFolder);
-                    LogAndCreateFolderIfNotExists(Sys.Settings.AaliFolder);
+                    LogAndCreateFolderIfNotExists(settings.LibraryLocation);
+                    LogAndCreateFolderIfNotExists(settings.MovieFolder);
+                    LogAndCreateFolderIfNotExists(settings.AaliFolder);
 
 
                     // copy ff7.exe to install path if not found since Steam & Re-Release installation does not provide a ff7.exe
-                    if (!File.Exists(Sys.Settings.FF7Exe) && Path.GetFileName(Sys.Settings.FF7Exe).Equals("ff7.exe", StringComparison.InvariantCultureIgnoreCase))
+                    if (!File.Exists(settings.FF7Exe) && Path.GetFileName(settings.FF7Exe).Equals("ff7.exe", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        Logger.Info($"Copying ff7.exe from {Sys.PathToProvidedExe} to {Sys.Settings.FF7Exe}");
+                        Logger.Info($"Copying ff7.exe from {Sys.PathToProvidedExe} to {settings.FF7Exe}");
 
                         try
                         {
-                            File.Copy(Path.Combine(Sys.PathToProvidedExe, "ff7.exe"), Sys.Settings.FF7Exe, true);
+                            File.Copy(Path.Combine(Sys.PathToProvidedExe, "ff7.exe"), settings.FF7Exe, true);
                             Logger.Info($"\tcopied succesfully.");
                         }
                         catch (Exception ex)

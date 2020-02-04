@@ -14,7 +14,7 @@
         Closed="Window_Closed"
         Height="600" Width="800"
         ResizeMode="CanResize"
-        MinHeight="400" MinWidth="600">
+        MinHeight="400" MinWidth="625">
     <Window.Resources>
 
         <DataTemplate x:Key="optionItem">
@@ -71,8 +71,11 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.25*"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
         <GroupBox Header=" Options "
@@ -89,6 +92,7 @@
         <GroupBox Header=" Configure "
                   Background="{DynamicResource SecondaryAppBackground}"
                   Grid.Column="1"
+                  Grid.ColumnSpan="4"
                   Margin="3,2,5,5">
 
             <Grid>
@@ -177,27 +181,27 @@
         </cls:ButtonWithImage>
 
         <Button x:Name="btnReset"
-                Grid.Row="4"
-                Grid.Column="1"
+                Grid.Row="1"
+                Grid.Column="2"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
-                Margin="0,0,175,5"
+                Margin="0,0,0,5"
                 Click="btnReset_Click"
                 Content="Reset to Mod Defaults" />
 
         <Button x:Name="btnOk"
-                Grid.Row="4"
-                Grid.Column="1"
+                Grid.Row="1"
+                Grid.Column="3"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
-                Margin="0,0,90,5"
+                Margin="0,0,0,5"
                 Width="85"
                 Click="btnOk_Click"
                 Content="Save" />
 
         <Button x:Name="btnCancel"
-                Grid.Row="4"
-                Grid.Column="1"
+                Grid.Row="1"
+                Grid.Column="4"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
                 Margin="0,0,5,5"

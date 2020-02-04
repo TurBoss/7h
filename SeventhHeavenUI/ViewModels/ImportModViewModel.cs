@@ -32,7 +32,6 @@ namespace SeventhHeaven.ViewModels
         private string _pathToModFolderInput;
         private string _pathToBatchFolderInput;
         private string _helpText;
-        private string _modNameInput;
         private int _selectedTabIndex;
         private bool _isImporting;
         private int _progressValue;
@@ -165,7 +164,7 @@ namespace SeventhHeaven.ViewModels
             }
             else if ((ImportTabIndex)SelectedTabIndex == ImportTabIndex.FromFolder)
             {
-                HelpText = "Select a folder that contain mod files. The mod file(s) will be copied into the library folder";
+                HelpText = "Select a folder that contains mod files. The mod file(s) will be copied into the library folder.";
             }
             else
             {
@@ -208,13 +207,13 @@ namespace SeventhHeaven.ViewModels
         {
             if (string.IsNullOrWhiteSpace(PathToIroArchiveInput))
             {
-                MessageDialogWindow.Show("Enter a path to a .iro archive file", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show("Enter a path to an .iro file.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
             if (!File.Exists(PathToIroArchiveInput))
             {
-                MessageDialogWindow.Show(".iro archive file does not exist", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show(".iro file does not exist.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
@@ -233,7 +232,7 @@ namespace SeventhHeaven.ViewModels
             catch (Exception e)
             {
                 Logger.Error(e);
-                MessageDialogWindow.Show("Failed to import mod. The error has been logged", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show("Failed to import mod. The error has been logged.", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
             finally
@@ -260,7 +259,7 @@ namespace SeventhHeaven.ViewModels
 
             if (!Directory.Exists(PathToModFolderInput))
             {
-                MessageDialogWindow.Show("Directory does not exist", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show("Directory does not exist.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
@@ -279,7 +278,7 @@ namespace SeventhHeaven.ViewModels
             catch (Exception e)
             {
                 Logger.Error(e);
-                MessageDialogWindow.Show("Failed to import mod. The error has been logged", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show("Failed to import mod. The error has been logged.", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
             finally
@@ -292,13 +291,13 @@ namespace SeventhHeaven.ViewModels
         {
             if (string.IsNullOrWhiteSpace(PathToBatchFolderInput))
             {
-                MessageDialogWindow.Show("Enter a path to a folder containing .iro mod files and/or mod folders", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show("Enter a path to a folder containing .iro files and/or mod folders.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
             if (!Directory.Exists(PathToBatchFolderInput))
             {
-                MessageDialogWindow.Show("Directory does not exist", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show("Directory does not exist.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
@@ -331,7 +330,7 @@ namespace SeventhHeaven.ViewModels
             catch (Exception e)
             {
                 Logger.Error(e);
-                MessageDialogWindow.Show("Failed to import mod(s). The error has been logged", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show("Failed to import mod(s). The error has been logged.", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
             finally

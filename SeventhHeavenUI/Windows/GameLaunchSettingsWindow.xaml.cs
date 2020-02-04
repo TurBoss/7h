@@ -243,5 +243,10 @@ namespace SeventhHeaven.Windows
 
             ViewModel.ChangeProgramOrder((lstPrograms.SelectedItem as ProgramToRunViewModel), (lstPrograms.Items.Count - 1) - lstPrograms.SelectedIndex);
         }
+
+        private void btnDefaults_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ResetToDefaults();
+        }
     }
 }
