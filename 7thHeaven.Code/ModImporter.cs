@@ -14,7 +14,73 @@ namespace _7thHeaven.Code
 
         public void Import(string source, string name, bool iroMode, bool noCopy)
         {
-            Mod m = new Mod()
+            Mod m = ParseModXmlFromSource(source); // this will increment the progress changed value up to 40%
+
+            if (string.IsNullOrWhiteSpace(m.Name))
+            {
+                m.Name = name;
+            }
+
+            // validate mod with same ID doesn't exist in library
+            InstalledItem existingItem = Sys.Library.GetItem(m.ID);
+            if (existingItem != null)
+            {
+                throw new DuplicateModException($"A mod ({existingItem.CachedDetails.Name}) with the same ID already exists in your library.");
+            }
+
+            string copyLocation;
+            if (noCopy)
+                copyLocation = Path.GetFileName(source);
+            else
+                copyLocation = String.Format("{0}_{1}", m.ID, name);
+
+            if (!iroMode)
+            {
+                if (!noCopy)
+                {
+                    int i = 1;
+                    string[] allFiles = Directory.GetFiles(source, "*", SearchOption.AllDirectories);
+                    foreach (string file in allFiles)
+                    {
+                        string part = file.Substring(source.Length).Trim('\\', '/');
+                        string dest = Path.Combine(Sys.Settings.LibraryLocation, copyLocation, part);
+                        Directory.CreateDirectory(Path.GetDirectoryName(dest));
+                        File.Copy(file, dest, true);
+
+                        double newProgress = 45.0 + (((double)i / allFiles.Length) * 45); // start at 45 and eventually increment to 90 (i.e. 45 + 45 = 90)
+                        RaiseProgressChanged($"Copying files from folder {i} / {allFiles.Length}", newProgress);
+                        i++;
+                    }
+                }
+            }
+            else
+            {
+                if (!noCopy)
+                {
+                    RaiseProgressChanged("Copying .iro file to library", 75);
+                    copyLocation += ".iro";
+                    File.Copy(source, Path.Combine(Sys.Settings.LibraryLocation, copyLocation), true);
+                }
+            }
+
+            RaiseProgressChanged("Finalizing import", 95);
+
+            Sys.Library.AddInstall(new InstalledItem()
+            {
+                CachedDetails = m,
+                CachePreview = String.Empty,
+                ModID = m.ID,
+                UpdateType = UpdateType.Ignore,
+                Versions = new List<InstalledVersion>() { new InstalledVersion() { VersionDetails = m.LatestVersion, InstalledLocation = copyLocation } },
+            });
+
+            Sys.ActiveProfile.AddItem(new ProfileItem() { ModID = m.ID, Name = m.Name, Settings = new List<ProfileSetting>(), IsModActive = false });
+            RaiseProgressChanged("Import complete", 100);
+        }
+
+        private Mod ParseModXmlFromSource(string sourceFileOrFolder)
+        {
+            Mod parsedMod = new Mod()
             {
                 Author = String.Empty,
                 Description = "Imported mod",
@@ -22,7 +88,7 @@ namespace _7thHeaven.Code
                 ID = Guid.NewGuid(),
                 Link = String.Empty,
                 Tags = new List<string>(),
-                Name = name,
+                Name = "",
                 LatestVersion = new ModVersion()
                 {
                     CompatibleGameVersions = GameVersions.All,
@@ -34,74 +100,65 @@ namespace _7thHeaven.Code
                 }
             };
 
-            string location;
-            if (noCopy)
-                location = Path.GetFileName(source);
-            else
-                location = String.Format("{0}_{1}", m.ID, name);
+            if (string.IsNullOrWhiteSpace(sourceFileOrFolder))
+            {
+                return parsedMod;
+            }
 
+            if (!File.Exists(sourceFileOrFolder) && !Directory.Exists(sourceFileOrFolder))
+            {
+                return parsedMod;
+            }
+
+            bool isIroFile = sourceFileOrFolder.EndsWith(".iro");
             System.Xml.XmlDocument doc = null;
             Func<string, byte[]> getData = null;
-            if (!iroMode)
+            _7thWrapperLib.IrosArc arc = null;
+
+            if (isIroFile)
             {
-                if (!noCopy)
+                RaiseProgressChanged("Getting mod.xml data from .iro", 10);
+
+                arc = new _7thWrapperLib.IrosArc(sourceFileOrFolder, patchable: false, (i, fileCount) =>
                 {
-                    int i = 0;
-                    string[] allFiles = Directory.GetFiles(source, "*", SearchOption.AllDirectories);
-                    foreach (string file in allFiles)
-                    {
-                        string part = file.Substring(source.Length).Trim('\\', '/');
-                        string dest = Path.Combine(Sys.Settings.LibraryLocation, location, part);
-                        Directory.CreateDirectory(Path.GetDirectoryName(dest));
-                        File.Copy(file, dest, true);
-
-                        RaiseProgressChanged($"Copying files from folder {i} / {allFiles.Length}", ((double)i / allFiles.Length) * 50);
-                        i++;
-                    }
-                }
-                string mx = Path.Combine(Sys.Settings.LibraryLocation, location, "mod.xml");
-
-
-                RaiseProgressChanged("Getting mod.xml data from file", 70);
-                if (File.Exists(mx))
-                {
-                    doc = new System.Xml.XmlDocument();
-                    doc.Load(mx);
-                }
-
-                getData = s =>
-                {
-                    string file = Path.Combine(Sys.Settings.LibraryLocation, location, s);
-                    if (File.Exists(file)) return File.ReadAllBytes(file);
-                    return null;
-                };
-            }
-            else
-            {
-                if (!noCopy)
-                {
-                    RaiseProgressChanged("Copying .iro file to library", 50);
-                    location += ".iro";
-                    File.Copy(source, Path.Combine(Sys.Settings.LibraryLocation, location), true);
-                }
-
-
-                RaiseProgressChanged("Getting mod.xml data from .iro", 60);
-                var arc = new _7thWrapperLib.IrosArc(source, patchable: false, (i, fileCount) => 
-                {
-                    RaiseProgressChanged($"Scanning .iro archive files {i} / {fileCount}", ((double) i / fileCount) * 70);
+                    double newProgress = 10.0 + ((double)i / fileCount) * 30.0;
+                    RaiseProgressChanged($"Scanning .iro archive files {i} / {fileCount}", newProgress);
                 });
+
                 if (arc.HasFile("mod.xml"))
                 {
                     doc = new System.Xml.XmlDocument();
                     doc.Load(arc.GetData("mod.xml"));
                 }
-                getData = s => arc.HasFile(s) ? arc.GetBytes(s) : null;
+
+                getData = s =>
+                {
+                    return arc.HasFile(s) ? arc.GetBytes(s) : null;
+                };
             }
+            else
+            {
+                string pathToModXml = Path.Combine(sourceFileOrFolder, "mod.xml");
+
+                RaiseProgressChanged("Getting mod.xml data from file", 10);
+                if (File.Exists(pathToModXml))
+                {
+                    doc = new System.Xml.XmlDocument();
+                    doc.Load(pathToModXml);
+                }
+
+                getData = s =>
+                {
+                    string file = Path.Combine(sourceFileOrFolder, s);
+                    if (File.Exists(file)) return File.ReadAllBytes(file);
+                    return null;
+                };
+            }
+
 
             if (doc != null)
             {
-                RaiseProgressChanged("Parsing information from mod.xml", 90);
+                RaiseProgressChanged("Parsing information from mod.xml", 40);
 
                 //If mod.xml contains an ID GUID, then use that instead of generating random one
                 string modidstr = doc.SelectSingleNode("/ModInfo/ID").NodeTextS();
@@ -109,36 +166,31 @@ namespace _7thHeaven.Code
                 {
                     try
                     {
-                        m.ID = new Guid(modidstr);
+                        parsedMod.ID = new Guid(modidstr);
                     }
                     catch (Exception e)
                     {
                         Sys.Message(new WMessage("Invalid GUID found for Mod ID ... Using random guid.", WMessageLogLevel.LogOnly, e));
-                        m.ID = Guid.NewGuid();
+                        parsedMod.ID = Guid.NewGuid();
                     }
                 }
 
-                m.Name = doc.SelectSingleNode("/ModInfo/Name").NodeTextS();
+                parsedMod.Name = doc.SelectSingleNode("/ModInfo/Name").NodeTextS();
 
-                if (string.IsNullOrWhiteSpace(m.Name))
-                {
-                    m.Name = name;
-                }
-
-                m.Author = doc.SelectSingleNode("/ModInfo/Author").NodeTextS();
-                m.Link = doc.SelectSingleNode("/ModInfo/Link").NodeTextS();
-                m.Description = doc.SelectSingleNode("/ModInfo/Description").NodeTextS();
-                m.Category = doc.SelectSingleNode("/ModInfo/Category").NodeTextS();
-                m.LatestVersion.ReleaseNotes = doc.SelectSingleNode("/ModInfo/ReleaseNotes").NodeTextS();
+                parsedMod.Author = doc.SelectSingleNode("/ModInfo/Author").NodeTextS();
+                parsedMod.Link = doc.SelectSingleNode("/ModInfo/Link").NodeTextS();
+                parsedMod.Description = doc.SelectSingleNode("/ModInfo/Description").NodeTextS();
+                parsedMod.Category = doc.SelectSingleNode("/ModInfo/Category").NodeTextS();
+                parsedMod.LatestVersion.ReleaseNotes = doc.SelectSingleNode("/ModInfo/ReleaseNotes").NodeTextS();
 
                 if (DateTime.TryParse(doc.SelectSingleNode("/ModInfo/ReleaseDate").NodeTextS(), out DateTime parsedDate))
                 {
-                    m.LatestVersion.ReleaseDate = parsedDate;
+                    parsedMod.LatestVersion.ReleaseDate = parsedDate;
                 }
 
                 if (decimal.TryParse(doc.SelectSingleNode("/ModInfo/Version").NodeTextS().Replace(',', '.'), out decimal ver))
                 {
-                    m.LatestVersion.Version = ver;
+                    parsedMod.LatestVersion.Version = ver;
                 }
 
                 var pv = doc.SelectSingleNode("/ModInfo/PreviewFile");
@@ -148,27 +200,19 @@ namespace _7thHeaven.Code
                     byte[] data = getData(pv.InnerText);
                     if (data != null)
                     {
-                        string url = "iros://Preview/Auto/" + m.ID.ToString();
-                        m.LatestVersion.PreviewImage = url;
+                        string url = "iros://Preview/Auto/" + parsedMod.ID.ToString();
+                        parsedMod.LatestVersion.PreviewImage = url;
                         Sys.ImageCache.InsertManual(url, data);
                     }
                 }
             }
 
-
-            RaiseProgressChanged("Finalizing import", 95);
-
-            Sys.Library.AddInstall(new InstalledItem()
+            if (arc != null)
             {
-                CachedDetails = m,
-                CachePreview = String.Empty,
-                ModID = m.ID,
-                UpdateType = UpdateType.Ignore,
-                Versions = new List<InstalledVersion>() { new InstalledVersion() { VersionDetails = m.LatestVersion, InstalledLocation = location } },
-            });
+                arc.Dispose();
+            }
 
-            Sys.ActiveProfile.AddItem(new ProfileItem() { ModID = m.ID, Name = m.Name, Settings = new List<ProfileSetting>(), IsModActive = false });
-            RaiseProgressChanged("Import complete", 100);
+            return parsedMod;
         }
 
         public static void ImportMod(string source, string name, bool iroMode, bool noCopy)

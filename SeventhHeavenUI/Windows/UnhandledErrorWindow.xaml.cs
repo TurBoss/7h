@@ -43,6 +43,7 @@ namespace SeventhHeaven.Windows
         public UnhandledErrorWindow()
         {
             InitializeComponent();
+            txtMessage.MaxLines = int.MaxValue;
         }
 
         public UnhandledErrorWindow(string exceptionMessage)

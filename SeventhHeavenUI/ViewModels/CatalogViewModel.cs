@@ -138,7 +138,7 @@ It may not work properly unless you find and install the requirements.";
             Dictionary<string, int> subscriptionOrder = new Dictionary<string, int>();
             for (int i = 0; i < Sys.Settings.Subscriptions.Count; i++)
             {
-                subscriptionOrder[Sys.Settings.Subscriptions[i].Name] = i;
+                subscriptionOrder[Sys.Settings.Subscriptions[i].Url] = i;
             }
 
             if (String.IsNullOrEmpty(searchText))
@@ -157,10 +157,7 @@ It may not work properly unless you find and install the requirements.";
                     {
                         return FilterItemViewModel.FilterByTags(m, tags);
                     }
-                }).OrderBy(k => subscriptionOrder[k.SourceCatalogName])
-                  .ThenBy(k => k.Category)
-                  .ThenBy(k => k.Name)
-                  .ToList();
+                }).ToList();
             }
             else
             {
@@ -184,15 +181,18 @@ It may not work properly unless you find and install the requirements.";
                     {
                         return isRelevant;
                     }
-                }).OrderBy(k => subscriptionOrder[k.SourceCatalogName])
-                  .ThenBy(a => a.Category)
-                  .ThenBy(a => a.Name)
-                  .ToList();
+                }).ToList();
             }
 
             List<CatalogModItemViewModel> newList = new List<CatalogModItemViewModel>();
 
-            foreach (Mod m in results)
+            foreach (Mod m in results.OrderBy(k =>
+                                        {
+                                            subscriptionOrder.TryGetValue(k.SourceCatalogUrl, out int sortOrder);
+                                            return sortOrder;
+                                        })
+                                     .ThenBy(k => k.Category)
+                                     .ThenBy(k => k.Name))
             {
                 CatalogModItemViewModel item = new CatalogModItemViewModel(m);
                 newList.Add(item);
@@ -320,12 +320,12 @@ It may not work properly unless you find and install the requirements.";
                     return;
                 }
 
-                foreach (string subscribe in Sys.Settings.SubscribedUrls.ToArray())
+                foreach (string subUrl in Sys.Settings.SubscribedUrls.ToArray())
                 {
-                    Subscription sub = Sys.Settings.Subscriptions.Find(s => s.Url.Equals(subscribe, StringComparison.InvariantCultureIgnoreCase));
+                    Subscription sub = Sys.Settings.Subscriptions.Find(s => s.Url.Equals(subUrl, StringComparison.InvariantCultureIgnoreCase));
                     if (sub == null)
                     {
-                        sub = new Subscription() { Url = subscribe, FailureCount = 0, LastSuccessfulCheck = DateTime.MinValue };
+                        sub = new Subscription() { Url = subUrl, FailureCount = 0, LastSuccessfulCheck = DateTime.MinValue };
                         Sys.Settings.Subscriptions.Add(sub);
                     }
 
@@ -336,7 +336,7 @@ It may not work properly unless you find and install the requirements.";
                         string uniqueFileName = $"cattemp{Path.GetRandomFileName()}.xml"; // save temp catalog update to unique filename so multiple catalog updates can download async
                         string path = Path.Combine(Sys.SysFolder, "temp", uniqueFileName);
 
-                        Sys.Downloads.Download(subscribe, path, $"Checking catalog {subscribe}", new Install.InstallProcedureCallback(e =>
+                        Sys.Downloads.Download(subUrl, path, $"Checking catalog {subUrl}", new Install.InstallProcedureCallback(e =>
                         {
                             bool success = (e.Error == null && e.Cancelled == false);
                             subUpdateCount++;
@@ -354,7 +354,11 @@ It may not work properly unless you find and install the requirements.";
                                         sourceCatalogName = c.Name;
                                     }
 
-                                    c.Mods.ForEach(m => m.SourceCatalogName = sourceCatalogName);
+                                    c.Mods.ForEach(m =>
+                                    {
+                                        m.SourceCatalogName = sourceCatalogName;
+                                        m.SourceCatalogUrl = subUrl;
+                                    });
 
 
                                     lock (Sys.CatalogLock) // put a lock on the Catalog so multiple threads can only merge one at a time
@@ -367,7 +371,7 @@ It may not work properly unless you find and install the requirements.";
                                         }
                                     }
 
-                                    Sys.Message(new WMessage() { Text = $"Updated catalog from {subscribe}" });
+                                    Sys.Message(new WMessage() { Text = $"Updated catalog from {subUrl}" });
 
                                     sub.LastSuccessfulCheck = DateTime.Now;
                                     sub.FailureCount = 0;
@@ -382,7 +386,7 @@ It may not work properly unless you find and install the requirements.";
                                     Logger.Error(ex);
 
                                     sub.FailureCount++;
-                                    Sys.Message(new WMessage() { Text = $"Failed to load subscription {subscribe}: {ex.Message}" });
+                                    Sys.Message(new WMessage() { Text = $"Failed to load subscription {subUrl}: {ex.Message}" });
                                 }
                                 finally
                                 {
@@ -402,7 +406,7 @@ It may not work properly unless you find and install the requirements.";
                             // reload the UI list of catalog mods and scan for any mod updates once all subs have been attempted to download
                             bool isDoneDownloading = false;
 
-                            lock(countLock)
+                            lock (countLock)
                             {
                                 isDoneDownloading = (subUpdateCount == subTotalCount);
                             }
@@ -418,7 +422,7 @@ It may not work properly unless you find and install the requirements.";
                     }
                     else
                     {
-                        lock(countLock)
+                        lock (countLock)
                         {
                             subTotalCount -= 1; // This catalog does not have to be updated
                         }
@@ -597,7 +601,7 @@ It may not work properly unless you find and install the requirements.";
 
                 case LocationType.GDrive:
                     var gd = new GDrive();
-                    newDownload.PerformCancel = () => 
+                    newDownload.PerformCancel = () =>
                     {
                         gd.CancelAsync();
                         newDownload.OnCancel?.Invoke();

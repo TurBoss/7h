@@ -514,6 +514,7 @@
         <Setter Property="Background" Value="{DynamicResource SecondaryAppBackground}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource PrimaryControlMouseOver}"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
+        <Setter Property="MaxLines" Value="1"/>
     </Style>
 
     <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource PrimaryTextBoxStyle}"/>

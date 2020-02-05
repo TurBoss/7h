@@ -29,7 +29,6 @@ namespace SeventhHeaven.ViewModels
         private bool _importLibraryFolderAuto;
         private bool _checkForUpdatesAuto;
         private bool _bypassCompatibilityLocks;
-        private string _extraFoldersInput;
         private bool _openIrosLinks;
         private bool _openModFilesWith7H;
         private bool _warnAboutModCode;
@@ -39,10 +38,6 @@ namespace SeventhHeaven.ViewModels
         private string _newUrlText;
         private string _newNameText;
         private bool _isSubscriptionPopupOpen;
-        private ObservableCollection<ProgramToRunViewModel> _programList;
-        private string _newProgramPathText;
-        private string _newProgramArgsText;
-        private bool _isProgramPopupOpen;
         private bool _isResolvingName;
         private string _subscriptionNameHintText;
         private bool _subscriptionNameTextBoxIsEnabled;
@@ -343,7 +338,7 @@ namespace SeventhHeaven.ViewModels
             }
             set
             {
-                _newUrlText = value;
+                _newUrlText = value.Trim(new char[] { '\n', ' ', '\r' });
                 NotifyPropertyChanged();
             }
         }
@@ -356,7 +351,7 @@ namespace SeventhHeaven.ViewModels
             }
             set
             {
-                _newNameText = value;
+                _newNameText = value.Trim(new char[] { '\n', ' ', '\r' });
                 NotifyPropertyChanged();
             }
         }
@@ -970,6 +965,7 @@ namespace SeventhHeaven.ViewModels
             }
 
             SubscriptionList.Move(currentIndex, newIndex);
+            SubscriptionsChanged = true;
         }
 
         internal void RemoveSelectedSubscription(SubscriptionSettingViewModel selected)

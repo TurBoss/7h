@@ -27,6 +27,7 @@ namespace SeventhHeaven.Windows
             this.DataContext = ViewModel;
 
             btnOk.Visibility = Visibility.Collapsed;
+            txtLog.MaxLines = int.MaxValue;
         }
 
         public static GameLaunchViewModel Show(bool variableDump, bool debugLogging, bool noMods = false)

@@ -419,6 +419,11 @@ namespace Iros._7th.Workshop
                                 Sys.Message(new WMessage() { Text = $"Could not import .iro mod {Path.GetFileNameWithoutExtension(iro)}, file is corrupt" });
                                 continue;
                             }
+                            catch (Exception ex)
+                            {
+                                Sys.Message(new WMessage() { Text = "Mod " + name + " failed to import: " + ex.ToString() });
+                                continue;
+                            }
 
                             Sys.Message(new WMessage() { Text = $"Auto imported mod {name}" });
                         }

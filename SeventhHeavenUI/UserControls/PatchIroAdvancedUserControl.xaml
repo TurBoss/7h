@@ -168,6 +168,7 @@
                  Grid.Row="4"                 
                  Text="{Binding FilesToDeleteText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  AcceptsReturn="True"
+                 MaxLines="1000"
                  VerticalScrollBarVisibility="Auto"
                  HorizontalScrollBarVisibility="Auto"
                  HorizontalAlignment="Stretch"

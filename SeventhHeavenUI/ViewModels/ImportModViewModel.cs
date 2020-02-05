@@ -196,6 +196,11 @@ namespace SeventhHeaven.ViewModels
                         break;
                 }
 
+                if (!didImport)
+                {
+                    UpdateHelpText(); // reset the help text since the window will stay open on failure
+                }
+
                 IsImporting = false;
                 return didImport;
             });
@@ -229,6 +234,12 @@ namespace SeventhHeaven.ViewModels
                 Sys.Message(new WMessage($"Successfully imported {fileName}!"));
                 return true;
             }
+            catch (DuplicateModException de)
+            {
+                Logger.Error(de);
+                MessageDialogWindow.Show($"Can not import mod. {de.Message}", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
             catch (Exception e)
             {
                 Logger.Error(e);
@@ -246,6 +257,7 @@ namespace SeventhHeaven.ViewModels
         {
             HelpText = message;
             ProgressValue = (int)percentComplete;
+            Logger.Info($"Mod import progress: {message} | {percentComplete:0.00}%");
             App.ForceUpdateUI();
         }
 
@@ -274,6 +286,12 @@ namespace SeventhHeaven.ViewModels
 
                 Sys.Message(new WMessage($"Successfully imported {folderName}!", true));
                 return true;
+            }
+            catch (DuplicateModException de)
+            {
+                Logger.Error(de);
+                MessageDialogWindow.Show($"Can not import mod. {de.Message}", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
             }
             catch (Exception e)
             {
@@ -326,6 +344,12 @@ namespace SeventhHeaven.ViewModels
 
                 Sys.Message(new WMessage($"Successfully imported {modImportCount} mod(s)!", true));
                 return true;
+            }
+            catch (DuplicateModException de)
+            {
+                Logger.Error(de);
+                MessageDialogWindow.Show($"Can not import mod(s). {de.Message}", "Import Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
             }
             catch (Exception e)
             {
