@@ -208,8 +208,8 @@ namespace SeventhHeaven.Classes
             }
 
 
-            Instance.RaiseProgressChanged("Verifying game driver plugins/shaders folders exist ...");
-            converter.CopyMissingPluginsAndShaders();
+            Instance.RaiseProgressChanged("Verifying game driver shaders folders exist ...");
+            converter.CopyMissingShaders();
 
 
             Instance.RaiseProgressChanged("Verifying ff7 exe ...");
@@ -1267,8 +1267,8 @@ namespace SeventhHeaven.Classes
 
             if (Sys.Settings.GameLaunchSettings.SelectedRenderer == 3)
             {
-                SetValueIfChanged(graphicsKeyPath, "DriverPath", "7H_GameDriver.fgd");
-                SetValueIfChanged(graphicsVirtualKeyPath, "DriverPath", "7H_GameDriver.fgd");
+                SetValueIfChanged(graphicsKeyPath, "DriverPath", "7H_GameDriver.dll");
+                SetValueIfChanged(graphicsVirtualKeyPath, "DriverPath", "7H_GameDriver.dll");
 
                 SetValueIfChanged(graphicsKeyPath, "Mode", 2, RegistryValueKind.DWord);
                 SetValueIfChanged(graphicsVirtualKeyPath, "Mode", 2, RegistryValueKind.DWord);

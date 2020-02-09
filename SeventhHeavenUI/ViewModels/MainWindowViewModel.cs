@@ -1153,13 +1153,13 @@ They will be automatically turned off.";
             createWindow.ShowDialog();
         }
 
-        internal void ShowGLConfigWindow()
+        internal void ShowGameDriverConfigWindow()
         {
-            string spec = Path.Combine(Sys._7HFolder, "ConfigSpec-FF7OpenGL.xml");
-            string cfg = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "7H_GameDriver.cfg");
+            string uiXml = Path.Combine(Sys._7HFolder, "7H_GameDriver_UI.xml");
+            string driverCfg = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "7H_GameDriver.cfg");
 
             ConfigureGLWindow gLWindow = new ConfigureGLWindow() { WindowStartupLocation = WindowStartupLocation.CenterScreen };
-            gLWindow.Init(spec, cfg);
+            gLWindow.Init(uiXml, driverCfg);
             gLWindow.ShowDialog();
         }
 

@@ -129,7 +129,7 @@ namespace SeventhHeavenUI
                     }
                     catch (Exception ex)
                     {
-                        Sys.Message(new WMessage() { Text = "Mod " + irofilenoext + " failed to import: " + ex.ToString() });
+                        Sys.Message(new WMessage("Mod " + irofilenoext + " failed to import: " + ex.ToString(), true));
                         continue;
                     }
 
@@ -334,7 +334,7 @@ namespace SeventhHeavenUI
 
         private void menuItemAaliSettings_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.ShowGLConfigWindow();
+            ViewModel.ShowGameDriverConfigWindow();
         }
 
         private void menuPlayWithMods_Click(object sender, RoutedEventArgs e)

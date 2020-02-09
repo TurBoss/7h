@@ -498,7 +498,9 @@ namespace SeventhHeaven.Classes
                 string fullPath = Path.Combine(InstallPath, file);
                 if (File.Exists(fullPath))
                 {
-                    File.Move(fullPath, Path.Combine(pathToBackup, file));
+                    string destPath = Path.Combine(pathToBackup, file);
+                    Directory.CreateDirectory(Path.GetDirectoryName(destPath));
+                    File.Move(fullPath, destPath);
                 }
             }
 
@@ -1175,31 +1177,16 @@ namespace SeventhHeaven.Classes
         }
 
         /// <summary>
-        /// Checks 7H_GameDriver.fgd is up to date and matches file in Resources/Game Driver/ folder.
+        /// Checks 7H_GameDriver.dll is up to date and matches file in Resources/Game Driver/ folder.
         /// If files are different then game driver files are copied to ff7 install path
         /// </summary>
         /// <returns>returns false if error occurred</returns>
         internal bool InstallLatestGameDriver(string backupFolderPath)
         {
-            string pathToCurrentFile = Path.Combine(InstallPath, "7H_GameDriver.fgd");
-            string pathToLatestFile = Path.Combine(Sys.PathToGameDriverFolder, "7H_GameDriver.fgd");
+            string pathToCurrentFile = Path.Combine(InstallPath, "7H_GameDriver.dll");
+            string pathToLatestFile = Path.Combine(Sys.PathToGameDriverFolder, "7H_GameDriver.dll");
             string pathToLatestCfg = Path.Combine(Sys.PathToGameDriverFolder, "7H_GameDriver.cfg");
             string pathToCurrentCfg = Path.Combine(InstallPath, "7H_GameDriver.cfg");
-
-            // copy default .cfg if it is missing
-            if (!File.Exists(pathToCurrentCfg))
-            {
-                if (File.Exists(pathToLatestCfg))
-                {
-                    SendMessage($"\t7H_GameDriver.cfg file is missing. Copying default from {Sys.PathToGameDriverFolder} ...", NLog.LogLevel.Warn);
-                    File.Copy(pathToLatestCfg, pathToCurrentCfg, true);
-                }
-                else
-                {
-                    SendMessage($"\tcannot create default .cfg due to missing file: {pathToLatestCfg} ...", NLog.LogLevel.Error);
-                    return false;
-                }
-            }
 
             if (!File.Exists(pathToLatestFile))
             {
@@ -1207,9 +1194,17 @@ namespace SeventhHeaven.Classes
                 return true; // return true so it does not halt process
             }
 
-            if (CompareOpenGlDriverVersions(pathToCurrentFile, pathToLatestFile) >= 0)
+            FileVersionInfo currentFileVersion = null;
+            if (File.Exists(pathToCurrentFile))
             {
-                SendMessage("\t7H_GameDriver.fgd file is up to date.");
+                currentFileVersion = FileVersionInfo.GetVersionInfo(pathToCurrentFile);
+            }
+
+            FileVersionInfo latestFileVersion = FileVersionInfo.GetVersionInfo(pathToLatestFile);
+
+            if (currentFileVersion != null && latestFileVersion != null && new Version(currentFileVersion.FileVersion).CompareTo(new Version(latestFileVersion.FileVersion)) >= 0)
+            {
+                SendMessage("\t7H_GameDriver.dll file is up to date.");
                 return true; // file exist and matches what is in /Game Driver folder
             }
 
@@ -1219,7 +1214,7 @@ namespace SeventhHeaven.Classes
                 {
                     Directory.CreateDirectory(backupFolderPath);
                     SendMessage($"\tbacking up existing game driver to {backupFolderPath} ...");
-                    File.Copy(pathToCurrentFile, Path.Combine(backupFolderPath, "7H_GameDriver.fgd"), true);
+                    File.Copy(pathToCurrentFile, Path.Combine(backupFolderPath, "7H_GameDriver.dll"), true);
                 }
 
                 if (File.Exists(pathToCurrentCfg))
@@ -1228,14 +1223,27 @@ namespace SeventhHeaven.Classes
                     SendMessage($"\tbacking up existing game driver .cfg to {backupFolderPath} ...");
                     File.Copy(pathToCurrentCfg, Path.Combine(backupFolderPath, "7H_GameDriver.cfg"), true);
                 }
+                else
+                {
+                    // copy default .cfg if it is missing
+                    if (File.Exists(pathToLatestCfg))
+                    {
+                        SendMessage($"\t7H_GameDriver.cfg file is missing. Copying default from {Sys.PathToGameDriverFolder} ...", NLog.LogLevel.Warn);
+                        File.Copy(pathToLatestCfg, pathToCurrentCfg, true);
+                    }
+                    else
+                    {
+                        SendMessage($"\tcannot create default .cfg due to missing file: {pathToLatestCfg} ...", NLog.LogLevel.Error);
+                        return false;
+                    }
+                }
 
-                SendMessage($"\tbacking up existing plugins folder to {backupFolderPath} ...");
-                Directory.CreateDirectory(Path.Combine(backupFolderPath, "plugins"));
-                FileUtils.CopyDirectoryRecursively(Path.Combine(InstallPath, "plugins"), Path.Combine(backupFolderPath, "plugins"));
-
-                SendMessage($"\tbacking up existing shaders folder to {backupFolderPath} ...");
-                Directory.CreateDirectory(Path.Combine(backupFolderPath, "shaders"));
-                FileUtils.CopyDirectoryRecursively(Path.Combine(InstallPath, "shaders"), Path.Combine(backupFolderPath, "shaders"));
+                if (Directory.Exists(Path.Combine(InstallPath, "shaders")))
+                {
+                    SendMessage($"\tbacking up existing shaders folder to {backupFolderPath} ...");
+                    Directory.CreateDirectory(Path.Combine(backupFolderPath, "shaders"));
+                    FileUtils.CopyDirectoryRecursively(Path.Combine(InstallPath, "shaders"), Path.Combine(backupFolderPath, "shaders"));
+                }
 
                 SendMessage($"\tcopying contents of {Sys.PathToGameDriverFolder} to {InstallPath} ...");
                 FileUtils.CopyDirectoryRecursively(Sys.PathToGameDriverFolder, InstallPath);
@@ -1396,9 +1404,8 @@ namespace SeventhHeaven.Classes
             }
         }
 
-        internal void CopyMissingPluginsAndShaders()
+        internal void CopyMissingShaders()
         {
-            string pathToPlugins = Path.Combine(InstallPath, "plugins");
             string pathToShaders = Path.Combine(InstallPath, "shaders");
             string pathToNoLight = Path.Combine(InstallPath, "shaders", "nolight");
             string pathToNvidia = Path.Combine(InstallPath, "shaders", "ComplexMultiShader_Nvidia");
@@ -1423,13 +1430,7 @@ namespace SeventhHeaven.Classes
                 Directory.CreateDirectory(pathToShaders);
             }
 
-            if (!Directory.Exists(pathToPlugins))
-            {
-                SendMessage("\tmissing plugins folder. Creating directory ...");
-                Directory.CreateDirectory(pathToPlugins);
-            }
-
-            // copy files from plugins and/or shaders folder if files are missing
+            // copy files from shaders folder if files are missing
             string sourcePath = Path.Combine(Sys.PathToGameDriverFolder, "shaders");
             string[] sourceFiles = Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories);
 
@@ -1442,21 +1443,6 @@ namespace SeventhHeaven.Classes
                     SendMessage($"\tmissing shader file: {targetPath}. Copying from {sourcePath} ...");
                     Directory.CreateDirectory(Path.GetDirectoryName(targetPath)); // ensure any missing sub folders are created
                     File.Copy(shaderFile, targetPath, true);
-                }
-            }
-
-
-            sourcePath = Path.Combine(Sys.PathToGameDriverFolder, "plugins");
-            sourceFiles = Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories);
-
-            foreach (string pluginFile in sourceFiles)
-            {
-                string targetPath = pluginFile.Replace(sourcePath, pathToPlugins);
-
-                if (!File.Exists(targetPath))
-                {
-                    SendMessage($"\tmissing plugin file: {targetPath}. Copying from {sourcePath} ...");
-                    File.Copy(pluginFile, targetPath, true);
                 }
             }
         }

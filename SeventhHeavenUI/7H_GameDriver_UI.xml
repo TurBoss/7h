@@ -1,0 +1,589 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ConfigSpec xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <!-- GRAPHICS TAB -->
+  <Setting xsi:type="DropDown">
+    <Group>Graphics</Group>
+    <Name>Window Mode</Name>
+    <Description>Display game in boxed window, or borderless fullscreen.</Description>
+    <Option>
+      <Text>Windowed</Text>
+      <Settings>fullscreen=off</Settings>
+    </Option>
+    <Option>
+      <Text>Fullscreen</Text>
+      <Settings>fullscreen=on</Settings>
+    </Option>
+    <DefaultValue>fullscreen=off</DefaultValue>
+  </Setting>
+  
+  <Setting xsi:type="DropDown">
+    <Group>Graphics</Group>
+    <Name>Aspect Ratio</Name>
+    <Description>Preserve aspect ratio adds black borders as needed to preserve a 4:3 aspect ratio.</Description>
+    <DefaultValue>preserve_aspect=on</DefaultValue>
+    <Option>
+      <Text>Preserve to Fit</Text>
+      <Settings>preserve_aspect=on</Settings>
+    </Option>
+    <Option>
+      <Text>Stretch to Fill</Text>
+      <Settings>preserve_aspect=off</Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>Graphics</Group>
+    <Name>Resolution</Name>
+    <Description>Set the window size (or fullscreen resolution) of FF7. Auto uses game resolution in windowed mode or current desktop resolution in fullscreen mode.</Description>
+    <DefaultValue>window_size_x=1280,window_size_y=720</DefaultValue>
+    <Option>
+      <Text>Auto</Text>
+      <Settings>window_size_x=0,window_size_y = 0</Settings>
+    </Option>
+    <Option>
+      <Text>640x480</Text>
+      <Settings>window_size_x = 640,window_size_y = 480</Settings>
+    </Option>
+    <Option>
+      <Text>800x600</Text>
+      <Settings>window_size_x = 800,window_size_y = 600</Settings>
+    </Option>
+    <Option>
+      <Text>1024x768</Text>
+      <Settings>window_size_x = 1024,window_size_y = 768</Settings>
+    </Option>
+    <Option>
+      <Text>1280x720</Text>
+      <Settings>window_size_x = 1280,window_size_y = 720</Settings>
+    </Option>
+    <Option>
+      <Text>1280x960</Text>
+      <Settings>window_size_x = 1280,window_size_y = 960</Settings>
+    </Option>
+    <Option>
+      <Text>1400x1050</Text>
+      <Settings>window_size_x = 1400,window_size_y = 1050</Settings>
+    </Option>
+    <Option>
+      <Text>1440x1080</Text>
+      <Settings>window_size_x = 1440,window_size_y = 1080</Settings>
+    </Option>
+    <Option>
+      <Text>1600x1200</Text>
+      <Settings>window_size_x = 1600,window_size_y = 1200</Settings>
+    </Option>
+    <Option>
+      <Text>1920x1440</Text>
+      <Settings>window_size_x = 1920,window_size_y = 1440</Settings>
+    </Option>
+    <Option>
+      <Text>2048x1536</Text>
+      <Settings>window_size_x = 2048,window_size_y = 1536</Settings>
+    </Option>
+    <Option>
+      <Text>2560x1920</Text>
+      <Settings>window_size_x = 2560,window_size_y = 1920</Settings>
+    </Option>
+    <Option>
+      <Text>2880x2160</Text>
+      <Settings>window_size_x = 2880,window_size_y = 2160</Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="Checkbox">
+    <Group>Graphics</Group>
+    <Name>Vertical Sync</Name>
+    <Description>Sync the frame rate of the game with the monitor refresh rate. May negatively impact performance or break 60 fps mods. Turn on if you experience screen tearing.</Description>
+    <DefaultValue>enable_vsync=off</DefaultValue>
+    <TrueSetting>enable_vsync=on</TrueSetting>
+    <FalseSetting>enable_vsync=off</FalseSetting>
+  </Setting>
+  
+  <!--RENDERING TAB-->
+  <Setting xsi:type="Checkbox">
+    <Group>Rendering</Group>
+    <Name>Transparent Dialogs</Name>
+    <Description>Make all dialog boxes transparent, same effect as the transparent dialog boxes YAMP patch.</Description>
+    <DefaultValue>transparent_dialogs=on</DefaultValue>
+    <TrueSetting>transparent_dialogs=on</TrueSetting>
+    <FalseSetting>transparent_dialogs=off</FalseSetting>
+  </Setting>
+
+  <Setting xsi:type="Checkbox">
+    <Group>Rendering</Group>
+    <Name>FPS Counter</Name>
+    <Description>Displays the Frames Per Second overlay in the top right corner of the screen.</Description>
+    <DefaultValue>show_fps=off</DefaultValue>
+    <TrueSetting>show_fps=on</TrueSetting>
+    <FalseSetting>show_fps=off</FalseSetting>
+  </Setting>
+
+  <Setting xsi:type="Checkbox">
+    <Group>Rendering</Group>
+    <Name>Skip FMV Frames</Name>
+    <Description>Skip frames in movies when PC is underperforming. May improve performance or help with stuttering on low-end hardware.</Description>
+    <DefaultValue>skip_frames=no</DefaultValue>
+    <TrueSetting>skip_frames=yes</TrueSetting>
+    <FalseSetting>skip_frames=no</FalseSetting>
+  </Setting>
+ 
+  <Setting xsi:type="Checkbox">
+    <Group>Rendering</Group>
+    <Name>Linear Filtering</Name>
+    <Description>May improve low resolution texture quality. Not recommended when using high resolution mods. If you see cyan or purple artifacts on fields, turn this off.</Description>
+    <DefaultValue>linear_filter=off</DefaultValue>
+    <TrueSetting>linear_filter=on</TrueSetting>
+    <FalseSetting>linear_filter=off</FalseSetting>
+  </Setting>
+  
+  <Setting xsi:type="Checkbox">
+    <Group>Rendering</Group>
+    <Name>Post-Processing</Name>
+    <Description>Enable post-processing shaders. Used to apply fullscreen effects.</Description>
+    <DefaultValue>enable_postprocessing=no</DefaultValue>
+    <TrueSetting>enable_postprocessing=yes</TrueSetting>
+    <FalseSetting>enable_postprocessing=no</FalseSetting>
+  </Setting>
+  
+  <Setting xsi:type="DropDown">
+    <Group>Rendering</Group>
+    <Name>Shader Options</Name>
+    <Description>Choose a shader to apply effects. Only effective if Post-Processing is enabled.</Description>
+    <DefaultValue>post_source=shaders/bloom2.post</DefaultValue>
+    <Option>
+      <Text>All - Bloom2</Text>
+      <Settings>post_source=shaders/bloom2.post</Settings>
+    </Option>
+    <Option>
+      <Text>All - Bloom2Dark</Text>
+      <Settings>post_source=shaders/Bloom2Dark.post</Settings>
+    </Option>
+    <Option>
+      <Text>ATI - SmartBloomAdvanced</Text>
+      <Settings>post_source=shaders/SmartBloomAdvanced.post</Settings>
+    </Option>
+    <Option>
+      <Text>ATI - SmartBloomHDR</Text>
+      <Settings>post_source=shaders/SmartBloomHDR.post</Settings>
+    </Option>
+    <Option>
+      <Text>Nvidia - ComplexMultiShader</Text>
+      <Settings>post_source=shaders/ComplexMultiShader_Nvidia/ComplexMultiShader_Nvidia.post</Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>Rendering</Group>
+    <Name>Texture Memory</Name>
+    <Description>Max size of the texture cache to hold in RAM, in megabytes.  Use higher values if you are experiencing texture problems.</Description>
+    <DefaultValue>texture_cache_size=1024</DefaultValue>
+    <Option>
+      <Text>256</Text>
+      <Settings>texture_cache_size=256</Settings>
+    </Option>
+    <Option>
+      <Text>512</Text>
+      <Settings>texture_cache_size=512</Settings>
+    </Option>
+    <Option>
+      <Text>768</Text>
+      <Settings>texture_cache_size=768</Settings>
+    </Option>
+    <Option>
+      <Text>1024 (Recommended)</Text>
+      <Settings>texture_cache_size=1024</Settings>
+    </Option>
+    <Option>
+      <Text>2048</Text>
+      <Settings>texture_cache_size=2048</Settings>
+    </Option>
+  </Setting>
+  
+  <!-- ADVANCED TAB -->
+  <Setting xsi:type="DropDown">
+    <Group>Advanced</Group>
+    <Name>Music Plugin</Name>
+    <Description>Plugin used to play music. 7H VGMstream requires a music mod or set of looping .OGG files in the music\vgmstream folder.</Description>
+    <DefaultValue>music_plugin=plugins/7H_vgmstream_music.fgp</DefaultValue>
+    <Option>
+      <Text>None (MIDI on 1998 version)</Text>
+      <Settings>music_plugin=</Settings>
+    </Option>
+    <Option>
+      <Text>7H VGMstream (Recommended)</Text>
+      <Settings>music_plugin=plugins/7H_vgmstream_music.fgp</Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="Checkbox">
+    <Group>Advanced</Group>
+    <Name>Use Mipmaps</Name>
+    <Description>Use mipmaps (anisotropic filtering) for high-res textures. This can improve performance and image quality, but uses more Texture Memory.</Description>
+    <DefaultValue>use_mipmaps=yes</DefaultValue>
+    <TrueSetting>use_mipmaps=yes</TrueSetting>
+    <FalseSetting>use_mipmaps=no</FalseSetting>
+  </Setting>
+
+  <Setting xsi:type="Checkbox">
+    <Group>Advanced</Group>
+    <Name>Pixel Buffer</Name>
+    <Description>Use pixel buffer objects to speed up texture loading.</Description>
+    <DefaultValue>use_pbo=no</DefaultValue>
+    <TrueSetting>use_pbo=yes</TrueSetting>
+    <FalseSetting>use_pbo=no</FalseSetting>
+  </Setting>
+
+  <Setting xsi:type="Checkbox">
+    <Group>Advanced</Group>
+    <Name>Show Stats</Name>
+    <Description>Displays some real-time debug information on screen.</Description>
+    <DefaultValue>show_stats=off</DefaultValue>
+    <TrueSetting>show_stats=on</TrueSetting>
+    <FalseSetting>show_stats=off</FalseSetting>
+  </Setting>
+
+  <Setting xsi:type="Checkbox">
+    <Group>Advanced</Group>
+    <Name>Texture Cache</Name>
+    <Description>Lossy cache for low-VRAM GPUs. Clear after any change or mod that affects textures.</Description>
+    <DefaultValue>compress_textures=no</DefaultValue>
+    <TrueSetting>compress_textures=yes</TrueSetting>
+    <FalseSetting>compress_textures=no</FalseSetting>
+  </Setting>
+
+  <!--FPS GROUP - NOT IN UI-->
+  
+  <!--<Setting xsi:type="DropDown">
+    <Group>FPS</Group>
+    <Name>Field Framerate</Name>
+    <Description>Choose a framerate for the field.</Description>
+    <DefaultValue>field_framerate=60</DefaultValue>
+    <Option>
+      <Text>15 FPS</Text>
+      <Settings>field_framerate=15</Settings>
+    </Option>
+    <Option>
+      <Text>30 FPS</Text>
+      <Settings>field_framerate=30</Settings>
+    </Option>
+    <Option>
+      <Text>60 FPS</Text>
+      <Settings>field_framerate=60</Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>FPS</Group>
+    <Name>Battle Framerate</Name>
+    <Description>Choose a framerate for battles.</Description>
+    <DefaultValue>battle_framerate=60</DefaultValue>
+    <Option>
+      <Text>15 FPS</Text>
+      <Settings>battle_framerate=15</Settings>
+    </Option>
+    <Option>
+      <Text>30 FPS</Text>
+      <Settings>battle_framerate=30</Settings>
+    </Option>
+    <Option>
+      <Text>60 FPS</Text>
+      <Settings>battle_framerate=60</Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>FPS</Group>
+    <Name>World Map Framerate</Name>
+    <Description>Choose a framerate for the world map.</Description>
+    <DefaultValue>worldmap_framerate=60</DefaultValue>
+    <Option>
+      <Text>15 FPS</Text>
+      <Settings>worldmap_framerate=15</Settings>
+    </Option>
+    <Option>
+      <Text>30 FPS</Text>
+      <Settings>worldmap_framerate=30</Settings>
+    </Option>
+    <Option>
+      <Text>60 FPS</Text>
+      <Settings>worldmap_framerate=60</Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>FPS</Group>
+    <Name>Menu Framerate</Name>
+    <Description>Choose a framerate for the menu.</Description>
+    <DefaultValue>menu_framerate=60</DefaultValue>
+    <Option>
+      <Text>15 FPS</Text>
+      <Settings>menu_framerate=15</Settings>
+    </Option>
+    <Option>
+      <Text>30 FPS</Text>
+      <Settings>menu_framerate=30</Settings>
+    </Option>
+    <Option>
+      <Text>60 FPS</Text>
+      <Settings>menu_framerate=60</Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>FPS</Group>
+    <Name>Chocobo Framerate</Name>
+    <Description>Choose a framerate for the chocobo.</Description>
+    <DefaultValue>chocobo_framerate=60</DefaultValue>
+    <Option>
+      <Text>15 FPS</Text>
+      <Settings>chocobo_framerate=15</Settings>
+    </Option>
+    <Option>
+      <Text>30 FPS</Text>
+      <Settings>chocobo_framerate=30</Settings>
+    </Option>
+    <Option>
+      <Text>60 FPS</Text>
+      <Settings>chocobo_framerate=60</Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>FPS</Group>
+    <Name>Condor Framerate</Name>
+    <Description>Choose a framerate for the condor.</Description>
+    <DefaultValue>condor_framerate=60</DefaultValue>
+    <Option>
+      <Text>15 FPS</Text>
+      <Settings>condor_framerate=15</Settings>
+    </Option>
+    <Option>
+      <Text>30 FPS</Text>
+      <Settings>condor_framerate=30</Settings>
+    </Option>
+    <Option>
+      <Text>60 FPS</Text>
+      <Settings>condor_framerate=60</Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>FPS</Group>
+    <Name>Submarine Framerate</Name>
+    <Description>Choose a framerate for the submarine.</Description>
+    <DefaultValue>submarine_framerate=60</DefaultValue>
+    <Option>
+      <Text>15 FPS</Text>
+      <Settings>submarine_framerate=15</Settings>
+    </Option>
+    <Option>
+      <Text>30 FPS</Text>
+      <Settings>submarine_framerate=30</Settings>
+    </Option>
+    <Option>
+      <Text>60 FPS</Text>
+      <Settings>submarine_framerate=60</Settings>
+    </Option>
+  </Setting>
+
+
+  <Setting xsi:type="DropDown">
+    <Group>FPS</Group>
+    <Name>Gameover Screen Framerate</Name>
+    <Description>Choose a framerate for the gameover screen.</Description>
+    <DefaultValue>gameover_framerate=60</DefaultValue>
+    <Option>
+      <Text>15 FPS</Text>
+      <Settings>gameover_framerate=15</Settings>
+    </Option>
+    <Option>
+      <Text>30 FPS</Text>
+      <Settings>gameover_framerate=30</Settings>
+    </Option>
+    <Option>
+      <Text>60 FPS</Text>
+      <Settings>gameover_framerate=60</Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>FPS</Group>
+    <Name>Credits Screen Framerate</Name>
+    <Description>Choose a framerate for the credits screen.</Description>
+    <DefaultValue>credits_framerate=60</DefaultValue>
+    <Option>
+      <Text>15 FPS</Text>
+      <Settings>credits_framerate=15</Settings>
+    </Option>
+    <Option>
+      <Text>30 FPS</Text>
+      <Settings>credits_framerate=30</Settings>
+    </Option>
+    <Option>
+      <Text>60 FPS</Text>
+      <Settings>credits_framerate=60</Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>FPS</Group>
+    <Name>Snowboard Framerate</Name>
+    <Description>Choose a framerate for the snowboard.</Description>
+    <DefaultValue>snowboard_framerate=60</DefaultValue>
+    <Option>
+      <Text>15 FPS</Text>
+      <Settings>snowboard_framerate=15</Settings>
+    </Option>
+    <Option>
+      <Text>30 FPS</Text>
+      <Settings>snowboard_framerate=30</Settings>
+    </Option>
+    <Option>
+      <Text>60 FPS</Text>
+      <Settings>snowboard_framerate=60</Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>FPS</Group>
+    <Name>Highway Framerate</Name>
+    <Description>Choose a framerate for the highway.</Description>
+    <DefaultValue>highway_framerate=30</DefaultValue>
+    <Option>
+      <Text>15 FPS</Text>
+      <Settings>highway_framerate=15</Settings>
+    </Option>
+    <Option>
+      <Text>30 FPS</Text>
+      <Settings>highway_framerate=30</Settings>
+    </Option>
+    <Option>
+      <Text>60 FPS</Text>
+      <Settings>highway_framerate=60</Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>FPS</Group>
+    <Name>Coaster Framerate</Name>
+    <Description>Choose a framerate for the coaster.</Description>
+    <DefaultValue>coaster_framerate=60</DefaultValue>
+    <Option>
+      <Text>15 FPS</Text>
+      <Settings>coaster_framerate=15</Settings>
+    </Option>
+    <Option>
+      <Text>30 FPS</Text>
+      <Settings>coaster_framerate=30</Settings>
+    </Option>
+    <Option>
+      <Text>60 FPS</Text>
+      <Settings>coaster_framerate=60</Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>FPS</Group>
+    <Name>Battle Swirl Framerate</Name>
+    <DefaultValue>battleswirl_framerate=60</DefaultValue>
+    <Description>Choose a framerate for the battle swirl.</Description>
+    <Option>
+      <Text>15 FPS</Text>
+      <Settings>battleswirl_framerate=15</Settings>
+    </Option>
+    <Option>
+      <Text>30 FPS</Text>
+      <Settings>battleswirl_framerate=30</Settings>
+    </Option>
+    <Option>
+      <Text>60 FPS</Text>
+      <Settings>battleswirl_framerate=60</Settings>
+    </Option>
+  </Setting>-->
+
+
+  <!--DEFAULT SETTINGS NOT INCLUDED IN UI-->
+
+  <!--<Setting xsi:type="Checkbox">
+    <Group>Rendering</Group>
+    <Name>Use QPC Timer</Name>
+    <Description>High resolution framelimiter timer source. Has nothing to do with in-game bomb countdown!</Description>
+    <DefaultValue>use_new_timer=yes</DefaultValue>
+    <TrueSetting>use_new_timer=yes</TrueSetting>
+    <FalseSetting>use_new_timer=no</FalseSetting>
+  </Setting>-->
+
+  <!--<Setting xsi:type="Checkbox">
+    <Group>Rendering</Group>
+    <Name>Direct Mode</Name>
+    <Description>Read files from the direct folder instead of the LGP archives. Required to be on for most mods!</Description>
+    <DefaultValue>direct_mode=on</DefaultValue>
+    <TrueSetting>direct_mode=on</TrueSetting>
+    <FalseSetting>direct_mode=off</FalseSetting>
+  </Setting>-->
+
+  <!--<Setting xsi:type="Checkbox">
+    <Group>Graphics</Group>
+    <Name>Magic Defense Fix</Name>
+    <DefaultValue>mdef_fix=yes</DefaultValue>
+    <Description>Fix calculation of armor's magic defense.</Description>
+    <TrueSetting>mdef_fix=yes</TrueSetting>
+    <FalseSetting>mdef_fix=no</FalseSetting>
+  </Setting>-->
+
+  <!--<Setting xsi:type="Checkbox">
+    <Group>Graphics</Group>
+    <Name>Fancy Transparency</Name>
+    <Description>Enable alpha blending for textures without an existing blending effect.</Description>
+    <DefaultValue>fancy_transparency=yes</DefaultValue>
+    <TrueSetting>fancy_transparency=yes</TrueSetting>
+    <FalseSetting>fancy_transparency=no</FalseSetting>
+  </Setting>-->
+
+  <!--<Setting xsi:type="Checkbox">
+    <Group>Debug</Group>
+    <Name>More FF7 Debugging</Name>
+    <Description>Enable more debugging for ff7.</Description>
+    <DefaultValue>more_ff7_debug=off</DefaultValue>
+    <TrueSetting>more_ff7_debug=on</TrueSetting>
+    <FalseSetting>more_ff7_debug=off</FalseSetting>
+  </Setting>-->
+
+  <!--<Setting xsi:type="Checkbox">
+    <Group>Debug</Group>
+    <Name>Show Applog</Name>
+    <Description>Enable showing app log.</Description>
+    <DefaultValue>show_applog=on</DefaultValue>
+    <TrueSetting>show_applog=on</TrueSetting>
+    <FalseSetting>show_applog=off</FalseSetting>
+  </Setting>-->
+
+
+  <!--<Setting xsi:type="Checkbox">
+    <Group>Debug</Group>
+    <Name>Show Missing Textures</Name>
+    <Description>Show every failed attempt at loading a .png texture.</Description>
+    <DefaultValue>show_missing_textures=no</DefaultValue>
+    <TrueSetting>show_missing_textures=yes</TrueSetting>
+    <FalseSetting>show_missing_textures=no</FalseSetting>
+  </Setting>-->
+
+  <!--<Setting xsi:type="Checkbox">
+    <Group>Debug</Group>
+    <Name>Show FF7 Popup</Name>
+    <Description>Enable showing FF7 as popup.</Description>
+    <DefaultValue>ff7_popup=no</DefaultValue>
+    <TrueSetting>ff7_popup=yes</TrueSetting>
+    <FalseSetting>ff7_popup=no</FalseSetting>
+  </Setting>-->
+
+  <!--<Setting xsi:type="Checkbox">
+    <Group>Debug</Group>
+    <Name>Show Info Popup</Name>
+    <Description>Enable showing info popup.</Description>
+    <DefaultValue>info_popup=no</DefaultValue>
+    <TrueSetting>info_popup=yes</TrueSetting>
+    <FalseSetting>info_popup=no</FalseSetting>
+  </Setting>-->
+
+</ConfigSpec>

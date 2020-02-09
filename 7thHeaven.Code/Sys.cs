@@ -392,7 +392,7 @@ namespace Iros._7th.Workshop
                             }
                             catch (Exception ex)
                             {
-                                Sys.Message(new WMessage() { Text = "Mod " + name + " failed to import: " + ex.ToString() });
+                                Sys.Message(new WMessage("Mod " + name + " failed to import: " + ex.ToString(), true));
                                 continue;
                             }
                             Sys.Message(new WMessage() { Text = "Auto imported mod " + name });
@@ -416,12 +416,12 @@ namespace Iros._7th.Workshop
                             }
                             catch (_7thWrapperLib.IrosArcException)
                             {
-                                Sys.Message(new WMessage() { Text = $"Could not import .iro mod {Path.GetFileNameWithoutExtension(iro)}, file is corrupt" });
+                                Sys.Message(new WMessage($"Could not import .iro mod {Path.GetFileNameWithoutExtension(iro)}, file is corrupt", true));
                                 continue;
                             }
                             catch (Exception ex)
                             {
-                                Sys.Message(new WMessage() { Text = "Mod " + name + " failed to import: " + ex.ToString() });
+                                Sys.Message(new WMessage("Mod " + name + " failed to import: " + ex.ToString(), true));
                                 continue;
                             }
 
