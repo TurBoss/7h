@@ -138,19 +138,19 @@ namespace Iros._7th.Workshop
                 Category = modToCopy.Category,
                 ID = modToCopy.ID,
                 Link = modToCopy.Link,
-                Tags = modToCopy.Tags.ToList(),
+                Tags = modToCopy.Tags?.ToList(),
                 Name = modToCopy.Name,
                 ContainsMovies = modToCopy.ContainsMovies,
                 ContainsMusic = modToCopy.ContainsMusic,
                 MetaVersion = modToCopy.MetaVersion,
                 SourceCatalogName = modToCopy.SourceCatalogName,
                 SourceCatalogUrl = modToCopy.SourceCatalogUrl,
-                Patches = modToCopy.Patches.ToList(),
-                Requirements = modToCopy.Requirements.ToList(),
+                Patches = modToCopy.Patches?.ToList(),
+                Requirements = modToCopy.Requirements?.ToList(),
                 LatestVersion = new ModVersion()
                 {
                     CompatibleGameVersions = modToCopy.LatestVersion.CompatibleGameVersions,
-                    Links = modToCopy.LatestVersion.Links.ToList(),
+                    Links = modToCopy.LatestVersion.Links?.ToList(),
                     PreviewImage = modToCopy.LatestVersion.PreviewImage,
                     ReleaseDate = modToCopy.LatestVersion.ReleaseDate,
                     ReleaseNotes = modToCopy.LatestVersion.ReleaseNotes,
@@ -158,7 +158,7 @@ namespace Iros._7th.Workshop
                     DownloadSize = modToCopy.LatestVersion.DownloadSize,
                     ExtractInto = modToCopy.LatestVersion.ExtractInto,
                     ExtractSubFolder = modToCopy.LatestVersion.ExtractSubFolder,
-                    PatchLinks = modToCopy.LatestVersion.PatchLinks.ToList()
+                    PatchLinks = modToCopy.LatestVersion.PatchLinks?.ToList()
                 }
             };
         }
