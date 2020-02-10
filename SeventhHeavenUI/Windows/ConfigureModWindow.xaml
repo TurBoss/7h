@@ -31,6 +31,62 @@
 
         <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MainListBoxItemStyle}">
             <Setter Property="ContentTemplate" Value="{StaticResource optionItem}"/>
+            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </Style>
+
+        <Style TargetType="{x:Type TreeViewItem}">
+            <Setter Property="Header" Value="{Binding OptionName}"/>
+            <Setter Property="ItemsSource" Value="{Binding Children}"/>
+            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TreeViewItem">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition MinWidth="19" Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <ToggleButton x:Name="Expander"
+                                          Style="{StaticResource ExpandCollapseToggleStyle}"
+                                          ClickMode="Press"
+                                          IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"/>
+                            <Border x:Name="Bd" Background="{TemplateBinding Background}" Grid.Column="1" Padding="5,0,5,0">
+                                <TextBlock Text="{TemplateBinding Header}" Foreground="{TemplateBinding Foreground}"/>
+                            </Border>
+                            <ItemsPresenter x:Name="ItemsHost"
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Grid.ColumnSpan="2"
+                                            Visibility="Collapsed"/>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger SourceName="Bd" Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource PrimaryControlMouseOver}"/>
+                            </Trigger>
+                            <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource PrimaryControlPressed}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsExpanded}" Value="True">
+                                <Setter TargetName="ItemsHost" Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                            <Trigger Property="HasItems" Value="False">
+                                <Setter TargetName="Expander" Property="Visibility" Value="Hidden" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Style x:Key="dropdownItemStyle" TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource MainComboBoxItemStyle}">
@@ -82,11 +138,23 @@
                   Background="{DynamicResource SecondaryAppBackground}"
                   Grid.RowSpan="5"
                   Margin="5,2,0,5">
-            <ListBox x:Name="lstOptions"
-                     FontSize="13"
-                     ItemsSource="{Binding ModOptions}"
-                     SelectedIndex="{Binding SelectedOptionIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="1"/>
+            <Grid>
+                <ListBox x:Name="lstOptions"
+                         FontSize="13"
+                         ItemsSource="{Binding ModOptions}"
+                         Visibility="{Binding OptionListVisibility}"
+                         SelectedItem="{Binding SelectedOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="1"/>
+                <TreeView x:Name="treeOptions"
+                          ItemsSource="{Binding ModOptions}"
+                          Visibility="{Binding TreeViewVisibility}"
+                          Background="{DynamicResource SecondaryAppBackground}"
+                          BorderThickness="0"
+                          Margin="1"
+                          SelectedItemChanged="treeOptions_SelectedItemChanged"
+                          FontSize="13"/>
+
+            </Grid>
         </GroupBox>
 
         <GroupBox Header=" Configure "

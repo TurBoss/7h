@@ -33,16 +33,18 @@ namespace SeventhHeaven.ViewModels
         private string _compatibilityNote;
         private string _checkBoxText;
         private bool _isOptionChecked;
-        private int _selectedOptionIndex;
         private int _dropdownSelectedIndex;
         private Uri _imageOptionSource;
         private List<ConfigOptionViewModel> _modOptions;
         private List<OptionValueViewModel> _dropdownOptions;
-        private ConfigOption _selectedOption;
+        private ConfigOptionViewModel _selectedOption;
 
         private Visibility _checkBoxVisibility;
         private Visibility _comboBoxVisibility;
         private Visibility _previewButtonVisibility;
+        private Visibility _treeViewVisibility;
+        private Visibility _optionListVisibility;
+
 
         private bool _checkBoxIsEnabled;
         private bool _comboBoxIsEnabled;
@@ -182,6 +184,20 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public ConfigOptionViewModel SelectedOption
+        {
+            get
+            {
+                return _selectedOption;
+            }
+            set
+            {
+                _selectedOption = value;
+                NotifyPropertyChanged();
+                LoadSelectedOptionDetails();
+            }
+        }
+
         public List<OptionValueViewModel> DropdownOptions
         {
             get
@@ -208,20 +224,6 @@ namespace SeventhHeaven.ViewModels
             {
                 _imageOptionSource = value;
                 NotifyPropertyChanged();
-            }
-        }
-
-        public int SelectedOptionIndex
-        {
-            get
-            {
-                return _selectedOptionIndex;
-            }
-            set
-            {
-                _selectedOptionIndex = value;
-                NotifyPropertyChanged();
-                LoadSelectedOptionDetails();
             }
         }
 
@@ -279,8 +281,38 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public Visibility TreeViewVisibility
+        {
+            get
+            {
+                return _treeViewVisibility;
+            }
+            set
+            {
+                _treeViewVisibility = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public Visibility OptionListVisibility
+        {
+            get
+            {
+                return _optionListVisibility;
+            }
+            set
+            {
+                _optionListVisibility = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+
+
         public ConfigureModViewModel()
         {
+            OptionListVisibility = Visibility.Visible;
+            TreeViewVisibility = Visibility.Collapsed;
         }
 
         internal void Init(ModInfo info, Func<string, string> imageReader, Func<string, Stream> audioReader, Iros._7th.Workshop.ProfileItem activeModInfo, List<Constraint> modConstraints, string pathToModFolderOrIro)
@@ -291,10 +323,46 @@ namespace SeventhHeaven.ViewModels
             _audioReader = audioReader;
             _constraints = modConstraints;
             _values = activeModInfo.Settings.ToDictionary(s => s.ID, s => s.Value, StringComparer.InvariantCultureIgnoreCase);
-            ModOptions.AddRange(info.Options.Select(o => new ConfigOptionViewModel(o)).ToList());
+
+            if (info.Options.Any(c => c.Name.StartsWith("===")))
+            {
+                // use tree view style to display options
+                TreeViewVisibility = Visibility.Visible;
+                OptionListVisibility = Visibility.Collapsed;
+
+                List<ConfigOptionViewModel> treeOptions = new List<ConfigOptionViewModel>();
+
+                for (int i = 0; i < info.Options.Count; i++)
+                {
+                    if (info.Options[i].Name.StartsWith("==="))
+                    {
+                        ConfigOptionViewModel parent = new ConfigOptionViewModel(info.Options[i]);
+                        for (int j = i+1; j < info.Options.Count; j++)
+                        {
+                            if (info.Options[j].Name.StartsWith("==="))
+                            {
+                                i = j - 1; // subtract 1 since the next for loop will increment by one
+                                break;
+                            }
+
+                            ConfigOptionViewModel child = new ConfigOptionViewModel(info.Options[j]);
+                            parent.Children.Add(child);
+                        }
+
+                        treeOptions.Add(parent);
+                    }
+                }
+
+                ModOptions = treeOptions;
+            }
+            else
+            {
+                ModOptions.AddRange(info.Options.Select(o => new ConfigOptionViewModel(o)).ToList());
+            }
+
             WindowTitle = $"Configure Mod - {Sys.Library.GetItem(activeModInfo.ModID)?.CachedDetails.Name}";
 
-            SelectedOptionIndex = ModOptions.Count > 0 ? 0 : -1;
+            SelectedOption = ModOptions.Count > 0 ? ModOptions[0] : null;
         }
 
         /// <summary>
@@ -310,23 +378,22 @@ namespace SeventhHeaven.ViewModels
         /// </summary>
         internal void LoadSelectedOptionDetails()
         {
-            _selectedOption = ModOptions.ElementAt(SelectedOptionIndex)?.Option;
-
-            if (_selectedOption == null)
+            if (SelectedOption == null)
             {
-                Logger.Warn($"option with index {SelectedOptionIndex} not found");
                 return;
             }
 
-            Description = _selectedOption.Description;
+            ConfigOption option = SelectedOption.Option;
+
+            Description = option.Description;
 
             int value;
-            if (!_values.TryGetValue(_selectedOption.ID, out value))
-                value = _selectedOption.Default;
+            if (!_values.TryGetValue(option.ID, out value))
+                value = option.Default;
 
-            Constraint ct = _constraints.Find(c => c.Setting.Equals(_selectedOption.ID, StringComparison.InvariantCultureIgnoreCase));
+            Constraint ct = _constraints.Find(c => c.Setting.Equals(option.ID, StringComparison.InvariantCultureIgnoreCase));
 
-            switch (_selectedOption.Type)
+            switch (option.Type)
             {
                 case OptionType.Bool:
                     UpdateViewForBoolOption(ct, value);
@@ -336,11 +403,18 @@ namespace SeventhHeaven.ViewModels
                     UpdateViewForListOption(ct, value);
                     break;
             }
+
+            // hide combobox / checkbox if header option e.g. '=== Enemies ==='
+            if (option.Name.StartsWith("==="))
+            {
+                ComboBoxVisibility = Visibility.Hidden;
+                CheckBoxVisibility = Visibility.Hidden;
+            }
         }
 
         private void UpdateViewForListOption(Constraint ct, int value)
         {
-            IEnumerable<OptionValue> values = _selectedOption.Values;
+            IEnumerable<OptionValue> values = _selectedOption.Option.Values;
             if (ct.Require.Any())
             {
                 value = ct.Require[0];
@@ -392,16 +466,16 @@ namespace SeventhHeaven.ViewModels
             CheckBoxVisibility = Visibility.Visible;
             ComboBoxVisibility = Visibility.Hidden;
 
-            CheckBoxText = _selectedOption.Name;
+            CheckBoxText = _selectedOption.Option.Name;
             IsOptionChecked = (value == 1);
         }
 
         private void UpdateViewForCheckChanged()
         {
-            if (_selectedOption == null)
+            if (SelectedOption == null)
                 return;
 
-            OptionValue o = _selectedOption.Values.Find(v => v.Value == (IsOptionChecked ? 1 : 0));
+            OptionValue o = SelectedOption.Option.Values.Find(v => v.Value == (IsOptionChecked ? 1 : 0));
 
             if (o != null)
             {
@@ -414,7 +488,7 @@ namespace SeventhHeaven.ViewModels
             }
 
             SetupAudioPreview(o);
-            _values[_selectedOption.ID] = IsOptionChecked ? 1 : 0;
+            _values[SelectedOption.Option.ID] = IsOptionChecked ? 1 : 0;
         }
 
         private void SetupAudioPreview(OptionValue o)
@@ -520,7 +594,7 @@ namespace SeventhHeaven.ViewModels
 
             SetupAudioPreview(o);
 
-            _values[_selectedOption.ID] = o.Value;
+            _values[_selectedOption.Option.ID] = o.Value;
         }
 
         internal static void DeleteTempFolder()
@@ -650,10 +724,31 @@ namespace SeventhHeaven.ViewModels
             foreach (ConfigOptionViewModel option in ModOptions)
             {
                 _values[option.Option.ID] = option.Option.Default;
+                if (option.Children.Count > 0)
+                {
+                    ResetToModDefaultsRecursive(option.Children);
+                }
             }
 
             // reload what is selected in the UI to reflect new defaults set
             LoadSelectedOptionDetails();
+        }
+
+        /// <summary>
+        /// Recursively set options in list to default values.
+        /// </summary>
+        /// <param name="children"></param>
+        internal void ResetToModDefaultsRecursive(List<ConfigOptionViewModel> children)
+        {
+            // loop through each viewmodel representing a modoption and set the value to the default
+            foreach (ConfigOptionViewModel option in children)
+            {
+                _values[option.Option.ID] = option.Option.Default;
+                if (option.Children.Count > 0)
+                {
+                    ResetToModDefaultsRecursive(option.Children);
+                }
+            }
         }
 
         /// <summary>
@@ -684,9 +779,13 @@ namespace SeventhHeaven.ViewModels
 
     public class ConfigOptionViewModel : ViewModelBase
     {
+        
         internal ConfigOption Option { get; set; }
 
         private string _optionName;
+        private List<ConfigOptionViewModel> _children;
+        private bool _isExpanded;
+        private bool _isSelected;
 
         public string OptionName
         {
@@ -701,10 +800,58 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public List<ConfigOptionViewModel> Children
+        {
+            get
+            {
+                return _children;
+            }
+            set
+            {
+                _children = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public bool IsExpanded
+        {
+            get
+            {
+                return _isExpanded;
+            }
+            set
+            {
+                _isExpanded = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public bool IsSelected
+        {
+            get
+            {
+                return _isSelected;
+            }
+            set
+            {
+                _isSelected = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+
         public ConfigOptionViewModel(ConfigOption option)
         {
             Option = option;
             OptionName = option.Name;
+            IsSelected = false;
+            IsExpanded = false;
+            Children = new List<ConfigOptionViewModel>();
+
+            if (OptionName.StartsWith("==="))
+            {
+                OptionName = OptionName.Trim('=');
+            }
         }
     }
 

@@ -1209,4 +1209,48 @@
         </Style.Triggers>
     </Style>
 
+
+    <Style x:Key="ExpandCollapseToggleStyle" TargetType="ToggleButton">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Grid Width="15" Height="13" Background="Transparent">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualState x:Name="Checked">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Collapsed">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Hidden}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="Expanded">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unchecked" />
+                                <VisualState x:Name="Indeterminate" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Path x:Name="Collapsed"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Center"
+                              Margin="1,1,1,1"
+                              Fill="{DynamicResource PrimaryControlForeground}"
+                              Data="M 4 0 L 8 4 L 4 8 Z"/>
+
+                        <Path x:Name="Expanded"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Center"
+                              Margin="1,1,1,1"
+                              Data="M 0 4 L 8 4 L 4 8 Z"
+                              Fill="{DynamicResource PrimaryControlForeground}"
+                              Visibility="Hidden"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
 </ResourceDictionary>

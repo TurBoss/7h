@@ -1367,7 +1367,6 @@ namespace SeventhHeaven.Classes
                 Path.Combine(InstallPath, "shaders"),
                 Path.Combine(InstallPath, "shaders", "nolight"),
                 Path.Combine(InstallPath, "shaders", "ComplexMultiShader_Nvidia"),
-                Path.Combine(InstallPath, "plugins")
             };
 
             foreach (string dir in requiredFolders)

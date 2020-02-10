@@ -57,5 +57,11 @@ namespace SeventhHeaven.Windows
         {
             ViewModel.ResetToModDefaultValues();
         }
+
+        private void treeOptions_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            ConfigOptionViewModel option = e.NewValue as ConfigOptionViewModel;
+            ViewModel.SelectedOption = option;
+        }
     }
 }
