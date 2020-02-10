@@ -176,7 +176,19 @@ namespace Iros._7th.Workshop {
                 _usedFiles.Add(e.File);
             }
 
-            File.WriteAllBytes(Path.Combine(_folder, e.File), data);
+            try
+            {
+                File.WriteAllBytes(Path.Combine(_folder, e.File), data);
+            }
+            catch (IOException ioex)
+            {
+                // IOException can be thrown if image is in-use at the time e.g. being previewed
+                Sys.Message(new WMessage($"Failed to update image cache file: {ioex.Message}", WMessageLogLevel.LogOnly));
+            }
+            catch (Exception ex)
+            {
+                Sys.Message(new WMessage("Failed to update image cache file", WMessageLogLevel.LogOnly, ex));
+            }
         }
 
         /// <summary>

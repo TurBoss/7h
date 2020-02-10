@@ -35,7 +35,7 @@ It may not work properly unless you find and install the requirements.";
         public delegate void OnSelectionChanged(object sender, CatalogModItemViewModel selected);
         public event OnSelectionChanged SelectedModChanged;
 
-        public delegate void OnRefreshListRequested();
+        public delegate void OnRefreshListRequested(bool beforeRefresh);
         public event OnRefreshListRequested RefreshListRequested;
 
         private List<CatalogModItemViewModel> _catalogModList;
@@ -415,7 +415,7 @@ It may not work properly unless you find and install the requirements.";
                             {
                                 ReloadModList(GetSelectedMod()?.Mod.ID);
                                 ScanForModUpdates();
-                                RefreshListRequested?.Invoke();
+                                RefreshListRequested?.Invoke(false);
                             }
 
                         }), null);

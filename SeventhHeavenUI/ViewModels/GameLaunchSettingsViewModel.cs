@@ -923,9 +923,10 @@ namespace SeventhHeaven.ViewModels
                 MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
                 foreach (MMDevice device in enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active))
                 {
-                    if (device.FriendlyName.StartsWith(caps.ProductName))
+                    if (device.FriendlyName.StartsWith(caps.ProductName) && !deviceGuids.ContainsKey(device.FriendlyName))
                     {
-                        deviceGuids.Add(device.FriendlyName, new Guid(device.Properties[PropertyKeys.PKEY_AudioEndpoint_GUID].Value as string));
+                        Guid audioGuid = new Guid(device.Properties[PropertyKeys.PKEY_AudioEndpoint_GUID].Value as string);
+                        deviceGuids.Add(device.FriendlyName, audioGuid);
                         break;
                     }
                 }

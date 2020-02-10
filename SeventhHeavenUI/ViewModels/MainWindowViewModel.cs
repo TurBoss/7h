@@ -542,10 +542,30 @@ They will be automatically turned off.";
         /// Clears the search text and applied filters.
         /// Triggered when my mods or catalog mods list is refreshed from button click
         /// </summary>
-        private void ModList_RefreshRequested()
+        private void ModList_RefreshRequested(bool beforeRefresh)
         {
-            SearchText = "";
-            ReloadAvailableFilters(recheckFilters: false);
+            if (beforeRefresh)
+            {
+                string pathToSelectedMod = Path.Combine(Sys.Settings.LibraryLocation, MyMods.GetSelectedMod().InstallInfo.LatestInstalled.InstalledLocation);
+                if (Directory.Exists(pathToSelectedMod) && File.Exists(Path.Combine(pathToSelectedMod, "mod.xml")))
+                {
+                    // Set the preview image to null before doing a refresh because the mod.xml will be re-parsed and the image cache may get updated with a new image
+                    // ... setting to null will prevent IOException due to file being in use
+                    SetPreviewImage(null);
+                }
+            }
+            else
+            {
+                string pathToSelectedMod = Path.Combine(Sys.Settings.LibraryLocation, MyMods.GetSelectedMod().InstallInfo.LatestInstalled.InstalledLocation);
+                if (Directory.Exists(pathToSelectedMod) && File.Exists(Path.Combine(pathToSelectedMod, "mod.xml")))
+                {
+                    // ensure the mod preview is reloaded so the new preview image and other info is displayed
+                    UpdateModPreviewInfo(MyMods.GetSelectedMod(), forceUpdate: true);
+                }
+
+                SearchText = "";
+                ReloadAvailableFilters(recheckFilters: false);
+            }
         }
 
         private void CatalogViewModel_SelectedModChanged(object sender, CatalogModItemViewModel selected)

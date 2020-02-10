@@ -3,6 +3,7 @@ using Iros._7th.Workshop;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace _7thHeaven.Code
@@ -78,27 +79,33 @@ namespace _7thHeaven.Code
             RaiseProgressChanged("Import complete", 100);
         }
 
-        private Mod ParseModXmlFromSource(string sourceFileOrFolder)
+        public Mod ParseModXmlFromSource(string sourceFileOrFolder, Mod defaultModIfMissing = null)
         {
-            Mod parsedMod = new Mod()
+            if (defaultModIfMissing == null)
             {
-                Author = String.Empty,
-                Description = "Imported mod",
-                Category = "Unknown",
-                ID = Guid.NewGuid(),
-                Link = String.Empty,
-                Tags = new List<string>(),
-                Name = "",
-                LatestVersion = new ModVersion()
+                defaultModIfMissing = new Mod()
                 {
-                    CompatibleGameVersions = GameVersions.All,
-                    Links = new List<string>(),
-                    PreviewImage = String.Empty,
-                    ReleaseDate = DateTime.Now,
-                    ReleaseNotes = String.Empty,
-                    Version = 1.00m,
-                }
-            };
+                    Author = String.Empty,
+                    Description = "Imported mod",
+                    Category = "Unknown",
+                    ID = Guid.NewGuid(),
+                    Link = String.Empty,
+                    Tags = new List<string>(),
+                    Name = "",
+                    LatestVersion = new ModVersion()
+                    {
+                        CompatibleGameVersions = GameVersions.All,
+                        Links = new List<string>(),
+                        PreviewImage = String.Empty,
+                        ReleaseDate = DateTime.Now,
+                        ReleaseNotes = String.Empty,
+                        Version = 1.00m,
+                    }
+                };
+            }
+
+
+            Mod parsedMod = Mod.CopyMod(defaultModIfMissing);
 
             if (string.IsNullOrWhiteSpace(sourceFileOrFolder))
             {
@@ -177,6 +184,11 @@ namespace _7thHeaven.Code
 
                 parsedMod.Name = doc.SelectSingleNode("/ModInfo/Name").NodeTextS();
 
+                if (string.IsNullOrWhiteSpace(parsedMod.Name))
+                {
+                    parsedMod.Name = defaultModIfMissing.Name;
+                }
+
                 parsedMod.Author = doc.SelectSingleNode("/ModInfo/Author").NodeTextS();
                 parsedMod.Link = doc.SelectSingleNode("/ModInfo/Link").NodeTextS();
                 parsedMod.Description = doc.SelectSingleNode("/ModInfo/Description").NodeTextS();
@@ -200,7 +212,7 @@ namespace _7thHeaven.Code
                     byte[] data = getData(pv.InnerText);
                     if (data != null)
                     {
-                        string url = "iros://Preview/Auto/" + parsedMod.ID.ToString();
+                        string url = $"iros://Preview/Auto/{parsedMod.ID}_{pv.InnerText}";
                         parsedMod.LatestVersion.PreviewImage = url;
                         Sys.ImageCache.InsertManual(url, data);
                     }

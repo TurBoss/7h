@@ -117,6 +117,29 @@ namespace Iros._7th.Workshop
                     this.Author != other.Author ||
                     this.Link != other.Link);
         }
+
+        public static Mod CopyMod(Mod defaultModIfMissing)
+        {
+            return new Mod()
+            {
+                Author = defaultModIfMissing.Author,
+                Description = defaultModIfMissing.Description,
+                Category = defaultModIfMissing.Category,
+                ID = defaultModIfMissing.ID,
+                Link = defaultModIfMissing.Link,
+                Tags = defaultModIfMissing.Tags.ToList(),
+                Name = defaultModIfMissing.Name,
+                LatestVersion = new ModVersion()
+                {
+                    CompatibleGameVersions = defaultModIfMissing.LatestVersion.CompatibleGameVersions,
+                    Links = defaultModIfMissing.LatestVersion.Links.ToList(),
+                    PreviewImage = defaultModIfMissing.LatestVersion.PreviewImage,
+                    ReleaseDate = defaultModIfMissing.LatestVersion.ReleaseDate,
+                    ReleaseNotes = defaultModIfMissing.LatestVersion.ReleaseNotes,
+                    Version = defaultModIfMissing.LatestVersion.Version,
+                }
+            };
+        }
     }
 
     public class ModRequirement

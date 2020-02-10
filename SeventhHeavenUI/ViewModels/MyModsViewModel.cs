@@ -21,7 +21,7 @@ namespace SeventhHeavenUI.ViewModels
         public delegate void OnSelectionChanged(object sender, InstalledModViewModel selected);
         public event OnSelectionChanged SelectedModChanged;
 
-        public delegate void OnRefreshListRequested();
+        public delegate void OnRefreshListRequested(bool beforeRefresh);
         public event OnRefreshListRequested RefreshListRequested;
 
         private object listLock = new object();
@@ -77,9 +77,34 @@ namespace SeventhHeavenUI.ViewModels
 
         internal void RefreshModList()
         {
+            RefreshListRequested?.Invoke(true);
+
+            UpdateModCachedDetails();
             ClearRememberedSearchTextAndCategories();
             ReloadModList(GetSelectedMod()?.InstallInfo.ModID);
-            RefreshListRequested?.Invoke();
+
+            RefreshListRequested?.Invoke(false);
+        }
+
+        /// <summary>
+        /// Loop over installed mods and update Cached Details of mod by parsing mod.xml (if mod is installed in folder format, not .iro file)
+        /// </summary>
+        private void UpdateModCachedDetails()
+        {
+            foreach (InstalledItem item in Sys.Library.Items)
+            {
+                string absolutePath = Path.Combine(Sys.Settings.LibraryLocation, item.LatestInstalled?.InstalledLocation);
+                if (Directory.Exists(absolutePath))
+                {
+                    string pathToXml = Path.Combine(absolutePath, "mod.xml");
+                    
+                    if (File.Exists(pathToXml))
+                    {
+                        Mod parsedModXml = new ModImporter().ParseModXmlFromSource(absolutePath, item.CachedDetails);
+                        item.CachedDetails = parsedModXml;
+                    }
+                }
+            }
         }
 
         /// <summary>
