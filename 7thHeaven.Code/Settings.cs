@@ -6,6 +6,7 @@
 using _7thHeaven.Code;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -155,6 +156,31 @@ namespace Iros._7th.Workshop {
             defaultSettings.UserColumnSettings = ColumnSettings.GetDefaultSettings();
 
             return defaultSettings;
+        }
+
+        /// <summary>
+        /// Sets the default paths for an FF7 Install i.e 'mods/Textures', 'mods/7th Heaven', 'data/movies'
+        /// </summary>
+        /// <param name="pathToFf7Install"></param>
+        public void SetPathsFromInstallationPath(string pathToFf7Install)
+        {
+            FF7Exe = Path.Combine(pathToFf7Install, "FF7.exe");
+            AaliFolder = Path.Combine(pathToFf7Install, "mods", @"Textures");
+            LibraryLocation = Path.Combine(pathToFf7Install, "mods", @"7th Heaven");
+            MovieFolder = Path.Combine(pathToFf7Install, "data", @"movies");
+
+            LogAndCreateFolderIfNotExists(LibraryLocation);
+            LogAndCreateFolderIfNotExists(MovieFolder);
+            LogAndCreateFolderIfNotExists(AaliFolder);
+        }
+
+        private static void LogAndCreateFolderIfNotExists(string pathToFolder)
+        {
+            if (!Directory.Exists(pathToFolder))
+            {
+                Sys.Message(new WMessage($"directory missing. creating {pathToFolder}", WMessageLogLevel.LogOnly));
+                Directory.CreateDirectory(pathToFolder);
+            }
         }
     }
 }

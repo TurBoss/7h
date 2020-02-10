@@ -1,17 +1,16 @@
-﻿using System;
+﻿using Iros._7th.Workshop;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace SeventhHeaven.Classes
+namespace _7thHeaven.Code
 {
     public class FileUtils
     {
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-
-        internal static List<string> CopyDirectoryRecursively(string sourceDirName, string destDirName, List<string> filesToExclude, List<string> foldersToExclude, bool doContainsSearch)
+        public static List<string> CopyDirectoryRecursively(string sourceDirName, string destDirName, List<string> filesToExclude, List<string> foldersToExclude, bool doContainsSearch)
         {
             List<string> filesCopied = new List<string>();
 
@@ -40,13 +39,13 @@ namespace SeventhHeaven.Classes
             }
             catch (Exception e)
             {
-                Logger.Error(e);
+                Sys.Message(new WMessage("failed to copy directory", WMessageLogLevel.LogOnly, e));
             }
 
             return filesCopied;
         }
 
-        internal static void CopyDirectoryRecursively(string sourceDirName, string destDirName)
+        public static void CopyDirectoryRecursively(string sourceDirName, string destDirName)
         {
             CopySettings settings = new CopySettings()
             {
@@ -61,11 +60,11 @@ namespace SeventhHeaven.Classes
             }
             catch (Exception e)
             {
-                Logger.Error(e);
+                Sys.Message(new WMessage("failed to copy directory", WMessageLogLevel.LogOnly, e));
             }
         }
 
-        internal static void MoveDirectoryRecursively(string sourceDirName, string destDirName, List<string> filesToExclude, List<string> foldersToExclude, bool doContainsSearch)
+        public static void MoveDirectoryRecursively(string sourceDirName, string destDirName, List<string> filesToExclude, List<string> foldersToExclude, bool doContainsSearch)
         {
             if (filesToExclude == null)
             {
@@ -92,11 +91,11 @@ namespace SeventhHeaven.Classes
             }
             catch (Exception e)
             {
-                Logger.Error(e);
+                Sys.Message(new WMessage("failed to move directory", WMessageLogLevel.LogOnly, e));
             }
         }
 
-        internal static string ListAllFiles(string rootPath, int indentLevel = 0)
+        public static string ListAllFiles(string rootPath, int indentLevel = 0)
         {
             StringBuilder allFiles = new StringBuilder();
             string tabs = new String(' ', indentLevel * 4);
@@ -123,7 +122,7 @@ namespace SeventhHeaven.Classes
             return allFiles.ToString();
         }
 
-        internal static void MoveDirectoryRecursively(string sourceDirName, string destDirName)
+        public static void MoveDirectoryRecursively(string sourceDirName, string destDirName)
         {
             CopySettings settings = new CopySettings()
             {
@@ -138,7 +137,7 @@ namespace SeventhHeaven.Classes
             }
             catch (Exception e)
             {
-                Logger.Error(e);
+                Sys.Message(new WMessage("failed to move directory", WMessageLogLevel.LogOnly, e));
             }
         }
 
@@ -221,7 +220,7 @@ namespace SeventhHeaven.Classes
             }
         }
 
-        internal static void DeleteEmptyFolders(string pathToCache)
+        public static void DeleteEmptyFolders(string pathToCache)
         {
             if (!Directory.Exists(pathToCache))
             {
@@ -275,7 +274,7 @@ namespace SeventhHeaven.Classes
             return allFiles;
         }
 
-        public static BoolWithMessage DeleteFiles(List<string> filesToDelete)
+        public static bool DeleteFiles(List<string> filesToDelete)
         {
             try
             {
@@ -287,11 +286,12 @@ namespace SeventhHeaven.Classes
                     }
                 }
 
-                return BoolWithMessage.True();
+                return true;
             }
             catch (Exception e)
             {
-                return BoolWithMessage.False($"Failed to delete files: {e.Message}");
+                Sys.Message(new WMessage("failed to delete files", WMessageLogLevel.LogOnly, e));
+                return false;
             }
         }
 

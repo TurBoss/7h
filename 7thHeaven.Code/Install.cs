@@ -3,6 +3,7 @@
   The original developer is Iros <irosff@outlook.com>
 */
 
+using _7thHeaven.Code;
 using SharpCompress.Archives;
 using System;
 using System.Collections.Generic;
@@ -328,6 +329,8 @@ namespace Iros._7th.Workshop
                     var inst = Sys.Library.GetItem(Mod.ID);
                     if (inst == null)
                     {
+                        Mod = new ModImporter().ParseModXmlFromSource(_dest, Mod);
+
                         Sys.Library.AddInstall(new InstalledItem()
                         {
                             ModID = Mod.ID,
@@ -340,7 +343,7 @@ namespace Iros._7th.Workshop
                     }
                     else
                     {
-                        inst.CachedDetails = Mod;
+                        inst.CachedDetails = new ModImporter().ParseModXmlFromSource(_dest, Mod);
                         if (!Sys.Settings.HasOption(GeneralOptions.KeepOldVersions))
                         {
                             foreach (string ivfile in inst.Versions.Select(v => v.InstalledLocation))
@@ -529,6 +532,8 @@ namespace Iros._7th.Workshop
                     var inst = Sys.Library.GetItem(Mod.ID);
                     if (inst == null)
                     {
+                        Mod = new ModImporter().ParseModXmlFromSource(_dest, Mod);
+
                         Sys.Library.AddInstall(new InstalledItem()
                         {
                             ModID = Mod.ID,
@@ -541,7 +546,8 @@ namespace Iros._7th.Workshop
                     }
                     else
                     {
-                        inst.CachedDetails = Mod;
+                        inst.CachedDetails = new ModImporter().ParseModXmlFromSource(_dest, Mod);
+
                         if (!Sys.Settings.HasOption(GeneralOptions.KeepOldVersions))
                         {
                             foreach (string ivfile in inst.Versions.Select(v => v.InstalledLocation))

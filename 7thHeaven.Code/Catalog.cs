@@ -85,6 +85,17 @@ namespace Iros._7th.Workshop
         [System.Xml.Serialization.XmlElement("Requirement")]
         public List<ModRequirement> Requirements { get; set; }
 
+        /// <summary>
+        /// Set to true on import if mod has music files
+        /// </summary>
+        public bool ContainsMusic { get; set; }
+
+
+        /// <summary>
+        /// Set to true on import if mod has movie files
+        /// </summary>
+        public bool ContainsMovies { get; set; }
+
         public IEnumerable<ModPatch> GetPatchesFromTo(decimal from, decimal to)
         {
             foreach (var patch in Patches)
@@ -118,25 +129,36 @@ namespace Iros._7th.Workshop
                     this.Link != other.Link);
         }
 
-        public static Mod CopyMod(Mod defaultModIfMissing)
+        public static Mod CopyMod(Mod modToCopy)
         {
             return new Mod()
             {
-                Author = defaultModIfMissing.Author,
-                Description = defaultModIfMissing.Description,
-                Category = defaultModIfMissing.Category,
-                ID = defaultModIfMissing.ID,
-                Link = defaultModIfMissing.Link,
-                Tags = defaultModIfMissing.Tags.ToList(),
-                Name = defaultModIfMissing.Name,
+                Author = modToCopy.Author,
+                Description = modToCopy.Description,
+                Category = modToCopy.Category,
+                ID = modToCopy.ID,
+                Link = modToCopy.Link,
+                Tags = modToCopy.Tags.ToList(),
+                Name = modToCopy.Name,
+                ContainsMovies = modToCopy.ContainsMovies,
+                ContainsMusic = modToCopy.ContainsMusic,
+                MetaVersion = modToCopy.MetaVersion,
+                SourceCatalogName = modToCopy.SourceCatalogName,
+                SourceCatalogUrl = modToCopy.SourceCatalogUrl,
+                Patches = modToCopy.Patches.ToList(),
+                Requirements = modToCopy.Requirements.ToList(),
                 LatestVersion = new ModVersion()
                 {
-                    CompatibleGameVersions = defaultModIfMissing.LatestVersion.CompatibleGameVersions,
-                    Links = defaultModIfMissing.LatestVersion.Links.ToList(),
-                    PreviewImage = defaultModIfMissing.LatestVersion.PreviewImage,
-                    ReleaseDate = defaultModIfMissing.LatestVersion.ReleaseDate,
-                    ReleaseNotes = defaultModIfMissing.LatestVersion.ReleaseNotes,
-                    Version = defaultModIfMissing.LatestVersion.Version,
+                    CompatibleGameVersions = modToCopy.LatestVersion.CompatibleGameVersions,
+                    Links = modToCopy.LatestVersion.Links.ToList(),
+                    PreviewImage = modToCopy.LatestVersion.PreviewImage,
+                    ReleaseDate = modToCopy.LatestVersion.ReleaseDate,
+                    ReleaseNotes = modToCopy.LatestVersion.ReleaseNotes,
+                    Version = modToCopy.LatestVersion.Version,
+                    DownloadSize = modToCopy.LatestVersion.DownloadSize,
+                    ExtractInto = modToCopy.LatestVersion.ExtractInto,
+                    ExtractSubFolder = modToCopy.LatestVersion.ExtractSubFolder,
+                    PatchLinks = modToCopy.LatestVersion.PatchLinks.ToList()
                 }
             };
         }

@@ -79,6 +79,12 @@ namespace _7thHeaven.Code
             RaiseProgressChanged("Import complete", 100);
         }
 
+        /// <summary>
+        /// Parses mod.xml from a folder or .iro and returns the <see cref="Mod"/>
+        /// </summary>
+        /// <param name="sourceFileOrFolder">absolute path to folder or .iro file </param>
+        /// <param name="defaultModIfMissing"> default mod properties to use if the mod.xml file is not found </param>
+        /// <returns></returns>
         public Mod ParseModXmlFromSource(string sourceFileOrFolder, Mod defaultModIfMissing = null)
         {
             if (defaultModIfMissing == null)
@@ -119,8 +125,12 @@ namespace _7thHeaven.Code
 
             bool isIroFile = sourceFileOrFolder.EndsWith(".iro");
             System.Xml.XmlDocument doc = null;
-            Func<string, byte[]> getData = null;
+            Func<string, byte[]> getImageData = null;
             _7thWrapperLib.IrosArc arc = null;
+
+            string[] musicFiles = FF7FileLister.GetMusicFiles();
+            string[] movieFiles = FF7FileLister.GetMovieFiles().Keys.ToArray();
+
 
             if (isIroFile)
             {
@@ -138,7 +148,27 @@ namespace _7thHeaven.Code
                     doc.Load(arc.GetData("mod.xml"));
                 }
 
-                getData = s =>
+                RaiseProgressChanged($"Scanning .iro archive files for movie and music files", 35);
+                foreach (string file in arc.AllFileNames())
+                {
+                    if (musicFiles.Any(f => f.Equals(Path.GetFileName(file), StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        parsedMod.ContainsMusic = true;
+                    }
+
+                    if (movieFiles.Any(f => f.Equals(Path.GetFileName(file), StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        parsedMod.ContainsMovies = true;
+                    }
+
+                    if (parsedMod.ContainsMovies && parsedMod.ContainsMusic)
+                    {
+                        break; // break out of loop to stop scanning since confirmed both music and movie files exist in mod
+                    }
+                }
+                
+
+                getImageData = s =>
                 {
                     return arc.HasFile(s) ? arc.GetBytes(s) : null;
                 };
@@ -154,7 +184,25 @@ namespace _7thHeaven.Code
                     doc.Load(pathToModXml);
                 }
 
-                getData = s =>
+                foreach (string file in FileUtils.GetAllFilesInDirectory(sourceFileOrFolder))
+                {
+                    if (musicFiles.Any(f => f.Equals(Path.GetFileName(file), StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        parsedMod.ContainsMusic = true;
+                    }
+
+                    if (movieFiles.Any(f => f.Equals(Path.GetFileName(file), StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        parsedMod.ContainsMovies = true;
+                    }
+
+                    if (parsedMod.ContainsMovies && parsedMod.ContainsMusic)
+                    {
+                        break; // break out of loop to stop scanning since confirmed both music and movie files exist in mod
+                    }
+                }
+
+                getImageData = s =>
                 {
                     string file = Path.Combine(sourceFileOrFolder, s);
                     if (File.Exists(file)) return File.ReadAllBytes(file);
@@ -209,7 +257,7 @@ namespace _7thHeaven.Code
                 if (pv != null)
                 {
                     // add the preview file to image cache and set the url prefixed with iros://Preview/Auto since it came from auto-import
-                    byte[] data = getData(pv.InnerText);
+                    byte[] data = getImageData(pv.InnerText);
                     if (data != null)
                     {
                         string url = $"iros://Preview/Auto/{parsedMod.ID}_{pv.InnerText}";

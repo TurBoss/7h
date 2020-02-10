@@ -435,15 +435,7 @@ namespace SeventhHeaven.ViewModels
 
                 if (foundVersion != FF7Version.Unknown)
                 {
-                    settings.FF7Exe = Path.Combine(ff7, "FF7.exe");
-                    settings.AaliFolder = Path.Combine(ff7, "mods", @"Textures");
-                    settings.LibraryLocation = Path.Combine(ff7, "mods", @"7th Heaven");
-                    settings.MovieFolder = Path.Combine(ff7, "data", @"movies");
-
-                    LogAndCreateFolderIfNotExists(settings.LibraryLocation);
-                    LogAndCreateFolderIfNotExists(settings.MovieFolder);
-                    LogAndCreateFolderIfNotExists(settings.AaliFolder);
-
+                    settings.SetPathsFromInstallationPath(ff7);
 
                     // copy ff7.exe to install path if not found since Steam & Re-Release installation does not provide a ff7.exe
                     if (!File.Exists(settings.FF7Exe) && Path.GetFileName(settings.FF7Exe).Equals("ff7.exe", StringComparison.InvariantCultureIgnoreCase))
@@ -467,15 +459,6 @@ namespace SeventhHeaven.ViewModels
                 }
 
 
-            }
-        }
-
-        private static void LogAndCreateFolderIfNotExists(string pathToFolder)
-        {
-            if (!Directory.Exists(pathToFolder))
-            {
-                Logger.Info($"directory missing. creating {pathToFolder}");
-                Directory.CreateDirectory(pathToFolder);
             }
         }
 

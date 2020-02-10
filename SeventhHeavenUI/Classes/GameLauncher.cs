@@ -124,6 +124,36 @@ namespace SeventhHeaven.Classes
                 return false;
             }
 
+            Instance.RaiseProgressChanged("Verifying game is not installed in a System/Protected folder ...");
+            if (converter.IsGameLocatedInSystemFolders())
+            {
+                string message = "FF7 is currently installed in a System folder which can cause mods not to work. It is recommended you install it at C:\\Games\\Final Fantasy VII\n\nWould you like to automatically copy your installtion to C:\\Games\\Final Fantasy VII to continue?";
+                var result = MessageDialogWindow.Show(message, "Cannot Continue!", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+                if (result.Result == MessageBoxResult.No)
+                {
+                    Instance.RaiseProgressChanged($"\t can not continue due to FF7 being installed in System/Protected folder. Aborting...", NLog.LogLevel.Error);
+                    return false;
+                }
+
+
+                // copy installation and update settings with new path
+                string newInstallationPath = @"C:\Games\Final Fantasy VII";
+                Instance.RaiseProgressChanged($"\t copying game files to {newInstallationPath}");
+                bool didCopy = converter.CopyGame(newInstallationPath);
+
+                if (!didCopy)
+                {
+                    Instance.RaiseProgressChanged($"\t failed to copy FF7 to {newInstallationPath}. Aborting...", NLog.LogLevel.Error);
+                    return false;
+                }
+
+                // update settings with new path
+                Logger.Info("\tUpdating paths in Sys.Settings with new installation path");
+                Sys.Settings.SetPathsFromInstallationPath(newInstallationPath);
+                converter.InstallPath = newInstallationPath;
+            }
+
             Instance.RaiseProgressChanged("Verifying additional files for 'battle' & 'kernel' folders exist ...");
             if (!converter.VerifyAdditionalFilesExist())
             {

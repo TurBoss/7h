@@ -35,7 +35,7 @@ It may not work properly unless you find and install the requirements.";
         public delegate void OnSelectionChanged(object sender, CatalogModItemViewModel selected);
         public event OnSelectionChanged SelectedModChanged;
 
-        public delegate void OnRefreshListRequested(bool beforeRefresh);
+        public delegate void OnRefreshListRequested();
         public event OnRefreshListRequested RefreshListRequested;
 
         private List<CatalogModItemViewModel> _catalogModList;
@@ -415,7 +415,7 @@ It may not work properly unless you find and install the requirements.";
                             {
                                 ReloadModList(GetSelectedMod()?.Mod.ID);
                                 ScanForModUpdates();
-                                RefreshListRequested?.Invoke(false);
+                                RefreshListRequested?.Invoke();
                             }
 
                         }), null);
@@ -564,7 +564,7 @@ It may not work properly unless you find and install the requirements.";
             {
                 onError = () =>
                 {
-                    Logger.Info($"Downloading {file} - switching to backup url {links.ElementAt(1)}");
+                    Sys.Message(new WMessage($"Downloading {file} - switching to backup url {links.ElementAt(1)}"));
                     Download(links.Skip(1), file, description, iproc, onCancel);
                 };
             }
@@ -634,7 +634,7 @@ It may not work properly unless you find and install the requirements.";
                             case MegaIros.TransferState.Failed:
                                 RemoveFromDownloadList(item);
                                 Sys.Message(new WMessage() { Text = "Error downloading " + item.ItemName });
-                                onCancel?.Invoke();
+                                item.OnError?.Invoke();
                                 break;
 
                             case MegaIros.TransferState.Canceled:
@@ -691,15 +691,16 @@ It may not work properly unless you find and install the requirements.";
             DownloadItemViewModel item = (DownloadItemViewModel)e.UserState;
             if (e.Cancelled)
             {
-                item.OnCancel?.Invoke();
+                item.PerformCancel?.Invoke();
                 RemoveFromDownloadList(item);
             }
             else if (e.Error != null)
             {
-                item.OnError?.Invoke();
-                RemoveFromDownloadList(item);
                 string msg = $"Error {item.ItemName} - {e.Error.GetBaseException().Message}";
                 Sys.Message(new WMessage(msg, WMessageLogLevel.Error, e.Error.GetBaseException()));
+
+                item.OnError?.Invoke();
+                RemoveFromDownloadList(item);
             }
             else
             {

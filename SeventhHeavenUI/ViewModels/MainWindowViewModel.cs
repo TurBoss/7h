@@ -518,7 +518,7 @@ They will be automatically turned off.";
             Sys.TryAutoImportMods();
 
 
-            CatalogMods.RefreshListRequested += ModList_RefreshRequested;
+            CatalogMods.RefreshListRequested += CatalogList_RefreshRequested;
             MyMods.RefreshListRequested += ModList_RefreshRequested;
 
             CatalogMods.CheckForCatalogUpdatesAsync(new CatCheckOptions());
@@ -538,6 +538,12 @@ They will be automatically turned off.";
             Sys.AppVersion = App.GetAppVersion();
         }
 
+        private void CatalogList_RefreshRequested()
+        {
+            SearchText = "";
+            ReloadAvailableFilters(recheckFilters: false);
+        }
+
         /// <summary>
         /// Clears the search text and applied filters.
         /// Triggered when my mods or catalog mods list is refreshed from button click
@@ -546,21 +552,29 @@ They will be automatically turned off.";
         {
             if (beforeRefresh)
             {
-                string pathToSelectedMod = Path.Combine(Sys.Settings.LibraryLocation, MyMods.GetSelectedMod().InstallInfo.LatestInstalled.InstalledLocation);
-                if (Directory.Exists(pathToSelectedMod) && File.Exists(Path.Combine(pathToSelectedMod, "mod.xml")))
+                if (MyMods.GetSelectedMod() != null)
                 {
-                    // Set the preview image to null before doing a refresh because the mod.xml will be re-parsed and the image cache may get updated with a new image
-                    // ... setting to null will prevent IOException due to file being in use
-                    SetPreviewImage(null);
+                    string relativePath = MyMods.GetSelectedMod()?.InstallInfo?.LatestInstalled?.InstalledLocation ?? "";
+                    string pathToSelectedMod = Path.Combine(Sys.Settings.LibraryLocation, relativePath);
+                    if (Directory.Exists(pathToSelectedMod) && File.Exists(Path.Combine(pathToSelectedMod, "mod.xml")))
+                    {
+                        // Set the preview image to null before doing a refresh because the mod.xml will be re-parsed and the image cache may get updated with a new image
+                        // ... setting to null will prevent IOException due to file being in use
+                        SetPreviewImage(null);
+                    }
                 }
             }
             else
             {
-                string pathToSelectedMod = Path.Combine(Sys.Settings.LibraryLocation, MyMods.GetSelectedMod().InstallInfo.LatestInstalled.InstalledLocation);
-                if (Directory.Exists(pathToSelectedMod) && File.Exists(Path.Combine(pathToSelectedMod, "mod.xml")))
+                if (MyMods.GetSelectedMod() != null)
                 {
-                    // ensure the mod preview is reloaded so the new preview image and other info is displayed
-                    UpdateModPreviewInfo(MyMods.GetSelectedMod(), forceUpdate: true);
+                    string relativePath = MyMods.GetSelectedMod()?.InstallInfo?.LatestInstalled?.InstalledLocation ?? "";
+                    string pathToSelectedMod = Path.Combine(Sys.Settings.LibraryLocation, relativePath);
+                    if (Directory.Exists(pathToSelectedMod) && File.Exists(Path.Combine(pathToSelectedMod, "mod.xml")))
+                    {
+                        // ensure the mod preview is reloaded so the new preview image and other info is displayed if the currently selected mod is installed via folder format
+                        UpdateModPreviewInfo(MyMods.GetSelectedMod(), forceUpdate: true);
+                    }
                 }
 
                 SearchText = "";
@@ -644,7 +658,7 @@ They will be automatically turned off.";
             MyMods = null;
 
             CatalogMods.SelectedModChanged -= CatalogViewModel_SelectedModChanged;
-            CatalogMods.RefreshListRequested -= ModList_RefreshRequested;
+            CatalogMods.RefreshListRequested -= CatalogList_RefreshRequested;
             CatalogMods.CatalogModList.Clear();
             CatalogMods = null;
         }

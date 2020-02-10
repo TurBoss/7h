@@ -103,7 +103,6 @@
     <Compile Include="Classes\Constraint.cs" />
     <Compile Include="Classes\DateTimeComparer.cs" />
     <Compile Include="Classes\FileDialogHelper.cs" />
-    <Compile Include="Classes\FileUtils.cs" />
     <Compile Include="Classes\GameConverter.cs" />
     <Compile Include="Classes\GameLauncher.cs" />
     <Compile Include="Classes\OpenFolderDialog.cs" />
