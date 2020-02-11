@@ -515,7 +515,7 @@ They will be automatically turned off.";
                 ShowGeneralSettingsWindow();
             }
 
-            Sys.TryAutoImportMods();
+            Sys.TryAutoImportModsAsync();
 
 
             CatalogMods.RefreshListRequested += CatalogList_RefreshRequested;
@@ -534,8 +534,8 @@ They will be automatically turned off.";
             ConfigureModViewModel.DeleteTempFolder();
 
             // TODO: check for app updates
-            StatusMessage = $"{App.GetAppName()} v{App.GetAppVersion().ToString()} started - Click here to view the app log.  |  Hint: {GetRandomHint()}";
             Sys.AppVersion = App.GetAppVersion();
+            StatusMessage = $"{App.GetAppName()} v{Sys.AppVersion.ToString()} started - Click here to view the app log.  |  Hint: {GetRandomHint()}";
         }
 
         private void CatalogList_RefreshRequested()

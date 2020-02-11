@@ -1,9 +1,11 @@
 ﻿using _7thHeaven.Code;
 using Iros._7th.Workshop;
 using SeventhHeaven.Windows;
+using SeventhHeavenUI;
 using SeventhHeavenUI.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -88,8 +90,12 @@ namespace SeventhHeaven.UserControls
         private void btnRefresh_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Sys.ValidateAndRemoveDeletedMods();
-            ViewModel.RefreshModList();
-            RecalculateColumnWidths();
+            Task t = ViewModel.RefreshModListAsync();
+
+            t.ContinueWith((result) =>
+            {
+                App.Current.Dispatcher.Invoke(() => RecalculateColumnWidths());
+            });
         }
 
         private void btnDeactivateAll_Click(object sender, System.Windows.RoutedEventArgs e)

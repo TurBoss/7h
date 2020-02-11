@@ -263,7 +263,7 @@
 
   <Setting xsi:type="Checkbox">
     <Group>Advanced</Group>
-    <Name>Show Stats Title bar</Name>
+    <Name>Show Stats Title Bar</Name>
     <Description>Display some real-time debug information in the title bar. Only visible in windowed mode.</Description>
     <DefaultValue>show_stats_titlebar = off</DefaultValue>
     <TrueSetting>show_stats_titlebar = on</TrueSetting>

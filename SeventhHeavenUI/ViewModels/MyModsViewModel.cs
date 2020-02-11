@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace SeventhHeavenUI.ViewModels
@@ -75,13 +76,25 @@ namespace SeventhHeavenUI.ViewModels
             _previousReloadOptions = new ReloadListOption();
         }
 
+        internal Task RefreshModListAsync()
+        {
+            Task t = Task.Factory.StartNew(() =>
+            {
+                RefreshModList();
+            });
+
+            return t;
+        }
+
         internal void RefreshModList()
         {
             RefreshListRequested?.Invoke(true);
 
+            Sys.TryAutoImportMods();
+
             UpdateModCachedDetails();
             ClearRememberedSearchTextAndCategories();
-            ReloadModList(GetSelectedMod()?.InstallInfo.ModID);
+            ReloadModListFromUIThread(GetSelectedMod()?.InstallInfo.ModID);
 
             RefreshListRequested?.Invoke(false);
         }
@@ -114,8 +127,6 @@ namespace SeventhHeavenUI.ViewModels
         {
             // make sure to remove any deleted items and auto import mods first
             Sys.ActiveProfile.RemoveDeletedItems();
-            Sys.TryAutoImportMods();
-
 
             // if there are no mods installed then just clear the list and return since no extra filtering work needs to be done
             if (Sys.Library.Items.Count == 0)

@@ -197,8 +197,12 @@ namespace SeventhHeaven.Classes
                             MessageDialogWindow.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
                         }
 
-                        Instance.RaiseProgressChanged(title, NLog.LogLevel.Warn);
-                        Instance.RaiseProgressChanged(message, NLog.LogLevel.Warn);
+                        if (!activeModsHasMovies)
+                        {
+                            Instance.RaiseProgressChanged(title, NLog.LogLevel.Warn);
+                            Instance.RaiseProgressChanged(message, NLog.LogLevel.Warn);
+                        }
+
                     }
                 }
             }
@@ -214,15 +218,19 @@ namespace SeventhHeaven.Classes
                     bool activeModsHasMusic = Sys.ActiveProfile.ActiveItems.Any(a => Sys.Library.GetItem(a.ModID).CachedDetails.ContainsMusic);
 
                     string title = ".OGG music files are missing!";
-                    string message = "In order to hear high quality background music, you will need to download and activate a music mod.\n\nAlternatively, you can listen to the game's original low quality MIDI music, but you will need to select 'None' for your 'Music Plugin' which can be found under Settings>Game Driver... > Advanced tab.\n\nLater, if you wish to use high quality .OGG files, switch the setting back to 'VGMstream'.";
+                    string message = "In order to hear high quality background music, you will need to download and activate a music mod.\n\nAlternatively, you can listen to the game's original low quality MIDI music, but you will need to select 'Original MIDI' for your 'Music Option' which can be found under Settings>Game Driver... > Advanced tab.\n\nLater, if you wish to use high quality .OGG files, switch the setting back to 'VGMstream'.";
                     if (!Sys.Settings.GameLaunchSettings.HasDisplayedOggMusicWarning && !activeModsHasMusic)
                     {
                         Sys.Settings.GameLaunchSettings.HasDisplayedOggMusicWarning = true;
                         MessageDialogWindow.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
 
-                    Instance.RaiseProgressChanged(title, NLog.LogLevel.Warn);
-                    Instance.RaiseProgressChanged(message, NLog.LogLevel.Warn);
+                    if (!activeModsHasMusic)
+                    {
+                        Instance.RaiseProgressChanged(title, NLog.LogLevel.Warn);
+                        Instance.RaiseProgressChanged(message, NLog.LogLevel.Warn);
+                    }
+
                 }
             }
 

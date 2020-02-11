@@ -654,7 +654,7 @@ namespace SeventhHeaven.ViewModels
             var shell = progid.CreateSubKey("shell");
             var open = shell.CreateSubKey("open");
             var command = open.CreateSubKey("command");
-            progid.SetValue(String.Empty, "7thHeaven Mod File");
+            progid.SetValue(String.Empty, "7th Heaven Mod File");
             icon.SetValue(String.Empty, "\"" + app + "\"");
             command.SetValue(String.Empty, "\"" + app + "\" /OPENIRO:\"%1\"");
 

@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Iros._7th.Workshop
 {
@@ -371,6 +372,16 @@ namespace Iros._7th.Workshop
                         _context.VarAliases[parts[0]] = parts[1];
                 }
             }
+        }
+
+        public static Task TryAutoImportModsAsync()
+        {
+            Task t = Task.Factory.StartNew(() =>
+            {
+                TryAutoImportMods();
+            });
+
+            return t;
         }
 
         public static void TryAutoImportMods()
