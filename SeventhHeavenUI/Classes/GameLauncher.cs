@@ -127,7 +127,7 @@ namespace SeventhHeaven.Classes
             Instance.RaiseProgressChanged("Verifying game is not installed in a System/Protected folder ...");
             if (converter.IsGameLocatedInSystemFolders())
             {
-                string message = "FF7 is currently installed in a System folder which can cause mods not to work. It is recommended you install it at C:\\Games\\Final Fantasy VII\n\nWould you like to automatically copy your installtion to C:\\Games\\Final Fantasy VII to continue?";
+                string message = "FF7 is currently installed in a System folder which can cause mods not to work. It is recommended you install it at C:\\Games\\Final Fantasy VII\n\nWould you like to automatically copy your installation to C:\\Games\\Final Fantasy VII to continue?";
                 var result = MessageDialogWindow.Show(message, "Cannot Continue!", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
                 if (result.Result == MessageBoxResult.No)
@@ -186,9 +186,12 @@ namespace SeventhHeaven.Classes
 
                     if (!converter.CopyMovieFilesToFolder(Sys.Settings.MovieFolder))
                     {
+                        // skip warning if an active mod contains movie files
+                        bool activeModsHasMovies = Sys.ActiveProfile.ActiveItems.Any(a => Sys.Library.GetItem(a.ModID).CachedDetails.ContainsMovies);
+
                         string title = "Movie files are missing!";
                         string message = "In order to see in-game movies, you will need to download and activate a movie mod.\n\nAlternatively, you can import your movie files from disc by going to Settings>Game Launcher... > Import Movies from Disc.\n\nLastly, you can set your movie path in 'General Settings' to point to your game disc's 'FF7\\Movies' folder, but you will be required to change discs while playing the game.";
-                        if (!Sys.Settings.GameLaunchSettings.HasDisplayedMovieWarning)
+                        if (!Sys.Settings.GameLaunchSettings.HasDisplayedMovieWarning && !activeModsHasMovies)
                         {
                             Sys.Settings.GameLaunchSettings.HasDisplayedMovieWarning = true;
                             MessageDialogWindow.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -207,9 +210,12 @@ namespace SeventhHeaven.Classes
 
                 if (!converter.AllMusicFilesExist())
                 {
+                    // skip warning if an active mod contains music files
+                    bool activeModsHasMusic = Sys.ActiveProfile.ActiveItems.Any(a => Sys.Library.GetItem(a.ModID).CachedDetails.ContainsMusic);
+
                     string title = ".OGG music files are missing!";
                     string message = "In order to hear high quality background music, you will need to download and activate a music mod.\n\nAlternatively, you can listen to the game's original low quality MIDI music, but you will need to select 'None' for your 'Music Plugin' which can be found under Settings>Game Driver... > Advanced tab.\n\nLater, if you wish to use high quality .OGG files, switch the setting back to 'VGMstream'.";
-                    if (!Sys.Settings.GameLaunchSettings.HasDisplayedOggMusicWarning)
+                    if (!Sys.Settings.GameLaunchSettings.HasDisplayedOggMusicWarning && !activeModsHasMusic)
                     {
                         Sys.Settings.GameLaunchSettings.HasDisplayedOggMusicWarning = true;
                         MessageDialogWindow.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
