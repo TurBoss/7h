@@ -79,7 +79,7 @@ namespace SeventhHeavenUI
                         irofilenoext = Path.GetFileNameWithoutExtension(irofile);
                         Logger.Info("Importing IRO from Windows " + irofile);
 
-                        ModImporter.ImportMod(irofile, irofilenoext, true, false);
+                        ModImporter.ImportMod(irofile, ModImporter.ParseNameFromFileOrFolder(irofilenoext), true, false);
                     }
                     catch (Exception ex)
                     {

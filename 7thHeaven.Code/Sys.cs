@@ -359,7 +359,7 @@ namespace Iros._7th.Workshop
                 VarAliases = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
             };
 
-            string varFile = "7thHeaven.var";
+            string varFile = Path.Combine(_7HFolder, "7thHeaven.var");
 
 
             if (File.Exists(varFile))

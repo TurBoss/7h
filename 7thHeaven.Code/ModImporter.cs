@@ -15,7 +15,7 @@ namespace _7thHeaven.Code
 
         public void Import(string source, string name, bool iroMode, bool noCopy)
         {
-            Mod m = ParseModXmlFromSource(source); // this will increment the progress changed value up to 40%
+            Mod m = ParseModXmlFromSource(source); // this will increment the progress changed value up to 50%
 
             if (string.IsNullOrWhiteSpace(m.Name))
             {
@@ -48,7 +48,7 @@ namespace _7thHeaven.Code
                         Directory.CreateDirectory(Path.GetDirectoryName(dest));
                         File.Copy(file, dest, true);
 
-                        double newProgress = 45.0 + (((double)i / allFiles.Length) * 45); // start at 45 and eventually increment to 90 (i.e. 45 + 45 = 90)
+                        double newProgress = 50.0 + (((double)i / allFiles.Length) * 40); // start at 50 and eventually increment to 90 (i.e. 50 + 40 = 90)
                         RaiseProgressChanged($"Copying files from folder {i} / {allFiles.Length}", newProgress);
                         i++;
                     }
@@ -148,7 +148,7 @@ namespace _7thHeaven.Code
                     doc.Load(arc.GetData("mod.xml"));
                 }
 
-                RaiseProgressChanged($"Scanning .iro archive files for movie and music files", 35);
+                RaiseProgressChanged($"Scanning .iro archive files for movie and music files", 45);
                 foreach (string file in arc.AllFileNames())
                 {
                     if (musicFiles.Any(f => f.Equals(Path.GetFileName(file), StringComparison.InvariantCultureIgnoreCase)))
@@ -184,6 +184,7 @@ namespace _7thHeaven.Code
                     doc.Load(pathToModXml);
                 }
 
+                RaiseProgressChanged($"Scanning mod folder for movie and music files", 25);
                 foreach (string file in FileUtils.GetAllFilesInDirectory(sourceFileOrFolder))
                 {
                     if (musicFiles.Any(f => f.Equals(Path.GetFileName(file), StringComparison.InvariantCultureIgnoreCase)))
@@ -213,7 +214,7 @@ namespace _7thHeaven.Code
 
             if (doc != null)
             {
-                RaiseProgressChanged("Parsing information from mod.xml", 40);
+                RaiseProgressChanged("Parsing information from mod.xml", 50);
 
                 //If mod.xml contains an ID GUID, then use that instead of generating random one
                 string modidstr = doc.SelectSingleNode("/ModInfo/ID").NodeTextS();

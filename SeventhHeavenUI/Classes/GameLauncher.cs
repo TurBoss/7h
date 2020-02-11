@@ -116,14 +116,6 @@ namespace SeventhHeaven.Classes
                 return false;
             }
 
-            Instance.RaiseProgressChanged("Verifying game is full/max install ...");
-            if (!converter.VerifyFullInstallation())
-            {
-                string messageToUser = "Your FF7 installation folder is missing critical file(s). When you installed FF7, you may have accidentally chosen to install the 'Standard Install', but the 'Maximum Install' is required.\n\n7th Heaven can repair this for you automatically. Simply insert one of your game discs and try again.";
-                Instance.RaiseProgressChanged(messageToUser, NLog.LogLevel.Error);
-                return false;
-            }
-
             Instance.RaiseProgressChanged("Verifying game is not installed in a System/Protected folder ...");
             if (converter.IsGameLocatedInSystemFolders())
             {
@@ -153,6 +145,17 @@ namespace SeventhHeaven.Classes
                 Sys.Settings.SetPathsFromInstallationPath(newInstallationPath);
                 converter.InstallPath = newInstallationPath;
             }
+
+            Instance.RaiseProgressChanged("Verifying game is full/max install ...");
+            if (!converter.VerifyFullInstallation())
+            {
+                string messageToUser = "Your FF7 installation folder is missing critical file(s). When you installed FF7, you may have accidentally chosen to install the 'Standard Install', but the 'Maximum Install' is required.\n\n7th Heaven can repair this for you automatically. Simply insert one of your game discs and try again.";
+                Instance.RaiseProgressChanged(messageToUser, NLog.LogLevel.Error);
+                return false;
+            }
+
+            Instance.RaiseProgressChanged("Creating missing required directories ...");
+            converter.CreateMissingDirectories();
 
             Instance.RaiseProgressChanged("Verifying additional files for 'battle' & 'kernel' folders exist ...");
             if (!converter.VerifyAdditionalFilesExist())
@@ -233,10 +236,6 @@ namespace SeventhHeaven.Classes
 
                 }
             }
-
-            Instance.RaiseProgressChanged("Creating missing required directories ...");
-            converter.CreateMissingDirectories();
-
 
             string backupFolderPath = Path.Combine(converter.InstallPath, GameConverter.BackupFolderName, DateTime.Now.ToString("yyyyMMddHHmmss"));
 

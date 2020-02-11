@@ -1020,11 +1020,37 @@ namespace SeventhHeaven.Classes
                     }
                 }
 
-                if (Directory.Exists(Path.Combine(InstallPath, "shaders")))
+                string pathToShaders = Path.Combine(InstallPath, "shaders");
+                if (Directory.Exists(pathToShaders) && Directory.GetFiles(pathToShaders).Length > 0)
                 {
                     SendMessage($"\tbacking up existing shaders folder to {backupFolderPath} ...");
                     Directory.CreateDirectory(Path.Combine(backupFolderPath, "shaders"));
                     FileUtils.CopyDirectoryRecursively(Path.Combine(InstallPath, "shaders"), Path.Combine(backupFolderPath, "shaders"));
+                }
+
+                // move old game driver (*.fgp) plugins to backup folder and delete plugins folder if empty
+                string pathToPlugins = Path.Combine(InstallPath, "plugins");
+                if (Directory.Exists(pathToPlugins))
+                {
+                    string[] pluginFiles = new string[] { "ff7music.fgp", "ffmpeg_movies.fgp", "vgmstream_music.fgp" };
+
+                    foreach (string file in pluginFiles)
+                    {
+                        string absolutePath = Path.Combine(pathToPlugins, file);
+                        string targetPath = Path.Combine(backupFolderPath, "plugins", file);
+
+                        if (File.Exists(absolutePath))
+                        {
+                            Directory.CreateDirectory(Path.GetDirectoryName(targetPath));
+                            File.Move(absolutePath, targetPath);
+                        }
+                    }
+
+                    if (Directory.GetFileSystemEntries(pathToPlugins).Length == 0)
+                    {
+                        // delete now empty plugins folder
+                        Directory.Delete(pathToPlugins);
+                    }
                 }
 
                 SendMessage($"\tcopying contents of {Sys.PathToGameDriverFolder} to {InstallPath} ...");
@@ -1120,13 +1146,16 @@ namespace SeventhHeaven.Classes
         }
 
         /// <summary>
-        /// Creates 'mods/Textures', 'direct' and subfolders, 'music', 'music/vgmstream' folders if missing
+        /// Creates 'mods/Textures', 'direct' and subfolders, 'music', 'music/vgmstream', 'data/kernel' 'data/battle' folders if missing
         /// </summary>
         public void CreateMissingDirectories()
         {
             string[] requiredFolders = new string[]
             {
                 Sys.Settings.AaliFolder,
+                Path.Combine(InstallPath, "data"),
+                Path.Combine(InstallPath, "data", "kernel"),
+                Path.Combine(InstallPath, "data", "battle"),
                 Path.Combine(InstallPath, "direct"),
                 Path.Combine(InstallPath, "direct", "battle"),
                 Path.Combine(InstallPath, "direct", "char"),
