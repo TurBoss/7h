@@ -66,7 +66,11 @@ namespace SeventhHeavenUI
             {
                 if (parm.StartsWith("iros://", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    //TODO: ProcessIrosLink(parm);
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        MainWindow window = App.Current.MainWindow as MainWindow;
+                        window.ViewModel.AddIrosUrlToSubscriptions(parm);
+                    });
                 }
                 else if (parm.StartsWith("/OPENIRO:", StringComparison.InvariantCultureIgnoreCase))
                 {

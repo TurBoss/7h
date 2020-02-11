@@ -553,7 +553,7 @@ It may not work properly unless you find and install the requirements.";
             LocationType type;
             string location;
 
-            if (!LocationUtil.Parse(link, out type, out location)) return;
+            if (!LocationUtil.TryParse(link, out type, out location)) return;
 
             Action onError = () =>
             {

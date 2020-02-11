@@ -1402,6 +1402,30 @@ They will be automatically turned off.";
             GameLauncher.Instance.LaunchCompleted -= GameLauncher_LaunchCompleted;
             IsGameLaunching = false;
         }
+
+        internal void AddIrosUrlToSubscriptions(string irosUrl)
+        {
+            if (LocationUtil.TryParse(irosUrl, out LocationType type, out string httpUrl))
+            {
+                if (Sys.Settings.Subscriptions.Any(s => s.Url.Equals(irosUrl, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    Sys.Message(new WMessage($"The subscription {irosUrl} is already added.", true));
+                    return;
+                }
+
+                GeneralSettingsViewModel.ResolveCatalogNameFromUrl(irosUrl, name =>
+                {
+                    Sys.Settings.Subscriptions.Add(new Subscription() { Url = irosUrl, Name = name });
+                    Sys.Message(new WMessage($"Added {irosUrl} to subscriptions.", true));
+
+                    CatalogMods.ForceCheckCatalogUpdateAsync();
+                });
+            }
+            else
+            {
+                Sys.Message(new WMessage($"The iros:// link {irosUrl} may be formatted incorrectly. Could not add to subscriptions.", WMessageLogLevel.LogOnly));
+            }
+        }
     }
 
     internal class CatCheckOptions

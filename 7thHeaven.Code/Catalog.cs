@@ -193,7 +193,7 @@ namespace Iros._7th.Workshop
 
     public static class LocationUtil
     {
-        public static bool Parse(string link, out LocationType type, out string url)
+        public static bool TryParse(string link, out LocationType type, out string url)
         {
             if (link.StartsWith("iros://", StringComparison.InvariantCultureIgnoreCase)) link = link.Substring(7);
             string[] parts = link.Split(new[] { '/' }, 2);

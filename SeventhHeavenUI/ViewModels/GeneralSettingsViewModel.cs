@@ -1123,7 +1123,7 @@ namespace SeventhHeaven.ViewModels
         /// </summary>
         /// <param name="catalogUrl"></param>
         /// <param name="callback"></param>
-        internal void ResolveCatalogNameFromUrl(string catalogUrl, Action<string> callback)
+        internal static void ResolveCatalogNameFromUrl(string catalogUrl, Action<string> callback)
         {
             string name = "";
 
