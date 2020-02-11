@@ -971,9 +971,14 @@ namespace SeventhHeaven.Classes
 
         internal static bool SanityCheckCompatibility()
         {
-            List<InstalledItem> profInst = Sys.ActiveProfile.ActiveItems.Select(pi => Sys.Library.GetItem(pi.ModID)).ToList();
+            if (Sys.Settings.HasOption(GeneralOptions.BypassCompatibility))
+            {
+                return true; // user has 'ignore compatibility restrictions' set in general settings so just return true
+            }
 
-            foreach (InstalledItem item in profInst)
+            List<InstalledItem> activeInstalledMods = Sys.ActiveProfile.ActiveItems.Select(pi => Sys.Library.GetItem(pi.ModID)).ToList();
+
+            foreach (InstalledItem item in activeInstalledMods)
             {
                 ModInfo info = item.GetModInfo();
 
@@ -984,7 +989,7 @@ namespace SeventhHeaven.Classes
 
                 foreach (var req in info.Compatibility.Requires)
                 {
-                    var rInst = profInst.Find(i => i.ModID.Equals(req.ModID));
+                    var rInst = activeInstalledMods.Find(i => i.ModID.Equals(req.ModID));
                     if (rInst == null)
                     {
                         MessageDialogWindow.Show(String.Format("Mod {0} requires you to activate {1} as well.", item.CachedDetails.Name, req.Description), "Missing Required Activation");
@@ -999,7 +1004,7 @@ namespace SeventhHeaven.Classes
 
                 foreach (var forbid in info.Compatibility.Forbids)
                 {
-                    var rInst = profInst.Find(i => i.ModID.Equals(forbid.ModID));
+                    var rInst = activeInstalledMods.Find(i => i.ModID.Equals(forbid.ModID));
                     if (rInst == null)
                     {
                         continue; //good!

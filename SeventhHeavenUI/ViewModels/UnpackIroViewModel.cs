@@ -130,7 +130,7 @@ namespace SeventhHeaven.ViewModels
             return isValid;
         }
 
-        internal void UnpackIro()
+        internal Task UnpackIro()
         {
             string pathToOutput = PathToOutputFolder;
             string pathToIro = PathToIroFile;
@@ -170,6 +170,8 @@ namespace SeventhHeaven.ViewModels
 
                 StatusText = "Unpacking complete!";
             });
+
+            return unpackTask;
         }
 
         private void IroProgress(double d, string s)

@@ -523,7 +523,14 @@ namespace SeventhHeaven.ViewModels
                 RemoveIroFileAssociationFromRegistry();
             }
 
-            // TODO: add context menu option to Explorer
+            if (Sys.Settings.HasOption(GeneralOptions.Show7HInFileExplorerContextMenu))
+            {
+                AssociateFileExplorerContextMenuWith7H();
+            }
+            else
+            {
+                RemoveFileExplorerContextMenuAssociationWith7H();
+            }
         }
 
         /// <summary>
@@ -640,7 +647,6 @@ namespace SeventhHeaven.ViewModels
             string app = System.Reflection.Assembly.GetExecutingAssembly().Location;
 
             //Create Prog_ID in Registry so we can associate file types
-            //TODO: Add additional subkeys to define an "Unpack" option for IROs
             var progid = key.CreateSubKey("7thHeaven");
             if (progid == null) return false;
 
@@ -678,8 +684,30 @@ namespace SeventhHeaven.ViewModels
 
                 if (subkeys.Contains("7thHeaven"))
                 {
-                    key.DeleteSubKeyTree("7thHeaven");
-                    deletedKeys = true;
+                    var progKey = key.OpenSubKey("7thHeaven", true);
+                    string[] subKeys = progKey.GetSubKeyNames();
+
+                    if (subKeys.Any(k => k == "shell"))
+                    {
+                        var shell = progKey.OpenSubKey("shell", true);
+                        if (shell.GetSubKeyNames().Any(k => k == "open"))
+                        {
+                            shell.DeleteSubKeyTree("open");
+                            deletedKeys = true;
+                        }
+                    }
+
+                    if (subKeys.Any(k => k == ".iro"))
+                    {
+                        progKey.DeleteSubKeyTree(".iro");
+                        deletedKeys = true;
+                    }
+
+                    if (subKeys.Any(k => k == "DefaultIcon"))
+                    {
+                        progKey.DeleteSubKeyTree("DefaultIcon");
+                        deletedKeys = true;
+                    }
                 }
 
                 if (subkeys.Contains(".iro"))
@@ -762,6 +790,97 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        /// <summary>
+        /// Update Registry to add 7th Heaven Context menu options to Windows File Explorer
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private static bool AssociateFileExplorerContextMenuWith7H(RegistryKey key)
+        {
+            string app = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
+            // create registry keys for 'Pack IRO' for folders
+            var dir = key.CreateSubKey("Directory");
+            if (dir == null) return false;
+
+            var shell = dir.CreateSubKey("shell");
+            var name = shell.CreateSubKey("Pack into IRO");
+            var command = name.CreateSubKey("command");
+
+            command.SetValue(String.Empty, "\"" + app + "\" \"/PACKIRO:%1\"");
+            name.SetValue("Icon", "\"" + app + "\"");
+
+            // create registry keys for 'Unpack IRO' for files
+            var progid = key.CreateSubKey("7thHeaven");
+            if (progid == null) return false;
+
+            var iroShell = progid.CreateSubKey("shell");
+            var unpackCmdName = iroShell.CreateSubKey("Unpack IRO");
+            var unpackCommand = unpackCmdName.CreateSubKey("command");
+
+            unpackCommand.SetValue(String.Empty, "\"" + app + "\" \"/UNPACKIRO:%1\"");
+            unpackCmdName.SetValue("Icon", "\"" + app + "\"");
+
+            SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Deletes Registry key/values (if they exist) to unasssociate 7th heaven context menu options from Windows File Explorer
+        /// </summary>
+        /// <param name="key"> could be HKEY_CLASSES_ROOT or HKEY_CURRENT_USER/Software/Classes </param>
+        /// <returns></returns>
+        private static bool RemoveContextMenuAssociationFromRegistry(RegistryKey key)
+        {
+            try
+            {
+                List<string> subkeys = key.GetSubKeyNames().Where(k => k == "Directory" || k == "7thHeaven").ToList();
+
+                if (subkeys.Contains("Directory"))
+                {
+                    var dirKey = key.OpenSubKey("Directory", true);
+                    
+                    if (dirKey.GetSubKeyNames().Any(k => k == "shell"))
+                    {
+                        var shell = dirKey.OpenSubKey("shell", true);
+                        if (shell.GetSubKeyNames().Any(k => k == "Pack into IRO"))
+                        {
+                            shell.DeleteSubKeyTree("Pack into IRO");
+                        }
+                    }
+
+                    //Refresh Shell/Explorer so icon cache updates
+                    SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
+                }
+
+                if (subkeys.Contains("7thHeaven"))
+                {
+                    var dirKey = key.OpenSubKey("7thHeaven", true);
+
+                    if (dirKey.GetSubKeyNames().Any(k => k == "shell"))
+                    {
+                        var shell = dirKey.OpenSubKey("shell", true);
+                        if (shell.GetSubKeyNames().Any(k => k == "Unpack IRO"))
+                        {
+                            shell.DeleteSubKeyTree("Unpack IRO");
+                        }
+                    }
+
+                    //Refresh Shell/Explorer so icon cache updates
+                    SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Warn(e); // could be error thrown if already deleted
+                return false;
+            }
+        }
+
+
         internal static bool AssociateIroFilesWith7H()
         {
             try
@@ -826,6 +945,46 @@ namespace SeventhHeaven.ViewModels
             {
                 Logger.Error(e);
                 Sys.Message(new WMessage("Failed to un-register iros:// links with 7th Heaven"));
+                return false;
+            }
+        }
+
+        internal static bool AssociateFileExplorerContextMenuWith7H()
+        {
+            try
+            {
+                RegistryKey key = Registry.ClassesRoot;
+                bool global = AssociateFileExplorerContextMenuWith7H(key);
+                if (!global)
+                {
+                    key = Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Classes");
+                    global = AssociateFileExplorerContextMenuWith7H(key);
+                }
+                return global;
+            }
+            catch (Exception e)
+            {
+                Sys.Message(new WMessage("Failed to create 7th Heaven Context Menu entries in Windows Explorer", WMessageLogLevel.Error, e));
+                return false;
+            }
+        }
+
+        internal static bool RemoveFileExplorerContextMenuAssociationWith7H()
+        {
+            try
+            {
+                RegistryKey key = Registry.ClassesRoot;
+                bool global = RemoveContextMenuAssociationFromRegistry(key);
+                if (!global)
+                {
+                    key = Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Classes");
+                    global = RemoveContextMenuAssociationFromRegistry(key);
+                }
+                return global;
+            }
+            catch (Exception e)
+            {
+                Sys.Message(new WMessage("Failed to remove 7th Heaven Context Menu entries in Windows Explorer", WMessageLogLevel.Error, e));
                 return false;
             }
         }

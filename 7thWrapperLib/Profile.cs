@@ -617,7 +617,11 @@ namespace _7thWrapperLib
             if (n.Attributes["Versions"] != null)
                 Versions = n.Attributes["Versions"].Value
                     .Split(',')
-                    .Select(s => decimal.Parse(s))
+                    .Select(s =>
+                    {
+                        decimal.TryParse(s, out decimal parsedVer);
+                        return parsedVer;
+                    })
                     .ToList();
             else
                 Versions = new List<decimal>();

@@ -47,16 +47,7 @@ namespace SeventhHeavenUI
 
             SetWindowSizeAndLocation();
 
-            ProcessCommandLineArgs();
-
-            App.uniqueMutex = new System.Threading.Mutex(true, App.uniqueAppGuid, out bool result);
-            GC.KeepAlive(App.uniqueMutex);
-
-            if (!result)
-            {
-                App.Current.Shutdown(); // only one instance of the app opened at a time so close after processing arguments
-                return;
-            }
+            App.ProcessCommandLineArgs(Environment.GetCommandLineArgs(), true);
 
             InitColumnSettings();
         }
@@ -102,56 +93,6 @@ namespace SeventhHeavenUI
                 Width = Sys.Settings.MainWindow.W;
                 Height = Sys.Settings.MainWindow.H;
                 WindowState = Sys.Settings.MainWindow.State;
-            }
-        }
-
-        private void ProcessCommandLineArgs()
-        {
-            foreach (string parm in Environment.GetCommandLineArgs())
-            {
-                if (parm.StartsWith("iros://", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    //TODO: ProcessIrosLink(parm);
-                    
-                }
-                else if (parm.StartsWith("/OPENIRO:", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    string irofile = null;
-                    string irofilenoext = null;
-
-                    try
-                    {
-                        irofile = parm.Substring(9);
-                        irofilenoext = System.IO.Path.GetFileNameWithoutExtension(irofile);
-                        Logger.Info("Importing IRO from Windows " + irofile);
-
-                        ModImporter.ImportMod(irofile, irofilenoext, true, false);
-                    }
-                    catch (Exception ex)
-                    {
-                        Sys.Message(new WMessage("Mod " + irofilenoext + " failed to import: " + ex.ToString(), true));
-                        continue;
-                    }
-
-                    Sys.Message(new WMessage() { Text = "Auto imported mod " + irofilenoext });
-                    MessageDialogWindow.Show("The mod " + irofilenoext + " has been added to your Library.", "Import Mod from Windows");
-
-                    //TODO: Add an IRO "Unpack" option here
-                }
-                else if (parm.StartsWith("/PROFILE:", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    Sys.Settings.CurrentProfile = parm.Substring(9);
-                    Sys.ActiveProfile = Util.Deserialize<Profile>(Sys.PathToCurrentProfileFile);
-                    ViewModel.RefreshProfile();
-                }
-                else if (parm.Equals("/LAUNCH", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    ViewModel.LaunchGame();
-                }
-                else if (parm.Equals("/QUIT", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    App.Current.Shutdown();
-                }
             }
         }
 

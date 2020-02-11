@@ -28,7 +28,7 @@ namespace SeventhHeavenUI.ViewModels
 Download and install them?";
 
         private const string _msgMissingReq =
-            @"This mod requires the following mods to also be installed, but I cannot find them:
+            @"This mod requires the following mods to also be installed, but they could not be found in any catalog:
 {0}
 It may not work properly unless you find and install the requirements.";
 

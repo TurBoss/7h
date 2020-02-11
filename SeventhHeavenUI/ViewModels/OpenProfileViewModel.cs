@@ -284,7 +284,7 @@ namespace SeventhHeaven.ViewModels
         internal bool SwitchToProfile(string selectedProfile)
         {
             // ensure profile xml file exists before switching
-            string xmlFile = Path.Combine(Sys.PathToProfiles, $"{SelectedProfile}.xml");
+            string xmlFile = Path.Combine(Sys.PathToProfiles, $"{selectedProfile}.xml");
 
             if (!File.Exists(xmlFile))
             {
@@ -311,8 +311,6 @@ namespace SeventhHeaven.ViewModels
                 Logger.Warn(e);
                 return false;
             }
-
-
         }
     }
 }

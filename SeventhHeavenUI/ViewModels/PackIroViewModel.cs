@@ -176,7 +176,7 @@ namespace SeventhHeaven.ViewModels
             return isValid;
         }
 
-        internal void PackIro()
+        internal Task PackIro()
         {
             string pathToSource = PathToSourceFolder;
             string outputFile = PathToOutputFile;
@@ -209,6 +209,8 @@ namespace SeventhHeaven.ViewModels
 
                 StatusText = "Packing complete!";
             });
+
+            return packTask;
         }
 
         private void IroProgress(double d, string s)
