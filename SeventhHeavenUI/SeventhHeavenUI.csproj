@@ -157,6 +157,9 @@
     <Compile Include="ViewModels\MyModsViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="Windows\CatalogCreationToolWindow.xaml.cs">
+      <DependentUpon>CatalogCreationToolWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\ChunkToolWindow.xaml.cs">
       <DependentUpon>ChunkToolWindow.xaml</DependentUpon>
     </Compile>
@@ -209,6 +212,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="UserControls\PackIroUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\CatalogCreationToolWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

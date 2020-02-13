@@ -124,6 +124,8 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Speed" Width="100" DisplayMemberBinding="{Binding DownloadSpeed, FallbackValue='32.5 kb/s'}"/>
+                    <GridViewColumn Header="Time Left" Width="100" DisplayMemberBinding="{Binding RemainingTime, FallbackValue='54 sec'}"/>
+
                 </GridView>
             </ListView.View>
         </ListView>

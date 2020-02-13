@@ -52,6 +52,7 @@
     <Compile Include="Catalog.cs" />
     <Compile Include="ColumnSettings.cs" />
     <Compile Include="ConfigSettings.cs" />
+    <Compile Include="DownloadItem.cs" />
     <Compile Include="DuplicateModException.cs" />
     <Compile Include="FF7FileLister.cs" />
     <Compile Include="FileUtils.cs" />

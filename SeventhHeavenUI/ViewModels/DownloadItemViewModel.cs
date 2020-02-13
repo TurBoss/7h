@@ -1,4 +1,5 @@
-﻿using Iros._7th;
+﻿using _7thHeaven.Code;
+using Iros._7th;
 using Iros._7th.Workshop;
 using Iros.Mega;
 using System;
@@ -10,42 +11,19 @@ using System.Threading.Tasks;
 
 namespace SeventhHeavenUI.ViewModels
 {
-    public enum DownloadMode
-    {
-        Download,
-        Install,
-    }
+
 
     public class DownloadItemViewModel : ViewModelBase
     {
-        private string _itemName;
-        private double _percentComplete;
         private bool _isSelected;
-        private string _downloadSpeed;
 
-        public Guid UniqueId { get; set; }
-
-        public Install.InstallProcedure IProc { get; set; }
-
-        public DateTime LastCalc { get; set; }
-        public long LastBytes { get; set; }
-
-        public Action PerformCancel { get; set; }
-        public Action OnCancel { get; set; }
-
-        public Action OnError { get; set; }
-
+        public DownloadItem Download { get; set; }
 
         public string ItemName
         {
             get
             {
-                return _itemName;
-            }
-            set
-            {
-                _itemName = value;
-                NotifyPropertyChanged();
+                return Download.ItemName;
             }
         }
 
@@ -53,12 +31,15 @@ namespace SeventhHeavenUI.ViewModels
         {
             get
             {
-                return _percentComplete;
+                return Download.PercentComplete;
             }
             set
             {
-                _percentComplete = value;
-                NotifyPropertyChanged();
+                if (value != Download.PercentComplete)
+                {
+                    Download.PercentComplete = value;
+                    NotifyPropertyChanged();
+                }
             }
         }
 
@@ -66,11 +47,24 @@ namespace SeventhHeavenUI.ViewModels
         {
             get
             {
-                return _downloadSpeed;
+                return Download.DownloadSpeed;
             }
             set
             {
-                _downloadSpeed = value;
+                Download.DownloadSpeed = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string RemainingTime
+        {
+            get
+            {
+                return Download.RemainingTime;
+            }
+            set
+            {
+                Download.RemainingTime = value;
                 NotifyPropertyChanged();
             }
         }
@@ -89,13 +83,9 @@ namespace SeventhHeavenUI.ViewModels
         }
 
 
-
-
-        public DownloadItemViewModel()
+        public DownloadItemViewModel(DownloadItem download)
         {
-            LastCalc = DateTime.Now;
-            UniqueId = Guid.NewGuid();
-            PercentComplete = 0;
+            this.Download = download;
         }
 
     }

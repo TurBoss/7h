@@ -1,4 +1,5 @@
-﻿using Iros._7th;
+﻿using _7thHeaven.Code;
+using Iros._7th;
 using Iros._7th.Workshop;
 using Microsoft.Win32;
 using SeventhHeaven.Classes;
@@ -1176,7 +1177,17 @@ namespace SeventhHeaven.ViewModels
             });
             downloadCallback.Error = onError;
 
-            Sys.Downloads.Download(catalogUrl, path, $"Resolving catalog name for {catalogUrl}", downloadCallback, onCancel);
+            DownloadItem download = new DownloadItem()
+            {
+                Links = new List<string>() { catalogUrl },
+                SaveFilePath = path,
+                Category = DownloadCategory.Catalog,
+                ItemName = $"Resolving catalog name for {catalogUrl}",
+                IProc = downloadCallback,
+                OnCancel = onCancel
+            };
+
+            Sys.Downloads.AddToDownloadQueue(download);
         }
 
         internal void AddExtraFolder()

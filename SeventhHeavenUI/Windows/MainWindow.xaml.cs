@@ -98,6 +98,17 @@ namespace SeventhHeavenUI
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (ViewModel.CatalogMods.DownloadList.Count > 0)
+            {
+                var result = MessageDialogWindow.Show("Are you sure you want to exit? You have downloads pending.", "Confirm Exit", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+                if (result.Result == MessageBoxResult.No)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+            }
+
             Sys.Settings.MainWindow = new SavedWindow()
             {
                 X = (int)System.Windows.Application.Current.MainWindow.Left,
@@ -320,6 +331,11 @@ namespace SeventhHeavenUI
         private void menuItemLaunchSettings_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.ShowGameLaunchSettingsWindow();
+        }
+
+        private void menuItemCatalogCreation_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ShowCatalogCreationTool();
         }
     }
 }

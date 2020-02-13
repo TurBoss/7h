@@ -1,3 +1,9 @@
+CurrentDay=Sys:Day
+CurrentMonth=Sys:Month
+CurrentYear=Sys:Year
+CurrentHour=Sys:Hour
+CurrentMinute=Sys:Minute
+CurrentSecond=Sys:Second
 UTS=Byte:0xDC0BD5
 Subtitles=Byte:0xDC0BCF
 Unlocks=Byte:0xDC0BD6

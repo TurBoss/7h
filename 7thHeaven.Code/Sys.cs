@@ -80,9 +80,9 @@ namespace Iros._7th.Workshop
 
     public interface IDownloader
     {
-        void Download(string link, string file, string description, Install.InstallProcedure iproc, Action onCancel);
-        void Download(IEnumerable<string> links, string file, string description, Install.InstallProcedure iproc, Action onCancel);
-        void BringToFront();
+        void AddToDownloadQueue(DownloadItem download);
+        void Download(string link, DownloadItem downloadInfo);
+        void Download(IEnumerable<string> links, DownloadItem downloadInfo);
     }
 
     public static class Sys

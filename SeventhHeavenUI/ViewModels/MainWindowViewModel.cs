@@ -429,6 +429,11 @@ They will be automatically turned off.";
             }
         }
 
+        internal void ShowCatalogCreationTool()
+        {
+            CatalogCreationToolWindow window = new CatalogCreationToolWindow();
+            window.Show();
+        }
 
         public bool IsGameLaunching
         {

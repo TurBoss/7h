@@ -3,6 +3,7 @@
   The original developer is Iros <irosff@outlook.com>
 */
 
+using _7thHeaven.Code;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -86,7 +87,16 @@ namespace Iros._7th.Workshop {
 
             string pathToTempDownload = Path.Combine(_folder, file + ".tmp");
 
-            Sys.Downloads.Download("iros://Url/" + url.Replace("://", "$"), pathToTempDownload, "Downloading preview image", new Install.InstallProcedureCallback(ae =>
+            DownloadItem download = new DownloadItem()
+            {
+                Links = new List<string> { LocationUtil.FormatHttpUrl(url) },
+                SaveFilePath = pathToTempDownload,
+                ItemName = "Downloading preview image",
+                Category = DownloadCategory.Image,
+                OnCancel = null
+            };
+
+            download.IProc = new Install.InstallProcedureCallback(ae =>
             {
                 if (ae.Error == null)
                 {
@@ -129,7 +139,9 @@ namespace Iros._7th.Workshop {
                     Sys.Message(new WMessage("ImageCache Download error: " + ae.Error.ToString(), WMessageLogLevel.LogOnly, ae.Error));
                 }
 
-            }), null);
+            });
+
+            Sys.Downloads.AddToDownloadQueue(download);
         }
 
         /// <summary>
@@ -224,7 +236,7 @@ namespace Iros._7th.Workshop {
                     TriggerDownload(url, modID);
                 }
             }
-            else
+            else if (!url.StartsWith("iros://Preview/Auto", StringComparison.InvariantCultureIgnoreCase))
             {
                 TriggerDownload(url, modID);
             }

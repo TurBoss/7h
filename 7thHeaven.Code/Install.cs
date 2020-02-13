@@ -118,18 +118,25 @@ namespace Iros._7th.Workshop
                 {
                     string pfile = String.Format("{0}_{1}_{2}.irop", m.ID, SafeStr(m.Name), m.LatestVersion.Version);
                     Sys.SetStatus(m.ID, ModStatus.Downloading);
-                    Sys.Downloads.Download(patches.Select(p => p.Link),
-                        System.IO.Path.Combine(temppath, pfile),
-                        "Downloading " + m.Name,
-                        new PatchModProcedure()
-                        {
-                            File = pfile,
-                            Install = install,
-                            Mod = m,
-                            Error = onError
-                        },
-                        onCancel
-                    );
+
+                    DownloadItem download = new DownloadItem()
+                    {
+                        Links = patches.Select(p => p.Link).ToList(),
+                        SaveFilePath = System.IO.Path.Combine(temppath, pfile),
+                        Category = DownloadCategory.Mod,
+                        ItemName = "Downloading " + m.Name,
+                        OnCancel = onCancel
+                    };
+
+                    download.IProc = new PatchModProcedure()
+                    {
+                        File = pfile,
+                        Install = install,
+                        Mod = m,
+                        Error = onError
+                    };
+
+                    Sys.Downloads.AddToDownloadQueue(download);
                     return;
                 }
             }
@@ -141,62 +148,81 @@ namespace Iros._7th.Workshop
             {
                 PatchController pc = new PatchController(m.LatestVersion.PatchLinks.Count);
 
-                Sys.Downloads.Download(m.LatestVersion.Links,
-                    System.IO.Path.Combine(temppath, file),
-                    "Downloading " + m.Name,
-                    new DownloadThenPatchProcedure()
-                    {
-                        File = file,
-                        Mod = m,
-                        Controller = pc,
-                        Error = onError
-                    },
-                    onCancel
-                );
+                DownloadItem download = new DownloadItem()
+                {
+                    Links = m.LatestVersion.Links,
+                    SaveFilePath = System.IO.Path.Combine(temppath, file),
+                    ItemName = "Downloading " + m.Name,
+                    Category = DownloadCategory.Mod,
+                    OnCancel = onCancel
+                };
+
+                download.IProc = new DownloadThenPatchProcedure()
+                {
+                    File = file,
+                    Mod = m,
+                    Controller = pc,
+                    Error = onError
+                };
+
+                Sys.Downloads.AddToDownloadQueue(download);
+
                 int pCount = 0;
                 foreach (string p in m.LatestVersion.PatchLinks)
                 {
                     string pfile = String.Format("{0}_{1}_{2}_patch{3}.iro", m.ID, SafeStr(m.Name), m.LatestVersion.Version, pCount);
                     pc.PatchFiles.Add(pfile);
-                    Sys.Downloads.Download(p,
-                        System.IO.Path.Combine(temppath, pfile),
-                        "Downloading " + m.Name + " patch " + pCount,
-                        new DownloadPatchProcedure()
-                        {
-                            File = pfile,
-                            Controller = pc,
-                            Error = ex =>
-                            {
-                                pc.PatchFailed();
-                                Sys.RevertStatus(m.ID);
-                            }
-                        },
-                        () =>
+
+                    DownloadItem patchDownload = new DownloadItem()
+                    {
+                        Links = new List<string>() { p },
+                        SaveFilePath = System.IO.Path.Combine(temppath, pfile),
+                        ItemName = "Downloading " + m.Name + " patch " + pCount,
+                        Category = DownloadCategory.Mod,
+                        OnCancel = () =>
                         {
                             pc.PatchFailed();
                             Sys.RevertStatus(m.ID);
                         }
-                    );
+                    };
 
+                    patchDownload.IProc = new DownloadPatchProcedure()
+                    {
+                        File = pfile,
+                        Controller = pc,
+                        Error = ex =>
+                        {
+                            pc.PatchFailed();
+                            Sys.RevertStatus(m.ID);
+                        }
+                    };
+
+                    Sys.Downloads.AddToDownloadQueue(patchDownload);
                     pCount++;
                 }
 
             }
             else
             {
-                Sys.Downloads.Download(m.LatestVersion.Links,
-                    System.IO.Path.Combine(temppath, file),
-                    "Downloading " + m.Name,
-                    new InstallModProcedure()
-                    {
-                        File = file,
-                        Mod = m,
-                        ExtractSubFolder = m.LatestVersion.ExtractSubFolder,
-                        ExtractInto = m.LatestVersion.ExtractInto,
-                        Error = onError
-                    },
-                    onCancel
-                );
+                DownloadItem installDownload = new DownloadItem()
+                {
+                    Links = m.LatestVersion.Links,
+                    SaveFilePath = System.IO.Path.Combine(temppath, file),
+                    Category = DownloadCategory.Mod,
+                    ItemName = "Downloading " + m.Name,
+                    OnCancel = onCancel
+                };
+
+                installDownload.IProc = new InstallModProcedure()
+                {
+                    File = file,
+                    Mod = m,
+                    ExtractSubFolder = m.LatestVersion.ExtractSubFolder,
+                    ExtractInto = m.LatestVersion.ExtractInto,
+                    Error = onError
+                };
+
+                Sys.Downloads.AddToDownloadQueue(installDownload);
             }
         }
 

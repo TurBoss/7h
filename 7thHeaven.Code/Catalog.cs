@@ -188,7 +188,7 @@ namespace Iros._7th.Workshop
         INVALID,
         Url,
         MegaSharedFolder, //Format: SharedFolderLink,FileIDString,HintFileName
-        GDrive,
+        GDrive
     }
 
     public static class LocationUtil
@@ -206,6 +206,23 @@ namespace Iros._7th.Workshop
             int dpos = url.IndexOf('$');
             if (dpos >= 0) url = url.Substring(0, dpos) + "://" + url.Substring(dpos + 1);
             return true;
+        }
+
+        public static string FormatHttpUrl(string httpUrl)
+        {
+            // handle empty string
+            if (string.IsNullOrWhiteSpace(httpUrl))
+            {
+                return "";
+            }
+
+            // already formatted
+            if (httpUrl.StartsWith("iros://Url/"))
+            {
+                return httpUrl;
+            }
+
+            return "iros://Url/" + httpUrl.Replace("://", "$");
         }
     }
 

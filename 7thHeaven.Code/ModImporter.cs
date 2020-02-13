@@ -261,7 +261,7 @@ namespace _7thHeaven.Code
                     byte[] data = getImageData(pv.InnerText);
                     if (data != null)
                     {
-                        string url = $"iros://Preview/Auto/{parsedMod.ID}_{pv.InnerText}";
+                        string url = $"iros://Preview/Auto/{parsedMod.ID}_{pv.InnerText.Replace('\\', '_')}";
                         parsedMod.LatestVersion.PreviewImage = url;
                         Sys.ImageCache.InsertManual(url, data);
                     }

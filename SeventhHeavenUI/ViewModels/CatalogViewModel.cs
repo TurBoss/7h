@@ -1,4 +1,5 @@
-﻿using Iros._7th;
+﻿using _7thHeaven.Code;
+using Iros._7th;
 using Iros._7th.Workshop;
 using Iros.Mega;
 using SeventhHeaven.Classes;
@@ -336,7 +337,16 @@ It may not work properly unless you find and install the requirements.";
                         string uniqueFileName = $"cattemp{Path.GetRandomFileName()}.xml"; // save temp catalog update to unique filename so multiple catalog updates can download async
                         string path = Path.Combine(Sys.SysFolder, "temp", uniqueFileName);
 
-                        Sys.Downloads.Download(subUrl, path, $"Checking catalog {subUrl}", new Install.InstallProcedureCallback(e =>
+                        DownloadItem download = new DownloadItem()
+                        {
+                            Links = new List<string>() { subUrl },
+                            SaveFilePath = path,
+                            Category = DownloadCategory.Catalog,
+                            ItemName = $"Checking catalog {subUrl}",
+                            OnCancel = null,
+                        };
+
+                        download.IProc = new Install.InstallProcedureCallback(e =>
                         {
                             bool success = (e.Error == null && e.Cancelled == false);
                             subUpdateCount++;
@@ -418,7 +428,9 @@ It may not work properly unless you find and install the requirements.";
                                 RefreshListRequested?.Invoke();
                             }
 
-                        }), null);
+                        });
+
+                        Sys.Downloads.AddToDownloadQueue(download);
                     }
                     else
                     {
@@ -473,9 +485,9 @@ It may not work properly unless you find and install the requirements.";
 
         internal void CancelDownload(DownloadItemViewModel downloadItemViewModel)
         {
-            downloadItemViewModel?.PerformCancel();
-            RemoveFromDownloadList(downloadItemViewModel);
-            Sys.Message(new WMessage($"Canceled {downloadItemViewModel.ItemName}"));
+            downloadItemViewModel?.Download?.PerformCancel?.Invoke();
+            RemoveFromDownloadList(downloadItemViewModel?.Download);
+            Sys.Message(new WMessage($"Canceled {downloadItemViewModel?.ItemName}"));
         }
 
         internal void DownloadMod(CatalogModItemViewModel catalogModItemViewModel)
@@ -542,13 +554,15 @@ It may not work properly unless you find and install the requirements.";
             }
         }
 
-        public void Download(string link, string file, string description, Install.InstallProcedure iproc, Action onCancel)
+        public void Download(string link, DownloadItem downloadInfo)
         {
-            Download(new[] { link }, file, description, iproc, onCancel);
+            Download(new List<string>() { link }, downloadInfo);
         }
 
-        public void Download(IEnumerable<string> links, string file, string description, Install.InstallProcedure iproc, Action onCancel)
+        public void Download(IEnumerable<string> links, DownloadItem downloadInfo)
         {
+            downloadInfo.HasStarted = true;
+
             string link = links.First();
             LocationType type;
             string location;
@@ -557,58 +571,48 @@ It may not work properly unless you find and install the requirements.";
 
             Action onError = () =>
             {
-                iproc.Error?.Invoke(new Exception($"Failed {description}"));
+                RemoveFromDownloadList(downloadInfo);
+                downloadInfo.IProc.Error?.Invoke(new Exception($"Failed {downloadInfo.ItemName}"));
             };
 
             if (links.Count() > 1)
             {
                 onError = () =>
                 {
-                    Sys.Message(new WMessage($"Downloading {file} - switching to backup url {links.ElementAt(1)}"));
-                    Download(links.Skip(1), file, description, iproc, onCancel);
+                    Sys.Message(new WMessage($"Downloading {downloadInfo.SaveFilePath} - switching to backup url {links.ElementAt(1)}"));
+                    Download(links.Skip(1), downloadInfo);
                 };
             }
 
-            DownloadItemViewModel newDownload = new DownloadItemViewModel()
-            {
-                ItemName = description,
-                IProc = iproc,
-                OnCancel = onCancel,
-                OnError = onError,
-                DownloadSpeed = "Calculating ..."
-            };
-
-
-            // invoking on current App dispatcher to update the list from UI instead of background thread....
-            AddToDownloadList(newDownload);
+            downloadInfo.OnError = onError;
 
             switch (type)
             {
                 case LocationType.Url:
                     using (var wc = new System.Net.WebClient())
                     {
-                        newDownload.PerformCancel = () =>
+                        downloadInfo.PerformCancel = () =>
                         {
                             wc.CancelAsync();
-                            newDownload.OnCancel?.Invoke();
+                            downloadInfo.OnCancel?.Invoke();
                         };
                         wc.DownloadProgressChanged += new System.Net.DownloadProgressChangedEventHandler(_wc_DownloadProgressChanged);
                         wc.DownloadFileCompleted += new AsyncCompletedEventHandler(_wc_DownloadFileCompleted);
-                        wc.DownloadFileAsync(new Uri(location), file, newDownload);
+                        wc.DownloadFileAsync(new Uri(location), downloadInfo.SaveFilePath, downloadInfo);
                     }
 
                     break;
 
                 case LocationType.GDrive:
                     var gd = new GDrive();
-                    newDownload.PerformCancel = () =>
+                    downloadInfo.PerformCancel = () =>
                     {
                         gd.CancelAsync();
-                        newDownload.OnCancel?.Invoke();
+                        downloadInfo.OnCancel?.Invoke();
                     };
                     gd.DownloadProgressChanged += new System.Net.DownloadProgressChangedEventHandler(_wc_DownloadProgressChanged);
                     gd.DownloadFileCompleted += new AsyncCompletedEventHandler(_wc_DownloadFileCompleted);
-                    gd.Download(location, file, newDownload);
+                    gd.Download(location, downloadInfo.SaveFilePath, downloadInfo);
                     break;
 
                 case LocationType.MegaSharedFolder:
@@ -620,58 +624,87 @@ It may not work properly unless you find and install the requirements.";
                     {
                         _megaFolders[parts[0]] = mega = new MegaIros(parts[0], String.Empty);
                     }
-                    DownloadItemViewModel item = newDownload;
                     MegaIros.Transfer tfr = null;
 
-                    tfr = mega.Download(parts[1], parts[2], file, () =>
+                    tfr = mega.Download(parts[1], parts[2], downloadInfo.SaveFilePath, () =>
                     {
                         switch (tfr.State)
                         {
                             case MegaIros.TransferState.Complete:
-                                ProcessDownloadComplete(item, new AsyncCompletedEventArgs(null, false, item));
+                                ProcessDownloadComplete(downloadInfo, new AsyncCompletedEventArgs(null, false, downloadInfo));
                                 break;
 
                             case MegaIros.TransferState.Failed:
-                                RemoveFromDownloadList(item);
-                                Sys.Message(new WMessage() { Text = "Error downloading " + item.ItemName });
-                                item.OnError?.Invoke();
+                                Sys.Message(new WMessage() { Text = "Error downloading " + downloadInfo.ItemName });
+                                downloadInfo.OnError?.Invoke();
                                 break;
 
                             case MegaIros.TransferState.Canceled:
-                                RemoveFromDownloadList(item);
-                                Sys.Message(new WMessage() { Text = $"{item.ItemName} was canceled" });
+                                RemoveFromDownloadList(downloadInfo);
+                                Sys.Message(new WMessage() { Text = $"{downloadInfo.ItemName} was canceled" });
                                 break;
 
                             default:
-                                UpdateDownloadProgress(item, (int)(100 * tfr.Complete / tfr.Size), tfr.Complete);
+                                UpdateDownloadProgress(downloadInfo, (int)(100 * tfr.Complete / tfr.Size), tfr.Complete, tfr.Size);
                                 break;
                         }
                     });
 
                     mega.ConfirmStartTransfer();
-                    newDownload.PerformCancel = () =>
+                    downloadInfo.PerformCancel = () =>
                     {
                         mega.CancelDownload(tfr);
-                        newDownload.OnCancel?.Invoke();
+                        downloadInfo.OnCancel?.Invoke();
                     };
                     break;
             }
 
-
         }
 
-        private void AddToDownloadList(DownloadItemViewModel newDownload)
+        public void AddToDownloadQueue(DownloadItem newDownload)
         {
+            int downloadCount = 0;
+
             App.Current.Dispatcher.Invoke(() =>
             {
                 lock (_downloadLock)
                 {
-                    if (DownloadList.All(d => d.UniqueId != newDownload.UniqueId))
+                    if (DownloadList.All(d => d.Download.UniqueId != newDownload.UniqueId))
                     {
-                        DownloadList.Add(newDownload);
+                        DownloadList.Add(new DownloadItemViewModel(newDownload));
                     }
+
+                    downloadCount = DownloadList.Count;
                 }
             });
+
+
+            if (downloadCount == 1)
+            {
+                // only item in queue so start downloading right away
+                Download(newDownload.Links, newDownload);
+            }
+            else if (downloadCount > 1)
+            {
+                // allow images and catalogs to download while mod is downloading so it does not halt queue of catalog/image refreshes
+                DownloadItem nextDownload = null;
+                bool isAlreadyDownloadingImageOrCat = false;
+
+                lock (_downloadLock)
+                {
+                    if (DownloadList[0].Download.Category == DownloadCategory.Mod && DownloadList[0].Download.HasStarted)
+                    {
+                        isAlreadyDownloadingImageOrCat = DownloadList.Any(d => d.Download.Category != DownloadCategory.Mod && d.Download.HasStarted);
+                        nextDownload = DownloadList.FirstOrDefault(d => d.Download.Category != DownloadCategory.Mod && !d.Download.HasStarted)?.Download;
+                    }
+                }
+
+                //start the next catalog/image download if no other catalogs/images are being downloaded
+                if (!isAlreadyDownloadingImageOrCat && nextDownload != null)
+                {
+                    Download(nextDownload.Links, nextDownload);
+                }
+            }
         }
 
         internal void UpdateModDetails(Guid modID)
@@ -688,7 +721,7 @@ It may not work properly unless you find and install the requirements.";
 
         void _wc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            DownloadItemViewModel item = (DownloadItemViewModel)e.UserState;
+            DownloadItem item = (DownloadItem)e.UserState;
             if (e.Cancelled)
             {
                 item.PerformCancel?.Invoke();
@@ -700,7 +733,6 @@ It may not work properly unless you find and install the requirements.";
                 Sys.Message(new WMessage(msg, WMessageLogLevel.Error, e.Error.GetBaseException()));
 
                 item.OnError?.Invoke();
-                RemoveFromDownloadList(item);
             }
             else
             {
@@ -708,38 +740,83 @@ It may not work properly unless you find and install the requirements.";
             }
         }
 
-        private void RemoveFromDownloadList(DownloadItemViewModel item)
+        private void RemoveFromDownloadList(DownloadItem item)
         {
+            int downloadCount = 0;
+            bool isDownloadingMod = false;
+
+
             App.Current.Dispatcher.Invoke(() =>
             {
                 lock (_downloadLock)
                 {
-                    if (DownloadList.Any(d => d.UniqueId == item.UniqueId))
+                    if (DownloadList.Any(d => d.Download.UniqueId == item.UniqueId))
                     {
-                        DownloadList.Remove(item);
+                        DownloadItemViewModel viewModel = DownloadList.FirstOrDefault(d => d.Download.UniqueId == item.UniqueId);
+                        DownloadList.Remove(viewModel);
                     }
+
+                    downloadCount = DownloadList.Count;
+                    isDownloadingMod = DownloadList.Any(d => d.Download.Category == DownloadCategory.Mod && d.Download.HasStarted);
                 }
             });
+
+            if (downloadCount > 0)
+            {
+                // start next download in queue
+                DownloadItem nextDownload = null;
+
+                lock (_downloadLock)
+                {
+                    if (!isDownloadingMod)
+                    {
+                        // no mod is currently downloading so get the next download in queue
+                        nextDownload = DownloadList.FirstOrDefault(d => !d.Download.HasStarted)?.Download;
+                    }
+                    else
+                    {
+                        // a mod is downloading so get next catalog/image to download
+                        nextDownload = DownloadList.FirstOrDefault(d => d.Download.Category != DownloadCategory.Mod && !d.Download.HasStarted)?.Download;
+                    }
+                }
+
+                if (nextDownload != null)
+                {
+                    Download(nextDownload.Links, nextDownload);
+                }
+            }
         }
 
         void _wc_DownloadProgressChanged(object sender, System.Net.DownloadProgressChangedEventArgs e)
         {
-            DownloadItemViewModel item = (DownloadItemViewModel)e.UserState;
+            DownloadItem item = (DownloadItem)e.UserState;
+
+            long totalBytes = e.TotalBytesToReceive;
+
+            if (item.Category == DownloadCategory.Image && e.TotalBytesToReceive > 3 * 1000000)
+            {
+                Logger.Warn("preview image greater than 3MB, cancelling download");
+                item.PerformCancel?.Invoke();
+                return;
+            }
+
             int prog = e.ProgressPercentage;
             if ((e.TotalBytesToReceive < 0) && (sender is GDrive))
             {
-                prog = (int)(100 * e.BytesReceived / (sender as GDrive).GetContentLength());
+                totalBytes = (sender as GDrive).GetContentLength();
+                prog = (int)(100 * e.BytesReceived / totalBytes);
             }
-            UpdateDownloadProgress(item, prog, e.BytesReceived);
+
+            UpdateDownloadProgress(item, prog, e.BytesReceived, totalBytes);
         }
 
-        private void CompleteIProc(DownloadItemViewModel item, AsyncCompletedEventArgs e)
+        private void CompleteIProc(DownloadItem item, AsyncCompletedEventArgs e)
         {
             item.IProc.DownloadComplete(e);
             RemoveFromDownloadList(item);
         }
 
-        private void ProcessDownloadComplete(DownloadItemViewModel item, AsyncCompletedEventArgs e)
+        private void ProcessDownloadComplete(DownloadItem item, AsyncCompletedEventArgs e)
         {
             // wire-up error action to also remove the item from the download list
             Action<Exception> existingErrorAction = item.IProc.Error;
@@ -763,31 +840,58 @@ It may not work properly unless you find and install the requirements.";
             item.IProc.Schedule();
         }
 
-        private void UpdateDownloadProgress(DownloadItemViewModel item, int percentDone, long bytesReceived)
+        private void UpdateDownloadProgress(DownloadItem item, int percentDone, long bytesReceived, long totalBytes)
         {
-            if (item.PercentComplete != percentDone)
+            DownloadItemViewModel viewModel = DownloadList.FirstOrDefault(d => d.Download.UniqueId == item.UniqueId);
+
+            if (viewModel == null)
             {
-                item.PercentComplete = percentDone;
+                return;
             }
+
+            viewModel.PercentComplete = percentDone;
 
             TimeSpan interval = DateTime.Now - item.LastCalc;
 
-            if ((interval.TotalSeconds >= 5))
+            if ((interval.TotalSeconds >= 3))
             {
                 if (bytesReceived > 0)
                 {
-                    item.DownloadSpeed = (((bytesReceived - item.LastBytes) / 1024.0) / interval.TotalSeconds).ToString("0.0") + "KB/s";
+                    double estimatedSpeed = (((bytesReceived - item.LastBytes) / 1024.0) / interval.TotalSeconds); // estimated speed in KB/s
+
+                    if ((estimatedSpeed / 1024.0) > 1.0)
+                    {
+                        // show speed in MB/s
+                        viewModel.DownloadSpeed = (estimatedSpeed / 1024.0).ToString("0.0") + "MB/s";
+                    }
+                    else
+                    {
+                        // show speed in KB/s
+                        viewModel.DownloadSpeed = estimatedSpeed.ToString("0.0") + "KB/s";
+                    }
+
+                    double estimatedSecondsLeft = ((totalBytes - bytesReceived) / 1024.0) / estimatedSpeed; // divide bytes by 1024 to get total KB
+
+                    if ((estimatedSecondsLeft / 60) > 60)
+                    {
+                        // show in hours
+                        viewModel.RemainingTime = $"{(estimatedSecondsLeft / 60) / 60: 0.0} hours";
+                    }
+                    else if (estimatedSecondsLeft > 60)
+                    {
+                        // show in minutes
+                        viewModel.RemainingTime = $"{estimatedSecondsLeft / 60: 0.0} min";
+                    }
+                    else
+                    {
+                        viewModel.RemainingTime = $"{estimatedSecondsLeft: 0.0} sec";
+                    }
+
                     item.LastBytes = bytesReceived;
                 }
 
                 item.LastCalc = DateTime.Now;
             }
-        }
-
-
-        public void BringToFront()
-        {
-            return;
         }
 
         #endregion
