@@ -342,8 +342,7 @@ It may not work properly unless you find and install the requirements.";
                             Links = new List<string>() { subUrl },
                             SaveFilePath = path,
                             Category = DownloadCategory.Catalog,
-                            ItemName = $"Checking catalog {subUrl}",
-                            OnCancel = null,
+                            ItemName = $"Checking catalog {subUrl}"
                         };
 
                         download.IProc = new Install.InstallProcedureCallback(e =>
@@ -485,7 +484,15 @@ It may not work properly unless you find and install the requirements.";
 
         internal void CancelDownload(DownloadItemViewModel downloadItemViewModel)
         {
-            downloadItemViewModel?.Download?.PerformCancel?.Invoke();
+            if (downloadItemViewModel?.Download?.PerformCancel != null)
+            {
+                downloadItemViewModel.Download.PerformCancel?.Invoke(); // PerformCancel will happen during download and internally calls OnCancel
+            }
+            else
+            {
+                downloadItemViewModel.Download.OnCancel?.Invoke(); // invoke OnCancel when downloads are pending so the full cancellation process can happen
+            }
+
             RemoveFromDownloadList(downloadItemViewModel?.Download);
             Sys.Message(new WMessage($"Canceled {downloadItemViewModel?.ItemName}"));
         }
@@ -586,84 +593,102 @@ It may not work properly unless you find and install the requirements.";
 
             downloadInfo.OnError = onError;
 
-            switch (type)
+            try
             {
-                case LocationType.Url:
-                    using (var wc = new System.Net.WebClient())
-                    {
+                switch (type)
+                {
+                    case LocationType.Url:
+                        using (var wc = new System.Net.WebClient())
+                        {
+                            downloadInfo.PerformCancel = () =>
+                            {
+                                wc.CancelAsync();
+                                downloadInfo.OnCancel?.Invoke();
+                            };
+                            wc.DownloadProgressChanged += new System.Net.DownloadProgressChangedEventHandler(_wc_DownloadProgressChanged);
+                            wc.DownloadFileCompleted += new AsyncCompletedEventHandler(_wc_DownloadFileCompleted);
+                            wc.DownloadFileAsync(new Uri(location), downloadInfo.SaveFilePath, downloadInfo);
+                        }
+
+                        break;
+
+                    case LocationType.GDrive:
+                        var gd = new GDrive();
                         downloadInfo.PerformCancel = () =>
                         {
-                            wc.CancelAsync();
+                            gd.CancelAsync();
                             downloadInfo.OnCancel?.Invoke();
                         };
-                        wc.DownloadProgressChanged += new System.Net.DownloadProgressChangedEventHandler(_wc_DownloadProgressChanged);
-                        wc.DownloadFileCompleted += new AsyncCompletedEventHandler(_wc_DownloadFileCompleted);
-                        wc.DownloadFileAsync(new Uri(location), downloadInfo.SaveFilePath, downloadInfo);
-                    }
+                        gd.DownloadProgressChanged += new System.Net.DownloadProgressChangedEventHandler(_wc_DownloadProgressChanged);
+                        gd.DownloadFileCompleted += new AsyncCompletedEventHandler(_wc_DownloadFileCompleted);
+                        gd.Download(location, downloadInfo.SaveFilePath, downloadInfo);
+                        break;
 
-                    break;
+                    case LocationType.MegaSharedFolder:
+                        string[] parts = location.Split(',');
 
-                case LocationType.GDrive:
-                    var gd = new GDrive();
-                    downloadInfo.PerformCancel = () =>
-                    {
-                        gd.CancelAsync();
-                        downloadInfo.OnCancel?.Invoke();
-                    };
-                    gd.DownloadProgressChanged += new System.Net.DownloadProgressChangedEventHandler(_wc_DownloadProgressChanged);
-                    gd.DownloadFileCompleted += new AsyncCompletedEventHandler(_wc_DownloadFileCompleted);
-                    gd.Download(location, downloadInfo.SaveFilePath, downloadInfo);
-                    break;
+                        MegaIros mega;
 
-                case LocationType.MegaSharedFolder:
-                    string[] parts = location.Split(',');
-
-                    MegaIros mega;
-
-                    if (!_megaFolders.TryGetValue(parts[0], out mega) || mega.Dead)
-                    {
-                        _megaFolders[parts[0]] = mega = new MegaIros(parts[0], String.Empty);
-                    }
-                    MegaIros.Transfer tfr = null;
-
-                    tfr = mega.Download(parts[1], parts[2], downloadInfo.SaveFilePath, () =>
-                    {
-                        switch (tfr.State)
+                        if (!_megaFolders.TryGetValue(parts[0], out mega) || mega.Dead)
                         {
-                            case MegaIros.TransferState.Complete:
-                                ProcessDownloadComplete(downloadInfo, new AsyncCompletedEventArgs(null, false, downloadInfo));
-                                break;
-
-                            case MegaIros.TransferState.Failed:
-                                Sys.Message(new WMessage() { Text = "Error downloading " + downloadInfo.ItemName });
-                                downloadInfo.OnError?.Invoke();
-                                break;
-
-                            case MegaIros.TransferState.Canceled:
-                                RemoveFromDownloadList(downloadInfo);
-                                Sys.Message(new WMessage() { Text = $"{downloadInfo.ItemName} was canceled" });
-                                break;
-
-                            default:
-                                UpdateDownloadProgress(downloadInfo, (int)(100 * tfr.Complete / tfr.Size), tfr.Complete, tfr.Size);
-                                break;
+                            _megaFolders[parts[0]] = mega = new MegaIros(parts[0], String.Empty);
                         }
-                    });
+                        MegaIros.Transfer tfr = null;
 
-                    mega.ConfirmStartTransfer();
-                    downloadInfo.PerformCancel = () =>
-                    {
-                        mega.CancelDownload(tfr);
-                        downloadInfo.OnCancel?.Invoke();
-                    };
-                    break;
+                        tfr = mega.Download(parts[1], parts[2], downloadInfo.SaveFilePath, () =>
+                        {
+                            switch (tfr.State)
+                            {
+                                case MegaIros.TransferState.Complete:
+                                    ProcessDownloadComplete(downloadInfo, new AsyncCompletedEventArgs(null, false, downloadInfo));
+                                    break;
+
+                                case MegaIros.TransferState.Failed:
+                                    Sys.Message(new WMessage() { Text = "Error downloading " + downloadInfo.ItemName });
+                                    downloadInfo.OnError?.Invoke();
+                                    break;
+
+                                case MegaIros.TransferState.Canceled:
+                                    RemoveFromDownloadList(downloadInfo);
+                                    Sys.Message(new WMessage() { Text = $"{downloadInfo.ItemName} was canceled" });
+                                    break;
+
+                                default:
+                                    UpdateDownloadProgress(downloadInfo, (int)(100 * tfr.Complete / tfr.Size), tfr.Complete, tfr.Size);
+                                    break;
+                            }
+                        });
+
+                        mega.ConfirmStartTransfer();
+                        downloadInfo.PerformCancel = () =>
+                        {
+                            mega.CancelDownload(tfr);
+                            downloadInfo.OnCancel?.Invoke();
+                        };
+                        break;
+                }
             }
+            catch (Exception e)
+            {
+                string msg = $"Error {downloadInfo.ItemName} - {e.Message}";
+                Sys.Message(new WMessage(msg, WMessageLogLevel.Error, e));
+                downloadInfo.OnError?.Invoke();
+            }
+
 
         }
 
         public void AddToDownloadQueue(DownloadItem newDownload)
         {
             int downloadCount = 0;
+
+            if (newDownload.OnCancel == null)
+            {
+                newDownload.OnCancel = () =>
+                {
+                    RemoveFromDownloadList(newDownload);
+                };
+            }
 
             App.Current.Dispatcher.Invoke(() =>
             {

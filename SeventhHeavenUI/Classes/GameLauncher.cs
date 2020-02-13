@@ -213,6 +213,9 @@ namespace SeventhHeaven.Classes
             Instance.RaiseProgressChanged("Verifying music files exist ...");
             if (!converter.AllMusicFilesExist())
             {
+                Instance.RaiseProgressChanged($"\tcould not find all music files at {Path.Combine(converter.InstallPath, "music", "vgmstream")}", NLog.LogLevel.Warn);
+
+                Instance.RaiseProgressChanged($"\tattempting to copy music files ...");
                 converter.CopyMusicFiles();
 
                 if (!converter.AllMusicFilesExist())

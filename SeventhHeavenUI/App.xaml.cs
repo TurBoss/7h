@@ -72,26 +72,12 @@ namespace SeventhHeavenUI
                         window.ViewModel.AddIrosUrlToSubscriptions(parm);
                     });
                 }
-                else if (parm.StartsWith("/OPENIRO:", StringComparison.InvariantCultureIgnoreCase))
+                else if (parm.Equals("/MINI", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    string irofile = null;
-                    string irofilenoext = null;
-
-                    try
+                    App.Current.Dispatcher.Invoke(() =>
                     {
-                        irofile = parm.Substring(9);
-                        irofilenoext = Path.GetFileNameWithoutExtension(irofile);
-                        Logger.Info("Importing IRO from Windows " + irofile);
-
-                        ModImporter.ImportMod(irofile, ModImporter.ParseNameFromFileOrFolder(irofilenoext), true, false);
-                    }
-                    catch (Exception ex)
-                    {
-                        Sys.Message(new WMessage("Mod " + irofilenoext + " failed to import: " + ex.ToString(), true));
-                        continue;
-                    }
-
-                    Sys.Message(new WMessage($"Auto imported mod {irofilenoext}", true));
+                        App.Current.MainWindow.WindowState = WindowState.Minimized;
+                    });
                 }
                 else if (parm.StartsWith("/PROFILE:", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -141,11 +127,15 @@ namespace SeventhHeavenUI
                         {
                             Thread.Sleep(10000); // sleep 10 seconds and check again until ff7 not running
 
-                            App.Current.Dispatcher.Invoke(() =>
+                            if (isGameLaunching)
                             {
-                                MainWindow window = App.Current.MainWindow as MainWindow;
-                                isGameLaunching = window.ViewModel.IsGameLaunching;
-                            });
+                                // only need to invoke this until game launcher is finished launching the game
+                                App.Current.Dispatcher.Invoke(() =>
+                                {
+                                    MainWindow window = App.Current.MainWindow as MainWindow;
+                                    isGameLaunching = window.ViewModel.IsGameLaunching;
+                                });
+                            }
                         }
 
                         // wait for ff7 to close before closing down 7th Heaven
@@ -153,12 +143,26 @@ namespace SeventhHeavenUI
 
                     ShutdownApp();
                 }
-                else if (parm.Equals("/MINI", StringComparison.InvariantCultureIgnoreCase))
+                else if (parm.StartsWith("/OPENIRO:", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    App.Current.Dispatcher.Invoke(() =>
+                    string irofile = null;
+                    string irofilenoext = null;
+
+                    try
                     {
-                        App.Current.MainWindow.WindowState = WindowState.Minimized;
-                    });
+                        irofile = parm.Substring(9);
+                        irofilenoext = Path.GetFileNameWithoutExtension(irofile);
+                        Logger.Info("Importing IRO from Windows " + irofile);
+
+                        ModImporter.ImportMod(irofile, ModImporter.ParseNameFromFileOrFolder(irofilenoext), true, false);
+                    }
+                    catch (Exception ex)
+                    {
+                        Sys.Message(new WMessage("Mod " + irofilenoext + " failed to import: " + ex.ToString(), true));
+                        continue;
+                    }
+
+                    Sys.Message(new WMessage($"Auto imported mod {irofilenoext}", true));
                 }
                 else if (parm.StartsWith("/PACKIRO:", StringComparison.InvariantCultureIgnoreCase))
                 {

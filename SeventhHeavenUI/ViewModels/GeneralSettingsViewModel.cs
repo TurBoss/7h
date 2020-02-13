@@ -745,14 +745,16 @@ namespace SeventhHeaven.ViewModels
             var iros = key.CreateSubKey("iros");
             if (iros == null) return false;
 
+            iros.SetValue(String.Empty, "7H Catalog Subscription");
+            iros.SetValue("URL Protocol", String.Empty);
+
+
             var icon = iros.CreateSubKey("DefaultIcon");
+            icon.SetValue(String.Empty, "\"" + app + "\"");
+
             var shell = iros.CreateSubKey("shell");
             var open = shell.CreateSubKey("open");
             var command = open.CreateSubKey("command");
-
-            iros.SetValue(String.Empty, "7H Catalog Subscription");
-            icon.SetValue(String.Empty, "\"" + app + "\"");
-
             command.SetValue(String.Empty, "\"" + app + "\" \"%1\"");
 
             //Refresh Shell/Explorer so icon cache updates

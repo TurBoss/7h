@@ -92,8 +92,7 @@ namespace Iros._7th.Workshop {
                 Links = new List<string> { LocationUtil.FormatHttpUrl(url) },
                 SaveFilePath = pathToTempDownload,
                 ItemName = "Downloading preview image",
-                Category = DownloadCategory.Image,
-                OnCancel = null
+                Category = DownloadCategory.Image
             };
 
             download.IProc = new Install.InstallProcedureCallback(ae =>

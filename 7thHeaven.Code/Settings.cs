@@ -148,7 +148,7 @@ namespace Iros._7th.Workshop {
             defaultSettings.Options.Add(GeneralOptions.OpenModFilesWith7H);
 
             defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/http$pastebin.com/raw.php?i=QBGsgGK6", Name = "Mods of the Round" });
-            defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/http$pastebin.com/raw.php?i=dDBkYkDu", Name = "EQ2Alyza" });
+            defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/http$pastebin.com/raw.php?i=EpQBv5PL", Name = "Qhimm Catalog" });
 
             defaultSettings.ExtraFolders.Add("direct");
             defaultSettings.ExtraFolders.Add("music");
