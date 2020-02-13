@@ -3,6 +3,7 @@
   The original developer is Iros <irosff@outlook.com>
 */
 
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -540,7 +541,14 @@ namespace _7thWrapperLib {
                         Offset = (uint)(Loffset & 0xffffffff),
                         OffsetHigh = (uint)(Loffset >> 32)
                     };
-                    Win32.ReadFile(_data.Handle, dest, readLen, ref bytesRead, ref ov);
+
+                    using (SafeFileHandle handle = _data.SafeFileHandle)
+                    {
+                        if (!handle.IsInvalid)
+                        {
+                            Win32.ReadFile(handle.DangerousGetHandle(), dest, readLen, ref bytesRead, ref ov);
+                        }
+                    }
                 }
             } else
                 bytesRead = 0;
@@ -554,8 +562,16 @@ namespace _7thWrapperLib {
         }
 
         public IntPtr GetDummyHandle() {
-            IntPtr h;
-            Win32.DuplicateHandle(Win32.GetCurrentProcess(), _data.Handle, Win32.GetCurrentProcess(), out h, 0, false, 0x2);
+            IntPtr h = IntPtr.Zero;
+
+            using (SafeFileHandle safeHandle = _data.SafeFileHandle)
+            {
+                if (!safeHandle.IsInvalid)
+                {
+                    Win32.DuplicateHandle(Win32.GetCurrentProcess(), safeHandle.DangerousGetHandle(), Win32.GetCurrentProcess(), out h, 0, false, 0x2);
+                }
+            }
+
             return h;
         }
 

@@ -226,7 +226,7 @@ namespace _7thHeaven.Code
                 if (proc != null) proc.WaitForExit();
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
@@ -256,7 +256,7 @@ namespace _7thHeaven.Code
                 rootKey.DeleteSubKeyTree(fullRegPath, true);
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -281,7 +281,7 @@ namespace _7thHeaven.Code
 
                 return regKey.GetValueNames().ToList();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return new List<string>();
             }
@@ -309,7 +309,7 @@ namespace _7thHeaven.Code
 
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }

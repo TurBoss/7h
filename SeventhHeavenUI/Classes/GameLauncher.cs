@@ -801,7 +801,7 @@ namespace SeventhHeaven.Classes
                 Instance.RaiseProgressChanged($"\tfailed to get list of Runtime Mods due to a missing variable for a mod: {aex.Message}", NLog.LogLevel.Error);
                 return null;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;
             }

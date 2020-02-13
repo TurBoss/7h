@@ -21,7 +21,6 @@ namespace SeventhHeaven.ViewModels
 
         private string _statusText;
         private string _selectedThemeText;
-        private List<string> _themeDropdownItems;
         private string _appBackgroundText;
         private string _secondaryBackgroundText;
         private string _controlDisabledBgText;

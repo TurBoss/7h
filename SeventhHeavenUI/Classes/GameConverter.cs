@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace SeventhHeaven.Classes
 {
     /// <summary>
-    /// This is holds the main logic for converting the FF7 game to work with 7th Heaven
+    /// An instance of <see cref="GameConverter"/> is used to perform actions necessary to make FF7 compatible with mods.
     /// </summary>
     public class GameConverter
     {
@@ -34,174 +34,6 @@ namespace SeventhHeaven.Classes
         {
             InstallPath = settings.InstallPath;
             Settings = settings;
-        }
-
-        public static BoolWithMessage StartConversion(ConversionSettings settings)
-        {
-            GameConverter converter = new GameConverter(settings);
-            string installPath = converter.InstallPath;
-
-            if (!Directory.Exists(installPath))
-            {
-                return BoolWithMessage.False($"Path to Install does not exist: {installPath}");
-            }
-
-            // Check if game version installed is pirated
-            if (converter.IsGamePirated())
-            {
-                Logger.Warn("Game detected to be not legitimate ...");
-
-                // TODO - write list of files to log
-                return BoolWithMessage.False("Cannot patch the game, the copy of the game does not seem legitimate. The list of files/folders have been logged to converter.log for troubleshooting.");
-            }
-
-            // Check game is installed in a system folder like Program Files or Windows
-            if (converter.IsGameLocatedInSystemFolders())
-            {
-                Logger.Warn("Game detected to be located in system folders ...");
-
-                if (settings.CopyGameFolder)
-                {
-                    Logger.Warn("\tattempting to copy game ...");
-
-                    bool didCopy = converter.CopyGame(settings.CopiedGameTargetPath);
-
-                    if (!didCopy)
-                    {
-                        return BoolWithMessage.False($"Failed to copy the game to {settings.CopiedGameTargetPath} ... Cannot continue patching.");
-                    }
-
-                    // update install path to new copied location
-                    converter.InstallPath = settings.CopiedGameTargetPath;
-                    installPath = converter.InstallPath;
-                }
-                else
-                {
-                    Logger.Warn("\tskipping copy game ...");
-                    return BoolWithMessage.False("Cannot patch the game as it is installed in a system folder which can potentially cause some modding errors. Install the game in a location such as C:\\Games");
-                }
-            }
-
-            // Backup registry and original converter files if 'BackupGC2020' folder does not exist
-            try
-            {
-                string backupFolderPath = Path.Combine(converter.InstallPath, BackupFolderName, $"Backup_{DateTime.Now.ToString("yyyyMMddHHmmss")}");
-                Logger.Warn($"Attempting backup of files and registry to {backupFolderPath} ...");
-
-                converter.BackupRegistry(backupFolderPath);
-                converter.MoveOriginalConverterFilesToBackup(backupFolderPath);
-                converter.MoveOriginalAppFilesToBackup(backupFolderPath);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-                return BoolWithMessage.False("Failed to backup files and/or registry");
-            }
-
-
-            // cleanup install folder by removing cache files and old reg keys
-            bool deletedCache = converter.DeleteCacheFiles();
-
-            if (!deletedCache)
-            {
-                return BoolWithMessage.False("Failed to delete cache files from install path");
-            }
-
-            try
-            {
-                converter.DeleteOriginalConverterAndAppFiles();
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-                return BoolWithMessage.False("Failed to delete old game converter and app files");
-            }
-
-
-            // Move OGG Music Files to /music/vgmstream
-            if (converter.Settings.Version != FF7Version.Original98)
-            {
-                try
-                {
-                    FileUtils.MoveDirectoryRecursively(Path.Combine(installPath, "data", "music_ogg"), Path.Combine(installPath, "music", "vgmstream"));
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(ex);
-                    return BoolWithMessage.False("Failed to move music_ogg to music/vgmstream");
-                }
-            }
-
-
-            // Remove Compatibility Flags
-            try
-            {
-                DeleteCompatibilityFlagRegKeys();
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-                return BoolWithMessage.False("Failed to delete compatibility flags set by old game converter");
-            }
-
-
-            // Copy standard "ff7.exe" and "ff7config.exe" to root install folder.
-            bool didCopyFf7 = converter.CopyFF7ExeToGame();
-
-            if (!didCopyFf7)
-            {
-                return BoolWithMessage.False("Failed to copy ff7.exe to install path");
-            }
-
-
-            // OpenGL Driver Install
-            bool didCopyGl = converter.CopyGLDriversToGame();
-
-            if (!didCopyGl)
-            {
-                return BoolWithMessage.False("Failed to copy open gl drivers to install path");
-            }
-
-            return BoolWithMessage.True();
-        }
-
-        public static FF7Version GetInstalledVersion()
-        {
-            string installPath = null;
-
-            if (Environment.Is64BitOperatingSystem)
-            {
-                // on 64-bit OS, Steam release registry key could be at 64bit path or 32bit path so check both
-                installPath = RegistryHelper.GetValue(RegistryHelper.SteamKeyPath64Bit, "InstallLocation", "") as string;
-
-                if (string.IsNullOrEmpty(installPath))
-                {
-                    installPath = RegistryHelper.GetValue(RegistryHelper.SteamKeyPath32Bit, "InstallLocation", "") as string;
-                }
-            }
-            else
-            {
-                installPath = RegistryHelper.GetValue(FF7RegKey.SteamKeyPath, "InstallLocation", "") as string;
-            }
-
-            if (!string.IsNullOrEmpty(installPath))
-            {
-                return FF7Version.Steam;
-            }
-
-            installPath = RegistryHelper.GetValue(FF7RegKey.RereleaseKeyPath, "InstallLocation", "") as string;
-            if (!string.IsNullOrEmpty(installPath))
-            {
-                return FF7Version.ReRelease;
-            }
-
-            installPath = RegistryHelper.GetValue(FF7RegKey.FF7AppKeyPath, "Path", "") as string;
-            if (!string.IsNullOrEmpty(installPath))
-            {
-                return FF7Version.Original98;
-            }
-
-            return FF7Version.Unknown;
         }
 
         public static string GetInstallLocation(FF7Version installedVersion)
@@ -512,45 +344,6 @@ namespace SeventhHeaven.Classes
             }
         }
 
-        public void DeleteOriginalConverterAndAppFiles()
-        {
-            if (!Directory.Exists(InstallPath))
-            {
-                return;
-            }
-
-            List<string> filesToDelete = new List<string>() { "app.log", "ff7.exe", "ff7config.exe", "RunFFVIIConfig.bat", "RunFFVIIConfig.exe", "ff7_mo.exe", "ff7_nt.exe", "ff7_ss.exe", "ff7_ss_safer.exe", "ff7_bc.exe", "ff7input.cfg", "Multi_Readme.txt", "cfg.log", "Hext.log", "FF7_GC.log", "eax.dll", "Hext.dll", "multi.dll", "ff7_opengl.cfg", "ff7_opengl.fgd", @"\plugins\ff7music.fgp", @"\plugins\ffmpeg_movies.fgp", @"\plugins\vgmstream_music.fgp" };
-            List<string> foldersToDelete = new List<string>() { "DLL_in", "Hext_in", "LOADR", "Multi_DLL", "FF7anyCDv2", "BackupGC" };
-
-            foreach (string file in filesToDelete)
-            {
-                string fullPath = Path.Combine(InstallPath, file);
-                if (File.Exists(fullPath))
-                {
-                    File.Delete(fullPath);
-                }
-            }
-
-            foreach (string folder in foldersToDelete)
-            {
-                string fullPath = Path.Combine(InstallPath, folder);
-                if (Directory.Exists(fullPath))
-                {
-                    Directory.Delete(fullPath, true);
-                }
-            }
-
-            // delete EasyHook related files
-            foreach (string file in Directory.GetFiles(InstallPath, "EasyHook*.*"))
-            {
-                File.Delete(file);
-            }
-
-            // delete Old GameConverter reg keys
-            string oldGameConverterKeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII\\GameConverterkeys";
-            RegistryHelper.DeleteKey(oldGameConverterKeyPath);
-        }
-
         /// <summary>
         /// Delete all cache files (S*D.P and T*D.P files) in <see cref="InstallPath"/>
         /// </summary>
@@ -585,21 +378,6 @@ namespace SeventhHeaven.Classes
         }
 
         #endregion
-
-        public static void DeleteCompatibilityFlagRegKeys()
-        {
-            string keyPath = @"HKEY_CURRENT_USER\Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers";
-
-            List<string> keyValuesToDelete = new List<string>() { "ff7.exe", "ff7config.exe", "ff7music.exe" };
-
-            foreach (string valueName in RegistryHelper.GetValueNamesFromKey(keyPath))
-            {
-                if (keyValuesToDelete.Any(s => valueName.IndexOf(s, StringComparison.InvariantCultureIgnoreCase) >= 0))
-                {
-                    RegistryHelper.DeleteValueFromKey(keyPath, valueName);
-                }
-            }
-        }
 
         public bool CopyFF7ExeToGame()
         {
@@ -1066,86 +844,6 @@ namespace SeventhHeaven.Classes
         }
 
         /// <summary>
-        /// Does a regex on the 7H_GameDriver.fgd file to find the opengl driver version.
-        /// Returns -1 if <paramref name="fileOne"/> version is older than <paramref name="fileTwo"/> version.
-        /// Returns 0 if versions are equal.
-        /// Returns 1 if <paramref name="fileOne"/> version is newer than <paramref name="fileTwo"/> version.
-        /// </summary>
-        /// <param name="fileOne"></param>
-        /// <param name="fileTwo"></param>
-        /// <returns></returns>
-        private int CompareOpenGlDriverVersions(string fileOne, string fileTwo)
-        {
-            Regex regex = new Regex(@"Custom 7th Heaven FF7 Game Driver version [0-9].[0-9].[0-9].*\n");
-
-            if (!File.Exists(fileOne) && File.Exists(fileTwo))
-            {
-                return -1;
-            }
-            else if (File.Exists(fileOne) && !File.Exists(fileTwo))
-            {
-                return 1;
-            }
-
-            try
-            {
-                string fileOneContents = File.ReadAllText(fileOne);
-                string fileTwoContents = File.ReadAllText(fileTwo);
-
-                Match fileOneMatch = regex.Match(fileOneContents);
-                Match fileTwoMatch = regex.Match(fileTwoContents);
-
-                string fileOneVersion = "";
-                string fileTwoVersion = "";
-
-                if (fileOneMatch.Success)
-                {
-                    fileOneVersion = fileOneMatch.Value.TrimEnd('\n').Split(' ').LastOrDefault();
-                    fileOneVersion = Regex.Replace(fileOneVersion, "[^0-9.]", ""); // we must strip alpha characters from the version since we can't compare against that. e.g. "0.8.1b" becomes "0.8.1"
-
-                    if (fileOneVersion.Count(c => c == '.') < 3) // we must ensure all four parts of a Version are there so "0.8.1" becomes "0.8.1.0"
-                    {
-                        fileOneVersion += ".0";
-                    }
-                }
-
-                if (fileTwoMatch.Success)
-                {
-                    fileTwoVersion = fileTwoMatch.Value.TrimEnd('\n').Split(' ').LastOrDefault();
-                    fileTwoVersion = Regex.Replace(fileTwoVersion, "[^0-9.]", "");
-
-                    if (fileTwoVersion.Count(c => c == '.') < 3)
-                    {
-                        fileTwoVersion += ".0";
-                    }
-                }
-
-                Version parsedVersionOne = new Version("0.0.0.0");
-                Version parsedVersionTwo = new Version("0.0.0.0");
-
-                if (!string.IsNullOrEmpty(fileOneVersion))
-                {
-                    parsedVersionOne = new Version(fileOneVersion);
-                }
-
-                if (!string.IsNullOrEmpty(fileTwoVersion))
-                {
-                    parsedVersionTwo = new Version(fileTwoVersion);
-                }
-
-
-                return parsedVersionOne.CompareTo(parsedVersionTwo);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-                SendMessage("\tfailed to get game driver version from files. Error has been logged.", NLog.LogLevel.Warn);
-                return 0;
-            }
-
-        }
-
-        /// <summary>
         /// Creates 'mods/Textures', 'direct' and subfolders, 'music', 'music/vgmstream', 'data/kernel' 'data/battle' folders if missing
         /// </summary>
         public void CreateMissingDirectories()
@@ -1272,22 +970,6 @@ namespace SeventhHeaven.Classes
 
     public class ConversionSettings
     {
-        public FF7Version Version { get; set; }
-
         public string InstallPath { get; set; }
-
-        public bool DoBackup { get; set; }
-
-        public bool DeleteReunionIfFound { get; set; }
-
-        public Guid AudioDeviceGuid { get; set; }
-
-        public string DriveLetter { get; set; }
-
-        public bool CopyGameFolder { get; set; }
-
-        public string CopiedGameTargetPath { get; set; }
-
-        public bool UseLaptopKeyboardCfg { get; set; }
     }
 }

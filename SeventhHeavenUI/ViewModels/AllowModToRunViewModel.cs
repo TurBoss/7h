@@ -18,7 +18,6 @@ namespace SeventhHeaven.ViewModels
         private string _message;
         private bool _isChecked;
         private Visibility _checkboxVisibility;
-        private MessageBoxImage _imageToDisplay;
         private bool _noRadioButtonIsChecked;
         private bool _yesRadioButtonIsChecked;
 

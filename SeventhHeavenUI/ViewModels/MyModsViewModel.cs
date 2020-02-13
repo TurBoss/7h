@@ -58,6 +58,16 @@ namespace SeventhHeavenUI.ViewModels
 
         internal ReloadListOption _previousReloadOptions;
 
+        public string PreviousSearchText
+        {
+            get => _previousReloadOptions.SearchText ?? "";
+        }
+
+        public bool HasPreviousCategoriesOrTags
+        {
+            get => _previousReloadOptions?.Categories?.Count > 0 || _previousReloadOptions?.Tags?.Count > 0;
+        }
+
         public MyModsViewModel()
         {
             _previousReloadOptions = new ReloadListOption();
@@ -153,12 +163,14 @@ namespace SeventhHeavenUI.ViewModels
 
                 if (mod != null)
                 {
+                    mod.CachedDetails.Category = item.Category ?? mod.CachedDetails.Category; // ensure cached details match the active profile
                     bool includeMod = DoesModMatchSearchCriteria(searchText, categories, tags, mod.CachedDetails);
 
                     if (includeMod)
                     {
                         InstalledModViewModel activeMod = new InstalledModViewModel(mod, item);
-                        activeMod.ActivationChanged += ActiveMod_ActivationChanged;
+                        activeMod.ActivationChanged += InstalledMod_ActivationChanged;
+                        activeMod.CategoryChanged += InstalledMod_CategoryChanged;
                         allMods.Add(activeMod);
                     }
                 }
@@ -168,20 +180,24 @@ namespace SeventhHeavenUI.ViewModels
             {
                 bool isAdded = allMods.Any(m => m.InstallInfo.ModID == item.ModID && m.InstallInfo.LatestInstalled.InstalledLocation == item.LatestInstalled.InstalledLocation);
 
-                bool includeMod = DoesModMatchSearchCriteria(searchText, categories, tags, item.CachedDetails);
-
                 // ensure installed mod is included under the active profile if it is missing so you can toggle activation later
                 ProfileItem profileItem = Sys.ActiveProfile.GetItem(item.ModID);
+
                 if (profileItem == null)
                 {
                     profileItem = new ProfileItem() { ModID = item.ModID, Name = item.CachedDetails.Name, Settings = new List<ProfileSetting>(), IsModActive = false };
                     Sys.ActiveProfile.AddItem(profileItem);
                 }
 
+                item.CachedDetails.Category = profileItem.Category ?? item.CachedDetails.Category;
+                bool includeMod = DoesModMatchSearchCriteria(searchText, categories, tags, item.CachedDetails);
+
+
                 if (!isAdded && includeMod)
                 {
                     InstalledModViewModel installedMod = new InstalledModViewModel(item, profileItem);
-                    installedMod.ActivationChanged += ActiveMod_ActivationChanged;
+                    installedMod.ActivationChanged += InstalledMod_ActivationChanged;
+                    installedMod.CategoryChanged += InstalledMod_CategoryChanged;
                     allMods.Add(installedMod);
                 }
             }
@@ -331,7 +347,8 @@ namespace SeventhHeavenUI.ViewModels
             {
                 foreach (var item in ModList)
                 {
-                    item.ActivationChanged -= ActiveMod_ActivationChanged;
+                    item.ActivationChanged -= InstalledMod_ActivationChanged;
+                    item.CategoryChanged -= InstalledMod_CategoryChanged;
                 }
 
                 ModList.Clear();
@@ -340,9 +357,14 @@ namespace SeventhHeavenUI.ViewModels
             modLoadOrders.Clear();
         }
 
-        private void ActiveMod_ActivationChanged(object sender, InstalledModViewModel selected)
+        private void InstalledMod_ActivationChanged(InstalledModViewModel selected)
         {
-            ToggleActivateMod(selected.InstallInfo.ModID, false);
+            ToggleActivateMod(selected.InstallInfo.ModID, reloadList: false);
+        }
+
+        private void InstalledMod_CategoryChanged(InstalledModViewModel selected)
+        {
+            RefreshListRequested?.Invoke(beforeRefresh: false);
         }
 
         internal void ShowImportModWindow()

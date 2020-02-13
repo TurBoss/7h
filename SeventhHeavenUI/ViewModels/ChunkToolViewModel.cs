@@ -29,8 +29,6 @@ namespace SeventhHeaven.ViewModels
         private bool _sectionEightIsChecked;
         private bool _sectionNineIsChecked;
 
-        private bool _extractFailed;
-
         public string PathToFlevelFile
         {
             get
@@ -266,7 +264,7 @@ namespace SeventhHeaven.ViewModels
             {
                 string message = "Complete!";
 
-                if (taskResult.IsFaulted || _extractFailed)
+                if (taskResult.IsFaulted)
                 {
                     Logger.Error(taskResult.Exception?.GetBaseException());
                     message = "Failed to extract. the error has been logged";

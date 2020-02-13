@@ -116,7 +116,7 @@ namespace Iros._7th.Workshop {
                             File.Move(pathToTempDownload, f);
 
                         }
-                        catch (IOException ioex)
+                        catch (IOException)
                         {
                             // this happens while the file is in-use. the file will be renamed and image cache entry updated to point to new file instead
                             file = GetCacheFileName(url);

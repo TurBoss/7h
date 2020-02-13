@@ -251,7 +251,7 @@ namespace _7thWrapperLib {
         //private Overrides _overrides;
         private RuntimeProfile _profile;
 
-        LocalHook _hCreateFileW, _hCreateFileA, _hReadFile, _hFindFirstFile, _hFindFirstFileA, _hSetFilePointer, _hCloseHandle,
+        LocalHook _hCreateFileW, _hReadFile, _hFindFirstFile, _hSetFilePointer, _hCloseHandle,
             _hGetFileType, _hCreateProcessW, _hGetFileInformationByHandle, _hDuplicateHandle,
             _hGetFileSize, _hGetFileSizeEx, _hSetFilePointerEx, _hWriteFile;
 

@@ -771,7 +771,7 @@ namespace SeventhHeaven.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    Logger.Warn($"Failed to delete temp audio file at {filePath}");
+                    Logger.Warn($"Failed to delete temp audio file at {filePath}: {ex.Message}");
                 }
             }
         }

@@ -136,14 +136,26 @@ They will be automatically turned off.";
                     NotifyPropertyChanged();
                     NotifyPropertyChanged(nameof(ReadmeVisibility));
 
-                    ReloadAvailableFilters();
+                    ReloadAvailableFilters(recheckFilters: false);
 
                     if ((TabIndex)_selectedTabIndex == TabIndex.MyMods)
                     {
+                        if (CatalogMods.PreviousSearchText != MyMods.PreviousSearchText || MyMods.HasPreviousCategoriesOrTags)
+                        {
+                            SearchText = "";
+                            DoSearch();
+                        }
+
                         UpdateModPreviewInfo(MyMods.GetSelectedMod());
                     }
                     else
                     {
+                        if (MyMods.PreviousSearchText != CatalogMods.PreviousSearchText || CatalogMods.HasPreviousCategoriesOrTags)
+                        {
+                            SearchText = "";
+                            DoSearch();
+                        }
+
                         UpdateModPreviewInfo(CatalogMods.GetSelectedMod());
                     }
                 }
@@ -551,7 +563,7 @@ They will be automatically turned off.";
 
         /// <summary>
         /// Clears the search text and applied filters.
-        /// Triggered when my mods or catalog mods list is refreshed from button click
+        /// Triggered when my mods or catalog mods list is refreshed from button click or when category changed for an installed mod
         /// </summary>
         private void ModList_RefreshRequested(bool beforeRefresh)
         {
@@ -1263,26 +1275,28 @@ They will be automatically turned off.";
 
             if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
             {
-                categories = Sys.Catalog.Mods.Where(c => !string.IsNullOrEmpty(c.Category))
-                                             .Select(c => c.Category)
-                                             .Distinct()
+                categories = Sys.Catalog.Mods.Select(c =>
+                                                {
+                                                    if (string.IsNullOrEmpty(c.Category))
+                                                        return "Unknown";
+
+                                                    return c.Category;
+                                                })
                                              .ToList();
             }
             else
             {
-                categories = Sys.Library.Items.Where(c => !string.IsNullOrEmpty(c.CachedDetails.Category))
-                                              .Select(c => c.CachedDetails.Category)
-                                              .Distinct()
-                                              .ToList();
+                categories = MyMods.ModList.Select(c =>
+                                                {
+                                                    if (string.IsNullOrEmpty(c.Category))
+                                                        return "Unknown";
+
+                                                    return c.Category;
+                                                })
+                                           .ToList();
             }
 
-            categories = categories.OrderBy(s => s).ToList();
-
-            // mods with no category are filtered with the 'Unknown' category
-            if (!categories.Contains(_unknownText))
-            {
-                categories.Add(_unknownText);
-            }
+            categories = categories.Distinct().OrderBy(s => s).ToList();
 
             return categories;
         }
@@ -1297,7 +1311,7 @@ They will be automatically turned off.";
 
             if ((TabIndex)SelectedTabIndex == TabIndex.BrowseCatalog)
             {
-                MyMods.ClearRememberedSearchTextAndCategories();
+                CatalogMods.ClearRememberedSearchTextAndCategories();
                 CatalogMods.ReloadModList(CatalogMods.GetSelectedMod()?.Mod?.ID, SearchText, CheckedCategories, CheckedTags);
             }
             else

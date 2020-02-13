@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Net;
+using Microsoft.Win32.SafeHandles;
 
 namespace Iros.Mega {
     public class MegaIros {
@@ -222,10 +223,18 @@ namespace Iros.Mega {
                 fs.Position = pos;
                 uint read = 0;
                 uint toRead = (uint)length;
-                ReadFile(fs.Handle, buffer, toRead, ref read, IntPtr.Zero);
-                Logger(String.Format("Read {0} bytes from file {1}", read, fs.Name));
-                return (int)read;
+
+                using (SafeFileHandle safeHandle = fs.SafeFileHandle)
+                {
+                    if (!safeHandle.IsInvalid)
+                    {
+                        ReadFile(safeHandle.DangerousGetHandle(), buffer, toRead, ref read, IntPtr.Zero);
+                        Logger(String.Format("Read {0} bytes from file {1}", read, fs.Name));
+                        return (int)read;
+                    }
+                }
             }
+
             return 0;
         }
 
@@ -234,10 +243,18 @@ namespace Iros.Mega {
             if (_files.TryGetValue(handle, out fs)) {
                 fs.Position = pos;
                 uint written = 0;
-                WriteFile(fs.Handle, buffer, (uint)length, out written, IntPtr.Zero);
-                Logger(String.Format("Written {0} bytes to file {1}", written, fs.Name));
-                return (int)written;
+
+                using (SafeFileHandle safeHandle = fs.SafeFileHandle)
+                {
+                    if (!safeHandle.IsInvalid)
+                    {
+                        WriteFile(safeHandle.DangerousGetHandle(), buffer, (uint)length, out written, IntPtr.Zero);
+                        Logger(String.Format("Written {0} bytes to file {1}", written, fs.Name));
+                        return (int)written;
+                    }
+                }
             }
+
             return 0;
         }
 

@@ -9,9 +9,21 @@
 	  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 	  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 	  	<style type="text/css" media="screen">
-	
+		img{
+			max-width:500px;
+		}
+		a:visited{
+			color:#59b3e7
+		}
+		a:link{
+			color:#59b3e7
+		}
+		a:active{
+			color:#cf2d2a
+		}
 		body {
 			background-color: #000000;
+			color:#FFFFFF;
 		}
 		code {font-size: 120%;}
 		
@@ -24,79 +36,94 @@
 	</style>
    </head>
 
-   <body link="#0FCEF5" vlink="#808080" alink="#FF0000"><font color="#FFFFFF">
-   <center><img src="logo.jpg"></center>
+   <body>
+   <a id="the_top"></a>
+   <center><img src="images/logo.png"></center>
 
 <center><h1>7th Heaven Help</h1></center>
       <p style = "font-family: Arial, Helvetica, sans-serif;font-size:16px;">
 <center><a href="index.html">What is 7th Heaven?</a>	|	<a href="getstarted.html">Getting Started</a>	|	<a href="userhelp.html">Using 7th Heaven</a>	|	<a href="modhelp.html">Modding</a>	|	<a href="troubleshooting.html">Troubleshooting</a></center>
-<u><h2>About 7th Heaven</h2></u>
+
+Contents:<br>
+<ol type="1">
+  <li><a href="#about_7h">About 7th Heaven</a></li>
+  <li><a href="#main_features">Main Features</a></li>
+  <li><a href="#whats_new">What's New in 7H 2.0?</a></li>
+</ol>
+
+<u><h2><a id="about_7h">About 7th Heaven</a></h2></u>
 7th Heaven is a mod (modification) manager for the game Final Fantasy VII (7) for the PC.  It is named after Tifa's bar and hideout for the group AVALANCHE.<br><br>
 Mods allow you to change nearly any aspect of the game, including, but not limited to: music, movies, SFX, character/NPC/enemy models, gameplay, battle/world/field textures, animations, skill/spell effects, user interface, dialogue, tweaks and cheats, and more.<br><br>
 7th Heaven is unique in that it lets you easily activate and deactivate mods using a convenient user interface (GUI) without needing to permanently alter your game or mess with complicated mod file/folder installs.  You can quickly try out a mod and keep or uninstall it without affecting your game installation.  It accomplishes this by intercepting (hooking) the game's requests for resources (models, music, textures, etc.) and instead supplies an alternate copy of that resource from the mods you have installed and activated.  There is no need to uninstall and reinstall Final Fantasy 7 if a mod causes a problem or is no longer desired.
 <br>
-<u><h2>Features</h2></u>
+<u><h2><a id="main_features">Main Features</a></h2></u>
 <ul>
+  <li>Fully integrated and automatic 'Game Converter'.</li>
+  <li>Fully integrated replacement for 'FF7Config'</li>
+  <li>'Game Launcher' ensures FF7 is always play-ready when you click the 'Play' button.</li>
   <li>Import, Activate, Deactivate, or Uninstall mods at the click of a button</li>
   <li>Rearrange the priority/load order of your mods</li>
+  <li>Powerful new search w/ tags, catalog, and category support</li>
   <li>Pack or Unpack mods to/from .iro files</li>
   <li>Supports mods in a folder structure or iro file format</li>
-  <li>Create or browse catalogs (lists of downloadable mods)</li>
+  <li>Create or browse catalog subscriptions (lists of downloadable mods)</li>
   <li>Integrated mod downloader</li>
-  <li>more blah</li>
+  <li>Manage multiple profiles/configurations for your mods</li>
+  <li>Chunk Tool for flevel files</li>
+  <li>Import movies from disc (for original 1998 users)</li>
+  <li>GUI for configuring OpenGL Driver</li>
 </ul>
-<u><h2>What's New in 7H 2.0?</h2></u>
+<u><h2><a id="whats_new">What's New in 7H 2.0?</a></h2></u>
 <ul>
 <i>
+  <li>Built-in 'Game Converter'</li>
+  <li>Built-in 'FF7Config'</li>
+  <li>'Game Launcher' automatically checks for problems and fixes them</li>
   <li>Complete Rewrite/Redesign of User Interface, built on WPF</li>
-  <li>New high resolution program icon - Representative of a "neon bar sign"</li>
-  <li>Dark/Light themes and customize your own colors</li>
+  <li>New high resolution program icon - Representative of a neon bar sign</li>
+  <li>Auto-Sort Mods - Less hassle getting your mod order correct</li>
+  <li>Drag and Drop mods to reorder them</li>
+  <li>Move mod to top/send mod to bottom</li>
+  <li>Auto mount/dismount game disc</li>
+  <li>Dark/Light/Classic 7H theme presets or customize your own colors</li>
   <li>Import/Export themes</li>
+  <li>Game controls presets that apply on game launch</li>
+  <li>Popular catalog subscriptions included by default</li>
+  <li>Reduced interface to 2 tabs - 'My Mods' and 'Browse Catalog'</li>
   <li>Split screen design - Mod info on the left, mod downloading and manipulation on the right</li>
   <li>See more of your mods - new design essentially always compact mode</li>
-  <li>Low mouse travel to do common mod tasks</li>
-  <li>Reduced interface to 2 tabs - "My Mods" and "Browse Catalog"</li>
-  <li>Drag and Drop mod reordering</li>
-  <li>Move mod to top/send mod to bottom</li>
-  <li>Double-click to download/activate/deactivate mods (or use "Active" toggle button)</li>
-  <li>Import mods directly by opening .iro file from shell/explorer</li>
+  <li>Low mouse travel to do all common mod tasks</li>
+  <li>Middle-click to activate/deactivate mods (or use 'Active' toggle button)</li>
+  <li>Double-click to configure mods (or use 'Configure Mod' button</li>
+  <li>Import mods directly by opening .iro file from shell/Explorer</li>
   <li>Pack/Unpack iro files directly from Windows</li>
-  <li>Better profile management</li>
-  <li>Better catalog management</li>
-  <li>Better additional programs to run management</li>
-  <li>Popular catalogs now included in default settings</li>
-  <li>Integrated search and filtering of mod names, authors, tags, categories, and catalog names</li>
-  <li>Download window built in to Browse Catalog tab, no longer separate window</li>
+  <li>Improved profile management</li>
+  <li>Improved catalog management</li>
+  <li>Improved additional programs to run management</li>
+  <li>Integrated search and filtering of mod names, authors, descriptions, tags, categories, and catalog names</li>
+  <li>Download window built-in to Browse Catalog tab, no longer separate window</li>
   <li>Resizable mod config window</li>
   <li>Better "BrowseForFolder" dialog</li>
-  <li>Categories - Mods can be identified by what type of content they contain</li>
-  <li>Auto-Sort - With categories, mods can now load in the safest order automatically</li>
+  <li>Categories - Mods can be identified and sorted by what type of content they contain</li>
   <li>Combined "Update Catalog" and "Refresh Catalog" to one refresh button</li>
   <li>Support for higher quality/larger preview images</li>
   <li>Catalogs support a Name tag for friendlier/easier reading</li>
-  <li>mod.xml supports Name, ReleaseDate, ReleaseNotes, Category tags</li>
+  <li>mod.xml updated to support Name, ID, ReleaseDate, ReleaseNotes, and Category tags</li>
   <li>Return support of readme.txt and add support for readme.html in mods</li>
   <li>Improved logging/debugging</li>
   <li>Integrated offline help and troubleshooting</li>
   <li>Clearer dialogs and warnings, less nagging</li>
-  <li>Eliminated side log messages, now displayed in status/info bar</li>
-  <li>Modern Game Converter (TODO: link to help section)</li>
-  <li>Includes new OpenGL driver (previously named Aali's driver)</li>
+  <li>Includes updated and custom 'Aali' OpenGL driver</li>
   <li>Improved OpenGL configuration settings - Better organization and description of options</li>
-  <li>Bug Fix: Audio Device Output now always uses default device</li>
-  <li>Bug Fix: Access Denied on EasyHook.RemoteHooking.CreateAndInject(640x480 compatibility flag)</li>
-  <li>Bug Fix: Refresh Catalog works - No longer need to delete catalog.xml</li>
+  <li>Bug Fix: EasyHook.RemoteHooking.CreateAndInject</li>
+  <li>Bug Fix: Refresh Catalog works properly</li>
   <li>Bug Fix: New UI eliminates mouse scrolling issues, glitchy mod movement animations</li>
-  <li>Bug Fix: "Activate All Mods" no longer causes crash</li>
-  <li>Bug Fix: "Extra Folders" no longer duplicates 'direct' and 'music'</li>
+  <li>Bug Fix: 'Activate All Mods' no longer causes crash</li>
+  <li>Bug Fix: 'Extra Folders' (now renamed) no longer duplicates 'direct' and 'music'</li>
+  <li>Bug Fix: Multiple other crash fixes throughout</li>
   </i>
 </ul>
-<pre>
-  <code>
-This is a
-test code block
-  </code>
-</pre>
+<center><a href="#the_top">Top of page</a></center>
       </p>
    </body>
    

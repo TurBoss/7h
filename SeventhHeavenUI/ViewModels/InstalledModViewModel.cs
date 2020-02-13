@@ -32,8 +32,11 @@ namespace SeventhHeavenUI.ViewModels
         private List<string> _categoryList;
         private Thickness _borderThickness;
 
-        public delegate void OnActivationChanged(object sender, InstalledModViewModel selected);
+        public delegate void OnActivationChanged(InstalledModViewModel selected);
         public event OnActivationChanged ActivationChanged;
+
+        public delegate void OnCategoryChanged(InstalledModViewModel selected);
+        public event OnCategoryChanged CategoryChanged;
 
 
         public string Name
@@ -86,6 +89,7 @@ namespace SeventhHeavenUI.ViewModels
                 _category = value;
                 ActiveModInfo.Category = Category;
                 NotifyPropertyChanged();
+                CategoryChanged?.Invoke(this);
             }
         }
 
@@ -172,7 +176,7 @@ namespace SeventhHeavenUI.ViewModels
             }
             set
             {
-                ActivationChanged?.Invoke(this, this);
+                ActivationChanged?.Invoke(this);
             }
         }
 

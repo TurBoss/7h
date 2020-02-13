@@ -44,6 +44,16 @@ It may not work properly unless you find and install the requirements.";
 
         internal ReloadListOption _previousReloadOptions;
 
+        public string PreviousSearchText
+        {
+            get => _previousReloadOptions.SearchText ?? "";
+        }
+
+        public bool HasPreviousCategoriesOrTags
+        {
+            get => _previousReloadOptions?.Categories?.Count > 0 || _previousReloadOptions?.Tags?.Count > 0;
+        }
+
         private Dictionary<string, MegaIros> _megaFolders = new Dictionary<string, MegaIros>(StringComparer.InvariantCultureIgnoreCase);
 
         private object _listLock = new object();
@@ -254,6 +264,9 @@ It may not work properly unless you find and install the requirements.";
             _previousReloadOptions = new ReloadListOption();
         }
 
+        /// <summary>
+        /// Clears search text and selected categories, then does a force catalog update and reloads the list
+        /// </summary>
         internal void RefreshCatalogList()
         {
             ClearRememberedSearchTextAndCategories();

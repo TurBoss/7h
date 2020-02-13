@@ -123,7 +123,7 @@ namespace SeventhHeaven.Classes.WCF
                 NamedPipeHost = null;
                 return false;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // an uknown error occurred maybe invalid endpoint?
                 return false;
