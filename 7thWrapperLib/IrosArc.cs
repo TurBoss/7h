@@ -542,13 +542,7 @@ namespace _7thWrapperLib {
                         OffsetHigh = (uint)(Loffset >> 32)
                     };
 
-                    using (SafeFileHandle handle = _data.SafeFileHandle)
-                    {
-                        if (!handle.IsInvalid)
-                        {
-                            Win32.ReadFile(handle.DangerousGetHandle(), dest, readLen, ref bytesRead, ref ov);
-                        }
-                    }
+                    Win32.ReadFile(_data.Handle, dest, readLen, ref bytesRead, ref ov);
                 }
             } else
                 bytesRead = 0;
@@ -562,15 +556,9 @@ namespace _7thWrapperLib {
         }
 
         public IntPtr GetDummyHandle() {
-            IntPtr h = IntPtr.Zero;
+            IntPtr h;
 
-            using (SafeFileHandle safeHandle = _data.SafeFileHandle)
-            {
-                if (!safeHandle.IsInvalid)
-                {
-                    Win32.DuplicateHandle(Win32.GetCurrentProcess(), safeHandle.DangerousGetHandle(), Win32.GetCurrentProcess(), out h, 0, false, 0x2);
-                }
-            }
+            Win32.DuplicateHandle(Win32.GetCurrentProcess(), _data.Handle, Win32.GetCurrentProcess(), out h, 0, false, 0x2);
 
             return h;
         }
