@@ -146,6 +146,8 @@ namespace Iros._7th.Workshop {
             defaultSettings.Options.Add(GeneralOptions.WarnAboutModCode);
             defaultSettings.Options.Add(GeneralOptions.OpenIrosLinksWith7H);
             defaultSettings.Options.Add(GeneralOptions.OpenModFilesWith7H);
+            defaultSettings.Options.Add(GeneralOptions.CheckForUpdates);
+
 
             defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/http$pastebin.com/raw.php?i=QBGsgGK6", Name = "Mods of the Round" });
             defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/http$pastebin.com/raw.php?i=EpQBv5PL", Name = "Qhimm Catalog" });

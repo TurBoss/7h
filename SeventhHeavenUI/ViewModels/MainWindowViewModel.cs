@@ -550,9 +550,34 @@ They will be automatically turned off.";
             // ... this will ensure the images from last app session are deleted
             ConfigureModViewModel.DeleteTempFolder();
 
-            // TODO: check for app updates
             Sys.AppVersion = App.GetAppVersion();
             StatusMessage = $"{App.GetAppName()} v{Sys.AppVersion.ToString()} started - Click here to view the app log.  |  Hint: {GetRandomHint()}";
+
+            UpdateChecker.Instance.UpdateCheckCompleted += AppUpdater_UpdateCheckCompleted;
+            if (Sys.Settings.HasOption(GeneralOptions.CheckForUpdates))
+            {
+                Task.Factory.StartNew(() =>
+                {
+                    System.Threading.Thread.Sleep(5000); // wait 5 seconds after init before checking for update to let UI render
+                    Sys.Message(new WMessage("Checking for app updates ...", WMessageLogLevel.LogOnly));
+                    UpdateChecker.Instance.CheckForUpdates();
+                });
+            }
+        }
+
+        private void AppUpdater_UpdateCheckCompleted(bool wasSuccessful)
+        {
+            if (wasSuccessful && UpdateChecker.IsNewVersionAvailable(Sys.LastCheckedVersion))
+            {
+                string message = $"An update is available for {App.GetAppName()} - {App.GetAppVersion()}\nClick 'Yes' to open the download page in a browser.\n\n{Sys.LastCheckedVersion.Version} Release Notes: {Sys.LastCheckedVersion.ReleaseNotes}";
+                var dialogResult = MessageDialogWindow.Show(message, $"New Version ({Sys.LastCheckedVersion.Version}) Available!", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+
+                if (dialogResult.Result == MessageBoxResult.Yes)
+                {
+                    ProcessStartInfo startInfo = new ProcessStartInfo(Sys.LastCheckedVersion.ReleaseDownloadLink);
+                    Process.Start(startInfo);
+                }
+            }
         }
 
         private void CatalogList_RefreshRequested()

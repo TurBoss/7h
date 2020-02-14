@@ -158,6 +158,7 @@
     <Compile Include="Classes\Themes\DarkTheme.cs" />
     <Compile Include="Classes\Themes\ITheme.cs" />
     <Compile Include="Classes\Themes\ThemeSettings.cs" />
+    <Compile Include="Classes\UpdateChecker.cs" />
     <Compile Include="Classes\WCF\ServiceHost.cs" />
     <Compile Include="UserControls\CatalogUserControl.xaml.cs">
       <DependentUpon>CatalogUserControl.xaml</DependentUpon>

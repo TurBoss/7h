@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AvailableUpdate.cs" />
     <Compile Include="Catalog.cs" />
     <Compile Include="ColumnSettings.cs" />
     <Compile Include="ConfigSettings.cs" />

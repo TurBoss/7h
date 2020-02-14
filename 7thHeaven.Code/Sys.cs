@@ -107,6 +107,8 @@ namespace Iros._7th.Workshop
         }
 
         public static Settings Settings { get; private set; }
+
+        public static AvailableUpdate LastCheckedVersion { get; set; }
         public static string _7HFolder { get; private set; }
         public static string SysFolder { get; private set; }
 
@@ -227,21 +229,24 @@ namespace Iros._7th.Workshop
         }
 
         /// <summary>
-        /// Saves settings.xml, library.xml, and image cache.xml to disk
+        /// Saves settings.xml, library.xml, and image cache.xml, and versions.xml to disk
         /// </summary>
         public static void Save()
         {
             string lfile = Path.Combine(SysFolder, "library.xml");
             string sfile = Path.Combine(SysFolder, "settings.xml");
+            string pathToVersions = Path.Combine(SysFolder, "version.xml");
 
             Directory.CreateDirectory(Path.GetDirectoryName(lfile));
 
             using (var fs = new FileStream(lfile, FileMode.Create))
                 Util.Serialize(Library, fs);
 
-
             using (var fs = new FileStream(sfile, FileMode.Create))
                 Util.Serialize(Settings, fs);
+
+            using (var fs = new FileStream(pathToVersions, FileMode.Create))
+                Util.Serialize(LastCheckedVersion, fs);
 
             ImageCache.Save();
         }
@@ -326,6 +331,24 @@ namespace Iros._7th.Workshop
             ImageCache = new ImageCache(System.IO.Path.Combine(SysFolder, "cache"));
 
             AppVersion = new Version();
+
+            string pathToVersions = Path.Combine(SysFolder, "version.xml");
+            if (File.Exists(pathToVersions))
+            {
+                try
+                {
+                    LastCheckedVersion = Util.Deserialize<AvailableUpdate>(pathToVersions);
+                }
+                catch (Exception e)
+                {
+                    Sys.Message(new WMessage("Failed to open/deserialize version.xml", WMessageLogLevel.LogOnly, e));
+                }
+            }
+
+            if (LastCheckedVersion == null)
+            {
+                LastCheckedVersion = new AvailableUpdate();
+            }
         }
 
         /// <summary>

@@ -11,7 +11,8 @@ namespace _7thHeaven.Code
     {
         Mod,
         Catalog,
-        Image
+        Image,
+        AppUpdate
     }
 
     public class DownloadItem
