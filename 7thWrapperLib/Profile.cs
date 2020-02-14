@@ -3,6 +3,7 @@
   The original developer is Iros <irosff@outlook.com>
 */
 
+using Iros._7th.Workshop;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -151,8 +152,10 @@ namespace _7thWrapperLib
         public List<string> LoadLibraries { get; private set; }
         public List<string> LoadAssemblies { get; private set; }
         public List<string> LoadPlugins { get; private set; }
-
         public List<ProgramInfo> LoadPrograms { get; private set; }
+
+        [NonSerialized]
+        public Wpf32Window WpfWindowInterop;
 
 
         private HashSet<string> _activated = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);

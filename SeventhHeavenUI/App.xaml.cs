@@ -269,6 +269,10 @@ namespace SeventhHeavenUI
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            // Enable Visual styles for Winform applications to support plugins that uses Winforms as a UI
+            System.Windows.Forms.Application.EnableVisualStyles();
+            System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
+
             SetupExceptionHandling();
         }
 

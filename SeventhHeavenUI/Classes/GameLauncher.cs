@@ -5,6 +5,7 @@ using Iros._7th.Workshop;
 using Microsoft.Win32;
 using SeventhHeaven.ViewModels;
 using SeventhHeaven.Windows;
+using SeventhHeavenUI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,6 +16,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Interop;
 
 namespace SeventhHeaven.Classes
 {
@@ -682,17 +684,21 @@ namespace SeventhHeaven.Classes
                 Instance.RaiseProgressChanged("Setting up FF7 .exe to stop plugins and mod programs after exiting ...");
                 ff7Proc.Exited += (o, e) =>
                 {
-                    foreach (var plugin in Instance._plugins.Values)
+                    for (int i = 0; i < Instance._plugins.Count; i++)
                     {
                         try
                         {
-                            plugin.Stop();
+                            string key = Instance._plugins.ElementAt(i).Key;
+                            Instance._plugins[key].Stop();
+                            Instance._plugins[key] = null;
                         }
                         catch (Exception ex)
                         {
                             Logger.Error(ex);
                         }
                     }
+
+                    Instance._plugins.Clear();
 
                     Instance.RaiseProgressChanged("Stopping other programs for mods started by 7H ...");
                     Instance.StopAllSideProcessesForMods();
@@ -775,7 +781,13 @@ namespace SeventhHeaven.Classes
                 }
 
                 Instance.RaiseProgressChanged($"\tstarting plugin: {dll}");
-                plugin.Start(mod);
+
+                // invoke on app dispatcher thread since accessing main window which is a UI object
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    mod.WpfWindowInterop = new Wpf32Window(new WindowInteropHelper(App.Current.MainWindow).EnsureHandle());
+                    App.Current.Dispatcher.Invoke(() => plugin.Start(mod));
+                });
             }
         }
 
