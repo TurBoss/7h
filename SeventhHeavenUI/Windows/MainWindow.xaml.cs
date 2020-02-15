@@ -337,5 +337,24 @@ namespace SeventhHeavenUI
         {
             ViewModel.ShowCatalogCreationTool();
         }
+
+        private void btnUpdateMod_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.UpdateSelectedMod();
+        }
+
+        private void btnUpdateModType_Click(object sender, RoutedEventArgs e)
+        {
+            if (!popupModUpdateType.IsOpen)
+            {
+                popupModUpdateType.IsOpen = true;
+                btnUpdateModType.IsEnabled = false;
+            }
+        }
+
+        private void popupModUpdateType_Closed(object sender, EventArgs e)
+        {
+            btnUpdateModType.IsEnabled = true;
+        }
     }
 }

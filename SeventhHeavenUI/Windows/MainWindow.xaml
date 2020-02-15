@@ -211,13 +211,48 @@
                                        Style="{StaticResource ModInfoDetailsStyle}"/>
                         </WrapPanel>
 
-                        <WrapPanel Margin="3,6,3,0" Grid.Row="3">
+                        <WrapPanel Margin="3,3,3,0" Grid.Row="3" Visibility="{Binding ModUpdateMenuVisibility}">
+                            <TextBlock Text="Version:" Style="{StaticResource ModInfoLabelStyle}"
+                                       Margin="0,0,3,2"/>
+                            <TextBlock Text="{Binding PreviewModVersion, FallbackValue='1.3'}"
+                                       Margin="2,0,3,2"
+                                       Style="{StaticResource ModInfoDetailsStyle}"/>
+                            
+                            <Button x:Name="btnUpdateMod" 
+                                    Content="{Binding UpdateModButtonText, FallbackValue='Update Available'}"
+                                    IsEnabled="{Binding IsUpdateModButtonEnabled}"
+                                    Click="btnUpdateMod_Click"
+                                    Style="{StaticResource HyperlinkButton}"
+                                    Margin="0,0,0,0"
+                                    Width="140"
+                                    Background="Transparent"/>
+                            <ToggleButton x:Name="btnUpdateModType"
+                                          Click="btnUpdateModType_Click"
+                                          Style="{StaticResource DownArrowToggleButton}"
+                                          Background="Transparent"/>
+                        </WrapPanel>
+
+                        <Popup x:Name="popupModUpdateType"
+                               StaysOpen="False"
+                               Closed="popupModUpdateType_Closed"
+                               PlacementTarget="{Binding ElementName=btnUpdateModType}" 
+                               HorizontalOffset="-142">
+                            <Border x:Name="bd" BorderBrush="{DynamicResource PrimaryControlBackground}" BorderThickness="1">
+                                <StackPanel Background="{DynamicResource SecondaryAppBackground}">
+                                    <RadioButton IsChecked="{Binding PreviewIsAutoUpdateModsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="Auto Update/Install" Margin="5,3,5,3" GroupName="modUpdateType"/>
+                                    <RadioButton IsChecked="{Binding PreviewIgnoreModUpdatesChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="Ignore" Margin="5,3,5,3" GroupName="modUpdateType"/>
+                                    <RadioButton IsChecked="{Binding PreviewIsNotifyAboutUpdatesChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="Notify" Margin="5,3,5,3" GroupName="modUpdateType"/>
+                                </StackPanel>
+                            </Border>
+                        </Popup>
+
+                        <WrapPanel Margin="3,0,3,0" Grid.Row="4">
                             <TextBlock Text="Description:" Style="{StaticResource ModInfoLabelStyle}"/>
                             <TextBlock Text="{Binding PreviewModDescription, FallbackValue='This is a short description of my cool new mod and it does these things like a and b and even x and y.'}" 
                                Style="{StaticResource ModInfoDetailsStyle}"/>
                         </WrapPanel>
 
-                        <WrapPanel Margin="3,0,3,0" Grid.Row="4">
+                        <WrapPanel Margin="3,0,3,0" Grid.Row="5">
                             <TextBlock Text="Link:" Style="{StaticResource ModInfoLabelStyle}" Margin="0,0,0,3"/>
                             <Button x:Name="btnOpenModLink" 
                                     Width="80"
@@ -427,7 +462,7 @@
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
-                        
+
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding IsFlashingStatus}" Value="True">
                                 <DataTrigger.EnterActions>

@@ -117,6 +117,9 @@ namespace Iros._7th.Workshop
         [System.Xml.Serialization.XmlIgnore]
         private bool? _hasReadMe;
 
+        [System.Xml.Serialization.XmlIgnore]
+        private bool? _isUpdateAvailable;
+
         public Guid ModID { get; set; }
         public Mod CachedDetails { get; set; }
         public string CachePreview { get; set; }
@@ -138,6 +141,25 @@ namespace Iros._7th.Workshop
             set
             {
                 _hasReadMe = value;
+            }
+        }
+
+        [System.Xml.Serialization.XmlIgnore]
+        public bool IsUpdateAvailable
+        {
+            get
+            {
+                if (_isUpdateAvailable == null)
+                {
+                    Mod cat = Sys.GetModFromCatalog(this.ModID);
+                    _isUpdateAvailable = (cat != null && cat.LatestVersion?.Version > Versions?.Max(v => v.VersionDetails.Version));
+                }
+
+                return _isUpdateAvailable.GetValueOrDefault(false);
+            }
+            set
+            {
+                _isUpdateAvailable = value;
             }
         }
 

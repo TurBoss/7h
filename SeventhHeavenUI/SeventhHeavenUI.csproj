@@ -693,7 +693,7 @@
     <Content Include="Resources\Help\userhelp.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\icons_license.txt">
+    <Content Include="Resources\Licenses\icons_license.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Help\index.html">
@@ -733,8 +733,6 @@
     <Content Include="Resources\Controls\WASD unab0mb%27s Choice Swap.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="LICENSE" />
-    <None Include="README.md" />
     <None Include="Resources\FF7DISC1.ISO">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -794,6 +792,9 @@
     </Content>
     <Content Include="Resources\Game Driver\7H_GameDriver.cfg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Licenses\naudio_LICENSE">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="7H.ico" />
     <Content Include="7thHeaven.var">

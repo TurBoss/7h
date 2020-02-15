@@ -103,6 +103,8 @@ namespace SeventhHeavenUI.ViewModels
             Sys.TryAutoImportMods();
 
             UpdateModCachedDetails();
+            ScanForModUpdates();
+
             ClearRememberedSearchTextAndCategories();
             ReloadModListFromUIThread(GetSelectedMod()?.InstallInfo.ModID);
 
@@ -914,6 +916,34 @@ namespace SeventhHeavenUI.ViewModels
             Sys.ActiveProfile.Items = ModList.Select(m => m.ActiveModInfo).ToList();
 
             ReloadModList(GetSelectedMod()?.InstallInfo?.ModID);
+        }
+
+        internal void ScanForModUpdates()
+        {
+            foreach (InstalledItem inst in Sys.Library.Items)
+            {
+                Mod cat = Sys.GetModFromCatalog(inst.ModID);
+
+                inst.IsUpdateAvailable = (cat != null && cat.LatestVersion.Version > inst.Versions.Max(v => v.VersionDetails.Version));
+
+                if (inst.IsUpdateAvailable)
+                {
+                    switch (inst.UpdateType)
+                    {
+                        case UpdateType.Notify:
+                            Sys.Message(new WMessage($"New version of {cat.Name} available"));
+                            Sys.PingInfoChange(inst.ModID);
+                            break;
+
+                        case UpdateType.Install:
+                            if (Sys.GetStatus(cat.ID) != ModStatus.Downloading && Sys.GetStatus(cat.ID) != ModStatus.Updating)
+                            {
+                                Install.DownloadAndInstall(cat, true);
+                            }
+                            break;
+                    }
+                }
+            }
         }
     }
 }

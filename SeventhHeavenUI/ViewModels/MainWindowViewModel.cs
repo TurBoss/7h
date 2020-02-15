@@ -90,6 +90,11 @@ They will be automatically turned off.";
         private string _previewModLink;
         private Uri _previewModImageSource;
         private bool _previewModHasReadMe;
+        private bool _previewIsNotifyAboutUpdatesChecked;
+        private bool _previewIsAutoUpdateModsChecked;
+        private bool _previewIgnoreModUpdatesChecked;
+        private Visibility _modUpdateMenuVisibility;
+
 
         public MyModsViewModel MyMods { get; set; }
 
@@ -146,6 +151,7 @@ They will be automatically turned off.";
                             DoSearch();
                         }
 
+                        ModUpdateMenuVisibility = Visibility.Visible;
                         UpdateModPreviewInfo(MyMods.GetSelectedMod());
                     }
                     else
@@ -156,6 +162,7 @@ They will be automatically turned off.";
                             DoSearch();
                         }
 
+                        ModUpdateMenuVisibility = Visibility.Collapsed;
                         UpdateModPreviewInfo(CatalogMods.GetSelectedMod());
                     }
                 }
@@ -315,6 +322,133 @@ They will be automatically turned off.";
                 NotifyPropertyChanged();
             }
         }
+
+        public bool PreviewIsNotifyAboutUpdatesChecked
+        {
+            get
+            {
+                return _previewIsNotifyAboutUpdatesChecked;
+            }
+            set
+            {
+                if (_previewIsNotifyAboutUpdatesChecked != value)
+                {
+                    _previewIsNotifyAboutUpdatesChecked = value;
+                    NotifyPropertyChanged();
+                    ChangeUpdateModTypeForSelectedMod();
+                }
+            }
+        }
+
+        public bool PreviewIsAutoUpdateModsChecked
+        {
+            get
+            {
+                return _previewIsAutoUpdateModsChecked;
+            }
+            set
+            {
+                if (_previewIsAutoUpdateModsChecked != value)
+                {
+                    _previewIsAutoUpdateModsChecked = value;
+                    NotifyPropertyChanged();
+                    ChangeUpdateModTypeForSelectedMod();
+                }
+            }
+        }
+
+        public bool PreviewIgnoreModUpdatesChecked
+        {
+            get
+            {
+                return _previewIgnoreModUpdatesChecked;
+            }
+            set
+            {
+                if (_previewIgnoreModUpdatesChecked != value)
+                {
+                    _previewIgnoreModUpdatesChecked = value;
+                    NotifyPropertyChanged();
+                    ChangeUpdateModTypeForSelectedMod();
+                }
+            }
+        }
+
+        public Visibility ModUpdateMenuVisibility
+        {
+            get
+            {
+                return _modUpdateMenuVisibility;
+            }
+            set
+            {
+                if (_modUpdateMenuVisibility != value)
+                {
+                    _modUpdateMenuVisibility = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public string UpdateModButtonText
+        {
+            get
+            {
+                var selected = MyMods.GetSelectedMod();
+
+                if (selected != null)
+                {
+                    if (selected.InstallInfo.IsUpdateAvailable)
+                    {
+                        ModStatus status = Sys.GetStatus(selected.InstallInfo.ModID);
+                        if (status != ModStatus.Downloading && status != ModStatus.Updating)
+                        {
+                            return "Update Available";
+                        }
+                        else
+                        {
+                            return "Update Downloading";
+                        }
+                    }
+                    else
+                    {
+                        switch(selected.InstallInfo.UpdateType)
+                        {
+                            case UpdateType.Notify:
+                                return "No Updates";
+
+                            case UpdateType.Ignore:
+                                return "Updates Ignored";
+
+                            case UpdateType.Install:
+                                return "Auto Update";
+                        }
+                    }
+                }
+
+                return "";
+            }
+        }
+
+        public bool IsUpdateModButtonEnabled
+        {
+            get
+            {
+                var selected = MyMods.GetSelectedMod();
+
+                if (selected != null && selected.InstallInfo.IsUpdateAvailable)
+                {
+                    ModStatus status = Sys.GetStatus(selected.InstallInfo.ModID);
+                    if (status != ModStatus.Downloading && status != ModStatus.Updating)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
 
         public Uri PreviewModImageSource
         {
@@ -536,9 +670,10 @@ They will be automatically turned off.";
             CatalogMods.RefreshListRequested += CatalogList_RefreshRequested;
             MyMods.RefreshListRequested += ModList_RefreshRequested;
 
-            CatalogMods.CheckForCatalogUpdatesAsync(new CatCheckOptions());
 
             CatalogMods.ReloadModList();
+            CatalogMods.CheckForCatalogUpdatesAsync(new CatCheckOptions());
+
 
             ReloadAvailableFilters();
 
@@ -550,6 +685,8 @@ They will be automatically turned off.";
 
             Sys.AppVersion = App.GetAppVersion();
             StatusMessage = $"{App.GetAppName()} v{Sys.AppVersion.ToString()} started - Click here to view the app log.  |  Hint: {GetRandomHint()}";
+
+            MyMods.ScanForModUpdates();
 
             UpdateChecker.Instance.UpdateCheckCompleted += AppUpdater_UpdateCheckCompleted;
             if (Sys.Settings.HasOption(GeneralOptions.CheckForUpdates))
@@ -619,6 +756,10 @@ They will be automatically turned off.";
 
                 SearchText = "";
                 ReloadAvailableFilters(recheckFilters: false);
+
+                // refresh button text in case mod scan for updates started downloading the selected mod
+                NotifyPropertyChanged(nameof(UpdateModButtonText));
+                NotifyPropertyChanged(nameof(IsUpdateModButtonEnabled));
             }
         }
 
@@ -659,7 +800,7 @@ They will be automatically turned off.";
 
             if (e.Status == ModStatus.InfoChanged)
             {
-                // update mod preview info page when a change (e.g. image downloaded) has happeend for selected mod
+                // update mod preview info page when a change (e.g. image downloaded or update available) has happeend for selected mod
                 if ((TabIndex)SelectedTabIndex == TabIndex.MyMods)
                 {
                     InstalledModViewModel currentlySelected = MyMods.GetSelectedMod();
@@ -716,6 +857,8 @@ They will be automatically turned off.";
                 PreviewModCategory = "";
                 PreviewModDescription = "";
                 PreviewModLink = "";
+                PreviewIsAutoUpdateModsChecked = false;
+                PreviewIsNotifyAboutUpdatesChecked = false;
                 PreviewModImageSource = null;
                 return;
             }
@@ -738,6 +881,15 @@ They will be automatically turned off.";
             PreviewModLink = selected.InstallInfo.CachedDetails.Link;
 
             PreviewModHasReadMe = selected.HasReadMe; // checks if mod .iro or folder has a readme file and caches the result since the disc lookup is slow on larger mods
+
+            NotifyPropertyChanged(nameof(UpdateModButtonText));
+            NotifyPropertyChanged(nameof(IsUpdateModButtonEnabled));
+
+            ModUpdateMenuVisibility = Visibility.Visible;
+            PreviewIsAutoUpdateModsChecked = selected.InstallInfo?.UpdateType == UpdateType.Install;
+            PreviewIsNotifyAboutUpdatesChecked = selected.InstallInfo?.UpdateType == UpdateType.Notify;
+            PreviewIgnoreModUpdatesChecked = selected.InstallInfo?.UpdateType == UpdateType.Ignore;
+
 
             if (!string.IsNullOrWhiteSpace(selected.InstallInfo.CachedDetails.LatestVersion.PreviewImage))
             {
@@ -787,6 +939,8 @@ They will be automatically turned off.";
             PreviewModDescription = selected.Mod.Description;
             PreviewModLink = selected.Mod.Link;
             PreviewModHasReadMe = false; // no READMEs for catalog (only installed mods)
+
+            ModUpdateMenuVisibility = Visibility.Collapsed; // do not display the 'version:' and 'update avaialble' menu on catalog mods
 
             string pathToImage = Sys.ImageCache.GetImagePath(selected.Mod.LatestVersion.PreviewImage, selected.Mod.ID);
 
@@ -1315,6 +1469,9 @@ They will be automatically turned off.";
             ReloadAvailableFilters();
         }
 
+        /// <summary>
+        /// Reloads the list of dropdown category/tag filters a user can click on based on what is in the my mods / browse catalog tab
+        /// </summary>
         internal void ReloadAvailableFilters(bool recheckFilters = true)
         {
             List<string> tags = GetTagsForSelectedTab();
@@ -1437,6 +1594,45 @@ They will be automatically turned off.";
                 Sys.Message(new WMessage($"The iros:// link {irosUrl} may be formatted incorrectly. Could not add to subscriptions.", WMessageLogLevel.LogOnly));
             }
         }
+
+        private void ChangeUpdateModTypeForSelectedMod()
+        {
+            InstalledModViewModel selected = MyMods.GetSelectedMod();
+
+            if (selected != null)
+            {
+                UpdateType updateType = UpdateType.Ignore;
+                
+                if (PreviewIsAutoUpdateModsChecked)
+                {
+                    updateType = UpdateType.Install;
+                }
+                else if (PreviewIsNotifyAboutUpdatesChecked)
+                {
+                    updateType = UpdateType.Notify;
+                }
+
+                selected.InstallInfo.UpdateType = updateType; // update info in viewmodel
+                Sys.Library.GetItem(selected.InstallInfo.ModID).UpdateType = updateType; // and also make sure info is updated in Sys.Library so it will be saved back to library.xml
+        
+                NotifyPropertyChanged(nameof(UpdateModButtonText));
+                NotifyPropertyChanged(nameof(IsUpdateModButtonEnabled));
+            }
+
+        }
+
+        internal void UpdateSelectedMod()
+        {
+            InstalledModViewModel selected = MyMods.GetSelectedMod();
+
+            if (selected != null && selected.InstallInfo.IsUpdateAvailable)
+            {
+                Install.DownloadAndInstall(selected.InstallInfo.CachedDetails, true);
+                NotifyPropertyChanged(nameof(IsUpdateModButtonEnabled));
+                NotifyPropertyChanged(nameof(UpdateModButtonText));
+            }
+        }
+
     }
 
     internal class CatCheckOptions

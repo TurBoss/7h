@@ -97,8 +97,28 @@ namespace Iros._7th.Workshop
             Sys.Library.AttemptDeletions();
         }
 
-        public static void DownloadAndInstall(Mod m)
+        public static void DownloadAndInstall(Mod m, bool isUpdatingMod = false)
         {
+            // validate mod is not already downloading/updating
+            ModStatus status = Sys.GetStatus(m.ID);
+            if (status == ModStatus.Downloading)
+            {
+                Sys.Message(new WMessage($"{m.Name} is already downloading!", true));
+                return;
+            }
+
+            if (status == ModStatus.Updating)
+            {
+                Sys.Message(new WMessage($"{m.Name} is already updating!", true));
+                return;
+            }
+
+            if (status == ModStatus.Installed && !isUpdatingMod)
+            {
+                Sys.Message(new WMessage($"{m.Name} is already downloaded and installed!", true));
+                return;
+            }
+
             Action onCancel = () => Sys.RevertStatus(m.ID);
             Action<Exception> onError = ex =>
             {
@@ -117,7 +137,15 @@ namespace Iros._7th.Workshop
                 if (patches.Any())
                 {
                     string pfile = String.Format("{0}_{1}_{2}.irop", m.ID, SafeStr(m.Name), m.LatestVersion.Version);
-                    Sys.SetStatus(m.ID, ModStatus.Downloading);
+
+                    if (status == ModStatus.Installed && isUpdatingMod)
+                    {
+                        Sys.SetStatus(m.ID, ModStatus.Updating);
+                    }
+                    else
+                    {
+                        Sys.SetStatus(m.ID, ModStatus.Downloading);
+                    }
 
                     DownloadItem download = new DownloadItem()
                     {

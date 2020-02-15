@@ -543,7 +543,7 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type MenuItem}">
+    <Style x:Key="MainMenuItemStyle" TargetType="{x:Type MenuItem}">
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
         <Setter Property="Template">
@@ -570,6 +570,8 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource MainMenuItemStyle}"/>
 
     <Style x:Key="MenuItemImage" TargetType="{x:Type MenuItem}">
         <Setter Property="FontSize" Value="14"/>

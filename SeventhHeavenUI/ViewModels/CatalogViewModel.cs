@@ -436,7 +436,6 @@ It may not work properly unless you find and install the requirements.";
                             if (isDoneDownloading)
                             {
                                 ReloadModList(GetSelectedMod()?.Mod.ID);
-                                ScanForModUpdates();
                                 RefreshListRequested?.Invoke();
                             }
 
@@ -468,29 +467,6 @@ It may not work properly unless you find and install the requirements.";
                     Logger.Warn(taskResult.Exception);
                 }
             });
-        }
-
-        private void ScanForModUpdates()
-        {
-            foreach (InstalledItem inst in Sys.Library.Items)
-            {
-                Mod cat = Sys.GetModFromCatalog(inst.ModID);
-
-                if (cat != null && cat.LatestVersion.Version > inst.Versions.Max(v => v.VersionDetails.Version))
-                {
-                    switch (inst.UpdateType)
-                    {
-                        case UpdateType.Notify:
-                            Sys.Message(new WMessage() { Text = $"New version of {cat.Name} available", Link = "iros://" + cat.ID.ToString() });
-                            Sys.Ping(inst.ModID);
-                            break;
-
-                        case UpdateType.Install:
-                            Install.DownloadAndInstall(cat);
-                            break;
-                    }
-                }
-            }
         }
 
         #region Methods Related to Downloads
@@ -533,7 +509,7 @@ It may not work properly unless you find and install the requirements.";
                 return;
             }
 
-            if (Sys.GetStatus(modToDownload.ID) == ModStatus.NotInstalled)
+            if (status == ModStatus.NotInstalled)
             {
                 Install.DownloadAndInstall(modToDownload);
             }
