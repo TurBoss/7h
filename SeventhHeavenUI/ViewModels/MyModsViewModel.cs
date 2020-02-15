@@ -552,7 +552,7 @@ namespace SeventhHeavenUI.ViewModels
 
             if (reloadList)
             {
-                ReloadModList(item.ModID);
+                ReloadModListFromUIThread(item.ModID);
             }
         }
 

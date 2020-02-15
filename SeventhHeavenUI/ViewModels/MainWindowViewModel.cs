@@ -497,8 +497,6 @@ They will be automatically turned off.";
 
             GeneralSettingsViewModel.AutoDetectSystemPaths(Sys.Settings);
 
-            CopyDllAndUpdaterExe(); // TODO: change or fix app updater process
-
             LoadCatalogXmlFile();
 
             Sys.InitLoaderContext();
@@ -953,37 +951,6 @@ They will be automatically turned off.";
             {
                 Logger.Warn(e, "failed to load catalog.xml - initializing empty catalog ...");
                 Sys.SetNewCatalog(new Catalog());
-            }
-        }
-
-        private static void CopyDllAndUpdaterExe()
-        {
-            try
-            {
-                string src = Path.Combine(Sys._7HFolder, "SharpCompressU.cpy");
-                string dst = Path.Combine(Sys._7HFolder, "SharpCompressU.dll");
-
-                if (File.Exists(dst))
-                {
-                    File.Delete(dst);
-                    File.Copy(src, dst);
-                }
-
-                src = Path.Combine(Sys._7HFolder, "Updater.cpy");
-                dst = Path.Combine(Sys._7HFolder, "Updater.exe");
-                if (File.Exists(dst))
-                {
-                    File.Delete(dst);
-                    File.Copy(src, dst);
-                }
-            }
-            catch (IOException iex)
-            {
-                Logger.Warn(iex);
-            }
-            catch (UnauthorizedAccessException uae)
-            {
-                Logger.Warn(uae);
             }
         }
 

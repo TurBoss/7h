@@ -16,7 +16,7 @@ namespace SeventhHeaven.Classes
     /// </summary>
     public class UpdateChecker
     {
-        public const string linkToVersionXml = "https://pastebin.com/raw/4Qu2Lie2";
+        public const string linkToVersionXml = "https://pastebin.com/raw/U1HaMtec";
         private static UpdateChecker _instance;
 
         public delegate void OnUpdateChecked(bool wasSuccessful);
