@@ -224,14 +224,11 @@ namespace Iros.Mega {
                 uint read = 0;
                 uint toRead = (uint)length;
 
-                using (SafeFileHandle safeHandle = fs.SafeFileHandle)
+                if (!fs.SafeFileHandle.IsInvalid)
                 {
-                    if (!safeHandle.IsInvalid)
-                    {
-                        ReadFile(safeHandle.DangerousGetHandle(), buffer, toRead, ref read, IntPtr.Zero);
-                        Logger(String.Format("Read {0} bytes from file {1}", read, fs.Name));
-                        return (int)read;
-                    }
+                    ReadFile(fs.SafeFileHandle.DangerousGetHandle(), buffer, toRead, ref read, IntPtr.Zero);
+                    Logger(String.Format("Read {0} bytes from file {1}", read, fs.Name));
+                    return (int)read;
                 }
             }
 
@@ -244,14 +241,11 @@ namespace Iros.Mega {
                 fs.Position = pos;
                 uint written = 0;
 
-                using (SafeFileHandle safeHandle = fs.SafeFileHandle)
+                if (!fs.SafeFileHandle.IsInvalid)
                 {
-                    if (!safeHandle.IsInvalid)
-                    {
-                        WriteFile(safeHandle.DangerousGetHandle(), buffer, (uint)length, out written, IntPtr.Zero);
-                        Logger(String.Format("Written {0} bytes to file {1}", written, fs.Name));
-                        return (int)written;
-                    }
+                    WriteFile(fs.SafeFileHandle.DangerousGetHandle(), buffer, (uint)length, out written, IntPtr.Zero);
+                    Logger(String.Format("Written {0} bytes to file {1}", written, fs.Name));
+                    return (int)written;
                 }
             }
 
