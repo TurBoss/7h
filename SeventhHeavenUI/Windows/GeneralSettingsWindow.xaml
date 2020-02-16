@@ -112,7 +112,7 @@
                 <CheckBox Height="25" Content="Activate Newly Installed Mods Automatically" IsChecked="{Binding ActivateInstalledModsAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
                 <CheckBox Height="25" Content="Import Library Folder Mods Automatically" IsChecked="{Binding ImportLibraryFolderAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
                 <CheckBox Height="25" Content="Warn When Mod Contains Code" IsChecked="{Binding WarnAboutModCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <CheckBox Height="25" Content="Keep Older Mod Versions After Updating" IsChecked="{Binding KeepOldModsAfterUpdating, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='True'}" Margin="0,0,0,2"/>
+                <CheckBox Height="25" Content="Auto Update Mods By Default" IsChecked="{Binding AutoUpdateModsByDefault, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='True'}" Margin="0,0,0,2"/>
                 <CheckBox Height="25" Content="Ignore Mod Compatibility Restrictions" IsChecked="{Binding BypassCompatibilityLocks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <CheckBox Height="25" Content="Check For 7th Heaven Updates Automatically" IsChecked="{Binding CheckForUpdatesAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
             </StackPanel>

@@ -326,6 +326,11 @@ namespace Iros._7th.Workshop
             if (Library == null)
                 Library = new Library();
 
+            if (Settings.HasOption(GeneralOptions.AutoUpdateMods))
+            {
+                Library.DefaultUpdate = UpdateType.Install;
+            }
+
             _statuses = Library.Items.ToDictionary(i => i.ModID, _ => ModStatus.Installed);
 
             ImageCache = new ImageCache(System.IO.Path.Combine(SysFolder, "cache"));

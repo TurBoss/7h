@@ -374,6 +374,12 @@ namespace Iros.Mega {
                     else
                         t.Status = 500;
                 }
+                catch (Exception e)
+                {
+                    Logger(String.Format("Error receiving from {0}: {1}", handle, e.ToString()));
+                    t.ReceiveDone = true;
+                    t.Status = 500;
+                }
             };
             t.ReceiveBuffer = new byte[0x10000];
 

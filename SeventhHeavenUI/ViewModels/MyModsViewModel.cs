@@ -924,7 +924,7 @@ namespace SeventhHeavenUI.ViewModels
             {
                 Mod cat = Sys.GetModFromCatalog(inst.ModID);
 
-                inst.IsUpdateAvailable = (cat != null && cat.LatestVersion.Version > inst.Versions.Max(v => v.VersionDetails.Version));
+                inst.IsUpdateAvailable = (cat != null && cat.LatestVersion.Version > inst.LatestInstalled.VersionDetails.Version);
 
                 if (inst.IsUpdateAvailable)
                 {

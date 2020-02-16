@@ -25,6 +25,7 @@ namespace Iros._7th.Workshop {
         OpenModFilesWith7H,
         Show7HInFileExplorerContextMenu,
         WarnAboutModCode,
+        AutoUpdateMods
     }
 
     [Flags]

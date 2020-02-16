@@ -25,7 +25,7 @@ namespace SeventhHeaven.ViewModels
         private string _moviesPathInput;
         private string _texturesPathInput;
         private string _libraryPathInput;
-        private bool _keepOldModsAfterUpdating;
+        private bool _autoUpdateModsByDefault;
         private bool _activateInstalledModsAuto;
         private bool _importLibraryFolderAuto;
         private bool _checkForUpdatesAuto;
@@ -117,15 +117,15 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-        public bool KeepOldModsAfterUpdating
+        public bool AutoUpdateModsByDefault
         {
             get
             {
-                return _keepOldModsAfterUpdating;
+                return _autoUpdateModsByDefault;
             }
             set
             {
-                _keepOldModsAfterUpdating = value;
+                _autoUpdateModsByDefault = value;
                 NotifyPropertyChanged();
             }
         }
@@ -384,7 +384,7 @@ namespace SeventhHeaven.ViewModels
             MoviesPathInput = settings.MovieFolder;
             TexturesPathInput = settings.AaliFolder;
 
-            KeepOldModsAfterUpdating = settings.HasOption(GeneralOptions.KeepOldVersions);
+            AutoUpdateModsByDefault = settings.HasOption(GeneralOptions.AutoUpdateMods);
             ActivateInstalledModsAuto = settings.HasOption(GeneralOptions.AutoActiveNewMods);
             ImportLibraryFolderAuto = settings.HasOption(GeneralOptions.AutoImportMods);
             CheckForUpdatesAuto = settings.HasOption(GeneralOptions.CheckForUpdates);
@@ -532,6 +532,15 @@ namespace SeventhHeaven.ViewModels
             {
                 RemoveFileExplorerContextMenuAssociationWith7H();
             }
+
+            if (Sys.Settings.HasOption(GeneralOptions.AutoUpdateMods))
+            {
+                Sys.Library.DefaultUpdate = UpdateType.Install;
+            }
+            else
+            {
+                Sys.Library.DefaultUpdate = UpdateType.Notify;
+            }
         }
 
         /// <summary>
@@ -541,8 +550,8 @@ namespace SeventhHeaven.ViewModels
         {
             List<GeneralOptions> newOptions = new List<GeneralOptions>();
 
-            if (KeepOldModsAfterUpdating)
-                newOptions.Add(GeneralOptions.KeepOldVersions);
+            if (AutoUpdateModsByDefault)
+                newOptions.Add(GeneralOptions.AutoUpdateMods);
 
             if (ActivateInstalledModsAuto)
                 newOptions.Add(GeneralOptions.AutoActiveNewMods);
