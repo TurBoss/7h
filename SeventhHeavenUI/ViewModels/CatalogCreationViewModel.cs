@@ -1,0 +1,121 @@
+﻿using _7thHeaven.Code;
+using Iros._7th;
+using Iros._7th.Workshop;
+using Iros.Mega;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SeventhHeavenUI.ViewModels
+{
+
+    public class CatalogCreationViewModel : ViewModelBase
+    {
+        private string _name;
+        private string _author;
+        private string _version;
+        private string _downloadSize;
+        private int _downloadSizeInBytes;
+        private string _releaseDate;
+        private string _category;
+
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                _name = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string DownloadSize
+        {
+            get
+            {
+                return _downloadSize;
+            }
+            set
+            {
+                _downloadSize = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public int DownloadSizeInBytes
+        {
+            get
+            {
+                return _downloadSizeInBytes;
+            }
+            set
+            {
+                _downloadSizeInBytes = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string ReleaseDate
+        {
+            get
+            {
+                return _releaseDate;
+            }
+            set
+            {
+                _releaseDate = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string Author
+        {
+            get
+            {
+                return _author;
+            }
+            set
+            {
+                _author = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string Version
+        {
+            get
+            {
+                return _version;
+            }
+            set
+            {
+                _version = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string Category
+        {
+            get
+            {
+                return _category;
+            }
+            set
+            {
+                _category = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+
+        public CatalogCreationViewModel()
+        {
+        }
+    }
+}

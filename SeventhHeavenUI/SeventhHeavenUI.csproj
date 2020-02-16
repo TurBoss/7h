@@ -163,6 +163,9 @@
     <Compile Include="UserControls\CatalogUserControl.xaml.cs">
       <DependentUpon>CatalogUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\CreateModUserControl.xaml.cs">
+      <DependentUpon>CreateModUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\MyModsUserControl.xaml.cs">
       <DependentUpon>MyModsUserControl.xaml</DependentUpon>
     </Compile>
@@ -179,6 +182,8 @@
       <DependentUpon>PackIroUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\AllowModToRunViewModel.cs" />
+    <Compile Include="ViewModels\ModCreationViewModel.cs" />
+    <Compile Include="ViewModels\CatalogCreationViewModel.cs" />
     <Compile Include="ViewModels\GameLaunchSettingsViewModel.cs" />
     <Compile Include="ViewModels\GameLaunchViewModel.cs" />
     <Compile Include="ViewModels\ProgramToRunViewModel.cs" />
@@ -246,6 +251,10 @@
     <Compile Include="Windows\UnhandledErrorWindow.xaml.cs">
       <DependentUpon>UnhandledErrorWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="UserControls\CreateModUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\PatchIroAdvancedUserControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

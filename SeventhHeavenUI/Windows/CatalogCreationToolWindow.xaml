@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
+        xmlns:ctrl="clr-namespace:SeventhHeaven.UserControls"
         mc:Ignorable="d"
         Title="Catalog and Mod Creation Tool"
         WindowStartupLocation="CenterScreen"
@@ -27,139 +28,9 @@
     <Grid>
         <TabControl>
             <TabItem Header="Create Mod">
-                <Grid Margin="0,5,0,0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Text="ID:" Style="{StaticResource createLabelStyle}"/>
-                    <TextBox Text="{Binding IDInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource createTextboxStyle}"
-                             Grid.Column="1"/>
-
-                    <TextBlock Text="Author:"
-                               Style="{StaticResource createLabelStyle}"
-                               Grid.Column="2"
-                               Grid.Row="0"/>
-                    <TextBox Text="{Binding AuthorInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource createTextboxStyle}"
-                             Grid.Column="3" Grid.Row="0"/>
-
-                    <TextBlock Text="Name:"
-                               Style="{StaticResource createLabelStyle}"
-                               Grid.Row="2"/>
-                    <TextBox Text="{Binding NameInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource createTextboxStyle}"
-                             Grid.Column="1" Grid.Row="2"/>
-
-                    <TextBlock Text="Description:"
-                               Style="{StaticResource createLabelStyle}"
-                               Margin="0,0,0,0"
-                               Grid.Column="2"
-                               Grid.Row="2"/>
-                    <TextBox Text="{Binding DescriptionInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource createTextboxStyle}"
-                             AcceptsReturn="True"
-                             AcceptsTab="True"
-                             VerticalScrollBarVisibility="Auto"
-                             MaxLines="1000"
-                             Height="125"
-                             Margin="0,0,0,10"
-                             Grid.Column="3" Grid.Row="2"/>
-
-                    <TextBlock Text="Category:"
-                               Style="{StaticResource createLabelStyle}"
-                               VerticalAlignment="Top"
-                               Margin="0,34,5,0"
-                               Grid.Row="2"/>
-                    <ComboBox SelectedItem="{Binding CategoryInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              Style="{StaticResource MainComboBoxStyle}"
-                              Margin="0,35,5,0"
-                              VerticalAlignment="Top"
-                              Grid.Column="1" Grid.Row="2"/>
-
-                    <TextBlock Text="Version:"
-                               Style="{StaticResource createLabelStyle}"
-                               Grid.Column="0"
-                               Margin="0,68,5,0"
-                               Grid.Row="2"/>
-                    <TextBox Text="{Binding VersionInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource createTextboxStyle}"
-                             Grid.Column="1" Grid.Row="2"
-                             Margin="0,69,5,0"/>
-
-                    <TextBlock Text="Info Link:"
-                               Style="{StaticResource createLabelStyle}"
-                               Grid.Row="7"/>
-                    <TextBox Text="{Binding InfoLinkInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource createTextboxStyle}"
-                             Grid.Column="1" Grid.Row="7"/>
-
-                    
-                    <TextBlock Text="Link Kind:"
-                               Style="{StaticResource createLabelStyle}"
-                               Grid.Row="6"/>
-
-                    <Grid Grid.Row="6"
-                               Grid.Column="1"
-                               Grid.ColumnSpan="3">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <ComboBox SelectedItem="{Binding LinkKindInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  Style="{StaticResource MainComboBoxStyle}"
-                                  Margin="0,0,5,10"
-                                  MinWidth="75"
-                                  Width="75"
-                                  HorizontalAlignment="Left"/>
-
-                        <TextBlock Text="Link Source:"
-                               Style="{StaticResource createLabelStyle}"
-                               Grid.Column="1"/>
-                        <TextBox Text="{Binding InfoLinkInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource createTextboxStyle}"
-                                 HorizontalAlignment="Stretch"
-                                 Grid.Column="2"/>
-                    </Grid>
-
-                    <TextBlock Text="Preview:"
-                               Style="{StaticResource createLabelStyle}"
-                               Margin="0,0,5,13"
-                               VerticalAlignment="Bottom"
-                               Grid.Row="2"/>
-                    <TextBox Text="{Binding PreviewImageInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource createTextboxStyle}"
-                             Margin="0,0,5,10"
-                             VerticalAlignment="Bottom"
-                             Grid.Column="1" Grid.Row="2"/>
-                    <Button x:Name="btnBrowseImage"
-                            Click="btnBrowseImage_Click"
-                            Style="{StaticResource FileEllipsisImageButton}"
-                            Grid.Row="2"
-                            Margin="0,0,0,8"
-                            VerticalAlignment="Bottom"
-                            HorizontalAlignment="Left"
-                            Grid.Column="2"/>
-                </Grid>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ctrl:CreateModUserControl Margin="0,5,0,0"/>
+                </ScrollViewer>
             </TabItem>
             
             <TabItem Header="Create Catalog">

@@ -11,23 +11,33 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SeventhHeaven.Windows
+namespace SeventhHeaven.UserControls
 {
     /// <summary>
-    /// Interaction logic for CatalogCreationToolWindow.xaml
+    /// Interaction logic for CreateModUserControl.xaml
     /// </summary>
-    public partial class CatalogCreationToolWindow : Window
+    public partial class CreateModUserControl : UserControl
     {
-        public CatalogCreationToolWindow()
+        ModCreationViewModel ViewModel { get; set; }
+        public CreateModUserControl()
         {
             InitializeComponent();
+
+            ViewModel = new ModCreationViewModel();
+            this.DataContext = ViewModel;
         }
 
         private void btnBrowseImage_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void btnGenerate_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.GenerateModOutput();
         }
     }
 }

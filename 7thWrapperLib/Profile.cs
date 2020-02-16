@@ -606,6 +606,10 @@ namespace _7thWrapperLib
             Folder = source.Attributes["Folder"].NodeText();
             ActiveWhen = ActiveWhen.Parse(source);
         }
+
+        public ModFolder()
+        {
+        }
     }
 
     public class CompatEntry
@@ -628,6 +632,10 @@ namespace _7thWrapperLib
                     .ToList();
             else
                 Versions = new List<decimal>();
+        }
+
+        public CompatEntry()
+        {
         }
     }
 
@@ -655,6 +663,10 @@ namespace _7thWrapperLib
                 .Cast<XmlNode>()
                 .Select(x => int.Parse(x.InnerText))
                 .ToList();
+        }
+
+        public CompatSetting()
+        {
         }
     }
 
@@ -689,6 +701,9 @@ namespace _7thWrapperLib
             }
         }
 
+        public Compatibility()
+        {
+        }
     }
 
     public class ModInfo
@@ -788,23 +803,32 @@ namespace _7thWrapperLib
             Version = 0.00m;
             OrderAfter = new List<Guid>();
             OrderBefore = new List<Guid>();
+            Compatibility = null;
         }
+
+        public Guid ID { get; set; }
+        public string Name { get; set; }
+        public string Category { get; set; }
 
         public string Author { get; set; }
         public decimal Version { get; set; }
         public string Description { get; set; }
+        public string ReleaseNotes { get; set; }
+        public DateTime ReleaseDate { get; set; }
+
         public string Link { get; set; }
         public string PreviewFile { get; set; }
         public List<ModFolder> ModFolders { get; private set; }
-        public List<ConditionalFolder> Conditionals { get; private set; }
-        public List<ConfigOption> Options { get; private set; }
-        public List<string> LoadLibraries { get; private set; }
-        public List<string> LoadAssemblies { get; private set; }
-        public List<string> LoadPlugins { get; private set; }
-        public List<ProgramInfo> LoadPrograms { get; private set; }
-        public Compatibility Compatibility { get; private set; }
-        public List<Guid> OrderBefore { get; private set; }
-        public List<Guid> OrderAfter { get; private set; }
+        public List<ConditionalFolder> Conditionals { get;  set; }
+        public List<ConfigOption> Options { get;  set; }
+        public List<string> LoadLibraries { get;  set; }
+        public List<string> LoadAssemblies { get;  set; }
+        public List<string> LoadPlugins { get;  set; }
+        public List<ProgramInfo> LoadPrograms { get;  set; }
+        public Compatibility Compatibility { get; set; }
+        public List<Guid> OrderBefore { get; set; }
+        public List<Guid> OrderAfter { get; set; }
+
     }
 
     [Serializable]
@@ -965,6 +989,10 @@ namespace _7thWrapperLib
                     _conditions[n.Attributes["ApplyTo"].NodeText()] = c;
                 }
             }
+        }
+
+        public ConditionalFolder()
+        {
         }
     }
 
