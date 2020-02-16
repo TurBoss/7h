@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace _7thWrapperLib
 {
@@ -507,10 +508,11 @@ namespace _7thWrapperLib
         }
     }
 
+    [XmlInclude(typeof(And)), XmlInclude(typeof(Or)), XmlInclude(typeof(Not)), XmlInclude(typeof(Option))]
     public abstract class ActiveWhen
     {
 
-        private class And : ActiveWhen
+        public class And : ActiveWhen
         {
             private List<ActiveWhen> _children;
             protected override void Load(XmlNode source)
@@ -522,7 +524,7 @@ namespace _7thWrapperLib
                 return _children.All(a => a.IsActive(check));
             }
         }
-        private class Or : ActiveWhen
+        public class Or : ActiveWhen
         {
             private List<ActiveWhen> _children;
             protected override void Load(XmlNode source)
@@ -534,7 +536,7 @@ namespace _7thWrapperLib
                 return _children.Any(a => a.IsActive(check));
             }
         }
-        private class Not : ActiveWhen
+        public class Not : ActiveWhen
         {
             private ActiveWhen _child;
             protected override void Load(XmlNode source)
@@ -546,7 +548,7 @@ namespace _7thWrapperLib
                 return !_child.IsActive(check);
             }
         }
-        private class Option : ActiveWhen
+        public class Option : ActiveWhen
         {
             public string Condition { get; set; }
             protected override void Load(XmlNode source)
@@ -598,6 +600,7 @@ namespace _7thWrapperLib
 
     public class ModFolder
     {
+        [XmlAttribute]
         public string Folder { get; set; }
         public ActiveWhen ActiveWhen { get; set; }
 
@@ -614,9 +617,25 @@ namespace _7thWrapperLib
 
     public class CompatEntry
     {
+        [XmlAttribute]
         public Guid ModID { get; set; }
         public string Description { get; set; }
+
+        [XmlIgnore]
         public List<decimal> Versions { get; set; }
+
+        [XmlAttribute(AttributeName = "Versions")]
+        public string VersionsAttribute
+        {
+            get
+            {
+                if (Versions == null || Versions.Count == 0)
+                    return "";
+
+                return string.Join(",", Versions);
+            }
+        }
+
         public CompatEntry(XmlNode n)
         {
             Description = n.InnerText;
@@ -725,11 +744,20 @@ namespace _7thWrapperLib
             LoadPlugins = new List<string>();
             LoadPrograms = new List<ProgramInfo>();
 
+            Guid.TryParse(doc.SelectSingleNode("/ModInfo/ID").NodeText(), out Guid parsedId);
+            ID = parsedId;
+            
+            Name = doc.SelectSingleNode("/ModInfo/Name").NodeText();
             Author = doc.SelectSingleNode("/ModInfo/Author").NodeText();
             Version = decimal.Parse(doc.SelectSingleNode("/ModInfo/Version").NodeText("0.00").Replace(',', '.'));
+            ReleaseNotes = doc.SelectSingleNode("/ModInfo/ReleaseNotes").NodeText();
             Description = doc.SelectSingleNode("/ModInfo/Description").NodeText();
+            Category = doc.SelectSingleNode("/ModInfo/Category").NodeText();
             Link = doc.SelectSingleNode("/ModInfo/Link").NodeText();
             PreviewFile = doc.SelectSingleNode("/ModInfo/PreviewFile").NodeText();
+
+            DateTime.TryParse(doc.SelectSingleNode("/ModInfo/ReleaseDate").NodeText(), out DateTime parsedDate);
+            ReleaseDate = parsedDate;
 
             foreach (XmlNode cond in doc.SelectNodes("/ModInfo/Conditional"))
                 Conditionals.Add(new ConditionalFolder(cond, ctx));
@@ -818,8 +846,12 @@ namespace _7thWrapperLib
 
         public string Link { get; set; }
         public string PreviewFile { get; set; }
+
+        [XmlElement(ElementName = "ModFolder")]
         public List<ModFolder> ModFolders { get; private set; }
         public List<ConditionalFolder> Conditionals { get;  set; }
+
+        [XmlElement(ElementName = "ConfigOption")]
         public List<ConfigOption> Options { get;  set; }
         public List<string> LoadLibraries { get;  set; }
         public List<string> LoadAssemblies { get;  set; }
@@ -901,9 +933,13 @@ namespace _7thWrapperLib
 
     public class OptionValue
     {
+        [XmlAttribute]
         public int Value { get; set; }
+        [XmlAttribute]
         public string Name { get; set; }
+        [XmlAttribute]
         public string PreviewFile { get; set; }
+        [XmlAttribute]
         public string PreviewAudio { get; set; }
 
         public OptionValue() { }
@@ -925,6 +961,8 @@ namespace _7thWrapperLib
     public class ConfigOption
     {
         public OptionType Type { get; set; }
+
+        [XmlElement(ElementName = "Option")]
         public List<OptionValue> Values { get; set; }
         public int Default { get; set; }
         public string Name { get; set; }

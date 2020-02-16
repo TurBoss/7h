@@ -1,18 +1,7 @@
-﻿using SeventhHeavenUI.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SeventhHeaven.Classes;
+using SeventhHeavenUI.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SeventhHeaven.UserControls
 {
@@ -32,12 +21,38 @@ namespace SeventhHeaven.UserControls
 
         private void btnBrowseImage_Click(object sender, RoutedEventArgs e)
         {
+            string pathToFile = FileDialogHelper.BrowseForFile("image|*.png,*.jpg,*.gif,*.jpeg", "Select mod.xml to Load");
 
+
+            if (!string.IsNullOrEmpty(pathToFile))
+            {
+                ViewModel.PreviewImageInput = System.IO.Path.GetFileName(pathToFile);
+            }
         }
 
         private void btnGenerate_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.GenerateModOutput();
+        }
+
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+            string pathToFile = FileDialogHelper.OpenSaveDialog("mod .xml|*.xml", "Save mod xml");
+
+            if (!string.IsNullOrEmpty(pathToFile))
+            {
+                ViewModel.SaveModXml(pathToFile);
+            }
+        }
+
+        private void btnLoad_Click(object sender, RoutedEventArgs e)
+        {
+            string pathToFile = FileDialogHelper.BrowseForFile("mod .xml|*.xml", "Select mod.xml to Load");
+        
+            if (!string.IsNullOrEmpty(pathToFile))
+            {
+                ViewModel.LoadModXml(pathToFile);
+            }
         }
     }
 }

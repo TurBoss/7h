@@ -163,6 +163,9 @@
     <Compile Include="UserControls\CatalogUserControl.xaml.cs">
       <DependentUpon>CatalogUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\CreateCatalogUserControl.xaml.cs">
+      <DependentUpon>CreateCatalogUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\CreateModUserControl.xaml.cs">
       <DependentUpon>CreateModUserControl.xaml</DependentUpon>
     </Compile>
@@ -251,6 +254,10 @@
     <Compile Include="Windows\UnhandledErrorWindow.xaml.cs">
       <DependentUpon>UnhandledErrorWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="UserControls\CreateCatalogUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\CreateModUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

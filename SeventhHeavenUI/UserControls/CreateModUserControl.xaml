@@ -34,9 +34,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -71,6 +69,7 @@
                     Grid.Row="1"/>
         <TextBox Text="{Binding DescriptionInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     Style="{StaticResource createTextboxStyle}"
+                 TextWrapping="Wrap"
                     AcceptsReturn="True"
                     AcceptsTab="True"
                     VerticalScrollBarVisibility="Auto"
@@ -134,6 +133,7 @@
                     Grid.Row="3"/>
         <TextBox Text="{Binding ReleaseNotesInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     Style="{StaticResource createTextboxStyle}"
+                 TextWrapping="Wrap"
                     AcceptsReturn="True"
                     AcceptsTab="True"
                     VerticalScrollBarVisibility="Auto"
@@ -183,6 +183,7 @@
                 Grid.Row="5"/>
 
         <Button x:Name="btnSave"
+                Click="btnSave_Click"   
                 Content="Save"
                 Width="80"
                 ToolTip="Save mod.xml to file"
@@ -192,6 +193,7 @@
                 Grid.Row="5"/>
 
         <Button x:Name="btnLoad"
+                Click="btnLoad_Click"
                 Content="Load"
                 ToolTip="Load a mod.xml file to edit"
                 Width="80"
@@ -205,10 +207,11 @@
                  Style="{StaticResource createTextboxStyle}"
                  IsReadOnly="True"
                  VerticalScrollBarVisibility="Auto"
-                 MaxLines="1000"
+                 VerticalAlignment="Stretch"
+                 MaxLines="100000"
                  MinHeight="125"
-                 MaxHeight="300"
-                 Margin="5,0,5,0"
+                 MaxHeight="400"
+                 Margin="5,0,5,5"
                  Grid.Column="0" Grid.Row="6"
                  Grid.ColumnSpan="4"/>
     </Grid>

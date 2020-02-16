@@ -217,6 +217,7 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
+        public ModInfo LoadedMod { get; set; }
 
         public ModCreationViewModel()
         {
@@ -238,27 +239,84 @@ namespace SeventhHeavenUI.ViewModels
             decimal.TryParse(VersionInput, out decimal parsedVersion);
             Guid.TryParse(IDInput, out Guid parsedId);
 
-            ModInfo mod = new ModInfo()
+            if (LoadedMod == null)
             {
-                ID = parsedId,
-                Name = NameInput,
-                Author = AuthorInput,
-                Version = parsedVersion,
-                Category = CategoryInput,
-                Description = DescriptionInput,
-                Link = InfoLinkInput,
-                PreviewFile = PreviewImageInput,
-                ReleaseDate = DateTime.Now,
-                ReleaseNotes = ReleaseNotesInput
-            };
+                LoadedMod = new ModInfo()
+                {
+                    ID = parsedId,
+                    Name = NameInput,
+                    Author = AuthorInput,
+                    Version = parsedVersion,
+                    Category = CategoryInput,
+                    Description = DescriptionInput,
+                    Link = InfoLinkInput,
+                    PreviewFile = PreviewImageInput,
+                    ReleaseDate = DateTime.Now,
+                    ReleaseNotes = ReleaseNotesInput
+                };
+            }
+            else
+            {
+                LoadedMod.ID = parsedId;
+                LoadedMod.Name = NameInput;
+                LoadedMod.Author = AuthorInput;
+                LoadedMod.Version = parsedVersion;
+                LoadedMod.Category = CategoryInput;
+                LoadedMod.Description = DescriptionInput;
+                LoadedMod.Link = InfoLinkInput;
+                LoadedMod.PreviewFile = PreviewImageInput;
+                LoadedMod.ReleaseDate = DateTime.Now;
+                LoadedMod.ReleaseNotes = ReleaseNotesInput;
+            }
 
-
-            return mod;
+            return LoadedMod;
         }
 
         public void GenerateModOutput()
         {
-            ModOutput = Util.Serialize(GenerateModFromInput());
+            ModOutput = Util.Serialize(GenerateModFromInput()).Replace("<?xml version=\"1.0\" encoding=\"utf-16\"?>", "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+        }
+
+        internal void LoadModXml(string pathToFile)
+        {
+            try
+            {
+                LoadedMod = new ModInfo(pathToFile, Sys._context);
+
+                IDInput = LoadedMod.ID.ToString();
+                NameInput = LoadedMod.Name;
+                CategoryInput = LoadedMod.Category;
+                AuthorInput = LoadedMod.Author;
+                DescriptionInput = LoadedMod.Description;
+                VersionInput = LoadedMod.Version.ToString();
+                PreviewImageInput = LoadedMod.PreviewFile;
+                InfoLinkInput = LoadedMod.Link;
+                ReleaseNotesInput = LoadedMod.ReleaseNotes;
+            }
+            catch (Exception e)
+            {
+                Sys.Message(new WMessage($"Could not load mod xml: {e.Message}", true)
+                {
+                    LoggedException = e
+                });
+            }
+        }
+
+        internal void SaveModXml(string pathToFile)
+        {
+            try
+            {
+                GenerateModOutput();
+                File.WriteAllText(pathToFile, ModOutput);
+                Sys.Message(new WMessage($"Successfully saved to {pathToFile}", true));
+            }
+            catch (Exception e)
+            {
+                Sys.Message(new WMessage($"Could not save mod xml: {e.Message}", true)
+                {
+                    LoggedException = e
+                });
+            }
         }
     }
 }
