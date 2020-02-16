@@ -505,13 +505,22 @@ It may not work properly unless you find and install the requirements.";
 
             if (status == ModStatus.Installed)
             {
-                MessageDialogWindow.Show($"{modToDownload.Name} is already downloaded and installed!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
+                InstalledItem installedItem = Sys.Library.GetItem(modToDownload.ID);
 
-            if (status == ModStatus.NotInstalled)
+                if (installedItem != null && !installedItem.IsUpdateAvailable)
+                {
+                    MessageDialogWindow.Show($"{modToDownload.Name} is already downloaded and installed!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+                else
+                {
+                    // update available for installed mod
+                    Install.DownloadAndInstall(modToDownload, isUpdatingMod: true);
+                }
+            }
+            else if (status == ModStatus.NotInstalled)
             {
-                Install.DownloadAndInstall(modToDownload);
+                Install.DownloadAndInstall(modToDownload, isUpdatingMod: false);
             }
 
             List<Mod> required = new List<Mod>();
