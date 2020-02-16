@@ -21,7 +21,7 @@ namespace SeventhHeaven.UserControls
 
         private void btnBrowseImage_Click(object sender, RoutedEventArgs e)
         {
-            string pathToFile = FileDialogHelper.BrowseForFile("image|*.png,*.jpg,*.gif,*.jpeg", "Select mod.xml to Load");
+            string pathToFile = FileDialogHelper.BrowseForFile("*.png,*.jpg,*.gif,*.jpeg|*.*", "Select mod.xml to Load");
 
 
             if (!string.IsNullOrEmpty(pathToFile))
