@@ -213,9 +213,9 @@
 
                         <WrapPanel Margin="3,3,3,0" Grid.Row="3" Visibility="{Binding ModUpdateMenuVisibility}">
                             <TextBlock Text="Version:" Style="{StaticResource ModInfoLabelStyle}"
-                                       Margin="0,0,3,2"/>
+                                       Margin="0,0,3,1"/>
                             <TextBlock Text="{Binding PreviewModVersion, FallbackValue='1.3'}"
-                                       Margin="2,0,3,2"
+                                       Margin="2,0,3,1"
                                        Style="{StaticResource ModInfoDetailsStyle}"/>
                             
                             <Button x:Name="btnUpdateMod" 
@@ -223,8 +223,9 @@
                                     IsEnabled="{Binding IsUpdateModButtonEnabled}"
                                     Click="btnUpdateMod_Click"
                                     Style="{StaticResource HyperlinkButton}"
+                                    FontSize="12"
                                     Margin="0,0,0,0"
-                                    Width="140"
+                                    Width="120"
                                     Background="Transparent"/>
                             <ToggleButton x:Name="btnUpdateModType"
                                           Click="btnUpdateModType_Click"
@@ -236,12 +237,12 @@
                                StaysOpen="False"
                                Closed="popupModUpdateType_Closed"
                                PlacementTarget="{Binding ElementName=btnUpdateModType}" 
-                               HorizontalOffset="-142">
+                               HorizontalOffset="-116">
                             <Border x:Name="bd" BorderBrush="{DynamicResource PrimaryControlBackground}" BorderThickness="1">
                                 <StackPanel Background="{DynamicResource SecondaryAppBackground}">
-                                    <RadioButton IsChecked="{Binding PreviewIsAutoUpdateModsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="Auto Update/Install" Margin="5,3,5,3" GroupName="modUpdateType"/>
-                                    <RadioButton IsChecked="{Binding PreviewIgnoreModUpdatesChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="Ignore" Margin="5,3,5,3" GroupName="modUpdateType"/>
-                                    <RadioButton IsChecked="{Binding PreviewIsNotifyAboutUpdatesChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="Notify" Margin="5,3,5,3" GroupName="modUpdateType"/>
+                                    <RadioButton FontSize="12" IsChecked="{Binding PreviewIsAutoUpdateModsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="Auto Update/Install" Margin="5,3,5,3" GroupName="modUpdateType"/>
+                                    <RadioButton FontSize="12" IsChecked="{Binding PreviewIgnoreModUpdatesChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="Ignore" Margin="5,3,5,3" GroupName="modUpdateType"/>
+                                    <RadioButton FontSize="12" IsChecked="{Binding PreviewIsNotifyAboutUpdatesChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="Notify" Margin="5,3,5,3" GroupName="modUpdateType"/>
                                 </StackPanel>
                             </Border>
                         </Popup>
@@ -253,9 +254,10 @@
                         </WrapPanel>
 
                         <WrapPanel Margin="3,0,3,0" Grid.Row="5">
-                            <TextBlock Text="Link:" Style="{StaticResource ModInfoLabelStyle}" Margin="0,0,0,3"/>
+                            <TextBlock Text="Link:" Style="{StaticResource ModInfoLabelStyle}" Margin="0,1,0,3"/>
                             <Button x:Name="btnOpenModLink" 
                                     Width="80"
+                                    FontSize="12"
                                     Background="Transparent"
                                     Margin="2,0,5,0"
                                     Click="btnOpenModLink_Click"
@@ -263,13 +265,14 @@
                                     IsEnabled="{Binding PreviewModHasLink, FallbackValue='False'}"
                                     Style="{StaticResource OpenLinkStyle}"/>
 
-                            <TextBlock Text="Readme:" Style="{StaticResource ModInfoLabelStyle}" Margin="0,0,0,3"
+                            <TextBlock Text="Readme:" Style="{StaticResource ModInfoLabelStyle}" Margin="0,1,0,3"
                                        Visibility="{Binding ReadmeVisibility, FallbackValue='Visible'}"/>
                             <Button x:Name="btnOpenModReadme"
+                                    Click="btnOpenModReadme_Click"
+                                    FontSize="12"
                                     Background="Transparent"
                                     Width="80"
                                     Margin="2,0,10,0"
-                                    Click="btnOpenModReadme_Click"
                                     Visibility="{Binding ReadmeVisibility, FallbackValue='Visible'}"
                                     IsEnabled="{Binding PreviewModHasReadMe, FallbackValue='False'}"
                                     Style="{StaticResource ReadMeStyle}"/>

@@ -232,26 +232,58 @@ namespace _7thHeaven.Code
                 }
 
                 parsedMod.Name = doc.SelectSingleNode("/ModInfo/Name").NodeTextS();
-
                 if (string.IsNullOrWhiteSpace(parsedMod.Name))
                 {
                     parsedMod.Name = defaultModIfMissing.Name;
                 }
 
                 parsedMod.Author = doc.SelectSingleNode("/ModInfo/Author").NodeTextS();
+                if (string.IsNullOrWhiteSpace(parsedMod.Author))
+                {
+                    parsedMod.Author = defaultModIfMissing.Author;
+                }
+
+
                 parsedMod.Link = doc.SelectSingleNode("/ModInfo/Link").NodeTextS();
+                if (string.IsNullOrWhiteSpace(parsedMod.Link))
+                {
+                    parsedMod.Link = defaultModIfMissing.Link;
+                }
+
                 parsedMod.Description = doc.SelectSingleNode("/ModInfo/Description").NodeTextS();
+                if (string.IsNullOrWhiteSpace(parsedMod.Description))
+                {
+                    parsedMod.Description = defaultModIfMissing.Description;
+                }
+
                 parsedMod.Category = doc.SelectSingleNode("/ModInfo/Category").NodeTextS();
+                if (string.IsNullOrWhiteSpace(parsedMod.Category))
+                {
+                    parsedMod.Category = defaultModIfMissing.Category;
+                }
+
                 parsedMod.LatestVersion.ReleaseNotes = doc.SelectSingleNode("/ModInfo/ReleaseNotes").NodeTextS();
+                if (string.IsNullOrWhiteSpace(parsedMod.ReleaseNotes))
+                {
+                    parsedMod.ReleaseNotes = defaultModIfMissing.ReleaseNotes;
+                }
 
                 if (DateTime.TryParse(doc.SelectSingleNode("/ModInfo/ReleaseDate").NodeTextS(), out DateTime parsedDate))
                 {
                     parsedMod.LatestVersion.ReleaseDate = parsedDate;
                 }
+                else
+                {
+                    parsedMod.LatestVersion.ReleaseDate = defaultModIfMissing.LatestVersion.ReleaseDate;
+                }
 
                 if (decimal.TryParse(doc.SelectSingleNode("/ModInfo/Version").NodeTextS().Replace(',', '.'), out decimal ver))
                 {
                     parsedMod.LatestVersion.Version = ver;
+                }
+                else
+                {
+                    parsedMod.LatestVersion.Version = defaultModIfMissing.LatestVersion.Version;
                 }
 
                 var pv = doc.SelectSingleNode("/ModInfo/PreviewFile");
