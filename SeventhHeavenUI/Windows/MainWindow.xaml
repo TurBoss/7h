@@ -211,7 +211,7 @@
                                        Style="{StaticResource ModInfoDetailsStyle}"/>
                         </WrapPanel>
 
-                        <WrapPanel Margin="3,3,3,0" Grid.Row="3" Visibility="{Binding ModUpdateMenuVisibility}">
+                        <WrapPanel Margin="3,3,3,0" Grid.Row="3">
                             <TextBlock Text="Version:" Style="{StaticResource ModInfoLabelStyle}"
                                        Margin="0,0,3,1"/>
                             <TextBlock Text="{Binding PreviewModVersion, FallbackValue='1.3'}"
@@ -221,6 +221,7 @@
                             <Button x:Name="btnUpdateMod" 
                                     Content="{Binding UpdateModButtonText, FallbackValue='Update Available'}"
                                     IsEnabled="{Binding IsUpdateModButtonEnabled}"
+                                    Visibility="{Binding ModUpdateMenuVisibility}"
                                     Click="btnUpdateMod_Click"
                                     Style="{StaticResource HyperlinkButton}"
                                     FontSize="12"
@@ -229,6 +230,7 @@
                                     Background="Transparent"/>
                             <ToggleButton x:Name="btnUpdateModType"
                                           Click="btnUpdateModType_Click"
+                                          Visibility="{Binding ModUpdateMenuVisibility}"
                                           Style="{StaticResource DownArrowToggleButton}"
                                           Background="Transparent"/>
                         </WrapPanel>
