@@ -71,7 +71,7 @@ namespace _7thHeaven.Code
                 CachedDetails = m,
                 CachePreview = String.Empty,
                 ModID = m.ID,
-                UpdateType = UpdateType.Ignore,
+                UpdateType = Sys.Library.DefaultUpdate,
                 Versions = new List<InstalledVersion>() { new InstalledVersion() { VersionDetails = m.LatestVersion, InstalledLocation = copyLocation } },
             });
 
