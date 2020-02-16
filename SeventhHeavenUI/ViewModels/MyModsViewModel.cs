@@ -920,7 +920,7 @@ namespace SeventhHeavenUI.ViewModels
 
         internal void ScanForModUpdates()
         {
-            foreach (InstalledItem inst in Sys.Library.Items)
+            foreach (InstalledItem inst in Sys.Library.Items.ToList())
             {
                 Mod cat = Sys.GetModFromCatalog(inst.ModID);
 
