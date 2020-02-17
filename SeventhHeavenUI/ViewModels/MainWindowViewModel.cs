@@ -627,7 +627,10 @@ They will be automatically turned off.";
             // Set the Downloads Interface so Sys can use Download methods defined in the CatalogViewModel
             Sys.Downloads = CatalogMods;
 
+            // wire up MegaIros downloader to log using NLog 
             MegaIros.Logger = Logger.Info;
+            MegaIros.ErrorLogger = Logger.Error;
+            MegaIros.TraceLogger = Logger.Trace;
 
             GeneralSettingsViewModel.AutoDetectSystemPaths(Sys.Settings);
 
@@ -873,7 +876,7 @@ They will be automatically turned off.";
 
             PreviewModAuthor = selected.Author;
             PreviewModVersion = selected.InstallInfo.CachedDetails.LatestVersion.Version.ToString();
-            PreviewModName = $"{selected.Name} v{PreviewModVersion}";
+            PreviewModName = selected.Name;
             PreviewModReleaseDate = selected.ReleaseDate;
             PreviewModReleaseNotes = selected.InstallInfo.CachedDetails.LatestVersion.ReleaseNotes;
             PreviewModCategory = selected.Category;
@@ -932,7 +935,7 @@ They will be automatically turned off.";
 
             PreviewModAuthor = selected.Author;
             PreviewModVersion = selected.Mod.LatestVersion.Version.ToString();
-            PreviewModName = $"{selected.Name} v{PreviewModVersion}";
+            PreviewModName = selected.Name;
             PreviewModReleaseDate = selected.ReleaseDate;
             PreviewModReleaseNotes = selected.Mod.LatestVersion.ReleaseNotes;
             PreviewModCategory = selected.Category;

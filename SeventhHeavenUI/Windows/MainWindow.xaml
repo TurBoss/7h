@@ -189,7 +189,7 @@
 
                         <WrapPanel Margin="3,5,3,0" Grid.Row="0">
                             <TextBlock Text="Name:" Style="{StaticResource ModInfoLabelStyle}"/>
-                            <TextBlock Text="{Binding PreviewModName, FallbackValue='My Cool New Mod v2.0'}" 
+                            <TextBlock Text="{Binding PreviewModName, FallbackValue='My Cool New Mod'}" 
                                Style="{StaticResource ModInfoDetailsStyle}"/>
                         </WrapPanel>
 

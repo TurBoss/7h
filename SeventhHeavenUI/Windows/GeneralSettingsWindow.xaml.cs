@@ -66,10 +66,33 @@ namespace SeventhHeaven.Windows
                 FileInfo fileSelected = new FileInfo(exePath);
                 if (fileSelected.Name.Equals("ff7_en.exe", System.StringComparison.InvariantCultureIgnoreCase) || fileSelected.Name.Equals("FF7_Launcher.exe", System.StringComparison.InvariantCultureIgnoreCase))
                 {
-                    MessageDialogWindow.Show("This exe is used for the Steam release of FF7, which 7th Heaven does not support. Please select a different FF7 EXE file.",
-                                             "Error - Incorrect Exe",
+                    // User selected the exe's for Steam release so we try to auto copy the 1.02 patched exe and select it for them
+                    string targetPathToFf7Exe = Path.Combine(fileSelected.DirectoryName, "ff7.exe");
+                    string copyOrSelectMessage = "selected";
+
+                    if (!File.Exists(targetPathToFf7Exe))
+                    {
+                        // use game converter to copy files over
+                        var gc = new GameConverter(new ConversionSettings() { InstallPath = fileSelected.DirectoryName });
+                        if (!gc.CopyFF7ExeToGame())
+                        {
+                            MessageDialogWindow.Show("This exe is used for the Steam release of FF7, which 7th Heaven does not support. The 1.02 patch ff7.exe failed to copy and could not be auto selected for you.",
+                                                     "Error - Incorrect Exe",
+                                                     MessageBoxButton.OK,
+                                                     MessageBoxImage.Error);
+                            return;
+                        }
+
+                        copyOrSelectMessage = "copied and selected";
+                    }
+
+                    ViewModel.FF7ExePathInput = targetPathToFf7Exe;
+
+                    MessageDialogWindow.Show($"This exe is used for the Steam release of FF7, which 7th Heaven does not support. The 1.02 patch ff7.exe was {copyOrSelectMessage} for you to ensure 7th Heaven works.",
+                                             "Warning - Incorrect Exe",
                                              MessageBoxButton.OK,
-                                             MessageBoxImage.Error);
+                                             MessageBoxImage.Warning);
+
                     return;
                 }
 

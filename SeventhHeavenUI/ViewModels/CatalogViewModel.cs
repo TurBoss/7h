@@ -584,7 +584,7 @@ It may not work properly unless you find and install the requirements.";
             {
                 onError = () =>
                 {
-                    Sys.Message(new WMessage($"Downloading {downloadInfo.SaveFilePath} - switching to backup url {links.ElementAt(1)}"));
+                    Sys.Message(new WMessage($"{downloadInfo.ItemName} - switching to backup url {links.ElementAt(1)}"));
                     Download(links.Skip(1), downloadInfo);
                 };
             }

@@ -146,8 +146,15 @@ namespace Iros.Mega {
 
         public static Action<string> Logger { get; set; }
 
+        public static Action<string> ErrorLogger { get; set; }
+
+        public static Action<string> TraceLogger { get; set; }
+
+
         static MegaIros() {
             Logger = s => { };
+            ErrorLogger = s => { };
+            TraceLogger = s => { };
         }
 
         public IEnumerable<IrosNode> GetNodes() {
@@ -156,7 +163,7 @@ namespace Iros.Mega {
         }
 
         private void Nodes(IntPtr nodes, int count, int options) {
-            Logger(String.Format("Received {0} new nodes", count));
+            TraceLogger(String.Format("Received {0} new nodes", count));
             lock (_nodes) {
                 if (options != 0) _nodes.Clear();
                 for (int i = 0; i < count; i++) {
@@ -180,7 +187,7 @@ namespace Iros.Mega {
                         if (tfr != null) {
                             tfr.ID = n.Handle;
                             int td = IrosAttemptDownload(_cli, tfr.ID);
-                            Logger(String.Format("Attempting download of file {0} (resulting channel {1})", tfr.ID, td));
+                            TraceLogger(String.Format("Attempting download of file {0} (resulting channel {1})", tfr.ID, td));
                             if (td >= 0) {
                                 tfr.State = TransferState.Beginning;
                                 tfr.TD = td;
@@ -213,7 +220,7 @@ namespace Iros.Mega {
             access = write != 0 ? (read != 0 ? System.IO.FileAccess.ReadWrite : System.IO.FileAccess.Write) : System.IO.FileAccess.Read;
 
             _files[handle] = new System.IO.FileStream(filename, mode, access);
-            Logger(String.Format("Opened file {0} for {1}", filename, access));
+            TraceLogger(String.Format("Opened file {0} for {1}", filename, access));
             return 1;
         }
 
@@ -227,7 +234,7 @@ namespace Iros.Mega {
                 if (!fs.SafeFileHandle.IsInvalid)
                 {
                     ReadFile(fs.SafeFileHandle.DangerousGetHandle(), buffer, toRead, ref read, IntPtr.Zero);
-                    Logger(String.Format("Read {0} bytes from file {1}", read, fs.Name));
+                    TraceLogger(String.Format("Read {0} bytes from file {1}", read, fs.Name));
                     return (int)read;
                 }
             }
@@ -244,7 +251,7 @@ namespace Iros.Mega {
                 if (!fs.SafeFileHandle.IsInvalid)
                 {
                     WriteFile(fs.SafeFileHandle.DangerousGetHandle(), buffer, (uint)length, out written, IntPtr.Zero);
-                    Logger(String.Format("Written {0} bytes to file {1}", written, fs.Name));
+                    TraceLogger(String.Format("Written {0} bytes to file {1}", written, fs.Name));
                     return (int)written;
                 }
             }
@@ -255,7 +262,7 @@ namespace Iros.Mega {
         private int _IrosFClose(IntPtr handle) {
             System.IO.FileStream fs;
             if (_files.TryGetValue(handle, out fs)) {
-                Logger(String.Format("Closed file {0}", fs.Name, fs));
+                TraceLogger(String.Format("Closed file {0}", fs.Name, fs));
                 _files.Remove(handle);
                 fs.Close();
             }
@@ -311,13 +318,13 @@ namespace Iros.Mega {
         }
 
         private void _IrosTError(int td, int httpcode, int count) {
-            Logger(String.Format("Transfer on channel {0} failed with error {1}", td, httpcode));
+            ErrorLogger(String.Format("Transfer on channel {0} failed with error {1}", td, httpcode));
         }
 
         private void _IrosTFail(int td, string filename, int error) {
             Transfer t;
             if (_transfers.TryGetValue(td, out t)) {
-                Logger(String.Format("Transfer on channel {0} failed with error {1}", td, error));
+                ErrorLogger(String.Format("Transfer on channel {0} failed with error {1}", td, error));
                 t.State = TransferState.Failed;
                 t.Notify();
             }
@@ -353,7 +360,7 @@ namespace Iros.Mega {
             //req.Method = data.len > 0 ? "POST" : "GET";
             req.Method = "POST";
 
-            Logger(String.Format("{3}ing {2} bytes to {0} handle {1}", url, handle, data.len, req.Method));
+            TraceLogger(String.Format("{3}ing {2} bytes to {0} handle {1}", url, handle, data.len, req.Method));
 
             byte[] buffer = new byte[data.len];
             Marshal.Copy(data.data, buffer, 0, buffer.Length);
@@ -367,7 +374,7 @@ namespace Iros.Mega {
                     var rs = req.GetResponse().GetResponseStream();
                     t.Async = rs.BeginRead(t.ReceiveBuffer, 0, t.ReceiveBuffer.Length, AsyncReceive, t);
                 } catch (WebException e) {
-                    Logger(String.Format("Error receiving from {0}: {1}", handle, e.ToString()));
+                    ErrorLogger(String.Format("Error receiving from {0}: {1}", handle, e.ToString()));
                     t.ReceiveDone = true;
                     if (e.Response != null)
                         t.Status = (int)((HttpWebResponse)e.Response).StatusCode;
@@ -376,7 +383,7 @@ namespace Iros.Mega {
                 }
                 catch (Exception e)
                 {
-                    Logger(String.Format("Error receiving from {0}: {1}", handle, e.ToString()));
+                    ErrorLogger(String.Format("Error receiving from {0}: {1}", handle, e.ToString()));
                     t.ReceiveDone = true;
                     t.Status = 500;
                 }
@@ -390,11 +397,11 @@ namespace Iros.Mega {
                         s.Write(buffer, 0, buffer.Length);
                     }
                     t.Completed = t.Size = buffer.Length;
-                    Logger(String.Format("Beginning GetResponse for {0}", handle));
+                    TraceLogger(String.Format("Beginning GetResponse for {0}", handle));
                     t.Async = req.BeginGetResponse(doResponse, t);
                 }, t);
             } else {
-                Logger(String.Format("Beginning GetResponse [no request data] for {0}", handle));
+                TraceLogger(String.Format("Beginning GetResponse [no request data] for {0}", handle));
                 t.Async = req.BeginGetResponse(doResponse, t);
             }
         }
@@ -403,7 +410,7 @@ namespace Iros.Mega {
             WebTask t = (WebTask)ar.AsyncState;
             var resp = t.Req.GetResponse().GetResponseStream();
             int count = resp.EndRead(ar);
-            Logger(String.Format("Received {0} bytes against handle {1}", count, t.Handle));
+            TraceLogger(String.Format("Received {0} bytes against handle {1}", count, t.Handle));
             t.ReceiveDone = (count == 0);
             if (count > 0) {
                 t.writeBack(t.Handle, t.ReceiveBuffer, count);
@@ -426,7 +433,7 @@ namespace Iros.Mega {
             status = 0;
             foreach (var task in _http.Values.ToArray()) {
                 if (task.ReceiveDone) {
-                    Logger(String.Format("Reporting complete against handle {0} status {1}", task.Handle, task.Status));
+                    TraceLogger(String.Format("Reporting complete against handle {0} status {1}", task.Handle, task.Status));
                     pHandle = task.Handle;
                     status = task.Status;
                     _http.Remove(task.Handle);
@@ -447,7 +454,7 @@ namespace Iros.Mega {
                     .Concat(new[] { _wakeUp })
                     .ToArray();
                 if (handles.Any()) { //which will always be true due to wakeup...
-                    Logger(String.Format("Waiting for " + ds + " deciseconds"));
+                    TraceLogger(String.Format("Waiting for " + ds + " deciseconds"));
                     if (ds < int.MaxValue / 100)
                         ds *= 100;
                     else
@@ -575,7 +582,7 @@ namespace Iros.Mega {
                 Marshal.DestroyStructure(ip, typeof(IrosLinkCallbacks));
             } catch (Exception e) {
                 Dead = true;
-                Logger("MegaIros died: " + e.ToString());
+                ErrorLogger("MegaIros died: " + e.ToString());
             }
         }
     }

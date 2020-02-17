@@ -85,12 +85,20 @@
       <Settings>window_size_x = 2048,window_size_y = 1536</Settings>
     </Option>
     <Option>
+      <Text>2560x1440</Text>
+      <Settings>window_size_x = 2560,window_size_y = 1440</Settings>
+    </Option>
+    <Option>
       <Text>2560x1920</Text>
       <Settings>window_size_x = 2560,window_size_y = 1920</Settings>
     </Option>
     <Option>
       <Text>2880x2160</Text>
       <Settings>window_size_x = 2880,window_size_y = 2160</Settings>
+    </Option>
+    <Option>
+      <Text>3860x2160</Text>
+      <Settings>window_size_x = 3860,window_size_y = 2160</Settings>
     </Option>
   </Setting>
 

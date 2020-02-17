@@ -749,7 +749,12 @@ namespace _7thWrapperLib
             
             Name = doc.SelectSingleNode("/ModInfo/Name").NodeText();
             Author = doc.SelectSingleNode("/ModInfo/Author").NodeText();
-            Version = decimal.Parse(doc.SelectSingleNode("/ModInfo/Version").NodeText("0.00").Replace(',', '.'));
+
+            if (decimal.TryParse(doc.SelectSingleNode("/ModInfo/Version").NodeText("0.00").Replace(',', '.'), out decimal parsedVersion))
+            {
+                Version = parsedVersion;
+            }
+
             ReleaseNotes = doc.SelectSingleNode("/ModInfo/ReleaseNotes").NodeText();
             Description = doc.SelectSingleNode("/ModInfo/Description").NodeText();
             Category = doc.SelectSingleNode("/ModInfo/Category").NodeText();

@@ -115,16 +115,16 @@
             </ListView.ContextMenu>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Item" Width="350" DisplayMemberBinding="{Binding ItemName, FallbackValue='item text'}"/>
-                    <GridViewColumn x:Name="colProgress" Header="Progress" Width="200">
+                    <GridViewColumn Header="Item" Width="225" DisplayMemberBinding="{Binding ItemName, FallbackValue='item text'}"/>
+                    <GridViewColumn x:Name="colProgress" Header="Progress" Width="175">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <ProgressBar Value="{Binding PercentComplete, FallbackValue='50'}" Width="{Binding ElementName=colProgress, Path=ActualWidth}" Height="10"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Speed" Width="100" DisplayMemberBinding="{Binding DownloadSpeed, FallbackValue='32.5 kb/s'}"/>
-                    <GridViewColumn Header="Time Left" Width="100" DisplayMemberBinding="{Binding RemainingTime, FallbackValue='54 sec'}"/>
+                    <GridViewColumn Header="Speed" Width="90" DisplayMemberBinding="{Binding DownloadSpeed, FallbackValue='32.5 kb/s'}"/>
+                    <GridViewColumn Header="Time Left" Width="90" DisplayMemberBinding="{Binding RemainingTime, FallbackValue='54 sec'}"/>
 
                 </GridView>
             </ListView.View>

@@ -70,6 +70,11 @@ namespace SeventhHeaven.Classes
         public FF7Version InstallVersion { get; set; }
         public string DriveLetter { get; set; }
 
+        /// <summary>
+        /// Used to ensure only one thread/task is trying to mount/unmount the disc
+        /// </summary>
+        private static object _mountLock = new object();
+
         #endregion
 
         [DllImport("user32.dll")]
@@ -87,8 +92,23 @@ namespace SeventhHeaven.Classes
             Instance.RaiseProgressChanged($"Checking FF7 is not running ...");
             if (IsFF7Running())
             {
-                Instance.RaiseProgressChanged("\tFF7 is already running. Only 1 instance is allowed. Aborting ...", NLog.LogLevel.Error);
-                return false;
+                string title = "FF7 Is Already Running!";
+                string message = "FF7 is already running. Only 1 instance is allowed. Do you want to force close FF7 to continue?";
+
+                Instance.RaiseProgressChanged($"\t{message}", NLog.LogLevel.Warn);
+
+                var result = MessageDialogWindow.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result.Result == MessageBoxResult.No)
+                {
+                    Instance.RaiseProgressChanged("\tAborting ...", NLog.LogLevel.Error);
+                    return false;
+                }
+
+                if (!ForceKillFF7())
+                {
+                    Instance.RaiseProgressChanged($"\tFailed to close {Path.GetFileName(Sys.Settings.FF7Exe)} processes. Aborting ...", NLog.LogLevel.Error);
+                    return false;
+                }
             }
 
             Instance.RaiseProgressChanged($"Checking FF7 .exe exists at {Sys.Settings.FF7Exe} ...");
@@ -1531,9 +1551,12 @@ namespace SeventhHeaven.Classes
                     return false;
                 }
 
-                using (PowerShell ps = PowerShell.Create())
+                lock (_mountLock)
                 {
-                    var result = ps.AddCommand("Mount-DiskImage").AddParameter("ImagePath", isoPath).Invoke();
+                    using (PowerShell ps = PowerShell.Create())
+                    {
+                        System.Collections.ObjectModel.Collection<PSObject> result = ps.AddCommand("Mount-DiskImage").AddParameter("ImagePath", isoPath).Invoke();
+                    }
                 }
 
                 return true;
@@ -1565,9 +1588,12 @@ namespace SeventhHeaven.Classes
                     return false;
                 }
 
-                using (PowerShell ps = PowerShell.Create())
+                lock (_mountLock)
                 {
-                    var result = ps.AddCommand("Dismount-DiskImage").AddParameter("ImagePath", isoPath).Invoke();
+                    using (PowerShell ps = PowerShell.Create())
+                    {
+                        System.Collections.ObjectModel.Collection<PSObject> result = ps.AddCommand("Dismount-DiskImage").AddParameter("ImagePath", isoPath).Invoke();
+                    }
                 }
 
                 return true;
@@ -1588,7 +1614,12 @@ namespace SeventhHeaven.Classes
             if (!File.Exists(pathToCustomCfg))
             {
                 Instance.RaiseProgressChanged("\tno custom.cfg file found in /Resources/Controls folder. Creating copy of ff7input.cfg", NLog.LogLevel.Warn);
-                GameLaunchSettingsViewModel.CopyInputCfgToCustomCfg();
+
+                if (GameLaunchSettingsViewModel.CopyInputCfgToCustomCfg()) // returns true if it copied successfully
+                {
+                    Instance.RaiseProgressChanged("\tswitching to control configuration file custom.cfg", NLog.LogLevel.Warn);
+                    Sys.Settings.GameLaunchSettings.InGameConfigOption = "custom.cfg";
+                }
             }
 
             string pathToCfg = Path.Combine(Sys.PathToControlsFolder, Sys.Settings.GameLaunchSettings.InGameConfigOption);
@@ -1597,7 +1628,7 @@ namespace SeventhHeaven.Classes
             if (!File.Exists(pathToCfg))
             {
                 Instance.RaiseProgressChanged($"\tinput cfg file not found at {pathToCfg}", NLog.LogLevel.Warn);
-                return true;
+                return false;
             }
 
             try
@@ -1622,6 +1653,27 @@ namespace SeventhHeaven.Classes
             string fileName = Path.GetFileNameWithoutExtension(Sys.Settings.FF7Exe);
             return Process.GetProcessesByName(fileName).Length > 0;
         }
+
+        private static bool ForceKillFF7()
+        {
+            string fileName = Path.GetFileNameWithoutExtension(Sys.Settings.FF7Exe);
+
+            try
+            {
+                foreach (Process item in Process.GetProcessesByName(fileName))
+                {
+                    item.Kill();
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                return false;
+            }
+        }
+
 
         /// <summary>
         /// Kills any currently running process found in <see cref="_sideLoadProcesses"/>
