@@ -51,7 +51,7 @@
       .allowedextension
     </AllowedReferenceRelatedFileExtensions>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\.dist\Build\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>

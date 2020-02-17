@@ -723,7 +723,7 @@ namespace SeventhHeaven.Classes
                     Instance.RaiseProgressChanged("Stopping other programs for mods started by 7H ...");
                     Instance.StopAllSideProcessesForMods();
 
-                    if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc)
+                    if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && IsVirtualIsoMounted(Instance.DriveLetter))
                     {
                         Instance.RaiseProgressChanged("Auto unmounting game disc ...");
                         UnmountIso();
@@ -969,7 +969,7 @@ namespace SeventhHeaven.Classes
                 ff7Proc.EnableRaisingEvents = true;
                 ff7Proc.Exited += (o, e) =>
                 {
-                    if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc)
+                    if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && IsVirtualIsoMounted(Instance.DriveLetter))
                     {
                         Instance.RaiseProgressChanged("Auto unmounting game disc ...");
                         UnmountIso();
@@ -1555,7 +1555,11 @@ namespace SeventhHeaven.Classes
                 {
                     using (PowerShell ps = PowerShell.Create())
                     {
-                        System.Collections.ObjectModel.Collection<PSObject> result = ps.AddCommand("Mount-DiskImage").AddParameter("ImagePath", isoPath).Invoke();
+                        ps.AddCommand("Mount-DiskImage");
+                        ps.AddParameter("ImagePath", isoPath);
+
+                        Logger.Info($"\tattempting to mount iso at {isoPath}");
+                        System.Collections.ObjectModel.Collection<PSObject> result = ps.Invoke();
                     }
                 }
 
@@ -1603,6 +1607,25 @@ namespace SeventhHeaven.Classes
                 Logger.Error(e);
                 return false;
             }
+        }
+
+        /// <summary>
+        /// returns true if mounted FF7DISC is a virtual iso (by checking for game files on the drive)
+        /// </summary>
+        /// <param name="driveLetter"></param>
+        public static bool IsVirtualIsoMounted(string driveLetter)
+        {
+            foreach (string movieFile in FF7FileLister.GetMovieFiles().Keys)
+            {
+                string fullPathToMovie = Path.Combine(driveLetter, "ff7", "movies", movieFile);
+
+                if (File.Exists(fullPathToMovie))
+                {
+                    return false; // found a movie file at drive letter so assume this is a physical disc (virtual iso that we mount has no files on it)
+                }
+            }
+
+            return true;
         }
 
         public static bool CopyKeyboardInputCfg()
