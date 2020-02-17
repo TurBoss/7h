@@ -568,19 +568,13 @@ It may not work properly unless you find and install the requirements.";
         {
             downloadInfo.HasStarted = true;
 
-            string link = links.First();
-            LocationType type;
-            string location;
-
-            if (!LocationUtil.TryParse(link, out type, out location)) return;
-
             Action onError = () =>
             {
                 RemoveFromDownloadList(downloadInfo);
                 downloadInfo.IProc.Error?.Invoke(new Exception($"Failed {downloadInfo.ItemName}"));
             };
 
-            if (links.Count() > 1)
+            if (links?.Count() > 1)
             {
                 onError = () =>
                 {
@@ -590,6 +584,21 @@ It may not work properly unless you find and install the requirements.";
             }
 
             downloadInfo.OnError = onError;
+
+            if (links == null || links?.Count() == 0)
+            {
+                Sys.Message(new WMessage($"No links for {downloadInfo.ItemName}", true));
+                downloadInfo.OnError?.Invoke();
+                return;
+            }
+
+            string link = links.First();
+            if (!LocationUtil.TryParse(link, out LocationType type, out string location))
+            {
+                Sys.Message(new WMessage($"Failed to parse link for {downloadInfo.ItemName}", true));
+                downloadInfo.OnError?.Invoke();
+                return;
+            }
 
             try
             {
