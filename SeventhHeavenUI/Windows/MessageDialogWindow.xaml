@@ -67,6 +67,7 @@
                        Text="{Binding Message, FallbackValue='The following mods are incompatible:'}" Grid.ColumnSpan="2"/>
 
             <TextBox x:Name="txtDetails"
+                     Style="{StaticResource PrimaryTextBoxStyle}"
                      Grid.Row="1"
                      Margin="0,0,10,0"
                      TextWrapping="Wrap"
@@ -74,7 +75,6 @@
                      VerticalScrollBarVisibility="Auto"
                      HorizontalScrollBarVisibility="Auto"
                      IsReadOnly="True"
-                     MinHeight="75"
                      Background="Transparent"
                      VerticalAlignment="Stretch"
                      Text="{Binding Details, FallbackValue='Here are alot of details about stuff. Here are alot of details about stuff. Here are alot of details  about stuff. Here are alot of de tails about stuff. Here are alot of details about stuff. Here are alot of details about stuff. Here are alot of details about stuff. '}" Grid.ColumnSpan="2"/>

@@ -136,7 +136,7 @@ namespace Iros._7th.Workshop
                 // mod is installed so download update files for updating mod
                 Sys.SetStatus(m.ID, ModStatus.Updating);
 
-                var patches = m.GetPatchesFromTo(install.LatestInstalled.VersionDetails.Version, m.LatestVersion.Version);
+                List<ModPatch> patches = m.GetPatchesFromTo(install.LatestInstalled.VersionDetails.Version, m.LatestVersion.Version);
                 if (patches.Any())
                 {
                     // download patches to update the mod

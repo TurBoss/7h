@@ -98,13 +98,36 @@ namespace Iros._7th.Workshop
         /// </summary>
         public bool ContainsMovies { get; set; }
 
-        public IEnumerable<ModPatch> GetPatchesFromTo(decimal from, decimal to)
+        /// <summary>
+        /// Returns list of patches to download to update <paramref name="from"/> version to  <paramref name="to"/> version 
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        public List<ModPatch> GetPatchesFromTo(decimal from, decimal to)
         {
-            foreach (var patch in Patches)
+            List<ModPatch> patchesForVersion = new List<ModPatch>();
+
+            if (Patches == null || Patches.Count == 0)
+                return patchesForVersion;
+
+            foreach (ModPatch patch in Patches)
             {
-                if (patch.VerTo == to && patch.VerFrom.Split(',').Select(s => decimal.Parse(s)).Contains(from))
-                    yield return patch;
+                if (patch == null)
+                    continue;
+
+                if (patch.VerTo == to && patch.VerFrom.Split(',').Select(s =>
+                                                                    {
+                                                                        if (decimal.TryParse(s, System.Globalization.NumberStyles.AllowDecimalPoint, new System.Globalization.CultureInfo(""), out decimal parsedVer))
+                                                                            return parsedVer;
+                                                                        else
+                                                                            return 0;
+                                                                    }).Contains(from))
+                {
+                    patchesForVersion.Add(patch);
+                }
             }
+
+            return patchesForVersion;
         }
 
         public int SearchRelevance(string text)
