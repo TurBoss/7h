@@ -54,8 +54,37 @@
             </ContentControl.Style>
         </ContentControl>
 
+        <Grid Visibility="{Binding DetailsVisibility, FallbackValue='Collapsed'}" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="txtTitle"
+                       Margin="0,5,10,5"
+                       FontSize="14"
+                       TextWrapping="Wrap"
+                       Text="{Binding Message, FallbackValue='The following mods are incompatible:'}" Grid.ColumnSpan="2"/>
+
+            <TextBox x:Name="txtDetails"
+                     Grid.Row="1"
+                     Margin="0,0,10,0"
+                     TextWrapping="Wrap"
+                     FontSize="14"
+                     VerticalScrollBarVisibility="Auto"
+                     HorizontalScrollBarVisibility="Auto"
+                     IsReadOnly="True"
+                     MinHeight="75"
+                     Background="Transparent"
+                     VerticalAlignment="Stretch"
+                     Text="{Binding Details, FallbackValue='Here are alot of details about stuff. Here are alot of details about stuff. Here are alot of details  about stuff. Here are alot of de tails about stuff. Here are alot of details about stuff. Here are alot of details about stuff. Here are alot of details about stuff. '}" Grid.ColumnSpan="2"/>
+
+
+        </Grid>
+
         <ScrollViewer VerticalScrollBarVisibility="Auto" 
                       VerticalAlignment="Center" 
+                      Visibility="{Binding MessageVisibility, FallbackValue='Visible'}"
                       Grid.Column="1"
                       Margin="10,0,10,0">
             <TextBlock x:Name="txtMessage"

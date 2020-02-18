@@ -418,13 +418,13 @@ namespace SeventhHeaven.ViewModels
             if (ct.Require.Any())
             {
                 value = ct.Require[0];
-                CompatibilityNote = $"This option cannot be changed due to compatibility with other mods ({string.Join(", ", ct.ParticipatingMods)})";
+                CompatibilityNote = $"This option cannot be changed due to compatibility with other mods ({string.Join(", ", ct.ParticipatingMods.Values)})";
                 ComboBoxIsEnabled = false;
             }
             else if (ct.Forbid.Any())
             {
                 var remove = values.Where(v => ct.Forbid.Contains(v.Value));
-                CompatibilityNote = $"The following values: {string.Join(", ", remove.Select(o => o.Name))} have been removed due to compatibility with other mods ({string.Join(", ", ct.ParticipatingMods)})";
+                CompatibilityNote = $"The following values: {string.Join(", ", remove.Select(o => o.Name))} have been removed due to compatibility with other mods ({string.Join(", ", ct.ParticipatingMods.Values)})";
                 values = values.Except(remove);
                 if (!values.Any(v => v.Value == value)) value = values.First().Value;
                 ComboBoxIsEnabled = true;
@@ -448,13 +448,13 @@ namespace SeventhHeaven.ViewModels
             if (ct.Require.Any())
             {
                 value = ct.Require[0];
-                CompatibilityNote = $"This option cannot be changed due to compatibility with other mods ({string.Join(", ", ct.ParticipatingMods)})";
+                CompatibilityNote = $"This option cannot be changed due to compatibility with other mods ({string.Join(", ", ct.ParticipatingMods.Values)})";
                 CheckBoxIsEnabled = false;
             }
             else if (ct.Forbid.Any())
             {
                 value = new[] { 0, 1 }.Except(ct.Forbid).FirstOrDefault();
-                CompatibilityNote = $"This option cannot be changed due to compatibility with other mods ({string.Join(", ", ct.ParticipatingMods)})";
+                CompatibilityNote = $"This option cannot be changed due to compatibility with other mods ({string.Join(", ", ct.ParticipatingMods.Values)})";
                 CheckBoxIsEnabled = false;
             }
             else

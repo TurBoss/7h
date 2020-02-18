@@ -57,6 +57,50 @@ namespace SeventhHeaven.Windows
             this.DataContext = ViewModel;
         }
 
+        public MessageDialogWindow(string windowTitle, string prompt, string details, MessageBoxButton buttons, MessageBoxImage image)
+        {
+            InitializeComponent();
+
+            ViewModel = new MessageDialogViewModel()
+            {
+                WindowTitle = windowTitle,
+                Message = prompt,
+                Details = details,
+                ImageToDisplay = image,
+                DetailsVisibility = Visibility.Visible,
+                CheckboxVisibility = Visibility.Collapsed,
+                MessageVisibility = Visibility.Collapsed
+            };
+
+            this.Height = 300;
+            this.Width = 550;
+
+            if (buttons == MessageBoxButton.YesNo)
+            {
+                btnOkay.Visibility = Visibility.Hidden;
+                btnCancel.Visibility = Visibility.Hidden;
+                btnNo.Focus();
+            }
+            else if (buttons == MessageBoxButton.OKCancel)
+            {
+                btnYes.Visibility = Visibility.Hidden;
+                btnNo.Visibility = Visibility.Hidden;
+                btnOkay.Focus();
+            }
+            else if (buttons == MessageBoxButton.OK)
+            {
+                btnYes.Visibility = Visibility.Hidden;
+                btnNo.Visibility = Visibility.Hidden;
+                btnCancel.Visibility = Visibility.Hidden;
+
+                btnOkay.Margin = new Thickness(0, 0, 0, 10); // change Margin so the 'OK' button is center
+                btnOkay.Focus();
+            }
+
+            this.DataContext = ViewModel;
+        }
+
+
         public MessageDialogWindow(string windowTitle, string prompt, MessageBoxButton buttons, string checkText = "Don't ask me again", bool isChecked = false)
         {
             InitializeComponent();
@@ -89,6 +133,17 @@ namespace SeventhHeaven.Windows
             return App.Current.Dispatcher.Invoke(() =>
             {
                 MessageDialogWindow window = new MessageDialogWindow(windowTitle, prompt, buttons, image);
+                window.ShowDialog();
+
+                return window.ViewModel;
+            });
+        }
+
+        public static MessageDialogViewModel Show(string prompt, string details, string windowTitle, MessageBoxButton buttons = MessageBoxButton.OK, MessageBoxImage image = MessageBoxImage.None)
+        {
+            return App.Current.Dispatcher.Invoke(() =>
+            {
+                MessageDialogWindow window = new MessageDialogWindow(windowTitle, prompt, details, buttons, image);
                 window.ShowDialog();
 
                 return window.ViewModel;
@@ -137,6 +192,11 @@ namespace SeventhHeaven.Windows
         /// </summary>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            if (ViewModel.DetailsVisibility == Visibility.Visible)
+            {
+                return; // don't resize for 'details' message window since it is resize in constructor to fit scrolling text area
+            }
+
             double padding = 75; // this is to account for margins between controls
 
             double newHeight = txtMessage.ActualHeight + btnOkay.ActualHeight + padding;

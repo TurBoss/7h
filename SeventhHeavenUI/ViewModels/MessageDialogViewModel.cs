@@ -20,6 +20,9 @@ namespace SeventhHeaven.ViewModels
         private string _checkboxText;
         private Visibility _checkboxVisibility;
         private MessageBoxImage _imageToDisplay;
+        private Visibility _detailsVisibility;
+        private Visibility _messageVisibility;
+        private string _details;
 
         public string WindowTitle
         {
@@ -47,6 +50,19 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public string Details
+        {
+            get
+            {
+                return _details;
+            }
+            set
+            {
+                _details = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public string CheckboxText
         {
             get
@@ -69,6 +85,32 @@ namespace SeventhHeaven.ViewModels
             set
             {
                 _checkboxVisibility = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public Visibility DetailsVisibility
+        {
+            get
+            {
+                return _detailsVisibility;
+            }
+            set
+            {
+                _detailsVisibility = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public Visibility MessageVisibility
+        {
+            get
+            {
+                return _messageVisibility;
+            }
+            set
+            {
+                _messageVisibility = value;
                 NotifyPropertyChanged();
             }
         }
@@ -105,8 +147,10 @@ namespace SeventhHeaven.ViewModels
         {
             Result = MessageBoxResult.Cancel;
             IsChecked = false;
-            CheckboxVisibility = Visibility.Collapsed;
             ImageToDisplay = MessageBoxImage.None;
+            MessageVisibility = Visibility.Visible;
+            DetailsVisibility = Visibility.Collapsed;
+            CheckboxVisibility = Visibility.Collapsed;
         }
 
     }

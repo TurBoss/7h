@@ -13,14 +13,18 @@ namespace SeventhHeaven.Classes
         public string Setting { get; set; }
         public List<int> Require { get; set; }
         public HashSet<int> Forbid { get; set; }
-        public HashSet<string> ParticipatingMods { get; set; }
+
+        /// <summary>
+        /// dictionary of mods participating in constraint with Key being Mod ID and Value being Mod Name
+        /// </summary>
+        public Dictionary<Guid, string> ParticipatingMods { get; set; }
         public _7thWrapperLib.ConfigOption Option { get; set; }
 
         public Constraint()
         {
             Forbid = new HashSet<int>();
             Require = new List<int>();
-            ParticipatingMods = new HashSet<string>();
+            ParticipatingMods = new Dictionary<Guid, string>();
         }
 
         public bool Verify(out string message)
@@ -35,20 +39,23 @@ namespace SeventhHeaven.Classes
                 setting = new ProfileSetting() { ID = Setting, Value = Option.Default };
                 pItem.Settings.Add(setting);
             }
+
+            string modsList = String.Join("\n", ParticipatingMods.Select(p => $"{p.Value} | ({p.Key})")); // list of mods participating in constraint
+
             if (Require.Any() && (Require.Min() != Require.Max()))
             {
-                message = String.Format("Mod {0}, setting {1} - no compatible option can be found. The following mods all restrict how it can be configured: {2}", inst.CachedDetails.Name, Option.Name, String.Join(",", ParticipatingMods));
+                message = String.Format("Mod {0}, setting {1} - no compatible option can be found. The following mods all restrict how it can be configured:\n\n{2}", inst.CachedDetails.Name, Option.Name, modsList);
                 return false;
             }
 
             if (Require.Any() && Forbid.Contains(Require[0]))
             {
-                message = String.Format("Mod {0}, setting {1} - no compatible option can be found. The following mods all restrict how it can be configured: {2}", inst.CachedDetails.Name, Option.Name, String.Join(",", ParticipatingMods));
+                message = String.Format("Mod {0}, setting {1} - no compatible option can be found. The following mods all restrict how it can be configured:\n\n{2}", inst.CachedDetails.Name, Option.Name, modsList);
                 return false;
             }
             if (Option.Values.All(o => Forbid.Contains(o.Value)))
             {
-                message = String.Format("Mod {0}, setting {1} - no compatible option can be found. The following mods all restrict how it can be configured: {2}", inst.CachedDetails.Name, Option.Name, String.Join(",", ParticipatingMods));
+                message = String.Format("Mod {0}, setting {1} - no compatible option can be found. The following mods all restrict how it can be configured:\n\n{2}", inst.CachedDetails.Name, Option.Name, modsList);
                 return false;
             }
             if (Require.Any() && (setting.Value != Require[0]))
@@ -56,7 +63,7 @@ namespace SeventhHeaven.Classes
                 var opt = Option.Values.Find(v => v.Value == Require[0]);
                 if (opt == null)
                 {
-                    message = String.Format("Mod {0}, setting {1} - no compatible option can be found. The following mods all restrict how it can be configured: {2}", inst.CachedDetails.Name, Option.Name, String.Join(",", ParticipatingMods));
+                    message = String.Format("Mod {0}, setting {1} - no compatible option can be found. The following mods all restrict how it can be configured:\n\n{2}", inst.CachedDetails.Name, Option.Name, modsList);
                     return false;
                 }
                 setting.Value = Require[0];

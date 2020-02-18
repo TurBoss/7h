@@ -999,7 +999,8 @@ namespace SeventhHeaven.Classes
             {
                 if (!constraint.Verify(out string msg))
                 {
-                    MessageDialogWindow.Show(msg, "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    Logger.Warn(msg);
+                    MessageDialogWindow.Show("There was an error verifying the mod constraint. See the following details:", msg, "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return false;
                 }
 
@@ -1011,7 +1012,8 @@ namespace SeventhHeaven.Classes
 
             if (changes.Any())
             {
-                MessageDialogWindow.Show($"The following settings have been changed to make these mods compatible:\n{String.Join("\n", changes)}", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Logger.Warn($"The following settings have been changed to make these mods compatible:\n{String.Join("\n", changes)}");
+                MessageDialogWindow.Show($"The following settings have been changed to make these mods compatible:", String.Join("\n", changes), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
             return true;
@@ -1152,7 +1154,11 @@ namespace SeventhHeaven.Classes
                         constraints.Add(ct);
                     }
 
-                    ct.ParticipatingMods.Add(inst.CachedDetails.Name);
+                    if (!ct.ParticipatingMods.ContainsKey(inst.CachedDetails.ID))
+                    {
+                        ct.ParticipatingMods.Add(inst.CachedDetails.ID, inst.CachedDetails.Name);
+                    }
+
                     if (cSetting.Require.HasValue)
                     {
                         ct.Require.Add(cSetting.Require.Value);
