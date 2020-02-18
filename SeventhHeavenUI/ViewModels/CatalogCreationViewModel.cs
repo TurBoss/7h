@@ -278,7 +278,7 @@ namespace SeventhHeavenUI.ViewModels
                     }
 
                     DateTime.TryParse(ReleaseDateInput, out DateTime parsedDate);
-                    decimal.TryParse(VersionInput, out decimal parsedVersion);
+                    decimal.TryParse(VersionInput, System.Globalization.NumberStyles.AllowDecimalPoint, new System.Globalization.CultureInfo(""), out decimal parsedVersion);
 
                     _selectedMod.Mod.LatestVersion = new ModVersion()
                     {
@@ -425,7 +425,7 @@ namespace SeventhHeavenUI.ViewModels
             }
 
             DateTime.TryParse(ReleaseDateInput, out DateTime parsedDate);
-            decimal.TryParse(VersionInput, out decimal parsedVersion);
+            decimal.TryParse(VersionInput, System.Globalization.NumberStyles.AllowDecimalPoint, new System.Globalization.CultureInfo(""), out decimal parsedVersion);
 
 
             Mod newMod = new Mod()

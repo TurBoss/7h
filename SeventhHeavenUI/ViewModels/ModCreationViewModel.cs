@@ -236,7 +236,7 @@ namespace SeventhHeavenUI.ViewModels
 
         public ModInfo GenerateModFromInput()
         {
-            decimal.TryParse(VersionInput, out decimal parsedVersion);
+            decimal.TryParse(VersionInput, System.Globalization.NumberStyles.AllowDecimalPoint, new System.Globalization.CultureInfo(""), out decimal parsedVersion);
             Guid.TryParse(IDInput, out Guid parsedId);
 
             if (LoadedMod == null)

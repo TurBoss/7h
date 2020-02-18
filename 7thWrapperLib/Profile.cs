@@ -6,6 +6,7 @@
 using Iros._7th.Workshop;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -645,7 +646,7 @@ namespace _7thWrapperLib
                     .Split(',')
                     .Select(s =>
                     {
-                        decimal.TryParse(s, out decimal parsedVer);
+                        decimal.TryParse(s, NumberStyles.AllowDecimalPoint, new CultureInfo("") ,out decimal parsedVer);
                         return parsedVer;
                     })
                     .ToList();
@@ -750,7 +751,8 @@ namespace _7thWrapperLib
             Name = doc.SelectSingleNode("/ModInfo/Name").NodeText();
             Author = doc.SelectSingleNode("/ModInfo/Author").NodeText();
 
-            if (decimal.TryParse(doc.SelectSingleNode("/ModInfo/Version").NodeText("0.00").Replace(',', '.'), out decimal parsedVersion))
+            string versionText = doc.SelectSingleNode("/ModInfo/Version").NodeText("0.00").Replace(',', '.'); // in-case Xml has "1,7" format then replace with "1.70"
+            if (decimal.TryParse(versionText, NumberStyles.AllowDecimalPoint, new CultureInfo("") ,out decimal parsedVersion))
             {
                 Version = parsedVersion;
             }

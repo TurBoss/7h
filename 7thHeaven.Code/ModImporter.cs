@@ -277,7 +277,8 @@ namespace _7thHeaven.Code
                     parsedMod.LatestVersion.ReleaseDate = defaultModIfMissing.LatestVersion.ReleaseDate;
                 }
 
-                if (decimal.TryParse(doc.SelectSingleNode("/ModInfo/Version").NodeTextS().Replace(',', '.'), out decimal ver))
+                string versionText = doc.SelectSingleNode("/ModInfo/Version").NodeTextS().Replace(',', '.'); // in-case Xml has "1,7" format then replace with "1.7"
+                if (decimal.TryParse(versionText, System.Globalization.NumberStyles.AllowDecimalPoint, new System.Globalization.CultureInfo(""), out decimal ver))
                 {
                     parsedMod.LatestVersion.Version = ver;
                 }
