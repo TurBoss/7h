@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace _7thWrapperLib
@@ -509,13 +510,14 @@ namespace _7thWrapperLib
         }
     }
 
-    [XmlInclude(typeof(And)), XmlInclude(typeof(Or)), XmlInclude(typeof(Not)), XmlInclude(typeof(Option))]
     public abstract class ActiveWhen
     {
-
         public class And : ActiveWhen
         {
             private List<ActiveWhen> _children;
+
+            public List<ActiveWhen> Children { get => _children; }
+
             protected override void Load(XmlNode source)
             {
                 _children = source.SelectNodes("*").Cast<XmlNode>().Select(n => Create(n)).ToList();
@@ -528,6 +530,8 @@ namespace _7thWrapperLib
         public class Or : ActiveWhen
         {
             private List<ActiveWhen> _children;
+            public List<ActiveWhen> Children { get => _children; }
+
             protected override void Load(XmlNode source)
             {
                 _children = source.SelectNodes("*").Cast<XmlNode>().Select(n => Create(n)).ToList();
@@ -540,6 +544,12 @@ namespace _7thWrapperLib
         public class Not : ActiveWhen
         {
             private ActiveWhen _child;
+
+            public ActiveWhen Child
+            {
+                get => _child;
+            }
+
             protected override void Load(XmlNode source)
             {
                 _child = Create(source.SelectSingleNode("*"));
@@ -551,7 +561,9 @@ namespace _7thWrapperLib
         }
         public class Option : ActiveWhen
         {
+            [XmlElement("Option")]
             public string Condition { get; set; }
+
             protected override void Load(XmlNode source)
             {
                 Condition = source.InnerText;
@@ -575,12 +587,14 @@ namespace _7thWrapperLib
 
         protected abstract void Load(System.Xml.XmlNode source);
         public abstract bool IsActive(Func<string, bool> check);
+
         private static ActiveWhen Create(System.Xml.XmlNode source)
         {
             ActiveWhen aw = _types[source.LocalName]();
             aw.Load(source);
             return aw;
         }
+
         private static ActiveWhen Compat(string condition)
         {
             return new Option() { Condition = condition };
@@ -595,14 +609,57 @@ namespace _7thWrapperLib
                 return Compat(source.Attributes["ActiveWhen"].Value);
             return null;
         }
+
+        /// <summary>
+        /// Recursively write the correct xml structure for the abstract class based on the inherited types
+        /// </summary>
+        internal void WriteXml(XmlWriter writer)
+        {
+            if (this is ActiveWhen.Option)
+            {
+                writer.WriteElementString("Option", (this as Option).Condition);
+            }
+            else if (this is ActiveWhen.Not)
+            {
+                writer.WriteStartElement("Not");
+
+                (this as Not).Child.WriteXml(writer);
+
+                writer.WriteEndElement();
+            }
+            else if (this is ActiveWhen.And)
+            {
+                writer.WriteStartElement("And");
+
+                List<ActiveWhen> children = (this as ActiveWhen.And).Children;
+                foreach (ActiveWhen child in children)
+                {
+                    child.WriteXml(writer);
+                }
+
+                writer.WriteEndElement();
+            }
+            else if (this is ActiveWhen.Or)
+            {
+                writer.WriteStartElement("Or");
+
+                var children = (this as ActiveWhen.Or).Children;
+                foreach (ActiveWhen child in children)
+                {
+                    child.WriteXml(writer);
+                }
+
+                writer.WriteEndElement();
+            }
+        }
     }
 
 
 
-    public class ModFolder
+    public class ModFolder : IXmlSerializable
     {
-        [XmlAttribute]
         public string Folder { get; set; }
+
         public ActiveWhen ActiveWhen { get; set; }
 
         public ModFolder(XmlNode source)
@@ -613,6 +670,78 @@ namespace _7thWrapperLib
 
         public ModFolder()
         {
+        }
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            // This method should not be used for de-serialization... see ModInfo.Load()
+            XmlDocument doc = new XmlDocument();
+            doc.ReadNode(reader);
+
+            if (doc != null)
+            {
+                ModFolder parsed = new ModFolder(doc.SelectSingleNode("*"));
+                Folder = parsed.Folder;
+                ActiveWhen = parsed.ActiveWhen;
+            }
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteAttributeString("Folder", Folder);
+            if (ActiveWhen is ActiveWhen.Option)
+            {
+                // ActiveWhen is treated as an attribute when it is just an Option
+                writer.WriteAttributeString("ActiveWhen", (ActiveWhen as ActiveWhen.Option).Condition);
+            }
+            else
+            {
+                // ActiveWhen is an xml element
+                writer.WriteStartElement("ActiveWhen");
+
+                if (ActiveWhen is ActiveWhen.Not)
+                {
+                    writer.WriteStartElement("Not");
+
+                    ActiveWhen child = (ActiveWhen as ActiveWhen.Not).Child;
+                    child.WriteXml(writer);
+
+                    writer.WriteEndElement();
+                }
+                else if (ActiveWhen is ActiveWhen.And)
+                {
+                    writer.WriteStartElement("And");
+
+                    List<ActiveWhen> children = (ActiveWhen as ActiveWhen.And).Children;
+
+                    foreach (var child in children)
+                    {
+                        child.WriteXml(writer);
+                    }
+
+                    writer.WriteEndElement();
+                }
+                else if (ActiveWhen is ActiveWhen.Or)
+                {
+                    writer.WriteStartElement("Or");
+
+                    List<ActiveWhen> children = (ActiveWhen as ActiveWhen.Or).Children;
+
+                    foreach (var child in children)
+                    {
+                        child.WriteXml(writer);
+                    }
+
+                    writer.WriteEndElement();
+                }
+
+                writer.WriteEndElement();
+            }
         }
     }
 
