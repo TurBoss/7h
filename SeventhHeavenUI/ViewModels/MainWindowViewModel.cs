@@ -1630,7 +1630,8 @@ They will be automatically turned off.";
 
             if (selected != null && selected.InstallInfo.IsUpdateAvailable)
             {
-                Install.DownloadAndInstall(selected.InstallInfo.CachedDetails, true);
+                // get mod from catalog so it downloads the latest version
+                Install.DownloadAndInstall(Sys.GetModFromCatalog(selected.InstallInfo.ModID), true);
                 NotifyPropertyChanged(nameof(IsUpdateModButtonEnabled));
                 NotifyPropertyChanged(nameof(UpdateModButtonText));
             }

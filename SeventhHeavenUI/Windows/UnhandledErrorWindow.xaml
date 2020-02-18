@@ -19,7 +19,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Image Source="/SeventhHeaven;component/7H.ico"
+        <Image Source="/7th Heaven;component/7H.ico"
                Margin="10"
                Grid.RowSpan="3"
                VerticalAlignment="Center"
@@ -33,18 +33,18 @@
                    TextWrapping="Wrap"
                    Text="An unhandled exception has occurred and the app must close."/>
 
-        <ScrollViewer Grid.Row="1"
-                      Margin="10,0,0,0"
-                      ScrollViewer.VerticalScrollBarVisibility="Auto"
-                      Grid.Column="1">
-            
-            <TextBox x:Name="txtMessage"
-                     FontSize="16"
-                     TextWrapping="Wrap"
-                     IsReadOnly="True"
-                     Background="Transparent"
-                     Text="This is a long detailed error message that will need to be shown to show exception message details."/>
-        </ScrollViewer>
+        <TextBox x:Name="txtMessage"
+                 Style="{StaticResource PrimaryTextBoxStyle}"
+                 VerticalScrollBarVisibility="Auto"
+                 Grid.Row="1"
+                 Grid.Column="1"
+                 VerticalAlignment="Stretch"
+                 FontSize="15"
+                 FontFamily="Consolas"
+                 TextWrapping="Wrap"
+                 IsReadOnly="True"
+                 Background="Transparent"
+                 Text="This is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. testThis is a long detailed error message that will need to be shown to show exception message details. test"/>
 
         <Button x:Name="btnOkay"
                 Click="btnOkay_Click"

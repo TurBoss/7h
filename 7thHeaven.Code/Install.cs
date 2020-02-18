@@ -126,27 +126,21 @@ namespace Iros._7th.Workshop
                 Sys.RevertStatus(m.ID);
             };
 
-
+            string file = String.Format("{0}_{1}_{2}.iro", m.ID, SafeStr(m.Name), m.LatestVersion.Version);
             string temppath = System.IO.Path.Combine(Sys.Settings.LibraryLocation, "temp");
             System.IO.Directory.CreateDirectory(temppath);
 
             var install = Sys.Library.GetItem(m.ID);
             if (install != null)
             {
+                // mod is installed so download update files for updating mod
+                Sys.SetStatus(m.ID, ModStatus.Updating);
+
                 var patches = m.GetPatchesFromTo(install.LatestInstalled.VersionDetails.Version, m.LatestVersion.Version);
                 if (patches.Any())
                 {
+                    // download patches to update the mod
                     string pfile = String.Format("{0}_{1}_{2}.irop", m.ID, SafeStr(m.Name), m.LatestVersion.Version);
-
-                    if (status == ModStatus.Installed && isUpdatingMod)
-                    {
-                        Sys.SetStatus(m.ID, ModStatus.Updating);
-                    }
-                    else
-                    {
-                        Sys.SetStatus(m.ID, ModStatus.Downloading);
-                    }
-
                     DownloadItem download = new DownloadItem()
                     {
                         Links = patches.Select(p => p.Link).ToList(),
@@ -167,13 +161,40 @@ namespace Iros._7th.Workshop
                     Sys.Downloads.AddToDownloadQueue(download);
                     return;
                 }
+                else
+                {
+                    // no patches available to update so download entire new mod version .iro
+                    DownloadItem installDownload = new DownloadItem()
+                    {
+                        Links = m.LatestVersion.Links,
+                        SaveFilePath = System.IO.Path.Combine(temppath, file),
+                        Category = DownloadCategory.Mod,
+                        ItemName = "Downloading " + m.Name,
+                        OnCancel = onCancel
+                    };
+
+                    installDownload.IProc = new InstallModProcedure()
+                    {
+                        File = file,
+                        Mod = m,
+                        ExtractSubFolder = m.LatestVersion.ExtractSubFolder,
+                        ExtractInto = m.LatestVersion.ExtractInto,
+                        Error = onError
+                    };
+
+                    Sys.Downloads.AddToDownloadQueue(installDownload);
+                    return;
+                }
             }
 
-            string file = String.Format("{0}_{1}_{2}.iro", m.ID, SafeStr(m.Name), m.LatestVersion.Version);
+
+
             Sys.SetStatus(m.ID, ModStatus.Downloading);
 
             if (m.LatestVersion.PatchLinks.Any())
             {
+                // mod is not installed and the latest version has patches available
+                // so first download and install mod then download all patches for mod
                 PatchController pc = new PatchController(m.LatestVersion.PatchLinks.Count);
 
                 DownloadItem download = new DownloadItem()
@@ -232,6 +253,7 @@ namespace Iros._7th.Workshop
             }
             else
             {
+                // mod is not installed in library so just download using the links of latest version
                 DownloadItem installDownload = new DownloadItem()
                 {
                     Links = m.LatestVersion.Links,
@@ -602,6 +624,7 @@ namespace Iros._7th.Workshop
                     {
                         inst.CachedDetails = new ModImporter().ParseModXmlFromSource(_dest, Mod);
 
+                        // 7H 2.0 NOTE: GeneralOptions.KeepOldVersions is always FALSE and is hidden from the user.. The conditional is kept in-case we ever want to try re-enabling it.
                         if (!Sys.Settings.HasOption(GeneralOptions.KeepOldVersions))
                         {
                             foreach (string ivfile in inst.Versions.Select(v => v.InstalledLocation))
@@ -614,6 +637,7 @@ namespace Iros._7th.Workshop
                             }
                             inst.Versions.Clear();
                         }
+
                         inst.Versions.Add(new InstalledVersion() { InstalledLocation = System.IO.Path.GetFileName(_dest), VersionDetails = Mod.LatestVersion });
                         Sys.Message(new WMessage() { Text = "Updated " + Mod.Name, Link = "iros://" + Mod.ID.ToString() });
                         Sys.SetStatus(Mod.ID, ModStatus.Installed);
