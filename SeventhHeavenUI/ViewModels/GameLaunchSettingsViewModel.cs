@@ -1209,14 +1209,14 @@ namespace SeventhHeaven.ViewModels
 
                 foreach (string disc in discsToInsert)
                 {
-                    string driveLetter = "";
+                    List<string> driveLetters;
 
                     do
                     {
                         SetImportStatus($"Looking for {disc} ...");
-                        driveLetter = GameLauncher.GetDriveLetter(disc);
+                        driveLetters = GameLauncher.GetDriveLetters(disc);
 
-                        if (string.IsNullOrEmpty(driveLetter))
+                        if (driveLetters.Count == 0)
                         {
                             SetImportStatus($"Insert {disc} to continue.");
 
@@ -1234,36 +1234,40 @@ namespace SeventhHeaven.ViewModels
                             return;
                         }
 
-                    } while (string.IsNullOrEmpty(driveLetter));
+                    } while (driveLetters.Count == 0);
 
-                    SetImportStatus($"Found {disc} at {driveLetter} ...");
+                    SetImportStatus($"Found {disc} at {string.Join("  ", driveLetters)} ...");
 
                     // loop over missing files on the found disc and copy to data/movies destination
                     foreach (string movieFile in missingMovies.Where(kv => kv.Value.Any(s => s.Equals(disc, StringComparison.InvariantCultureIgnoreCase)))
                                                               .Select(kv => kv.Key))
                     {
-                        string fullTargetPath = Path.Combine(Sys.Settings.MovieFolder, movieFile);
-                        string sourceFilePath = Path.Combine(driveLetter, "ff7", "movies", movieFile);
 
-                        if (File.Exists(sourceFilePath))
+                        foreach (string drive in driveLetters)
                         {
-                            if (File.Exists(fullTargetPath))
+                            string fullTargetPath = Path.Combine(Sys.Settings.MovieFolder, movieFile);
+                            string sourceFilePath = Path.Combine(drive, "ff7", "movies", movieFile);
+
+                            if (File.Exists(sourceFilePath))
                             {
-                                SetImportStatus($"Overwriting {movieFile} ...");
+                                if (File.Exists(fullTargetPath))
+                                {
+                                    SetImportStatus($"Overwriting {movieFile} ...");
+                                }
+                                else
+                                {
+                                    SetImportStatus($"Copying {movieFile} ...");
+                                }
+
+                                File.Copy(sourceFilePath, fullTargetPath, true);
+                                filesCopied++;
+                                UpdateImportProgress(filesCopied, totalFiles);
+                                break;
                             }
                             else
                             {
-                                SetImportStatus($"Copying {movieFile} ...");
+                                SetImportStatus($"Failed to find {movieFile} at {sourceFilePath}");
                             }
-
-                            File.Copy(sourceFilePath, fullTargetPath, true);
-                            filesCopied++;
-
-                            UpdateImportProgress(filesCopied, totalFiles);
-                        }
-                        else
-                        {
-                            SetImportStatus($"Failed to find {movieFile} at {sourceFilePath}");
                         }
                     }
                 }

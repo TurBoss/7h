@@ -1296,6 +1296,35 @@ namespace SeventhHeaven.Classes
         }
 
         /// <summary>
+        /// Scans all drives looking for the drive labeled "FF7DISC1", "FF7DISC2", or "FF7DISC3" and returns the corresponding drive letters that have the matching label.
+        /// If not found returns empty string. Returns the drive letter for <paramref name="labelToFind"/> if not null
+        /// </summary>
+        public static List<string> GetDriveLetters(string labelToFind = null)
+        {
+            List<string> labels = null;
+            if (string.IsNullOrWhiteSpace(labelToFind))
+            {
+                labels = new List<string>() { "FF7DISC1", "FF7DISC2", "FF7DISC3" };
+            }
+            else
+            {
+                labels = new List<string>() { labelToFind };
+            }
+
+            List<string> drivesFound = new List<string>();
+
+            foreach (DriveInfo drive in DriveInfo.GetDrives())
+            {
+                if (drive.IsReady && labels.Any(s => s.Equals(drive.VolumeLabel, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    drivesFound.Add(drive.Name);
+                }
+            }
+
+            return drivesFound;
+        }
+
+        /// <summary>
         /// Updates Registry with new values from <see cref="Sys.Settings.GameLaunchSettings"/>
         /// </summary>
         public void SetRegistryValues()
