@@ -194,7 +194,12 @@ namespace Iros._7th.Workshop
             catch (VariableAliasNotFoundException aex)
             {
                 // this exception occurrs when the variable alias is not found in .var file which causes ModInfo not to be captured completely. warn user and return null
-                Sys.Message(new WMessage($"WARNING: failed to get mod info due to a missing variable which can cause problems: {aex.Message}", true));
+                Sys.Message(new WMessage($"WARNING: failed to get mod info due to a missing variable which can cause problems: {aex.Message}", true) { LoggedException = aex });
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Sys.Message(new WMessage($"WARNING: failed to get mod info due to unknown exception: {ex.Message}", true) { LoggedException = ex });
                 return null;
             }
 
