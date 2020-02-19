@@ -922,12 +922,10 @@ namespace SeventhHeavenUI.ViewModels
         {
             foreach (InstalledItem inst in Sys.Library.Items.ToList())
             {
-                Mod cat = Sys.GetModFromCatalog(inst.ModID);
-
-                inst.IsUpdateAvailable = (cat != null && cat.LatestVersion.Version > inst.LatestInstalled.VersionDetails.Version);
-
                 if (inst.IsUpdateAvailable)
                 {
+                    Mod cat = Sys.GetModFromCatalog(inst.ModID);
+
                     switch (inst.UpdateType)
                     {
                         case UpdateType.Notify:

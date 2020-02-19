@@ -796,9 +796,16 @@ They will be automatically turned off.";
             }
 
             if (e.Status == ModStatus.Installed && e.OldStatus != ModStatus.Installed && Sys.Settings.HasOption(GeneralOptions.AutoActiveNewMods))
+            {
+                if (Sys.ActiveProfile.Items.Any(i => i.ModID.Equals(e.ModID) && !i.IsModActive))
+                {
+                    MyMods.ToggleActivateMod(e.ModID);
+                }
+            }
+            if (e.OldStatus == ModStatus.Installed && e.Status == ModStatus.NotInstalled && Sys.ActiveProfile.Items.Any(i => i.ModID.Equals(e.ModID) && !i.IsModActive))
+            {
                 MyMods.ToggleActivateMod(e.ModID);
-            if (e.OldStatus == ModStatus.Installed && e.Status == ModStatus.NotInstalled && Sys.ActiveProfile.Items.Any(i => i.ModID.Equals(e.ModID)))
-                MyMods.ToggleActivateMod(e.ModID);
+            }
 
 
             if (e.Status == ModStatus.InfoChanged)
@@ -849,6 +856,9 @@ They will be automatically turned off.";
 
         private void UpdateModPreviewInfo(InstalledModViewModel selected, bool forceUpdate = false)
         {
+            NotifyPropertyChanged(nameof(UpdateModButtonText));
+            NotifyPropertyChanged(nameof(IsUpdateModButtonEnabled));
+
             if (selected == null)
             {
                 _previewMod = null;
@@ -862,13 +872,8 @@ They will be automatically turned off.";
                 PreviewModLink = "";
                 PreviewIsAutoUpdateModsChecked = false;
                 PreviewIsNotifyAboutUpdatesChecked = false;
+                PreviewIgnoreModUpdatesChecked = false;
                 PreviewModImageSource = null;
-                return;
-            }
-
-            if (_previewMod?.ID == selected.InstallInfo?.ModID && !forceUpdate)
-            {
-                // no change in selected
                 return;
             }
 
@@ -884,9 +889,6 @@ They will be automatically turned off.";
             PreviewModLink = selected.InstallInfo.CachedDetails.Link;
 
             PreviewModHasReadMe = selected.HasReadMe; // checks if mod .iro or folder has a readme file and caches the result since the disc lookup is slow on larger mods
-
-            NotifyPropertyChanged(nameof(UpdateModButtonText));
-            NotifyPropertyChanged(nameof(IsUpdateModButtonEnabled));
 
             ModUpdateMenuVisibility = Visibility.Visible;
             PreviewIsAutoUpdateModsChecked = selected.InstallInfo?.UpdateType == UpdateType.Install;
@@ -925,12 +927,6 @@ They will be automatically turned off.";
                 return;
             }
 
-            if (_previewMod?.ID == selected.Mod?.ID && !forceUpdate)
-            {
-                // no change in selected
-                return;
-            }
-
             _previewMod = selected.Mod;
 
             PreviewModAuthor = selected.Author;
@@ -943,7 +939,7 @@ They will be automatically turned off.";
             PreviewModLink = selected.Mod.Link;
             PreviewModHasReadMe = false; // no READMEs for catalog (only installed mods)
 
-            ModUpdateMenuVisibility = Visibility.Collapsed; // do not display the 'version:' and 'update avaialble' menu on catalog mods
+            ModUpdateMenuVisibility = Visibility.Collapsed; // do not display the 'update avaialble' menu on catalog mods
 
             string pathToImage = Sys.ImageCache.GetImagePath(selected.Mod.LatestVersion.PreviewImage, selected.Mod.ID);
 
@@ -1338,9 +1334,18 @@ They will be automatically turned off.";
             };
             bool? didSave = settingsWindow.ShowDialog();
 
-            if (didSave.GetValueOrDefault(false) && settingsWindow.ViewModel.SubscriptionsChanged)
+            if (didSave.GetValueOrDefault(false))
             {
-                CatalogMods.ForceCheckCatalogUpdateAsync();
+                if (settingsWindow.ViewModel.SubscriptionsChanged)
+                {
+                    CatalogMods.ForceCheckCatalogUpdateAsync();
+                }
+
+                if (settingsWindow.ViewModel.HasChangedInstalledModUpdateTypes && SelectedTabIndex == (int)TabIndex.MyMods)
+                {
+                    MyMods.ScanForModUpdates();
+                    UpdateModPreviewInfo(MyMods.GetSelectedMod(), true);
+                }
             }
         }
 
@@ -1600,6 +1605,11 @@ They will be automatically turned off.";
 
         private void ChangeUpdateModTypeForSelectedMod()
         {
+            if (!PreviewIsAutoUpdateModsChecked && !PreviewIgnoreModUpdatesChecked && !PreviewIsNotifyAboutUpdatesChecked)
+            {
+                return; // all three options are false so skip changing the type to avoid incorrect assigning of Ignore
+            }
+
             InstalledModViewModel selected = MyMods.GetSelectedMod();
 
             if (selected != null)

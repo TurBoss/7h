@@ -357,6 +357,8 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public bool HasChangedInstalledModUpdateTypes { get; set; }
+
         public GeneralSettingsViewModel()
         {
             NewUrlText = "";
@@ -365,6 +367,7 @@ namespace SeventhHeaven.ViewModels
             IsResolvingName = false;
             SubscriptionNameTextBoxIsEnabled = true;
             SubscriptionNameHintText = "Enter name for catalog";
+            HasChangedInstalledModUpdateTypes = false;
         }
 
         internal void ResetToDefaults()
@@ -504,7 +507,7 @@ namespace SeventhHeaven.ViewModels
         /// <summary>
         /// applies various options based on what is enabled e.g. updating registry to associate files
         /// </summary>
-        private static void ApplyOptions()
+        private void ApplyOptions()
         {
             if (Sys.Settings.HasOption(GeneralOptions.OpenIrosLinksWith7H))
             {
@@ -533,13 +536,27 @@ namespace SeventhHeaven.ViewModels
                 RemoveFileExplorerContextMenuAssociationWith7H();
             }
 
-            if (Sys.Settings.HasOption(GeneralOptions.AutoUpdateMods))
+            // ensure only applying option if it has changed
+            if (Sys.Settings.HasOption(GeneralOptions.AutoUpdateMods) && Sys.Library.DefaultUpdate == UpdateType.Notify)
             {
+                HasChangedInstalledModUpdateTypes = true;
                 Sys.Library.DefaultUpdate = UpdateType.Install;
+
+                foreach (InstalledItem item in Sys.Library.Items)
+                {
+                    item.UpdateType = UpdateType.Install;
+                }
+
             }
-            else
+            else if (!Sys.Settings.HasOption(GeneralOptions.AutoUpdateMods) && Sys.Library.DefaultUpdate == UpdateType.Install)
             {
+                HasChangedInstalledModUpdateTypes = true;
                 Sys.Library.DefaultUpdate = UpdateType.Notify;
+
+                foreach (InstalledItem item in Sys.Library.Items)
+                {
+                    item.UpdateType = UpdateType.Notify;
+                }
             }
         }
 
@@ -852,7 +869,7 @@ namespace SeventhHeaven.ViewModels
                 if (subkeys.Contains("Directory"))
                 {
                     var dirKey = key.OpenSubKey("Directory", true);
-                    
+
                     if (dirKey.GetSubKeyNames().Any(k => k == "shell"))
                     {
                         var shell = dirKey.OpenSubKey("shell", true);
@@ -1105,7 +1122,7 @@ namespace SeventhHeaven.ViewModels
         {
             int currentIndex = SubscriptionList.IndexOf(selected);
 
-            if (currentIndex < 0 )
+            if (currentIndex < 0)
             {
                 // not found in  list
                 return;
