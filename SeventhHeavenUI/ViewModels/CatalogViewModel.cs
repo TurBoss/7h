@@ -3,11 +3,13 @@ using Iros._7th;
 using Iros._7th.Workshop;
 using Iros.Mega;
 using SeventhHeaven.Classes;
+using SeventhHeaven.ViewModels;
 using SeventhHeaven.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -578,8 +580,19 @@ It may not work properly unless you find and install the requirements.";
             {
                 onError = () =>
                 {
-                    Sys.Message(new WMessage($"{downloadInfo.ItemName} - switching to backup url {links.ElementAt(1)}"));
-                    Download(links.Skip(1), downloadInfo);
+                    string[] backupLinks = links.ToArray();
+
+                    // determine if the next url is ExternalUrl and has an empty url
+                    string backupLink = backupLinks[1];
+                    LocationUtil.TryParse(backupLink, out LocationType backupType, out string backupUrl);
+
+                    if (backupType == LocationType.ExternalUrl && string.IsNullOrWhiteSpace(backupUrl))
+                    {
+                        backupLinks[1] = backupLinks[0].Replace("iros://Url", "iros://ExternalUrl");
+                    }
+
+                    Sys.Message(new WMessage($"{downloadInfo.ItemName} - switching to backup url {backupLinks[1]}"));
+                    Download(backupLinks.Skip(1), downloadInfo);
                 };
             }
 
@@ -604,6 +617,26 @@ It may not work properly unless you find and install the requirements.";
             {
                 switch (type)
                 {
+                    case LocationType.ExternalUrl:
+                        MessageDialogViewModel dialogViewModel = null;
+
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            dialogViewModel = MessageDialogWindow.Show(downloadInfo.ExternalUrlDownloadMessage, "External Download?", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                        });
+
+                        if (dialogViewModel?.Result == MessageBoxResult.Yes)
+                        {
+                            Sys.Message(new WMessage($"Opening external url in browser for {downloadInfo.ItemName} - {location}"));
+                            ProcessStartInfo startInfo = new ProcessStartInfo(location);
+                            Process.Start(startInfo);
+                        }
+
+                        // ensure the download is removed from queue and status is reverted so it doesn't think it is still downloading by calling OnCancel()
+                        RemoveFromDownloadList(downloadInfo);
+                        downloadInfo.OnCancel?.Invoke();
+                        break;
+
                     case LocationType.Url:
                         using (var wc = new System.Net.WebClient())
                         {
@@ -689,12 +722,26 @@ It may not work properly unless you find and install the requirements.";
         {
             int downloadCount = 0;
 
+            // ensure you can cancel downloads that are pending download in queue
             if (newDownload.OnCancel == null)
             {
                 newDownload.OnCancel = () =>
                 {
                     RemoveFromDownloadList(newDownload);
                 };
+            }
+
+            // update message shown to user to reflect mod failing to download or only alowing external downloads for it
+            if (newDownload.Category == DownloadCategory.Mod && newDownload.Links.Count == 1)
+            {
+                // check that the only link available is external url and set message accordingly
+                if (LocationUtil.TryParse(newDownload.Links[0], out LocationType downloadType, out string url))
+                {
+                    if (downloadType == LocationType.ExternalUrl)
+                    {
+                        newDownload.ExternalUrlDownloadMessage = "This mod is only available by downloading it from an external web site.\n\nWould you like to open your web browser to download it now?";
+                    }
+                }
             }
 
             App.Current.Dispatcher.Invoke(() =>

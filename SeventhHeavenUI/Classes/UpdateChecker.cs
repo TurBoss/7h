@@ -16,6 +16,12 @@ namespace SeventhHeaven.Classes
     /// </summary>
     public class UpdateChecker
     {
+        /// <summary>
+        /// Link to version xml that provides information about available updates.
+        /// </summary>
+        /// <remarks>
+        /// Strife98 (moderator on Qhimm Forums and Discord) is account owner of the update check URL https://pastebin.com/raw/TriEpAcK and reach out to him for version update xml changes.
+        /// </remarks>
         public const string linkToVersionXml = "https://pastebin.com/raw/TriEpAcK";
         private static UpdateChecker _instance;
 

@@ -213,7 +213,8 @@ namespace Iros._7th.Workshop
         INVALID,
         Url,
         MegaSharedFolder, //Format: SharedFolderLink,FileIDString,HintFileName
-        GDrive
+        GDrive,
+        ExternalUrl // iros://ExternalUrl/{url} where {url} can be left blank and it assumes the previous url in the list
     }
 
     public static class LocationUtil
@@ -224,12 +225,34 @@ namespace Iros._7th.Workshop
             string[] parts = link.Split(new[] { '/' }, 2);
             type = LocationType.INVALID; url = null;
 
-            if (parts.Length < 2) return false;
-            if (!Enum.TryParse<LocationType>(parts[0], out type)) return false;
+            if (parts.Length < 1)
+            {
+                return false;
+            }
+
+            if (!Enum.TryParse<LocationType>(parts[0], out type))
+            {
+                return false;
+            }
+
+            if (type == LocationType.ExternalUrl && parts.Length == 1)
+            {
+                url = "";
+                return true; // external url does not always have a url defined because it assumes the previous url
+            }
+            else if (parts.Length < 2)
+            {
+                return false;
+            }
 
             url = parts[1];
             int dpos = url.IndexOf('$');
-            if (dpos >= 0) url = url.Substring(0, dpos) + "://" + url.Substring(dpos + 1);
+
+            if (dpos >= 0)
+            {
+                url = url.Substring(0, dpos) + "://" + url.Substring(dpos + 1);
+            }
+
             return true;
         }
 

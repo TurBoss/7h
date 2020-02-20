@@ -97,8 +97,8 @@
       <Settings>window_size_x = 2880,window_size_y = 2160</Settings>
     </Option>
     <Option>
-      <Text>3860x2160</Text>
-      <Settings>window_size_x = 3860,window_size_y = 2160</Settings>
+      <Text>3840x2160</Text>
+      <Settings>window_size_x = 3840,window_size_y = 2160</Settings>
     </Option>
   </Setting>
 

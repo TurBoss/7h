@@ -33,6 +33,11 @@ namespace _7thHeaven.Code
         public List<string> Links { get; set; }
         public bool HasStarted { get; set; }
 
+        /// <summary>
+        /// The message to show to the user when downloading a mod that may user ExternalUrl links. If the mod download only has one link to ExternalUrl then the message will be changed to reflect that.
+        /// </summary>
+        public string ExternalUrlDownloadMessage { get; set; }
+
         public DownloadItem()
         {
             LastCalc = DateTime.Now;
@@ -42,6 +47,7 @@ namespace _7thHeaven.Code
             HasStarted = false;
             RemainingTime = "Unknown";
             DownloadSpeed = "Pending...";
+            ExternalUrlDownloadMessage = "The download failed to automatically download. An external link to download this mod is available.\n\nWould you like to open your web browser to download it now?";
         }
     }
 }

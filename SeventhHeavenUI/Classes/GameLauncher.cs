@@ -737,9 +737,9 @@ namespace SeventhHeaven.Classes
                 };
 
 
-                Instance.RaiseProgressChanged("Waiting for FF7 .exe to respond ...");
-                DateTime start = DateTime.Now;
                 int secondsToWait = 30;
+                Instance.RaiseProgressChanged($"Waiting for FF7 .exe to respond ({secondsToWait} seconds max) ...");
+                DateTime start = DateTime.Now;
                 while (ff7Proc.Responding == false)
                 {
                     TimeSpan elapsed = DateTime.Now.Subtract(start);
