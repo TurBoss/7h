@@ -115,8 +115,8 @@
             </ListView.ContextMenu>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Item" Width="225" DisplayMemberBinding="{Binding ItemName, FallbackValue='item text'}"/>
-                    <GridViewColumn x:Name="colProgress" Header="Progress" Width="175">
+                    <GridViewColumn x:Name="colDownloadName" Header="Item" Width="Auto" DisplayMemberBinding="{Binding ItemName, FallbackValue='item text'}"/>
+                    <GridViewColumn x:Name="colProgress" Header="Progress" Width="Auto">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <ProgressBar Value="{Binding PercentComplete, FallbackValue='50'}" Width="{Binding ElementName=colProgress, Path=ActualWidth}" Height="10"/>

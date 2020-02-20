@@ -276,6 +276,7 @@ namespace SeventhHeavenUI
             {
                 _currentTabIndex = tabSelectedIndex;
                 ctrlCatalog.RecalculateColumnWidths(ctrlMyMods.lstMods.ActualWidth);
+                ctrlCatalog.RecalculateDownloadColumnWidths(ctrlMyMods.lstMods.ActualWidth);
             }
         }
 

@@ -1529,7 +1529,8 @@ namespace SeventhHeaven.Classes
             {
                 Instance.RaiseProgressChanged("\t Code 5 fix / High DPI fix set to false - deleting flags if exist ...");
                 ff7CompatKey = Registry.CurrentUser.OpenSubKey(keyPath, true);
-                if (ff7CompatKey.GetValue(Sys.Settings.FF7Exe) != null)
+
+                if (ff7CompatKey != null && ff7CompatKey.GetValue(Sys.Settings.FF7Exe) != null)
                 {
                     Instance.RaiseProgressChanged("\t\t compatibility flags found - deleting");
                     ff7CompatKey.DeleteValue(Sys.Settings.FF7Exe);

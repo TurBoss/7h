@@ -86,6 +86,60 @@ namespace SeventhHeaven.UserControls
             }
         }
 
+        internal void RecalculateDownloadColumnWidths(double listWidth)
+        {
+            double staticColumnWidth = 90 + 90; // sum of columns with static widths
+            double padding = 8;
+
+            if (listWidth == 0)
+            {
+                return; // ActualWidth could be zero if list has not been rendered yet
+            }
+
+            // account for the scroll bar being visible and add extra padding
+            ScrollViewer sv = FindVisualChild<ScrollViewer>(lstDownloads);
+            Visibility? scrollVis = sv?.ComputedVerticalScrollBarVisibility;
+
+            if (scrollVis.GetValueOrDefault() == Visibility.Visible)
+            {
+                padding = 26;
+            }
+
+
+            double remainingWidth = listWidth - staticColumnWidth - padding;
+
+            double nameWidth = (0.66) * remainingWidth; // Download Name takes 66% of remaining width
+            double progressWidth = (0.33) * remainingWidth; // Progress takes up 33% of remaining width
+
+            double minNameWidth = 100; // don't resize columns less than the minimums
+            double minProgressWidth = 60;
+
+            try
+            {
+                if (nameWidth < listWidth && nameWidth > minNameWidth)
+                {
+                    colDownloadName.Width = nameWidth;
+                }
+                else if (nameWidth <= minNameWidth)
+                {
+                    colDownloadName.Width = minNameWidth;
+                }
+
+                if (progressWidth < listWidth && progressWidth > minProgressWidth)
+                {
+                    colProgress.Width = progressWidth;
+                }
+                else if (nameWidth <= minProgressWidth)
+                {
+                    colProgress.Width = minProgressWidth;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Warn(e, "failed to resize download list columns");
+            }
+        }
+
         internal void RecalculateColumnWidths(double listWidth)
         {
             var currentColumnSettings = GetColumnSettings();
@@ -145,6 +199,7 @@ namespace SeventhHeaven.UserControls
         internal void RecalculateColumnWidths()
         {
             RecalculateColumnWidths(lstCatalogMods.ActualWidth);
+            RecalculateDownloadColumnWidths(lstCatalogMods.ActualWidth);
         }
 
         private childItem FindVisualChild<childItem>(DependencyObject obj)
