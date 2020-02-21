@@ -28,10 +28,14 @@ namespace _7thHeaven.Code
         private string _destination;
         private int _chunkSize;
         private Lazy<long> _contentLength;
+        private bool _checkedContentRange;
 
         private object _userState;
         private object _lock = new object();
 
+        private CookieContainer _cookies;
+
+        public WebHeaderCollection Headers { get; set; }
 
         public long BytesWritten { get; private set; }
         public long ContentLength { get { return _contentLength.Value; } }
@@ -78,7 +82,7 @@ namespace _7thHeaven.Code
 
         public bool IsStarted { get => _isStarted; }
 
-        public FileDownloadTask(string source, string destination, object userState = null, int chunkSizeInBytes = 10000 /*Default to 0.01 mb*/)
+        public FileDownloadTask(string source, string destination, object userState = null, CookieContainer cookies = null,int chunkSizeInBytes = 10000 /*Default to 0.01 mb*/)
         {
             System.Net.ServicePointManager.Expect100Continue = false; // ensure this is set to false
             AllowedToRun = true;
@@ -86,9 +90,12 @@ namespace _7thHeaven.Code
             _sourceUrl = source;
             _destination = destination;
             _chunkSize = chunkSizeInBytes;
-            _contentLength = new Lazy<long>(() => GetContentLength());
+            _checkedContentRange = false;
+            _contentLength = new Lazy<long>(() => GetContentLength()); // will fallback to trying to get Content-Range header if Content-Length is -1
             _userState = userState;
             _isStarted = false;
+
+            _cookies = cookies;
 
             BytesWritten = 0;
         }
@@ -100,6 +107,23 @@ namespace _7thHeaven.Code
 
             using (var response = request.GetResponse())
                 return response.ContentLength;
+        }
+
+        private long GetContentRange(WebResponse response)
+        {
+            string crange = ((HttpWebResponse) response).Headers[HttpResponseHeader.ContentRange];
+            if (crange != null)
+            {
+                int spos = crange.LastIndexOf('/');
+                if (spos >= 0)
+                {
+                    long range = -1;
+                    long.TryParse(crange.Substring(spos + 1), out range);
+                    return range;
+                }
+            }
+
+            return -1;
         }
 
         private async Task Start(long range)
@@ -114,8 +138,24 @@ namespace _7thHeaven.Code
             request.Proxy = null;
             request.AddRange(range);
 
+            if (_cookies != null)
+            {
+                request.CookieContainer = _cookies;
+            }
+
+            if (Headers != null)
+            {
+                request.Referer = Headers["Referer"];
+            }
+
             using (WebResponse response = await request.GetResponseAsync())
             {
+                if (ContentLength == -1 && !_checkedContentRange)
+                {
+                    _checkedContentRange = true;
+                    _contentLength = new Lazy<long>(() => GetContentRange(response));
+                }
+
                 using (Stream responseStream = response.GetResponseStream())
                 {
                     FileMode fileMode = FileMode.Append;

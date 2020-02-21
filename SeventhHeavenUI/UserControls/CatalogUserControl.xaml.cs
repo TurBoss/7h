@@ -426,7 +426,7 @@ namespace SeventhHeaven.UserControls
 
             if (LocationUtil.TryParse(selected.Download.Links[0], out LocationType downloadType, out string url))
             {
-                if (downloadType != LocationType.Url) // current implementation only supports Url
+                if (downloadType != LocationType.Url && downloadType != LocationType.GDrive) // current implementation only supports Url/GDrive
                 {
                     menuItemPauseDownload.Header = "Pause/Resume selected download";
                     menuItemPauseDownload.IsEnabled = false;

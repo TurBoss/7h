@@ -677,8 +677,9 @@ It may not work properly unless you find and install the requirements.";
                             downloadInfo.OnCancel?.Invoke();
                         };
 
-                        gd.DownloadProgressChanged += new System.Net.DownloadProgressChangedEventHandler(_wc_DownloadProgressChanged);
-                        gd.DownloadFileCompleted += new AsyncCompletedEventHandler(WebRequest_DownloadFileCompleted);
+                        gd.DownloadProgressChanged += _wc_DownloadProgressChanged;
+                        gd.FileDownloadProgressChanged += WebRequest_DownloadProgressChanged;
+                        gd.DownloadFileCompleted += WebRequest_DownloadFileCompleted;
 
                         gd.Download(location, downloadInfo.SaveFilePath, downloadInfo);
                         break;
@@ -739,8 +740,14 @@ It may not work properly unless you find and install the requirements.";
 
         private void WebRequest_DownloadProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            FileDownloadTask download = sender as FileDownloadTask;
             DownloadItem item = e.UserState as DownloadItem;
+            FileDownloadTask download = item?.FileDownloadTask;
+
+            if (item == null || download == null)
+            {
+                Logger.Warn("item or download is null.");
+                return;
+            }
 
             if (item.Category == DownloadCategory.Image && download.ContentLength > 3 * 1000000)
             {

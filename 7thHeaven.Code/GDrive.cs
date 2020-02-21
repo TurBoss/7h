@@ -9,10 +9,12 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using System.ComponentModel;
+using _7thHeaven.Code;
 
 namespace Iros._7th.Workshop {
     public class GDrive {
 
+        public event ProgressChangedEventHandler FileDownloadProgressChanged;
         public event DownloadProgressChangedEventHandler DownloadProgressChanged;
         public event AsyncCompletedEventHandler DownloadFileCompleted;
 
@@ -25,15 +27,25 @@ namespace Iros._7th.Workshop {
         //1 = First download completed, HTML detecting, retrying
 
         public void CancelAsync() {
-            _webClient.CancelAsync();
+            if (_webClient != null)
+            {
+                _webClient.CancelAsync();
+            }
         }
 
         public long GetContentLength() {
+            if (_webClient == null)
+            {
+                return -1;
+            }
+
             string crange = _webClient.ResponseHeaders["Content-Range"];
             if (crange != null) {
                 int spos = crange.LastIndexOf('/');
                 if (spos >= 0) {
-                    return long.Parse(crange.Substring(spos + 1));
+                    long range = -1;
+                    long.TryParse(crange.Substring(spos + 1), out range);
+                    return range;
                 }
             }
             return -1;
@@ -83,15 +95,18 @@ namespace Iros._7th.Workshop {
             gUrl = String.Format("https://docs.google.com/uc?id={0}&export=download", gUrl);
             _cookies = new CookieContainer();
             var wc = new WebClientEx(_cookies);
-            wc.DownloadProgressChanged += new DownloadProgressChangedEventHandler(wc_DownloadProgressChanged);
-            wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadFileCompleted);
-            System.Diagnostics.Debug.WriteLine("GDrive: requesting " + gUrl);
-            wc.Headers.Add(HttpRequestHeader.AcceptEncoding, "");
-            wc.DownloadFileAsync(new Uri(gUrl), destination, userState);
+
+            wc.DownloadProgressChanged += wc_DownloadProgressChanged;
+            wc.DownloadFileCompleted += wc_DownloadFileCompleted;
+
             _file = destination;
             _url = gUrl;
             _state = userState;
             _webClient = wc;
+
+            System.Diagnostics.Debug.WriteLine("GDrive: requesting " + gUrl);
+            wc.Headers.Add(HttpRequestHeader.AcceptEncoding, "");
+            wc.DownloadFileAsync(new Uri(gUrl), destination, userState);
         }
 
         void wc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e) {
@@ -111,16 +126,34 @@ namespace Iros._7th.Workshop {
                                     if (hrefend > 0) {
                                         string url = text.Substring(href + 6, hrefend - href - 6).Replace("&amp;", "&");
                                         if (url.IndexOf("://") < 0) url = new Uri(_url).GetLeftPart(UriPartial.Authority) + url;
+
                                         System.Diagnostics.Debug.WriteLine("GDrive: redirecting to " + url);
                                         System.Diagnostics.Debug.WriteLine("GDrive: {0} cookies set", _cookies.Count);
-                                        var wc = new WebClientEx(_cookies);
-                                        wc.DownloadFileCompleted += new AsyncCompletedEventHandler(wc_DownloadFileCompleted);
-                                        wc.DownloadProgressChanged += new DownloadProgressChangedEventHandler(wc_DownloadProgressChanged);
-                                        System.IO.File.Delete(_file);
-                                        wc.Headers.Add("Referer", _url);
-                                        wc.DownloadFileAsync(new Uri(url), _file, _state);
+
+                                        DownloadItem downloadInfo = _state as DownloadItem;
+
+                                        FileDownloadTask fileDownload = new FileDownloadTask(url, _file, downloadInfo, _cookies)
+                                        {
+                                            Headers = new WebHeaderCollection()
+                                        };
+                                        fileDownload.Headers.Add("Referer", _url);
+
+                                        downloadInfo.PerformCancel = () =>
+                                        {
+                                            fileDownload.CancelAsync();
+                                            downloadInfo.OnCancel?.Invoke();
+                                        };
+
+                                        fileDownload.DownloadProgressChanged += FileDownload_DownloadProgressChanged;
+                                        fileDownload.DownloadFileCompleted += wc_DownloadFileCompleted;
+
+                                        System.IO.File.Delete(_file); // delete temp html file just downloaded
+
+                                        downloadInfo.FileDownloadTask = fileDownload;
+                                        fileDownload.Start();
                                         _mode = 1;
-                                        _webClient = wc;
+
+                                        CleanUpWebClient();
                                         return;
                                     }
                                 }
@@ -135,20 +168,54 @@ namespace Iros._7th.Workshop {
 
                             //If we get here, it went wrong
                             System.IO.File.Delete(_file);
-                            DownloadFileCompleted(this, new AsyncCompletedEventArgs(new Exception(err), false, _state));
+                            DownloadFileCompleted?.Invoke(this, new AsyncCompletedEventArgs(new Exception(err), false, _state));
                         } else {
-                            DownloadFileCompleted(this, e);
+                            DownloadFileCompleted?.Invoke(this, e);
                         }
                     } else
-                        DownloadFileCompleted(this, e);
+                        DownloadFileCompleted?.Invoke(this, e);
                 } else
-                    DownloadFileCompleted(this, e);
+                {
+                    // actual file being downloaded has finished successfully at this point
+                    CleanUpFileDownloadTask();
+                    DownloadFileCompleted?.Invoke(this, e);
+                }
             }
+        }
+
+        private void CleanUpWebClient()
+        {
+            if (_webClient == null)
+            {
+                return;
+            }
+
+            _webClient.DownloadProgressChanged -= wc_DownloadProgressChanged;
+            _webClient.DownloadFileCompleted -= wc_DownloadFileCompleted;
+            _webClient.Dispose();
+            _webClient = null;
+        }
+
+        internal void CleanUpFileDownloadTask()
+        {
+            DownloadItem downloadInfo = _state as DownloadItem;
+
+            if (downloadInfo?.FileDownloadTask != null)
+            {
+                downloadInfo.FileDownloadTask.DownloadProgressChanged -= FileDownload_DownloadProgressChanged;
+                downloadInfo.FileDownloadTask.DownloadFileCompleted -= wc_DownloadFileCompleted;
+                downloadInfo.FileDownloadTask = null;
+            }
+        }
+
+        private void FileDownload_DownloadProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            FileDownloadProgressChanged?.Invoke(this, e);
         }
 
         void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
             if (_mode != 0 || e.BytesReceived > 100 * 1024) {
-                DownloadProgressChanged(this, e);
+                DownloadProgressChanged?.Invoke(this, e);
             }
         }
     }
