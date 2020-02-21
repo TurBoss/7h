@@ -78,11 +78,17 @@ namespace Iros._7th.Workshop
                             Directory.Delete(path, true);
                         }
                     }
-                    catch (IOException)
+                    catch (IOException ioex)
                     {
-                        System.Diagnostics.Debug.Write(String.Format("File {0} could not be accessed - in use? Leaving in list.", path));
+                        Sys.Message(new WMessage($"File {path} could not be accessed - in use? Leaving in list.", WMessageLogLevel.LogOnly, ioex));
                         continue;
                     }
+                    catch (Exception ex)
+                    {
+                        Sys.Message(new WMessage($"Unknown exception deleting {path} - Leaving in list.", WMessageLogLevel.LogOnly, ex));
+                        continue;
+                    }
+
                     System.Diagnostics.Debug.Write(String.Format("File {0} successfully deleted.", path));
                     PendingDelete.RemoveAt(i);
                 }
