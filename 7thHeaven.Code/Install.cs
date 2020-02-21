@@ -122,7 +122,7 @@ namespace Iros._7th.Workshop
             Action onCancel = () => Sys.RevertStatus(m.ID);
             Action<Exception> onError = ex =>
             {
-                Sys.Message(new WMessage($"Error ocurred downloading/installing {m.Name} - {ex.Message}"));
+                Sys.Message(new WMessage($"Error occurred downloading/installing {m.Name} - {ex.Message}"));
                 Sys.RevertStatus(m.ID);
             };
 

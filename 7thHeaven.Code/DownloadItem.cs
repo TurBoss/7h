@@ -47,7 +47,7 @@ namespace _7thHeaven.Code
             HasStarted = false;
             RemainingTime = "Unknown";
             DownloadSpeed = "Pending...";
-            ExternalUrlDownloadMessage = "The download failed to automatically download. An external link to download this mod is available.\n\nWould you like to open your web browser to download it now?";
+            ExternalUrlDownloadMessage = "The mod failed to automatically download. An external link to download this mod is available.\n\nWould you like to open your web browser to download it now?";
         }
     }
 }
