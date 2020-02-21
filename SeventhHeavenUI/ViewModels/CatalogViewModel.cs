@@ -467,6 +467,7 @@ It may not work properly unless you find and install the requirements.";
 
             if (downloadItem.Download.FileDownloadTask?.IsPaused == true)
             {
+                downloadItem.DownloadSpeed = "Resuming...";
                 downloadItem.Download.FileDownloadTask.Start();
             }
             else
@@ -498,12 +499,7 @@ It may not work properly unless you find and install the requirements.";
             {
                 downloadItemViewModel.Download.PerformCancel?.Invoke(); // PerformCancel will happen during download and internally calls OnCancel
             }
-            else
-            {
-                downloadItemViewModel.Download.OnCancel?.Invoke(); // invoke OnCancel when downloads are pending so the full cancellation process can happen
-            }
 
-            RemoveFromDownloadList(downloadItemViewModel?.Download);
             Sys.Message(new WMessage($"Canceled {downloadItemViewModel?.ItemName}"));
         }
 
@@ -657,30 +653,19 @@ It may not work properly unless you find and install the requirements.";
                         break;
 
                     case LocationType.Url:
+                        FileDownloadTask fileDownload = new FileDownloadTask(location, downloadInfo.SaveFilePath, downloadInfo);
+
                         downloadInfo.PerformCancel = () =>
                         {
+                            fileDownload.CancelAsync();
                             downloadInfo.OnCancel?.Invoke();
                         };
 
-                        FileDownloadTask fileDownload = new FileDownloadTask(location, downloadInfo.SaveFilePath, downloadInfo);
-
-                        fileDownload.DownloadProgressChanged += FileDownload_DownloadProgressChanged;
-                        fileDownload.DownloadFileCompleted += _wc_DownloadFileCompleted;
+                        fileDownload.DownloadProgressChanged += WebRequest_DownloadProgressChanged;
+                        fileDownload.DownloadFileCompleted += WebRequest_DownloadFileCompleted;
 
                         downloadInfo.FileDownloadTask = fileDownload;
                         fileDownload.Start();
-
-                        //using (var wc = new System.Net.WebClient())
-                        //{
-                        //    downloadInfo.PerformCancel = () =>
-                        //    {
-                        //        wc.CancelAsync();
-                        //        downloadInfo.OnCancel?.Invoke();
-                        //    };
-                        //    wc.DownloadProgressChanged += new System.Net.DownloadProgressChangedEventHandler(_wc_DownloadProgressChanged);
-                        //    wc.DownloadFileCompleted += new AsyncCompletedEventHandler(_wc_DownloadFileCompleted);
-                        //    wc.DownloadFileAsync(new Uri(location), downloadInfo.SaveFilePath, downloadInfo);
-                        //}
 
                         break;
 
@@ -691,8 +676,10 @@ It may not work properly unless you find and install the requirements.";
                             gd.CancelAsync();
                             downloadInfo.OnCancel?.Invoke();
                         };
+
                         gd.DownloadProgressChanged += new System.Net.DownloadProgressChangedEventHandler(_wc_DownloadProgressChanged);
-                        gd.DownloadFileCompleted += new AsyncCompletedEventHandler(_wc_DownloadFileCompleted);
+                        gd.DownloadFileCompleted += new AsyncCompletedEventHandler(WebRequest_DownloadFileCompleted);
+
                         gd.Download(location, downloadInfo.SaveFilePath, downloadInfo);
                         break;
 
@@ -750,7 +737,7 @@ It may not work properly unless you find and install the requirements.";
 
         }
 
-        private void FileDownload_DownloadProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void WebRequest_DownloadProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             FileDownloadTask download = sender as FileDownloadTask;
             DownloadItem item = e.UserState as DownloadItem;
@@ -770,11 +757,12 @@ It may not work properly unless you find and install the requirements.";
             int downloadCount = 0;
 
             // ensure you can cancel downloads that are pending download in queue
-            if (newDownload.OnCancel == null)
+            if (newDownload.PerformCancel == null)
             {
-                newDownload.OnCancel = () =>
+                newDownload.PerformCancel = () =>
                 {
                     RemoveFromDownloadList(newDownload);
+                    newDownload.OnCancel?.Invoke();
                 };
             }
 
@@ -791,13 +779,15 @@ It may not work properly unless you find and install the requirements.";
                 }
             }
 
+            DownloadItemViewModel downloadViewModel = new DownloadItemViewModel(newDownload);
+
             App.Current.Dispatcher.Invoke(() =>
             {
                 lock (_downloadLock)
                 {
                     if (DownloadList.All(d => d.Download.UniqueId != newDownload.UniqueId))
                     {
-                        DownloadList.Add(new DownloadItemViewModel(newDownload));
+                        DownloadList.Add(downloadViewModel);
                     }
 
                     downloadCount = DownloadList.Count;
@@ -808,6 +798,7 @@ It may not work properly unless you find and install the requirements.";
             if (downloadCount == 1)
             {
                 // only item in queue so start downloading right away
+                downloadViewModel.DownloadSpeed = "Starting...";
                 Download(newDownload.Links, newDownload);
             }
             else if (downloadCount > 1)
@@ -828,6 +819,7 @@ It may not work properly unless you find and install the requirements.";
                 //start the next catalog/image download if no other catalogs/images are being downloaded
                 if (!isAlreadyDownloadingImageOrCat && nextDownload != null)
                 {
+                    downloadViewModel.DownloadSpeed = "Starting...";
                     Download(nextDownload.Links, nextDownload);
                 }
             }
@@ -845,24 +837,38 @@ It may not work properly unless you find and install the requirements.";
             foundMod?.UpdateDetails();
         }
 
-        void _wc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        void WebRequest_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             DownloadItem item = (DownloadItem)e.UserState;
+            CleanUpFileDownloadTask(item);
+
             if (e.Cancelled)
             {
-                item.PerformCancel?.Invoke();
                 RemoveFromDownloadList(item);
             }
             else if (e.Error != null)
             {
                 string msg = $"Error {item.ItemName} - {e.Error.GetBaseException().Message}";
                 Sys.Message(new WMessage(msg, WMessageLogLevel.Error, e.Error.GetBaseException()));
-
                 item.OnError?.Invoke();
             }
             else
             {
                 ProcessDownloadComplete(item, e);
+            }
+        }
+
+        /// <summary>
+        /// Removes event handlers and nullifys the <see cref="FileDownloadTask"/> in <paramref name="item"/>
+        /// </summary>
+        private void CleanUpFileDownloadTask(DownloadItem item)
+        {
+            if (item.FileDownloadTask != null)
+            {
+                // remove event handlers to prevent holding object in memory
+                item.FileDownloadTask.DownloadProgressChanged -= WebRequest_DownloadProgressChanged;
+                item.FileDownloadTask.DownloadFileCompleted -= WebRequest_DownloadFileCompleted;
+                item.FileDownloadTask = null;
             }
         }
 
@@ -890,25 +896,26 @@ It may not work properly unless you find and install the requirements.";
             if (downloadCount > 0)
             {
                 // start next download in queue
-                DownloadItem nextDownload = null;
+                DownloadItemViewModel nextDownload = null;
 
                 lock (_downloadLock)
                 {
                     if (!isDownloadingMod)
                     {
                         // no mod is currently downloading so get the next download in queue
-                        nextDownload = DownloadList.FirstOrDefault(d => !d.Download.HasStarted)?.Download;
+                        nextDownload = DownloadList.FirstOrDefault(d => !d.Download.HasStarted);
                     }
                     else
                     {
                         // a mod is downloading so get next catalog/image to download
-                        nextDownload = DownloadList.FirstOrDefault(d => d.Download.Category != DownloadCategory.Mod && !d.Download.HasStarted)?.Download;
+                        nextDownload = DownloadList.FirstOrDefault(d => d.Download.Category != DownloadCategory.Mod && !d.Download.HasStarted);
                     }
                 }
 
                 if (nextDownload != null)
                 {
-                    Download(nextDownload.Links, nextDownload);
+                    nextDownload.DownloadSpeed = "Starting...";
+                    Download(nextDownload.Download.Links, nextDownload.Download);
                 }
             }
         }
@@ -954,14 +961,24 @@ It may not work properly unless you find and install the requirements.";
 
             item.IProc.Complete = () => CompleteIProc(item, e);
 
-            item.PercentComplete = 0;
-            item.IProc.SetPCComplete = i =>
+            // update UI viewmodel to reflect installation status
+            DownloadItemViewModel itemViewModel = DownloadList.FirstOrDefault(i => i.Download.UniqueId == item.UniqueId);
+
+            if (item.Category == DownloadCategory.Mod && itemViewModel != null)
             {
-                if (item.PercentComplete != i)
+                itemViewModel.ItemName = item.ItemName.Replace("Downloading ", "Installing ");
+                itemViewModel.DownloadSpeed = "N/A";
+                itemViewModel.RemainingTime = "Unknown";
+            }
+
+            if (itemViewModel != null)
+            {
+                itemViewModel.PercentComplete = 0;
+                item.IProc.SetPCComplete = i =>
                 {
-                    item.PercentComplete = i;
-                }
-            };
+                    itemViewModel.PercentComplete = i;
+                };
+            }
 
             item.IProc.Schedule();
         }
@@ -973,6 +990,11 @@ It may not work properly unless you find and install the requirements.";
             if (viewModel == null)
             {
                 return;
+            }
+
+            if (item.FileDownloadTask != null && item.FileDownloadTask.IsPaused)
+            {
+                return; // download is paused so don't update the below information since it will overwrite the 'Paused...' text
             }
 
             viewModel.PercentComplete = percentDone;

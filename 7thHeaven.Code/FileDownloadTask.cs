@@ -21,6 +21,7 @@ namespace _7thHeaven.Code
         public event ProgressChangedEventHandler DownloadProgressChanged;
         public event AsyncCompletedEventHandler DownloadFileCompleted;
 
+        private bool _isCanceled;
         private bool _isStarted;
         private bool _allowedToRun;
         private string _sourceUrl;
@@ -30,6 +31,7 @@ namespace _7thHeaven.Code
 
         private object _userState;
         private object _lock = new object();
+
 
         public long BytesWritten { get; private set; }
         public long ContentLength { get { return _contentLength.Value; } }
@@ -47,7 +49,7 @@ namespace _7thHeaven.Code
                     return _allowedToRun;
                 }
             }
-            set
+            private set
             {
                 lock (_lock)
                 {
@@ -56,10 +58,29 @@ namespace _7thHeaven.Code
             }
         }
 
+        public bool IsCanceled
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _isCanceled;
+                }
+            }
+            private set
+            {
+                lock (_lock)
+                {
+                    _isCanceled = value;
+                }
+            }
+        }
+
         public bool IsStarted { get => _isStarted; }
 
         public FileDownloadTask(string source, string destination, object userState = null, int chunkSizeInBytes = 10000 /*Default to 0.01 mb*/)
         {
+            System.Net.ServicePointManager.Expect100Continue = false; // ensure this is set to false
             AllowedToRun = true;
 
             _sourceUrl = source;
@@ -83,17 +104,19 @@ namespace _7thHeaven.Code
 
         private async Task Start(long range)
         {
-            if (!_allowedToRun)
+            if (IsPaused || IsCanceled)
                 return;
 
-            var request = (HttpWebRequest)WebRequest.Create(_sourceUrl);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_sourceUrl);
             request.Method = "GET";
             request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)";
+            request.KeepAlive = false;
+            request.Proxy = null;
             request.AddRange(range);
 
-            using (var response = await request.GetResponseAsync())
+            using (WebResponse response = await request.GetResponseAsync())
             {
-                using (var responseStream = response.GetResponseStream())
+                using (Stream responseStream = response.GetResponseStream())
                 {
                     FileMode fileMode = FileMode.Append;
 
@@ -102,13 +125,13 @@ namespace _7thHeaven.Code
                         fileMode = FileMode.Create;
                     }
 
-                    using (var fs = new FileStream(_destination, fileMode, FileAccess.Write, FileShare.ReadWrite))
+                    using (FileStream fs = new FileStream(_destination, fileMode, FileAccess.Write, FileShare.ReadWrite))
                     {
-                        while (AllowedToRun)
+                        while (AllowedToRun && !IsCanceled)
                         {
                             _isStarted = true;
-                            var buffer = new byte[_chunkSize];
-                            var bytesRead = await responseStream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+                            byte[] buffer = new byte[_chunkSize];
+                            int bytesRead = await responseStream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
 
                             if (bytesRead == 0) break;
 
@@ -123,22 +146,43 @@ namespace _7thHeaven.Code
                         await fs.FlushAsync();
                     }
                 }
+            }
 
-                if (BytesWritten == ContentLength)
-                {
-                    DownloadFileCompleted?.Invoke(this, new AsyncCompletedEventArgs(null, false, _userState));
-                }
+            if (AllowedToRun && !IsCanceled && (BytesWritten == ContentLength) || (ContentLength == -1)) // -1 is returned when response doesnt have the content-length
+            {
+                DownloadFileCompleted?.Invoke(this, new AsyncCompletedEventArgs(null, false, _userState));
+            }
+            else if (IsCanceled)
+            {
+                DownloadFileCompleted?.Invoke(this, new AsyncCompletedEventArgs(null, cancelled: true, _userState));
             }
         }
 
         public Task Start()
         {
             AllowedToRun = true;
-            return Start(BytesWritten);
+            Task downloadTask = Start(BytesWritten);
+
+            // wire up async task to handle exceptions that may occurr
+            downloadTask.ContinueWith((result) =>
+            {
+                if (result.IsFaulted)
+                {
+                    DownloadFileCompleted?.Invoke(this, new AsyncCompletedEventArgs(result.Exception, false, _userState));
+                }
+            });
+
+            return downloadTask;
         }
 
         public void Pause()
         {
+            AllowedToRun = false;
+        }
+
+        public void CancelAsync()
+        {
+            IsCanceled = true;
             AllowedToRun = false;
         }
     }

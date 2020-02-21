@@ -543,6 +543,8 @@ namespace Iros._7th.Workshop
                             using (var iro = new _7thWrapperLib.IrosArc(source))
                                 if (!iro.CheckValid())
                                     throw new Exception("IRO archive appears to be invalid: corrupted download?");
+
+                            SetPCComplete(50);
                             System.IO.File.Move(source, _dest);
                         }
                         else
@@ -551,6 +553,7 @@ namespace Iros._7th.Workshop
                             var iroEnt = archive.Entries.FirstOrDefault(e => System.IO.Path.GetExtension(e.Key).Equals(".iro", StringComparison.InvariantCultureIgnoreCase));
                             if (iroEnt != null)
                             {
+                                SetPCComplete(50);
                                 iroEnt.WriteToFile(_dest);
                             }
                             else
@@ -576,7 +579,8 @@ namespace Iros._7th.Workshop
                                                     reader.WriteEntryTo(fOut);
                                             }
                                             count++;
-                                            SetPCComplete(100 * count / entries.Length);
+                                            float prog = (float) count / (float)entries.Length;
+                                            SetPCComplete((int) (100 * prog));
                                         }
                                     }
                                 }

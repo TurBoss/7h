@@ -25,6 +25,14 @@ namespace SeventhHeavenUI.ViewModels
             {
                 return Download.ItemName;
             }
+            set
+            {
+                if (value != Download.ItemName)
+                {
+                    Download.ItemName = value;
+                    NotifyPropertyChanged();
+                }
+            }
         }
 
         public double PercentComplete
