@@ -107,9 +107,11 @@
                   Margin="0,5,0,0"
                   ItemsSource="{Binding DownloadList, UpdateSourceTrigger=PropertyChanged}"
                   MinHeight="100"
-                  MaxHeight="150">
+                  MaxHeight="150"
+                  ContextMenuOpening="menuDownloadList_ContextMenuOpening">
             <ListView.ContextMenu>
-                <ContextMenu>
+                <ContextMenu x:Name="menuDownloadList">
+                    <MenuItem x:Name="menuItemPauseDownload" Header="Pause/Resume selected download" Click="menuItemPauseDownload_Click"/>
                     <MenuItem x:Name="menuItemCancelDownload" Header="Cancel selected download" Click="menuItemCancelDownload_Click"/>
                 </ContextMenu>
             </ListView.ContextMenu>

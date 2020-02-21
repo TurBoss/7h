@@ -21,6 +21,7 @@ namespace _7thHeaven.Code
         public DownloadCategory Category { get; set; }
         public string SaveFilePath { get; set; }
         public Install.InstallProcedure IProc { get; set; }
+        public FileDownloadTask FileDownloadTask { get; set; }
         public DateTime LastCalc { get; set; }
         public long LastBytes { get; set; }
         public Action PerformCancel { get; set; }

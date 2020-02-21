@@ -458,6 +458,25 @@ It may not work properly unless you find and install the requirements.";
             return t;
         }
 
+        internal void PauseOrResumeDownload(DownloadItemViewModel downloadItem)
+        {
+            if (downloadItem?.Download?.FileDownloadTask == null)
+            {
+                return;
+            }
+
+            if (downloadItem.Download.FileDownloadTask?.IsPaused == true)
+            {
+                downloadItem.Download.FileDownloadTask.Start();
+            }
+            else
+            {
+                downloadItem.DownloadSpeed = "Paused...";
+                downloadItem.RemainingTime = "Unknown";
+                downloadItem.Download.FileDownloadTask.Pause();
+            }
+        }
+
         internal void ForceCheckCatalogUpdateAsync()
         {
             Task t = CheckForCatalogUpdatesAsync(new CatCheckOptions() { ForceCheck = true });
@@ -638,17 +657,30 @@ It may not work properly unless you find and install the requirements.";
                         break;
 
                     case LocationType.Url:
-                        using (var wc = new System.Net.WebClient())
+                        downloadInfo.PerformCancel = () =>
                         {
-                            downloadInfo.PerformCancel = () =>
-                            {
-                                wc.CancelAsync();
-                                downloadInfo.OnCancel?.Invoke();
-                            };
-                            wc.DownloadProgressChanged += new System.Net.DownloadProgressChangedEventHandler(_wc_DownloadProgressChanged);
-                            wc.DownloadFileCompleted += new AsyncCompletedEventHandler(_wc_DownloadFileCompleted);
-                            wc.DownloadFileAsync(new Uri(location), downloadInfo.SaveFilePath, downloadInfo);
-                        }
+                            downloadInfo.OnCancel?.Invoke();
+                        };
+
+                        FileDownloadTask fileDownload = new FileDownloadTask(location, downloadInfo.SaveFilePath, downloadInfo);
+
+                        fileDownload.DownloadProgressChanged += FileDownload_DownloadProgressChanged;
+                        fileDownload.DownloadFileCompleted += _wc_DownloadFileCompleted;
+
+                        downloadInfo.FileDownloadTask = fileDownload;
+                        fileDownload.Start();
+
+                        //using (var wc = new System.Net.WebClient())
+                        //{
+                        //    downloadInfo.PerformCancel = () =>
+                        //    {
+                        //        wc.CancelAsync();
+                        //        downloadInfo.OnCancel?.Invoke();
+                        //    };
+                        //    wc.DownloadProgressChanged += new System.Net.DownloadProgressChangedEventHandler(_wc_DownloadProgressChanged);
+                        //    wc.DownloadFileCompleted += new AsyncCompletedEventHandler(_wc_DownloadFileCompleted);
+                        //    wc.DownloadFileAsync(new Uri(location), downloadInfo.SaveFilePath, downloadInfo);
+                        //}
 
                         break;
 
@@ -716,6 +748,21 @@ It may not work properly unless you find and install the requirements.";
             }
 
 
+        }
+
+        private void FileDownload_DownloadProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            FileDownloadTask download = sender as FileDownloadTask;
+            DownloadItem item = e.UserState as DownloadItem;
+
+            if (item.Category == DownloadCategory.Image && download.ContentLength > 3 * 1000000)
+            {
+                Logger.Warn("preview image greater than 3MB, cancelling download");
+                item.PerformCancel?.Invoke();
+                return;
+            }
+
+            UpdateDownloadProgress(item, e.ProgressPercentage, download.BytesWritten, download.ContentLength);
         }
 
         public void AddToDownloadQueue(DownloadItem newDownload)

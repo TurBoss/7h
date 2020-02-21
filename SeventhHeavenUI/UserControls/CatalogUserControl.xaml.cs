@@ -387,5 +387,63 @@ namespace SeventhHeaven.UserControls
 
             RecalculateColumnWidths(); // call this to have auto resize columns recalculate
         }
+
+        private void menuItemPauseDownload_Click(object sender, RoutedEventArgs e)
+        {
+            if (lstDownloads.SelectedItem == null)
+            {
+                Sys.Message(new WMessage("No Download selected.", true));
+                return;
+            }
+
+            ViewModel.PauseOrResumeDownload((lstDownloads.SelectedItem as DownloadItemViewModel));
+        }
+
+        private void menuDownloadList_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            if (lstDownloads.SelectedItem == null)
+            {
+                menuItemPauseDownload.IsEnabled = false;
+                return;
+            }
+
+            DownloadItemViewModel selected = lstDownloads.SelectedItem as DownloadItemViewModel;
+
+            if (selected.Download.Category != DownloadCategory.Mod || selected.Download.FileDownloadTask == null)
+            {
+                menuItemPauseDownload.Header = "Pause/Resume selected download";
+                menuItemPauseDownload.IsEnabled = false;
+                return;
+            }
+
+            if (!selected.Download.FileDownloadTask.IsStarted)
+            {
+                menuItemPauseDownload.Header = "Pause selected download";
+                menuItemPauseDownload.IsEnabled = false;
+                return;
+            }
+
+
+            if (LocationUtil.TryParse(selected.Download.Links[0], out LocationType downloadType, out string url))
+            {
+                if (downloadType != LocationType.Url) // current implementation only supports Url
+                {
+                    menuItemPauseDownload.Header = "Pause/Resume selected download";
+                    menuItemPauseDownload.IsEnabled = false;
+                    return;
+                }
+            }
+
+            menuItemPauseDownload.IsEnabled = true;
+
+            if (selected.Download.FileDownloadTask.IsPaused)
+            {
+                menuItemPauseDownload.Header = "Resume selected download";
+            }
+            else
+            {
+                menuItemPauseDownload.Header = "Pause selected download";
+            }
+        }
     }
 }

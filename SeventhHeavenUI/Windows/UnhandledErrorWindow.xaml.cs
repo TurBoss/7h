@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SeventhHeavenUI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,12 +25,15 @@ namespace SeventhHeaven.Windows
 
         public static void Show(string message)
         {
-            UnhandledErrorWindow window = new UnhandledErrorWindow(message)
+            App.Current.Dispatcher.Invoke(() =>
             {
-                WindowStartupLocation = WindowStartupLocation.CenterScreen
-            };
+                UnhandledErrorWindow window = new UnhandledErrorWindow(message)
+                {
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen
+                };
 
-            window.ShowDialog();
+                window.ShowDialog();
+            });
         }
 
         public static void Show(Exception exception)
