@@ -106,15 +106,9 @@
                   Grid.Row="1" 
                   Margin="0,5,0,0"
                   ItemsSource="{Binding DownloadList, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedItem="{Binding SelectedDownload, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   MinHeight="100"
-                  MaxHeight="150"
-                  ContextMenuOpening="menuDownloadList_ContextMenuOpening">
-            <ListView.ContextMenu>
-                <ContextMenu x:Name="menuDownloadList">
-                    <MenuItem x:Name="menuItemPauseDownload" Header="Pause/Resume selected download" Click="menuItemPauseDownload_Click"/>
-                    <MenuItem x:Name="menuItemCancelDownload" Header="Cancel selected download" Click="menuItemCancelDownload_Click"/>
-                </ContextMenu>
-            </ListView.ContextMenu>
+                  MaxHeight="150">
             <ListView.View>
                 <GridView>
                     <GridViewColumn x:Name="colDownloadName" Header="Item" Width="Auto" DisplayMemberBinding="{Binding ItemName, FallbackValue='item text'}"/>
@@ -131,5 +125,37 @@
                 </GridView>
             </ListView.View>
         </ListView>
+
+        <StackPanel Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="0,5,0,0"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Right">
+
+            <Button x:Name="btnPause"
+                    ToolTipService.ShowOnDisabled="True"
+                    IsEnabled="{Binding PauseDownloadIsEnabled}"
+                    ToolTip="{Binding PauseDownloadToolTip, FallbackValue='Pause/Resume Selected Download'}"
+                    Click="btnPause_Click"
+                    Margin="0,0,0,0">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource SmallImageButton}">
+                        <Setter Property="Content" Value="{StaticResource iconCloudPlay}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsSelectedDownloadPaused}" Value="False">
+                                <Setter Property="Content" Value="{StaticResource iconCloudPause}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <Button x:Name="btnCancel"
+                    ToolTip="Cancel Selected Download"
+                    Style="{StaticResource SmallImageButton}"
+                    Content="{StaticResource iconCloudStop}"
+                    Click="btnCancel_Click"/>
+
+        </StackPanel>
     </Grid>
 </UserControl>

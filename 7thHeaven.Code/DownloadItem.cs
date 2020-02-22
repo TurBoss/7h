@@ -38,6 +38,16 @@ namespace _7thHeaven.Code
         /// The message to show to the user when downloading a mod that may user ExternalUrl links. If the mod download only has one link to ExternalUrl then the message will be changed to reflect that.
         /// </summary>
         public string ExternalUrlDownloadMessage { get; set; }
+        public bool IsFileDownloadPaused
+        {
+            get
+            {
+                if (FileDownloadTask == null)
+                    return false;
+
+                return FileDownloadTask.IsPaused;
+            }
+        }
 
         public DownloadItem()
         {

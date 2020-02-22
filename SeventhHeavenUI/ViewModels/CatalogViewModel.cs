@@ -60,6 +60,10 @@ It may not work properly unless you find and install the requirements.";
 
         private object _listLock = new object();
         private object _downloadLock = new object();
+        private bool _isSelectedDownloadPaused;
+        private DownloadItemViewModel _selectedDownload;
+        private bool _pauseDownloadIsEnabled;
+        private string _pauseDownloadToolTip;
 
         /// <summary>
         /// List of installed mods (includes active mods in the currently active profile)
@@ -102,9 +106,65 @@ It may not work properly unless you find and install the requirements.";
             }
         }
 
+        public DownloadItemViewModel SelectedDownload
+        {
+            get
+            {
+                return _selectedDownload;
+            }
+            set
+            {
+                _selectedDownload = value;
+                NotifyPropertyChanged();
+                UpdatePauseDownloadButtonUI();
+            }
+        }
+
+        public bool IsSelectedDownloadPaused
+        {
+            get
+            {
+                return _isSelectedDownloadPaused;
+            }
+            set
+            {
+                _isSelectedDownloadPaused = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public bool PauseDownloadIsEnabled
+        {
+            get
+            {
+                return _pauseDownloadIsEnabled;
+            }
+            set
+            {
+                _pauseDownloadIsEnabled = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string PauseDownloadToolTip
+        {
+            get
+            {
+                return _pauseDownloadToolTip;
+            }
+            set
+            {
+                _pauseDownloadToolTip = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public CatalogViewModel()
         {
             DownloadList = new ObservableCollection<DownloadItemViewModel>();
+            PauseDownloadToolTip = "Pause/Resume Selected Download";
+            PauseDownloadIsEnabled = false;
+            IsSelectedDownloadPaused = false;
             _previousReloadOptions = new ReloadListOption();
         }
 
@@ -475,7 +535,10 @@ It may not work properly unless you find and install the requirements.";
                 downloadItem.DownloadSpeed = "Paused...";
                 downloadItem.RemainingTime = "Unknown";
                 downloadItem.Download.FileDownloadTask.Pause();
+                StartNextModDownload(); // have the next mod in the download queue start automatically
             }
+
+            UpdatePauseDownloadButtonUI();
         }
 
         internal void ForceCheckCatalogUpdateAsync()
@@ -489,6 +552,61 @@ It may not work properly unless you find and install the requirements.";
                     Logger.Warn(taskResult.Exception);
                 }
             });
+        }
+
+        private void UpdatePauseDownloadButtonUI()
+        {
+            if (SelectedDownload == null)
+            {
+                PauseDownloadIsEnabled = false;
+                return;
+            }
+
+
+            if (SelectedDownload.Download.Category != DownloadCategory.Mod || SelectedDownload.Download.FileDownloadTask == null)
+            {
+                PauseDownloadToolTip = "Pause/Resume Selected Download";
+                PauseDownloadIsEnabled = false;
+                return;
+            }
+
+            if (!SelectedDownload.Download.FileDownloadTask.IsStarted)
+            {
+                PauseDownloadToolTip = "Pause Selected Download";
+                PauseDownloadIsEnabled = false;
+                return;
+            }
+
+
+            if (LocationUtil.TryParse(SelectedDownload.Download.Links[0], out LocationType downloadType, out string url))
+            {
+                if (downloadType != LocationType.Url && downloadType != LocationType.GDrive) // current implementation only supports Url/GDrive
+                {
+                    PauseDownloadToolTip = "Pause/Resume Selected Download";
+                    PauseDownloadIsEnabled = false;
+                    return;
+                }
+            }
+
+            // if another mod is already downloading then don't allow to resume other mods
+            if (DownloadList.Any(d => d.Download.UniqueId != SelectedDownload.Download.UniqueId && d.Download.Category == DownloadCategory.Mod && d.Download.HasStarted && !d.Download.IsFileDownloadPaused))
+            {
+                PauseDownloadIsEnabled = false;
+            }
+            else
+            {
+                PauseDownloadIsEnabled = true;
+            }
+
+            IsSelectedDownloadPaused = SelectedDownload.Download.FileDownloadTask.IsPaused;
+            if (IsSelectedDownloadPaused)
+            {
+                PauseDownloadToolTip = "Resume Selected Download";
+            }
+            else
+            {
+                PauseDownloadToolTip = "Pause Selected Download";
+            }
         }
 
         #region Methods Related to Downloads
@@ -757,6 +875,7 @@ It may not work properly unless you find and install the requirements.";
             }
 
             UpdateDownloadProgress(item, e.ProgressPercentage, download.BytesWritten, download.ContentLength);
+            UpdatePauseDownloadButtonUI();
         }
 
         public void AddToDownloadQueue(DownloadItem newDownload)
@@ -813,11 +932,20 @@ It may not work properly unless you find and install the requirements.";
                 // allow images and catalogs to download while mod is downloading so it does not halt queue of catalog/image refreshes
                 DownloadItem nextDownload = null;
                 bool isAlreadyDownloadingImageOrCat = false;
+                bool isDownloadingMod = false;
 
                 lock (_downloadLock)
                 {
-                    if (DownloadList[0].Download.Category == DownloadCategory.Mod && DownloadList[0].Download.HasStarted)
+                    isDownloadingMod = DownloadList.Any(d => d.Download.Category == DownloadCategory.Mod && d.Download.HasStarted && !d.Download.IsFileDownloadPaused);
+                    
+                    if (!isDownloadingMod)
                     {
+                        // no mod is currently downloading so get the next download in queue
+                        nextDownload = DownloadList.FirstOrDefault(d => !d.Download.HasStarted)?.Download;
+                    }
+                    else
+                    {
+                        // a mod is downloading so get next catalog/image to download
                         isAlreadyDownloadingImageOrCat = DownloadList.Any(d => d.Download.Category != DownloadCategory.Mod && d.Download.HasStarted);
                         nextDownload = DownloadList.FirstOrDefault(d => d.Download.Category != DownloadCategory.Mod && !d.Download.HasStarted)?.Download;
                     }
@@ -896,7 +1024,7 @@ It may not work properly unless you find and install the requirements.";
                     }
 
                     downloadCount = DownloadList.Count;
-                    isDownloadingMod = DownloadList.Any(d => d.Download.Category == DownloadCategory.Mod && d.Download.HasStarted);
+                    isDownloadingMod = DownloadList.Any(d => d.Download.Category == DownloadCategory.Mod && d.Download.HasStarted && !d.Download.IsFileDownloadPaused);
                 }
             });
 
@@ -917,6 +1045,36 @@ It may not work properly unless you find and install the requirements.";
                         // a mod is downloading so get next catalog/image to download
                         nextDownload = DownloadList.FirstOrDefault(d => d.Download.Category != DownloadCategory.Mod && !d.Download.HasStarted);
                     }
+                }
+
+                if (nextDownload != null)
+                {
+                    nextDownload.DownloadSpeed = "Starting...";
+                    Download(nextDownload.Download.Links, nextDownload.Download);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Finds the next mod in download queue to start downloading
+        /// </summary>
+        private void StartNextModDownload()
+        {
+            int downloadCount = 0;
+
+            lock (_downloadLock)
+            {
+                downloadCount = DownloadList.Count;
+            }
+
+            if (downloadCount > 0)
+            {
+                // start next download in queue
+                DownloadItemViewModel nextDownload = null;
+
+                lock (_downloadLock)
+                {
+                    nextDownload = DownloadList.FirstOrDefault(d => d.Download.Category == DownloadCategory.Mod && !d.Download.HasStarted);
                 }
 
                 if (nextDownload != null)

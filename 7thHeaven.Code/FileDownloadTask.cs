@@ -222,6 +222,12 @@ namespace _7thHeaven.Code
 
         public void CancelAsync()
         {
+            if (IsPaused)
+            {
+                // if the download is paused when cancelling download then invoke the event here
+                DownloadFileCompleted?.Invoke(this, new AsyncCompletedEventArgs(null, cancelled: true, _userState));
+            }
+
             IsCanceled = true;
             AllowedToRun = false;
         }
