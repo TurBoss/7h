@@ -8,10 +8,13 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
 
-        <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource MainListViewItemStyle}">
+        <Style x:Key="ControlListViewItemStyle" TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource MainListViewItemStyle}">
             <Setter Property="Height" Value="34"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </Style>
+
+        <Style x:Key="ModListViewItem" TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ControlListViewItemStyle}">
             <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
         </Style>
 
@@ -31,7 +34,9 @@
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
-        <ListView x:Name="lstCatalogMods" ItemsSource="{Binding CatalogModList}"
+        <ListView x:Name="lstCatalogMods" 
+                  ItemsSource="{Binding CatalogModList}"
+                  ItemContainerStyle="{StaticResource ModListViewItem}"
                   SelectionChanged="lstCatalogMods_SelectionChanged"
                   GridViewColumnHeader.Click="GridViewColumnHeaderClickedHandler"
                   ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -107,6 +112,7 @@
                   Margin="0,5,0,0"
                   ItemsSource="{Binding DownloadList, UpdateSourceTrigger=PropertyChanged}"
                   SelectedItem="{Binding SelectedDownload, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  ItemContainerStyle="{StaticResource ControlListViewItemStyle}"
                   MinHeight="100"
                   MaxHeight="150">
             <ListView.View>

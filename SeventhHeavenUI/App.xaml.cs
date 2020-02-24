@@ -158,7 +158,7 @@ namespace SeventhHeavenUI
                     }
                     catch (Exception ex)
                     {
-                        Sys.Message(new WMessage("Mod " + irofilenoext + " failed to import: " + ex.ToString(), true));
+                        Sys.Message(new WMessage("Mod " + irofilenoext + " failed to import: " + ex.ToString(), true) { LoggedException = ex });
                         continue;
                     }
 

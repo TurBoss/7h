@@ -200,7 +200,7 @@ namespace SeventhHeaven.ViewModels
                 string tempFile = Path.Combine(tempFolder, $"{name.Replace(" ", "")}_{Path.GetRandomFileName()}.txt");
                 Directory.CreateDirectory(tempFolder);
 
-                var profileDetails = profileToView.GetDetails();
+                IEnumerable<string> profileDetails = profileToView.GetDetails();
 
                 File.WriteAllLines(tempFile, profileDetails);
 
@@ -208,7 +208,7 @@ namespace SeventhHeaven.ViewModels
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage($"Failed to open profile details: {e.Message}", true));
+                Sys.Message(new WMessage($"Failed to open profile details: {e.Message}", true) { LoggedException = e });
             }
         }
 

@@ -467,10 +467,8 @@ It may not work properly unless you find and install the requirements.";
                                 }
                                 catch (Exception ex)
                                 {
-                                    Logger.Error(ex);
-
                                     sub.FailureCount++;
-                                    Sys.Message(new WMessage() { Text = $"Failed to load subscription {subUrl}: {ex.Message}" });
+                                    Sys.Message(new WMessage() { Text = $"Failed to load subscription {subUrl}: {ex.Message}", LoggedException = ex });
                                 }
                                 finally
                                 {

@@ -299,9 +299,9 @@ namespace Iros._7th.Workshop
                 {
                     Settings = Util.Deserialize<Settings>(sfile);
                 }
-                catch
+                catch(Exception e)
                 {
-                    Sys.Message(new WMessage() { Text = "Error loading settings - please configure 7H using the Workshop/Settings menu" });
+                    Sys.Message(new WMessage("Error loading settings - please configure 7H using the Workshop/Settings menu", WMessageLogLevel.Error, e));
                 }
             }
             if (Settings == null)
@@ -317,9 +317,9 @@ namespace Iros._7th.Workshop
                 {
                     Library = Util.Deserialize<Library>(lfile);
                 }
-                catch
+                catch(Exception e)
                 {
-                    Sys.Message(new WMessage() { Text = "Error loading library file" });
+                    Sys.Message(new WMessage("Error loading library file", WMessageLogLevel.Error, e));
                 }
             }
 
@@ -431,9 +431,10 @@ namespace Iros._7th.Workshop
                             }
                             catch (Exception ex)
                             {
-                                Sys.Message(new WMessage("Mod " + name + " failed to import: " + ex.ToString(), true));
+                                Sys.Message(new WMessage("Mod " + name + " failed to import: " + ex.ToString(), true) { LoggedException = ex });
                                 continue;
                             }
+
                             Sys.Message(new WMessage() { Text = "Auto imported mod " + name });
                         }
                     }
@@ -453,14 +454,14 @@ namespace Iros._7th.Workshop
                                 string modName = ModImporter.ParseNameFromFileOrFolder(Path.GetFileNameWithoutExtension(iro));
                                 ModImporter.ImportMod(iro, modName, true, true);
                             }
-                            catch (_7thWrapperLib.IrosArcException)
+                            catch (_7thWrapperLib.IrosArcException ae)
                             {
-                                Sys.Message(new WMessage($"Could not import .iro mod {Path.GetFileNameWithoutExtension(iro)}, file is corrupt", true));
+                                Sys.Message(new WMessage($"Could not import .iro mod {Path.GetFileNameWithoutExtension(iro)}, file is corrupt", true) { LoggedException = ae });
                                 continue;
                             }
                             catch (Exception ex)
                             {
-                                Sys.Message(new WMessage("Mod " + name + " failed to import: " + ex.ToString(), true));
+                                Sys.Message(new WMessage("Mod " + name + " failed to import: " + ex.ToString(), true) { LoggedException = ex });
                                 continue;
                             }
 

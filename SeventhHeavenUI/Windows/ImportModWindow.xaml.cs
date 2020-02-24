@@ -45,7 +45,7 @@ namespace SeventhHeaven.Windows
                 
                 if (taskResult.IsFaulted)
                 {
-                    Sys.Message(new WMessage($"Failed to import - {taskResult.Exception.GetBaseException()?.Message}", true));
+                    Sys.Message(new WMessage($"Failed to import - {taskResult.Exception.GetBaseException()?.Message}", true) { LoggedException = taskResult.Exception.GetBaseException() });
                     return;
                 }
 
