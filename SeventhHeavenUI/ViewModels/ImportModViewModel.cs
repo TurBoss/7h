@@ -229,7 +229,7 @@ namespace SeventhHeaven.ViewModels
 
                 importer = new ModImporter();
                 importer.ImportProgressChanged += Importer_ImportProgressChanged;
-                importer.Import(PathToIroArchiveInput, fileName, true, false);
+                importer.Import(PathToIroArchiveInput, ModImporter.ParseNameFromFileOrFolder(fileName), true, false);
 
                 Sys.Message(new WMessage($"Successfully imported {fileName}!"));
                 return true;
@@ -282,7 +282,7 @@ namespace SeventhHeaven.ViewModels
 
                 importer = new ModImporter();
                 importer.ImportProgressChanged += Importer_ImportProgressChanged;
-                importer.Import(PathToModFolderInput, folderName, false, false);
+                importer.Import(PathToModFolderInput, ModImporter.ParseNameFromFileOrFolder(folderName), false, false);
 
                 Sys.Message(new WMessage($"Successfully imported {folderName}!", true));
                 return true;

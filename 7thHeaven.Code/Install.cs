@@ -122,7 +122,7 @@ namespace Iros._7th.Workshop
             Action onCancel = () => Sys.RevertStatus(m.ID);
             Action<Exception> onError = ex =>
             {
-                Sys.Message(new WMessage($"Error occurred downloading/installing {m.Name} - {ex.Message}"));
+                Sys.Message(new WMessage($"Error occurred downloading/installing {m.Name} - {ex.Message}", WMessageLogLevel.Error, ex));
                 Sys.RevertStatus(m.ID);
             };
 
@@ -538,14 +538,17 @@ namespace Iros._7th.Workshop
                         fs.Read(sig, 0, 4);
                         int isig = BitConverter.ToInt32(sig, 0);
                         if (isig == _7thWrapperLib.IrosArc.SIG)
-                        { //plain IRO file, just move into place
+                        { 
+                            //plain IRO file, just move into place
                             fs.Close();
                             using (var iro = new _7thWrapperLib.IrosArc(source))
                                 if (!iro.CheckValid())
                                     throw new Exception("IRO archive appears to be invalid: corrupted download?");
 
                             SetPCComplete(50);
-                            System.IO.File.Move(source, _dest);
+
+                            System.IO.File.Copy(source, _dest, overwrite: true);
+                            System.IO.File.Delete(source);
                         }
                         else
                         {
@@ -557,7 +560,8 @@ namespace Iros._7th.Workshop
                                 iroEnt.WriteToFile(_dest);
                             }
                             else
-                            { //extract entire archive...
+                            { 
+                                //extract entire archive...
                                 if (_dest.EndsWith(".iro", StringComparison.InvariantCultureIgnoreCase)) _dest = _dest.Substring(0, _dest.Length - 4);
                                 var entries = archive.Entries.ToArray();
                                 string extractTo = _dest;
@@ -580,7 +584,7 @@ namespace Iros._7th.Workshop
                                             }
                                             count++;
                                             float prog = (float) count / (float)entries.Length;
-                                            SetPCComplete((int) (100 * prog));
+                                            SetPCComplete((int) (50 * prog) + 50); // start at 50% go up to 100%
                                         }
                                     }
                                 }
@@ -603,14 +607,16 @@ namespace Iros._7th.Workshop
             {
                 if (e.Error != null)
                 {
-                    Sys.Message(new WMessage() { Text = "Error downloading " + Mod.Name + "\r\n" + e.Error.ToString() });
+                    Sys.Message(new WMessage() { Text = $"Error downloading {Mod.Name}\r\n{e.Error.ToString()}", LoggedException = e.Error });
                     Sys.RevertStatus(Mod.ID);
+                    return;
                 }
-                else
+
+                InstalledItem inst = Sys.Library.GetItem(Mod.ID);
+
+                if (inst == null)
                 {
-                    //ProcessDownload(file);
-                    var inst = Sys.Library.GetItem(Mod.ID);
-                    if (inst == null)
+                    try
                     {
                         Mod = new ModImporter().ParseModXmlFromSource(_dest, Mod);
 
@@ -621,10 +627,19 @@ namespace Iros._7th.Workshop
                             UpdateType = Sys.Library.DefaultUpdate,
                             Versions = new List<InstalledVersion>() { new InstalledVersion() { InstalledLocation = System.IO.Path.GetFileName(_dest), VersionDetails = Mod.LatestVersion } }
                         });
-                        Sys.Message(new WMessage() { Text = "Installed " + Mod.Name, Link = "iros://" + Mod.ID.ToString() });
-                        Sys.SetStatus(Mod.ID, ModStatus.Installed);
                     }
-                    else
+                    catch (Exception ex)
+                    {
+                        base.Error(ex);
+                        return;
+                    }
+
+                    Sys.Message(new WMessage() { Text = "Installed " + Mod.Name, Link = "iros://" + Mod.ID.ToString() });
+                    Sys.SetStatus(Mod.ID, ModStatus.Installed);
+                }
+                else
+                {
+                    try
                     {
                         inst.CachedDetails = new ModImporter().ParseModXmlFromSource(_dest, Mod);
 
@@ -635,19 +650,30 @@ namespace Iros._7th.Workshop
                             {
                                 string ifile = System.IO.Path.Combine(Sys.Settings.LibraryLocation, ivfile);
                                 if (System.IO.File.Exists(ifile))
+                                {
                                     System.IO.File.Delete(ifile);
+                                }
                                 else if (System.IO.Directory.Exists(ifile))
+                                {
                                     System.IO.Directory.Delete(ifile, true);
+                                }
                             }
                             inst.Versions.Clear();
                         }
 
                         inst.Versions.Add(new InstalledVersion() { InstalledLocation = System.IO.Path.GetFileName(_dest), VersionDetails = Mod.LatestVersion });
-                        Sys.Message(new WMessage() { Text = "Updated " + Mod.Name, Link = "iros://" + Mod.ID.ToString() });
-                        Sys.SetStatus(Mod.ID, ModStatus.Installed);
                     }
-                    Sys.Save();
+                    catch (Exception ex)
+                    {
+                        base.Error(ex);
+                        return;
+                    }
+
+                    Sys.Message(new WMessage() { Text = "Updated " + Mod.Name, Link = "iros://" + Mod.ID.ToString() });
+                    Sys.SetStatus(Mod.ID, ModStatus.Installed);
                 }
+
+                Sys.Save();
             }
 
             public override void Schedule()
