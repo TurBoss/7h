@@ -111,7 +111,13 @@ namespace Iros._7th.Workshop {
 
         void wc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e) {
             if (e.Error != null || e.Cancelled)
+            {
+                if (System.IO.File.Exists(_file))
+                {
+                    System.IO.File.Delete(_file);
+                }
                 DownloadFileCompleted(this, e);
+            }
             else {
                 if (_mode == 0) {
                     if (new System.IO.FileInfo(_file).Length < 100 * 1024) {

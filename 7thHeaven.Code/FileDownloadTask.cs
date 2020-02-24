@@ -216,6 +216,7 @@ namespace _7thHeaven.Code
             }
             else if (IsCanceled)
             {
+                File.Delete(_destination); // delete the partially downloaded file since canceled
                 DownloadFileCompleted?.Invoke(this, new AsyncCompletedEventArgs(null, cancelled: true, _userState));
             }
         }
@@ -246,7 +247,8 @@ namespace _7thHeaven.Code
         {
             if (IsPaused)
             {
-                // if the download is paused when cancelling download then invoke the event here
+                // if the download is paused when cancelling download then invoke the event here and delete partially downloaded file
+                File.Delete(_destination); 
                 DownloadFileCompleted?.Invoke(this, new AsyncCompletedEventArgs(null, cancelled: true, _userState));
             }
 

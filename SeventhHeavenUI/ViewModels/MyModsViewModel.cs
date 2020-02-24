@@ -738,7 +738,7 @@ namespace SeventhHeavenUI.ViewModels
             Func<string, string> imageReader;
             Func<string, Stream> audioReader;
 
-            string config_temp_folder = Path.Combine(Sys.PathToTempFolder, "configmod");
+            string config_temp_folder = Path.Combine(Sys.PathToTempFolder, "configmod", modToConfigure.InstallInfo.CachedDetails.ID.ToString());
             string pathToModXml = Path.Combine(Sys.Settings.LibraryLocation, installed.InstalledLocation);
 
             // wire up the imageReader and audioReader to extract/read files from the .iro archive
