@@ -1145,6 +1145,7 @@ It may not work properly unless you find and install the requirements.";
                 };
             }
 
+            UpdatePauseDownloadButtonUI();
             item.IProc.Schedule();
         }
 

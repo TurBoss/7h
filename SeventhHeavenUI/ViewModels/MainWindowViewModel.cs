@@ -396,7 +396,7 @@ They will be automatically turned off.";
             {
                 var selected = MyMods.GetSelectedMod();
 
-                if (selected != null)
+                if (selected?.InstallInfo != null)
                 {
                     if (selected.InstallInfo.IsUpdateAvailable)
                     {
@@ -436,7 +436,7 @@ They will be automatically turned off.";
             {
                 var selected = MyMods.GetSelectedMod();
 
-                if (selected != null && selected.InstallInfo.IsUpdateAvailable)
+                if (selected?.InstallInfo != null && selected.InstallInfo.IsUpdateAvailable)
                 {
                     ModStatus status = Sys.GetStatus(selected.InstallInfo.ModID);
                     if (status != ModStatus.Downloading && status != ModStatus.Updating)
@@ -1625,8 +1625,13 @@ They will be automatically turned off.";
                     updateType = UpdateType.Notify;
                 }
 
-                selected.InstallInfo.UpdateType = updateType; // update info in viewmodel
-                Sys.Library.GetItem(selected.InstallInfo.ModID).UpdateType = updateType; // and also make sure info is updated in Sys.Library so it will be saved back to library.xml
+                InstalledItem libraryItem = Sys.Library.GetItem(selected.InstallInfo.ModID);
+                if (selected.InstallInfo != null && libraryItem != null)
+                {
+                    selected.InstallInfo.UpdateType = updateType; // update info in viewmodel
+                    libraryItem.UpdateType = updateType; // and also make sure info is updated in Sys.Library so it will be saved back to library.xml
+
+                }
         
                 NotifyPropertyChanged(nameof(UpdateModButtonText));
                 NotifyPropertyChanged(nameof(IsUpdateModButtonEnabled));

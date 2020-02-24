@@ -27,7 +27,7 @@ namespace _7thHeaven.Code
         private string _sourceUrl;
         private string _destination;
         private int _chunkSize;
-        private Lazy<long> _contentLength;
+        private long? _contentLength;
         private bool _checkedContentRange;
 
         private object _userState;
@@ -38,7 +38,13 @@ namespace _7thHeaven.Code
         public WebHeaderCollection Headers { get; set; }
 
         public long BytesWritten { get; private set; }
-        public long ContentLength { get { return _contentLength.Value; } }
+        public long ContentLength
+        {
+            get
+            {
+                return _contentLength.GetValueOrDefault(-1);
+            }
+        }
 
         public bool Done { get { return ContentLength == BytesWritten; } }
 
@@ -91,7 +97,7 @@ namespace _7thHeaven.Code
             _destination = destination;
             _chunkSize = chunkSizeInBytes;
             _checkedContentRange = false;
-            _contentLength = new Lazy<long>(() => GetContentLength()); // will fallback to trying to get Content-Range header if Content-Length is -1
+            _contentLength = null;
             _userState = userState;
             _isStarted = false;
 
@@ -100,13 +106,24 @@ namespace _7thHeaven.Code
             BytesWritten = 0;
         }
 
-        private long GetContentLength()
+        private async Task<long> GetContentLengthAsync()
         {
             var request = (HttpWebRequest)WebRequest.Create(_sourceUrl);
             request.Method = "HEAD";
+            request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)";
+            request.KeepAlive = false;
+            request.Proxy = null;
+            request.Timeout = 5000; // should not take more than 5 seconds to get the content-length
 
-            using (var response = request.GetResponse())
-                return response.ContentLength;
+            try
+            {
+                using (WebResponse response = await request.GetResponseAsync())
+                    return response.ContentLength;
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
         }
 
         private long GetContentRange(WebResponse response)
@@ -148,12 +165,17 @@ namespace _7thHeaven.Code
                 request.Referer = Headers["Referer"];
             }
 
+            if (_contentLength == null)
+            {
+                _contentLength = await GetContentLengthAsync();
+            }
+
             using (WebResponse response = await request.GetResponseAsync())
             {
                 if (ContentLength == -1 && !_checkedContentRange)
                 {
                     _checkedContentRange = true;
-                    _contentLength = new Lazy<long>(() => GetContentRange(response));
+                    _contentLength = GetContentRange(response);
                 }
 
                 using (Stream responseStream = response.GetResponseStream())

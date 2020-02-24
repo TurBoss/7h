@@ -205,7 +205,7 @@ namespace Iros._7th.Workshop
             }
             catch (Exception ex)
             {
-                Sys.Message(new WMessage($"WARNING: failed to get mod info due to unknown exception: {ex.Message}", true) { LoggedException = ex });
+                Sys.Message(new WMessage($"WARNING: failed to get mod info due to unknown exception (commonly caused by incorrect xml): {ex.Message}", WMessageLogLevel.LogOnly, ex));
                 return null;
             }
 

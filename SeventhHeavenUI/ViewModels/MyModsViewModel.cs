@@ -727,8 +727,14 @@ namespace SeventhHeavenUI.ViewModels
                 return;
             }
 
+            _7thWrapperLib.ModInfo info = modToConfigure.InstallInfo.GetModInfo();
+            if (info == null)
+            {
+                Sys.Message(new WMessage($"Can not configure mod {modToConfigure.Name} - Failed to read mod.xml", true));
+                return;
+            }
+
             InstalledVersion installed = Sys.Library.GetItem(modToConfigure.InstallInfo.ModID)?.LatestInstalled;
-            _7thWrapperLib.ModInfo info = null;
             Func<string, string> imageReader;
             Func<string, Stream> audioReader;
 
@@ -740,12 +746,6 @@ namespace SeventhHeavenUI.ViewModels
             if (pathToModXml.EndsWith(".iro", StringComparison.InvariantCultureIgnoreCase))
             {
                 var arc = new _7thWrapperLib.IrosArc(pathToModXml);
-                if (arc.HasFile("mod.xml"))
-                {
-                    var doc = new System.Xml.XmlDocument();
-                    doc.Load(arc.GetData("mod.xml"));
-                    info = new _7thWrapperLib.ModInfo(doc, Sys._context);
-                }
 
                 imageReader = s =>
                 {
@@ -803,9 +803,6 @@ namespace SeventhHeavenUI.ViewModels
             else
             {
                 // if mod is in a folder than wire up imageReader and audioReader to return path to file and audio file stream
-                string file = Path.Combine(pathToModXml, "mod.xml");
-                if (File.Exists(file))
-                    info = new _7thWrapperLib.ModInfo(file, Sys._context);
 
                 imageReader = s =>
                 {
