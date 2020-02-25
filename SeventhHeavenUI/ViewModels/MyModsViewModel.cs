@@ -615,6 +615,7 @@ namespace SeventhHeavenUI.ViewModels
             }
 
             Install.Uninstall(installed);
+            Sys.Message(new WMessage() { Text = "Uninstalled " + installed.CachedDetails.Name });
             ReloadModList();
         }
 

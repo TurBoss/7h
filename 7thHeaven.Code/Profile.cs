@@ -117,7 +117,7 @@ namespace Iros._7th.Workshop {
         {
             List<string> removedMods = new List<string>();
 
-            foreach (var item in Items.ToList())
+            foreach (ProfileItem item in Items.ToList())
             {
                 if (Sys.Library.GetItem(item.ModID) == null)
                 {

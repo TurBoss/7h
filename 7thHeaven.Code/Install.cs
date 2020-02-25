@@ -70,30 +70,8 @@ namespace Iros._7th.Workshop
 
         public static void Uninstall(InstalledItem ii)
         {
-            /*
-            List<string> files = new List<string>(), dirs = new List<string>();
-            foreach (var ver in ii.Versions) {
-                string file = System.IO.Path.Combine(Sys.Settings.LibraryLocation, ver.InstalledLocation);
-                if (System.IO.File.Exists(file))
-                    files.Add(ver.InstalledLocation);
-                else if (System.IO.Directory.Exists(file))
-                    dirs.Add(ver.InstalledLocation);
-            }
-
-            string err;
-            switch (CheckDeleteAll(files, dirs, out err)) {
-                case DeleteStatus.DidntStart:
-                    Sys.Message(new WMessage() { Text = err });
-                    return;
-                case DeleteStatus.Partial:
-                    Sys.Message(new WMessage() { Text = "Some files could not be deleted, were they in use?" });
-                    break;
-            }
-             */
-
             Sys.Library.QueuePendingDelete(ii.Versions.Select(v => v.InstalledLocation));
             Sys.Library.RemoveInstall(ii);
-            Sys.Message(new WMessage() { Text = "Uninstalled " + ii.CachedDetails.Name });
             Sys.Library.AttemptDeletions();
         }
 

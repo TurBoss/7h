@@ -23,11 +23,23 @@ namespace _7thHeaven.Code
             }
 
             // validate mod with same ID doesn't exist in library
+            // ... if it already exists then check if it's newer version to update to
             InstalledItem existingItem = Sys.Library.GetItem(m.ID);
+
             if (existingItem != null)
             {
-                throw new DuplicateModException($"A mod ({existingItem.CachedDetails.Name}) with the same ID already exists in your library.");
+                if (existingItem.LatestInstalled.VersionDetails.Version >= m.LatestVersion.Version)
+                {
+                    throw new DuplicateModException($"A mod ({existingItem.CachedDetails.Name} v{existingItem.LatestInstalled.VersionDetails.Version}) with the same ID already exists in your library.");
+                }
+                else
+                {
+                    // mod is being updated so uninstall current version
+                    Install.Uninstall(existingItem);
+                    Sys.ActiveProfile.RemoveDeletedItems();
+                }
             }
+
 
             string copyLocation;
             if (noCopy)

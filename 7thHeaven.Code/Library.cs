@@ -89,7 +89,7 @@ namespace Iros._7th.Workshop
                         continue;
                     }
 
-                    System.Diagnostics.Debug.Write(String.Format("File {0} successfully deleted.", path));
+                    Sys.Message(new WMessage($"File {path} successfully deleted.", WMessageLogLevel.LogOnly));
                     PendingDelete.RemoveAt(i);
                 }
 
