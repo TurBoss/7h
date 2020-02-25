@@ -973,32 +973,20 @@ It may not work properly unless you find and install the requirements.";
         void WebRequest_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             DownloadItem item = (DownloadItem)e.UserState;
+            CleanUpFileDownloadTask(item);
 
             if (e.Cancelled)
             {
-                CleanUpFileDownloadTask(item);
                 RemoveFromDownloadList(item);
             }
             else if (e.Error != null)
             {
-                if (item.Category == DownloadCategory.Mod && e.Error.Message.IndexOf("quota", StringComparison.InvariantCultureIgnoreCase) >= 0)
-                {
-                    // pause instead of cancelling mod download since quota exceeded
-                    Sys.Message(new WMessage($"Paused {item.ItemName} - bandwidth quota exceeded. Resume the download later.", true) { LoggedException = e.Error });
-                    DownloadItemViewModel itemViewModel = DownloadList.FirstOrDefault(d => d.Download.UniqueId == item.UniqueId);
-                    PauseOrResumeDownload(itemViewModel);
-                }
-                else
-                {
-                    CleanUpFileDownloadTask(item);
-                    string msg = $"Error {item.ItemName} - {e.Error.GetBaseException().Message}";
-                    Sys.Message(new WMessage(msg, WMessageLogLevel.Error, e.Error.GetBaseException()));
-                    item.OnError?.Invoke();
-                }
+                string msg = $"Error {item.ItemName} - {e.Error.GetBaseException().Message}";
+                Sys.Message(new WMessage(msg, WMessageLogLevel.Error, e.Error.GetBaseException()));
+                item.OnError?.Invoke();
             }
             else
             {
-                CleanUpFileDownloadTask(item);
                 ProcessDownloadComplete(item, e);
             }
         }
