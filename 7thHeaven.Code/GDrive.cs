@@ -11,8 +11,10 @@ using System.Net;
 using System.ComponentModel;
 using _7thHeaven.Code;
 
-namespace Iros._7th.Workshop {
-    public class GDrive {
+namespace Iros._7th.Workshop
+{
+    public class GDrive
+    {
 
         public event ProgressChangedEventHandler FileDownloadProgressChanged;
         public event DownloadProgressChangedEventHandler DownloadProgressChanged;
@@ -26,23 +28,27 @@ namespace Iros._7th.Workshop {
         //0 = Not sure, trying initial download
         //1 = First download completed, HTML detecting, retrying
 
-        public void CancelAsync() {
+        public void CancelAsync()
+        {
             if (_webClient != null)
             {
                 _webClient.CancelAsync();
             }
         }
 
-        public long GetContentLength() {
+        public long GetContentLength()
+        {
             if (_webClient == null)
             {
                 return -1;
             }
 
             string crange = _webClient.ResponseHeaders["Content-Range"];
-            if (crange != null) {
+            if (crange != null)
+            {
                 int spos = crange.LastIndexOf('/');
-                if (spos >= 0) {
+                if (spos >= 0)
+                {
                     long range = -1;
                     long.TryParse(crange.Substring(spos + 1), out range);
                     return range;
@@ -51,45 +57,54 @@ namespace Iros._7th.Workshop {
             return -1;
         }
 
-        private class WebClientEx : WebClient {
-            public WebClientEx(CookieContainer container) {
+        private class WebClientEx : WebClient
+        {
+            public WebClientEx(CookieContainer container)
+            {
                 this.container = container;
             }
 
             private readonly CookieContainer container = new CookieContainer();
 
-            protected override WebRequest GetWebRequest(Uri address) {
+            protected override WebRequest GetWebRequest(Uri address)
+            {
                 WebRequest r = base.GetWebRequest(address);
                 var request = r as HttpWebRequest;
-                if (request != null) {
+                if (request != null)
+                {
                     request.CookieContainer = container;
                     request.AddRange(0);
                 }
                 return r;
             }
 
-            protected override WebResponse GetWebResponse(WebRequest request, IAsyncResult result) {
+            protected override WebResponse GetWebResponse(WebRequest request, IAsyncResult result)
+            {
                 WebResponse response = base.GetWebResponse(request, result);
                 ReadCookies(response);
                 return response;
             }
 
-            protected override WebResponse GetWebResponse(WebRequest request) {
+            protected override WebResponse GetWebResponse(WebRequest request)
+            {
                 WebResponse response = base.GetWebResponse(request);
                 ReadCookies(response);
                 return response;
             }
 
-            private void ReadCookies(WebResponse r) {
+            private void ReadCookies(WebResponse r)
+            {
                 var response = r as HttpWebResponse;
-                if (response != null) {
+                if (response != null)
+                {
                     CookieCollection cookies = response.Cookies;
                     container.Add(cookies);
                 }
             }
         }
 
-        public void Download(string gUrl, string destination, object userState) {
+        public void Download(string gUrl, string destination, object userState)
+        {
             //https://docs.google.com/uc?id=0B-Q_AObuWRSXNW9rb3FxS0F1Qk0&export=download
             //https://docs.google.com/uc?export=download&confirm=_bQe&id=0B-Q_AObuWRSXNW9rb3FxS0F1Qk0
             gUrl = String.Format("https://docs.google.com/uc?id={0}&export=download", gUrl);
@@ -109,7 +124,8 @@ namespace Iros._7th.Workshop {
             wc.DownloadFileAsync(new Uri(gUrl), destination, userState);
         }
 
-        void wc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e) {
+        void wc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
             if (e.Error != null || e.Cancelled)
             {
                 if (System.IO.File.Exists(_file))
@@ -118,18 +134,25 @@ namespace Iros._7th.Workshop {
                 }
                 DownloadFileCompleted(this, e);
             }
-            else {
-                if (_mode == 0) {
-                    if (new System.IO.FileInfo(_file).Length < 100 * 1024) {
+            else
+            {
+                if (_mode == 0)
+                {
+                    if (new System.IO.FileInfo(_file).Length < 100 * 1024)
+                    {
                         string text = System.IO.File.ReadAllText(_file);
                         int html = text.IndexOf("<html", StringComparison.InvariantCultureIgnoreCase);
-                        if (html >= 0 && html < 100) {
+                        if (html >= 0 && html < 100)
+                        {
                             int ilink = text.IndexOf("\"uc-download-link\"", StringComparison.InvariantCultureIgnoreCase);
-                            if (ilink > 0) {
+                            if (ilink > 0)
+                            {
                                 int href = text.IndexOf("href=\"", ilink, StringComparison.InvariantCultureIgnoreCase);
-                                if (href > 0) {
+                                if (href > 0)
+                                {
                                     int hrefend = text.IndexOf('"', href + 6);
-                                    if (hrefend > 0) {
+                                    if (hrefend > 0)
+                                    {
                                         string url = text.Substring(href + 6, hrefend - href - 6).Replace("&amp;", "&");
                                         if (url.IndexOf("://") < 0) url = new Uri(_url).GetLeftPart(UriPartial.Authority) + url;
 
@@ -168,19 +191,26 @@ namespace Iros._7th.Workshop {
                             int tstart = text.IndexOf("<title>", StringComparison.InvariantCultureIgnoreCase);
                             int tend = text.IndexOf("</title>", StringComparison.InvariantCultureIgnoreCase);
                             string err = "Couldn't parse data";
-                            if (tstart > 0 && tend > 0) {
+                            if (tstart > 0 && tend > 0)
+                            {
                                 err = text.Substring(tstart + 7, tend - tstart - 7);
                             }
 
                             //If we get here, it went wrong
                             System.IO.File.Delete(_file);
                             DownloadFileCompleted?.Invoke(this, new AsyncCompletedEventArgs(new Exception(err), false, _state));
-                        } else {
+                        }
+                        else
+                        {
                             DownloadFileCompleted?.Invoke(this, e);
                         }
-                    } else
+                    }
+                    else
+                    {
                         DownloadFileCompleted?.Invoke(this, e);
-                } else
+                    }
+                }
+                else
                 {
                     // actual file being downloaded has finished successfully at this point
                     CleanUpFileDownloadTask();
@@ -219,8 +249,10 @@ namespace Iros._7th.Workshop {
             FileDownloadProgressChanged?.Invoke(this, e);
         }
 
-        void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
-            if (_mode != 0 || e.BytesReceived > 100 * 1024) {
+        void wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            if (_mode != 0 || e.BytesReceived > 100 * 1024)
+            {
                 DownloadProgressChanged?.Invoke(this, e);
             }
         }
