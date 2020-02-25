@@ -70,6 +70,8 @@ namespace SeventhHeaven.Classes
         public FF7Version InstallVersion { get; set; }
         public string DriveLetter { get; set; }
 
+        public bool DidMountVirtualDisc { get; set; }
+
         /// <summary>
         /// Used to ensure only one thread/task is trying to mount/unmount the disc
         /// </summary>
@@ -362,6 +364,8 @@ namespace SeventhHeaven.Classes
             //
             // Get Drive Letter and auto mount if needed
             //
+            Instance.DidMountVirtualDisc = false;
+
             Instance.RaiseProgressChanged("Looking for game disc ...");
             Instance.DriveLetter = GetDriveLetter();
 
@@ -391,6 +395,7 @@ namespace SeventhHeaven.Classes
                             return false;
                         }
 
+                        Instance.DidMountVirtualDisc = true;
                         Instance.RaiseProgressChanged("Looking for game disc after mounting ...");
                         Instance.DriveLetter = GetDriveLetter();
 
@@ -718,22 +723,31 @@ namespace SeventhHeaven.Classes
                         }
                     }
 
-                    Instance._plugins.Clear();
-
-                    Instance.RaiseProgressChanged("Stopping other programs for mods started by 7H ...");
-                    Instance.StopAllSideProcessesForMods();
-
-                    if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && IsVirtualIsoMounted(Instance.DriveLetter))
+                    // wrapped in try/catch so an unhandled exception when exiting the game does not crash 7H
+                    try
                     {
-                        Instance.RaiseProgressChanged("Auto unmounting game disc ...");
-                        UnmountIso();
+                        Instance._plugins.Clear();
+
+                        Instance.RaiseProgressChanged("Stopping other programs for mods started by 7H ...");
+                        Instance.StopAllSideProcessesForMods();
+
+                        if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && Instance.DidMountVirtualDisc && IsVirtualIsoMounted(Instance.DriveLetter))
+                        {
+                            Instance.RaiseProgressChanged("Auto unmounting game disc ...");
+                            UnmountIso();
+                        }
+
+                        // ensure Reunion is re-enabled when ff7 process exits in case it failed above for any reason
+                        if (File.Exists(Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "Reunion.dll.bak")))
+                        {
+                            EnableOrDisableReunionMod(doEnable: true);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error(ex);
                     }
 
-                    // ensure Reunion is re-enabled when ff7 process exits in case it failed above for any reason
-                    if (File.Exists(Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "Reunion.dll.bak")))
-                    {
-                        EnableOrDisableReunionMod(doEnable: true);
-                    }
                 };
 
 
@@ -969,16 +983,23 @@ namespace SeventhHeaven.Classes
                 ff7Proc.EnableRaisingEvents = true;
                 ff7Proc.Exited += (o, e) =>
                 {
-                    if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && IsVirtualIsoMounted(Instance.DriveLetter))
+                    try
                     {
-                        Instance.RaiseProgressChanged("Auto unmounting game disc ...");
-                        UnmountIso();
-                    }
+                        if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && Instance.DidMountVirtualDisc && IsVirtualIsoMounted(Instance.DriveLetter))
+                        {
+                            Instance.RaiseProgressChanged("Auto unmounting game disc ...");
+                            UnmountIso();
+                        }
 
-                    // ensure Reunion is re-enabled when ff7 process exits in case it failed above for any reason
-                    if (File.Exists(Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "Reunion.dll.bak")))
+                        // ensure Reunion is re-enabled when ff7 process exits in case it failed above for any reason
+                        if (File.Exists(Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "Reunion.dll.bak")))
+                        {
+                            EnableOrDisableReunionMod(doEnable: true);
+                        }
+                    }
+                    catch (Exception ex)
                     {
-                        EnableOrDisableReunionMod(doEnable: true);
+                        Logger.Error(ex);
                     }
                 };
 
@@ -1611,6 +1632,10 @@ namespace SeventhHeaven.Classes
         /// <summary>
         /// Unmounts FF7DISC1
         /// </summary>
+        /// <remarks>
+        /// This assumes the iso image at Path.Combine(Sys._7HFolder, "Resources", "FF7DISC1.ISO") is the mounted iso.
+        /// ... this code does not handle unmounting other iso files.
+        /// </remarks>
         /// <returns></returns>
         public static bool UnmountIso()
         {
@@ -1651,17 +1676,15 @@ namespace SeventhHeaven.Classes
         /// <param name="driveLetter"></param>
         public static bool IsVirtualIsoMounted(string driveLetter)
         {
-            foreach (string movieFile in FF7FileLister.GetMovieFiles().Keys)
-            {
-                string fullPathToMovie = Path.Combine(driveLetter, "ff7", "movies", movieFile);
+            DriveInfo driveInfo = DriveInfo.GetDrives().FirstOrDefault(d => d.IsReady && d.Name == driveLetter);
 
-                if (File.Exists(fullPathToMovie))
-                {
-                    return false; // found a movie file at drive letter so assume this is a physical disc (virtual iso that we mount has no files on it)
-                }
+            if (driveInfo == null)
+            {
+                return false;
             }
 
-            return true;
+            // the .iso we mount has the following attributes so check for these
+            return driveInfo.DriveFormat == "UDF" && driveInfo.DriveType == DriveType.CDRom && driveInfo.TotalFreeSpace == 0;
         }
 
         public static bool CopyKeyboardInputCfg()
