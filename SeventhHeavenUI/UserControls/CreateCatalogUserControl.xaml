@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:SeventhHeaven.UserControls"
              xmlns:ctrl="clr-namespace:SeventhHeaven.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="850" d:DesignWidth="1200">
     <UserControl.Resources>
         <Style x:Key="createLabelStyle" TargetType="TextBlock" BasedOn="{StaticResource PrimaryTextBlockStyle}">
             <Setter Property="HorizontalAlignment" Value="Right"/>
@@ -34,12 +34,12 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="False">
         
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
-                <RowDefinition Height="3*"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -53,7 +53,7 @@
                     ToolTip="Ouputs current catalog.xml to below text area."
                     HorizontalAlignment="Left"
                     Width="80"
-                    Margin="5,0,165,0"/>
+                    Margin="5,0,165,5"/>
 
             <Button x:Name="btnSave"
                     Click="btnSave_Click"
@@ -61,7 +61,7 @@
                     Width="80"
                     ToolTip="Save catalog.xml to file"
                     HorizontalAlignment="Left"
-                    Margin="85,0,0,0"/>
+                    Margin="85,0,0,5"/>
 
             <Button x:Name="btnLoad"
                     Click="btnLoad_Click"
@@ -69,7 +69,7 @@
                     ToolTip="Load a catalog.xml file to edit"
                     HorizontalAlignment="Left"
                     Width="80"
-                    Margin="165,0,5,0"/>
+                    Margin="165,0,5,5"/>
 
             <Button x:Name="btnAdd"
                     Grid.Column="1"
@@ -78,22 +78,22 @@
                     ToolTip="Add mod to catalog"
                     HorizontalAlignment="Right"
                     Width="80"
-                    Margin="0,0,5,0"/>
+                    Margin="0,0,15,5"/>
 
             <Button x:Name="btnImport"
                     Grid.Column="1"
                     Click="btnImport_Click"
                     Content="Import"
-                    ToolTip="Import mod from mod.xml"
+                    ToolTip="Import mod from mod.xml or .iro"
                     HorizontalAlignment="Right"
                     Width="80"
-                    Margin="0,0,85,0"/>
+                    Margin="0,0,95,5"/>
 
             <ListView Grid.Row="1" x:Name="lstMods"
                       ItemContainerStyle="{StaticResource MainListViewItemStyle}"
                       ItemsSource="{Binding CatalogModList}"
+                      MaxHeight="{Binding ElementName=scrollInputs, Path=ActualHeight}"
                       VerticalAlignment="Stretch"
-                      MaxHeight="450"
                       SelectedItem="{Binding SelectedMod, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       Margin="5,0,0,0">
                 <ListView.View>
@@ -112,19 +112,20 @@
                      IsReadOnly="True"
                      VerticalScrollBarVisibility="Auto"
                      VerticalAlignment="Stretch"
-                     MaxLines="1000"
                      MinHeight="75"
                      MaxHeight="400"
-                     Margin="5,10,5,5"
+                     Margin="5,10,15,5"
                      Grid.Column="0" Grid.Row="2"
                      Grid.ColumnSpan="2"/>
 
-            <ScrollViewer Grid.Row="1" Grid.Column="1" Margin="0,0,5,0"
-                          Height="{Binding ElementName=lstMods, Path=ActualHeight}"
-                          VerticalAlignment="Top"
+            <ScrollViewer Grid.Row="1" Grid.Column="1" Margin="0,0,15,0"
+                          MaxHeight="450"
+                          x:Name="scrollInputs"
+                          VerticalAlignment="Stretch"
                           VerticalScrollBarVisibility="Auto">
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
@@ -171,8 +172,8 @@
                              AcceptsReturn="True"
                              AcceptsTab="True"
                              VerticalScrollBarVisibility="Auto"
-                             MaxLines="1000"
-                             Height="125"
+                             MaxLines="500"
+                             Height="100"
                              Grid.Column="1" Grid.Row="3"/>
 
                     <TextBlock Text="Category:"
@@ -196,34 +197,48 @@
                         Style="{StaticResource createTextboxStyle}"
                         Grid.Column="1" Grid.Row="5"/>
 
+                    <TextBlock Text="Release Notes:"
+                        Style="{StaticResource createLabelStyle}"
+                        Grid.Column="0"
+                        Grid.Row="6"/>
+                    <TextBox Text="{Binding ReleaseNotesInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource createTextboxStyle}"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             AcceptsTab="True"
+                             VerticalScrollBarVisibility="Auto"
+                             MaxLines="500"
+                             Height="100"
+                             Grid.Column="1" Grid.Row="6"/>
+
                     <TextBlock Text="Release Date:"
                                Style="{StaticResource createLabelStyle}"
                                Grid.Column="0"
-                               Grid.Row="6"/>
+                               Grid.Row="7"/>
                     <TextBox Text="{Binding ReleaseDateInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        Style="{StaticResource createTextboxStyle}"
-                        Grid.Column="1" Grid.Row="6"/>
-
-                    <TextBlock Text="Image Link:"
-                        Style="{StaticResource createLabelStyle}"
-                        Grid.Row="7"/>
-                    <TextBox Text="{Binding PreviewImageInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Style="{StaticResource createTextboxStyle}"
                         Grid.Column="1" Grid.Row="7"/>
 
-                    <TextBlock Text="Info Link:"
+                    <TextBlock Text="Image Link:"
                         Style="{StaticResource createLabelStyle}"
                         Grid.Row="8"/>
-                    <TextBox Text="{Binding InfoLinkInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    <TextBox Text="{Binding PreviewImageInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Style="{StaticResource createTextboxStyle}"
                         Grid.Column="1" Grid.Row="8"/>
+
+                    <TextBlock Text="Info Link:"
+                        Style="{StaticResource createLabelStyle}"
+                        Grid.Row="9"/>
+                    <TextBox Text="{Binding InfoLinkInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Style="{StaticResource createTextboxStyle}"
+                        Grid.Column="1" Grid.Row="9"/>
 
 
                     <TextBlock Text="Link Kind:"
                         Style="{StaticResource createLabelStyle}"
-                        Grid.Row="9"/>
+                        Grid.Row="10"/>
 
-                    <Grid Grid.Row="9"
+                    <Grid Grid.Row="10"
                           Grid.Column="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>

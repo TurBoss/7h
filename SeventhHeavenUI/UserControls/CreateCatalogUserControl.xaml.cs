@@ -1,5 +1,6 @@
 ﻿using SeventhHeaven.Classes;
 using SeventhHeavenUI.ViewModels;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -52,11 +53,20 @@ namespace SeventhHeaven.UserControls
 
         private void btnImport_Click(object sender, RoutedEventArgs e)
         {
-            string pathToFile = FileDialogHelper.BrowseForFile("mod .xml|*.xml", "Select mod.xml to Load");
+            string pathToFile = FileDialogHelper.BrowseForFile("mod .xml|*.xml|iro file (*.iro)|*.iro", "Select mod.xml or .iro file to Load");
 
             if (!string.IsNullOrEmpty(pathToFile))
             {
-                ViewModel.LoadModXml(pathToFile);
+                FileInfo info = new FileInfo(pathToFile);
+
+                if (info.Extension == ".xml")
+                {
+                    ViewModel.LoadModXml(pathToFile);
+                }
+                else
+                {
+                    ViewModel.LoadModXmlFromIro(pathToFile);
+                }
             }
         }
     }

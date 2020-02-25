@@ -275,10 +275,11 @@ namespace _7thHeaven.Code
                 }
 
                 parsedMod.LatestVersion.ReleaseNotes = doc.SelectSingleNode("/ModInfo/ReleaseNotes").NodeTextS();
-                if (string.IsNullOrWhiteSpace(parsedMod.ReleaseNotes))
+                if (string.IsNullOrWhiteSpace(parsedMod.LatestVersion.ReleaseNotes))
                 {
-                    parsedMod.ReleaseNotes = defaultModIfMissing.ReleaseNotes;
+                    parsedMod.LatestVersion.ReleaseNotes = defaultModIfMissing.LatestVersion.ReleaseNotes;
                 }
+
 
                 if (DateTime.TryParse(doc.SelectSingleNode("/ModInfo/ReleaseDate").NodeTextS(), out DateTime parsedDate))
                 {

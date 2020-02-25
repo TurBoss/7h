@@ -1,4 +1,5 @@
 ﻿using SeventhHeaven.Classes;
+using SeventhHeaven.Windows;
 using SeventhHeavenUI.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,6 +28,7 @@ namespace SeventhHeaven.UserControls
             if (!string.IsNullOrEmpty(pathToFile))
             {
                 ViewModel.PreviewImageInput = System.IO.Path.GetFileName(pathToFile);
+                MessageDialogWindow.Show($"Make sure to copy {ViewModel.PreviewImageInput} to the root folder of your mod so the preview image loads correctly.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 

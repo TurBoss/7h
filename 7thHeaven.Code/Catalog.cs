@@ -73,8 +73,6 @@ namespace Iros._7th.Workshop
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public string ReleaseNotes { get; set; }
-
         public string Category { get; set; }
 
         public string SourceCatalogName { get; set; }

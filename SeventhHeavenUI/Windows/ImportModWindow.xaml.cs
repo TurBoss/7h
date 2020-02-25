@@ -69,7 +69,7 @@ namespace SeventhHeaven.Windows
 
         private void btnBrowseIro_Click(object sender, RoutedEventArgs e)
         {
-            string selectedFile = FileDialogHelper.BrowseForFile("iro archive (*.iro)|*.iro", "Select .iro Archive File");
+            string selectedFile = FileDialogHelper.BrowseForFile("iro file (*.iro)|*.iro", "Select .iro File");
 
             if (!string.IsNullOrEmpty(selectedFile))
             {

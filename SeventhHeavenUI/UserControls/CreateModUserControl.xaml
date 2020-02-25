@@ -142,36 +142,6 @@
                     Grid.Column="3" Grid.Row="3"/>
 
 
-
-        <!--<TextBlock Text="Link Kind:"
-                    Style="{StaticResource createLabelStyle}"
-                    Grid.Row="4"/>-->
-
-        <!--<Grid Grid.Row="4"
-                    Grid.Column="1"
-                    Grid.ColumnSpan="3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <ComboBox SelectedItem="{Binding LinkKindInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                      ItemsSource="{Binding LinkKindList}"
-                      Style="{StaticResource MainComboBoxStyle}"
-                      Margin="0,0,5,10"
-                      MinWidth="75"
-                      Width="75"
-                      HorizontalAlignment="Left"/>
-
-            <TextBlock Text="Link Source:"
-                    Style="{StaticResource createLabelStyle}"
-                    Grid.Column="1"/>
-            <TextBox Text="{Binding SourceLinkInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        Style="{StaticResource createTextboxStyle}"
-                        HorizontalAlignment="Stretch"
-                        Grid.Column="2"/>
-        </Grid>-->
-
         <Button x:Name="btnGenerate"
                 Click="btnGenerate_Click"
                 Content="Generate"
@@ -179,7 +149,7 @@
                 Grid.Column="3"
                 HorizontalAlignment="Right"
                 Width="80"
-                Margin="0,0,165,0"
+                Margin="0,0,165,5"
                 Grid.Row="5"/>
 
         <Button x:Name="btnSave"
@@ -189,7 +159,7 @@
                 ToolTip="Save mod.xml to file"
                 Grid.Column="3"
                 HorizontalAlignment="Right"
-                Margin="0,0,85,0"
+                Margin="0,0,85,5"
                 Grid.Row="5"/>
 
         <Button x:Name="btnLoad"
@@ -199,7 +169,7 @@
                 Width="80"
                 Grid.Column="3"
                 HorizontalAlignment="Right"
-                Margin="0,0,5,0"
+                Margin="0,0,5,5"
                 Grid.Row="5"/>
 
 
@@ -210,7 +180,6 @@
                  VerticalAlignment="Stretch"
                  MaxLines="100000"
                  MinHeight="125"
-                 MaxHeight="400"
                  Margin="5,0,5,5"
                  Grid.Column="0" Grid.Row="6"
                  Grid.ColumnSpan="4"/>

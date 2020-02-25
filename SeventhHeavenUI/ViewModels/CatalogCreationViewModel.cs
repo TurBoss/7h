@@ -190,6 +190,7 @@ namespace SeventhHeavenUI.ViewModels
                         LocationType.GDrive.ToString(),
                         LocationType.MegaSharedFolder.ToString(),
                         LocationType.Url.ToString(),
+                        LocationType.ExternalUrl.ToString()
                     };
                 }
 
@@ -286,6 +287,7 @@ namespace SeventhHeavenUI.ViewModels
                         ReleaseDate = parsedDate,
                         Version = parsedVersion,
                         PreviewImage = PreviewImageInput,
+                        ReleaseNotes = ReleaseNotesInput,
                         CompatibleGameVersions = GameVersions.All
                     };
 
@@ -304,6 +306,7 @@ namespace SeventhHeavenUI.ViewModels
                     CategoryInput = _modToEdit.Category;
                     DescriptionInput = _modToEdit.Description;
                     InfoLinkInput = _modToEdit.Link;
+                    ReleaseNotesInput = _modToEdit.LatestVersion.ReleaseNotes;
                     PreviewImageInput = _modToEdit.LatestVersion.PreviewImage;
                     VersionInput = _modToEdit.LatestVersion.Version.ToString();
                     ReleaseDateInput = _modToEdit.LatestVersion.ReleaseDate.ToString("MM/dd/yyyy");
@@ -322,6 +325,7 @@ namespace SeventhHeavenUI.ViewModels
         public CatalogCreationViewModel()
         {
             CatalogModList = new ObservableCollection<CatalogModItemViewModel>();
+            VersionInput = "1.00";
         }
 
         public string GenerateCatalogOutput()
@@ -335,11 +339,11 @@ namespace SeventhHeavenUI.ViewModels
             return Util.Serialize(generated).Replace("<?xml version=\"1.0\" encoding=\"utf-16\"?>", "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
         }
 
-        internal void LoadModXml(string pathToFile)
+        internal void LoadModXml(string pathToModXml)
         {
             try
             {
-                ModInfo mod = new ModInfo(pathToFile, Sys._context);
+                ModInfo mod = new ModInfo(pathToModXml, Sys._context);
 
                 IDInput = mod.ID.ToString();
                 NameInput = mod.Name;
@@ -347,7 +351,7 @@ namespace SeventhHeavenUI.ViewModels
                 AuthorInput = mod.Author;
                 DescriptionInput = mod.Description;
                 VersionInput = mod.Version.ToString();
-                PreviewImageInput = mod.PreviewFile;
+                PreviewImageInput = "";
                 InfoLinkInput = mod.Link;
                 ReleaseNotesInput = mod.ReleaseNotes;
                 ReleaseDateInput = mod.ReleaseDate.ToString("MM/dd/yyyy");
@@ -355,6 +359,38 @@ namespace SeventhHeavenUI.ViewModels
             catch (Exception e)
             {
                 Sys.Message(new WMessage($"Could not load mod xml: {e.Message}", true)
+                {
+                    LoggedException = e
+                });
+            }
+        }
+
+        internal void LoadModXmlFromIro(string pathToIroFile)
+        {
+            try
+            {
+                Mod parsedMod = new ModImporter().ParseModXmlFromSource(pathToIroFile);
+
+                if (parsedMod == null)
+                {
+                    Sys.Message(new WMessage($"Could not load mod xml from .iro file", true));
+                    return;
+                }
+
+                IDInput = parsedMod.ID.ToString();
+                NameInput = parsedMod.Name;
+                CategoryInput = parsedMod.Category;
+                AuthorInput = parsedMod.Author;
+                DescriptionInput = parsedMod.Description;
+                VersionInput = parsedMod.LatestVersion.Version.ToString();
+                PreviewImageInput = "";
+                InfoLinkInput = parsedMod.Link;
+                ReleaseNotesInput = parsedMod.LatestVersion.ReleaseNotes;
+                ReleaseDateInput = parsedMod.LatestVersion.ReleaseDate.ToString("MM/dd/yyyy");
+            }
+            catch (Exception e)
+            {
+                Sys.Message(new WMessage($"Could not load mod xml from .iro: {e.Message}", true)
                 {
                     LoggedException = e
                 });
@@ -424,9 +460,13 @@ namespace SeventhHeavenUI.ViewModels
                 return;
             }
 
+            if (string.IsNullOrEmpty(VersionInput))
+            {
+                VersionInput = "1.00";
+            }
+
             DateTime.TryParse(ReleaseDateInput, out DateTime parsedDate);
             decimal.TryParse(VersionInput, System.Globalization.NumberStyles.AllowDecimalPoint, new System.Globalization.CultureInfo(""), out decimal parsedVersion);
-
 
             Mod newMod = new Mod()
             {

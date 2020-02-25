@@ -269,7 +269,75 @@ namespace SeventhHeavenUI.ViewModels
                 LoadedMod.ReleaseNotes = ReleaseNotesInput;
             }
 
+            NullifyEmptyLists();
+
             return LoadedMod;
+        }
+
+        /// <summary>
+        /// set empty/unused lists to null in <see cref="LoadedMod"/> so it wont be serialized
+        /// </summary>
+        private void NullifyEmptyLists()
+        {
+            if (LoadedMod.LoadAssemblies?.Count == 0)
+            {
+                LoadedMod.LoadAssemblies = null;
+            }
+
+            if (LoadedMod.LoadPlugins?.Count == 0)
+            {
+                LoadedMod.LoadPlugins = null;
+            }
+
+            if (LoadedMod.LoadLibraries?.Count == 0)
+            {
+                LoadedMod.LoadLibraries = null;
+            }
+
+            if (LoadedMod.LoadPrograms?.Count == 0)
+            {
+                LoadedMod.LoadPrograms = null;
+            }
+
+            if (LoadedMod.OrderBefore?.Count == 0)
+            {
+                LoadedMod.OrderBefore = null;
+            }
+
+            if (LoadedMod.OrderAfter?.Count == 0)
+            {
+                LoadedMod.OrderAfter = null;
+            }
+
+            if (LoadedMod.Conditionals?.Count == 0)
+            {
+                LoadedMod.Conditionals = null;
+            }
+
+            if (string.IsNullOrEmpty(LoadedMod.PreviewFile))
+            {
+                LoadedMod.PreviewFile = null;
+            }
+
+            if (LoadedMod.Compatibility?.Forbids?.Count == 0)
+            {
+                LoadedMod.Compatibility.Forbids = null;
+            }
+
+            if (LoadedMod.Compatibility?.Requires?.Count == 0)
+            {
+                LoadedMod.Compatibility.Requires = null;
+            }
+
+            if (LoadedMod.Compatibility?.Settings?.Count == 0)
+            {
+                LoadedMod.Compatibility.Settings = null;
+            }
+
+            if (LoadedMod.Compatibility?.Requires == null && LoadedMod.Compatibility?.Settings == null && LoadedMod.Compatibility?.Forbids == null)
+            {
+                LoadedMod.Compatibility = null;
+            }
         }
 
         public void GenerateModOutput()
