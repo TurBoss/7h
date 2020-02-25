@@ -128,10 +128,12 @@ namespace Iros._7th.Workshop
         {
             if (e.Error != null || e.Cancelled)
             {
-                if (System.IO.File.Exists(_file))
+                if (_mode == 0 && System.IO.File.Exists(_file))
                 {
+                    // delete temp file that was downloaded when trying to get gdrive direct download url
                     System.IO.File.Delete(_file);
                 }
+
                 DownloadFileCompleted(this, e);
             }
             else

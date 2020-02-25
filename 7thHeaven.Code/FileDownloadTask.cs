@@ -231,7 +231,7 @@ namespace _7thHeaven.Code
             {
                 if (result.IsFaulted)
                 {
-                    DownloadFileCompleted?.Invoke(this, new AsyncCompletedEventArgs(result.Exception, false, _userState));
+                    DownloadFileCompleted?.Invoke(this, new AsyncCompletedEventArgs(result.Exception.GetBaseException(), false, _userState));
                 }
             });
 
