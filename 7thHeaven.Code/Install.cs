@@ -627,6 +627,12 @@ namespace Iros._7th.Workshop
                             foreach (string ivfile in inst.Versions.Select(v => v.InstalledLocation))
                             {
                                 string ifile = System.IO.Path.Combine(Sys.Settings.LibraryLocation, ivfile);
+
+                                if (ifile == _dest)
+                                {
+                                    continue; // skip file that was just copied as the new version may have overwritten the old version file so they have the same file name
+                                }
+
                                 if (System.IO.File.Exists(ifile))
                                 {
                                     System.IO.File.Delete(ifile);
