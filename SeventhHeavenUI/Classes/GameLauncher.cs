@@ -102,7 +102,7 @@ namespace SeventhHeaven.Classes
                 var result = MessageDialogWindow.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (result.Result == MessageBoxResult.Yes)
                 {
-                    Instance.RaiseProgressChanged("\tforce closing all instances of FF7 ...", NLog.LogLevel.Error);
+                    Instance.RaiseProgressChanged("\tforce closing all instances of FF7 ...", NLog.LogLevel.Info);
 
                     if (!ForceKillFF7())
                     {
