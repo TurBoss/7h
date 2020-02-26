@@ -480,11 +480,6 @@ namespace SeventhHeaven.Classes
             Instance.RaiseProgressChanged("Copying ff7input.cfg to FF7 path ...");
             bool didCopyCfg = CopyKeyboardInputCfg();
 
-            if (!didCopyCfg)
-            {
-                return false;
-            }
-
 
             //
             // Setup log file if debugging
@@ -726,6 +721,12 @@ namespace SeventhHeaven.Classes
                     // wrapped in try/catch so an unhandled exception when exiting the game does not crash 7H
                     try
                     {
+                        if (Sys.Settings.GameLaunchSettings.InGameConfigOption.Equals("custom.cfg", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            Instance.RaiseProgressChanged("Updating custom.cfg with ff7input.cfg ...");
+                            GameLaunchSettingsViewModel.CopyInputCfgToCustomCfg();
+                        }
+
                         Instance._plugins.Clear();
 
                         Instance.RaiseProgressChanged("Stopping other programs for mods started by 7H ...");
@@ -985,6 +986,12 @@ namespace SeventhHeaven.Classes
                 {
                     try
                     {
+                        if (Sys.Settings.GameLaunchSettings.InGameConfigOption.Equals("custom.cfg", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            Instance.RaiseProgressChanged("Updating custom.cfg with ff7input.cfg ...");
+                            GameLaunchSettingsViewModel.CopyInputCfgToCustomCfg();
+                        }
+
                         if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && Instance.DidMountVirtualDisc && IsVirtualIsoMounted(Instance.DriveLetter))
                         {
                             Instance.RaiseProgressChanged("Auto unmounting game disc ...");
@@ -1697,10 +1704,9 @@ namespace SeventhHeaven.Classes
             {
                 Instance.RaiseProgressChanged("\tno custom.cfg file found in /Resources/Controls folder. Creating copy of ff7input.cfg", NLog.LogLevel.Warn);
 
-                if (GameLaunchSettingsViewModel.CopyInputCfgToCustomCfg()) // returns true if it copied successfully
+                if (!GameLaunchSettingsViewModel.CopyInputCfgToCustomCfg()) // returns true if it copied successfully
                 {
-                    Instance.RaiseProgressChanged("\tswitching to control configuration file custom.cfg", NLog.LogLevel.Warn);
-                    Sys.Settings.GameLaunchSettings.InGameConfigOption = "custom.cfg";
+                    Instance.RaiseProgressChanged("\tcould not copy ff7input.cfg to custom.cfg", NLog.LogLevel.Warn);
                 }
             }
 

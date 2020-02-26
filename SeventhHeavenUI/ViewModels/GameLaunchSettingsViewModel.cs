@@ -862,7 +862,7 @@ namespace SeventhHeaven.ViewModels
 
         public static bool CopyInputCfgToCustomCfg()
         {
-            return new GameLaunchSettingsViewModel().CopyInputCfgToCustomCfg(forceCopy: false);
+            return new GameLaunchSettingsViewModel().CopyInputCfgToCustomCfg(forceCopy: true);
         }
 
         private void InitInGameConfigOptions()

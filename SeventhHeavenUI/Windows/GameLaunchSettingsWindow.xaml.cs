@@ -142,11 +142,6 @@ namespace SeventhHeaven.Windows
             ViewModel.IsProgramPopupOpen = false;
         }
 
-        private void btnRefreshKeyboard_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.CopyInputCfgToCustomCfg(forceCopy: true);
-        }
-
         private void btnMoveProgramDown_Click(object sender, RoutedEventArgs e)
         {
             if (ViewModel.IsProgramPopupOpen)

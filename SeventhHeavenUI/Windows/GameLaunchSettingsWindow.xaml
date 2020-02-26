@@ -108,7 +108,6 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Controls:"
                                    FontSize="13"
@@ -130,17 +129,6 @@
                                   ItemTemplate="{StaticResource keyboardItemTemplate}"
                                   SelectedItem="{Binding SelectedGameConfigOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   ItemsSource="{Binding InGameConfigOptions}"/>
-                        <Button x:Name="btnRefreshKeyboard"
-                                Click="btnRefreshKeyboard_Click"
-                                Grid.Column="2"
-                                Style="{StaticResource ImageButton}"
-                                Content="{StaticResource iconRefresh}"
-                                IsEnabled="{Binding IsCustomConfigOptionSelected}"
-                                ToolTipService.IsEnabled="False"
-                                ToolTip="Retrieve your settings currently set in-game. Click refresh if you change your custom controls later."
-                                MouseEnter="Control_MouseEnter"
-                                Width="25"
-                                Height="25"/>
                     </Grid>
                 </StackPanel>
             </GroupBox>
