@@ -26,15 +26,14 @@ namespace SeventhHeavenUI.ViewModels
         private string _previewImageInput;
         private string _infoLinkInput;
         private string _releaseNotesInput;
-        private List<string> _linkKindList;
-        private string _linkKindInput;
-        private string _sourceLinkInput;
         private string _modOutput;
         private string _releaseDateInput;
         private ObservableCollection<CatalogModItemViewModel> _catalogModList;
         private CatalogModItemViewModel _selectedMod;
 
         private Mod _modToEdit;
+        private ObservableCollection<DownloadLinkViewModel> _downloadLinkList;
+        private string _tagsInput;
 
         public string IDInput
         {
@@ -179,47 +178,34 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
-        public List<string> LinkKindList
+        public string TagsInput
         {
             get
             {
-                if (_linkKindList == null)
-                {
-                    _linkKindList = new List<string>()
-                    {
-                        LocationType.GDrive.ToString(),
-                        LocationType.MegaSharedFolder.ToString(),
-                        LocationType.Url.ToString(),
-                        LocationType.ExternalUrl.ToString()
-                    };
-                }
-
-                return _linkKindList;
-            }
-        }
-
-        public string LinkKindInput
-        {
-            get
-            {
-                return _linkKindInput;
+                return _tagsInput;
             }
             set
             {
-                _linkKindInput = value;
+                _tagsInput = value;
                 NotifyPropertyChanged();
             }
         }
 
-        public string SourceLinkInput
+
+        public ObservableCollection<DownloadLinkViewModel> DownloadLinkList
         {
             get
             {
-                return _sourceLinkInput;
+                if (_downloadLinkList == null)
+                {
+                    _downloadLinkList = new ObservableCollection<DownloadLinkViewModel>();
+                }
+
+                return _downloadLinkList;
             }
             set
             {
-                _sourceLinkInput = value;
+                _downloadLinkList = value;
                 NotifyPropertyChanged();
             }
         }
@@ -236,7 +222,7 @@ namespace SeventhHeavenUI.ViewModels
                 NotifyPropertyChanged();
             }
         }
-    
+
         public ObservableCollection<CatalogModItemViewModel> CatalogModList
         {
             get
@@ -270,11 +256,13 @@ namespace SeventhHeavenUI.ViewModels
                     _selectedMod.Mod.Category = CategoryInput;
                     _selectedMod.Category = CategoryInput;
 
+                    _selectedMod.Mod.Tags = TagsInput.Split(new string[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
                     _selectedMod.Mod.Description = DescriptionInput;
                     _selectedMod.Mod.Link = InfoLinkInput;
 
                     if (Guid.TryParse(IDInput, out Guid parsedID))
-                    { 
+                    {
                         _selectedMod.Mod.ID = parsedID;
                     }
 
@@ -283,7 +271,7 @@ namespace SeventhHeavenUI.ViewModels
 
                     _selectedMod.Mod.LatestVersion = new ModVersion()
                     {
-                        Links = new List<string>() { $"iros://{LinkKindInput}/{SourceLinkInput?.Replace("://", "$")}" },
+                        Links = DownloadLinkList.Where(d => !string.IsNullOrEmpty(d.SourceLinkInput)).Select(s => s.GetFormattedLink()).ToList(),
                         ReleaseDate = parsedDate,
                         Version = parsedVersion,
                         PreviewImage = PreviewImageInput,
@@ -304,18 +292,23 @@ namespace SeventhHeavenUI.ViewModels
                     AuthorInput = _modToEdit.Author;
                     IDInput = _modToEdit.ID.ToString();
                     CategoryInput = _modToEdit.Category;
+                    TagsInput = string.Join("\n", _modToEdit.Tags);
                     DescriptionInput = _modToEdit.Description;
                     InfoLinkInput = _modToEdit.Link;
                     ReleaseNotesInput = _modToEdit.LatestVersion.ReleaseNotes;
                     PreviewImageInput = _modToEdit.LatestVersion.PreviewImage;
                     VersionInput = _modToEdit.LatestVersion.Version.ToString();
                     ReleaseDateInput = _modToEdit.LatestVersion.ReleaseDate.ToString("MM/dd/yyyy");
-                
-                    if (LocationUtil.TryParse(_modToEdit.LatestVersion.Links[0], out LocationType linkKind, out string url))
+
+                    DownloadLinkList.Clear();
+                    foreach (string link in _modToEdit.LatestVersion.Links)
                     {
-                        LinkKindInput = linkKind.ToString();
-                        SourceLinkInput = url;
+                        if (LocationUtil.TryParse(link, out LocationType linkKind, out string url))
+                        {
+                            DownloadLinkList.Add(new DownloadLinkViewModel(linkKind.ToString(), url));
+                        }
                     }
+
                 }
 
                 NotifyPropertyChanged();
@@ -326,6 +319,7 @@ namespace SeventhHeavenUI.ViewModels
         {
             CatalogModList = new ObservableCollection<CatalogModItemViewModel>();
             VersionInput = "1.00";
+            TagsInput = "";
         }
 
         public string GenerateCatalogOutput()
@@ -355,6 +349,8 @@ namespace SeventhHeavenUI.ViewModels
                 InfoLinkInput = mod.Link;
                 ReleaseNotesInput = mod.ReleaseNotes;
                 ReleaseDateInput = mod.ReleaseDate.ToString("MM/dd/yyyy");
+                DownloadLinkList.Clear();
+                _modToEdit = null;
             }
             catch (Exception e)
             {
@@ -387,6 +383,8 @@ namespace SeventhHeavenUI.ViewModels
                 InfoLinkInput = parsedMod.Link;
                 ReleaseNotesInput = parsedMod.LatestVersion.ReleaseNotes;
                 ReleaseDateInput = parsedMod.LatestVersion.ReleaseDate.ToString("MM/dd/yyyy");
+                DownloadLinkList.Clear();
+                _modToEdit = null;
             }
             catch (Exception e)
             {
@@ -442,10 +440,9 @@ namespace SeventhHeavenUI.ViewModels
             VersionInput = "1.0";
             PreviewImageInput = "";
             InfoLinkInput = "";
-            LinkKindInput = "GDrive";
             ReleaseNotesInput = "";
             ReleaseDateInput = DateTime.Now.ToString("MM/dd/yyyy");
-            SourceLinkInput = "";
+            DownloadLinkList.Clear();
         }
 
         internal void AddModToList()
@@ -474,11 +471,12 @@ namespace SeventhHeavenUI.ViewModels
                 Name = NameInput,
                 Author = AuthorInput,
                 Category = CategoryInput,
+                Tags = TagsInput.Split(new string[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries).ToList(),
                 Description = DescriptionInput,
                 Link = InfoLinkInput,
                 LatestVersion = new ModVersion()
                 {
-                    Links = new List<string>() { $"iros://{LinkKindInput}/{SourceLinkInput?.Replace("://", "$")}" },
+                    Links = DownloadLinkList.Where(d => !string.IsNullOrEmpty(d.SourceLinkInput)).Select(d => d.GetFormattedLink()).ToList(),
                     ReleaseDate = parsedDate,
                     Version = parsedVersion,
                     CompatibleGameVersions = GameVersions.All,
@@ -490,6 +488,16 @@ namespace SeventhHeavenUI.ViewModels
 
             _modToEdit = null;
             SelectedMod = CatalogModList[0];
+        }
+
+        internal void AddEmptyDownloadLink()
+        {
+            if (DownloadLinkList.Any(d => string.IsNullOrEmpty(d.SourceLinkInput)))
+            {
+                return; // don't add a new link since there is an empty one in the list that can be filled out
+            }
+
+            DownloadLinkList.Add(new DownloadLinkViewModel(LocationType.GDrive.ToString(), ""));
         }
 
     }

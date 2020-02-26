@@ -28,15 +28,47 @@
         </DataTemplate>
 
         <DataTemplate x:Key="linkKindItemTemplate">
-            <Grid x:Name="gd" DataContext="{Binding ElementName=ctrlCreateCatalog, Path=DataContext}" Background="Transparent">
+            <Grid x:Name="gd" DataContext="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem, Mode=FindAncestor}, Path=DataContext}" Background="Transparent">
                 <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding ElementName=gd, Path=DataContext.LinkKindInput, FallbackValue='Url'}" Margin="0,0,15,0"/>
             </Grid>
         </DataTemplate>
+
+        <Style x:Key="linkListItem" TargetType="{x:Type ListBoxItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Grid Grid.Column="1" Margin="0,0,0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox SelectedItem="{Binding LinkKindInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      ItemsSource="{Binding LinkKindList}"
+                                      ItemTemplate="{StaticResource linkKindItemTemplate}"
+                                      Style="{StaticResource MainComboBoxStyle}"
+                                      ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
+                                      Margin="5,0,0,0"
+                                      MinWidth="75"
+                                      Width="75"
+                                      HorizontalAlignment="Left"/>
+
+                            <TextBox Text="{Binding SourceLinkInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource createTextboxStyle}"
+                                     HorizontalAlignment="Stretch"
+                                     Margin="10,4,0,0"
+                                     Grid.Column="2"/>
+                        </Grid>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="False">
         
-        <Grid>
+        <Grid Background="{DynamicResource PrimaryAppBackground}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
@@ -136,6 +168,8 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
@@ -189,18 +223,32 @@
                               VerticalAlignment="Top"
                               Grid.Column="1" Grid.Row="4"/>
 
+                    <TextBlock Text="Tags:"
+                        Style="{StaticResource createLabelStyle}"
+                        Grid.Column="0"
+                        Grid.Row="5"/>
+                    <TextBox Text="{Binding TagsInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource createTextboxStyle}"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             AcceptsTab="True"
+                             VerticalScrollBarVisibility="Auto"
+                             MaxLines="20"
+                             Height="50"
+                             Grid.Column="1" Grid.Row="5"/>
+
                     <TextBlock Text="Version:"
                                Style="{StaticResource createLabelStyle}"
                                Grid.Column="0"
-                               Grid.Row="5"/>
+                               Grid.Row="6"/>
                     <TextBox Text="{Binding VersionInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Style="{StaticResource createTextboxStyle}"
-                        Grid.Column="1" Grid.Row="5"/>
+                        Grid.Column="1" Grid.Row="6"/>
 
                     <TextBlock Text="Release Notes:"
                         Style="{StaticResource createLabelStyle}"
                         Grid.Column="0"
-                        Grid.Row="6"/>
+                        Grid.Row="7"/>
                     <TextBox Text="{Binding ReleaseNotesInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource createTextboxStyle}"
                              TextWrapping="Wrap"
@@ -209,60 +257,53 @@
                              VerticalScrollBarVisibility="Auto"
                              MaxLines="500"
                              Height="100"
-                             Grid.Column="1" Grid.Row="6"/>
+                             Grid.Column="1" Grid.Row="7"/>
 
                     <TextBlock Text="Release Date:"
                                Style="{StaticResource createLabelStyle}"
                                Grid.Column="0"
-                               Grid.Row="7"/>
+                               Grid.Row="8"/>
                     <TextBox Text="{Binding ReleaseDateInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        Style="{StaticResource createTextboxStyle}"
-                        Grid.Column="1" Grid.Row="7"/>
-
-                    <TextBlock Text="Image Link:"
-                        Style="{StaticResource createLabelStyle}"
-                        Grid.Row="8"/>
-                    <TextBox Text="{Binding PreviewImageInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Style="{StaticResource createTextboxStyle}"
                         Grid.Column="1" Grid.Row="8"/>
 
-                    <TextBlock Text="Info Link:"
+                    <TextBlock Text="Image Link:"
                         Style="{StaticResource createLabelStyle}"
                         Grid.Row="9"/>
-                    <TextBox Text="{Binding InfoLinkInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    <TextBox Text="{Binding PreviewImageInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Style="{StaticResource createTextboxStyle}"
                         Grid.Column="1" Grid.Row="9"/>
 
-
-                    <TextBlock Text="Link Kind:"
+                    <TextBlock Text="Info Link:"
                         Style="{StaticResource createLabelStyle}"
                         Grid.Row="10"/>
+                    <TextBox Text="{Binding InfoLinkInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Style="{StaticResource createTextboxStyle}"
+                        Grid.Column="1" Grid.Row="10"/>
 
-                    <Grid Grid.Row="10"
-                          Grid.Column="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <ComboBox SelectedItem="{Binding LinkKindInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  ItemsSource="{Binding LinkKindList}"
-                                  ItemTemplate="{StaticResource linkKindItemTemplate}"
-                                  Style="{StaticResource MainComboBoxStyle}"
-                                  ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
-                                  Margin="0,0,5,10"
-                                  MinWidth="75"
-                                  Width="75"
-                                  HorizontalAlignment="Left"/>
 
-                        <TextBlock Text="Link Source:"
-                                   Style="{StaticResource createLabelStyle}"
-                                   Grid.Column="1"/>
-                        <TextBox Text="{Binding SourceLinkInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                 Style="{StaticResource createTextboxStyle}"
-                                 HorizontalAlignment="Stretch"
-                                 Grid.Column="2"/>
-                    </Grid>
+                    <GroupBox Header=" Download Links " Grid.Row="11" Grid.ColumnSpan="2" Margin="5,0,5,0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="auto"/>
+
+                            </Grid.RowDefinitions>
+                            <ListBox MinHeight="30" Background="Transparent" BorderThickness="0"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                     ItemsSource="{Binding DownloadLinkList}"
+                                     ItemContainerStyle="{StaticResource linkListItem}"/>
+
+
+                            <Button x:Name="btnAddLink"
+                                    Click="btnAddLink_Click"
+                                    Grid.Row="1"
+                                    Style="{StaticResource HyperlinkButton}"
+                                    HorizontalAlignment="Center"
+                                    Content="Add Link"/>
+                        </Grid>
+                    </GroupBox>
                 </Grid>
 
             </ScrollViewer>

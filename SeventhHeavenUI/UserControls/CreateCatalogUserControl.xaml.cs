@@ -69,5 +69,10 @@ namespace SeventhHeaven.UserControls
                 }
             }
         }
+
+        private void btnAddLink_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.AddEmptyDownloadLink();
+        }
     }
 }
