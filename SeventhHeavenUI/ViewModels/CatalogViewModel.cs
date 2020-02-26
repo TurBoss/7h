@@ -935,7 +935,7 @@ It may not work properly unless you find and install the requirements.";
                 lock (_downloadLock)
                 {
                     isDownloadingMod = DownloadList.Any(d => d.Download.Category == DownloadCategory.Mod && d.Download.HasStarted && !d.Download.IsFileDownloadPaused);
-                    
+
                     if (!isDownloadingMod)
                     {
                         // no mod is currently downloading so get the next download in queue
@@ -1123,7 +1123,11 @@ It may not work properly unless you find and install the requirements.";
                 RemoveFromDownloadList(item);
             };
 
-            item.IProc.Complete = () => CompleteIProc(item, e);
+            item.IProc.Complete = () =>
+            {
+                CompleteIProc(item, e);
+            };
+
 
             // update UI viewmodel to reflect installation status
             DownloadItemViewModel itemViewModel = DownloadList.FirstOrDefault(i => i.Download.UniqueId == item.UniqueId);

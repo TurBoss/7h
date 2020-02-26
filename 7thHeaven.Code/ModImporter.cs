@@ -106,7 +106,7 @@ namespace _7thHeaven.Code
                     Author = String.Empty,
                     Description = "Imported mod",
                     Category = "Unknown",
-                    ID = Guid.NewGuid(),
+                    ID = ParseModGuidFromFileOrFolderName(sourceFileOrFolder),
                     Link = String.Empty,
                     Tags = new List<string>(),
                     Name = "",
@@ -238,8 +238,8 @@ namespace _7thHeaven.Code
                     }
                     catch (Exception e)
                     {
-                        Sys.Message(new WMessage("Invalid GUID found for Mod ID ... Using random guid.", WMessageLogLevel.LogOnly, e));
-                        parsedMod.ID = Guid.NewGuid();
+                        Sys.Message(new WMessage("Invalid GUID found for Mod ID ... Using guid from file/folder name (or new guid).", WMessageLogLevel.LogOnly, e));
+                        parsedMod.ID = ParseModGuidFromFileOrFolderName(sourceFileOrFolder);
                     }
                 }
 
@@ -347,6 +347,29 @@ namespace _7thHeaven.Code
             }
 
             return parsedName;
+        }
+
+        /// <summary>
+        /// Returns guid from passed in file or folder name if guid is found in string; otherwise returns new guid
+        /// </summary>
+        /// <param name="name"> name of mod file/folder with possible Guid in string </param>
+        /// <returns> if Guid found then returns guid; other wise returns new guid</returns>
+        public static Guid ParseModGuidFromFileOrFolderName(string name)
+        {
+            Regex regex = new Regex(@"[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}");
+            Match match = regex.Match(name);
+
+            Guid parsedGuid = Guid.NewGuid();
+
+            if (match.Success)
+            {
+                if (!Guid.TryParse(match.Value, out parsedGuid))
+                {
+                    parsedGuid = Guid.NewGuid(); // failed to parse, which sets to empty guid so generate a new one
+                }
+            }
+
+            return parsedGuid;
         }
 
         public void RaiseProgressChanged(string message, double percentComplete)

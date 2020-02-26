@@ -880,6 +880,12 @@ namespace SeventhHeavenUI.ViewModels
                 {
                     int afterIndex = sortedList.FindIndex(m => m.InstallInfo.ModID.Equals(after));
 
+                    if (afterIndex == -1)
+                    {
+                        // mod could not be found in list
+                        continue;
+                    }
+
                     if (afterIndex > i)
                     {
                         // move mod to come after this guid
@@ -892,11 +898,17 @@ namespace SeventhHeavenUI.ViewModels
                 {
                     int beforeIndex = sortedList.FindIndex(m => m.InstallInfo.ModID.Equals(before));
 
+                    if (beforeIndex == -1)
+                    {
+                        // mod could not be found in list
+                        continue;
+                    }
+
                     if (beforeIndex < i)
                     {
                         // move mod to come before this guid
                         sortedList.RemoveAt(i);
-                        sortedList.Insert(beforeIndex-1, installedMod);
+                        sortedList.Insert(beforeIndex, installedMod);
                     }
                 }
 

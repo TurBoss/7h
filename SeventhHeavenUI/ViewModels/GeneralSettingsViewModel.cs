@@ -4,6 +4,7 @@ using Iros._7th.Workshop;
 using Microsoft.Win32;
 using SeventhHeaven.Classes;
 using SeventhHeaven.Windows;
+using SeventhHeavenUI;
 using SeventhHeavenUI.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -1084,10 +1085,13 @@ namespace SeventhHeaven.ViewModels
                 ResolveCatalogNameFromUrl(NewUrlText, resolvedName =>
                 {
                     NewNameText = resolvedName;
-                    SubscriptionList.Add(new SubscriptionSettingViewModel(NewUrlText, NewNameText));
-                    CloseSubscriptionPopup();
-                    IsResolvingName = false;
-                    ListDataChanged?.Invoke();
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        SubscriptionList.Add(new SubscriptionSettingViewModel(NewUrlText, NewNameText));
+                        CloseSubscriptionPopup();
+                        IsResolvingName = false;
+                        ListDataChanged?.Invoke();
+                    });
                 });
             }
             else if (IsEditingSubscription)
@@ -1201,7 +1205,6 @@ namespace SeventhHeaven.ViewModels
                 }
 
                 callback(name);
-
             });
             downloadCallback.Error = onError;
 
