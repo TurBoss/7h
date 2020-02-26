@@ -59,17 +59,51 @@ They will be automatically turned off.";
 
         public List<string> AppHints = new List<string>()
         {
-            "Did you know? You can drag and drop a mod to reorder your list.",
+            "You can drag and drop a mod to reorder your list.",
             "You can middle-click a mod to activate or deactivate it.",
             "You can double-click a mod to open the mod configuration window.",
             "You can double-click a mod in Browse Catalog to start downloading it.",
             "You can click the Auto Sort button to quickly put your mod list in the recommended order.",
-            "Mod Authors: Did you know you can base64 encode images into your Readme.html?",
+            "Mods can now automatically update themselves, or notify you of new versions.",
+            "Mod Authors: You can base64 encode images into your Readme.html.",
+            "Mod Authors: You can use OrderConstraints in mod.xml to specify load order.",
+            "Mod Authors: 7th Heaven now supports a Treeview style for your mod config options.",
+            "Mod Authors: 7th Heaven now supports iros://ExternalURL in catalogs to open downloads in a web browser.",
+            "Mod Authors: Enable General Settings/Context Menu in Explorer to enable right-click mod options from Windows.",
+            "Mod Authors: You can .7z/RAR/zip an IRO for a catalog download and 7H extracts it automatically.",
+            "Mod Authors: You can programmatically change other mod's settings for compatibility with yours.",
+            "You can double-click a mod file in Windows to open/import it into 7th Heaven.",
             "You can double-click a profile in the manage profiles window to load the selected profile.",
-            "Right-click My Mods tab to open your Mod Library Folder",
-            "Right-click Browse Catalog tab to open your Catalog settings",
+            "Profile details is now under Settings>Profiles then click the eyeball icon.",
+            "7th Heaven remembers your prior Config Mod settings even if you deactivate and reactivate.",
+            "Reset a mod's settings by clicking 'Reset to Mod Defaults' in the Config Mod window.",
+            "Accidentally delete your catalog subscriptions? Click 'Reset Defaults' in General Settings.",
+            "Right-click the My Mods tab to open your Mod Library Folder in Windows.",
+            "Right-click the Browse Catalog tab to open your Catalog settings.",
+            "Right-click the arrows in the sidebar to send a mod to the top or bottom.",
+            "Mangled your column views? Click the 'Reset Columns' button in the sidebar.",
+            "Fix old mod 'Unknown' categories by clicking the arrow in the Category column under My Mods.",
             "You can find answers to many questions or problems on the forum at https://forums.qhimm.com.",
-            "You can find answers to many questions or problems from the Help menu."
+            "You can find answers to many questions or problems from the Help menu.",
+            "Change your game's graphics settings by going to Settings>Game Driver...",
+            "Change each mod's update settings from the drop down arrow in the Mod Info Panel.",
+            "7th Heaven will auto mount/dismount the virtual game disc if you're on Windows 8 or newer.",
+            "7th Heaven no longer requires the old Game Converter. Everything is now automatic!",
+            "You no longer need to use FF7Config.exe. Its features are built into Settings>Game Launcher.",
+            "Did you know 7th Heaven 1.0 was released in 2013? 2.0 was released 7 years later in 2020.",
+            "Your current active profile shows in the title bar in between brackets.",
+            "If the game window is cut off/not centered, try the High-DPI fix in Settings.",
+            "You can sort your Browse Catalog columns by clicking the column headers.",
+            "You can rearrange your columns by dragging and dropping the column headers.",
+            "You can filter your views by clicking the drop down arrow next to the search box.",
+            "Quickly switch keyboard/gamepad control options in 'Game Launcher Settings'.",
+            "Want to use custom controls? Select 'Custom' in 'Game Launcher Settings'.",
+            "Updated your in-game controls? Click the 'Refresh' button in 'Game Launcher Settings'.",
+            "Did you know? 7th Heaven supports command line parameters (switches).",
+            "Have the 1998 discs? Import your movies automatically from 'Game Launcher Settings'.",
+            "Customize your 7th Heaven colors by going to Settings>Change Color Theme.",
+            "You can export and share your custom Color Theme with others.",
+            "You can pause and resume some downloads."
         };
 
         private string _catFile;
@@ -412,7 +446,7 @@ They will be automatically turned off.";
                     }
                     else
                     {
-                        switch(selected.InstallInfo.UpdateType)
+                        switch (selected.InstallInfo.UpdateType)
                         {
                             case UpdateType.Notify:
                                 return "No Updates";
@@ -1615,7 +1649,7 @@ They will be automatically turned off.";
             if (selected != null)
             {
                 UpdateType updateType = UpdateType.Ignore;
-                
+
                 if (PreviewIsAutoUpdateModsChecked)
                 {
                     updateType = UpdateType.Install;
@@ -1632,7 +1666,7 @@ They will be automatically turned off.";
                     libraryItem.UpdateType = updateType; // and also make sure info is updated in Sys.Library so it will be saved back to library.xml
 
                 }
-        
+
                 NotifyPropertyChanged(nameof(UpdateModButtonText));
                 NotifyPropertyChanged(nameof(IsUpdateModButtonEnabled));
             }

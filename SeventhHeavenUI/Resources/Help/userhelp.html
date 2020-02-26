@@ -43,7 +43,7 @@
 
 <center><h1>7th Heaven Help</h1></center>
       <p style = "font-family: Arial, Helvetica, sans-serif;font-size:16px;">
-<center><a href="index.html">What is 7th Heaven?</a>	|	<a href="getstarted.html">Getting Started</a>	|	<a href="userhelp.html">Using 7th Heaven</a>	|	<a href="modhelp.html">Modding</a>	|	<a href="troubleshooting.html">Troubleshooting</a></center>
+<center><a href="index.html">What is 7th Heaven?</a>	|	<a href="getstarted.html">Getting Started</a>	|	<a href="userhelp.html">Using 7th Heaven</a>	|	<a href="modhelp.html">Creating Mods</a>	|	<a href="troubleshooting.html">FAQ/Troubleshooting</a></center>
 
 Contents:<br />
 <ol type="1">
@@ -138,12 +138,14 @@ Gives you access to many of the features included with 7th Heaven. It is organiz
 <a id="ui_modinfo_detail"><h3><b>Mod Info Panel</b></h3></a>
 <center><img src="images/screens/modinfo.panel.png" style="max-height:350px;"></center>
 <br />
-<b>Name: </b>The name of the mod, followed by the version.<br /><br />
+<b>Name: </b>The name of the mod.<br /><br />
 <b>Author: </b>The creator(s) of the mod.<br /><br />
 <b>Released: </b>The date the mod was released. MM/DD/YYYY format.<br /><br />
 <b>Category: </b>New in 7th Heaven 2.0* - The general content of the mod, or what the mod affects in the game. Categories are important because mods are auto-sorted (when you click Auto Sort
 <img src="images/buttons/appbar.sort.numeric.png" style="max-height:30px; vertical-align:middle">) by category then alphabetically by name, among other things. This is to assist you with sorting your mods for best compatibility with other mods that you may have installed.
 <br /><i>If an older mod that hasn't been updated for 7th Heaven 2.0 is installed, it will display a category of 'Unknown'. You can manually set/change the category so that 7th Heaven better knows how to sort it. Inform your mod author(s) that they should update their mod to support categories!</i><br /><br />
+<b>Version: </b>The version number of the mod.<br /><br />
+<b>Update: </b>If an update is found for the mod, click the 'Update Available' link to download the update. You can click the drop down<img src="images/buttons/appbar.search.filter.png" style="max-height:30px; vertical-align:middle">to set update check options for each individual mod such as 'Auto-Update/Install', 'Ignore', and 'Notify'. If you'd rather all mods update automatically all the time, you can set that option in <a href="#gensettings">General Settings</a>.<br /><br />
 
 <b>Description: </b>Information about what the mod is, or what it does.<br />
 <b>Link: </b>A link to an internet location usually where you can find more information or support for the mod, if provided by the mod author.<br /><br />
@@ -166,6 +168,9 @@ Gives you access to many of the features included with 7th Heaven. It is organiz
 <img src="images/buttons/appbar.delete.png" style="max-height:70px;">
 <img src="images/buttons/appbar.layout.header.png" style="max-height:70px;">
 <img src="images/buttons/appbar.download.png" style="max-height:70px;">
+<img src="images/buttons/appbar.cloud.pause.png" style="max-height:70px;">
+<img src="images/buttons/appbar.cloud.play.png" style="max-height:70px;">
+<img src="images/buttons/appbar.cloud.delete.png" style="max-height:70px;">
 </center>
 </p>
 
@@ -248,6 +253,28 @@ Tip: You can also double-click a mod to download it.
 <div style="clear: both;"></div>
 
 <p>
+<img src="images/buttons/appbar.cloud.pause.png" style="max-height:50px; float:left">
+<b>Pause Download: </b><a href="#ui_browsecatalog_detail">Browse Catalog Tab</a> only. Pauses the currently selected download. Not all downloads can support the pause function.
+</p>
+
+<div style="clear: both;"></div>
+
+<p>
+<img src="images/buttons/appbar.cloud.play.png" style="max-height:50px; float:left">
+<b>Resume Download: </b><a href="#ui_browsecatalog_detail">Browse Catalog Tab</a> only. Resumes the currently selected download.
+</p>
+
+<div style="clear: both;"></div>
+
+<p>
+<img src="images/buttons/appbar.cloud.delete.png" style="max-height:50px; float:left">
+<b>Cancel Download: </b><a href="#ui_browsecatalog_detail">Browse Catalog Tab</a> only. Cancels the currently selected download.
+</p>
+
+
+<div style="clear: both;"></div>
+
+<p>
 <a id="ui_mymods_detail"><h3><b>My Mods Tab</b></h3></a>
 <center><img src="images/screens/mymods.view.png" style="max-width:500px"></center>
 <br /><br />
@@ -293,8 +320,12 @@ Tip: You can also double-click a mod to download it.
 <br /><br />
 <b>Force Update All Subscriptions/Refresh Catalog<img src="images/buttons/appbar.refresh.png" style="max-height:30px; vertical-align:middle">: </b>While updates to catalog subscriptions are checked on startup of 7th Heaven, you can click this button to force all subscriptions to update and a current refreshed catalog to display immediately.
 <br /><br />
-<b>Download Mod<img src="images/buttons/appbar.download.png" style="max-height:30px; vertical-align:middle">: </b>Downloads the mod from the catalog and into your <a href="#ui_mymods_detail">My Mods Tab</a>. Tip: You can also double-click to start a download. You can monitor the progress of your downloads in the Downloads area at the bottom of the window. You can cancel a download by right-clicking it in the Downloads window, then select 'Cancel selected download'.<br />
-<i>Note: You are limited to 1 mod downloading at a time, but you can queue up as many as you want. This is to prevent abuse of starting and not finishing multiple mods at a time. The mods are usually hosted on free services like Mega or Google Drive which have timed data usage limits (such as daily). If you are having trouble downloading a mod, it may be because the quota/data usage limits have been reached. Please try again later. You can also try finding an alternate download for the mod on the <a href="https://forums.qhimm.com" target="_blank">Qhimm Forums</a> or on <a href="https://nexusmods.com" target="_blank">Nexus Mods</a>.</i>
+<b><a id="downloadmod">Download Mod</a><img src="images/buttons/appbar.download.png" style="max-height:30px; vertical-align:middle">: </b>Downloads the mod from the catalog and into your <a href="#ui_mymods_detail">My Mods Tab</a>. Tip: You can also double-click to start a download. You can monitor the progress of your downloads in the Downloads area at the bottom of the window.<br />
+<i>Note: You are limited to 1 mod downloading at a time, but you can queue up as many as you want. This is to prevent abuse of starting and not finishing multiple mods at a time. The mods are usually hosted on free services like Mega or Google Drive which have timed data usage limits (such as daily). You might try downloading the mod again later. *New in 7th Heaven 2.0: 7th Heaven now supports external links for mod downloads. So, if there is a problem direct downloading a mod, 7H can prompt you to go to a web site (like Nexus Mods) to download the mod instead. The Catalog creators must enable and take advantage of the new iros://ExternalURL/ links feature in their catalogs for this to work.</i>
+<br /><br />
+<b>Pause/Resume Download</a><img src="images/buttons/appbar.cloud.pause.png" style="max-height:30px; vertical-align:middle">/<img src="images/buttons/appbar.cloud.play.png" style="max-height:30px; vertical-align:middle">: </b>Pause or Resume downloading the selected mod in the downloads window. Not all links support pause/resume so the buttons may not be activated.
+<br /><br />
+<b>Cancel Download</a><img src="images/buttons/appbar.cloud.delete.png" style="max-height:30px; vertical-align:middle">: </b>Cancels downloading the selected mod in the downloads window.
 </p>
 
 <p>
@@ -317,7 +348,7 @@ Tip: You can also double-click a mod to download it.
 <center><img src="images/screens/config.mod.png" style="max-width:500px;"></center>
 <br />
 
-<b>To Get Here: </b>Select an active<img src="images/buttons/toggle.on.png" style="max-height:25px; vertical-align:middle">mod in your <a href="#ui_mymods_detail">My Mods Tab</a> then click<img src="images/buttons/appbar.settings.png" style="max-height:30px; vertical-align:middle">in your <a href="#ui_modsidebar_detail">Mod Sidebar</a>.
+<b>To Get Here: </b>Select an active<img src="images/buttons/toggle.on.png" style="max-height:25px; vertical-align:middle">mod in your <a href="#ui_mymods_detail">My Mods Tab</a> then click<img src="images/buttons/appbar.settings.png" style="max-height:30px; vertical-align:middle">in your <a href="#ui_modsidebar_detail">Mod Sidebar</a>. Alternatively, you can double-click an active mod.
 <br /><br />
 <b>What it is: </b>Here you can configure the options that are available for your mod. Not all mods have configurable options.
 <br /><br />
@@ -328,11 +359,21 @@ Tip: You can also double-click a mod to download it.
 </p>
 
 <p>
-<a id="catalogmodcreationtool"><h3><b>Mod/Catalog Creation Tool</b></h3></a>
-<center><img src="images/screens/catalogmodcreation.tool.png" style="max-width:500px;"></center>
+<a id="catalogmodcreationtool"><h3><b>Catalog/Mod Creation Tool (Work in Progress)</b></h3></a>
+<center><img src="images/screens/catalogmodcreation.tool.png" style="max-width:700px;"></center>
 <br />
 
-<b>To Get Here: </b>Click 'Tools' in the <a href="#ui_menus_detail">Menu Bar</a>, then 'Mod/Catalog Creation Tool'.
+<b>To Get Here: </b>Click 'Tools' in the <a href="#ui_menus_detail">Menu Bar</a>, then 'Catalog/Mod Creation Tool'.
+<br /><br />
+
+<b>What it is: </b>These tools are useful for modders and catalog creators. The 'Create Mod' tab helps you to easily load (from existing), generate (update existing or create new), and save a mod.xml file. It is only used to generate the basic info needed. To learn more about creating mods, look at the <a href="modhelp.html">Creating Mods Section</a> and search the <a href="https://forums.qhimm.com" target=_blank>Qhimm Forums</a>. The 'Create Catalog' tab helps you to generate an XML file to use as a catalog subscription. To fully create a catalog, you would need to upload your mod files to a file hosting service somewhere. Use the tool to generate a list of mods for your catalog when you supply the information and download links. Upload the XML file to a server somewhere such as pastebin.com, add the link to your catalog to 7th Heaven, and watch your list of mods load up in the <a href="#ui_browsecatalog_detail">Browse Catalog Tab</a>.
+<br /><br />
+
+<b>How to Use (Create Mod Tab): </b>A randomly generated unique ID is automatically put into the ID text box at the top for you. This ID is important! It allows 7H to identify your mod so that it can check when there are updates available for it in a catalog subscription, and for auto-sort and compatibility reasons. This ID should also be used to identify your mod if it is being added to a catalog (your mod.xml and the catalog should match for your mod). Give your mod a name, and select a Category to give it from the drop down (helps with auto-sort). Version should be in the format x.xx like 1.00. Select a Preview Image you want to use in your mod by clicking<img src="images/buttons/appbar.folder.ellipsis.png" style="max-height:30px; vertical-align:middle">. Be sure you copy the image file to the root of your mod folder. Continue to fill out the rest of the fields which should be self-explanatory, then click the 'Generate' button. This will create (or update if you previously clicked 'Load' to open an existing mod.xml file) the XML needed for your mod.xml file. If you're happy with the results, click on the 'Save' button to save your mod.xml file.
+<br /><br />
+
+<b>How to Use (Create Catalog Tab): </b>Click 'Load' if you have an existing catalog xml file you want to edit. Click on the 'Import' button if you have an existing mod that you want to add to your catalog. Select the mod or its mod.xml file and the information from it will be displayed in the fields. If you don't have an existing mod to load information from, you will need to manually enter data into the fields. For your download link where the mod will be downloaded from, select the 'Link Kind', whether it is a Google Drive (GDrive) link, or a 'MegaSharedFolder' or other URL (standard web address). Paste the download link into the 'Link Source' field. Links will be converted into an iros:// protocol link. iros:// links are formatted like 'iros://Url/http$website.com/myfile.iro' for a URL web address. For GDrive, go into your Google Drive and create a shareable link. The link would be something like 'https://drive.google.com/open?id=1mX0q6Yb4cgYNYkAmd8ocSfGu0c2QHT0B' the link would look like 'iros://GDrive/fileID' where 'fileiD' is the '1mX0q6Yb4cgYNYkAmd8ocSfGu0c2QHT0B' part of the link. Once you have all of the fields filled out, click on the 'Add' button in the top right corner. This will add that mod to the list for your catalog on the left. Repeat for any and all mods you want to include in your catalog. Once you're finished adding mods to your list, click the 'Generate' button to display the XML for you catalog. Click the 'Save' button to save the output to a file that you can use to upload. Add the catalog subscription link that points to this file into 7th Heaven and check out and test your catalog.
+<br /><br />
 </p>
 
 <p>
@@ -372,7 +413,7 @@ Tip: You can also double-click a mod to download it.
   <li><b><a href="index.html">What is 7th Heaven?</a></b>: Information about what 7th Heaven is, how it works, what it does, and summary of What's New in this version.</li>
   <li><b><a href="getstarted.html">Getting Started</a></b>: Information about purchasing and installing Final Fantasy VII, and installing and running 7th Heaven.</li>
   <li><b><a href="userhelp.html">Using 7th Heaven</a></b>: This section. An overview and detailed information about the entire program. A general User's Guide.</li>
-  <li><b><a href="modhelp.html">Modding</a></b>: This section is for those of you that want to create your own mods for use in 7th Heaven. This focuses more on the modding features of 7th Heaven and how to make your mods work with 7th Heaven, not on modding FF7 itself. For learning how the game is structured and how to mod FF7 itself, there is plenty of information available on the <a href="https://forums.qhimm.com" target="_blank">Qhimm Forums</a>.</li>
+  <li><b><a href="modhelp.html">Creating Mods</a></b>: This section is for those of you that want to create your own mods for use in 7th Heaven. This focuses more on the modding features of 7th Heaven and how to make your mods work with 7th Heaven, not on modding FF7 itself. For learning how the game is structured and how to mod FF7 itself, there is plenty of information available on the <a href="https://forums.qhimm.com" target="_blank">Qhimm Forums</a>.</li>
   <li><b><a href="troubleshooting.html">Troubleshooting</a></b>: 7th Heaven 2.0 was designed specifically to be a more user-friendly, all-in-one solution than previous versions. Many of the problems and manual steps you needed to do in the past are now gone. With that said, people will always run into issues once in a while, so check the troubleshooting section for your issue and possible solution. As new issues are found, they will be fixed if possible, or information about the issue will be added to this section with future releases. Of course, the <a href="https://forums.qhimm.com" target="_blank">Qhimm Forums</a> are always available and up to date.</li>
 </ul>
 </p>
@@ -432,7 +473,7 @@ Note about the Compression options. Compression does not alter the content of yo
 <b>Unpack IRO Tab: </b>Extracts the contents of an .iro mod file to a folder. Click<img src="images/buttons/appbar.folder.ellipsis.png" style="max-height:30px; vertical-align:middle">to select an .iro file that you want to extract. Click<img src="images/buttons/appbar.folder.png" style="max-height:30px; vertical-align:middle">to select an output folder where the .iro contents will be extracted to. Click the 'Go' button and wait for the process to complete. You can now go to the folder to browse the files that were contained in the .iro mod file.
 <br /><br />
 
-Note about IRO "Patching": Imagine you have a very large file size (say, 1GB or larger) .iro mod file that you released and put in a catalog subscription. You now want to release a small update to this mod, such as adding or fixing a few textures, but these changes are only a few MB in size, say 10MB. Instead of creating a whole new .iro file to upload to your catalog and to prevent your mod users from having to re-download your entire full size mod again, you can instead create an .iro "patch" or .irop file. See below on how to create an .irop file. Refer to the <a href="modhelp.html">Modding</a> section for instructions on how to update your catalog subscription XML file to support upgrading your mod via .irop patch files. IRO patching is only supported via catalog subscriptions and cannot currently be done outside of a catalog subscription.
+Note about IRO "Patching": Imagine you have a very large file size (say, 1GB or larger) .iro mod file that you released and put in a catalog subscription. You now want to release a small update to this mod, such as adding or fixing a few textures, but these changes are only a few MB in size, say 10MB. Instead of creating a whole new .iro file to upload to your catalog and to prevent your mod users from having to re-download your entire full size mod again, you can instead create an .iro "patch" or .irop file. See below on how to create an .irop file. Refer to the <a href="modhelp.html">Creating Mods</a> section for instructions on how to update your catalog subscription XML file to support upgrading your mod via .irop patch files. IRO patching is only supported via catalog subscriptions and cannot currently be done outside of a catalog subscription.
 <br /><br />
 
 <b>Patch IRO Tab: </b>Click<img src="images/buttons/appbar.folder.ellipsis.png" style="max-height:30px; vertical-align:middle">next to 'Original IRO' to select your original (the one that is now outdated) .iro file. Then, click<img src="images/buttons/appbar.folder.ellipsis.png" style="max-height:30px; vertical-align:middle">next to 'New IRO' to select the .iro file that contains the new version of your mod. Finally, click<img src="images/buttons/appbar.folder.ellipsis.png" style="max-height:30px; vertical-align:middle">next to 'Save as IROP' to select a location and file name to save your .irop patch file. Choose a compression option (see above for explanation of these). Click the 'Go' button. 7th Heaven will compare the contents of the original .iro file with the contents of the new .IRO file. Any new files that didn't exist in the original .iro or files that were updated in the new .iro, including your new mod.xml file, will be exported into a new .irop file. So, this smaller file size .irop file contains all content necessary to upgrade an old version of your mod to the new version and can be distributed via a catalog subscription.
@@ -487,18 +528,20 @@ Note about IRO "Patching": Imagine you have a very large file size (say, 1GB or 
 <img src="images/screens/shell.integration.shortcut.png" style="max-height:400px;">
 </center>
 <br />
-<b>To Get Here: </b>Open a Command Prompt window. You can do that by right-clicking the Start Menu button in newer versions of Windows, then select Command Prompt. Or, you can click Start, Run (or type in the search bar) and type cmd.exe and press the Enter key. From within the Command Prompt window, navigate to your 7th Heaven installation folder where SeventhHeaven.exe is located. Press the Enter key after each command. For example:
+<b>To Get Here: </b>Open a Command Prompt window. You can do that by right-clicking the Start Menu button in newer versions of Windows, then select Command Prompt. Or, you can click Start, Run (or type in the search bar) and type cmd.exe and press the Enter key. From within the Command Prompt window, navigate to your 7th Heaven installation folder where 7th Heaven.exe is located. Press the Enter key after each command. For example:
+
 <pre>
   <code>
 c:
 chdir "C:\7th Heaven"
   </code>
 </pre>
-<b>What it is: </b>You can control some functions of 7th Heaven from a Command Prompt. This can be useful for automation or creating batch files or customized shortcuts. Commands are processed in order: /MINI, /PROFILE:, /LAUNCH, /QUIT, /OPENIRO:, /PACKIRO:, /UNPACKIRO:.
+
+<b>What it is: </b>You can control some functions of 7th Heaven from a Command Prompt. This can be useful for automation or creating batch files or customized shortcuts. Commands are processed in order: /MINI, /PROFILE:, /LAUNCH, /QUIT, /OPENIRO:, /PACKIRO:, /UNPACKIRO:. So, if you put the /QUIT parameter first, as an example, the other parameters will not be run.
 <br /><br />
-<b>How to Use: </b>You will type SeventhHeaven.exe followed by one or more command parameters. See below explanations.
+<b>How to Use: </b>You will type "7th Heaven.exe" followed by one or more command parameters. See below explanations.
 <br /><br />
-<b>/PROFILE:NameOfProfileToLoad</b> Loads a profile. Example: SeventhHeaven.exe /PROFILES:Default will load the default profile. The profile name must exist. You can modify and create Profiles from <a href="#profiles">Profiles</a>. This is useful if you want to create a shortcut that opens a certain profile with a certain mod configuration (what mods are active and what settings are configured for those mods). If you start SeventhHeaven.exe without the /PROFILE parameter, then 7th Heaven will just automatically open the last profile used.
+<b>/PROFILE:NameOfProfileToLoad</b> Loads a profile. Example: SeventhHeaven.exe /PROFILES:Default will load the default profile. The profile name must exist. You can modify and create Profiles from <a href="#profiles">Profiles</a>. This is useful if you want to create a shortcut that opens a certain profile with a certain mod configuration (what mods are active and what settings are configured for those mods). If you start 7th Heaven.exe without the /PROFILE parameter, then 7th Heaven will just automatically open the last profile used.
 <br /><br />
 <b>/LAUNCH</b> Launches Final Fantasy VII.
 <br /><br />
@@ -509,16 +552,16 @@ chdir "C:\7th Heaven"
 An example of using all of these functions together is below. This will start 7th Heaven in a minimized window, load the profile named 'MyFavoriteMods', start Final Fantasy VII, wait for the game to exit and then close out of 7th Heaven.
 <pre>
   <code>
-SeventhHeaven.exe /PROFILE:MyFavoriteMods /LAUNCH /MINI /QUIT
+"7th Heaven.exe" /MINI /PROFILE:MyFavoriteMods /LAUNCH /QUIT
   </code>
 </pre>
 There are additional Command Line Parameters that can be used in order to work with mods:
 <br /><br />
-<b>/OPENIRO:PathAndFileNameToIRO</b> Imports a mod into your <a href="#ui_mymods_detail">My Mods Tab</a>. Example: SeventhHeaven.exe /OPENIRO:"C:\Users\unab0mb\Desktop\MyModFile.iro" .
+<b>/OPENIRO:PathAndFileNameToIRO</b> Imports a mod into your <a href="#ui_mymods_detail">My Mods Tab</a>. Example: "7th Heaven.exe" /OPENIRO:"C:\Users\unab0mb\Desktop\MyModFile.iro" .
 <br /><br />
-<b>/PACKIRO:PathAndFolderName</b> Packs a mod folder into a single .IRO file for distribution. Example: SeventhHeaven.exe /PACKIRO:"C:\Users\unab0mb\Desktop\MyModFolder" . An .IRO file will be created with the same name as the folder, with an .IRO file extension.
+<b>/PACKIRO:PathAndFolderName</b> Packs a mod folder into a single .IRO file for distribution. Example: "7th Heaven.exe" /PACKIRO:"C:\Users\unab0mb\Desktop\MyModFolder" . An .IRO file will be created with the same name as the folder, with an .IRO file extension.
 <br /><br />
-<b>/UNPACKIRO:PathAndFileNameToIRO</b> Unpacks (extracts) an .IRO file. A subfolder with the .IRO file's name will be automatically created. Example: SeventhHeaven.exe /UNPACKIRO:"C:\Users\unab0mb\Desktop\MyModFile.iro" .
+<b>/UNPACKIRO:PathAndFileNameToIRO</b> Unpacks (extracts) an .IRO file. A subfolder with the .IRO file's name will be automatically created. Example: "7th Heaven.exe" /UNPACKIRO:"C:\Users\unab0mb\Desktop\MyModFile.iro" .
 </p>
 
 <p>
@@ -569,7 +612,7 @@ There are additional Command Line Parameters that can be used in order to work w
     </li>
 	<li><b>Warn When Mods Contain Code: </b>When<img src="images/buttons/toggle.on.png" style="max-height:30px; vertical-align:middle">, any time you activate a mod that contains hext patching or other executable code, you will receive a warning that it could harm your computer. Only activate mods you trust from a reliable source. Turn this<img src="images/buttons/toggle.off.png" style="max-height:30px; vertical-align:middle"> if you do not want to receive these warnings every time you activate a mod with code.<br />
     </li>
-	<li><b>Keep Older Mod Versions After Updating: </b>When<img src="images/buttons/toggle.on.png" style="max-height:30px; vertical-align:middle">, 7th Heaven will keep the old copy of your mod even after you update to a newer version from a catalog.<br />
+	<li><b>Auto Update Mods By Default: </b>When<img src="images/buttons/toggle.on.png" style="max-height:30px; vertical-align:middle">, 7th Heaven will set all installed mods to 'Auto Update/Install'. When<img src="images/buttons/toggle.off.png" style="max-height:30px; vertical-align:middle">, 7th Heaven will set all installed mods to the default 'Notify' option.<br />
     </li>
 	<li><b>Ignore Mod Compatibility Restrictions: </b>When<img src="images/buttons/toggle.on.png" style="max-height:30px; vertical-align:middle"> (not recommended), 7th Heaven will allow incompatible mods or certain settings of mods to be activated even if they are not compatible with each other. Turn this<img src="images/buttons/toggle.off.png" style="max-height:30px; vertical-align:middle"> to allow 7th Heaven to keep mods and mod settings compatible with each other.<br />
     </li>
@@ -643,7 +686,7 @@ There are additional Command Line Parameters that can be used in order to work w
   <br />
   <li><b>Show Game Launcher: </b>Shows or hides the detailed status/log when launching the game. If this option is<img src="images/buttons/toggle.on.png" style="max-height:30px; vertical-align:middle">, the <a href="#gamelauncher">Game Launcher</a> window will be displayed. Otherwise, you will see status updates from the <a href="#gamelauncher">Game Launcher</a> in the <a href="#ui_infobar_detail">Info/Status Bar (Log)</a> only.</li>
   <br />
-  <li><b>Controls: </b>The controls you have selected here will automatically be applied every time you start the game. This fixes a problem for some people where FF7 would frequently lose your configuration and make you have to setup your controls over and over. You can select a preset keyboard and gamepad button configuration from the drop down. If you've already had custom keys/buttons set up in the game but clicked 'Play', 7th Heaven has already made a backup copy of your controls for you and you can select them again if you like. Just select 'Custom' from the drop down menu and the controls you had set will be applied when you run the game. If you have 'Custom' controls set and you go into the game and change them, be sure you come back to this setting and click the<img src="images/buttons/appbar.refresh.png" style="max-height:30px; vertical-align:middle">button. This will force 7th Heaven to re-import your controls settings from the game so they can be applied the next time you click 'Play'.</li>
+  <li><b><a id="controls">Controls</a>: </b>The controls you have selected here will automatically be applied every time you start the game. This fixes a problem for some people where FF7 would frequently lose your configuration and make you have to setup your controls over and over. You can select a preset keyboard and gamepad button configuration from the drop down. If you've already had custom keys/buttons set up in the game but clicked 'Play', 7th Heaven has already made a backup copy of your controls for you and you can select them again if you like. Just select 'Custom' from the drop down menu and the controls you had set will be applied when you run the game. If you have 'Custom' controls set and you go into the game and change them, be sure you come back to this setting and click the<img src="images/buttons/appbar.refresh.png" style="max-height:30px; vertical-align:middle">button. This will force 7th Heaven to re-import your controls settings from the game so they can be applied the next time you click 'Play'.</li>
   <br />
 </ul>
 
@@ -651,12 +694,12 @@ There are additional Command Line Parameters that can be used in order to work w
 <br /><center><img src="images/screens/launcher.settings.compat.png" style="max-width:350px;"></center>
 
 <ul>
-  <li><b>High-DPI Scaling Fix: </b>Turn this<img src="images/buttons/toggle.on.png" style="max-height:30px; vertical-align:middle">if you are using a high DPI setting above 100% display scaling for your monitor and you notice that the Final Fantasy VII screen is cut off or not centered properly. <b>Note: Turning this setting on can have side-effects and can cause your open programs to move around, particularly on multi-monitor setups.</b> Alternatively, you can go into Windows Display Settings and change your DPI to 100%.
+  <li><b><a id="highdpifix">High-DPI Scaling Fix: </b>Turn this<img src="images/buttons/toggle.on.png" style="max-height:30px; vertical-align:middle">if you are using a high DPI setting above 100% display scaling for your monitor and you notice that the Final Fantasy VII screen is cut off or not centered properly. <b>Note: Turning this setting on can have side-effects and can cause your open programs to move around, particularly on multi-monitor setups.</b> Alternatively, you can go into Windows Display Settings and change your DPI to 100%.
   <br />
   <center><img src="images/troubleshooting/high.dpi.problem.png" style="max-width:350px;"></center>
   </li>
   <br />
-  <li><b>Code 5 Fix (aka 640x480 compat. flag): </b>This should no longer be an issue starting with 7th Heaven 2.0 and this option is disabled and unselectable by default. On old versions of 7th Heaven, it was common to get an error while trying to launch FF7. This was a problem in a 3rd party tool used by 7th Heaven called 'EasyHook', not a problem in 7th Heaven itself. 2.0 includes a custom fixed version of EasyHook that hopefully resolves these problems, but includes the 'Code 5 Fix' as a fallback just in case. When the <a href="#gamelauncher">Game Launcher</a> starts, it will automatically attempt to launch your game 7 times in the background. If launching the game fails, you will be prompted to turn this setting on and retry. The option then becomes available to you in the Game Launcher Settings. <b>Note: Turning this setting on can have side-effects and can cause your open programs to move around, particularly on multi-monitor setups.</b>
+  <li><b><a id="code5fix">Code 5 Fix (aka 640x480 compat. flag): </b>This should no longer be an issue starting with 7th Heaven 2.0 and this option is disabled and unselectable by default. On old versions of 7th Heaven, it was common to get an error while trying to launch FF7. This was a problem in a 3rd party tool used by 7th Heaven called 'EasyHook', not a problem in 7th Heaven itself. 2.0 includes a custom fixed version of EasyHook that hopefully resolves these problems, but includes the 'Code 5 Fix' as a fallback just in case. When the <a href="#gamelauncher">Game Launcher</a> starts, it will automatically attempt to launch your game 7 times in the background. If launching the game fails, you will be prompted to turn this setting on and retry. The option then becomes available to you in the Game Launcher Settings. <b>Note: Turning this setting on can have side-effects and can cause your open programs to move around, particularly on multi-monitor setups.</b>
   <br />
   The error commonly seen was:<br /><i> 'System.ApplicationException: STATUS_INTERNAL_ERROR: Unknown error in injected assembler code. (Code: 5) at EasyHook.RemoteHooking.CreateAndInject(String InEXEPath, String...'</i>.</li>
   <br />
@@ -696,9 +739,22 @@ There are additional Command Line Parameters that can be used in order to work w
 <center><img src="images/screens/profiles.png" style="max-height:300px;"></center>
 <b>To Get Here: </b>Click 'Settings' then 'Profiles' in the <a href="#ui_menus_detail">Menu Bar</a>.
 <br /><br />
-<b>What it is: </b>Meow.
+<b>What it is: </b>Use the 'Manage Profiles' window to load, save, copy, delete, or view your profile settings. A profile contains what mods you have in the <a href="#ui_mymods_detail">My Mods Tab</a>, the active or inactive status of those mods, the settings you have configured in those mods, and your mod load order. Your current active profile is always displayed in 7th Heaven's title bar in between brackets, like [Default]. When you open the 'Manage Profiles' window, your current active profile should also be selected/highlighted automatically.
 <br /><br />
-<b>How to Use: </b>Moo.
+<b>How to Use: </b>Profiles are saved automatically when you exit 7th Heaven or if you manually save them or switch profiles in the 'Manage Profiles' window. 
+ <ul>
+  	<li>Click<img src="images/buttons/appbar.save.png" style="max-height:30px; vertical-align:middle">to save your current profile to a new profile name (or you can type an existing name to overwrite it).
+    </li>
+	<li>Click<img src="images/buttons/appbar.copy.png" style="max-height:30px; vertical-align:middle">to copy the selected profile to a new profile name (or you can type an existing name to overwrite it).
+    </li>
+	<li>Click<img src="images/buttons/appbar.delete.png" style="max-height:30px; vertical-align:middle">to delete the selected profile.
+    </li>
+	<li>Click<img src="images/buttons/appbar.eye.png" style="max-height:30px; vertical-align:middle">to view details about the selected profile. The profile details will export to a random file name (to prevent file in-use conflicts), which will open in your default text editor and will show your 7th Heaven version followed by your mods, in order from top to bottom as they would be shown in your <a href="#ui_mymods_detail">My Mods Tab</a>. Details shown are the mod name, the mod ID, mod version, whether it is active or inactive, and all of the options you have configured in the <a href="#configmod">Configure Mod</a> window for that mod. All of the options you configured will show the variable names and values and new in 7th Heaven 2.0, will show the friendly names of those options and values for easier reading. See screenshot below for an example profile details view.
+    </li>
+	<li>Click the 'Load Profile' button at the bottom to load/switch to the selected profile and close the 'Manage Profiles' window. Tip: You can also double-click the profile to load it.
+    </li>
+</ul>
+<center><img src="images/screens/profiles.details.png" style="max-height:500px;"></center>
 </p>
 
 <center><a href="#the_top">Top of page</a></center>

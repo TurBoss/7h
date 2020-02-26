@@ -10,7 +10,7 @@
 	  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 	  	<style type="text/css" media="screen">
 		img{
-			max-width:500px;
+			max-width:700px;
 		}
 		a:visited{
 			color:#59b3e7
@@ -24,6 +24,7 @@
 		body {
 			background-color: #000000;
 			color:#FFFFFF;
+			line-height: 30px;
 		}
 		code {font-size: 120%;}
 		
@@ -31,7 +32,7 @@
 			background-color: #262626;
 			border: 1px solid #999;
 			display: block;
-			padding: 20px;
+			padding: 5px;
 		}
 	</style>
    </head>
@@ -42,19 +43,371 @@
 
 <center><h1>7th Heaven Help</h1></center>
       <p style = "font-family: Arial, Helvetica, sans-serif;font-size:16px;">
-<center><a href="index.html">What is 7th Heaven?</a>	|	<a href="getstarted.html">Getting Started</a>	|	<a href="userhelp.html">Using 7th Heaven</a>	|	<a href="modhelp.html">Modding</a>	|	<a href="troubleshooting.html">Troubleshooting</a></center>
+<center><a href="index.html">What is 7th Heaven?</a>	|	<a href="getstarted.html">Getting Started</a>	|	<a href="userhelp.html">Using 7th Heaven</a>	|	<a href="modhelp.html">Creating Mods</a>	|	<a href="troubleshooting.html">FAQ/Troubleshooting</a></center>
 
-Contents:<br>
+<center><br />This section is to assist mod authors with supported tags and options that they can use in their mod.xml files for their mods. Mod.xml files specify how the mods should function, what files should be loaded, settings available for the mod, compatibility with other mods, and mod sort order. This section is not intended to teach you about the ins and outs of FF7's file/folder structure for modding, etc. You will have to research the Qhimm forums for that. It is intended to show the available functions of developing your mod to work best in 7th Heaven.<br /><br /></center>
+
+Contents:<br />
 <ol type="1">
-  <li><a href="#link1">Index 1</a></li>
-  <li><a href="#link2">Index 2</a></li>
-  <li><a href="#link3">Index 3</a></li>
+  <li><a href="#basicmodfeatures">Basic Mod.xml Features</a></li>
+      <ul>
+  <li><a href="#modinfo">Mod Information</a></li>
+  <li><a href="#modfolders">Mod Folders</a></li>
+  <li><a href="#conditionalfolders">Conditional Folders</a></li>
+  <li><a href="#modconfig">Config Options</a></li>
+  <li><a href="#treeviewstyle">Treeview Style</a></li>
+  <li><a href="#modoperators">Operators</a></li>
+	   </ul>
+  <li><a href="#compatwithothermods">Compatibility With Other Mods</a></li>
+      <ul>
+  <li><a href="#moddependency">Mod Dependency</a></li>
+  <li><a href="#modcompatsettings">Mod Compatibility Settings</a></li>
+  <li><a href="#modloadorder">Mod Load Order</a></li>
+	   </ul>
+	     <li><a href="#catalogsubs">Catalog Subscriptions</a></li>
+      <ul>
+  <li><a href="#linkformats">Link Formats</a></li>
+  <li><a href="#downloadingmods">Downloading Mods</a></li>
+  <li><a href="#patchingmods">Patching Mods</a></li>
+	   </ul>
 </ol>
 
-<u><h2><a id="link1">Coming Soon</a></h2></u>
-Guide for modding coming soon.
-<br>
-<u><h2><a id="link2">Work in Progress</a></h2></u>
+<u><h2><a id="basicmodfeatures">Basic Mod.xml Features</a></h2></u>
+<b><a id="modinfo">Mod Information</a></b>: Your entire mod.xml code must be in the &lt;ModInfo&gt; tag, including the mod information, folders, settings, and compatibility. You can put comments in your mod.xml using standard XML formatting like &lt;!--My Comment Here--&gt;.</b>
+<ul>
+  <li><b>ID</b>: <b>This is EXTREMELY IMPORTANT!</b> You should specify a unique 32-character GUID that will identify your mod. This is so 7th Heaven  and other mods know how to identify your mod for updates, sort order, compatibility, settings, etc. You can generate a new, random ID for your mod by opening the <a href="userhelp.html#catalogmodcreationtool">Catalog/Mod Creation Tool</a>.</li>
+  <li><b>Name</b>: Give your mod a name.</li>
+  <li><b>Author</b>: The name of the author or authors of the mod.</li>
+  <li><b>Version</b>: The version number of your mod in format x.xx.</li>
+  <li><b>ReleaseDate</b>: The date your mod is/will be released in format YYYY-MM-DD.</li>
+  <li><b>Category</b>: The category that your mod belogs to. Valid choices are Animations, Battle Models, Battle Textures, Field Models, Field Textures, Gameplay, Media, Minigames, Miscellaneous, Spell Textures, User Interface, World Models, World Textures. If you do not specify a category, 7th Heaven will categorize it as Unknown.</li>
+  <li><b>ReleaseNotes</b>: These are notes for this specific release of your mod, such as "I added this new feature."</li>
+  <li><b>Link</b>: The web address/URL for your mod, usually where users can find more information about your mod.</li>
+  <li><b>PreviewFile</b>: The name of an image file that you want shown in the 7th Heaven UI in the Mod Info Panel.</li>
+  <li><b>Readme File</b>: This isn't in the mod.xml file itself, but you can include a Readme.txt or a Readme.html file in the root of your mod folder and 7th Heaven will open it if the user clicks on the Readme link in the UI.</li>
+</ul>
+<pre>
+  <code>
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ModInfo>
+  &lt;ID&gt;00000000-0000-0000-0000-000000000000&lt;/ID&gt;
+  &lt;Name&gt;My Awesome World Map Water Mod&lt;/Name&gt;
+  &lt;Author&gt;Some Person&lt;/Author&gt;
+  &lt;Version&gt;1.00&lt;/Version&gt;
+  &lt;ReleaseDate&gt;2019-12-25&lt;/ReleaseDate&gt;
+  &lt;Category&gt;World Textures&lt;/Category&gt;
+  &lt;Description&gt;Retextures for all water on the World Map.&lt;/Description&gt;
+  &lt;ReleaseNotes&gt;This is my first version!&lt;/ReleaseNotes&gt;
+  &lt;Link&gt;https://forums.qhimm.com/&lt;/Link&gt;
+  &lt;PreviewFile&gt;preview.gif&lt;/PreviewFile&gt;
+&lt;/ModInfo&gt;
+  </code>
+</pre>
+
+<b><a id="modfolders">Mod Folders</a></b>: Files needed for your mod should follow a folder structure. Each folder should be named so that you can easily identify them. You can manipulate which folders are active based on the mod settings you specify, or game conditions or other variables. 7th Heaven will check the mod paths in the order they're specified in its mod.xml file. The subfolders in your mod should follow the FF7 game folder structure. An example folder structure is below:
+<pre>
+  <code>
+                    |- mymodfolder
+                           |- mod.xml
+                           |- menu_us.lgp
+                                         |- cloud.tex
+                                         |- earith.tex
+                           |- sewer
+                                         |- char.lgp
+                                                 |- aaba.p
+                           |- junon
+                                         |- char.lgp
+                                                 |- aaba.p
+                           |- vgmstream
+                                         |- fan2.ogg
+
+  </code>
+</pre>
+
+To activate a subfolder in your mod based on a setting variable that you're using in 'Configure Mod', use &lt;ModFolder Folder="NameOfSubFolder" ActiveWhen=&quot;MySetting = 1&quot;/&gt;. More on using the Configure Mod settings later.
+
+<pre>
+  <code>
+&lt;ModInfo>  
+  &lt;ModFolder Folder=&quot;MyModFolder\ModSubFolder&quot;  ActiveWhen=&quot;MySetting = 1&quot; /&gt;
+&lt;/ModInfo&gt;
+  </code>
+</pre>
+
+<b><a id="conditionalfolders">Conditional Folders</a></b>: Conditional folders allow you to activate a folder of your mod when certain conditions are met, such as with runtime variables like a random number, counter, time, or game memory address. The below example is based on a mod with the folder structure as listed above in the 'Mod Folders' section.
+<pre>
+  <code>
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ModInfo&gt;
+  &lt;Conditional Folder=&quot;sewer&quot;&gt;
+    &lt;RuntimeVar Var=&quot;Short:0xCC15D0:2&quot; Values=&quot;0xD5,0x160&quot; /&gt;
+  &lt;/Conditional&gt;
+  &lt;Conditional Folder=&quot;junon&quot;&gt;
+    &lt;RuntimeVar Var=&quot;Short:0xDC08DC:2&quot; Values=&quot;300..400&quot; /&gt;
+  &lt;/Conditional&gt;
+&lt;/ModInfo&gt;
+  </code>
+</pre>
+
+What this means, if you activate this mod:<br />
+
+1) cloud.tex and earith.tex always replace the files in menu_us.lgp<br />
+2) 7th Heaven will read a 2-byte value from a location in memory (0xCC15D0 - this is the 'FieldID' variable). If it becomes 0xD5 or 0x160 then the files in the 'sewer' folder will become active, and so aaba.p inside char.lgp will also be replaced.<br />
+3) 7th Heaven will also check memory location 0xDC08DC (this is the PPV variable). If it is in the range 300-400, then the 'junon' folder will become active and it will replace aaba.p inside char.lgp
+<br /><br />
+If both conditions are true then the version of aaba.p from the 'sewer' folder is used, because it is listed first in the mod.xml file. If neither is true then the original version from the LGP file is used.
+
+<br />Note: Short:0xCC15D0:2 can be replaced with "FieldID" and Short:0xDC08DC:2 can be replaced with "PPV" as both of those memory locations are specified by default in the 7thHeaven.var file.
+<br /><br />
+
+<b><a id="modconfig">Config Options</a></b>: Below is an example mod that has 2 options that you can configure for the mod. The first is a folder called 'HolidayOutfits' that contains models for the main characters that changes their clothing to holiday style outfits, say, a Barret Santa, Cait Sith Snowman, Tifa Elf, etc. This option is a 'bool' (on or off) &lt;Type&gt; toggle value. The second is an option that changes the in-game music to a set of tracks from different genres. This option is a 'List' &lt;Type&gt; which has 4 settings: Default, Dance, Pop, and Rock music which are selectable from a drop-down list. Depending on what settings the user has set, different options of your/this mod would apply to the game. The first option has 'PreviewFile' which will show a preview image (gif, jpg, or png) of the selected setting. The second option has 'PreviewAudio' which will display a 'Play' button where the user can hear a sample of the music (mp3 or ogg) that is selected. The default selection for the outfits is 0 or 'off', and the default value for the music selection is 3 or 'Rock'. All of the variable names you want to assign to these different config options are in the &lt;ID&gt; tag.
+
+<pre>
+  <code>
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;ModInfo&gt;
+  &lt;ModFolder Folder=&quot;HolidayOutfits&quot; ActiveWhen=&quot;outfits = 1&quot; /&gt;
+  &lt;ModFolder Folder=&quot;MusicStyle\Dance\vgmstream&quot; ActiveWhen=&quot;music = 1&quot; /&gt;
+  &lt;ModFolder Folder=&quot;MusicStyle\Pop\vgmstream&quot; ActiveWhen=&quot;music = 2&quot; /&gt;
+  &lt;ModFolder Folder=&quot;MusicStyle\Rock\vgmstream&quot; ActiveWhen=&quot;music = 3&quot; /&gt;
+
+  &lt;ConfigOption&gt;
+    &lt;Type&gt;Bool&lt;/Type&gt;
+    &lt;Default&gt;0&lt;/Default&gt;
+    &lt;ID&gt;outfits&lt;/ID&gt;
+    &lt;Name&gt;Holiday Outfit Models&lt;/Name&gt;
+    &lt;Description&gt;This changes main characters outfits to Christmas style.&lt;/Description&gt;
+    &lt;Option Value=&quot;0&quot; Name=&quot;&quot; PreviewFile=&quot;preview\hollyoff.jpg&quot; /&gt;
+    &lt;Option Value=&quot;1&quot; Name=&quot;&quot; PreviewFile=&quot;preview\hollyon.jpg&quot; /&gt;
+  &lt;/ConfigOption&gt;
+
+  &lt;ConfigOption&gt;
+    &lt;Type&gt;List&lt;/Type&gt;
+    &lt;Default&gt;3&lt;/Default&gt;
+    &lt;ID&gt;music&lt;/ID&gt;
+    &lt;Name&gt;Choose Music Style&lt;/Name&gt;
+    &lt;Description&gt;This lets you change the genre of music you hear in the game.&lt;/Description&gt;
+    &lt;Option Value=&quot;0&quot; Name=&quot;Default Game&quot;/&gt;
+    &lt;Option Value=&quot;1&quot; Name=&quot;Dance&quot; PreviewFile=&quot;preview\dance.ogg&quot;/&gt;
+    &lt;Option Value=&quot;2&quot; Name=&quot;Pop&quot; PreviewFile=&quot;preview\pop.ogg&quot;/&gt;
+    &lt;Option Value=&quot;3&quot; Name=&quot;Rock&quot; PreviewFile=&quot;preview\rock.ogg&quot; /&gt;
+  &lt;/ConfigOption&gt;
+&lt;/ModInfo&gt;
+  </code>
+</pre>
+
+<b><a id="treeviewstyle">Treeview Style</a></b>: New in 7th Heaven 2.0! In addition to the regular list style, you can now show your mod settings in a grouped Treeview style. You will trigger the Treeview style by placing at least 3 equal signs '===' at the beginning of the Name of the config option. The ===Name=== will become the header/group of the treeview. This was designed this way to maintain full backwards compatibility with older 7th Heaven versions. <b>Note: You CANNOT switch back and forth between list items and the treeview! It is ALL or NOTHING. Once you trigger the TreeView style, all Config Options must then have a header--a Parent/Child relationship. See example below.</b>
+<pre>
+  <code>
+    &lt;ConfigOption&gt;
+    &lt;Type&gt;List&lt;/Type&gt;
+    &lt;Default&gt;0&lt;/Default&gt;
+    &lt;ID&gt;CharacterThemesHeader&lt;/ID&gt;
+    &lt;Name&gt;===Character Themes===&lt;/Name&gt;
+    &lt;Description&gt;Character Themes - Expand arrows on the left for track selection options.&lt;/Description&gt;
+    &lt;Option Value=&quot;0&quot; Name=&quot;&quot;/&gt;
+  &lt;/ConfigOption&gt;
+  
+  &lt;ConfigOption&gt;
+    &lt;Type&gt;List&lt;/Type&gt;
+    &lt;Default&gt;1&lt;/Default&gt;
+    &lt;ID&gt;oggearis&lt;/ID&gt;
+    &lt;Name&gt;Aerith's Theme&lt;/Name&gt;
+    &lt;Description&gt;Plays during scenes with Aeris and Sephiroth in the Forgotten City and during the subsequent battle with Jenova-LIFE.&lt;/Description&gt;
+    &lt;Option Value=&quot;0&quot; Name=&quot;No Change&quot; PreviewFile=&quot;off.png&quot;/&gt;
+    &lt;Option Value=&quot;1&quot; Name=&quot;Default Mix&quot; PreviewFile=&quot;on.png&quot; PreviewAudio=&quot;\vgmstream\earis.ogg&quot;/&gt;
+  &lt;/ConfigOption&gt;
+  
+  &lt;ConfigOption&gt;
+    &lt;Type&gt;List&lt;/Type&gt;
+    &lt;Default&gt;1&lt;/Default&gt;
+    &lt;ID&gt;oggbarret&lt;/ID&gt;
+    &lt;Name&gt;Barret's Theme&lt;/Name&gt;
+    &lt;Description&gt;Plays as the background to Sector 7 and the 7th Heaven after Cloud agrees to attack the Sector 5 Reactor.&lt;/Description&gt;
+    &lt;Option Value=&quot;0&quot; Name=&quot;No Change&quot; PreviewFile=&quot;off.png&quot;/&gt;
+    &lt;Option Value=&quot;1&quot; Name=&quot;Default Mix&quot; PreviewFile=&quot;on.png&quot; PreviewAudio=&quot;\vgmstream\barret.ogg&quot;/&gt;
+  &lt;/ConfigOption&gt;
+  
+  &lt;ConfigOption&gt;
+    &lt;Type&gt;List&lt;/Type&gt;
+    &lt;Default&gt;1&lt;/Default&gt;
+    &lt;ID&gt;oggsid2&lt;/ID&gt;
+    &lt;Name&gt;Cid's Theme&lt;/Name&gt;
+    &lt;Description&gt;Plays when meeting Cid and during prominent scenes featuring him.&lt;/Description&gt;
+    &lt;Option Value=&quot;0&quot; Name=&quot;No Change&quot; PreviewFile=&quot;off.png&quot;/&gt;
+    &lt;Option Value=&quot;1&quot; Name=&quot;Default Mix&quot; PreviewFile=&quot;on.png&quot; PreviewAudio=&quot;\vgmstream\sid2.ogg&quot;/&gt;
+  &lt;/ConfigOption&gt;
+  
+    &lt;ConfigOption&gt;
+    &lt;Type&gt;List&lt;/Type&gt;
+    &lt;Default&gt;0&lt;/Default&gt;
+    &lt;ID&gt;NextGroupHeader&lt;/ID&gt;
+    &lt;Name&gt;===Next Header===&lt;/Name&gt;
+    &lt;Description&gt;This is the start of the next group of options.&lt;/Description&gt;
+    &lt;Option Value=&quot;0&quot; Name=&quot;&quot;/&gt;
+  &lt;/ConfigOption&gt;
+  </code>
+</pre>
+
+<b><a id="modoperators">Mod Operators</a></b>: You can add operators that change the behavior of when a mod folder becomes active. Supported operators are 'And', 'Or', and 'Not'. See examples below.
+<pre>
+  <code>
+&lt;!--The folder would be active if BOTH MySetting AND MySetting2 do NOT equal 1--&gt;
+        &lt;ModFolder Folder=&quot;MyModSubFolder&quot; &gt;
+         &lt;ActiveWhen&gt;
+            &lt;Not&gt;
+             &lt;And&gt;
+              &lt;Option&gt;MySetting = 1&lt;/Option&gt;
+              &lt;Option&gt;MySetting2 = 1&lt;/Option&gt;
+             &lt;/And&gt;
+            &lt;/Not&gt;
+         &lt;/ActiveWhen&gt;
+      &lt;/ModFolder&gt;
+  </code>
+</pre>
+
+<pre>
+  <code>
+&lt;!--The folder would be active if EITHER MySetting OR MySetting2 equal 1--&gt;
+        &lt;ModFolder Folder=&quot;MyModSubFolder&quot; &gt;
+         &lt;ActiveWhen&gt;
+             &lt;Or&gt;
+              &lt;Option&gt;MySetting = 1&lt;/Option&gt;
+              &lt;Option&gt;MySetting2 = 1&lt;/Option&gt;
+             &lt;/Or&gt;
+         &lt;/ActiveWhen&gt;
+      &lt;/ModFolder&gt;
+  </code>
+</pre>
+
+<u><h2><a id="compatwithothermods">Compatibility With Other Mods</a></h2></u>
+<b><a id="moddependency">Mod Dependency</a>: </b>
+If your mod is dependent on another mod to be activated or deactivated in order to work properly, you can specify that in your mod.xml file in the Compatibility section/tag. If your mod requires another mod to be activated in order for yours to work properly, use the 'Require' tag. If your mod is completely incompatible with another mod, you can use the 'Forbid' tag. There is an optional 'Versions' parameter if one or more specific versions of the mod must be activated/deactivated. Note that 'Versions' targets specific versions, it is not a minimum version requirement. Example, if you specify 'Versions="1.0,3.0", that means the mod is dependent on versions 1.0 or 3.0 specifically. Version 2.0 will NOT be considered a dependency. If no 'Versions' parameter is specified, then version numbers are ignored and the dependency applies to ANY version of the mod.
+<pre>
+  <code>
+  &lt;!--Your mod REQUIRES that any version of the modID specified is activated--&gt;
+  &lt;Compatibility&gt;
+    &lt;Require ModID=&quot;00000000-0000-0000-0000-000000000000&quot;&gt;Name of Other Mod&lt;/Require&gt;
+  &lt;/Compatibility&gt;
+  </code>
+</pre>
+<pre>
+  <code>
+  &lt;!--Your mod FORBIDS that any version of the modID specified is activated--&gt;
+  &lt;Compatibility&gt;
+    &lt;Forbid ModID=&quot;00000000-0000-0000-0000-000000000000&quot;&gt;Name of Other Mod&lt;/Forbid&gt;
+  &lt;/Compatibility&gt;
+  </code>
+</pre>
+<pre>
+  <code>
+  &lt;!--Your mod FORBIDS that versions 1.0 and 2.0 of the modID specified is activated (but 3.0 would work)--&gt;
+  &lt;Compatibility&gt;
+    &lt;Forbid ModID=&quot;00000000-0000-0000-0000-000000000000&quot; Versions=&quot;1.0,2.0&quot;&gt;Name of Other Mod&lt;/Forbid&gt;
+  &lt;/Compatibility&gt;
+  </code>
+</pre>
+
+<b><a id="modcompatsettings">Mod Compatibility Settings</a>: </b>
+You can specify that if your mod has certain settings enabled, that other settings must also be set (either in your own mod or other mods) in order for them to be compatible with each other. This example shows that if your mod has a setting turned on 'MySettingVariable', that another mod (Qhimm Catalog 3.0 Minigames) must have its 'Wonder Square - Tweaks' setting set to 0. Instead of using the 'Require' tag, you can also use 'Forbid'. So for example, if a setting has 4 options in a drop down list and all of them except the value of 0 works fine with your mod, you would specify &lt;Forbid&gt;0&lt;/Forbid&gt;. That way, all options are selectable EXCEPT 0. The 'ModID' can specify your own mod's mod ID, or another (external of your mod) mod's ID. So, you could specify that if a specific setting in your own mod is selected, that another option be forced to a specific setting in your own mod as well.
+<pre>
+  <code>
+&lt;!--This specifies that if MySettingVariable has a value of 1 that--&gt;
+&lt;!--the Qhimm Catalog 3.0 Minigames mod must have Wonder Square turned off.--&gt;
+&lt;!--Otherwise the 2 mods would be incompatible.--&gt;
+&lt;Compatibility&gt;
+	&lt;Setting&gt;
+	  &lt;MyID&gt;MySettingVariable&lt;/MyID&gt;
+	  &lt;MyValue&gt;1&lt;/MyValue&gt;
+	  &lt;ModID&gt;fae201ee-9fa5-4163-ab56-2b478111449d&lt;/ModID&gt;
+	  &lt;TheirID&gt;Wonder Square - Tweaks&lt;/TheirID&gt;
+	  &lt;Require&gt;0&lt;/Require&gt;
+	&lt;/Setting&gt;
+&lt;/Compatibility&gt;
+  </code>
+</pre>
+
+<b><a id="modloadorder">Mod Load Order</a>: </b>
+You can specify in your mod.xml file that your mod requires being above (Before) or below (After) other mod IDs in order to work correctly using the &lt;OrderConstraints&gt; tag. 7th Heaven 2.0's Auto Sort feature will take this into account when auto-sorting the mods. First, mods will be sorted by category, then alphabetically by name, then by the settings specified in the mod load order in mod.xml. You can specify one or many mods at a time. <b>Note: OrderConstraints do NOT go inside the Compatibility tag (despite being in this section of the Help).</b>
+<pre>
+  <code>
+&lt;!--Specifies that your mod should be placed below (After) the modIDs specified--&gt;
+  &lt;OrderConstraints&gt;
+	&lt;After&gt;00000000-0000-0000-0000-000000000000&lt;/After&gt;
+	&lt;After&gt;00000000-0000-0000-0000-000000000001&lt;/After&gt;
+	&lt;After&gt;00000000-0000-0000-0000-000000000002&lt;/After&gt;
+  &lt;/OrderConstraints&gt;
+  </code>
+</pre>
+<pre>
+  <code>
+&lt;!--Specifies that your mod should be placed above (Before) the modIDs specified--&gt;
+  &lt;OrderConstraints&gt;
+	&lt;Before&gt;00000000-0000-0000-0000-000000000000&lt;/Before&gt;
+	&lt;Before&gt;00000000-0000-0000-0000-000000000001&lt;/Before&gt;
+	&lt;Before&gt;00000000-0000-0000-0000-000000000002&lt;/Before&gt;
+  &lt;/OrderConstraints&gt;
+  </code>
+</pre>
+
+<u><h2><a id="catalogsubs">Catalog Subscriptions</a></h2></u>
+You can create basic Catalog Subscriptions using the <a href="userhelp.html#catalogmodcreationtool">Catalog/Mod Creation Tool</a>.
+<br /><br />
+
+<b><a id="linkformats">Link Formats</a></b>: 7th Heaven supports links in the below formats. Links will begin with iros:// then the link type. The :// in http:// is replaced with a $ symbol in all links.
+<ul>
+  <li><b>GDrive</b>: Google Drive links are in the format of iros://GDrive/FileID . If you generate a shareable link in Google Drive, it will look something like https://drive.google.com/file/d/1mX0q6Yb4cgYNYkAmd8ocSfGu0c2QHT0B/view?usp=sharing . You would take the section 1mX0q6Yb4cgYNYkAmd8ocSfGu0c2QHT0B as the File ID so your link would become iros://GDrive/1mX0q6Yb4cgYNYkAmd8ocSfGu0c2QHT0B .</li>
+  <br />
+  <li><b>MEGA</b>: MEGA links are in the format of iros://MegaSharedFolder/folderID,fileID,fileName . FolderID is the shared folder ID string. Then specify EITHER the fileID OR the fileName. It is recommended to just use fileName because finding out the FileID is difficult. You can also use the MEGA Link Generator tab in the Catalog/Mod Creation Tool.</li>
+  <br />
+  <li><b>URL</b>: Regular URL links are in the format of iros://Url/http$www.mydomain.com/myfile.iro .</li>
+  <br />
+  <li><b>ExternalURL</b>: External URL links are in the format of iros://ExternalUrl/http$www.mydomain.com/myfile.iro . External links tell 7th Heaven to open the link external of 7th Heaven, in a web browser. This is useful if you have ad-supported links that you must use in order to download your mods when direct download links are unavailable.</li>
+</ul>
+
+<b><a id="downloadingmods">Downloading Mods</a></b>: When 7th Heaven downloads a mod from a catalog subscription, it expects one of the following:
+<ul>
+  <li><b>An .IRO file</b>: Simple, it is installed directly.</li>
+  <li><b>A ZIP/RAR/7Z file w/ IRO</b>: Containing a SINGLE .iro file. The file is extracted and installed. This is useful so that your IRO is compressed (externally) to save bandwidth/transfer time.</li>
+  <li><b>A ZIP/RAR/7Z file w/ Files</b>: Containing many other files (PNGs, TEXs, .....). So like a mod folder just zipped up. For this:  <br />
+   - if 'ExtractSubFolder' is set, it extracts only files from inside that particular folder inside the zip.<br />
+   - if 'ExtractInto' is set, it extracts the files into this particular subfolder inside the mod directory.</li>
+</ul>
+
+ExtractSubFolder is useful if your ZIP contains files that are not useful for the mod and you only need some of the files from the ZIP.<br /><br />
+
+ExtractInto is useful if your ZIP has not got the right folder structure for 7thHeaven. Like if your avatar files are just inside the ZIP with no folder names, you need to extract them into a folder called "menu_us.lgp" for 7th Heaven to work.
+<br /><br />
+
+<b><a id="patchingmods">Patching Mods</a></b>: If you've released a large mod and want to update it with a small .irop patch file (can be created with the IRO Tools in 7th Heaven), you can add a &lt;Patch&gt; entry in the catalog so people who already have the mod can update using the small .irop patch file. See the example below.</b>
+<pre>
+  <code>
+    &lt;Mod&gt;
+      &lt;ID&gt;BFAE987C-C1E6-42E6-8139-FF809142D72E&lt;/ID&gt;
+      &lt;Author&gt;Iros&lt;/Author&gt;
+      &lt;Link&gt;http://forums.qhimm.com/&lt;/Link&gt;
+      &lt;Name&gt;Test music/patching&lt;/Name&gt;
+      &lt;MetaVersion&gt;2&lt;/MetaVersion&gt;
+      &lt;Description&gt;Testing music in a IRO archive&lt;/Description&gt;
+      &lt;Tags&gt;
+        &lt;string&gt;Music&lt;/string&gt;
+      &lt;/Tags&gt;
+      &lt;LatestVersion&gt;
+        &lt;Link&gt;iros://Url/http$www.myserver.com/Music1.iro&lt;/Link&gt;
+        &lt;ApplyPatch&gt;iros://Url/http$www.myserver.com/Music_0_to_1.irop&lt;/ApplyPatch&gt;
+        &lt;ApplyPatch&gt;iros://Url/http$www.myserver.com/Music_1_to_2.irop&lt;/ApplyPatch&gt;
+	
+        &lt;Version&gt;1.2&lt;/Version&gt;
+        &lt;ReleaseDate&gt;2014-09-04&lt;/ReleaseDate&gt;
+        &lt;CompatibleGameVersions&gt;Original&lt;/CompatibleGameVersions&gt;
+        &lt;PreviewImage&gt;&lt;/PreviewImage&gt;
+        &lt;ReleaseNotes&gt;&lt;/ReleaseNotes&gt;
+      &lt;/LatestVersion&gt;
+      &lt;Patch VerFrom="1.0" VerTo="1.1"&gt;iros://Url/http$www.myserver.com/Music_0_to_1.irop&lt;/Patch&gt;
+      &lt;Patch VerFrom="1.1" VerTo="1.2"&gt;iros://Url/http$www.myserver.com/Music_1_to_2.irop&lt;/Patch&gt;
+    &lt;/Mod&gt;
+  </code>
+</pre>
 
 <center><a href="#the_top">Top of page</a></center>
       </p>
