@@ -95,21 +95,20 @@ namespace SeventhHeaven.Classes
             if (IsFF7Running())
             {
                 string title = "FF7 Is Already Running!";
-                string message = "FF7 is already running. Only 1 instance is allowed. Do you want to force close FF7 to continue?";
+                string message = "FF7 is already running. Do you want to force close it?\n\nClick Yes to close all current instances of FF7. Click No to start another instance.";
 
-                Instance.RaiseProgressChanged($"\t{message}", NLog.LogLevel.Warn);
+                Instance.RaiseProgressChanged($"\t{title}", NLog.LogLevel.Warn);
 
                 var result = MessageDialogWindow.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                if (result.Result == MessageBoxResult.No)
+                if (result.Result == MessageBoxResult.Yes)
                 {
-                    Instance.RaiseProgressChanged("\tAborting ...", NLog.LogLevel.Error);
-                    return false;
-                }
+                    Instance.RaiseProgressChanged("\tforce closing all instances of FF7 ...", NLog.LogLevel.Error);
 
-                if (!ForceKillFF7())
-                {
-                    Instance.RaiseProgressChanged($"\tFailed to close {Path.GetFileName(Sys.Settings.FF7Exe)} processes. Aborting ...", NLog.LogLevel.Error);
-                    return false;
+                    if (!ForceKillFF7())
+                    {
+                        Instance.RaiseProgressChanged($"\tfailed to close {Path.GetFileName(Sys.Settings.FF7Exe)} processes. Aborting ...", NLog.LogLevel.Error);
+                        return false;
+                    }
                 }
             }
 
