@@ -600,7 +600,7 @@ namespace SeventhHeaven.ViewModels
 
         internal void SelectBackgroundImage()
         {
-            string pathToFile = FileDialogHelper.BrowseForFile("*.png|*.png|*.jpg|*.jpg|*.jpeg|*.jpeg", "Select Background Image File");
+            string pathToFile = FileDialogHelper.BrowseForFile("*.png,*.jpg,*.jpeg|*.png;*.jpg;*.jpeg", "Select Background Image File");
 
             if (!string.IsNullOrEmpty(pathToFile))
             {
