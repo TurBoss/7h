@@ -10,7 +10,9 @@ namespace SeventhHeaven.Classes.Themes
     {
         Custom,
         DarkMode,
+        DarkModeWithBackground,
         LightMode,
+        LightModeWithBackground,
         Classic7H,
     }
 
@@ -25,5 +27,10 @@ namespace SeventhHeaven.Classes.Themes
         string PrimaryControlMouseOver { get; }
         string PrimaryControlDisabledBackground { get; }
         string PrimaryControlDisabledForeground { get; }
+
+        string BackgroundImageName { get; }
+
+        string BackgroundImageBase64 { get; }
+
     }
 }

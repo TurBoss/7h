@@ -259,8 +259,15 @@ namespace SeventhHeavenUI
 
         private void menuItemThemeSettings_Click(object sender, RoutedEventArgs e)
         {
-            var window = new ThemeSettingsWindow() { WindowStartupLocation = WindowStartupLocation.CenterScreen };
+            ThemeSettingsWindow window = new ThemeSettingsWindow();
+            window.ViewModel.BackgroundImageChanged += ThemeSettings_BackgroundImageChanged;
             window.ShowDialog();
+            window.ViewModel.BackgroundImageChanged -= ThemeSettings_BackgroundImageChanged;
+        }
+
+        private void ThemeSettings_BackgroundImageChanged(byte[] newImage)
+        {
+            ViewModel.UpdateBackgroundImage(newImage);
         }
 
         private void tabCtrlMain_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)

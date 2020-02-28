@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace SeventhHeavenUI.ViewModels
 {
@@ -64,6 +65,7 @@ It may not work properly unless you find and install the requirements.";
         private DownloadItemViewModel _selectedDownload;
         private bool _pauseDownloadIsEnabled;
         private string _pauseDownloadToolTip;
+        private BitmapImage _themeImage;
 
         /// <summary>
         /// List of installed mods (includes active mods in the currently active profile)
@@ -156,6 +158,22 @@ It may not work properly unless you find and install the requirements.";
             {
                 _pauseDownloadToolTip = value;
                 NotifyPropertyChanged();
+            }
+        }
+
+        public BitmapImage ThemeImage
+        {
+            get
+            {
+                return _themeImage;
+            }
+            set
+            {
+                if (value != _themeImage)
+                {
+                    _themeImage = value;
+                    NotifyPropertyChanged();
+                }
             }
         }
 

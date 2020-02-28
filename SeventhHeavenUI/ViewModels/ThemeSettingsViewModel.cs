@@ -19,6 +19,9 @@ namespace SeventhHeaven.ViewModels
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
+        public delegate void OnImageChanged(byte[] newImage);
+        public event OnImageChanged BackgroundImageChanged;
+
         private string _statusText;
         private string _selectedThemeText;
         private string _appBackgroundText;
@@ -29,6 +32,8 @@ namespace SeventhHeaven.ViewModels
         private string _controlForegroundText;
         private string _controlMouseOverText;
         private string _controlPressedText;
+        private string _backgroundImageText;
+        private byte[] currentImageTheme;
 
         public string StatusText
         {
@@ -177,6 +182,29 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public string BackgroundImageText
+        {
+            get
+            {
+                return _backgroundImageText;
+            }
+            set
+            {
+                _backgroundImageText = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public byte[] CurrentImageTheme 
+        { 
+            get => currentImageTheme;
+            set
+            {
+                currentImageTheme = value;
+                BackgroundImageChanged?.Invoke(currentImageTheme);
+            }
+        }
+
         public Dictionary<string, AppTheme> DropDownOptionEnums
         {
             get
@@ -184,7 +212,9 @@ namespace SeventhHeaven.ViewModels
                 return new Dictionary<string, AppTheme>
                 {
                     { "Dark Mode", AppTheme.DarkMode },
+                    { "Dark Mode w/ Background", AppTheme.DarkModeWithBackground },
                     { "Light Mode", AppTheme.LightMode },
+                    { "Light Mode w/ Background", AppTheme.LightModeWithBackground},
                     { "Classic 7H", AppTheme.Classic7H },
                     { "Custom", AppTheme.Custom },
                 };
@@ -228,6 +258,30 @@ namespace SeventhHeaven.ViewModels
         }
 
         /// <summary>
+        /// Returns ITheme loaded from theme.xml file. Dark Theme will be returned if theme.xml file does not exist or fail to deserialize.
+        /// </summary>
+        internal static ITheme GetThemeSettingsFromFile()
+        {
+            string pathToThemeFile = Path.Combine(Sys.SysFolder, "theme.xml");
+
+            if (!File.Exists(pathToThemeFile))
+            {
+                return ThemeSettings.GetThemeFromEnum(AppTheme.DarkMode);
+            }
+
+            try
+            {
+                ThemeSettings theme = Util.Deserialize<ThemeSettings>(pathToThemeFile);
+                return theme;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                return ThemeSettings.GetThemeFromEnum(AppTheme.DarkMode);
+            }
+        }
+
+        /// <summary>
         /// Reads theme .xml and sets App Brush resources
         /// </summary>
         /// <param name="themeFile"></param>
@@ -266,6 +320,13 @@ namespace SeventhHeaven.ViewModels
             try
             {
                 string pathToThemeFile = Path.Combine(Sys.SysFolder, "theme.xml");
+
+                if (!File.Exists(pathToThemeFile))
+                {
+                    Logger.Warn("theme.xml does not exist");
+                    return "Dark Mode";
+                }
+
                 ThemeSettings savedTheme = Util.Deserialize<ThemeSettings>(pathToThemeFile);
                 return savedTheme.Name;
             }
@@ -291,7 +352,8 @@ namespace SeventhHeaven.ViewModels
         {
             ThemeSettings settings = new ThemeSettings()
             {
-                Name = SelectedThemeText
+                Name = SelectedThemeText,
+                BackgroundImageName = BackgroundImageText
             };
 
             if (settings.Name == "Custom")
@@ -307,8 +369,15 @@ namespace SeventhHeaven.ViewModels
             }
 
 
+
+
             try
             {
+                if (CurrentImageTheme?.Length > 0)
+                {
+                    settings.BackgroundImageBase64 = Convert.ToBase64String(CurrentImageTheme);
+                }
+
                 using (FileStream file = new FileStream(pathToTheme, FileMode.Create, FileAccess.ReadWrite))
                 {
                     Util.Serialize(settings, file);
@@ -352,6 +421,24 @@ namespace SeventhHeaven.ViewModels
             ControlMouseOverText = theme.PrimaryControlMouseOver;
             ControlDisabledBgText = theme.PrimaryControlDisabledBackground;
             ControlDisabledFgText = theme.PrimaryControlDisabledForeground;
+            BackgroundImageText = theme.BackgroundImageName;
+
+            if (!string.IsNullOrEmpty(theme.BackgroundImageBase64))
+            {
+                try
+                {
+                    CurrentImageTheme = Convert.FromBase64String(theme.BackgroundImageBase64);
+                }
+                catch (Exception e)
+                {
+                    Logger.Warn(e);
+                    CurrentImageTheme = null;
+                }
+            }
+            else
+            {
+                CurrentImageTheme = null;
+            }
 
             ApplyCustomTheme();
         }
@@ -401,6 +488,24 @@ namespace SeventhHeaven.ViewModels
                 ControlMouseOverText = theme.PrimaryControlMouseOver;
                 ControlDisabledBgText = theme.PrimaryControlDisabledBackground;
                 ControlDisabledFgText = theme.PrimaryControlDisabledForeground;
+                BackgroundImageText = theme.BackgroundImageName;
+
+                if (!string.IsNullOrEmpty(theme.BackgroundImageBase64))
+                {
+                    try
+                    {
+                        CurrentImageTheme = Convert.FromBase64String(theme.BackgroundImageBase64);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Warn(e);
+                        CurrentImageTheme = null;
+                    }
+                }
+                else
+                {
+                    CurrentImageTheme = null;
+                }
 
                 ApplyCustomTheme();
                 SelectedThemeText = "Custom";
@@ -424,6 +529,13 @@ namespace SeventhHeaven.ViewModels
             try
             {
                 string pathToThemeFile = Path.Combine(Sys.SysFolder, "theme.xml");
+
+                if (!File.Exists(pathToThemeFile))
+                {
+                    Logger.Warn("theme.xml does not exist");
+                    return;
+                }
+
                 savedTheme = Util.Deserialize<ThemeSettings>(pathToThemeFile);
             }
             catch (Exception e)
@@ -445,6 +557,24 @@ namespace SeventhHeaven.ViewModels
             ControlMouseOverText = savedTheme.PrimaryControlMouseOver;
             ControlDisabledBgText = savedTheme.PrimaryControlDisabledBackground;
             ControlDisabledFgText = savedTheme.PrimaryControlDisabledForeground;
+            BackgroundImageText = savedTheme.BackgroundImageName;
+
+            if (!string.IsNullOrEmpty(savedTheme.BackgroundImageBase64))
+            {
+                try
+                {
+                    CurrentImageTheme = Convert.FromBase64String(savedTheme.BackgroundImageBase64);
+                }
+                catch (Exception e)
+                {
+                    Logger.Warn(e);
+                    CurrentImageTheme = null;
+                }
+            }
+            else
+            {
+                CurrentImageTheme = null;
+            }
         }
 
         /// <summary>
@@ -465,6 +595,18 @@ namespace SeventhHeaven.ViewModels
             propInfo.SetValue(this, hexValue);
 
             ApplyCustomTheme();
+        }
+
+        internal void SelectBackgroundImage()
+        {
+            string pathToFile = FileDialogHelper.BrowseForFile("*.png|*.png|*.jpg|*.jpg|*.jpeg|*.jpeg", "Select Background Image File");
+
+            if (!string.IsNullOrEmpty(pathToFile))
+            {
+                CurrentImageTheme = File.ReadAllBytes(pathToFile);
+                BackgroundImageText = Path.GetFileName(pathToFile);
+                SelectedThemeText = "Custom";
+            }
         }
     }
 }

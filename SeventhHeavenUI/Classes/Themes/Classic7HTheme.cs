@@ -84,5 +84,8 @@ namespace SeventhHeaven.Classes.Themes
                 return ThemeSettings.ColorToHexString(colorResource.Value);
             }
         }
+
+        public string BackgroundImageName { get => null; }
+        public string BackgroundImageBase64 { get => null; }
     }
 }

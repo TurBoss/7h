@@ -3,6 +3,7 @@ using Iros._7th.Workshop;
 using Iros.Mega;
 using Microsoft.Win32;
 using SeventhHeaven.Classes;
+using SeventhHeaven.Classes.Themes;
 using SeventhHeaven.ViewModels;
 using SeventhHeaven.Windows;
 using System;
@@ -672,7 +673,23 @@ They will be automatically turned off.";
 
             Sys.InitLoaderContext();
 
+
             ThemeSettingsViewModel.LoadThemeFromFile();
+            ITheme themeSettings = ThemeSettingsViewModel.GetThemeSettingsFromFile();
+
+            if (!string.IsNullOrEmpty(themeSettings.BackgroundImageBase64))
+            {
+                try
+                {
+                    byte[] imageBytes = Convert.FromBase64String(themeSettings.BackgroundImageBase64);
+                    UpdateBackgroundImage(imageBytes);
+                }
+                catch (Exception e)
+                {
+                    Logger.Warn(e);
+                    UpdateBackgroundImage(null);
+                }
+            }
 
             InitActiveProfile();
 
@@ -1686,6 +1703,40 @@ They will be automatically turned off.";
             }
         }
 
+
+        internal void UpdateBackgroundImage(byte[] newImage)
+        {
+            try
+            {
+                if (newImage == null || newImage.Length == 0)
+                {
+                    MyMods.ThemeImage = null;
+                    CatalogMods.ThemeImage = null;
+                    return;
+                }
+
+                using (var stream = new MemoryStream(newImage))
+                {
+                    BitmapImage bi = new BitmapImage();
+                    bi.BeginInit();
+                    bi.CacheOption = BitmapCacheOption.OnLoad;
+                    bi.StreamSource = stream;
+                    bi.EndInit();
+
+                    MyMods.ThemeImage = bi;
+                    CatalogMods.ThemeImage = bi;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Warn(e);
+                Sys.Message(new WMessage("Failed to set background image from theme.", true));
+
+                MyMods.ThemeImage = null;
+                CatalogMods.ThemeImage = null;
+            }
+
+        }
     }
 
     internal class CatCheckOptions

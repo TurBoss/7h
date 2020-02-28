@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace SeventhHeavenUI.ViewModels
 {
@@ -57,6 +58,7 @@ namespace SeventhHeavenUI.ViewModels
         }
 
         internal ReloadListOption _previousReloadOptions;
+        private BitmapImage _themeImage;
 
         public string PreviousSearchText
         {
@@ -66,6 +68,22 @@ namespace SeventhHeavenUI.ViewModels
         public bool HasPreviousCategoriesOrTags
         {
             get => _previousReloadOptions?.Categories?.Count > 0 || _previousReloadOptions?.Tags?.Count > 0;
+        }
+
+        public BitmapImage ThemeImage
+        {
+            get
+            {
+                return _themeImage;
+            }
+            set
+            {
+                if (value != _themeImage)
+                {
+                    _themeImage = value;
+                    NotifyPropertyChanged();
+                }
+            }
         }
 
         public MyModsViewModel()

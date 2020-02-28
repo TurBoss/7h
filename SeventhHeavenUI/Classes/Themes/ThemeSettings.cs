@@ -19,6 +19,9 @@ namespace SeventhHeaven.Classes.Themes
         public string PrimaryControlMouseOver { get; set; }
         public string PrimaryControlDisabledBackground { get; set; }
         public string PrimaryControlDisabledForeground { get; set; }
+        public string BackgroundImageName { get; set; }
+        public string BackgroundImageBase64 { get; set; }
+
 
         public static string ColorToHexString(Color color)
         {
@@ -35,8 +38,14 @@ namespace SeventhHeaven.Classes.Themes
                 case AppTheme.DarkMode:
                     return new DarkTheme();
 
+                case AppTheme.DarkModeWithBackground:
+                    return new DarkThemeWithBackground();
+
                 case AppTheme.LightMode:
                     return new LightTheme();
+
+                case AppTheme.LightModeWithBackground:
+                    return new LightThemeWithBackground();
 
                 case AppTheme.Custom:
                     return new ThemeSettings();
