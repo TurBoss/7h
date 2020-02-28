@@ -551,6 +551,7 @@ namespace SeventhHeavenUI.ViewModels
         private void DoDeactivate(ProfileItem item, bool reloadList = true)
         {
             item.IsModActive = false;
+            ModList.FirstOrDefault(m => m.InstallInfo.ModID == item.ModID)?.RaiseIsActivePropertyChanged();
 
             if (reloadList)
             {
@@ -577,6 +578,7 @@ namespace SeventhHeavenUI.ViewModels
                 Sys.ActiveProfile.AddItem(item);
             }
 
+            ModList.FirstOrDefault(m => m.InstallInfo.ModID == modID)?.RaiseIsActivePropertyChanged();
 
             if (reloadList)
             {

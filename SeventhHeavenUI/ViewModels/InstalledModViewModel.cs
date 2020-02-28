@@ -246,5 +246,9 @@ namespace SeventhHeavenUI.ViewModels
             return $"{SortOrder}; {InstallInfo?.ModID} = {Name}";
         }
 
+        public void RaiseIsActivePropertyChanged()
+        {
+            NotifyPropertyChanged(nameof(IsActive));
+        }
     }
 }
