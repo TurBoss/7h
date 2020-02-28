@@ -171,6 +171,9 @@
     <Compile Include="UserControls\CreateModUserControl.xaml.cs">
       <DependentUpon>CreateModUserControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\MegaLinkGenUserControl.xaml.cs">
+      <DependentUpon>MegaLinkGenUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\MyModsUserControl.xaml.cs">
       <DependentUpon>MyModsUserControl.xaml</DependentUpon>
     </Compile>
@@ -187,6 +190,7 @@
       <DependentUpon>PackIroUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\AllowModToRunViewModel.cs" />
+    <Compile Include="ViewModels\MegaLinkGenViewModel.cs" />
     <Compile Include="ViewModels\ModCreationViewModel.cs" />
     <Compile Include="ViewModels\CatalogCreationViewModel.cs" />
     <Compile Include="ViewModels\GameLaunchSettingsViewModel.cs" />
@@ -262,6 +266,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\CreateModUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\MegaLinkGenUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

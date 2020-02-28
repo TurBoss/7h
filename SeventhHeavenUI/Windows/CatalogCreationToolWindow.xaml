@@ -33,6 +33,10 @@
             <TabItem Header="Create Catalog">
                 <ctrl:CreateCatalogUserControl Margin="0,5,0,0"/>
             </TabItem>
+
+            <TabItem Header="Mega Link Generator">
+                <ctrl:MegaLinkGenUserControl Margin="0,5,0,0"/>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>
