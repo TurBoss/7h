@@ -627,7 +627,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="ListViewItem">
                     <Grid>
-                        <Rectangle x:Name="bg" Fill="Transparent" Opacity="0.5" IsHitTestVisible="False"/>
+                        <Rectangle x:Name="bg" Fill="Transparent" Opacity="1" IsHitTestVisible="False"/>
                         <Border x:Name="Border" Padding="2" SnapsToDevicePixels="true" Background="Transparent" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
                             <GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" TextElement.Foreground="{DynamicResource PrimaryControlForeground}"/>
                         </Border>
@@ -640,6 +640,11 @@
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="bg" Property="Fill" Value="{DynamicResource PrimaryControlPressed}"/>
+                        </Trigger>
+                        
+                        <!--Checking the Tag property to determine if background should be slightly transparent-->
+                        <Trigger Property="Tag" Value="TransparentBg">
+                            <Setter TargetName="bg" Property="Opacity" Value="0.5"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
