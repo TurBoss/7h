@@ -26,7 +26,6 @@ namespace SeventhHeaven.Windows
 
         private void cboThemes_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ViewModel.ChangeTheme();
             InitColorPickerBackgrounds();
         }
 
@@ -88,6 +87,7 @@ namespace SeventhHeaven.Windows
             if (!string.IsNullOrWhiteSpace(themeFile))
             {
                 ViewModel.ApplyThemeFromFile(themeFile);
+                InitColorPickerBackgrounds();
             }
         }
 
@@ -137,7 +137,9 @@ namespace SeventhHeaven.Windows
         private void SetSelectedThemeToCustom()
         {
             if (ViewModel.SelectedThemeText != "Custom")
-                ViewModel.SelectedThemeText = "Custom";
+            {
+                ViewModel.SetThemeToCustom();
+            }
         }
 
         #region Color Picker Color Changed Events

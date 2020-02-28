@@ -67,6 +67,7 @@ namespace SeventhHeaven.ViewModels
                 _selectedThemeText = value;
                 NotifyPropertyChanged();
                 NotifyPropertyChanged(nameof(IsCustomThemeEnabled));
+                ChangeTheme();
             }
         }
 
@@ -225,7 +226,6 @@ namespace SeventhHeaven.ViewModels
         {
             StatusText = "";
             SelectedThemeText = GetSavedThemeName();
-            InitColorTextInput();
         }
 
         public ThemeSettingsViewModel(bool loadThemeXml)
@@ -236,7 +236,6 @@ namespace SeventhHeaven.ViewModels
             if (loadThemeXml)
             {
                 SelectedThemeText = GetSavedThemeName();
-                InitColorTextInput();
             }
         }
 
@@ -401,7 +400,6 @@ namespace SeventhHeaven.ViewModels
             {
                 InitColorTextInput();
                 ApplyCustomTheme();
-                return;
             }
             else
             {
@@ -508,7 +506,7 @@ namespace SeventhHeaven.ViewModels
                 }
 
                 ApplyCustomTheme();
-                SelectedThemeText = "Custom";
+                SetThemeToCustom();
 
                 StatusText = "Theme loaded! Click 'Save' to save this theme as the default ...";
             }
@@ -606,8 +604,18 @@ namespace SeventhHeaven.ViewModels
             {
                 CurrentImageTheme = File.ReadAllBytes(pathToFile);
                 BackgroundImageText = Path.GetFileName(pathToFile);
-                SelectedThemeText = "Custom";
+                SetThemeToCustom();
             }
+        }
+
+        /// <summary>
+        /// Sets dropdown theme option to 'Custom' without firing <see cref="ChangeTheme()"/>
+        /// </summary>
+        internal void SetThemeToCustom()
+        {
+            _selectedThemeText = "Custom";
+            NotifyPropertyChanged(nameof(SelectedThemeText));
+            NotifyPropertyChanged(nameof(IsCustomThemeEnabled));
         }
     }
 }
