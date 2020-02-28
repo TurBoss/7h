@@ -247,10 +247,10 @@ namespace SeventhHeaven.ViewModels
         {
             string pathToThemeFile = Path.Combine(Sys.SysFolder, "theme.xml");
 
-            // dark theme will be applied as the default when theme.xml file does not exist
+            // dark theme w/ background will be applied as the default when theme.xml file does not exist
             if (!File.Exists(pathToThemeFile))
             {
-                new ThemeSettingsViewModel(loadThemeXml: false).ApplyBuiltInTheme(AppTheme.DarkMode);
+                new ThemeSettingsViewModel(loadThemeXml: false).ApplyBuiltInTheme(AppTheme.DarkModeWithBackground);
                 return;
             }
 
@@ -258,7 +258,7 @@ namespace SeventhHeaven.ViewModels
         }
 
         /// <summary>
-        /// Returns ITheme loaded from theme.xml file. Dark Theme will be returned if theme.xml file does not exist or fail to deserialize.
+        /// Returns ITheme loaded from theme.xml file. Dark Theme w/ Background will be returned if theme.xml file does not exist or fail to deserialize.
         /// </summary>
         internal static ITheme GetThemeSettingsFromFile()
         {
@@ -266,7 +266,7 @@ namespace SeventhHeaven.ViewModels
 
             if (!File.Exists(pathToThemeFile))
             {
-                return ThemeSettings.GetThemeFromEnum(AppTheme.DarkMode);
+                return ThemeSettings.GetThemeFromEnum(AppTheme.DarkModeWithBackground);
             }
 
             try
@@ -277,7 +277,7 @@ namespace SeventhHeaven.ViewModels
             catch (Exception e)
             {
                 Logger.Error(e);
-                return ThemeSettings.GetThemeFromEnum(AppTheme.DarkMode);
+                return ThemeSettings.GetThemeFromEnum(AppTheme.DarkModeWithBackground);
             }
         }
 
@@ -324,7 +324,7 @@ namespace SeventhHeaven.ViewModels
                 if (!File.Exists(pathToThemeFile))
                 {
                     Logger.Warn("theme.xml does not exist");
-                    return "Dark Mode";
+                    return "Dark Mode w/ Background";
                 }
 
                 ThemeSettings savedTheme = Util.Deserialize<ThemeSettings>(pathToThemeFile);
@@ -335,7 +335,7 @@ namespace SeventhHeaven.ViewModels
                 Logger.Warn(e);
             }
 
-            return "Dark Mode";
+            return "Dark Mode w/ Background";
         }
 
         /// <summary>
@@ -532,11 +532,12 @@ namespace SeventhHeaven.ViewModels
 
                 if (!File.Exists(pathToThemeFile))
                 {
-                    Logger.Warn("theme.xml does not exist");
-                    return;
+                    savedTheme = ThemeSettings.GetThemeFromEnum(AppTheme.DarkModeWithBackground) as ThemeSettings;
                 }
-
-                savedTheme = Util.Deserialize<ThemeSettings>(pathToThemeFile);
+                else
+                {
+                    savedTheme = Util.Deserialize<ThemeSettings>(pathToThemeFile);
+                }
             }
             catch (Exception e)
             {
