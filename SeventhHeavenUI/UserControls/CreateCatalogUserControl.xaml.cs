@@ -49,6 +49,11 @@ namespace SeventhHeaven.UserControls
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.AddModToList();
+
+            if (ViewModel.SelectedMod != null)
+            { 
+                lstMods.ScrollIntoView(ViewModel.SelectedMod);
+            }
         }
 
         private void btnImport_Click(object sender, RoutedEventArgs e)
@@ -73,6 +78,12 @@ namespace SeventhHeaven.UserControls
         private void btnAddLink_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.AddEmptyDownloadLink();
+            scrollInputs.ScrollToBottom();
+        }
+
+        private void menuDeleteMod_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.RemoveSelectedMod();
         }
     }
 }

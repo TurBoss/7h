@@ -23,6 +23,7 @@ namespace SeventhHeavenUI.ViewModels
         private string _categoryInput;
         private List<string> _categoryList;
         private string _versionInput;
+        private string _metaVersionInput;
         private string _previewImageInput;
         private string _infoLinkInput;
         private string _releaseNotesInput;
@@ -34,6 +35,7 @@ namespace SeventhHeavenUI.ViewModels
         private Mod _modToEdit;
         private ObservableCollection<DownloadLinkViewModel> _downloadLinkList;
         private string _tagsInput;
+        private string _catalogNameInput;
 
         public string IDInput
         {
@@ -126,6 +128,19 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
+        public string MetaVersionInput
+        {
+            get
+            {
+                return _metaVersionInput;
+            }
+            set
+            {
+                _metaVersionInput = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public string PreviewImageInput
         {
             get
@@ -187,6 +202,19 @@ namespace SeventhHeavenUI.ViewModels
             set
             {
                 _tagsInput = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string CatalogNameInput
+        {
+            get
+            {
+                return _catalogNameInput;
+            }
+            set
+            {
+                _catalogNameInput = value;
                 NotifyPropertyChanged();
             }
         }
@@ -279,6 +307,9 @@ namespace SeventhHeavenUI.ViewModels
                         CompatibleGameVersions = GameVersions.All
                     };
 
+                    decimal.TryParse(MetaVersionInput, System.Globalization.NumberStyles.AllowDecimalPoint, new System.Globalization.CultureInfo(""), out decimal parsedMetaVersion);
+                    _selectedMod.Mod.MetaVersion = parsedMetaVersion;
+
                     _selectedMod.ReleaseDate = parsedDate.ToString("MM/dd/yyyy");
                 }
 
@@ -298,6 +329,7 @@ namespace SeventhHeavenUI.ViewModels
                     ReleaseNotesInput = _modToEdit.LatestVersion.ReleaseNotes;
                     PreviewImageInput = _modToEdit.LatestVersion.PreviewImage;
                     VersionInput = _modToEdit.LatestVersion.Version.ToString();
+                    MetaVersionInput = _modToEdit.MetaVersion.ToString();
                     ReleaseDateInput = _modToEdit.LatestVersion.ReleaseDate.ToString("MM/dd/yyyy");
 
                     DownloadLinkList.Clear();
@@ -307,6 +339,11 @@ namespace SeventhHeavenUI.ViewModels
                         {
                             DownloadLinkList.Add(new DownloadLinkViewModel(linkKind.ToString(), url));
                         }
+                    }
+
+                    if (DownloadLinkList.Count == 0)
+                    {
+                        AddEmptyDownloadLink();
                     }
 
                 }
@@ -319,7 +356,9 @@ namespace SeventhHeavenUI.ViewModels
         {
             CatalogModList = new ObservableCollection<CatalogModItemViewModel>();
             VersionInput = "1.00";
+            MetaVersionInput = "1.00";
             TagsInput = "";
+            AddEmptyDownloadLink();
         }
 
         public string GenerateCatalogOutput()
@@ -327,7 +366,7 @@ namespace SeventhHeavenUI.ViewModels
             Catalog generated = new Catalog()
             {
                 Mods = CatalogModList.Select(m => m.Mod).ToList(),
-                Name = ""
+                Name = CatalogNameInput
             };
 
             return Util.Serialize(generated).Replace("<?xml version=\"1.0\" encoding=\"utf-16\"?>", "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
@@ -346,10 +385,20 @@ namespace SeventhHeavenUI.ViewModels
                 DescriptionInput = mod.Description;
                 VersionInput = mod.Version.ToString();
                 PreviewImageInput = "";
+                TagsInput = "";
                 InfoLinkInput = mod.Link;
                 ReleaseNotesInput = mod.ReleaseNotes;
                 ReleaseDateInput = mod.ReleaseDate.ToString("MM/dd/yyyy");
+
+                if (string.IsNullOrWhiteSpace(CategoryInput))
+                {
+                    CategoryInput = "Unknown";
+                }
+                MetaVersionInput = "1.00";
+
                 DownloadLinkList.Clear();
+                AddEmptyDownloadLink();
+
                 _modToEdit = null;
             }
             catch (Exception e)
@@ -379,11 +428,20 @@ namespace SeventhHeavenUI.ViewModels
                 AuthorInput = parsedMod.Author;
                 DescriptionInput = parsedMod.Description;
                 VersionInput = parsedMod.LatestVersion.Version.ToString();
+                MetaVersionInput = "1.00";
                 PreviewImageInput = "";
+                TagsInput = "";
                 InfoLinkInput = parsedMod.Link;
                 ReleaseNotesInput = parsedMod.LatestVersion.ReleaseNotes;
                 ReleaseDateInput = parsedMod.LatestVersion.ReleaseDate.ToString("MM/dd/yyyy");
+
+                if (string.IsNullOrWhiteSpace(CategoryInput))
+                {
+                    CategoryInput = "Unknown";
+                }
+
                 DownloadLinkList.Clear();
+                AddEmptyDownloadLink();
                 _modToEdit = null;
             }
             catch (Exception e)
@@ -416,6 +474,7 @@ namespace SeventhHeavenUI.ViewModels
             try
             {
                 Catalog catalog = Util.Deserialize<Catalog>(pathToFile);
+                CatalogNameInput = catalog.Name;
                 CatalogModList = new ObservableCollection<CatalogModItemViewModel>(catalog.Mods.Select(m => new CatalogModItemViewModel(m)));
                 SelectedMod = null;
                 ClearInputFields();
@@ -434,19 +493,27 @@ namespace SeventhHeavenUI.ViewModels
         {
             IDInput = Guid.NewGuid().ToString();
             NameInput = "";
-            CategoryInput = "Unknown";
             AuthorInput = "";
             DescriptionInput = "";
-            VersionInput = "1.0";
+            CategoryInput = "Unknown";
+            TagsInput = "";
+            VersionInput = "1.00";
+            MetaVersionInput = "1.00";
             PreviewImageInput = "";
             InfoLinkInput = "";
             ReleaseNotesInput = "";
             ReleaseDateInput = DateTime.Now.ToString("MM/dd/yyyy");
             DownloadLinkList.Clear();
+            AddEmptyDownloadLink();
         }
 
         internal void AddModToList()
         {
+            if (string.IsNullOrWhiteSpace(IDInput))
+            {
+                IDInput = Guid.NewGuid().ToString();
+            }
+
             if (!Guid.TryParse(IDInput, out Guid parsedID))
             {
                 return;
@@ -462,8 +529,29 @@ namespace SeventhHeavenUI.ViewModels
                 VersionInput = "1.00";
             }
 
+            if (string.IsNullOrEmpty(MetaVersionInput))
+            {
+                MetaVersionInput = "1.00";
+            }
+
             DateTime.TryParse(ReleaseDateInput, out DateTime parsedDate);
             decimal.TryParse(VersionInput, System.Globalization.NumberStyles.AllowDecimalPoint, new System.Globalization.CultureInfo(""), out decimal parsedVersion);
+            decimal.TryParse(MetaVersionInput, System.Globalization.NumberStyles.AllowDecimalPoint, new System.Globalization.CultureInfo(""), out decimal parsedMetaVersion);
+
+            if (string.IsNullOrEmpty(ReleaseDateInput) || parsedDate == DateTime.MinValue)
+            {
+                parsedDate = DateTime.Now;
+            }
+
+            if (parsedVersion <= 0)
+            {
+                parsedVersion = 1.0m;
+            }
+
+            if (parsedMetaVersion <= 0)
+            {
+                parsedMetaVersion = 1.0m;
+            }
 
             Mod newMod = new Mod()
             {
@@ -474,6 +562,7 @@ namespace SeventhHeavenUI.ViewModels
                 Tags = TagsInput.Split(new string[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries).ToList(),
                 Description = DescriptionInput,
                 Link = InfoLinkInput,
+                MetaVersion = parsedMetaVersion,
                 LatestVersion = new ModVersion()
                 {
                     Links = DownloadLinkList.Where(d => !string.IsNullOrEmpty(d.SourceLinkInput)).Select(d => d.GetFormattedLink()).ToList(),
@@ -487,7 +576,7 @@ namespace SeventhHeavenUI.ViewModels
             CatalogModList.Add(new CatalogModItemViewModel(newMod));
 
             _modToEdit = null;
-            SelectedMod = CatalogModList[0];
+            SelectedMod = CatalogModList.LastOrDefault();
         }
 
         internal void AddEmptyDownloadLink()
@@ -500,5 +589,24 @@ namespace SeventhHeavenUI.ViewModels
             DownloadLinkList.Add(new DownloadLinkViewModel(LocationType.GDrive.ToString(), ""));
         }
 
+        internal void RemoveSelectedMod()
+        {
+            if (SelectedMod == null)
+            {
+                return;
+            }
+
+            int listIndex = CatalogModList.IndexOf(SelectedMod);
+
+            _modToEdit = null;
+            CatalogModList.Remove(SelectedMod);
+            SelectedMod = null;
+
+            // ensure selection in list does not change after removing
+            if (listIndex < CatalogModList.Count)
+            {
+                SelectedMod = CatalogModList[listIndex];
+            }
+        }
     }
 }

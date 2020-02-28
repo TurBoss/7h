@@ -88,12 +88,14 @@ namespace Iros._7th.Workshop
         /// <summary>
         /// Set to true on import if mod has music files
         /// </summary>
+        [System.Xml.Serialization.XmlIgnore]
         public bool ContainsMusic { get; set; }
 
 
         /// <summary>
         /// Set to true on import if mod has movie files
         /// </summary>
+        [System.Xml.Serialization.XmlIgnore]
         public bool ContainsMovies { get; set; }
 
         /// <summary>

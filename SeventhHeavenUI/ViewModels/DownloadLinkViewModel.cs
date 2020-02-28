@@ -38,6 +38,13 @@ namespace SeventhHeavenUI.ViewModels
             set
             {
                 _sourceLinkInput = value;
+
+                if (LocationUtil.TryParse(_sourceLinkInput, out LocationType downloadType, out string url))
+                {
+                    _sourceLinkInput = url;
+                    LinkKindInput = downloadType.ToString();
+                }
+
                 NotifyPropertyChanged();
             }
         }

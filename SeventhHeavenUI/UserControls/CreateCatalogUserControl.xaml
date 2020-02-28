@@ -67,11 +67,12 @@
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" CanContentScroll="False">
-        
+
         <Grid Background="{DynamicResource PrimaryAppBackground}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -128,6 +129,11 @@
                       VerticalAlignment="Stretch"
                       SelectedItem="{Binding SelectedMod, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       Margin="5,0,0,0">
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem x:Name="menuDeleteMod" Header="Remove Mod" Click="menuDeleteMod_Click"/>
+                    </ContextMenu>
+                </ListView.ContextMenu>
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="Auto"/>
@@ -138,6 +144,22 @@
                 </ListView.View>
             </ListView>
 
+            <Grid Grid.Row="2" Margin="5,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Text="Catalog Name:"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           Margin="0,0,5,0"/>
+                <TextBox Text="{Binding CatalogNameInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         HorizontalAlignment="Stretch"
+                         Grid.Column="1"/>
+            </Grid>
+
+
 
             <TextBox Text="{Binding CatalogOutput}"
                      Style="{StaticResource createTextboxStyle}"
@@ -147,7 +169,7 @@
                      MinHeight="75"
                      MaxHeight="400"
                      Margin="5,10,15,5"
-                     Grid.Column="0" Grid.Row="2"
+                     Grid.Column="0" Grid.Row="3"
                      Grid.ColumnSpan="2"/>
 
             <ScrollViewer Grid.Row="1" Grid.Column="1" Margin="0,0,15,0"
@@ -178,8 +200,8 @@
 
                     <TextBlock Text="ID:" Style="{StaticResource createLabelStyle}"/>
                     <TextBox Text="{Binding IDInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        Style="{StaticResource createTextboxStyle}"
-                        Grid.Column="1"/>
+                             Style="{StaticResource createTextboxStyle}"
+                             Grid.Column="1"/>
 
                     <TextBlock Text="Author:"
                         Style="{StaticResource createLabelStyle}"
@@ -241,9 +263,29 @@
                                Style="{StaticResource createLabelStyle}"
                                Grid.Column="0"
                                Grid.Row="6"/>
-                    <TextBox Text="{Binding VersionInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        Style="{StaticResource createTextboxStyle}"
-                        Grid.Column="1" Grid.Row="6"/>
+                    <Grid Grid.Row="6" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Text="{Binding VersionInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 HorizontalAlignment="Left"
+                                 Width="125"
+                                 Margin="0,0,0,10"
+                                 Style="{StaticResource createTextboxStyle}"/>
+
+                        <TextBlock Text="Meta Version:"
+                               Style="{StaticResource createLabelStyle}"
+                               Grid.Column="1"/>
+                        <TextBox Text="{Binding MetaVersionInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 HorizontalAlignment="Left"
+                                 Width="125"
+                                 Margin="0,0,0,10"
+                                 Grid.Column="2"
+                                 Style="{StaticResource createTextboxStyle}"/>
+                    </Grid>
+
 
                     <TextBlock Text="Release Notes:"
                         Style="{StaticResource createLabelStyle}"
@@ -282,14 +324,19 @@
                         Grid.Column="1" Grid.Row="10"/>
 
 
-                    <GroupBox Header=" Download Links " Grid.Row="11" Grid.ColumnSpan="2" Margin="5,0,5,0">
+                    <Rectangle Grid.Row="11" Grid.ColumnSpan="2" Height="1" Fill="{DynamicResource PrimaryControlForeground}"
+                               Opacity="0.75"
+                               VerticalAlignment="Top"
+                               Margin="10,20,10,10"/>
+                    <GroupBox Header=" Download Links " Grid.Row="11" Grid.ColumnSpan="2" Margin="5,0,5,0" BorderThickness="0">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="auto"/>
-
                             </Grid.RowDefinitions>
+                            
                             <ListBox MinHeight="30" Background="Transparent" BorderThickness="0"
+                                     Margin="0,2,0,0"
                                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                      ScrollViewer.VerticalScrollBarVisibility="Auto"
                                      ItemsSource="{Binding DownloadLinkList}"
@@ -309,7 +356,7 @@
             </ScrollViewer>
 
         </Grid>
-    
+
     </ScrollViewer>
-    
+
 </UserControl>
