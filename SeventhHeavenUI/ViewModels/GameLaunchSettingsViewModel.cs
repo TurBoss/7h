@@ -32,7 +32,22 @@ namespace SeventhHeaven.ViewModels
 
     class GameLaunchSettingsViewModel : ViewModelBase
     {
+        #region Data Members
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
+        private List<string> _defaultControlNames = new List<string>() 
+        {
+            "1998 KB+Std Gamepad",
+            "1998 KB+Swap AB-XO Gamepad",
+            "1998 Original",
+            "No Numpad+Std Gamepad",
+            "No Numpad+Swap AB-XO Gamepad",
+            "Steam KB+Std GamePad",
+            "Steam KB+Swap AB-XO GamePad",
+            "Steam Original",
+            "WASD unab0mb's Choice Std",
+            "WASD unab0mb's Choice Swap"
+        };
 
         private string _statusMessage;
         private bool _autoMountChecked;
@@ -68,6 +83,11 @@ namespace SeventhHeaven.ViewModels
         private Visibility _importProgressVisibility;
         private double _importProgressValue;
         private VolumeSlider _lastVolumeSliderChanged;
+
+        #endregion
+
+
+        #region Properties
 
         public string StatusMessage
         {
@@ -162,7 +182,6 @@ namespace SeventhHeaven.ViewModels
                 NotifyPropertyChanged();
             }
         }
-
 
         public bool HasCode5Error
         {
@@ -550,11 +569,9 @@ namespace SeventhHeaven.ViewModels
         {
             get
             {
-                return SelectedGameConfigOption == "Custom";
+                return !_defaultControlNames.Any(s => s.Equals(SelectedGameConfigOption, StringComparison.InvariantCultureIgnoreCase));
             }
         }
-
-
 
         public string ImportStatusMessage
         {
@@ -568,8 +585,6 @@ namespace SeventhHeaven.ViewModels
                 NotifyPropertyChanged();
             }
         }
-
-
 
         public bool ImportButtonIsEnabled
         {
@@ -622,6 +637,9 @@ namespace SeventhHeaven.ViewModels
                 NotifyPropertyChanged();
             }
         }
+
+        #endregion
+
 
         public GameLaunchSettingsViewModel()
         {
@@ -772,11 +790,6 @@ namespace SeventhHeaven.ViewModels
                 Sys.Settings.GameLaunchSettings.ShowLauncherWindow = IsShowLauncherChecked;
 
                 Sys.Settings.GameLaunchSettings.InGameConfigOption = InGameConfigurationMap[SelectedGameConfigOption];
-                if (Sys.Settings.GameLaunchSettings.InGameConfigOption == "Custom")
-                {
-                    // create copy of ff7input.cfg to custom.cfg if does not exist
-                    CopyInputCfgToCustomCfg(forceCopy: false);
-                }
 
                 Sys.Settings.GameLaunchSettings.Code5Fix = Code5FixChecked;
                 Sys.Settings.GameLaunchSettings.HighDpiFix = HighDpiFixChecked;
@@ -820,12 +833,12 @@ namespace SeventhHeaven.ViewModels
         }
 
         /// <summary>
-        /// Copies ff7input.cfg from FF7 game folder to ./Resources/In-Game Config/custom.cfg
+        /// Copies ff7input.cfg from FF7 game folder to ./Resources/Controls/ folder with the given <paramref name="customFileName"/>
         /// </summary>
         /// <param name="forceCopy"> copies ff7input.cfg if it already exists; overwriting the current custom.cfg </param>
-        public bool CopyInputCfgToCustomCfg(bool forceCopy)
+        public bool CopyInputCfgToCustomCfg(bool forceCopy, string customFileName)
         {
-            string pathToCustomCfg = Path.Combine(Sys.PathToControlsFolder, "custom.cfg");
+            string pathToCustomCfg = Path.Combine(Sys.PathToControlsFolder, customFileName);
             string pathToInputCfg = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "ff7input.cfg");
 
             Directory.CreateDirectory(Sys.PathToControlsFolder);
@@ -853,16 +866,11 @@ namespace SeventhHeaven.ViewModels
             }
             else
             {
-                StatusMessage = $"custom.cfg already exists at {Sys.PathToControlsFolder}";
+                StatusMessage = $"{customFileName} already exists at {Sys.PathToControlsFolder}";
                 Logger.Warn(StatusMessage);
             }
 
             return false;
-        }
-
-        public static bool CopyInputCfgToCustomCfg()
-        {
-            return new GameLaunchSettingsViewModel().CopyInputCfgToCustomCfg(forceCopy: true);
         }
 
         private void InitInGameConfigOptions()
@@ -878,22 +886,11 @@ namespace SeventhHeaven.ViewModels
             foreach (string filePath in Directory.GetFiles(Sys.PathToControlsFolder, "*.cfg").OrderBy(s => s))
             {
                 FileInfo info = new FileInfo(filePath);
-
-                if (info.Name.Equals("custom.cfg", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    continue; // skip adding custom.cfg if found since it is always added at the end
-                }
                 configOptions.Add(Path.GetFileNameWithoutExtension(filePath), info.Name);
             }
 
-            configOptions.Add("Custom", "custom.cfg"); // have 'Custom' always be the last option
-
             InGameConfigurationMap = configOptions;
-
-            if (InGameConfigurationMap == null)
-            {
-                InGameConfigurationMap = new Dictionary<string, string>();
-            }
+            NotifyPropertyChanged(nameof(InGameConfigOptions));
         }
 
         private void InitSoundDevices()
@@ -933,6 +930,7 @@ namespace SeventhHeaven.ViewModels
             }
 
             SoundDeviceGuids = deviceGuids;
+            NotifyPropertyChanged(nameof(SoundDevices));
         }
 
         private void InitMidiDevices()
@@ -1343,6 +1341,105 @@ namespace SeventhHeaven.ViewModels
         {
             Logger.Info("Resetting game launcher settings to defaults.");
             LoadSettings(LaunchSettings.DefaultSettings());
+        }
+
+        internal void SaveNewCustomControl()
+        {
+            bool isValid = true;
+            string title = "Save Control Configuration";
+            string prompt = "Import current controls from game and save as...";
+            string controlName;
+            string pathToFile;
+
+            do
+            {
+                isValid = true;
+                InputTextWindow inputBox = new InputTextWindow(title, prompt);
+                inputBox.ViewModel.MaxCharLength = 24;
+
+                bool? dialogResult = inputBox.ShowDialog();
+                if (!dialogResult.GetValueOrDefault(false))
+                {
+                    return;
+                }
+
+                controlName = inputBox.ViewModel.TextInput;
+
+                if (string.IsNullOrEmpty(controlName))
+                {
+                    isValid = false;
+                    MessageDialogWindow.Show("Control name is empty.", "Save Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    continue;
+                }
+
+                if (Path.GetInvalidFileNameChars().Any(c => controlName.Contains(c)))
+                {
+                    isValid = false;
+                    MessageDialogWindow.Show("Control name contains invalid characters.", "Save Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    continue;
+                }
+
+                // construct path and check if already exists if name is valid
+                if (isValid)
+                {
+                    if (controlName.EndsWith(".cfg"))
+                    {
+                        controlName = controlName.Substring(0, controlName.Length - 4);
+                    }
+
+                    pathToFile = Path.Combine(Sys.PathToControlsFolder, $"{controlName}.cfg");
+
+                    if (File.Exists(pathToFile))
+                    {
+                        isValid = false;
+                        MessageDialogWindow.Show("Custom controls with that name already exist.", "Save Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+
+            } while (!isValid);
+
+            try
+            {
+                CopyInputCfgToCustomCfg(true, $"{controlName}.cfg");
+                InitInGameConfigOptions();
+                SelectedGameConfigOption = controlName;
+                StatusMessage = $"Successfully created custom controls.";
+
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                StatusMessage = $"Failed to create custom controls: {e.Message}";
+            }
+        }
+
+        internal void DeleteSelectedCustomControl()
+        {
+            if (!IsCustomConfigOptionSelected)
+            {
+                return;
+            }
+
+            string fileName = $"{SelectedGameConfigOption}.cfg";
+            string pathToFile = Path.Combine(Sys.PathToControlsFolder, fileName);
+
+            if (!File.Exists(pathToFile))
+            {
+                Logger.Warn($"Can not delete custom contols: no file found at {pathToFile}");
+            }
+
+            try
+            {
+                File.Delete(pathToFile);
+                InitInGameConfigOptions();
+                SelectedGameConfigOption = InGameConfigurationMap.Keys.ToArray()[0];
+                StatusMessage = $"Successfully deleted custom controls {fileName}.";
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                StatusMessage = $"Failed to delete custom controls: {e.Message}";
+            }
         }
     }
 }

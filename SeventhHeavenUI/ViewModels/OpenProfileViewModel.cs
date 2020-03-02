@@ -230,11 +230,7 @@ namespace SeventhHeaven.ViewModels
             do
             {
                 isValid = true;
-                InputTextWindow inputBox = new InputTextWindow(title, prompt)
-                {
-                    WindowStartupLocation = WindowStartupLocation.CenterScreen
-                };
-
+                InputTextWindow inputBox = new InputTextWindow(title, prompt);
                 bool? dialogResult = inputBox.ShowDialog();
 
                 if (!dialogResult.GetValueOrDefault(false))

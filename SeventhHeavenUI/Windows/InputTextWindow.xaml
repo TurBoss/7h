@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="{Binding WindowTitle, FallbackValue='Input Window'}" 
         Style="{StaticResource MainWindowStyle}"
         ResizeMode="NoResize"
@@ -35,6 +36,7 @@
                  KeyDown="txtInput_KeyDown"
                  Grid.Row="1"
                  FontSize="14"
+                 MaxLength="{Binding MaxCharLength, FallbackValue='100'}"
                  Text="{Binding TextInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  HorizontalAlignment="Stretch"
                  Margin="10"/>

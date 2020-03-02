@@ -720,12 +720,6 @@ namespace SeventhHeaven.Classes
                     // wrapped in try/catch so an unhandled exception when exiting the game does not crash 7H
                     try
                     {
-                        if (Sys.Settings.GameLaunchSettings.InGameConfigOption.Equals("custom.cfg", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            Instance.RaiseProgressChanged("Updating custom.cfg with ff7input.cfg ...");
-                            GameLaunchSettingsViewModel.CopyInputCfgToCustomCfg();
-                        }
-
                         Instance._plugins.Clear();
 
                         Instance.RaiseProgressChanged("Stopping other programs for mods started by 7H ...");
@@ -985,12 +979,6 @@ namespace SeventhHeaven.Classes
                 {
                     try
                     {
-                        if (Sys.Settings.GameLaunchSettings.InGameConfigOption.Equals("custom.cfg", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            Instance.RaiseProgressChanged("Updating custom.cfg with ff7input.cfg ...");
-                            GameLaunchSettingsViewModel.CopyInputCfgToCustomCfg();
-                        }
-
                         if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && Instance.DidMountVirtualDisc && IsVirtualIsoMounted(Instance.DriveLetter))
                         {
                             Instance.RaiseProgressChanged("Auto unmounting game disc ...");
@@ -1695,20 +1683,7 @@ namespace SeventhHeaven.Classes
 
         public static bool CopyKeyboardInputCfg()
         {
-            // ensure a custom.cfg file exists in Controls folder
-            string pathToCustomCfg = Path.Combine(Sys.PathToControlsFolder, "custom.cfg");
             Directory.CreateDirectory(Sys.PathToControlsFolder);
-
-            if (!File.Exists(pathToCustomCfg))
-            {
-                Instance.RaiseProgressChanged("\tno custom.cfg file found in /Resources/Controls folder. Creating copy of ff7input.cfg", NLog.LogLevel.Warn);
-
-                if (!GameLaunchSettingsViewModel.CopyInputCfgToCustomCfg()) // returns true if it copied successfully
-                {
-                    Instance.RaiseProgressChanged("\tcould not copy ff7input.cfg to custom.cfg", NLog.LogLevel.Warn);
-                }
-            }
-
             string pathToCfg = Path.Combine(Sys.PathToControlsFolder, Sys.Settings.GameLaunchSettings.InGameConfigOption);
 
             Instance.RaiseProgressChanged($"\tusing control configuration file {Sys.Settings.GameLaunchSettings.InGameConfigOption} ...");

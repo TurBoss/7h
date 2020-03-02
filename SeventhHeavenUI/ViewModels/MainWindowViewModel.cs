@@ -31,7 +31,7 @@ namespace SeventhHeavenUI.ViewModels
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         internal const string _msgReqMissing =
-    @"This mod requires the following mods to also be active, but I could not find them:
+    @"This mod requires the following mods to also be active, but they could not be found:
 {0}
 It may not work correctly unless you install them.";
 

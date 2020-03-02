@@ -17,6 +17,7 @@ namespace SeventhHeaven.ViewModels
         private string _windowTitle;
         private string _message;
         private string _textInput;
+        private int _maxCharLength;
 
         public string WindowTitle
         {
@@ -57,9 +58,24 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public int MaxCharLength
+        {
+            get
+            {
+                return _maxCharLength;
+            }
+            set
+            {
+                _maxCharLength = value;
+                NotifyPropertyChanged();
+            }
+
+        }
+
 
         public InputTextViewModel()
         {
+            MaxCharLength = 255;
         }
 
     }
