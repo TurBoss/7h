@@ -61,7 +61,7 @@ namespace SeventhHeaven.Windows
         {
             if (e.Key == Key.Enter)
             {
-                ViewModel.ApplyCustomTheme();
+                ViewModel.UpdateAppBrushesAndColors();
                 InitColorPickerBackgrounds(); // when the user types a color in then we have to make sure the color pickers get updated to match the new color
                 SetSelectedThemeToCustom();
             }
@@ -69,7 +69,7 @@ namespace SeventhHeaven.Windows
 
         private void TextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            ViewModel.ApplyCustomTheme();
+            ViewModel.UpdateAppBrushesAndColors();
             InitColorPickerBackgrounds(); // when the user types a color in then we have to make sure the color pickers get updated to match the new color
             SetSelectedThemeToCustom();
         }

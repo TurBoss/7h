@@ -399,7 +399,7 @@ namespace SeventhHeaven.ViewModels
             if (selectedTheme == AppTheme.Custom)
             {
                 InitColorTextInput();
-                ApplyCustomTheme();
+                UpdateAppBrushesAndColors();
             }
             else
             {
@@ -438,13 +438,13 @@ namespace SeventhHeaven.ViewModels
                 CurrentImageTheme = null;
             }
 
-            ApplyCustomTheme();
+            UpdateAppBrushesAndColors();
         }
 
         /// <summary>
         /// Updates App brush resources based on properties in view model (e.g. <see cref="AppBackgroundText"/>, <see cref="ControlBackgroundText"/>, etc...)
         /// </summary>
-        internal void ApplyCustomTheme()
+        internal void UpdateAppBrushesAndColors()
         {
             try
             {
@@ -460,6 +460,9 @@ namespace SeventhHeaven.ViewModels
                 App.Current.Resources["PrimaryControlDisabledForeground"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(ControlDisabledFgText));
 
                 App.Current.Resources["iconColorBrush"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(ControlForegroundText));
+
+                App.Current.Resources["PrimaryControlPressedColor"] = ((SolidColorBrush)(new BrushConverter().ConvertFrom(ControlPressedText))).Color;
+                App.Current.Resources["PrimaryControlMouseOverColor"] = ((SolidColorBrush)(new BrushConverter().ConvertFrom(ControlMouseOverText))).Color;
             }
             catch (Exception e)
             {
@@ -505,7 +508,7 @@ namespace SeventhHeaven.ViewModels
                     CurrentImageTheme = null;
                 }
 
-                ApplyCustomTheme();
+                UpdateAppBrushesAndColors();
                 SetThemeToCustom();
 
                 StatusText = "Theme loaded! Click 'Save' to save this theme as the default ...";
@@ -593,7 +596,7 @@ namespace SeventhHeaven.ViewModels
             PropertyInfo propInfo = typeof(ThemeSettingsViewModel).GetProperty(propertyName);
             propInfo.SetValue(this, hexValue);
 
-            ApplyCustomTheme();
+            UpdateAppBrushesAndColors();
         }
 
         internal void SelectBackgroundImage()
