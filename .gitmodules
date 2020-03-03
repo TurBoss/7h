@@ -1,3 +1,6 @@
 [submodule "SharpCompress"]
 	path = SharpCompress
 	url = https://github.com/adamhathcock/sharpcompress.git
+[submodule "EasyHook"]
+	path = EasyHook
+	url = https://github.com/rodriada000/EasyHook.git

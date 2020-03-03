@@ -156,7 +156,7 @@ namespace Iros._7th.Workshop {
             Sys.Settings.Options = (GeneralOptions)opts;
 
             // Clear EXE compatibility flags if user opts out
-            if (!Sys.Settings.Options.HasFlag(GeneralOptions.SetEXECompatFlags))
+            if (!Sys.Settings.HasOption(GeneralOptions.SetEXECompatFlags))
             {
                 RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
                 if (ff7CompatKey.GetValue(Sys.Settings.FF7Exe) != null) ff7CompatKey.DeleteValue(Sys.Settings.FF7Exe);

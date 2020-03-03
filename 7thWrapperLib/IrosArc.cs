@@ -3,6 +3,7 @@
   The original developer is Iros <irosff@outlook.com>
 */
 
+using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -277,7 +278,7 @@ namespace _7thWrapperLib {
             return true;
         }
 
-        public IrosArc(string filename, bool patchable = false) {
+        public IrosArc(string filename, bool patchable = false, Action<int, int> progressAction = null) {
             _source = filename;
             var sw = new System.Diagnostics.Stopwatch();
             sw.Start();
@@ -300,6 +301,7 @@ namespace _7thWrapperLib {
             _lookup = new Dictionary<string, DirectoryEntry>(StringComparer.InvariantCultureIgnoreCase);
             _folderNames = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
             for (int i = 0; i < numfiles; i++) {
+                progressAction?.Invoke(i, numfiles);
                 DirectoryEntry e = new DirectoryEntry();
                 e.Open(_data, _header.Version);
 #if !RUDE
@@ -539,6 +541,7 @@ namespace _7thWrapperLib {
                         Offset = (uint)(Loffset & 0xffffffff),
                         OffsetHigh = (uint)(Loffset >> 32)
                     };
+
                     Win32.ReadFile(_data.Handle, dest, readLen, ref bytesRead, ref ov);
                 }
             } else
@@ -554,7 +557,9 @@ namespace _7thWrapperLib {
 
         public IntPtr GetDummyHandle() {
             IntPtr h;
+
             Win32.DuplicateHandle(Win32.GetCurrentProcess(), _data.Handle, Win32.GetCurrentProcess(), out h, 0, false, 0x2);
+
             return h;
         }
 

@@ -251,7 +251,7 @@ namespace _7thWrapperLib {
         //private Overrides _overrides;
         private RuntimeProfile _profile;
 
-        LocalHook _hCreateFileW, _hCreateFileA, _hReadFile, _hFindFirstFile, _hFindFirstFileA, _hSetFilePointer, _hCloseHandle,
+        LocalHook _hCreateFileW, _hReadFile, _hFindFirstFile, _hSetFilePointer, _hCloseHandle,
             _hGetFileType, _hCreateProcessW, _hGetFileInformationByHandle, _hDuplicateHandle,
             _hGetFileSize, _hGetFileSizeEx, _hSetFilePointerEx, _hWriteFile;
 
@@ -488,11 +488,11 @@ namespace _7thWrapperLib {
 
 
             bool result = Win32.WriteFile(hFile, lpBuffer, nNumberOfBytesToWrite, out lpNumberOfBytesWritten, ref lpOverlapped);
-            System.Diagnostics.Debug.WriteLine(String.Format("Write {0} bytes on {1}", lpNumberOfBytesWritten, hFile.ToInt32()));
+            //System.Diagnostics.Debug.WriteLine(String.Format("Write {0} bytes on {1}", lpNumberOfBytesWritten, hFile.ToInt32()));
 
             if (_saveFiles.ContainsKey(hFile)) {
                 int offset = SetFilePointer(hFile, 0, IntPtr.Zero, EMoveMethod.Current);
-                System.Diagnostics.Debug.WriteLine(String.Format("Write {0} bytes to {1} at offset {2}", lpNumberOfBytesWritten, _saveFiles[hFile], offset));
+                //System.Diagnostics.Debug.WriteLine(String.Format("Write {0} bytes to {1} at offset {2}", lpNumberOfBytesWritten, _saveFiles[hFile], offset));
             }
 
             return result;
@@ -584,9 +584,15 @@ namespace _7thWrapperLib {
             [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes,
             IntPtr hTemplateFile) {
 
+            // Usually this check should be enough...
             bool isFF7GameFile = lpFileName.StartsWith(_profile.FF7Path, StringComparison.InvariantCultureIgnoreCase);
+            // ...but if it fails, last resort is to check if the file exists in the game directory
+            if (!isFF7GameFile && !lpFileName.StartsWith("\\", StringComparison.InvariantCultureIgnoreCase) && !Path.IsPathRooted(lpFileName))
+            {
+                isFF7GameFile = _profile.gameFiles.Any(s => s.EndsWith(lpFileName, StringComparison.InvariantCultureIgnoreCase));
+            }
 
-            // Patch only FF7 Game files
+            // If a game file is found, process with replacing its content with relative mod file
             if (isFF7GameFile)
             {
                 lpFileName = lpFileName.Replace("\\/", "\\").Replace("/", "\\").Replace("\\\\", "\\");
@@ -613,9 +619,10 @@ namespace _7thWrapperLib {
                                 return CreateVA(mapped);
                     }
                 }
-            }
+            } else
+                System.Diagnostics.Debug.WriteLine("Skipped file {0}{1}", "", lpFileName);
 
-			IntPtr handle = CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+            IntPtr handle = CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
 			//System.Diagnostics.Debug.WriteLine("Hooked CreateFileW for {0} under {1}", lpFileName, handle.ToInt32());
 
             if (isFF7GameFile && handle.ToInt32() != -1)
@@ -648,10 +655,10 @@ namespace _7thWrapperLib {
                     }
                 }
 
-                if (System.IO.Path.GetFileName(lpFileName).Equals("FF7_OpenGL.cfg", StringComparison.InvariantCultureIgnoreCase) && !String.IsNullOrWhiteSpace(_profile.OpenGLConfig))
+                if (System.IO.Path.GetFileName(lpFileName).Equals("7H_GameDriver.cfg", StringComparison.InvariantCultureIgnoreCase) && !String.IsNullOrWhiteSpace(_profile.OpenGLConfig))
                 {
                     _streamFiles[handle] = new VStreamFile(System.Text.Encoding.UTF8.GetBytes(_profile.OpenGLConfig));
-                    System.Diagnostics.Debug.WriteLine("Overriding FF7_OpenGL.cfg with replacement data");
+                    System.Diagnostics.Debug.WriteLine("Overriding 7H_GameDriver.cfg with replacement data");
                 }
 
                 

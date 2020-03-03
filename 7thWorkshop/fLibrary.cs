@@ -19,6 +19,7 @@ using System.Diagnostics;
 //using SharpCompress.Reader;
 using TurBoLog.UI;
 using System.Threading;
+using System.IO;
 
 namespace Iros._7th.Workshop {
     public partial class fLibrary : Form {
@@ -122,7 +123,7 @@ namespace Iros._7th.Workshop {
                 var loc = new Point(Sys.Settings.MainWindow.X, Sys.Settings.MainWindow.Y);
                 if (Screen.AllScreens.Any(s => s.Bounds.Contains(loc)))
                     Location = loc;
-                WindowState = Sys.Settings.MainWindow.State;
+                WindowState = FormWindowState.Normal;
             }
             cbCompact.Checked = (Sys.Settings.IntOptions & InterfaceOptions.ProfileCollapse) != 0;
 
@@ -531,7 +532,7 @@ namespace Iros._7th.Workshop {
             list = pcontainer.Controls.OfType<pMod>().ToDictionary(pm => pm.ModID, pm => pm);
             pResults.Focus();
         }
-
+        
         private bool VerifyOrdering() {
             var details = Sys.ActiveProfile
                 .Items
@@ -1022,7 +1023,7 @@ They will be automatically turned off.";
             Sys.Settings.MainWindow = new SavedWindow() {
                 X = Location.X, Y = Location.Y,
                 W = Size.Width, H = Size.Height,
-                State = WindowState
+                //State = WindowState
             };
 
             SaveProfile();
@@ -1245,6 +1246,7 @@ They will be automatically turned off.";
                 ModPath = Sys.Settings.LibraryLocation,
                 OpenGLConfig = Sys.ActiveProfile.OpenGLConfig,
                 FF7Path = ff7folder,
+                gameFiles = Directory.GetFiles(ff7folder, "*.*", SearchOption.AllDirectories),
                 Mods = Sys.ActiveProfile.Items
                     .Select(i => i.GetRuntime(_context))
                     .Where(i => i != null)

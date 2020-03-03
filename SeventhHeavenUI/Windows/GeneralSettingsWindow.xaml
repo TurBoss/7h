@@ -1,0 +1,396 @@
+﻿<Window x:Class="SeventhHeaven.Windows.GeneralSettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SeventhHeaven.Windows"
+        mc:Ignorable="d"
+        Loaded="Window_Loaded"
+        Unloaded="Window_Unloaded"
+        Style="{StaticResource MainWindowStyle}"
+        Title="General Settings" 
+        ResizeMode="NoResize"
+        Deactivated="Window_Deactivated"
+        LocationChanged="Window_LocationChanged"
+        Height="600" Width="825">
+    <Window.Resources>
+
+        <Style x:Key="MultiLineTextBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource PrimaryTextBoxStyle}">
+            <Setter Property="MinWidth" Value="325"/>
+            <Setter Property="Height" Value="115"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="AcceptsReturn" Value="True"/>
+            <Setter Property="TextWrapping" Value="NoWrap"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
+        </Style>
+
+        <Style TargetType="CheckBox" BasedOn="{StaticResource ToggleSwitchCheckbox}">
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Margin" Value="0,2,0,2"/>
+        </Style>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="1.1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <GroupBox Header=" Paths "
+                  Grid.ColumnSpan="2"
+                  Margin="10,5,10,0" 
+                  HorizontalAlignment="Stretch">
+            <Grid Margin="5" VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Text="FF7 Exe:" Margin="0,0,5,0" HorizontalAlignment="Right"/>
+                <TextBox x:Name="txtFf7Exe" Text="{Binding FF7ExePathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" Grid.Column="1" Margin="0,0,0,6"/>
+                <Button x:Name="btnFf7Exe"
+                        Style="{StaticResource FileEllipsisImageButton}"
+                        Click="btnFf7Exe_Click" 
+                        Grid.Column="2" 
+                        Margin="0,0,0,0"
+                        VerticalAlignment="Top"
+                        ToolTip="Click to select your FF7.exe file"/>
+
+                <TextBlock Text="Movies:" Margin="0,6,5,0" HorizontalAlignment="Right" Grid.Row="1"/>
+                <TextBox x:Name="txtMovies" Text="{Binding MoviesPathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="0,6,0,6"/>
+                <Button x:Name="btnMovies"
+                        Style="{StaticResource FolderImageButton}"
+                        Click="btnMovies_Click" 
+                        Grid.Row="1" Grid.Column="2" 
+                        Margin="0,6,0,3"
+                        VerticalAlignment="Top"
+                        ToolTip="Click to select where your movie folder is"/>
+
+
+                <TextBlock Text="Textures:" Margin="0,6,5,0" HorizontalAlignment="Right" Grid.Row="2"/>
+                <TextBox x:Name="txtTextures" Text="{Binding TexturesPathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1" Margin="0,6,0,6" />
+                <Button x:Name="btnTextures"
+                        Click="btnTextures_Click" 
+                        Style="{StaticResource FolderImageButton}"
+                        Grid.Row="2" Grid.Column="2" 
+                        Margin="0,6,0,0"
+                        VerticalAlignment="Top"
+                        ToolTip="Click to select where Textures are stored"/>
+
+
+                <TextBlock Text="Library:" Margin="0,6,5,0" HorizontalAlignment="Right" Grid.Row="3"/>
+                <TextBox x:Name="txtLibrary" Text="{Binding LibraryPathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Grid.Column="1" Margin="0,6,0,0"/>
+                <Button x:Name="btnLibrary"
+                        Click="btnLibrary_Click"
+                        Style="{StaticResource FolderImageButton}"
+                        Grid.Row="3" Grid.Column="2" 
+                        Margin="0,6,0,0"
+                        VerticalAlignment="Top"
+                        ToolTip="Click to select where your Mod Library is"/>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox x:Name="grpOptions" Header=" Options " Grid.Row="1" Margin="10,10,0,0"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top">
+            <StackPanel Margin="3" HorizontalAlignment="Left">
+                <CheckBox Height="25" Content="Activate Newly Installed Mods Automatically" IsChecked="{Binding ActivateInstalledModsAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
+                <CheckBox Height="25" Content="Import Library Folder Mods Automatically" IsChecked="{Binding ImportLibraryFolderAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
+                <CheckBox Height="25" Content="Warn When Mod Contains Code" IsChecked="{Binding WarnAboutModCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <CheckBox Height="25" Content="Auto Update Mods By Default" IsChecked="{Binding AutoUpdateModsByDefault, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='True'}" Margin="0,0,0,2"/>
+                <CheckBox Height="25" Content="Ignore Mod Compatibility Restrictions" IsChecked="{Binding BypassCompatibilityLocks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <CheckBox Height="25" Content="Check For 7th Heaven Updates Automatically" IsChecked="{Binding CheckForUpdatesAuto, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,2"/>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox x:Name="grpShell"
+                  Header=" Shell Integration " Grid.Row="2" Margin="10,10,0,0" 
+                  Width="{Binding ElementName=grpOptions, Path=ActualWidth}"
+                  Height="{Binding ElementName=grpFolders, Path=ActualHeight}"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top">
+            <StackPanel Margin="3" HorizontalAlignment="Right">
+                <CheckBox Height="25" Content="Open iros:// links with 7th Heaven" IsChecked="{Binding OpenIrosLinks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <CheckBox Height="25" Content="Open Mod Files with 7th Heaven" IsChecked="{Binding OpenModFilesWith7H, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <CheckBox Height="25" Content="Context Menu in Explorer" IsChecked="{Binding ShowContextMenuInExplorer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox Grid.Row="1" Grid.Column="1" Header=" Catalog Subscriptions: " Margin="25,10,10,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Margin="3,3,0,3">
+                    <Button x:Name="btnAddUrl"
+                            Click="btnAddUrl_Click"
+                            ToolTip="Add Subscription URL"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="28"
+                            Width="28"
+                            Margin="0,0,0,0"
+                            Content="{StaticResource iconAdd}"/>
+
+                    <Button x:Name="btnRemoveUrl"
+                            Click="btnRemoveUrl_Click"
+                            ToolTip="Remove Subscription URL"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="28"
+                            Width="28"
+                            Margin="0,0,0,0"
+                            Content="{StaticResource iconMinus}"/>
+
+                    <Button x:Name="btnEditUrl"
+                            ToolTip="Edit Subscription URL/Name"
+                            Click="btnEditUrl_Click"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="28"
+                            Width="28"
+                            Content="{StaticResource iconEdit}"/>
+
+                    <Button x:Name="btnMoveUrlUp"
+                            ToolTip="Move Subscription Up. Right-click to move to top.)"
+                            Click="btnMoveUrlUp_Click"
+                            MouseRightButtonUp="btnMoveUrlUp_MouseRightButtonUp"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="28"
+                            Width="28"
+                            Content="{StaticResource iconUpChevron}"/>
+
+                    <Button x:Name="btnMoveUrlDown"
+                            ToolTip="Move Subscription Down. Right-click to move to bottom"
+                            Click="btnMoveUrlDown_Click"
+                            MouseRightButtonUp="btnMoveUrlDown_MouseRightButtonUp"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="28"
+                            Width="28"
+                            Content="{StaticResource iconDownChevron}"/>
+
+                </StackPanel>
+                
+
+                <ListView x:Name="lstSubscriptions" Grid.Column="1" 
+                          ItemsSource="{Binding SubscriptionList}" 
+                          VirtualizingPanel.IsVirtualizing="false"
+                          MaxHeight="166"
+                          ItemContainerStyle="{StaticResource MainListViewItemStyle}"
+                          Margin="3">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn x:Name="colName" Header="Name" Width="Auto" DisplayMemberBinding="{Binding Name}"/>
+                            <GridViewColumn x:Name="colUrl" Header="Url" Width="Auto" DisplayMemberBinding="{Binding Url}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox x:Name="grpFolders"
+                  Grid.Row="2" 
+                  Grid.Column="1"
+                  VerticalAlignment="Bottom"
+                  Header=" Additional Folders to Monitor: " 
+                  Margin="25,5,10,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Margin="3,3,0,3">
+                    <Button x:Name="btnAddFolder"
+                            Click="btnAddFolder_Click"
+                            ToolTip="Add Folder"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="24"
+                            Width="24"
+                            Margin="0,0,0,0"
+                            Content="{StaticResource iconAdd}"/>
+
+                    <Button x:Name="btnRemoveFolder"
+                            Click="btnRemoveFolder_Click"
+                            ToolTip="Remove Folder"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="24"
+                            Width="24"
+                            Margin="0,0,0,0"
+                            Content="{StaticResource iconMinus}"/>
+
+                    <Button x:Name="btnMoveFolderUp"
+                            ToolTip="Move Folder Up. Right-click to move to top."
+                            Click="btnMoveFolderUp_Click"
+                            MouseRightButtonUp="btnMoveFolderUp_MouseRightButtonUp"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="24"
+                            Width="24"
+                            Content="{StaticResource iconUpChevron}"/>
+
+                    <Button x:Name="btnMoveFolderDown"
+                            ToolTip="Move Folder Down. Right-click to move to bottom."
+                            Click="btnMoveFolderDown_Click"
+                            MouseRightButtonUp="btnMoveFolderDown_MouseRightButtonUp"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="24"
+                            Width="24"
+                            Content="{StaticResource iconDownChevron}"/>
+
+                </StackPanel>
+
+
+                <ListBox x:Name="lstExtraFolders" Grid.Column="1"
+                          ItemsSource="{Binding ExtraFolderList}" 
+                          VirtualizingPanel.IsVirtualizing="false"
+                         MaxHeight="95"
+                          ItemContainerStyle="{StaticResource MainListBoxItemStyle}"
+                          Margin="3">
+
+                </ListBox>
+            </Grid>
+        </GroupBox>
+
+        <TextBlock Grid.Row="3"
+                   Grid.ColumnSpan="2"
+                   VerticalAlignment="Center"
+                   Margin="10,0,290,0"
+                   TextTrimming="CharacterEllipsis"
+                   Text="{Binding StatusMessage, FallbackValue='Select a subscription to edit.'}"/>
+
+        <Button x:Name="btnDefaults" 
+                Content="Reset Defaults" 
+                Click="btnDefaults_Click"
+                Grid.Row="3" Grid.Column="1"
+                Margin="0,5,170,10"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"/>
+
+        <Button x:Name="btnOk" 
+                Content="Save" 
+                Width="80"
+                Click="btnOk_Click"
+                Grid.Row="3" Grid.Column="1"
+                Margin="0,5,90,10"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"/>
+
+        <Button x:Name="btnCancel" 
+                Content="Cancel"
+                Width="80"
+                Click="btnCancel_Click"
+                Grid.Row="3" Grid.Column="1"
+                Margin="0,5,10,10"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"/>
+
+        <Popup x:Name="popupSubscription"
+               IsOpen="{Binding IsSubscriptionPopupOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+               StaysOpen="True"
+               Placement="Right"
+               PlacementTarget="{Binding ElementName=btnAddUrl}">
+            <Grid Width="400" Height="166" 
+                  Background="{DynamicResource PrimaryControlBackground}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+
+                </Grid.RowDefinitions>
+
+                <TextBox Text="{Binding NewUrlText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                         IsEnabled="{Binding IsNotResolvingName}"
+                         FontSize="14"
+                         VerticalContentAlignment="Center"
+                         Margin="25,15,25,10"/>
+
+                <TextBlock Text="Enter url in iros:// format"
+                           Foreground="{DynamicResource PrimaryControlDisabledForeground}"
+                           IsHitTestVisible="False"
+                           FontSize="14"
+                           Margin="30,16,25,10">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding NewUrlText, FallbackValue=''}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <TextBox x:Name="txtCatalogName"
+                         Text="{Binding NewNameText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         IsEnabled="{Binding SubscriptionNameTextBoxIsEnabled}"
+                         Grid.Row="1"
+                         FontSize="14"
+                         VerticalContentAlignment="Center"
+                         Margin="25,15,25,10"/>
+
+                <TextBlock x:Name="txtNameHint"
+                           Text="{Binding SubscriptionNameHintText, FallbackValue='Enter name for catalog'}"
+                           Grid.Row="1"
+                           Foreground="{DynamicResource PrimaryControlDisabledForeground}"
+                           IsHitTestVisible="False"
+                           FontSize="14"
+                           Margin="30,16,25,10">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding NewNameText, FallbackValue=''}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <Button x:Name="btnSaveSubscription"
+                        VerticalAlignment="Bottom"
+                        Click="btnSaveSubscription_Click"
+                        IsEnabled="{Binding IsNotResolvingName}"
+                        Grid.Row="2"
+                        HorizontalAlignment="Center"
+                        Width="80"
+                        Margin="0,0,90,10"
+                        Content="Save"/>
+
+                <Button x:Name="btnCancelSubscription"
+                        Click="btnCancelSubscription_Click"
+                        Grid.Row="2"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Center"
+                        Width="80"
+                        Margin="90,0,0,10"
+                        Content="Cancel"/>
+
+            </Grid>
+        </Popup>
+    </Grid>
+</Window>

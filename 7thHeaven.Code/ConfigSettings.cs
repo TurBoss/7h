@@ -15,6 +15,11 @@ namespace Iros._7th.Workshop.ConfigSettings {
         private Dictionary<string, string> _values = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
         private List<string> _lines;
 
+        /// <summary>
+        /// settings not to include in output
+        /// </summary>
+        public List<string> _settingsToExclude = new List<string>() { "vert_source", "frag_source", "yuv_source" };
+
         public string Get(string setting) {
             string s;
             _values.TryGetValue(setting, out s);
@@ -23,11 +28,16 @@ namespace Iros._7th.Workshop.ConfigSettings {
         public bool IsMatched(string spec) {
             string[] parts = spec.Split(',');
             foreach (string p in parts) {
-                string[] set = p.Split('=');
+                string trimmedParts = p.Trim();
+
+                string[] set = trimmedParts.Split('=');
                 if (set.Length == 2) {
+                    string trimmedName = set[0].Trim();
+                    string trimmedVal = set[1].Trim();
+
                     string value;
-                    _values.TryGetValue(set[0], out value);
-                    if (!set[1].Equals(value ?? String.Empty, StringComparison.InvariantCultureIgnoreCase))
+                    _values.TryGetValue(trimmedName, out value);
+                    if (!trimmedVal.Equals(value ?? String.Empty, StringComparison.InvariantCultureIgnoreCase))
                         return false;
                 }                    
             }
@@ -37,11 +47,37 @@ namespace Iros._7th.Workshop.ConfigSettings {
             if (String.IsNullOrWhiteSpace(spec)) return;
             string[] parts = spec.Split(',');
             foreach (string p in parts) {
-                string[] set = p.Split('=');
+                string trimmedParts = p.Trim();
+                string[] set = trimmedParts.Split('=');
+
                 if (set.Length == 2) {
-                    _values[set[0]] = set[1];
+                    string trimmedName = set[0].Trim();
+                    string trimmedVal = set[1].Trim();
+                    _values[trimmedName] = trimmedVal;
                 }
             }
+        }
+
+        public bool HasSetting(string spec)
+        {
+            List<bool> exists = new List<bool>();
+
+            string[] parts = spec.Split(',');
+            foreach (string p in parts)
+            {
+                string trimmedParts = p.Trim();
+
+                string[] set = trimmedParts.Split('=');
+                if (set.Length == 2)
+                {
+                    string trimmedName = set[0].Trim();
+                    string trimmedVal = set[1].Trim();
+
+                    exists.Add(_values.ContainsKey(trimmedName));
+                }
+            }
+
+            return exists.Count > 0 && exists.All(s => s);
         }
 
         public Settings(IEnumerable<string> lines) {
@@ -55,14 +91,58 @@ namespace Iros._7th.Workshop.ConfigSettings {
             }
         }
 
-        public IEnumerable<string> GetOutput() {
-            foreach (string line in _lines) {
-                string[] parts = line.Split(new[] { " = " }, 2, StringSplitOptions.None);
-                if (parts.Length == 2 && _values.ContainsKey(parts[0]))
-                    yield return parts[0] + " = " + _values[parts[0]];
-                else
-                    yield return line;
+        /// <summary>
+        /// Adds any missing default settings
+        /// </summary>
+        public void SetMissingDefaults(List<Setting> settings)
+        {
+            foreach (Setting item in settings)
+            {
+                if (!HasSetting(item.DefaultValue))
+                {
+                    Apply(item.DefaultValue);
+                }
             }
+        }
+
+        public IEnumerable<string> GetOutput() {
+
+            List<string> writtenKeys = new List<string>();
+            List<string> outputLines = new List<string>();
+
+
+            foreach (string line in _lines) {
+                string[] parts = line.Split(new[] { "=" }, 2, StringSplitOptions.None);
+                if (!line.StartsWith("#") && parts.Length == 2)
+                {
+                    string settingName = parts[0].Trim();
+
+                    if (_values.ContainsKey(settingName) && !_settingsToExclude.Any(s => s == settingName))
+                    {
+                        outputLines.Add(settingName + " = " + _values[settingName]);
+                        writtenKeys.Add(settingName);
+                    }
+                    else
+                    {
+                        outputLines.Add(line);
+                    }
+                }
+                else
+                {
+                    outputLines.Add(line);
+                }
+            }
+
+            // loop over new settings to add to cfg if it does not exist in the file
+            foreach (string key in _values.Keys)
+            {
+                if (!writtenKeys.Contains(key) && !_settingsToExclude.Any(s => s == key))
+                {
+                    outputLines.Add($"{key} = {_values[key]}");
+                }
+            }
+
+            return outputLines;
         }
     }
 
@@ -76,6 +156,8 @@ namespace Iros._7th.Workshop.ConfigSettings {
         public string Name { get; set; }
         public string Description { get; set; }
         public string Group { get; set; }
+
+        public string DefaultValue { get; set; }
 
         public virtual void Load(System.Windows.Forms.Control container, Settings settings) {
             var lbl = new System.Windows.Forms.Label() { Text = Name };

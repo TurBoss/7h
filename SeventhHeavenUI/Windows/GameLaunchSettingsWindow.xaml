@@ -1,0 +1,746 @@
+﻿<Window x:Class="SeventhHeaven.Windows.GameLaunchSettingsWindow"
+        x:Name="windowSettings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:cls="clr-namespace:SeventhHeaven.Classes"
+        xmlns:local="clr-namespace:SeventhHeaven.Windows"
+        mc:Ignorable="d"
+        Style="{StaticResource MainWindowStyle}"
+        LocationChanged="Window_LocationChanged"
+        Deactivated="Window_Deactivated"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Title="Game Launcher Settings" 
+        Width="820"
+        Height="575">
+    <Window.Resources>
+
+        <DataTemplate x:Key="programItem">
+            <TextBlock Text="{Binding DisplayName, FallbackValue='Program Name And Args'}"/>
+        </DataTemplate>
+
+        <Style x:Key="programItemStyle" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MainListBoxItemStyle}">
+            <Setter Property="ContentTemplate" Value="{StaticResource programItem}"/>
+        </Style>
+
+        <DataTemplate x:Key="keyboardItemTemplate">
+            <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedGameConfigOption, FallbackValue='No Numpad+Swap AB-XO Gamepad'}" 
+                           Margin="0,0,15,0" 
+                           TextTrimming="CharacterEllipsis"
+                           TextWrapping="NoWrap"/>
+            </Grid>
+        </DataTemplate>
+
+
+        <DataTemplate x:Key="soundItemTemplate">
+            <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedSoundDevice, FallbackValue='Auto-switch (Windows default)'}" Margin="0,0,15,0" 
+                           TextWrapping="NoWrap"
+                           TextTrimming="CharacterEllipsis"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="midiItemTemplate">
+            <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedMidiDevice, FallbackValue='General MIDI'}" Margin="0,0,15,0" 
+                           TextWrapping="NoWrap"
+                           TextTrimming="CharacterEllipsis"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="rendererItemTemplate">
+            <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedRenderer, FallbackValue='Custom 7H Game Driver'}" Margin="0,0,15,0" TextWrapping="Wrap"/>
+            </Grid>
+        </DataTemplate>
+
+        <Style TargetType="CheckBox" BasedOn="{StaticResource ToggleSwitchCheckbox}">
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Margin" Value="0,3,0,3"/>
+            <Setter Property="ToolTipService.IsEnabled" Value="False"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0"
+                    Grid.RowSpan="4">
+            
+            <GroupBox x:Name="grpOptions"
+                      MinWidth="235"
+                      Header=" Options " Grid.Row="0" Margin="10,10,0,0" 
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top">
+                <StackPanel Margin="3" HorizontalAlignment="Center">
+                    <CheckBox Height="25" Content="Auto-Mount Game Disc" 
+                              IsChecked="{Binding AutoMountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              IsEnabled="{Binding IsAutoMountSupported}"
+                              MouseEnter="Control_MouseEnter"
+                              ToolTip="Auto-mount game disc ISO when starting game. Windows 8 and up only. If on Windows 7 or older, you will need to insert disc or mount ISO manually."/>
+                    <CheckBox Height="25" Content="Auto-Dismount Game Disc" 
+                              IsChecked="{Binding AutoUnmountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              MouseEnter="Control_MouseEnter"
+                              IsEnabled="{Binding IsAutoMountSupported}"
+                              ToolTip="Auto-dismount game disc ISO when game closes. Windows 8 and up only. If on Windows 7 or older, you will need to eject disc or dismount ISO manually."/>
+                    <CheckBox Height="25" Content="Auto-Update Disc Path" 
+                              IsChecked="{Binding AutoUpdatePathChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              MouseEnter="Control_MouseEnter"
+                              ToolTip="Detects if disc has changed drive letters and auto-updates game to point to new location."/>
+                    <CheckBox Height="25" Content="Show Game Launcher" 
+                              IsChecked="{Binding IsShowLauncherChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              MouseEnter="Control_MouseEnter"
+                              ToolTip="Shows the Game Launcher window when starting FF7 for detailed output of the launch process."/>
+
+                    <Grid Margin="0,3,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Controls:"
+                                   FontSize="13"
+                                   ToolTip="Sets your in-game keyboard and gamepad controls. Select 'Custom' to use your own settings."
+                                   ToolTipService.IsEnabled="false"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Top"
+                                   Margin="0,4,1,0"/>
+                        <ComboBox Name="cboKeyboards"
+                                  FontSize="13"
+                                  Grid.Column="1"
+                                  MinWidth="240"
+                                  MaxWidth="240"
+                                  ToolTip="Sets your in-game keyboard and gamepad controls. Click save icon to save your current in game controls as a custom configuration."
+                                  ToolTipService.IsEnabled="false"
+                                  MouseEnter="Control_MouseEnter"
+                                  Style="{StaticResource MainComboBoxStyle}"
+                                  ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
+                                  ItemTemplate="{StaticResource keyboardItemTemplate}"
+                                  SelectedItem="{Binding SelectedGameConfigOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  ItemsSource="{Binding InGameConfigOptions}"/>
+                        
+                        <Button x:Name="btnSaveControls" 
+                                Click="btnSaveControls_Click"
+                                ToolTip="Save your current in-game control configuration."
+                                ToolTipService.IsEnabled="false"
+                                MouseEnter="Control_MouseEnter"
+                                Style="{StaticResource ImageButton}"
+                                Content="{StaticResource iconSave}"
+                                Grid.Column="2"
+                                Width="28"
+                                Height="28"/>
+                        
+                        <Button x:Name="btnDeleteControls"
+                                Click="btnDeleteControls_Click"
+                                ToolTip="Delete the selected custom control configuration."
+                                ToolTipService.ShowOnDisabled="True"
+                                ToolTipService.IsEnabled="false"
+                                MouseEnter="Control_MouseEnter"
+                                IsEnabled="{Binding IsCustomConfigOptionSelected}"
+                                Style="{StaticResource ImageButton}"
+                                Content="{StaticResource iconDelete}"
+                                Grid.Column="3"
+                                Width="28"
+                                Height="28"/>
+                    </Grid>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox x:Name="grpCompat"
+                      Width="{Binding ElementName=grpOptions, Path=ActualWidth}"
+                      Header=" Compatibility " Margin="10,5,0,0" 
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top">
+                <StackPanel Margin="3" HorizontalAlignment="Right">
+                    <CheckBox Height="25" Content="High-DPI Scaling Fix" 
+                              IsChecked="{Binding HighDpiFixChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              MouseEnter="Control_MouseEnter"
+                              ToolTip="May fix game screen being cut off and/or not being centered. Use with high-DPI displays. Alternatively, change your Windows Display Settings to 100% scaling."/>
+                    <CheckBox Height="25" Content="Code 5 Fix" 
+                              IsEnabled="{Binding HasCode5Error}"
+                              IsChecked="{Binding Code5FixChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              MouseEnter="Control_MouseEnter"
+                              ToolTip="May fix problems with 'Code 5' error when clicking 'Play'. Multi-monitor setups may see open programs pushed to the secondary monitor when activated."/>
+                    <CheckBox Height="25" Content="Reunion Driver Fix" 
+                              IsChecked="{Binding DisableReunionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              IsEnabled="{Binding IsReunionInstalled}"
+                              MouseEnter="Control_MouseEnter"
+                              ToolTip="Temporarily renames ddraw.dll to Reunion.dll.bak on game launch, then immediately back again. Does not affect playability of Reunion outside of 7H."/>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox x:Name="grpImport"
+                      Width="{Binding ElementName=grpOptions, Path=ActualWidth}"
+                      Height="{Binding ElementName=grpPrograms, Path=ActualHeight}"
+                      Header=" Import Movies From Disc " Margin="10,5,0,0" 
+                      ToolTip="Import missing movies from disc."
+                      MouseEnter="Control_MouseEnter"
+                      ToolTipService.IsEnabled="False"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top">
+                <Grid Margin="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               VerticalAlignment="Top"
+                               Margin="0,5,0,0"
+                               TextWrapping="Wrap"
+                               TextAlignment="Center"
+                               FontSize="13"
+                               MinHeight="40"
+                               MaxHeight="60"
+                               TextTrimming="CharacterEllipsis"
+                               Text="{Binding ImportStatusMessage, FallbackValue='Copying some movie to this path and this will wrap to test wrapping  '}"/>
+
+                    <cls:ButtonWithImage x:Name="btnImportMovies"
+                                         IsEnabled="{Binding ImportButtonIsEnabled}"
+                                         Click="btnImportMovies_Click"
+                                         Grid.Row="1"
+                                         FontSize="15"
+                                         TemplateSource="{StaticResource iconCD}"
+                                         ImageHeight="40"
+                                         ImageWidth="40"
+                                         HorizontalAlignment="Center"
+                                         Margin="0,3,0,0"
+                                         Content="Import"/>
+
+                    <ProgressBar Value="{Binding ImportProgressValue}"
+                                 Visibility="{Binding ImportProgressVisibility}"
+                                 Grid.Row="2"
+                                 HorizontalAlignment="Stretch"
+                                 Height="20"/>
+                </Grid>
+            </GroupBox>
+        </StackPanel>
+        
+
+        <GroupBox x:Name="grpAudio"
+                  Grid.Row="0"
+                  Grid.Column="1"
+                  Height="{Binding ElementName=grpOptions, Path=ActualHeight}"
+                  Header=" Audio Output Device " Margin="10,10,10,0" 
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch">
+            <StackPanel>
+                <Grid Margin="3,3,3,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Sound Device:"
+                               ToolTipService.IsEnabled="False"
+                               ToolTip="Select an output audio device for FF7."
+                               MouseEnter="Control_MouseEnter"
+                               Grid.Row="0"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Margin="2,0,0,10"/>
+
+                    <Grid Grid.Row="0"
+                          Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox x:Name="cboSoundDevices"
+                                  ToolTip="Select an output audio device for FF7."
+                                  ToolTipService.IsEnabled="False"
+                                  MouseEnter="Control_MouseEnter"
+                                  Style="{StaticResource MainComboBoxStyle}"
+                                  ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
+                                  ItemTemplate="{StaticResource soundItemTemplate}"
+                                  SelectedItem="{Binding SelectedSoundDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  ItemsSource="{Binding SoundDevices}"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Center"
+                                  Margin="4,1,0,10"/>
+
+                        <Button x:Name="btnTestAudio"
+                                Grid.Column="1"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Bottom"
+                                Margin="3,0,0,10"
+                                Width="{Binding ElementName=cboSoundDevices, Path=ActualHeight}"
+                                Height="{Binding ElementName=cboSoundDevices, Path=ActualHeight}"
+                                Style="{StaticResource ImageButton}"
+                                Content="{StaticResource iconSound}"
+                                IsEnabled="{Binding IsAudioNotPlaying}"
+                                Click="btnTestAudio_Click"
+                                ToolTipService.IsEnabled="false"
+                                ToolTip="Test the selected sound device and music/sfx volume. Test sound provided by Enrico Deiana."
+                                MouseEnter="Control_MouseEnter"/>
+                        <ToggleButton x:Name="btnAudioOptions"
+                                      Style="{StaticResource DownArrowToggleButton}"
+                                      Grid.Column="2"
+                                      VerticalAlignment="Bottom"
+                                      Height="{Binding ElementName=btnTestAudio, Path=ActualHeight}"
+                                      Margin="0,0,3,10"
+                                      Click="btnAudioOptions_Click"
+                                      ContextMenuService.Placement="Bottom">
+                            <ToggleButton.ContextMenu>
+                                <ContextMenu x:Name="menuAudioTest" Closed="menuAudioTest_Closed">
+                                    <MenuItem x:Name="menuItemTestLeft" 
+                                              Style="{StaticResource MenuItemImage}"
+                                              Header="{StaticResource iconSoundLeft}"
+                                              Height="34"
+                                              Width="34"
+                                              Click="menuItemTestLeft_Click" 
+                                              ToolTip="Test the selected sound device and music/sfx volume for the Left channel. Test sound provided by Enrico Deiana."
+                                              ToolTipService.IsEnabled="false"
+                                              MouseEnter="Control_MouseEnter"
+                                              IsEnabled="{Binding IsAudioNotPlaying}"/>
+                                    <MenuItem x:Name="menuItemTestRight" 
+                                              Style="{StaticResource MenuItemImage}"
+                                              Header="{StaticResource iconSoundRight}"
+                                              Height="34"
+                                              Width="34"
+                                              Click="menuItemTestRight_Click" 
+                                              ToolTip="Test the selected sound device and music/sfx volume for the Right channel. Test sound provided by Enrico Deiana."
+                                              ToolTipService.IsEnabled="false"
+                                              MouseEnter="Control_MouseEnter"
+                                              IsEnabled="{Binding IsAudioNotPlaying}"/>
+                                </ContextMenu>
+                            </ToggleButton.ContextMenu>
+                        </ToggleButton>
+                    </Grid>
+
+                    <TextBlock Text="MIDI Device:"
+                               Grid.Row="1"
+                               ToolTip="Select an output midi device for FF7."
+                               ToolTipService.IsEnabled="False"
+                               MouseEnter="Control_MouseEnter"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Margin="2,0,0,10"/>
+                    <ComboBox x:Name="cboMidiDevices"
+                              Grid.Row="1"
+                              Grid.Column="1"
+                              Style="{StaticResource MainComboBoxStyle}"
+                              ItemTemplate="{StaticResource midiItemTemplate}"
+                              ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
+                              SelectedItem="{Binding SelectedMidiDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding MidiDevices}"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Center"
+                              Margin="4,1,0,10"
+                              MinWidth="277"
+                              ToolTip="Select an output midi device for FF7."
+                              ToolTipService.IsEnabled="False"
+                              MouseEnter="Control_MouseEnter"
+                              Width="{Binding ElementName=cboSoundDevices, Path=ActualWidth}"/>
+
+
+                    <Grid Grid.Row="2"
+                          Grid.ColumnSpan="3"
+                          HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Text="SFX Volume:"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Center"
+                                   ToolTip="Set the in-game SFX volume."
+                                   ToolTipService.IsEnabled="False"
+                                   MouseEnter="Control_MouseEnter"
+                                   Margin="14,0,3,10"/>
+                        
+                        <Slider x:Name="sliderSfxVolume"
+                                Grid.Column="1"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Value="{Binding SfxVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
+                                ToolTipService.InitialShowDelay="100"
+                                ValueChanged="sliderSfxVolume_ValueChanged"
+                                PreviewMouseLeftButtonUp="sliderSfxVolume_MouseLeftButtonUp"
+                                Minimum="0"
+                                Maximum="100"
+                                MinWidth="85"
+                                Margin="0,0,0,5">
+                            <Slider.ToolTip>
+                                <ToolTip Content="{Binding SfxVolumeDisplayText}"/>
+                            </Slider.ToolTip>
+                        </Slider>
+
+                        <TextBlock Text="Music Volume:"
+                                   Grid.Column="2"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Center"
+                                   ToolTip="Set the in-game music volume."
+                                   ToolTipService.IsEnabled="False"
+                                   MouseEnter="Control_MouseEnter"
+                                   Margin="5,0,3,10"/>
+                        
+                        <Slider x:Name="sliderVolume"
+                                Grid.Column="3"
+                                Value="{Binding MusicVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
+                                ToolTipService.InitialShowDelay="100"
+                                ValueChanged="sliderVolume_ValueChanged"
+                                PreviewMouseLeftButtonUp="sliderVolume_PreviewMouseLeftButtonUp"
+                                Minimum="0"
+                                Maximum="100"
+                                MinWidth="85"
+                                VerticalAlignment="Center"
+                                Margin="1,0,4,5">
+                            <Slider.ToolTip>
+                                <ToolTip Content="{Binding MusicVolumeDisplayText}"/>
+                            </Slider.ToolTip>
+                        </Slider>
+                    </Grid>
+                </Grid>
+
+                <Grid Margin="3,10,3,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <CheckBox Content="Logarithmic Volume Control" 
+                              Height="25" 
+                              Margin="0,0,10,0"
+                              HorizontalAlignment="Left"
+                              IsChecked="{Binding IsLogVolumeChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              MouseEnter="Control_MouseEnter"
+                              ToolTip="Uncheck this option if you feel that the volume does not change smoothly."/> 
+                    <CheckBox Content="Reverse Speakers" 
+                              Height="25" 
+                              HorizontalAlignment="Right"
+                              Grid.Column="1"
+                              Margin="4,0,0,0"
+                              IsChecked="{Binding IsReverseSpeakersChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              MouseEnter="Control_MouseEnter"
+                              ToolTip="Swaps left and right channels when checked."/>
+                </Grid>
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox x:Name="grpVideo"
+                  Grid.Row="1"
+                  Grid.Column="1"
+                  Header=" Graphics Driver Options " 
+                  Height="{Binding ElementName=grpCompat, Path=ActualHeight}"
+                  Margin="10,5,10,0"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Top">
+            <StackPanel>
+
+                <Grid Margin="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Renderer:"
+                               Grid.Row="1"
+                               ToolTip="Select the graphics driver to use for rendering FF7. Mods will only work when set to 'Custom 7H Game Driver'"
+                               ToolTipService.IsEnabled="False"
+                               MouseEnter="Control_MouseEnter"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               Margin="0,0,5,5"/>
+                    <ComboBox x:Name="cboRenderers"
+                              Grid.Row="1"
+                              Grid.Column="1"
+                              ToolTip="Select the graphics driver to use for rendering FF7. Mods will only work when set to 'Custom 7H Game Driver'"
+                              ToolTipService.IsEnabled="False"
+                              MouseEnter="Control_MouseEnter"
+                              Style="{StaticResource MainComboBoxStyle}"
+                              ItemTemplate="{StaticResource rendererItemTemplate}"
+                              ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
+                              SelectedItem="{Binding SelectedRenderer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding AvailableRenderers}"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Center"
+                              Margin="0,1,4,5"/>
+                </Grid>
+
+                <WrapPanel HorizontalAlignment="Stretch" Margin="4,30,3,0">
+                    
+                    <RadioButton Content="Quarter Screen" VerticalAlignment="Center" Margin="0,0,0,0"
+                                 GroupName="ScreenMode"
+                                 ToolTip="Launch the game windowed (quarter screen). Only applies when set to 'Software Renderer' or 'Direct3D Hardware Acceleration'."
+                                 ToolTipService.IsEnabled="False"
+                                 MouseEnter="Control_MouseEnter"
+                                 FontSize="13"
+                                 Visibility="{Binding ScreenModesVisibility}"
+                                 IsChecked="{Binding IsQuarterScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <RadioButton Content="Full Screen" VerticalAlignment="Center" Margin="8,0,0,0"
+                                 GroupName="ScreenMode"
+                                 FontSize="13"
+                                 ToolTip="Launch the game in full screen. Only applies when set to 'Software Renderer' or 'Direct3D Hardware Acceleration'."
+                                 ToolTipService.IsEnabled="False"
+                                 MouseEnter="Control_MouseEnter"
+                                 Visibility="{Binding ScreenModesVisibility}"
+                                 IsChecked="{Binding IsFullScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <RadioButton Content="RIVA 128" VerticalAlignment="Center" Margin="28,0,0,0"
+                                 FontSize="13"
+                                 GroupName="GraphicsOption"
+                                 ToolTip="Sets the option to use for Hardware Acceleration. Only applies when set to 'Direct3D Hardware Acceleration'."
+                                 ToolTipService.IsEnabled="False"
+                                 MouseEnter="Control_MouseEnter"
+                                 Visibility="{Binding RivaOptionsVisibility}"
+                                 IsChecked="{Binding IsRivaOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <RadioButton Content="TNT" VerticalAlignment="Center" Margin="8,0,0,0"
+                                 FontSize="13"
+                                 GroupName="GraphicsOption"
+                                 ToolTip="Sets the option to use for Hardware Acceleration. Only applies when set to 'Direct3D Hardware Acceleration'."
+                                 ToolTipService.IsEnabled="False"
+                                 MouseEnter="Control_MouseEnter"
+                                 Visibility="{Binding RivaOptionsVisibility}"
+                                 IsChecked="{Binding IsTntOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </WrapPanel>
+
+            </StackPanel>
+        </GroupBox>
+
+        <GroupBox x:Name="grpPrograms"
+                  Grid.Row="2" 
+                  Grid.Column="1" 
+                  Height="{Binding ElementName=grpShell, Path=ActualHeight}"
+                  Header=" Programs to Run Prior to FF7: " 
+                  Margin="10,5,10,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Margin="3,3,0,3">
+                    <Button x:Name="btnAddProgram"
+                            Click="btnAddProgram_Click"
+                            ToolTip="Add a program to run prior to FF7 starting."
+                            ToolTipService.IsEnabled="False"
+                            MouseEnter="Control_MouseEnter"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="24"
+                            Width="24"
+                            Margin="0,0,0,0"
+                            Content="{StaticResource iconAdd}"/>
+
+                    <Button x:Name="btnRemoveProgram"
+                            Click="btnRemoveProgram_Click"
+                            ToolTipService.IsEnabled="False"
+                            MouseEnter="Control_MouseEnter"
+                            ToolTip="Remove selected program."
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="24"
+                            Width="24"
+                            Margin="0,0,0,0"
+                            Content="{StaticResource iconMinus}"/>
+
+                    <Button x:Name="btnEditProgram"
+                            ToolTip="Edit selected program and arguments."
+                            ToolTipService.IsEnabled="False"
+                            MouseEnter="Control_MouseEnter"
+                            Click="btnEditProgram_Click"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="24"
+                            Width="24"
+                            Content="{StaticResource iconEdit}"/>
+
+                    <Button x:Name="btnMoveProgramUp"
+                            ToolTip="Move selected program up in the list. Right-click to move to top."
+                            ToolTipService.IsEnabled="False"
+                            MouseEnter="Control_MouseEnter"
+                            Click="btnMoveProgramUp_Click"
+                            MouseRightButtonUp="btnMoveProgramUp_MouseRightButtonUp"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="24"
+                            Width="24"
+                            Content="{StaticResource iconUpChevron}"/>
+
+                    <Button x:Name="btnMoveProgramDown"
+                            ToolTip="Move selected program down in the list. Right-click to move to bottom."
+                            ToolTipService.IsEnabled="False"
+                            MouseEnter="Control_MouseEnter"
+                            Click="btnMoveProgramDown_Click"
+                            MouseRightButtonUp="btnMoveProgramDown_MouseRightButtonUp"
+                            Style="{StaticResource ImageButton}"
+                            VerticalAlignment="Top"
+                            Height="24"
+                            Width="24"
+                            Content="{StaticResource iconDownChevron}"/>
+
+                </StackPanel>
+
+
+                <ListBox x:Name="lstPrograms" Grid.Column="1"
+                          ItemsSource="{Binding ProgramList}" 
+                          VirtualizingPanel.IsVirtualizing="false"
+                          ItemContainerStyle="{StaticResource programItemStyle}"
+                          Margin="3">
+
+                </ListBox>
+            </Grid>
+        </GroupBox>
+
+        <TextBlock Grid.Row="3"
+                   Grid.ColumnSpan="2"
+                   VerticalAlignment="Center"
+                   TextWrapping="Wrap"
+                   Margin="10,0,290,0"
+                   TextTrimming="CharacterEllipsis"
+                   Text="{Binding StatusMessage, FallbackValue='This is a mouse over description or message to user.'}"/>
+
+        <Button x:Name="btnDefaults" 
+                Content="Reset Defaults" 
+                ToolTip="Reset game launcher settings to the default values."
+                ToolTipService.IsEnabled="False"
+                MouseEnter="Control_MouseEnter"
+                Click="btnDefaults_Click"
+                Grid.Row="3" Grid.Column="1"
+                Margin="0,5,170,10"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"/>
+
+        <Button x:Name="btnOk" 
+                Content="Save" 
+                Width="80"
+                Click="btnOk_Click"
+                Grid.Row="3" Grid.Column="1"
+                Margin="0,5,90,10"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"/>
+
+        <Button x:Name="btnCancel" 
+                Content="Cancel"
+                Width="80"
+                Click="btnCancel_Click"
+                Grid.Row="3" Grid.Column="1"
+                Margin="0,5,10,10"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"/>
+
+
+        <Popup x:Name="popupProgram"
+               IsOpen="{Binding IsProgramPopupOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+               StaysOpen="True"
+               Placement="Right"
+               HorizontalOffset="3"
+               PlacementTarget="{Binding ElementName=btnAddProgram}">
+            <Grid Width="{Binding ElementName=lstPrograms, Path=ActualWidth}" Height="{Binding ElementName=lstPrograms, Path=ActualHeight}" 
+                  Background="{DynamicResource PrimaryControlBackground}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox Text="{Binding NewProgramPathText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                         FontSize="14"
+                         Height="24"
+                         VerticalContentAlignment="Center"
+                         Margin="25,3,5,0"/>
+
+                <TextBlock Text="Enter full path to program to run"
+                           Foreground="{DynamicResource PrimaryControlDisabledForeground}"
+                           IsHitTestVisible="False"
+                           VerticalAlignment="Top"
+                           FontSize="14"
+                           Margin="30,6,5,0">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding NewProgramPathText, FallbackValue=''}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <Button x:Name="btnBrowseProgram"
+                        Click="btnBrowseProgram_Click"
+                        Style="{StaticResource FileEllipsisImageButton}"
+                        ToolTip="Browse for program to run"
+                        Grid.Column="1"
+                        Margin="0,3,25,0"
+                        VerticalAlignment="Center"/>
+
+
+                <TextBox x:Name="txtProgramPath"
+                         Text="{Binding NewProgramArgsText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Grid.Row="1"
+                         FontSize="14"
+                         Height="24"
+                         VerticalContentAlignment="Center"
+                         Margin="25,3,5,0"/>
+
+                <TextBlock x:Name="txtProgramArgs"
+                           Text="Enter program arguments"
+                           Grid.Row="1"
+                           Foreground="{DynamicResource PrimaryControlDisabledForeground}"
+                           IsHitTestVisible="False"
+                           FontSize="14"
+                           VerticalAlignment="Top"
+                           Margin="30,6,5,0">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding NewProgramArgsText, FallbackValue=''}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <Button x:Name="btnSaveProgram"
+                        Click="btnSaveProgram_Click"
+                        Grid.Row="2"
+                        HorizontalAlignment="Center"
+                        Width="80"
+                        Margin="0,3,60,3"
+                        Content="Save"/>
+
+                <Button x:Name="btnCancelProgramAction"
+                        Click="btnCancelProgramAction_Click"
+                        Grid.Row="2"
+                        HorizontalAlignment="Center"
+                        Width="80"
+                        Margin="100,3,0,3"
+                        Content="Cancel"/>
+
+            </Grid>
+        </Popup>
+    </Grid>
+</Window>

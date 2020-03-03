@@ -1,0 +1,117 @@
+﻿<Window x:Class="SeventhHeaven.Windows.GameConverterWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SeventhHeaven.Windows"
+        mc:Ignorable="d"
+        Style="{StaticResource MainWindowStyle}"
+        Title="Game Converter" 
+        Height="325" Width="500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <!--<Grid x:Name="gridSetPath"
+              Visibility="{Binding SetPathPageVisibility, FallbackValue=''}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Select the path to your Final Fantasy VII installation and the type of installation you have."
+                       TextWrapping="Wrap"
+                       Margin="15,25,25,0"/>
+
+            <TextBox x:Name="txtInstallPath"
+                     Grid.Row="1"
+                     Text="{Binding InstallPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Center"
+                     Margin="15,0,50,50"
+                     MinWidth="325"/>
+            <Button x:Name="btnBrowsePath"
+                    Content="..."
+                    Grid.Row="1"
+                    Width="20"
+                    Height="18"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Margin="0,0,25,50"/>
+
+
+            <TextBlock Grid.Row="1"
+                       Text="Installation Type:"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Center"
+                       Margin="0,0,203,2"/>
+            <ComboBox x:Name="cboInstallVersion"
+                      Grid.Row="1"
+                      Style="{StaticResource MainComboBoxStyle}"
+                      SelectedItem="{Binding SelectedInstallVersion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{Binding InstallVersions}"
+                      HorizontalAlignment="Right"
+                      VerticalAlignment="Center"
+                      Margin="0,0,50,0"
+                      MinWidth="150"/>
+        </Grid>-->
+
+        <Grid x:Name="gridUnpatch"
+              Visibility="{Binding UnpatchPageVisibility, FallbackValue=''}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="The game seems to be patched already. You can select to   re-patch or remove the patch below."
+                       TextWrapping="Wrap"
+                       Margin="15,25,25,0"/>
+
+            <StackPanel Grid.Row="1"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+
+                <WrapPanel HorizontalAlignment="Center">
+                    <TextBlock Grid.Row="1"
+                       Text="Installation Type:"
+                       HorizontalAlignment="Right"
+                       VerticalAlignment="Center"
+                       Margin="0,0,0,2"/>
+                    <ComboBox x:Name="cboInstallVersion"
+                      Grid.Row="1"
+                      Style="{StaticResource MainComboBoxStyle}"
+                      SelectedItem="{Binding SelectedInstallVersion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{Binding InstallVersions}"
+                      HorizontalAlignment="Right"
+                      VerticalAlignment="Center"
+                      Margin="0,0,50,0"
+                      MinWidth="150"/>
+                </WrapPanel>
+                <Button x:Name="btnRepatch"
+                        Content="Re-Patch"
+                        Width="120"
+                        Margin="0,0,0,10"/>
+                <Button x:Name="btnRemovepatch"
+                        Content="Remove Patch"
+                        Width="120"/>
+            </StackPanel>
+
+        </Grid>
+
+        <Button x:Name="btnBack"
+                Content="Back"
+                Grid.Row="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Margin="0,0,100,10"
+                Width="75"/>
+
+        <Button x:Name="btnNext"
+                Content="Next"
+                Grid.Row="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Margin="0,0,25,10"
+                Width="75"/>
+    </Grid>
+</Window>
