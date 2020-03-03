@@ -231,11 +231,10 @@ namespace SeventhHeaven.ViewModels
         public ThemeSettingsViewModel(bool loadThemeXml)
         {
             StatusText = "";
-            SelectedThemeText = "Custom";
 
             if (loadThemeXml)
             {
-                SelectedThemeText = GetSavedThemeName();
+                SelectedThemeText = GetSavedThemeName(); // this will trigger ChangeTheme()
             }
         }
 
