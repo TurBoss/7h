@@ -81,7 +81,7 @@
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Center" Margin="5,0,5,0" Width="{Binding ElementName=colInstalled, Path=ActualWidth}">
                                     <Viewbox Height="20" Width="20" HorizontalAlignment="Center" Margin="0,0,0,0">
-                                        <ContentControl Template="{StaticResource iconNewStar}" Margin="5" HorizontalAlignment="Center"/>
+                                        <ContentControl Template="{StaticResource iconNewStar}" Margin="5" HorizontalAlignment="Center" IsTabStop="False"/>
                                     </Viewbox>
                                 </Grid>
 
@@ -104,6 +104,7 @@
                     HorizontalAlignment="Right">
 
             <Button x:Name="btnRefresh"
+                    TabIndex="10"
                     ToolTip="Force Update All Subscriptions and Refresh Catalog"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconRefresh}"
@@ -111,12 +112,14 @@
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnDownload"
+                    TabIndex="11"                    
                     ToolTip="Download Selected Mod"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconDownload}"
                     Click="btnDownload_Click"/>
 
             <Button x:Name="btnResetColumns"
+                    TabIndex="12"
                     ToolTip="Reset Columns"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconHeader}"
@@ -156,6 +159,7 @@
                     HorizontalAlignment="Right">
 
             <Button x:Name="btnPause"
+                    TabIndex="13"
                     ToolTipService.ShowOnDisabled="True"
                     IsEnabled="{Binding PauseDownloadIsEnabled}"
                     ToolTip="{Binding PauseDownloadToolTip, FallbackValue='Pause/Resume Selected Download'}"
@@ -174,6 +178,7 @@
             </Button>
 
             <Button x:Name="btnCancel"
+                    TabIndex="14"
                     ToolTip="Cancel Selected Download"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconCloudStop}"

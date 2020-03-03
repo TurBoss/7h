@@ -85,7 +85,7 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid Width="{Binding ElementName=colCategory, Path=ActualWidth}">
-                                    <ComboBox SelectedItem="{Binding Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding CategoryList}" Margin="0,0,20,0"/>
+                                    <ComboBox SelectedItem="{Binding Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding CategoryList}" Margin="0,0,20,0" IsTabStop="False"/>
                                 </Grid>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
@@ -97,7 +97,8 @@
                                 <CheckBox Style="{StaticResource ToggleSwitchCheckbox}"
                                           MaxWidth="65"
                                           MinWidth="45"
-                                          IsChecked="{Binding IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                          IsChecked="{Binding IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          IsTabStop="False"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -112,6 +113,7 @@
                     HorizontalAlignment="Right">
 
             <Button x:Name="btnImport" 
+                    TabIndex="20"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconImport}"
                     Click="btnImport_Click"
@@ -119,6 +121,7 @@
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnMoveUp"
+                    TabIndex="21"
                     Click="btnMoveUp_Click"
                     MouseRightButtonUp="btnMoveTop_Click"
                     Style="{StaticResource SmallImageButton}"
@@ -127,6 +130,7 @@
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnMoveDown"
+                    TabIndex="22"
                     Click="btnMoveDown_Click"
                     MouseRightButtonDown="btnSendBottom_Click"
                     Style="{StaticResource SmallImageButton}"
@@ -134,6 +138,7 @@
                     ToolTip="Move Down/Right-Click to Move to Bottom"/>
 
             <Button x:Name="btnAutoSort" 
+                    TabIndex="23"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconSort}"
                     Click="btnAutoSort_Click"
@@ -141,6 +146,7 @@
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnConfigure" 
+                    TabIndex="24"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconSettings}"
                     Click="btnConfigure_Click"
@@ -148,6 +154,7 @@
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnActivateAll" 
+                    TabIndex="25"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconCheckmark}"
                     Click="btnActivateAll_Click"
@@ -155,6 +162,7 @@
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnDeactivateAll" 
+                    TabIndex="26"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconCancel}"
                     Click="btnDeactivateAll_Click"
@@ -162,6 +170,7 @@
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnRefresh" 
+                    TabIndex="27"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconRefresh}"
                     Click="btnRefresh_Click"
@@ -169,6 +178,7 @@
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnUninstall" 
+                    TabIndex="28"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconDelete}"
                     Click="btnUninstall_Click"
@@ -176,6 +186,7 @@
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnResetColumns" 
+                    TabIndex="29"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconHeader}"
                     Click="btnResetColumns_Click"

@@ -437,8 +437,8 @@
         </Popup>
 
 
-        <StatusBar  Grid.Row="2" Grid.ColumnSpan="3" Margin="0,5,0,0">
-            <StatusBarItem x:Name="statusBarItem" Height="22">
+        <StatusBar  Grid.Row="2" Grid.ColumnSpan="3" Margin="0,5,0,0" IsTabStop="False">
+            <StatusBarItem x:Name="statusBarItem" Height="22" IsTabStop="False">
                 <StatusBarItem.Style>
                     <Style TargetType="{x:Type StatusBarItem}" BasedOn="{StaticResource MainStatusBarStyle}">
                         <Setter Property="Template">
@@ -452,6 +452,7 @@
                                                     Style="{StaticResource MainButtonStyleWithNoTriggers}"
                                                     Cursor="Hand"
                                                     ToolTip="Click to view app log"
+                                                    IsTabStop="False"
                                                     Background="Transparent"/>
 
 

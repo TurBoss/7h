@@ -66,12 +66,25 @@
         <Setter Property="Background" Value="{DynamicResource PrimaryAppBackground}"/>
     </Style>
 
+    <Style x:Key="MainFocusVisualStyle">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle StrokeThickness="1" Stroke="{DynamicResource PrimaryControlForeground}"  
+                               StrokeDashArray="1 2"  
+                               SnapsToDevicePixels="true"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="{x:Type Button}">
         <Setter Property="Background" Value="{DynamicResource PrimaryControlBackground}"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
         <Setter Property="Padding" Value="10,8,10,8"/>
         <Setter Property="FontSize" Value="14"/>
-
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource MainFocusVisualStyle}"/>
+        
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -108,6 +121,8 @@
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
         <Setter Property="Padding" Value="10,8,10,8"/>
         <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource MainFocusVisualStyle}"/>
+
 
         <Setter Property="Template">
             <Setter.Value>
@@ -133,6 +148,7 @@
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="ImageWidth" Value="28"/>
         <Setter Property="ImageHeight" Value="28"/>
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource MainFocusVisualStyle}"/>
 
         <Setter Property="Template">
             <Setter.Value>
@@ -148,7 +164,7 @@
                             </Grid.ColumnDefinitions>
 
                             <Viewbox Width="{TemplateBinding ImageWidth}" Height="{TemplateBinding ImageHeight}" Stretch="UniformToFill">
-                                <ContentControl Template="{TemplateBinding TemplateSource}" Foreground="{TemplateBinding ImageForeground}"/>
+                                <ContentControl Template="{TemplateBinding TemplateSource}" Foreground="{TemplateBinding ImageForeground}" IsTabStop="False"/>
                             </Viewbox>
                             <TextBlock x:Name="txtContent"
                                        Grid.Column="1"
@@ -179,7 +195,9 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type cls:ButtonWithImage}" BasedOn="{StaticResource MainButtonWithImageStyle}"/>
+    <Style TargetType="{x:Type cls:ButtonWithImage}" BasedOn="{StaticResource MainButtonWithImageStyle}">
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource MainFocusVisualStyle}"/>
+    </Style>
 
     <Style x:Key="ButtonWithImageAndDownArrow" TargetType="{x:Type cls:ButtonWithImage}">
         <Setter Property="Background" Value="{DynamicResource PrimaryControlBackground}"/>
@@ -187,6 +205,7 @@
         <Setter Property="ImageForeground" Value="{DynamicResource PrimaryControlForeground}"/>
         <Setter Property="Padding" Value="0,8,5,8"/>
         <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource MainFocusVisualStyle}"/>
 
         <Setter Property="Template">
             <Setter.Value>
@@ -195,7 +214,7 @@
                     <Border x:Name="bd" BorderThickness="0" Background="{TemplateBinding Background}">
                         <WrapPanel>
                             <Viewbox Width="28" Height="28" Stretch="UniformToFill">
-                                <ContentControl Template="{TemplateBinding TemplateSource}" Foreground="{TemplateBinding ImageForeground}"/>
+                                <ContentControl Template="{TemplateBinding TemplateSource}" Foreground="{TemplateBinding ImageForeground}" IsTabStop="False"/>
                             </Viewbox>
                             
                             <TextBlock x:Name="txtContent"
@@ -236,6 +255,7 @@
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlPressed}"/>
         <Setter Property="Padding" Value="2"/>
         <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource MainFocusVisualStyle}"/>
 
         <Setter Property="Template">
             <Setter.Value>
@@ -279,6 +299,7 @@
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
         <Setter Property="Padding" Value="10,8,5,8"/>
         <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource MainFocusVisualStyle}"/>
 
         <Setter Property="Template">
             <Setter.Value>
@@ -321,6 +342,7 @@
         <Setter Property="Background" Value="{DynamicResource PrimaryControlBackground}"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
         <Setter Property="Padding" Value="5,2,5,2"/>
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource MainFocusVisualStyle}"/>
 
         <Setter Property="Template">
             <Setter.Value>
@@ -358,6 +380,7 @@
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
         <Setter Property="Width" Value="48"/>
         <Setter Property="Height" Value="48"/>
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource MainFocusVisualStyle}"/>
 
         <Setter Property="Template">
             <Setter.Value>
@@ -365,7 +388,7 @@
 
                     <Viewbox Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Stretch="UniformToFill">
                         <Border x:Name="bd" BorderThickness="0" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
-                            <ContentControl Template="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" VerticalContentAlignment="Center" VerticalAlignment="Center"/>
+                            <ContentControl Template="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" VerticalContentAlignment="Center" VerticalAlignment="Center" IsTabStop="False"/>
                         </Border>
                     </Viewbox>
 
@@ -414,7 +437,8 @@
     <Style TargetType="{x:Type TabItem}">
         <Setter Property="Foreground" Value="{StaticResource PrimaryControlForeground}" />
         <Setter Property="FontSize" Value="14"/>
-
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource MainFocusVisualStyle}"/>
+        
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabItem}">
@@ -429,6 +453,7 @@
                             <ContentPresenter x:Name="ContentSite"
                                               VerticalAlignment="Center"
                                               HorizontalAlignment="Center"
+                                              IsHitTestVisible="False"
                                               ContentSource="Header"
                                               Margin="12,2,12,2"
                                               RecognizesAccessKey="True"/>
@@ -626,6 +651,8 @@
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="BorderThickness" Value="0,0,0,0"/>
         <Setter Property="BorderBrush" Value="{DynamicResource PrimaryControlPressed}"/>
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource MainFocusVisualStyle}"/>
+
 
         <Setter Property="Template">
             <Setter.Value>
@@ -660,6 +687,8 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource MainFocusVisualStyle}"/>
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListBoxItem">
@@ -693,7 +722,8 @@
     <Style TargetType="{x:Type CheckBox}">
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
-        <!--<Setter Property="FocusVisualStyle" Value="{DynamicResource CheckBoxFocusVisual}" />-->
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource MainFocusVisualStyle}"/>
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type CheckBox}">
@@ -802,6 +832,8 @@
         <Setter Property="MinWidth" Value="120" />
         <Setter Property="MinHeight" Value="20" />
         <Setter Property="Background" Value="{DynamicResource PrimaryControlBackground}"/>
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource MainFocusVisualStyle}"/>
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
@@ -949,6 +981,7 @@
         <Setter Property="Height" Value="28"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
         <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource MainFocusVisualStyle}"/>
 
         <Setter Property="Template">
             <Setter.Value>
@@ -1080,6 +1113,8 @@
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="FocusVisualStyle" Value="{DynamicResource RadioButtonFocusVisual}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource MainFocusVisualStyle}"/>
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type RadioButton}">
@@ -1233,6 +1268,8 @@
     <Style TargetType="{x:Type Slider}">
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource MainFocusVisualStyle}"/>
+
         <Style.Triggers>
             <Trigger Property="Orientation" Value="Horizontal">
                 <Setter Property="MinWidth" Value="104" />
@@ -1401,7 +1438,7 @@
                 </Track.DecreaseRepeatButton>
                 
                 <Track.Thumb>
-                    <Thumb Style="{StaticResource ScrollBarThumb}"
+                    <Thumb Style="{DynamicResource ScrollBarThumb}"
                            Margin="1,0,1,0"
                            BorderBrush="{DynamicResource PrimaryControlBackground}"
                            Background="{DynamicResource SecondaryAppBackground}"/>
@@ -1443,7 +1480,7 @@
                 </Track.DecreaseRepeatButton>
                 
                 <Track.Thumb>
-                    <Thumb Style="{StaticResource ScrollBarThumb}" 
+                    <Thumb Style="{DynamicResource ScrollBarThumb}" 
                            Margin="0,1,0,1" 
                            BorderBrush="{DynamicResource PrimaryControlBackground}" 
                            Background="{DynamicResource SecondaryAppBackground}"/>
@@ -1469,15 +1506,14 @@
             <Trigger Property="Orientation" Value="Horizontal">
                 <Setter Property="Width" Value="Auto" />
                 <Setter Property="Height" Value="18" />
-                <Setter Property="Template" Value="{StaticResource HorizontalScrollBar}" />
+                <Setter Property="Template" Value="{DynamicResource HorizontalScrollBar}" />
             </Trigger>
             <Trigger Property="Orientation" Value="Vertical">
                 <Setter Property="Width" Value="18" />
                 <Setter Property="Height" Value="Auto" />
-                <Setter Property="Template" Value="{StaticResource VerticalScrollBar}" />
+                <Setter Property="Template" Value="{DynamicResource VerticalScrollBar}" />
             </Trigger>
         </Style.Triggers>
     </Style>
-
 
 </ResourceDictionary>
