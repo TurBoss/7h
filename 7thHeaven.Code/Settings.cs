@@ -163,6 +163,7 @@ namespace Iros._7th.Workshop {
 
         /// <summary>
         /// Sets the default paths for an FF7 Install i.e 'mods/Textures', 'mods/7th Heaven', 'data/movies'
+        /// and creates the folders if they do not exist. Default extra folders like 'direct' and 'music' are also created
         /// </summary>
         /// <param name="pathToFf7Install"></param>
         public void SetPathsFromInstallationPath(string pathToFf7Install)
@@ -175,6 +176,11 @@ namespace Iros._7th.Workshop {
             LogAndCreateFolderIfNotExists(LibraryLocation);
             LogAndCreateFolderIfNotExists(MovieFolder);
             LogAndCreateFolderIfNotExists(AaliFolder);
+
+            foreach (string folder in Settings.UseDefaultSettings().ExtraFolders)
+            {
+                LogAndCreateFolderIfNotExists(Path.Combine(pathToFf7Install, folder));
+            }
         }
 
         private static void LogAndCreateFolderIfNotExists(string pathToFolder)
