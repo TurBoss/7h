@@ -165,6 +165,8 @@ namespace SeventhHeavenUI.ViewModels
             {
                 Category = ModCategory.Unknown.ToString();
             }
+
+            NotifyPropertyChanged(nameof(IsInstalled));
         }
 
         private string GetDLSize(int size)

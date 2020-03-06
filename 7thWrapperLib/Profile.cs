@@ -200,7 +200,7 @@ namespace _7thWrapperLib
                     _chunkFiles.Add(parts[0] + "\\" + parts[1].Substring(0, chunk));
                 }
             }
-            System.Diagnostics.Debug.WriteLine("    Finished scan for chunks, found " + String.Join(",", _chunkFiles));
+            DebugLogger.WriteLine("    Finished scan for chunks, found " + String.Join(",", _chunkFiles));
         }
 
         /// <summary>
@@ -210,7 +210,7 @@ namespace _7thWrapperLib
         {
             if (BaseFolder.EndsWith(".iro", StringComparison.InvariantCultureIgnoreCase) && _archive == null)
             {
-                System.Diagnostics.Debug.WriteLine("      Loading archive " + BaseFolder);
+                DebugLogger.WriteLine("      Loading archive " + BaseFolder);
                 _archive = new IrosArc(BaseFolder);
                 ScanChunk();
             }
@@ -335,7 +335,7 @@ namespace _7thWrapperLib
         public static bool DirExists(string dir)
         {
             bool exist = System.IO.Directory.Exists(dir);
-            RuntimeLog.Write("MOD: Check if directory exists {0}: {1}", dir, exist);
+            DebugLogger.DetailedWriteLine($"MOD: Check if directory exists {dir}: {exist}");
             return exist;
         }
 
@@ -374,7 +374,7 @@ namespace _7thWrapperLib
                 exist = System.IO.File.Exists(file);
                 if (exist) _activated.Add(file);
             }
-            RuntimeLog.Write("MOD: Check if file exists {0}: {1}", file, exist);
+            DebugLogger.DetailedWriteLine($"MOD: Check if file exists {file}: {exist}");
             return exist;
         }
 
@@ -407,7 +407,7 @@ namespace _7thWrapperLib
                 string fn = System.IO.Path.GetFileName(file);
                 var files = GetPathOverrideNames(path);
                 bool chunked = files.Any(s => s.StartsWith(fn + ".chunk.", StringComparison.InvariantCultureIgnoreCase));
-                RuntimeLog.Write("MOD: Check if any chunk files present in {0}: {1}", file, chunked);
+                DebugLogger.DetailedWriteLine($"MOD: Check if any chunk files present in {file}: {chunked}");
                 return chunked;
             }
         }
@@ -1142,11 +1142,9 @@ namespace _7thWrapperLib
             if (!_conditions.TryGetValue(path, out c))
                 _conditions.TryGetValue(String.Empty, out c);
             bool active = c.IsActive();
-            //            if (active != _active)
-            //                System.Diagnostics.Debug.WriteLine("Folder {0} has become {1}", Folder, active ? "ACTIVE" : "INACTIVE");
-            //            _active = active;
 
-            System.Diagnostics.Debug.WriteLine("Folder {0} file {1} has become {2}", Folder, path, active ? "ACTIVE" : "INACTIVE");
+            string activeStr = active ? "ACTIVE" : "INACTIVE";
+            DebugLogger.WriteLine($"Folder {Folder} file {path} has become {activeStr}");
             return active;
         }
 

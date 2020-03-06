@@ -37,23 +37,28 @@ namespace SeventhHeaven.ViewModels
 
         public bool IsLaunchingWithNoMods { get; internal set; }
 
-        internal async Task<bool> BeginLaunchProcessAsync()
+        internal Task<bool> BeginLaunchProcessAsync()
         {
-            bool didLaunch = false;
-
-            try
+            Task<bool> launchTask = Task.Factory.StartNew(() =>
             {
-                GameLauncher.Instance.ProgressChanged += LaunchGame_ProgressChanged;
+                bool didLaunch = false;
 
-                didLaunch = GameLauncher.LaunchGame(variableDump, debugLogging, IsLaunchingWithNoMods);
-            }
-            finally
-            {
-                GameLauncher.Instance.ProgressChanged -= LaunchGame_ProgressChanged;
-                GameLauncher.Instance.RaiseLaunchCompleted(didLaunch);
-            }
+                try
+                {
+                    GameLauncher.Instance.ProgressChanged += LaunchGame_ProgressChanged;
 
-            return didLaunch;
+                    didLaunch = GameLauncher.LaunchGame(variableDump, debugLogging, IsLaunchingWithNoMods);
+                }
+                finally
+                {
+                    GameLauncher.Instance.ProgressChanged -= LaunchGame_ProgressChanged;
+                    GameLauncher.Instance.RaiseLaunchCompleted(didLaunch);
+                }
+
+                return didLaunch;
+            });
+
+            return launchTask;
         }
 
         internal void LogStatus(string message)

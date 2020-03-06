@@ -85,14 +85,14 @@ namespace _7thWrapperLib {
             if (value.Contains("..")) {
                 int[] range = value.Split(new[] { ".." }, StringSplitOptions.RemoveEmptyEntries).Select(s => (int)Parse(s)).ToArray();
                 compare = i => {
-                    if (i != last) System.Diagnostics.Debug.WriteLine("RuntimeVar {0} became {1}", spec, i);
+                    if (i != last) DebugLogger.WriteLine($"RuntimeVar {spec} became {i}");
                     last = i;
                     return i >= range[0] && i <= range[1];
                 };
             } else {
                 HashSet<int> values = new HashSet<int>(value.Split(',').Select(s => (int)Parse(s)));
                 compare = i => {
-                    if (i != last) System.Diagnostics.Debug.WriteLine("RuntimeVar {0} became {1}", spec, i);
+                    if (i != last) DebugLogger.WriteLine($"RuntimeVar {spec} became {i}");
                     last = i;
                     return values.Contains(i);
                 };
@@ -145,7 +145,7 @@ namespace _7thWrapperLib {
                     System.Runtime.InteropServices.Marshal.Copy(address, data, 0, size);
                     string s = FFText.Translate(data);
                     if (!s.Equals(last))
-                        System.Diagnostics.Debug.WriteLine("RuntimeVar {0} became {1}", spec, s);
+                        DebugLogger.WriteLine($"RuntimeVar {spec} became {s}");
                     last = s;
                     return values.Contains(s.Trim());
                 };

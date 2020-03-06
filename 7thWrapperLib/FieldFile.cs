@@ -16,12 +16,12 @@ namespace _7thWrapperLib {
             var min = new System.IO.MemoryStream(input);
             min.Position = 4;
             Lzs.Decode(min, ms);
-            System.Diagnostics.Debug.WriteLine("FF:Unchunk:LZS expanded {0} bytes to {1} bytes", input.Length, ms.Length);
+            DebugLogger.WriteLine($"FF:Unchunk:LZS expanded {input.Length} bytes to {ms.Length} bytes");
             byte[] scratch = new byte[4];
             ms.Position = 2;
             ms.Read(scratch, 0, 4);
             int numsection = BitConverter.ToInt32(scratch, 0);
-            System.Diagnostics.Debug.WriteLine("FF:Unchunk:{0} sections", numsection, 0);
+            DebugLogger.WriteLine($"FF:Unchunk:{numsection} sections");
             List<byte[]> sections = new List<byte[]>();
             foreach (int i in Enumerable.Range(0, numsection)) {
                 ms.Position = 6 + i * 4;

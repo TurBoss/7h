@@ -24,9 +24,9 @@ namespace _7thWrapperLib {
         }
 
         public void Dump() {
-            System.Diagnostics.Debug.WriteLine("VFILE:");
+            DebugLogger.WriteLine("VFILE:");
             foreach (var range in _ranges) {
-                System.Diagnostics.Debug.WriteLine("  Range {0} starts {1} length {2} [{3}]", range.GetType().Name, range.Start, range.Length, range.Tag);
+                DebugLogger.WriteLine($"  Range {range.GetType().Name} starts {range.Start} length {range.Length} [{range.Tag}]");
             }
         }
 
@@ -42,7 +42,7 @@ namespace _7thWrapperLib {
 
             if ((hprev != null) && (hcurr != null) && (hprev.Handle == hcurr.Handle) && ((hprev.Offset + hprev.Length) == hcurr.Offset)) {
                 (prev as VRangeHandle).Length += range.Length;
-                //System.Diagnostics.Debug.WriteLine("---expanding existing range");
+                //DebugLogger.WriteLine("---expanding existing range");
             } else {
                 _ranges.Last().Next = range;
                 _ranges.Add(range);
@@ -166,7 +166,7 @@ namespace _7thWrapperLib {
         }
 
         private unsafe void Recalculate() {
-            System.Diagnostics.Debug.WriteLine("Chunked file {0} recalculating contents...", Name, 0);
+            DebugLogger.WriteLine($"Chunked file {Name} recalculating contents...");
             byte[] original = new byte[_fbLen];
             Win32.OVERLAPPED ov = new Win32.OVERLAPPED() {
                 EventHandle = IntPtr.Zero,
@@ -181,7 +181,7 @@ namespace _7thWrapperLib {
                 //TODO should loop...
                 Win32.ReadFile(_fbHandle, new IntPtr(bp), (uint)_fbLen, ref bytesRead, ref ov);
             }
-            System.Diagnostics.Debug.WriteLine("Original read {0} from {1} sig {2} {3} {4} {5}", _fbLen, _fbOffset, original[0], original[1], original[2], original[3]);
+            DebugLogger.WriteLine($"Original read {_fbLen} from {_fbOffset} sig {original[0]} {original[1]} {original[2]} {original[3]}");
 
             var orig = FieldFile.Unchunk(original);
 
@@ -201,11 +201,11 @@ namespace _7thWrapperLib {
 
             _calculated = FieldFile.Chunk(orig);
             Bytes.WriteInt(_header, 20, _calculated.Length);
-            System.Diagnostics.Debug.WriteLine("New length of {0} is {1}", Name, _calculated.Length);
+            DebugLogger.WriteLine($"New length of {Name} is {_calculated.Length}");
         }
 
         public override void Read(uint offset, uint length, IntPtr dest, ref uint bytesRead) {
-            System.Diagnostics.Debug.WriteLine("Chunked {2} reading from OS {0} L {1}", offset, length, Name);
+            DebugLogger.WriteLine($"Chunked {Name} reading from OS {offset} L {length}");
 
             bool header = (offset < 24);
             bool init = (offset == 24);
@@ -222,7 +222,7 @@ namespace _7thWrapperLib {
                 length = Math.Min(length, 24 - offset);
                 System.Runtime.InteropServices.Marshal.Copy(_header, (int)offset, dest, (int)length);
                 bytesRead = length;
-                System.Diagnostics.Debug.WriteLine("Chunked {2} reading from cheader - {0} bytes read [current size is {1}]", bytesRead, BitConverter.ToInt32(_header, 20), Name);
+                DebugLogger.WriteLine($"Chunked {Name} reading from cheader - {bytesRead} bytes read [current size is {BitConverter.ToInt32(_header, 20)}]");
                 return;
             } else {
                 offset -= 24;
@@ -262,7 +262,7 @@ namespace _7thWrapperLib {
         }
 
         public override void Read(uint offset, uint length, IntPtr dest, ref uint bytesRead) {
-            //System.Diagnostics.Debug.WriteLine("Conditional {2} reading from OS {0} L {1}", offset, length, Name);
+            //DebugLogger.WriteLine("Conditional {2} reading from OS {0} L {1}", offset, length, Name);
 
             bool header = (offset < 24);
             bool init = (offset == 24);
@@ -274,14 +274,14 @@ namespace _7thWrapperLib {
 
                 foreach (var of in _files) {
                     if (of.CFolder == null || of.CFolder.IsActive(of.CName)) {
-                        System.Diagnostics.Debug.WriteLine("Conditional {0} switching to {1}", Name, of.File);
+                        DebugLogger.WriteLine($"Conditional {Name} switching to {of.File}");
                         _current = of;
                         Bytes.WriteInt(_header, 20, of.Size);
                         break;
                     }
                 }
                 if (_current == null)
-                    System.Diagnostics.Debug.WriteLine("Conditional {0} switching to fallback", Name, Name);
+                    DebugLogger.WriteLine($"Conditional {Name} switching to fallback");
                 _lastInit = true; //we're ready to read file headers
             } else {
                 _lastInit = init;
@@ -293,7 +293,7 @@ namespace _7thWrapperLib {
             _access = DateTime.Now;
 
             if (_current == null) { //read from fallback 
-                //System.Diagnostics.Debug.WriteLine("Conditional reading from fallback handle {0} with extra offset {1}", _fallbackHandle, _fallbackOffset);
+                //DebugLogger.WriteLine("Conditional reading from fallback handle {0} with extra offset {1}", _fallbackHandle, _fallbackOffset);
                 Win32.OVERLAPPED ov = new Win32.OVERLAPPED() {
                     EventHandle = IntPtr.Zero,
                     Internal = UIntPtr.Zero,
@@ -302,23 +302,23 @@ namespace _7thWrapperLib {
                     OffsetHigh = 0
                 };
                 Win32.ReadFile(_fallbackHandle, dest, length, ref bytesRead, ref ov);
-                //System.Diagnostics.Debug.WriteLine("Conditional {1} reading from fallback - {0} bytes read", bytesRead, Name);
+                //DebugLogger.WriteLine("Conditional {1} reading from fallback - {0} bytes read", bytesRead, Name);
             } else {
                 if (offset < 24) {
                     length = Math.Min(length, 24 - offset);
                     System.Runtime.InteropServices.Marshal.Copy(_header, (int)offset, dest, (int)length);
                     bytesRead = length;
-                    //System.Diagnostics.Debug.WriteLine("Conditional {2} reading from cheader - {0} bytes read [current size is {1}]", bytesRead, BitConverter.ToInt32(_header, 20), Name);
+                    //DebugLogger.WriteLine("Conditional {2} reading from cheader - {0} bytes read [current size is {1}]", bytesRead, BitConverter.ToInt32(_header, 20), Name);
                     return;
                 } else {
                     offset -= 24;
                     if (_current.Archive == null) {
                         Wrap.SetFilePointer(_handle, (int)offset, IntPtr.Zero, Wrap.EMoveMethod.Begin);
                         Win32.ReadFile(_handle, dest, length, ref bytesRead, IntPtr.Zero);
-                        //System.Diagnostics.Debug.WriteLine("Conditional {1} reading from cfile - {0} bytes read", bytesRead, Name);
+                        //DebugLogger.WriteLine("Conditional {1} reading from cfile - {0} bytes read", bytesRead, Name);
                     } else {
                         _current.Archive.RawRead(_current.File, offset, length, dest, ref bytesRead);
-                        //System.Diagnostics.Debug.WriteLine("Conditional {1} reading from cfile archive offset {2} length {3} - {0} bytes read", bytesRead, Name, offset, length);
+                        //DebugLogger.WriteLine("Conditional {1} reading from cfile archive offset {2} length {3} - {0} bytes read", bytesRead, Name, offset, length);
                     }
                 }
             }
@@ -328,7 +328,7 @@ namespace _7thWrapperLib {
             if (_access < cutoff && !_handle.Equals(IntPtr.Zero)) {
                 Win32.CloseHandle(_handle);
                 _handle = IntPtr.Zero;
-                System.Diagnostics.Debug.WriteLine("Closing handle to {0}, idle", _current, _handle);
+                DebugLogger.WriteLine($"Closing handle to {_current}, idle");
             }
         }
     }
@@ -339,7 +339,7 @@ namespace _7thWrapperLib {
         
         public override void Read(uint offset, uint length, IntPtr dest, ref uint bytesRead) {
             Archive.RawRead(File, offset, length, dest, ref bytesRead);
-            //System.Diagnostics.Debug.WriteLine("VRangeArchive read from {0} offset {1} length {2}, {3} bytes read", File, offset, length, bytesRead);
+            //DebugLogger.WriteLine("VRangeArchive read from {0} offset {1} length {2}, {3} bytes read", File, offset, length, bytesRead);
         }
     }
 
@@ -360,7 +360,7 @@ namespace _7thWrapperLib {
             if (_access < cutoff && !(_handle.Equals(IntPtr.Zero))) {
                 Win32.CloseHandle(_handle);
                 _handle = IntPtr.Zero;
-                System.Diagnostics.Debug.WriteLine("Closing handle to {0}, idle", (object)Filename);
+                DebugLogger.WriteLine($"Closing handle to {Filename}, idle");
             }
         }
     }
@@ -384,7 +384,7 @@ namespace _7thWrapperLib {
             foreach (var item in profile.Mods) {
                 foreach(var entry in item.GetOverrides(file)) {
                     if (entry.CFolder == null || entry.CFolder.IsActive(file)) {
-                        System.Diagnostics.Debug.WriteLine("File {0} overridden by {2}{1}", file, entry.File, entry.Archive);
+                        DebugLogger.WriteLine($"File {file} overridden by {entry.Archive}{entry.File}");
                         return entry;
                     }
                 }
@@ -400,12 +400,12 @@ namespace _7thWrapperLib {
 
         public LGPWrapper(IntPtr handle, string name, RuntimeProfile profile) {
             if (!AnyOverridesFor(name, profile)) {
-                System.Diagnostics.Debug.WriteLine("LGPWrapper: no overrides for {0}, early out", (object)name);
+                DebugLogger.WriteLine($"LGPWrapper: no overrides for {name}, early out");
                 return; //optimisation, don't run anything else, if no override files
             }
             IsActive = true;
 
-            System.Diagnostics.Debug.WriteLine("   LGPWrapper: Parsing");
+            DebugLogger.WriteLine("   LGPWrapper: Parsing");
             var fs = new System.IO.FileStream(new Microsoft.Win32.SafeHandles.SafeFileHandle(handle, false), FileAccess.Read);
             ProcMonParser.DataFile df = ProcMonParser.FF7Files.LoadLGP(fs, name);
             fs.Position = 0;
@@ -418,19 +418,19 @@ namespace _7thWrapperLib {
             foreach (var item in df.Items) {
                 filesOptions[item.Name] = 0;
                 filesSizes[item.Name] = item.Length - 24;
-                RuntimeLog.Write("Checking chunk support for {0}~{1}~", name, item.Name);
+                DebugLogger.DetailedWriteLine($"Checking chunk support for {name}~{item.Name}~");
                 if (profile.Mods.Any(m => m.SupportsChunks(System.IO.Path.Combine(name, item.Name)))) {
                     filesSizes[item.Name] = Math.Max(filesSizes[item.Name], 1024 * 1024 * 2); //This is a horrible hack. TODO.
                     filesOptions[item.Name] |= 0x1;
                 }
             }
-            System.Diagnostics.Debug.WriteLine("   LGPWrapper: Prepared structures");
+            DebugLogger.WriteLine("   LGPWrapper: Prepared structures");
             List<string> names = profile.Mods.SelectMany(m => m.GetPathOverrideNames(name)).Distinct(StringComparer.InvariantCultureIgnoreCase).ToList();
             foreach (string fname in names) {
                 if (fname.IndexOf(".chunk.", StringComparison.InvariantCultureIgnoreCase) >= 0) continue;
                 if (!filesSizes.ContainsKey(fname)) {
                     filesSizes[fname] = 0;
-                    System.Diagnostics.Debug.WriteLine("Added LGP file {0} {1}", name, fname);
+                    DebugLogger.WriteLine($"Added LGP file {name} {fname}");
                 }
                 var overrides = profile.Mods.SelectMany(m => m.GetOverrides(System.IO.Path.Combine(name, fname)));
                 foreach(var over in overrides) {
@@ -441,7 +441,7 @@ namespace _7thWrapperLib {
             List<LGPEntry> entries = filesSizes.Select(kv => new LGPEntry(kv.Key, kv.Value)).ToList();
             List<LGP.LGPEntryMade> newentries;
 
-            System.Diagnostics.Debug.WriteLine("   LGPWrapper: creating new headers");
+            DebugLogger.WriteLine("   LGPWrapper: creating new headers");
             byte[] headers = LGP.CalculateHeaders(entries, 
                 s => {
                     int index;
@@ -456,7 +456,7 @@ namespace _7thWrapperLib {
                 out newentries
             );
             int datastart = headers.Length;
-            System.Diagnostics.Debug.WriteLine("   LGPWrapper: Calculated new LGP headers for {0} with {1} file entries", name, entries.Count);
+            DebugLogger.WriteLine($"   LGPWrapper: Calculated new LGP headers for {name} with {entries.Count} file entries");
 
             /*            
             int datastart = df.Items[0].Start;
@@ -471,7 +471,7 @@ namespace _7thWrapperLib {
                 VFile.Add(new VRangeInline() { Start = 0, Length = offset, Data = headers, Tag = "Headers" });
                 int count = 0;
                 foreach (var item in newentries.OrderBy(em => em.DataIndex)) {
-                    RuntimeLog.Write("LGPWrapper calculate {0}", item.Entry.Name);
+                    DebugLogger.DetailedWriteLine($"LGPWrapper calculate {item.Entry.Name}");
                     //Bytes.WriteUInt(headers, 16 + 20 + 27 * item.Index, offset);
                     string fn = System.IO.Path.Combine(name, item.Entry.Name);
                     var overrides = profile.Mods.SelectMany(m => m.GetOverrides(fn));
@@ -480,7 +480,7 @@ namespace _7thWrapperLib {
                     filesOptions.TryGetValue(item.Entry.Name, out fOptions);                   
                     bool chunked = (fOptions & 0x1) != 0;
                     //var overrides = Enumerable.Empty<OverrideFile>();
-                    //System.Diagnostics.Debug.WriteLine("Virtualizing LGP entry {0} at offset {1}", item.Entry.Name, offset);
+                    //DebugLogger.WriteLine("Virtualizing LGP entry {0} at offset {1}", item.Entry.Name, offset);
                     if (item.DataOffset != offset) throw new Exception("LGPWrapper mismatch on offset for " + item.Entry.Name + " offset=" + offset + " hoffset=" + item.DataOffset);
 
                     if (chunked) {
@@ -492,13 +492,13 @@ namespace _7thWrapperLib {
                             Name = fn,
                             Tag = "Chunked"
                         });
-                        //System.Diagnostics.Debug.WriteLine("File {0} initialized with chunks", item.Entry.Name, 0);
+                        //DebugLogger.WriteLine("File {0} initialized with chunks", item.Entry.Name, 0);
                         offset += (uint)item.Entry.MaxSize + 24;
                     } else if (!overrides.Any()) { //take from original LGP
                         long pos = lgpItems[item.Entry.Name].Start;
                         VFile.Add(new VRangeHandle() { Start = offset, Length = (uint)(item.Entry.MaxSize + 24), Handle = handle, Offset = (uint)pos, Tag = item.Entry.Name });
                         offset += (uint)item.Entry.MaxSize + 24;
-                        //System.Diagnostics.Debug.WriteLine("--VRangeHandle");
+                        //DebugLogger.WriteLine("--VRangeHandle");
                     } else if (overrides.First().CFolder == null) { //only one override, replace directly
                         var ov = overrides.First();
 
@@ -513,22 +513,22 @@ namespace _7thWrapperLib {
                             VFile.Add(vf);
                             _wFiles.Add(vf);
                             vr = vf;
-                            //System.Diagnostics.Debug.WriteLine("LGP entry {0} coming from file {1}", item.Entry.Name, ov.File);
+                            //DebugLogger.WriteLine("LGP entry {0} coming from file {1}", item.Entry.Name, ov.File);
                         } else {
                             vr = new VRangeArchive() { Start = offset, Length = (uint)ov.Size, File = ov.File, Archive = ov.Archive, Tag = ov.File };
                             VFile.Add(vr);
-                            //System.Diagnostics.Debug.WriteLine("LGP entry {0} coming from archive file {1} with size {2}", item.Entry.Name, ov.File, ov.Size);
+                            //DebugLogger.WriteLine("LGP entry {0} coming from archive file {1} with size {2}", item.Entry.Name, ov.File, ov.Size);
                         }
                         //if (vr.Length != item.Entry.MaxSize)
-                            //System.Diagnostics.Debug.WriteLine("Entry {0} size difference {1} vs {2}", item.Entry.Name, vr.Length, item.Entry.MaxSize);
+                            //DebugLogger.WriteLine("Entry {0} size difference {1} vs {2}", item.Entry.Name, vr.Length, item.Entry.MaxSize);
                         if (vr.Length < item.Entry.MaxSize) {
                             uint diff = (uint)item.Entry.MaxSize - vr.Length;
                             VFile.Add(new VRangeNull() { Length = diff, Start = vr.Start + vr.Length, Tag = "Padding" });
                         }
                         offset += (uint)item.Entry.MaxSize;
-                        //System.Diagnostics.Debug.WriteLine("--VRangeFile");
+                        //DebugLogger.WriteLine("--VRangeFile");
                     } else { //multiple overrides; tricky!
-                        //System.Diagnostics.Debug.WriteLine("Add VRangeConditional for " + item.Entry.Name);
+                        //DebugLogger.WriteLine("Add VRangeConditional for " + item.Entry.Name);
                         ProcMonParser.DataItem di;
                         lgpItems.TryGetValue(item.Entry.Name, out di);
                         uint fbOffset = (di == null) ? 0 : (uint)di.Start;
@@ -537,7 +537,7 @@ namespace _7thWrapperLib {
                         VFile.Add(vcond);
                         _wFiles.Add(vcond);
                         offset += (uint)item.Entry.MaxSize + 24;
-                        //System.Diagnostics.Debug.WriteLine("--VRangeConditional");
+                        //DebugLogger.WriteLine("--VRangeConditional");
                     }
                     count++;
                     /*
@@ -560,7 +560,7 @@ namespace _7thWrapperLib {
                 }
                 byte[] footer = System.Text.Encoding.ASCII.GetBytes("FINAL FANTASY7");
                 VFile.Add(new VRangeInline() { Start = offset, Length = (uint)footer.Length, Data = footer, Tag = "footer" });
-                System.Diagnostics.Debug.WriteLine("Created: " + VFile.ToString());
+                DebugLogger.WriteLine("Created: " + VFile.ToString());
             } catch {
                 VFile.Dump();
                 throw;
@@ -637,7 +637,7 @@ namespace _7thWrapperLib {
         }
 
         public int SetFilePointer(long offset, Wrap.EMoveMethod method) {
-            System.Diagnostics.Debug.WriteLine("VArchive SetFilePointer on {0} to {1} from {2}", _filename, offset, method);
+            DebugLogger.WriteLine($"VArchive SetFilePointer on {_filename} to {offset} from {method}");
             switch (method) {
                 case Wrap.EMoveMethod.Begin:
                     _position = offset;
@@ -655,7 +655,7 @@ namespace _7thWrapperLib {
         }
 
         public bool SetFilePointerEx(IntPtr hFile, long liDistanceToMove, IntPtr lpNewFilePointer, uint dwMoveMethod) {
-            System.Diagnostics.Debug.WriteLine("VArchive SetFilePointerEx");
+            DebugLogger.WriteLine("VArchive SetFilePointerEx");
             SetFilePointer(liDistanceToMove, (Wrap.EMoveMethod)dwMoveMethod);
             if (lpNewFilePointer != IntPtr.Zero)
                 System.Runtime.InteropServices.Marshal.WriteInt64(lpNewFilePointer, _position);
@@ -663,15 +663,15 @@ namespace _7thWrapperLib {
         }
 
         public int ReadFile(IntPtr bytes, uint numBytesToRead, ref uint numBytesRead) {
-            System.Diagnostics.Debug.WriteLine("VArchive ReadFile on {0} from {1} for {2} bytes", _filename, _position, numBytesToRead);
+            DebugLogger.WriteLine($"VArchive ReadFile on {_filename} from {_position} for {numBytesToRead} bytes");
             _arc.RawRead(_filename, (uint)_position, numBytesToRead, bytes, ref numBytesRead);
             _position += numBytesRead;
-            System.Diagnostics.Debug.WriteLine("...actually read {0} bytes", numBytesRead);
+            DebugLogger.WriteLine($"...actually read {numBytesRead} bytes");
             return 1;
         }
 
         public uint GetFileSize(IntPtr lpFileSizeHigh) {
-            System.Diagnostics.Debug.WriteLine("VArchive GetFileSize on {0} = {1}", _filename, _size);
+            DebugLogger.WriteLine($"VArchive GetFileSize on {_filename} = {_size}");
             if (lpFileSizeHigh != IntPtr.Zero)
                 System.Runtime.InteropServices.Marshal.WriteInt32(lpFileSizeHigh, (int)(_size >> 32));
             return (uint)(_size & 0xffffffff);

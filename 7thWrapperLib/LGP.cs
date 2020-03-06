@@ -26,7 +26,7 @@ namespace _7thWrapperLib {
             ushort hash = (ushort)(Hash(name[0]) * HashValues);
             if (name.Length > 1 && name[1] != '.')
                 hash += (ushort)(Hash(name[1]) + 1);
-            //System.Diagnostics.Debug.WriteLine("Hash for {0} is {1}", name, hash);
+            //DebugLogger.WriteLine("Hash for {name} is {hash}");
             return hash;
         }
 

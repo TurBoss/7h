@@ -256,7 +256,7 @@ namespace _7thWrapperLib {
             _hGetFileSize, _hGetFileSizeEx, _hSetFilePointerEx, _hWriteFile;
 
         public Wrap(RemoteHooking.IContext context, RuntimeParams parms) {
-            System.Diagnostics.Debug.WriteLine("Wrap created");
+            DebugLogger.WriteLine("Wrap created");
         }
 
         public void Run(RemoteHooking.IContext context, RuntimeParams parms) {
@@ -264,22 +264,27 @@ namespace _7thWrapperLib {
             try {
 
                 RuntimeProfile profile;
-                using (var fs = new System.IO.FileStream(parms.ProfileFile, FileMode.Open))
+                using (var fs = new FileStream(parms.ProfileFile, FileMode.Open))
+                {
                     profile = Iros._7th.Util.DeserializeBinary<RuntimeProfile>(fs);
-                System.IO.File.Delete(parms.ProfileFile);
+                }
+                
+                File.Delete(parms.ProfileFile);
 
                 if (!String.IsNullOrWhiteSpace(profile.LogFile)) {
                     try {
-                        try { System.IO.File.Delete(profile.LogFile); } catch { }
-                        System.Diagnostics.Debug.Listeners.Add(new System.Diagnostics.TextWriterTraceListener(profile.LogFile));
-                        System.Diagnostics.Debug.WriteLine("Logging debug output to " + profile.LogFile);
+                        try { File.Delete(profile.LogFile); } catch { } // ensure old log is deleted since new run
+
+                        DebugLogger.Init(profile.LogFile);
+                        DebugLogger.IsDetailedLogging = profile.Options.HasFlag(RuntimeOptions.DetailedLog);
+
+                        DebugLogger.WriteLine("Logging debug output to " + profile.LogFile);
                     } catch (Exception ex) {
-                        System.Diagnostics.Debug.WriteLine("Failed to log debug output: " + ex.ToString());
+                        DebugLogger.WriteLine("Failed to log debug output: " + ex.ToString());
                     }
                 }
 
-                System.Diagnostics.Debug.WriteLine("Wrap run... Host: {0}  PID: {1}  TID: {2}   Path: {3}  Capture: {4}", context.HostPID, RemoteHooking.GetCurrentProcessId(), RemoteHooking.GetCurrentThreadId(), profile.ModPath, String.Join(", ", profile.MonitorPaths));
-                RuntimeLog.Enabled = profile.Options.HasFlag(RuntimeOptions.DetailedLog);
+                DebugLogger.WriteLine($"Wrap run... Host: {context.HostPID}  PID: {RemoteHooking.GetCurrentProcessId()}  TID: {RemoteHooking.GetCurrentThreadId()}   Path: {profile.ModPath}  Capture: {String.Join(", ", profile.MonitorPaths)}");
                 //_overrides = new Overrides(basepath);
                 _profile = profile;
                 for (int i = _profile.MonitorPaths.Count - 1; i >= 0; i--) {
@@ -289,8 +294,8 @@ namespace _7thWrapperLib {
                 }
 
                 foreach (var item in profile.Mods) {
-                    System.Diagnostics.Debug.WriteLine("  Mod: {0} has {1} conditionals", item.BaseFolder, item.Conditionals.Count);
-                    System.Diagnostics.Debug.WriteLine("     Additional paths: " + String.Join(", ", item.ExtraFolders));
+                    DebugLogger.WriteLine($"  Mod: {item.BaseFolder} has {item.Conditionals.Count} conditionals");
+                    DebugLogger.WriteLine("     Additional paths: " + String.Join(", ", item.ExtraFolders));
                     item.Startup();
                 }
 
@@ -351,12 +356,12 @@ namespace _7thWrapperLib {
 
                 System.Threading.Thread.Sleep(1000);
                 foreach (string LL in profile.Mods.SelectMany(m => m.GetLoadLibraries())) {
-                    System.Diagnostics.Debug.WriteLine("Loading library DLL {0}", LL, 0);
+                    DebugLogger.WriteLine($"Loading library DLL {LL}");
                     LoadLibrary(LL);
                 }
                 foreach (var mod in profile.Mods) {
                     foreach (string LA in mod.GetLoadAssemblies()) {
-                        System.Diagnostics.Debug.WriteLine("Loading assembly DLL {0}", LA, 0);
+                        DebugLogger.WriteLine($"Loading assembly DLL {LA}");
                         var asm = System.Reflection.Assembly.LoadFrom(LA);
                         try {
                             string path = mod.BaseFolder;
@@ -376,17 +381,17 @@ namespace _7thWrapperLib {
                             } else {
                                 s = of.Archive.GetData(of.File);
                             }
-                            System.Diagnostics.Debug.WriteLine("Applying hext patch {0} from mod {1}", file, mod.BaseFolder);
+                            DebugLogger.WriteLine($"Applying hext patch {file} from mod {mod.BaseFolder}");
                             try {
                                 HexPatch.Apply(s);
                             } catch (Exception ex) {
-                                System.Diagnostics.Debug.WriteLine("Error applying patch: " + ex.Message);
+                                DebugLogger.WriteLine("Error applying patch: " + ex.Message);
                             }
                         }
                     }
                 }
             } catch (Exception e) {
-                System.Diagnostics.Debug.WriteLine(e.ToString());
+                DebugLogger.WriteLine(e.ToString());
                 return;
             }
             while (true) {
@@ -405,7 +410,7 @@ namespace _7thWrapperLib {
 
             do {
                 System.Threading.Thread.Sleep(5000);
-                System.Diagnostics.Debug.WriteLine("MONITOR:");
+                DebugLogger.WriteLine("MONITOR:");
                 for (int i = 0; i < accessors.Count; i++) {
                     int value;
                     switch (accessors[i].Type) {
@@ -424,7 +429,7 @@ namespace _7thWrapperLib {
                     value = value & accessors[i].Mask;
                     if (value != values[i]) {
                         values[i] = value;
-                        System.Diagnostics.Debug.WriteLine("  {0} = {1}", accessors[i].Name, value);
+                        DebugLogger.WriteLine($"  {accessors[i].Name} = {value}");
                     }
                 }
             } while (true);
@@ -437,7 +442,7 @@ namespace _7thWrapperLib {
 
             if (_varchives.TryGetValue(hObject, out va)) {
                 _varchives.Remove(hObject);
-                System.Diagnostics.Debug.WriteLine("Closing dummy handle {0}", hObject);
+                DebugLogger.WriteLine($"Closing dummy handle {hObject}");
             }
 
             if (_streamFiles.ContainsKey(hObject))
@@ -450,17 +455,17 @@ namespace _7thWrapperLib {
         }
 
         private int HGetFileType(IntPtr hFile) {
-            RuntimeLog.Write("GetFileType on {0}", hFile);
+            DebugLogger.DetailedWriteLine($"GetFileType on {hFile}");
             VArchiveData va;
             if (_varchives.TryGetValue(hFile, out va)) {
-                //System.Diagnostics.Debug.WriteLine(" ---faking dummy file");
+                //DebugLogger.WriteLine(" ---faking dummy file");
                 return 1;
             } else
                 return GetFileType(hFile);
         }
 
         private int HSetFilePointer(IntPtr handle, int lDistanceTomove, IntPtr lpDistanceToMoveHigh, EMoveMethod dwMoveMethod) {
-            //System.Diagnostics.Debug.WriteLine("SetFilePointer on {0} to {1} by {2}", handle, lDistanceTomove, dwMoveMethod);
+            //DebugLogger.WriteLine("SetFilePointer on {0} to {1} by {2}", handle, lDistanceTomove, dwMoveMethod);
             VArchiveData va;
             VStreamFile vsf;
             long offset = lDistanceTomove;
@@ -478,7 +483,7 @@ namespace _7thWrapperLib {
         private bool HReadFileEx(IntPtr hFile, [Out] byte[] lpBuffer,
            uint nNumberOfBytesToRead, [In] ref System.Threading.NativeOverlapped lpOverlapped,
            ReadFileCompletionDelegate lpCompletionRoutine) {
-               RuntimeLog.Write("ReadFileEx on {0}", hFile);
+               DebugLogger.DetailedWriteLine("ReadFileEx on {0}", hFile);
                return ReadFileEx(hFile, lpBuffer, nNumberOfBytesToRead, ref lpOverlapped, lpCompletionRoutine);
         }
         */
@@ -488,11 +493,11 @@ namespace _7thWrapperLib {
 
 
             bool result = Win32.WriteFile(hFile, lpBuffer, nNumberOfBytesToWrite, out lpNumberOfBytesWritten, ref lpOverlapped);
-            //System.Diagnostics.Debug.WriteLine(String.Format("Write {0} bytes on {1}", lpNumberOfBytesWritten, hFile.ToInt32()));
+            //DebugLogger.WriteLine(String.Format("Write {0} bytes on {1}", lpNumberOfBytesWritten, hFile.ToInt32()));
 
             if (_saveFiles.ContainsKey(hFile)) {
                 int offset = SetFilePointer(hFile, 0, IntPtr.Zero, EMoveMethod.Current);
-                //System.Diagnostics.Debug.WriteLine(String.Format("Write {0} bytes to {1} at offset {2}", lpNumberOfBytesWritten, _saveFiles[hFile], offset));
+                //DebugLogger.WriteLine(String.Format("Write {0} bytes to {1} at offset {2}", lpNumberOfBytesWritten, _saveFiles[hFile], offset));
             }
 
             return result;
@@ -508,22 +513,22 @@ namespace _7thWrapperLib {
                 return vsf.Read(bytes, numBytesRead, ref numBytesRead);
             }
 
-            //System.Diagnostics.Debug.WriteLine("Hooked ReadFile on {0} for {1} bytes", handle.ToInt32(), numBytesToRead);
-            //if (overlapped != IntPtr.Zero) System.Diagnostics.Debug.WriteLine("(is overlapped)");
+            //DebugLogger.WriteLine("Hooked ReadFile on {0} for {1} bytes", handle.ToInt32(), numBytesToRead);
+            //if (overlapped != IntPtr.Zero) DebugLogger.WriteLine("(is overlapped)");
 
             //ProcMonParser.DataFile df;
             LGPWrapper lgp;
             if (_hMap.TryGetValue(handle, out lgp)) {
                 try {
                     int pos = SetFilePointer(handle, 0, IntPtr.Zero, EMoveMethod.Current);
-                    //System.Diagnostics.Debug.WriteLine("Hooked ReadFile on {0} for {1} bytes at {2}", handle.ToInt32(), numBytesToRead, pos);
+                    //DebugLogger.WriteLine("Hooked ReadFile on {0} for {1} bytes at {2}", handle.ToInt32(), numBytesToRead, pos);
                     lgp.VFile.Read((uint)pos, numBytesToRead, bytes, ref numBytesRead);
-                    //System.Diagnostics.Debug.WriteLine("--{0} bytes read", numBytesRead);
+                    //DebugLogger.WriteLine("--{0} bytes read", numBytesRead);
                     SetFilePointer(handle, (int)(pos + numBytesRead), IntPtr.Zero, EMoveMethod.Begin);
                     lgp.Ping();
                     return -1;
                 } catch (Exception e) {
-                    System.Diagnostics.Debug.WriteLine("ERROR: " + e.ToString());
+                    DebugLogger.WriteLine("ERROR: " + e.ToString());
                     throw;
                 }
             }
@@ -537,14 +542,14 @@ namespace _7thWrapperLib {
                             return -1;
                         }
                     } catch (Exception e) {
-                        System.Diagnostics.Debug.WriteLine(e.ToString());
+                        DebugLogger.WriteLine(e.ToString());
                         throw;
                     }
                 } else {
                     if (pos == 351033) {
                         ReadFile(handle, bytes, numBytesToRead, ref numBytesRead, overlapped);
                         System.Runtime.InteropServices.Marshal.WriteInt32(bytes, 137, 14612);
-                        System.Diagnostics.Debug.WriteLine("Patched 351033");
+                        DebugLogger.WriteLine("Patched 351033");
                         return -1;
                     } //AABA.P  351150 -> 579094
                 }
@@ -561,7 +566,7 @@ namespace _7thWrapperLib {
         //    [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition,
         //    [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes,
         //    IntPtr hTemplateFile) {
-        //        //System.Diagnostics.Debug.WriteLine("Hooked CreateFileW: " + lpFileName);
+        //        //DebugLogger.WriteLine("Hooked CreateFileW: " + lpFileName);
 
         //        return CreateFile(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
         //}
@@ -570,7 +575,7 @@ namespace _7thWrapperLib {
             //VArchiveFile va = new VArchiveFile(of.Archive, of.File);
             VArchiveData va = new VArchiveData(of.Archive.GetBytes(of.File));
             IntPtr dummy = of.Archive.GetDummyHandle();
-            System.Diagnostics.Debug.WriteLine("Creating dummy file handle {0} to access {1}{2}", dummy, of.Archive, of.File);
+            DebugLogger.WriteLine($"Creating dummy file handle {dummy} to access {of.Archive}{of.File}");
             _varchives[dummy] = va;
             return dummy;
         }
@@ -596,10 +601,10 @@ namespace _7thWrapperLib {
             if (isFF7GameFile)
             {
                 lpFileName = lpFileName.Replace("\\/", "\\").Replace("/", "\\").Replace("\\\\", "\\");
-                RuntimeLog.Write("CreateFile for {0}...", lpFileName, 0);
+                DebugLogger.DetailedWriteLine($"CreateFile for {lpFileName}...");
                 if (lpFileName.IndexOf('\\') < 0)
                 {
-                    //System.Diagnostics.Debug.WriteLine("No path: curdir is {0}", System.IO.Directory.GetCurrentDirectory(), 0);
+                    //DebugLogger.WriteLine("No path: curdir is {0}", System.IO.Directory.GetCurrentDirectory(), 0);
                     lpFileName = Path.Combine(Directory.GetCurrentDirectory(), lpFileName);
                 }
 
@@ -607,12 +612,12 @@ namespace _7thWrapperLib {
                 {
                     if (lpFileName.StartsWith(path, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        //System.Diagnostics.Debug.WriteLine("Trying to override file {0} found in path {1}", lpFileName, path);
+                        //DebugLogger.WriteLine("Trying to override file {0} found in path {1}", lpFileName, path);
                         OverrideFile mapped = LGPWrapper.MapFile(lpFileName.Substring(path.Length), _profile);
                         if (mapped != null)
                             if (mapped.Archive == null)
                             {
-                                System.Diagnostics.Debug.WriteLine("Remapping {0} to {1}", lpFileName, mapped.File);
+                                DebugLogger.WriteLine($"Remapping {lpFileName} to {mapped.File}");
                                 lpFileName = mapped.File;
                             }
                             else
@@ -620,10 +625,10 @@ namespace _7thWrapperLib {
                     }
                 }
             } else
-                System.Diagnostics.Debug.WriteLine("Skipped file {0}{1}", "", lpFileName);
+                DebugLogger.WriteLine($"Skipped file {lpFileName}");
 
             IntPtr handle = CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
-			//System.Diagnostics.Debug.WriteLine("Hooked CreateFileW for {0} under {1}", lpFileName, handle.ToInt32());
+			//DebugLogger.WriteLine("Hooked CreateFileW for {0} under {1}", lpFileName, handle.ToInt32());
 
             if (isFF7GameFile && handle.ToInt32() != -1)
             {
@@ -636,7 +641,7 @@ namespace _7thWrapperLib {
                 {
                     try
                     {
-                        System.Diagnostics.Debug.WriteLine("Hooked CreateFileW for {0} under {1}", lpFileName, handle.ToInt32());
+                        DebugLogger.WriteLine($"Hooked CreateFileW for {lpFileName} under {handle.ToInt32()}");
                         //var fs = new System.IO.FileStream(handle, FileAccess.Read, false);
                         //_hMap[handle] = ProcMonParser.FF7Files.LoadLGP(fs, lpFileName);
                         //_hNames[handle] = System.IO.Path.GetFileName(lpFileName);
@@ -644,13 +649,13 @@ namespace _7thWrapperLib {
                         LGPWrapper lgp = new LGPWrapper(handle, System.IO.Path.GetFileName(lpFileName), _profile);
                         if (lgp.IsActive)
                         {
-                            System.Diagnostics.Debug.WriteLine("Overrides found, activating VFile");
+                            DebugLogger.WriteLine("Overrides found, activating VFile");
                             _hMap[handle] = lgp;
                         }
                     }
                     catch (Exception e)
                     {
-                        System.Diagnostics.Debug.WriteLine("ERROR: " + e.ToString());
+                        DebugLogger.WriteLine("ERROR: " + e.ToString());
                         throw;
                     }
                 }
@@ -658,22 +663,22 @@ namespace _7thWrapperLib {
                 if (System.IO.Path.GetFileName(lpFileName).Equals("7H_GameDriver.cfg", StringComparison.InvariantCultureIgnoreCase) && !String.IsNullOrWhiteSpace(_profile.OpenGLConfig))
                 {
                     _streamFiles[handle] = new VStreamFile(System.Text.Encoding.UTF8.GetBytes(_profile.OpenGLConfig));
-                    System.Diagnostics.Debug.WriteLine("Overriding 7H_GameDriver.cfg with replacement data");
+                    DebugLogger.WriteLine("Overriding 7H_GameDriver.cfg with replacement data");
                 }
 
                 
-                RuntimeLog.Write("CreateFileW: {0} -> {1}", lpFileName, handle);
+                DebugLogger.DetailedWriteLine($"CreateFileW: {lpFileName} -> {handle}");
             }
 
             return handle;
         }
 
         private IntPtr HFindFirstFile(string lpFileName, out WIN32_FIND_DATA lpFindFileData) {
-            System.Diagnostics.Debug.WriteLine("FindFirstFile for " + lpFileName);
+            DebugLogger.WriteLine("FindFirstFile for " + lpFileName);
             return FindFirstFileW(lpFileName, out lpFindFileData);
         }
         //private IntPtr HFindFirstFileA(string lpFileName, out WIN32_FIND_DATA lpFindFileData) {
-        //    System.Diagnostics.Debug.WriteLine("FindFirstFileA for " + lpFileName);
+        //    DebugLogger.WriteLine("FindFirstFileA for " + lpFileName);
         //    return FindFirstFileA(lpFileName, out lpFindFileData);
         //}
 
@@ -683,7 +688,7 @@ namespace _7thWrapperLib {
             uint dwCreationFlags, IntPtr lpEnvironment, string lpCurrentDirectory,
             [In] ref STARTUPINFO lpStartupInfo,
             out PROCESS_INFORMATION lpProcessInformation) {
-                System.Diagnostics.Debug.WriteLine("CreateProcessW for {0}, {1}", lpApplicationName, lpCommandLine);
+                DebugLogger.WriteLine($"CreateProcessW for {lpApplicationName}, {lpCommandLine}");
                 string exe = lpApplicationName;
                 if (String.IsNullOrWhiteSpace(exe)) exe = lpCommandLine;
                 exe = exe.Replace('/', '\\');
@@ -692,12 +697,12 @@ namespace _7thWrapperLib {
                     //int pid;
                     try {
                         string lib = System.Reflection.Assembly.GetExecutingAssembly().Location;
-                        System.Diagnostics.Debug.WriteLine("--Injecting into " + exe + " with library " + lib);
+                        DebugLogger.WriteLine("--Injecting into " + exe + " with library " + lib);
                         
                         /*
                         System.IO.Directory.SetCurrentDirectory(System.IO.Path.GetDirectoryName(lib));
                         EasyHook.RemoteHooking.CreateAndInject(exe, String.Empty, 0, lib, null, out pid, _profile);
-                        System.Diagnostics.Debug.WriteLine("--PID: ", pid);
+                        DebugLogger.WriteLine("--PID: ", pid);
                         lpProcessInformation = new PROCESS_INFORMATION() { dwProcessId = pid };
                         return pid != 0;
                          */
@@ -709,7 +714,7 @@ namespace _7thWrapperLib {
                         } else
                             return false;
                     } catch (Exception ex) {
-                        System.Diagnostics.Debug.WriteLine(ex.ToString());
+                        DebugLogger.WriteLine(ex.ToString());
                         throw;
                     }
                 } else {
@@ -721,7 +726,7 @@ namespace _7thWrapperLib {
             bool result = GetFileInformationByHandle(hFile, out lpFileInformation);
             VArchiveData va;
             if (result && _varchives.TryGetValue(hFile, out va)) {
-                RuntimeLog.Write("Overriding GetFileInformationByHandle for dummy file {0}", hFile);
+                DebugLogger.DetailedWriteLine($"Overriding GetFileInformationByHandle for dummy file {hFile}");
                 lpFileInformation.FileSizeHigh = (uint)(va.Size >> 32);
                 lpFileInformation.FileSizeLow = (uint)(va.Size & 0xffffffff);
             }
@@ -731,11 +736,11 @@ namespace _7thWrapperLib {
         private bool HDuplicateHandle(IntPtr hSourceProcessHandle,
            IntPtr hSourceHandle, IntPtr hTargetProcessHandle, out IntPtr lpTargetHandle,
            uint dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, uint dwOptions) {
-            //               RuntimeLog.Write("DuplicateHandle on {0}", hSourceHandle);
+            //               DebugLogger.DetailedWriteLine("DuplicateHandle on {0}", hSourceHandle);
             bool result = Win32.DuplicateHandle(hSourceProcessHandle, hSourceHandle, hTargetProcessHandle, out lpTargetHandle, dwDesiredAccess, bInheritHandle, dwOptions);
             if (result && _varchives.ContainsKey(hSourceHandle)) {
                 _varchives[lpTargetHandle] = _varchives[hSourceHandle];
-                RuntimeLog.Write("Duplicating dummy handle {0} to {1}", hSourceHandle, lpTargetHandle);
+                DebugLogger.DetailedWriteLine($"Duplicating dummy handle {hSourceHandle} to {lpTargetHandle}");
                }
             return result;
         }
@@ -751,7 +756,7 @@ namespace _7thWrapperLib {
         private bool HGetFileSizeEx(IntPtr hFile, ref long lpFileSize) {
             VArchiveData va;
             if (_varchives.TryGetValue(hFile, out va)) {
-                System.Diagnostics.Debug.WriteLine("GetFileSizeEx on dummy handle {0}", hFile);
+                DebugLogger.WriteLine($"GetFileSizeEx on dummy handle {hFile}");
                 lpFileSize = va.Size;
                 return true;
             }

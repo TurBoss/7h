@@ -32,9 +32,9 @@ namespace _7thWrapperLib {
                 if (lf.Handle == IntPtr.Zero || lf.Handle == new IntPtr(-1)) {
                     lf.Missing = true;
                     lf.Tag = DateTime.MaxValue;
-                    System.Diagnostics.Debug.WriteLine("Passing through {0}, no override file", file, lf);
+                    DebugLogger.WriteLine($"Passing through {file}, no override file");
                 } else {
-                    System.Diagnostics.Debug.WriteLine("Overriding data for {0}", file, lf);
+                    DebugLogger.WriteLine($"Overriding data for {file}");
                     //System.Threading.Thread.Sleep(10000);
                     //System.Diagnostics.Debugger.Break();
                 }
@@ -54,9 +54,9 @@ namespace _7thWrapperLib {
                 Offset = offset,
                 OffsetHigh = 0
             };
-            System.Diagnostics.Debug.WriteLine("Attempting to read {0} bytes at offset {1} from {2}", length, offset, name);
+            DebugLogger.WriteLine($"Attempting to read {length} bytes at offset {offset} from {name}");
             Win32.ReadFile(lf.Handle, data, length, ref numBytesRead, ref ov);
-            System.Diagnostics.Debug.WriteLine("# bytes read: " + numBytesRead);
+            DebugLogger.WriteLine("# bytes read: " + numBytesRead);
             return true;
         }
 

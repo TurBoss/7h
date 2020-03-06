@@ -64,6 +64,7 @@
     <Compile Include="7HPlugin.cs" />
     <Compile Include="Bytes.cs" />
     <Compile Include="Data.cs" />
+    <Compile Include="DebugLogger.cs" />
     <Compile Include="FieldFile.cs" />
     <Compile Include="HexPatch.cs" />
     <Compile Include="IrosArc.cs" />

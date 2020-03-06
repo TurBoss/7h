@@ -316,7 +316,7 @@ namespace _7thWrapperLib {
                 }
             }
             sw.Stop();
-            System.Diagnostics.Debug.WriteLine("IrosArc: opened {0}, contains {1} files, took {2} ms to parse", filename, _lookup.Count, sw.ElapsedMilliseconds);
+            DebugLogger.DetailedWriteLine($"IrosArc: opened {filename}, contains {_lookup.Count} files, took {sw.ElapsedMilliseconds} ms to parse");
         }
 
         public void ApplyPatch(IrosArc patch, Action<double, string> onProgress) {
@@ -325,7 +325,7 @@ namespace _7thWrapperLib {
             if (deldata != null) {
                 string[] delfile = System.Text.Encoding.Unicode.GetString(deldata).Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string del in delfile) {
-                    RuntimeLog.Write("Removing file {0} from archive", del);
+                    DebugLogger.DetailedWriteLine($"Removing file {del} from archive");
                     _entries.RemoveAll(e => e.Filename.Equals(del, StringComparison.InvariantCultureIgnoreCase));
                 }
                 onProgress(0, "Removed " + delfile.Length + " deleted files");
@@ -338,21 +338,21 @@ namespace _7thWrapperLib {
                 patch._data.Position = patchEntry.Offset;
                 patch._data.Read(data, 0, data.Length);
                 if (HasFile(file)) { //update existing
-                    RuntimeLog.Write("File {0} is already in archive...", file);
+                    DebugLogger.DetailedWriteLine($"File {file} is already in archive...");
                     DirectoryEntry exist = _lookup[file];
                     if (exist.Length >= data.Length) { //put data in same position, woo
-                        RuntimeLog.Write("...updating in place");
+                        DebugLogger.DetailedWriteLine("...updating in place");
                         _data.Position = exist.Offset;
                     } else { //stick at end of file
                         _data.Position = _data.Length;
                         exist.Offset = _data.Position;
-                        RuntimeLog.Write("...size increase: writing to end of file");
+                        DebugLogger.DetailedWriteLine("...size increase: writing to end of file");
                     }
                     _data.Write(data, 0, data.Length);
                     exist.Length = data.Length;
                     exist.Flags = patchEntry.Flags;
                 } else { //new file, just append
-                    RuntimeLog.Write("File {0} is new, appending", file);
+                    DebugLogger.DetailedWriteLine($"File {file} is new, appending");
                     DirectoryEntry de = new DirectoryEntry() {
                         Filename = file,
                         Flags = patchEntry.Flags,
@@ -370,10 +370,10 @@ namespace _7thWrapperLib {
             }
             int newDirSize = _entries.Sum(e => e.GetSize());
             if (newDirSize <= currentDirSize) {
-                RuntimeLog.Write("Directory will fit in existing location");
+                DebugLogger.DetailedWriteLine("Directory will fit in existing location");
                 _data.Position = _header.Directory;
             } else {
-                RuntimeLog.Write("Directory size increase, appending");
+                DebugLogger.DetailedWriteLine("Directory size increase, appending");
                 if (_data.Length >= int.MaxValue) { //write forwarder
                     _data.Position = _header.Directory;
                     _data.WriteInt(-1);
@@ -403,13 +403,13 @@ namespace _7thWrapperLib {
 
         public bool HasFolder(string name) {
             bool result = _folderNames.Contains(name);
-            RuntimeLog.Write("ARCHIVE: Check if {0} contains folder {1}: {2}", _source, name, result);
+            DebugLogger.DetailedWriteLine($"ARCHIVE: Check if {_source} contains folder {name}: {result}");
             return result;
         }
 
         public bool HasFile(string name) {
             bool result = _lookup.ContainsKey(name);
-            RuntimeLog.Write("ARCHIVE: Check if {0} contains file {1}: {2}", _source, name, result);
+            DebugLogger.DetailedWriteLine($"ARCHIVE: Check if {_source} contains file {name}: {result}");
             return result;
         }
 
@@ -435,7 +435,7 @@ namespace _7thWrapperLib {
                 .Select(kv => kv.Key)
                 .ToArray();
             if (remove.Any()) {
-                RuntimeLog.Write("Removing {0} compressed files from cache: ", remove.Length);
+                DebugLogger.DetailedWriteLine($"Removing {remove.Length} compressed files from cache: ");
                 CacheEntry _;
                 foreach (long r in remove) _cache.TryRemove(r, out _);
             }
@@ -493,7 +493,7 @@ namespace _7thWrapperLib {
 
             /*
             if ((_cacheCounter++ % 100) == 0)
-                System.Diagnostics.Debug.WriteLine("IRO cache contents; " + String.Join(",", _cache.Values.Select(e => e.File)));
+                DebugLogger.WriteLine("IRO cache contents; " + String.Join(",", _cache.Values.Select(e => e.File)));
             */
 
             return ce;
@@ -529,7 +529,7 @@ namespace _7thWrapperLib {
                     System.Runtime.InteropServices.Marshal.Copy(cache.Data, (int)offset, dest, (int)readLen);
                     bytesRead = readLen;
                     if (readLen == 0) {
-                        System.Diagnostics.Debug.WriteLine("IrosArc RawRead file {0} offset {1} length {2} read {3} bytes - cache data size {4}", file, offset, length, readLen, cache.Data.Length);
+                        DebugLogger.DetailedWriteLine($"IrosArc RawRead file {file} offset {offset} length {length} read {readLen} bytes - cache data size {cache.Data.Length}");
                     }
                 } else {
                     uint readLen = Math.Min(length, (uint)e.Length - offset);
@@ -542,7 +542,7 @@ namespace _7thWrapperLib {
                         OffsetHigh = (uint)(Loffset >> 32)
                     };
 
-                    Win32.ReadFile(_data.Handle, dest, readLen, ref bytesRead, ref ov);
+                    Win32.ReadFile(_data.SafeFileHandle.DangerousGetHandle(), dest, readLen, ref bytesRead, ref ov);
                 }
             } else
                 bytesRead = 0;
@@ -558,7 +558,7 @@ namespace _7thWrapperLib {
         public IntPtr GetDummyHandle() {
             IntPtr h;
 
-            Win32.DuplicateHandle(Win32.GetCurrentProcess(), _data.Handle, Win32.GetCurrentProcess(), out h, 0, false, 0x2);
+            Win32.DuplicateHandle(Win32.GetCurrentProcess(), _data.SafeFileHandle.DangerousGetHandle(), Win32.GetCurrentProcess(), out h, 0, false, 0x2);
 
             return h;
         }

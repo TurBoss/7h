@@ -670,18 +670,37 @@ namespace SeventhHeaven.Classes
 
 
                 Instance.RaiseProgressChanged("Getting FF7 proc ...");
-                var ff7Proc = Process.GetProcessById(pid);
-                if (ff7Proc != null)
+                Process ff7Proc = Process.GetProcessById(pid);
+
+                if (ff7Proc == null)
                 {
-                    ff7Proc.EnableRaisingEvents = true;
-                    if (debug)
+                    Instance.RaiseProgressChanged("\tfailed to get FF7 proc. Aborting ...", NLog.LogLevel.Error);
+                    return false;
+                }
+
+                ff7Proc.EnableRaisingEvents = true;
+                if (debug)
+                {
+                    Instance.RaiseProgressChanged("Debug logging set to true. wiring up log file to open after game exit ...");
+                    ff7Proc.Exited += (o, e) =>
                     {
-                        Instance.RaiseProgressChanged("debug logging set to true. wiring up turbolog file to open after game exit ...");
-                        ff7Proc.Exited += (o, e) =>
+                        try
                         {
-                            Process.Start(runtimeProfile.LogFile);
-                        };
-                    }
+                            DebugLogger.CloseLogFile();
+
+                            ProcessStartInfo debugTxtProc = new ProcessStartInfo()
+                            {
+                                WorkingDirectory = Path.GetDirectoryName(runtimeProfile.LogFile),
+                                FileName = runtimeProfile.LogFile
+                            };
+                            Process.Start(debugTxtProc);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex);
+                            Instance.RaiseProgressChanged($"Failed to start process for debug log: {ex.Message}", NLog.LogLevel.Error);
+                        }
+                    };
                 }
 
                 /// sideload programs for mods before starting FF7 because FF7 losing focus while initializing can cause the intro movies to stop playing
@@ -751,7 +770,7 @@ namespace SeventhHeaven.Classes
                 while (ff7Proc.Responding == false)
                 {
                     TimeSpan elapsed = DateTime.Now.Subtract(start);
-                    if (elapsed.Seconds > secondsToWait)
+                    if (elapsed.TotalSeconds > secondsToWait)
                         break;
                 }
 

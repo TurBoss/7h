@@ -29,7 +29,7 @@ namespace _7thWrapperLib {
                     _position = _source.Length + pos;
                     break;
             }
-            //RuntimeLog.Write("Moving VStream position to {0}", _position);
+            //DebugLogger.DetailedWriteLine("Moving VStream position to {_position}");
             return _position;
         }
 
@@ -40,7 +40,7 @@ namespace _7thWrapperLib {
             }
             System.Runtime.InteropServices.Marshal.Copy(_source, (int)_position, buffer, willRead);
             _position += willRead;
-            //RuntimeLog.Write("VStream reading {0} bytes, new position {1}", willRead, _position);
+            //DebugLogger.DetailedWriteLine("VStream reading {willRead} bytes, new position {_position}");
             read = (uint)willRead;
             return 1;
         }

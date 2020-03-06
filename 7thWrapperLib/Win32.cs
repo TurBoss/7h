@@ -49,12 +49,4 @@ namespace _7thWrapperLib {
 
     }
 
-    public static class RuntimeLog {
-        public static bool Enabled { get; set; }
-        public static void Write(string msg, params object[] parms) {
-            if (Enabled)
-                System.Diagnostics.Debug.WriteLine(msg, parms);
-        }
-    }
-
 }

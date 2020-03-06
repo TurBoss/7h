@@ -41,7 +41,12 @@ namespace ProcMonParser {
                     return Items[check];
                 }
             }
-            if (min > 0) System.Diagnostics.Debug.WriteLine("Mid read from " + Filename + " at offset " + offset);
+
+            if (min > 0)
+            {
+                _7thWrapperLib.DebugLogger.WriteLine("Mid read from " + Filename + " at offset " + offset);
+            }
+
             return null;
         }
     }

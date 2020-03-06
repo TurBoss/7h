@@ -81,7 +81,7 @@ namespace _7thWrapperLib {
         private static void Apply(IEnumerable<string> lines) {
             int offset = 0;
             foreach (string instruct in FilterToUseful(lines)) {
-                //RuntimeLog.Write("Processing HEXT instruction {0}", instruct);
+                //DebugLogger.DetailedWriteLine("Processing HEXT instruction {instruct}");
                 try
                 {
                     if (instruct.StartsWith("+"))
@@ -130,7 +130,7 @@ namespace _7thWrapperLib {
                 if (int.TryParse(delay, out time)) {
                     new System.Threading.Thread(() => {
                         System.Threading.Thread.Sleep(time);
-                        RuntimeLog.Write("Applying delayed hex patch");
+                        DebugLogger.DetailedWriteLine("Applying delayed hex patch");
                         Apply(lines);
                     }) { IsBackground = true, Name = "ApplyDelayedHexPatch" }
                     .Start();
