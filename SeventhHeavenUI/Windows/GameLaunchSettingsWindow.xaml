@@ -78,31 +78,31 @@
 
         <StackPanel Grid.Row="0"
                     Grid.RowSpan="4">
-            
+
             <GroupBox x:Name="grpOptions"
                       MinWidth="235"
-                      Header=" Options " Grid.Row="0" Margin="10,10,0,0" 
+                      Header="{DynamicResource OptionsHeader}" Grid.Row="0" Margin="10,10,0,0" 
                       HorizontalAlignment="Left"
                       VerticalAlignment="Top">
                 <StackPanel Margin="3" HorizontalAlignment="Center">
-                    <CheckBox Height="25" Content="Auto-Mount Game Disc" 
+                    <CheckBox Height="25" Content="{DynamicResource AutoMountDisc}" 
                               IsChecked="{Binding AutoMountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding IsAutoMountSupported}"
                               MouseEnter="Control_MouseEnter"
-                              ToolTip="Auto-mount game disc ISO when starting game. Windows 8 and up only. If on Windows 7 or older, you will need to insert disc or mount ISO manually."/>
-                    <CheckBox Height="25" Content="Auto-Dismount Game Disc" 
+                              ToolTip="{DynamicResource AutoMountDiscTooltip}"/>
+                    <CheckBox Height="25" Content="{DynamicResource AutoDismountDisc}" 
                               IsChecked="{Binding AutoUnmountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               MouseEnter="Control_MouseEnter"
                               IsEnabled="{Binding IsAutoMountSupported}"
-                              ToolTip="Auto-dismount game disc ISO when game closes. Windows 8 and up only. If on Windows 7 or older, you will need to eject disc or dismount ISO manually."/>
-                    <CheckBox Height="25" Content="Auto-Update Disc Path" 
+                              ToolTip="{DynamicResource AutoDismountDiscTooltip}"/>
+                    <CheckBox Height="25" Content="{DynamicResource AutoUpdatePath}" 
                               IsChecked="{Binding AutoUpdatePathChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               MouseEnter="Control_MouseEnter"
-                              ToolTip="Detects if disc has changed drive letters and auto-updates game to point to new location."/>
-                    <CheckBox Height="25" Content="Show Game Launcher" 
+                              ToolTip="{DynamicResource AutoUpdatePathTooltip}"/>
+                    <CheckBox Height="25" Content="{DynamicResource ShowGameLauncher}" 
                               IsChecked="{Binding IsShowLauncherChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               MouseEnter="Control_MouseEnter"
-                              ToolTip="Shows the Game Launcher window when starting FF7 for detailed output of the launch process."/>
+                              ToolTip="{DynamicResource ShowGameLauncherTooltip}"/>
 
                     <Grid Margin="0,3,0,0">
                         <Grid.ColumnDefinitions>
@@ -111,9 +111,9 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Controls:"
+                        <TextBlock Text="{DynamicResource ControlsLabel}"
                                    FontSize="13"
-                                   ToolTip="Sets your in-game keyboard and gamepad controls. Select 'Custom' to use your own settings."
+                                   ToolTip="{DynamicResource ControlsTooltip}"
                                    ToolTipService.IsEnabled="false"
                                    HorizontalAlignment="Right"
                                    VerticalAlignment="Top"
@@ -123,7 +123,7 @@
                                   Grid.Column="1"
                                   MinWidth="240"
                                   MaxWidth="240"
-                                  ToolTip="Sets your in-game keyboard and gamepad controls. Click save icon to save your current in game controls as a custom configuration."
+                                  ToolTip="{DynamicResource ControlsTooltip}"
                                   ToolTipService.IsEnabled="false"
                                   MouseEnter="Control_MouseEnter"
                                   Style="{StaticResource MainComboBoxStyle}"
@@ -131,10 +131,10 @@
                                   ItemTemplate="{StaticResource keyboardItemTemplate}"
                                   SelectedItem="{Binding SelectedGameConfigOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   ItemsSource="{Binding InGameConfigOptions}"/>
-                        
+
                         <Button x:Name="btnSaveControls" 
                                 Click="btnSaveControls_Click"
-                                ToolTip="Save your current in-game control configuration."
+                                ToolTip="{DynamicResource SaveControlsTooltip}"
                                 ToolTipService.IsEnabled="false"
                                 MouseEnter="Control_MouseEnter"
                                 Style="{StaticResource ImageButton}"
@@ -142,10 +142,10 @@
                                 Grid.Column="2"
                                 Width="28"
                                 Height="28"/>
-                        
+
                         <Button x:Name="btnDeleteControls"
                                 Click="btnDeleteControls_Click"
-                                ToolTip="Delete the selected custom control configuration."
+                                ToolTip="{DynamicResource DeleteControlsTooltip}"
                                 ToolTipService.ShowOnDisabled="True"
                                 ToolTipService.IsEnabled="false"
                                 MouseEnter="Control_MouseEnter"
@@ -161,32 +161,32 @@
 
             <GroupBox x:Name="grpCompat"
                       Width="{Binding ElementName=grpOptions, Path=ActualWidth}"
-                      Header=" Compatibility " Margin="10,5,0,0" 
+                      Header="{DynamicResource CompatibilityHeader}" Margin="10,5,0,0" 
                       HorizontalAlignment="Left"
                       VerticalAlignment="Top">
                 <StackPanel Margin="3" HorizontalAlignment="Right">
-                    <CheckBox Height="25" Content="High-DPI Scaling Fix" 
+                    <CheckBox Height="25" Content="{DynamicResource HighDpiScalingFix}" 
                               IsChecked="{Binding HighDpiFixChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               MouseEnter="Control_MouseEnter"
-                              ToolTip="May fix game screen being cut off and/or not being centered. Use with high-DPI displays. Alternatively, change your Windows Display Settings to 100% scaling."/>
-                    <CheckBox Height="25" Content="Code 5 Fix" 
+                              ToolTip="{DynamicResource HighDpiScalingFixTooltip}"/>
+                    <CheckBox Height="25" Content="{DynamicResource Code5Fix}" 
                               IsEnabled="{Binding HasCode5Error}"
                               IsChecked="{Binding Code5FixChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               MouseEnter="Control_MouseEnter"
-                              ToolTip="May fix problems with 'Code 5' error when clicking 'Play'. Multi-monitor setups may see open programs pushed to the secondary monitor when activated."/>
-                    <CheckBox Height="25" Content="Reunion Driver Fix" 
+                              ToolTip="{DynamicResource Code5FixTooltip}"/>
+                    <CheckBox Height="25" Content="{DynamicResource ReunionDriverFix}" 
                               IsChecked="{Binding DisableReunionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding IsReunionInstalled}"
                               MouseEnter="Control_MouseEnter"
-                              ToolTip="Temporarily renames ddraw.dll to Reunion.dll.bak on game launch, then immediately back again. Does not affect playability of Reunion outside of 7H."/>
+                              ToolTip="{DynamicResource ReunionDriverFixTooltip}"/>
                 </StackPanel>
             </GroupBox>
 
             <GroupBox x:Name="grpImport"
                       Width="{Binding ElementName=grpOptions, Path=ActualWidth}"
                       Height="{Binding ElementName=grpPrograms, Path=ActualHeight}"
-                      Header=" Import Movies From Disc " Margin="10,5,0,0" 
-                      ToolTip="Import missing movies from disc."
+                      Header="{DynamicResource ImportMoviesHeader}" Margin="10,5,0,0" 
+                      ToolTip="{DynamicResource ImportTooltip}"
                       MouseEnter="Control_MouseEnter"
                       ToolTipService.IsEnabled="False"
                       HorizontalAlignment="Left"
@@ -219,7 +219,7 @@
                                          ImageWidth="40"
                                          HorizontalAlignment="Center"
                                          Margin="0,3,0,0"
-                                         Content="Import"/>
+                                         Content="{DynamicResource Import}"/>
 
                     <ProgressBar Value="{Binding ImportProgressValue}"
                                  Visibility="{Binding ImportProgressVisibility}"
@@ -229,13 +229,13 @@
                 </Grid>
             </GroupBox>
         </StackPanel>
-        
+
 
         <GroupBox x:Name="grpAudio"
                   Grid.Row="0"
                   Grid.Column="1"
                   Height="{Binding ElementName=grpOptions, Path=ActualHeight}"
-                  Header=" Audio Output Device " Margin="10,10,10,0" 
+                  Header="{DynamicResource AudioDeviceHeader}" Margin="10,10,10,0" 
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch">
             <StackPanel>
@@ -252,9 +252,9 @@
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="Sound Device:"
+                    <TextBlock Text="{DynamicResource SoundDeviceLabel}"
                                ToolTipService.IsEnabled="False"
-                               ToolTip="Select an output audio device for FF7."
+                               ToolTip="{DynamicResource SoundDeviceTooltip}"
                                MouseEnter="Control_MouseEnter"
                                Grid.Row="0"
                                HorizontalAlignment="Right"
@@ -269,7 +269,7 @@
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
                         <ComboBox x:Name="cboSoundDevices"
-                                  ToolTip="Select an output audio device for FF7."
+                                  ToolTip="{DynamicResource SoundDeviceTooltip}"
                                   ToolTipService.IsEnabled="False"
                                   MouseEnter="Control_MouseEnter"
                                   Style="{StaticResource MainComboBoxStyle}"
@@ -293,7 +293,7 @@
                                 IsEnabled="{Binding IsAudioNotPlaying}"
                                 Click="btnTestAudio_Click"
                                 ToolTipService.IsEnabled="false"
-                                ToolTip="Test the selected sound device and music/sfx volume. Test sound provided by Enrico Deiana."
+                                ToolTip="{DynamicResource TestSoundTooltip}"
                                 MouseEnter="Control_MouseEnter"/>
                         <ToggleButton x:Name="btnAudioOptions"
                                       Style="{StaticResource DownArrowToggleButton}"
@@ -311,7 +311,7 @@
                                               Height="34"
                                               Width="34"
                                               Click="menuItemTestLeft_Click" 
-                                              ToolTip="Test the selected sound device and music/sfx volume for the Left channel. Test sound provided by Enrico Deiana."
+                                              ToolTip="{DynamicResource TestLeftSoundTooltip}"
                                               ToolTipService.IsEnabled="false"
                                               MouseEnter="Control_MouseEnter"
                                               IsEnabled="{Binding IsAudioNotPlaying}"/>
@@ -321,7 +321,7 @@
                                               Height="34"
                                               Width="34"
                                               Click="menuItemTestRight_Click" 
-                                              ToolTip="Test the selected sound device and music/sfx volume for the Right channel. Test sound provided by Enrico Deiana."
+                                              ToolTip="{DynamicResource TestRightSoundTooltip}"
                                               ToolTipService.IsEnabled="false"
                                               MouseEnter="Control_MouseEnter"
                                               IsEnabled="{Binding IsAudioNotPlaying}"/>
@@ -330,14 +330,14 @@
                         </ToggleButton>
                     </Grid>
 
-                    <TextBlock Text="MIDI Device:"
+                    <TextBlock Text="{DynamicResource MidiDeviceLabel}"
                                Grid.Row="1"
-                               ToolTip="Select an output midi device for FF7."
+                               ToolTip="{DynamicResource MidiDeviceTooltip}"
                                ToolTipService.IsEnabled="False"
                                MouseEnter="Control_MouseEnter"
                                HorizontalAlignment="Right"
-                               VerticalAlignment="Center"
-                               Margin="2,0,0,10"/>
+                               VerticalAlignment="Bottom"
+                               Margin="0,0,0,16"/>
                     <ComboBox x:Name="cboMidiDevices"
                               Grid.Row="1"
                               Grid.Column="1"
@@ -350,7 +350,7 @@
                               VerticalAlignment="Center"
                               Margin="4,1,0,10"
                               MinWidth="277"
-                              ToolTip="Select an output midi device for FF7."
+                              ToolTip="{DynamicResource MidiDeviceTooltip}"
                               ToolTipService.IsEnabled="False"
                               MouseEnter="Control_MouseEnter"
                               Width="{Binding ElementName=cboSoundDevices, Path=ActualWidth}"/>
@@ -366,14 +366,14 @@
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="SFX Volume:"
+                        <TextBlock Text="{DynamicResource SFXVolumeLabel}"
                                    HorizontalAlignment="Right"
                                    VerticalAlignment="Center"
-                                   ToolTip="Set the in-game SFX volume."
+                                   ToolTip="{DynamicResource SFXVolumeTooltip}"
                                    ToolTipService.IsEnabled="False"
                                    MouseEnter="Control_MouseEnter"
                                    Margin="14,0,3,10"/>
-                        
+
                         <Slider x:Name="sliderSfxVolume"
                                 Grid.Column="1"
                                 HorizontalAlignment="Left"
@@ -391,15 +391,15 @@
                             </Slider.ToolTip>
                         </Slider>
 
-                        <TextBlock Text="Music Volume:"
+                        <TextBlock Text="{DynamicResource MusicVolumeLabel}"
                                    Grid.Column="2"
                                    HorizontalAlignment="Right"
                                    VerticalAlignment="Center"
-                                   ToolTip="Set the in-game music volume."
+                                   ToolTip="{DynamicResource MusicVolumeTooltip}"
                                    ToolTipService.IsEnabled="False"
                                    MouseEnter="Control_MouseEnter"
                                    Margin="5,0,3,10"/>
-                        
+
                         <Slider x:Name="sliderVolume"
                                 Grid.Column="3"
                                 Value="{Binding MusicVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
@@ -423,21 +423,21 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <CheckBox Content="Logarithmic Volume Control" 
+                    <CheckBox Content="{DynamicResource LogVolumeControl}" 
                               Height="25" 
                               Margin="0,0,10,0"
                               HorizontalAlignment="Left"
                               IsChecked="{Binding IsLogVolumeChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               MouseEnter="Control_MouseEnter"
-                              ToolTip="Uncheck this option if you feel that the volume does not change smoothly."/> 
-                    <CheckBox Content="Reverse Speakers" 
+                              ToolTip="{DynamicResource LogVolumeControlTooltip}"/>
+                    <CheckBox Content="{DynamicResource ReverseSpeakers}" 
                               Height="25" 
                               HorizontalAlignment="Right"
                               Grid.Column="1"
                               Margin="4,0,0,0"
                               IsChecked="{Binding IsReverseSpeakersChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               MouseEnter="Control_MouseEnter"
-                              ToolTip="Swaps left and right channels when checked."/>
+                              ToolTip="{DynamicResource ReverseSpeakersTooltip}"/>
                 </Grid>
             </StackPanel>
         </GroupBox>
@@ -445,7 +445,7 @@
         <GroupBox x:Name="grpVideo"
                   Grid.Row="1"
                   Grid.Column="1"
-                  Header=" Graphics Driver Options " 
+                  Header="{DynamicResource GraphicsDriverHeader}" 
                   Height="{Binding ElementName=grpCompat, Path=ActualHeight}"
                   Margin="10,5,10,0"
                   HorizontalAlignment="Stretch"
@@ -458,9 +458,9 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="Renderer:"
+                    <TextBlock Text="{DynamicResource RendererLabel}"
                                Grid.Row="1"
-                               ToolTip="Select the graphics driver to use for rendering FF7. Mods will only work when set to 'Custom 7H Game Driver'"
+                               ToolTip="{DynamicResource RendererTooltip}"
                                ToolTipService.IsEnabled="False"
                                MouseEnter="Control_MouseEnter"
                                HorizontalAlignment="Right"
@@ -469,7 +469,7 @@
                     <ComboBox x:Name="cboRenderers"
                               Grid.Row="1"
                               Grid.Column="1"
-                              ToolTip="Select the graphics driver to use for rendering FF7. Mods will only work when set to 'Custom 7H Game Driver'"
+                              ToolTip="{DynamicResource RendererTooltip}"
                               ToolTipService.IsEnabled="False"
                               MouseEnter="Control_MouseEnter"
                               Style="{StaticResource MainComboBoxStyle}"
@@ -483,19 +483,19 @@
                 </Grid>
 
                 <WrapPanel HorizontalAlignment="Stretch" Margin="4,30,3,0">
-                    
-                    <RadioButton Content="Quarter Screen" VerticalAlignment="Center" Margin="0,0,0,0"
+
+                    <RadioButton Content="{DynamicResource QuarterScreen}" VerticalAlignment="Center" Margin="0,0,0,0"
                                  GroupName="ScreenMode"
-                                 ToolTip="Launch the game windowed (quarter screen). Only applies when set to 'Software Renderer' or 'Direct3D Hardware Acceleration'."
+                                 ToolTip="{DynamicResource QuarterScreenTooltip}"
                                  ToolTipService.IsEnabled="False"
                                  MouseEnter="Control_MouseEnter"
                                  FontSize="13"
                                  Visibility="{Binding ScreenModesVisibility}"
                                  IsChecked="{Binding IsQuarterScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <RadioButton Content="Full Screen" VerticalAlignment="Center" Margin="8,0,0,0"
+                    <RadioButton Content="{DynamicResource FullScreen}" VerticalAlignment="Center" Margin="8,0,0,0"
                                  GroupName="ScreenMode"
                                  FontSize="13"
-                                 ToolTip="Launch the game in full screen. Only applies when set to 'Software Renderer' or 'Direct3D Hardware Acceleration'."
+                                 ToolTip="{DynamicResource FullScreenTooltip}"
                                  ToolTipService.IsEnabled="False"
                                  MouseEnter="Control_MouseEnter"
                                  Visibility="{Binding ScreenModesVisibility}"
@@ -504,7 +504,7 @@
                     <RadioButton Content="RIVA 128" VerticalAlignment="Center" Margin="28,0,0,0"
                                  FontSize="13"
                                  GroupName="GraphicsOption"
-                                 ToolTip="Sets the option to use for Hardware Acceleration. Only applies when set to 'Direct3D Hardware Acceleration'."
+                                 ToolTip="{DynamicResource HardwareGraphicsTooltip}"
                                  ToolTipService.IsEnabled="False"
                                  MouseEnter="Control_MouseEnter"
                                  Visibility="{Binding RivaOptionsVisibility}"
@@ -512,7 +512,7 @@
                     <RadioButton Content="TNT" VerticalAlignment="Center" Margin="8,0,0,0"
                                  FontSize="13"
                                  GroupName="GraphicsOption"
-                                 ToolTip="Sets the option to use for Hardware Acceleration. Only applies when set to 'Direct3D Hardware Acceleration'."
+                                 ToolTip="{DynamicResource HardwareGraphicsTooltip}"
                                  ToolTipService.IsEnabled="False"
                                  MouseEnter="Control_MouseEnter"
                                  Visibility="{Binding RivaOptionsVisibility}"
@@ -526,7 +526,7 @@
                   Grid.Row="2" 
                   Grid.Column="1" 
                   Height="{Binding ElementName=grpShell, Path=ActualHeight}"
-                  Header=" Programs to Run Prior to FF7: " 
+                  Header="{DynamicResource ProgramsToRunHeader}" 
                   Margin="10,5,10,0">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -537,7 +537,7 @@
                 <StackPanel Margin="3,3,0,3">
                     <Button x:Name="btnAddProgram"
                             Click="btnAddProgram_Click"
-                            ToolTip="Add a program to run prior to FF7 starting."
+                            ToolTip="{DynamicResource AddProgramTooltip}"
                             ToolTipService.IsEnabled="False"
                             MouseEnter="Control_MouseEnter"
                             Style="{StaticResource ImageButton}"
@@ -551,7 +551,7 @@
                             Click="btnRemoveProgram_Click"
                             ToolTipService.IsEnabled="False"
                             MouseEnter="Control_MouseEnter"
-                            ToolTip="Remove selected program."
+                            ToolTip="{DynamicResource RemoveProgramTooltip}"
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"
                             Height="24"
@@ -560,7 +560,7 @@
                             Content="{StaticResource iconMinus}"/>
 
                     <Button x:Name="btnEditProgram"
-                            ToolTip="Edit selected program and arguments."
+                            ToolTip="{DynamicResource EditProgramTooltip}"
                             ToolTipService.IsEnabled="False"
                             MouseEnter="Control_MouseEnter"
                             Click="btnEditProgram_Click"
@@ -571,7 +571,7 @@
                             Content="{StaticResource iconEdit}"/>
 
                     <Button x:Name="btnMoveProgramUp"
-                            ToolTip="Move selected program up in the list. Right-click to move to top."
+                            ToolTip="{DynamicResource MoveProgramUpTooltip}"
                             ToolTipService.IsEnabled="False"
                             MouseEnter="Control_MouseEnter"
                             Click="btnMoveProgramUp_Click"
@@ -583,7 +583,7 @@
                             Content="{StaticResource iconUpChevron}"/>
 
                     <Button x:Name="btnMoveProgramDown"
-                            ToolTip="Move selected program down in the list. Right-click to move to bottom."
+                            ToolTip="{DynamicResource MoveProgramDownTooltip}"
                             ToolTipService.IsEnabled="False"
                             MouseEnter="Control_MouseEnter"
                             Click="btnMoveProgramDown_Click"
@@ -616,8 +616,8 @@
                    Text="{Binding StatusMessage, FallbackValue='This is a mouse over description or message to user.'}"/>
 
         <Button x:Name="btnDefaults" 
-                Content="Reset Defaults" 
-                ToolTip="Reset game launcher settings to the default values."
+                Content="{DynamicResource ResetDefaults}" 
+                ToolTip="{DynamicResource ResetLauncherDefaultsTooltip}"
                 ToolTipService.IsEnabled="False"
                 MouseEnter="Control_MouseEnter"
                 Click="btnDefaults_Click"
@@ -627,7 +627,7 @@
                 VerticalAlignment="Bottom"/>
 
         <Button x:Name="btnOk" 
-                Content="Save" 
+                Content="{DynamicResource Save}" 
                 Width="80"
                 Click="btnOk_Click"
                 Grid.Row="3" Grid.Column="1"
@@ -636,7 +636,7 @@
                 VerticalAlignment="Bottom"/>
 
         <Button x:Name="btnCancel" 
-                Content="Cancel"
+                Content="{DynamicResource Cancel}"
                 Width="80"
                 Click="btnCancel_Click"
                 Grid.Row="3" Grid.Column="1"
@@ -669,7 +669,7 @@
                          VerticalContentAlignment="Center"
                          Margin="25,3,5,0"/>
 
-                <TextBlock Text="Enter full path to program to run"
+                <TextBlock Text="{DynamicResource ProgramNameHint}"
                            Foreground="{DynamicResource PrimaryControlDisabledForeground}"
                            IsHitTestVisible="False"
                            VerticalAlignment="Top"
@@ -690,7 +690,7 @@
                 <Button x:Name="btnBrowseProgram"
                         Click="btnBrowseProgram_Click"
                         Style="{StaticResource FileEllipsisImageButton}"
-                        ToolTip="Browse for program to run"
+                        ToolTip="{DynamicResource BrowseProgramTooltip}"
                         Grid.Column="1"
                         Margin="0,3,25,0"
                         VerticalAlignment="Center"/>
@@ -705,7 +705,7 @@
                          Margin="25,3,5,0"/>
 
                 <TextBlock x:Name="txtProgramArgs"
-                           Text="Enter program arguments"
+                           Text="{DynamicResource ProgramArgsHint}"
                            Grid.Row="1"
                            Foreground="{DynamicResource PrimaryControlDisabledForeground}"
                            IsHitTestVisible="False"
@@ -730,7 +730,7 @@
                         HorizontalAlignment="Center"
                         Width="80"
                         Margin="0,3,60,3"
-                        Content="Save"/>
+                        Content="{DynamicResource Save}"/>
 
                 <Button x:Name="btnCancelProgramAction"
                         Click="btnCancelProgramAction_Click"
@@ -738,7 +738,7 @@
                         HorizontalAlignment="Center"
                         Width="80"
                         Margin="100,3,0,3"
-                        Content="Cancel"/>
+                        Content="{DynamicResource Cancel}"/>
 
             </Grid>
         </Popup>

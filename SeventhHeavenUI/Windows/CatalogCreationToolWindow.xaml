@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         xmlns:ctrl="clr-namespace:SeventhHeaven.UserControls"
         mc:Ignorable="d"
-        Title="Catalog and Mod Creation Tool"
         WindowStartupLocation="CenterScreen"
+        Title="{DynamicResource CatalogCreationWindowTitle}"
         Style="{StaticResource MainWindowStyle}"
         Height="600" Width="1000">
     <Window.Resources>
@@ -26,15 +26,15 @@
     
     <Grid>
         <TabControl>
-            <TabItem Header="Create Mod">
+            <TabItem Header="{DynamicResource CreateMod}">
                 <ctrl:CreateModUserControl Margin="0,5,0,0"/>
             </TabItem>
             
-            <TabItem Header="Create Catalog">
+            <TabItem Header="{DynamicResource CreateCatalog}">
                 <ctrl:CreateCatalogUserControl Margin="0,5,0,0"/>
             </TabItem>
 
-            <TabItem Header="Mega Link Generator">
+            <TabItem Header="{DynamicResource MegaLinkGenerator}">
                 <ctrl:MegaLinkGenUserControl Margin="0,5,0,0"/>
             </TabItem>
         </TabControl>

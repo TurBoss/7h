@@ -114,7 +114,7 @@
                 VerticalAlignment="Bottom"
                 Margin="0,0,90,10"
                 Width="80"
-                Content="OK"/>
+                Content="{DynamicResource OK}"/>
 
         <Button x:Name="btnCancel"
                 Click="btnCancel_Click"
@@ -124,7 +124,7 @@
                 VerticalAlignment="Bottom"
                 Margin="90,0,0,10"
                 Width="80"
-                Content="Cancel"/>
+                Content="{DynamicResource Cancel}"/>
 
         <Button x:Name="btnYes"
                 Click="btnYes_Click"
@@ -134,7 +134,7 @@
                 VerticalAlignment="Bottom"
                 Margin="0,0,90,10"
                 Width="80"
-                Content="Yes"/>
+                Content="{DynamicResource Yes}"/>
 
         <Button x:Name="btnNo"
                 Click="btnNo_Click"
@@ -144,6 +144,6 @@
                 VerticalAlignment="Bottom"
                 Margin="90,0,0,10"
                 Width="80"
-                Content="No"/>
+                Content="{DynamicResource No}"/>
     </Grid>
 </Window>

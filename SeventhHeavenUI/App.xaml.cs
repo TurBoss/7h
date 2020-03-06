@@ -273,6 +273,7 @@ namespace SeventhHeavenUI
             System.Windows.Forms.Application.EnableVisualStyles();
             System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
 
+            SetLanguageDictionary();
             SetupExceptionHandling();
         }
 
@@ -314,5 +315,37 @@ namespace SeventhHeavenUI
             Dispatcher.PushFrame(frame);
         }
 
+        private void SetLanguageDictionary()
+        {
+            ResourceDictionary dict = new ResourceDictionary();
+            string detectedCulture = Thread.CurrentThread.CurrentCulture.ToString();
+
+            if (string.IsNullOrEmpty(detectedCulture) || detectedCulture.Length < 2)
+            {
+                return; // could not determine culture from thread so default language resource (English) will be used
+            }
+
+            switch (detectedCulture.Substring(0,2))
+            {
+                case "en":
+                    dict.Source = new Uri("Resources\\StringResources.xaml", UriKind.Relative);
+                    break;
+                case "fr":
+                    dict.Source = new Uri("Resources\\Languages\\StringResources.fr.xaml", UriKind.Relative);
+                    break;
+                case "es":
+                    dict.Source = new Uri("Resources\\Languages\\StringResources.es.xaml", UriKind.Relative);
+                    break;
+                case "de":
+                    dict.Source = new Uri("Resources\\Languages\\StringResources.de.xaml", UriKind.Relative);
+                    break;
+                default:
+                    dict.Source = new Uri("Resources\\StringResources.xaml", UriKind.Relative);
+                    break;
+            }
+
+            this.Resources.MergedDictionaries.RemoveAt(1); // remove the default string resources dictionary (second in merged dictionary in App.xaml)
+            this.Resources.MergedDictionaries.Add(dict);
+        }
     }
 }

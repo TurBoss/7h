@@ -75,13 +75,13 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn x:Name="colName" Width="Auto" DisplayMemberBinding="{Binding Name}">
-                        <GridViewColumnHeader Content="Name" SizeChanged="GridViewColumnHeader_SizeChanged"/>
+                        <GridViewColumnHeader Content="{DynamicResource Name}" SizeChanged="GridViewColumnHeader_SizeChanged"/>
                     </GridViewColumn>
                     <GridViewColumn x:Name="colAuthor" Width="Auto" DisplayMemberBinding="{Binding Author}">
-                        <GridViewColumnHeader Content="Author" SizeChanged="GridViewColumnHeader_SizeChanged"/>
+                        <GridViewColumnHeader Content="{DynamicResource Author}" SizeChanged="GridViewColumnHeader_SizeChanged"/>
                     </GridViewColumn>
                     <GridViewColumn x:Name="colCategory" Width="135">
-                        <GridViewColumnHeader Content="Category" SizeChanged="GridViewColumnHeader_SizeChanged"/>
+                        <GridViewColumnHeader Content="{DynamicResource Category}" SizeChanged="GridViewColumnHeader_SizeChanged"/>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid Width="{Binding ElementName=colCategory, Path=ActualWidth}">
@@ -91,7 +91,7 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn x:Name="colActive" Width="75">
-                        <GridViewColumnHeader Content="Active" SizeChanged="GridViewColumnHeader_SizeChanged"/>
+                        <GridViewColumnHeader Content="{DynamicResource Active}" SizeChanged="GridViewColumnHeader_SizeChanged"/>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <CheckBox Style="{StaticResource ToggleSwitchCheckbox}"
@@ -117,7 +117,7 @@
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconImport}"
                     Click="btnImport_Click"
-                    ToolTip="Import Mod"
+                    ToolTip="{DynamicResource ImportModTooltip}"
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnMoveUp"
@@ -126,7 +126,7 @@
                     MouseRightButtonUp="btnMoveTop_Click"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconUpChevron}"
-                    ToolTip="Move Up/Right-Click to Move to Top"
+                    ToolTip="{DynamicResource MoveUpTooltip}"
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnMoveDown"
@@ -135,14 +135,14 @@
                     MouseRightButtonDown="btnSendBottom_Click"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconDownChevron}"
-                    ToolTip="Move Down/Right-Click to Move to Bottom"/>
+                    ToolTip="{DynamicResource MoveDownTooltip}"/>
 
             <Button x:Name="btnAutoSort" 
                     TabIndex="23"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconSort}"
                     Click="btnAutoSort_Click"
-                    ToolTip="Auto Sort Mods Based On Category Load Order"
+                    ToolTip="{DynamicResource AutoSortTooltip}"
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnConfigure" 
@@ -150,7 +150,7 @@
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconSettings}"
                     Click="btnConfigure_Click"
-                    ToolTip="Configure Mod"
+                    ToolTip="{DynamicResource ConfigureModTooltip}"
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnActivateAll" 
@@ -158,7 +158,7 @@
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconCheckmark}"
                     Click="btnActivateAll_Click"
-                    ToolTip="Activate All Mods"
+                    ToolTip="{DynamicResource ActivateAllTooltip}"
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnDeactivateAll" 
@@ -166,7 +166,7 @@
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconCancel}"
                     Click="btnDeactivateAll_Click"
-                    ToolTip="Deactivate All"
+                    ToolTip="{DynamicResource DeactivateAllTooltip}"
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnRefresh" 
@@ -174,7 +174,7 @@
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconRefresh}"
                     Click="btnRefresh_Click"
-                    ToolTip="Refresh List"
+                    ToolTip="{DynamicResource RefreshListTooltip}"
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnUninstall" 
@@ -182,7 +182,7 @@
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconDelete}"
                     Click="btnUninstall_Click"
-                    ToolTip="Uninstall Mod"
+                    ToolTip="{DynamicResource UninstallModTooltip}"
                     Margin="0,0,0,0"/>
 
             <Button x:Name="btnResetColumns" 
@@ -190,7 +190,7 @@
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconHeader}"
                     Click="btnResetColumns_Click"
-                    ToolTip="Reset Columns"
+                    ToolTip="{DynamicResource ResetColumnsTooltip}"
                     Margin="0,0,0,0"/>
 
         </StackPanel>

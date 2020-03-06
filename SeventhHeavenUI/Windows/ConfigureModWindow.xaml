@@ -134,7 +134,7 @@
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
-        <GroupBox Header=" Options "
+        <GroupBox Header="{DynamicResource OptionsHeader}"
                   Background="{DynamicResource SecondaryAppBackground}"
                   Grid.RowSpan="5"
                   Margin="5,2,0,5">
@@ -157,7 +157,7 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox Header=" Configure "
+        <GroupBox Header="{DynamicResource ConfigureHeader}"
                   Background="{DynamicResource SecondaryAppBackground}"
                   Grid.Column="1"
                   Grid.ColumnSpan="4"
@@ -236,12 +236,12 @@
             <cls:ButtonWithImage.Style>
                 <Style TargetType="cls:ButtonWithImage" BasedOn="{StaticResource MainButtonWithImageStyle}">
                     <Setter Property="TemplateSource" Value="{StaticResource iconPlay}"/>
-                    <Setter Property="Content" Value="Preview"/>
+                    <Setter Property="Content" Value="{DynamicResource Preview}"/>
                     <Setter Property="ImageForeground" Value="ForestGreen"/>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsPlayingAudio}" Value="True">
                             <Setter Property="TemplateSource" Value="{StaticResource iconStopAudio}"/>
-                            <Setter Property="Content" Value="Stop"/>
+                            <Setter Property="Content" Value="{DynamicResource Stop}"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
@@ -255,7 +255,7 @@
                 VerticalAlignment="Bottom"
                 Margin="0,0,0,5"
                 Click="btnReset_Click"
-                Content="Reset to Mod Defaults" />
+                Content="{DynamicResource ResetToModDefaults}" />
 
         <Button x:Name="btnOk"
                 Grid.Row="1"
@@ -265,7 +265,7 @@
                 Margin="0,0,0,5"
                 Width="85"
                 Click="btnOk_Click"
-                Content="Save" />
+                Content="{DynamicResource Save}" />
 
         <Button x:Name="btnCancel"
                 Grid.Row="1"
@@ -275,7 +275,7 @@
                 Margin="0,0,5,5"
                 Width="85"
                 Click="btnCancel_Click"
-                Content="Cancel" />
+                Content="{DynamicResource Cancel}" />
 
     </Grid>
 </Window>

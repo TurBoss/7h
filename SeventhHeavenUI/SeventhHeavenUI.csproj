@@ -231,9 +231,6 @@
     <Compile Include="Windows\ConfigureModWindow.xaml.cs">
       <DependentUpon>ConfigureModWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\GameConverterWindow.xaml.cs">
-      <DependentUpon>GameConverterWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Windows\GameLaunchSettingsWindow.xaml.cs">
       <DependentUpon>GameLaunchSettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -261,6 +258,22 @@
     <Compile Include="Windows\UnhandledErrorWindow.xaml.cs">
       <DependentUpon>UnhandledErrorWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Resources\Languages\StringResources.de.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Languages\StringResources.fr.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Languages\StringResources.es.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\StringResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\CreateCatalogUserControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -302,10 +315,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\ConfigureModWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Windows\GameConverterWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

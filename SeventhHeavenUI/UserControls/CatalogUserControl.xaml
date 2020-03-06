@@ -61,22 +61,22 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn x:Name="colName" Width="Auto" DisplayMemberBinding="{Binding Name}">
-                        <GridViewColumnHeader Content="Name" SizeChanged="GridViewColumnHeader_SizeChanged"/>
+                        <GridViewColumnHeader Content="{DynamicResource Name}" SizeChanged="GridViewColumnHeader_SizeChanged"/>
                     </GridViewColumn>
                     <GridViewColumn x:Name="colAuthor" Width="Auto" DisplayMemberBinding="{Binding Author}">
-                        <GridViewColumnHeader Content="Author" SizeChanged="GridViewColumnHeader_SizeChanged"/>
+                        <GridViewColumnHeader Content="{DynamicResource Author}" SizeChanged="GridViewColumnHeader_SizeChanged"/>
                     </GridViewColumn>
                     <GridViewColumn Width="90" DisplayMemberBinding="{Binding ReleaseDate}">
-                        <GridViewColumnHeader Content="Released" SizeChanged="GridViewColumnHeader_SizeChanged"/>
+                        <GridViewColumnHeader Content="{DynamicResource Released}" SizeChanged="GridViewColumnHeader_SizeChanged"/>
                     </GridViewColumn>
                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding Category}">
                         <GridViewColumnHeader Content="Category" SizeChanged="GridViewColumnHeader_SizeChanged"/>
                     </GridViewColumn>
                     <GridViewColumn Width="60" DisplayMemberBinding="{Binding DownloadSize}">
-                        <GridViewColumnHeader Content="Size" SizeChanged="GridViewColumnHeader_SizeChanged"/>
+                        <GridViewColumnHeader Content="{DynamicResource Size}" SizeChanged="GridViewColumnHeader_SizeChanged"/>
                     </GridViewColumn>
                     <GridViewColumn x:Name="colInstalled" Width="40">
-                        <GridViewColumnHeader Content="Inst." SizeChanged="GridViewColumnHeader_SizeChanged"/>
+                        <GridViewColumnHeader Content="{DynamicResource Inst}" SizeChanged="GridViewColumnHeader_SizeChanged"/>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Grid HorizontalAlignment="Center" Margin="5,0,5,0" Width="{Binding ElementName=colInstalled, Path=ActualWidth}">
@@ -105,7 +105,7 @@
 
             <Button x:Name="btnRefresh"
                     TabIndex="10"
-                    ToolTip="Force Update All Subscriptions and Refresh Catalog"
+                    ToolTip="{DynamicResource RefreshCatalogTooltip}"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconRefresh}"
                     Click="btnRefresh_Click"
@@ -113,14 +113,14 @@
 
             <Button x:Name="btnDownload"
                     TabIndex="11"                    
-                    ToolTip="Download Selected Mod"
+                    ToolTip="{DynamicResource DownloadModTooltip}"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconDownload}"
                     Click="btnDownload_Click"/>
 
             <Button x:Name="btnResetColumns"
                     TabIndex="12"
-                    ToolTip="Reset Columns"
+                    ToolTip="{DynamicResource ResetColumnsTooltip}"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconHeader}"
                     Click="btnResetColumns_Click"/>
@@ -137,16 +137,16 @@
                   MaxHeight="150">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn x:Name="colDownloadName" Header="Item" Width="Auto" DisplayMemberBinding="{Binding ItemName, FallbackValue='item text'}"/>
-                    <GridViewColumn x:Name="colProgress" Header="Progress" Width="Auto">
+                    <GridViewColumn x:Name="colDownloadName" Header="{DynamicResource Item}" Width="Auto" DisplayMemberBinding="{Binding ItemName, FallbackValue='item text'}"/>
+                    <GridViewColumn x:Name="colProgress" Header="{DynamicResource Progress}" Width="Auto">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <ProgressBar Value="{Binding PercentComplete, FallbackValue='50'}" Width="{Binding ElementName=colProgress, Path=ActualWidth}" Height="10"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Speed" Width="90" DisplayMemberBinding="{Binding DownloadSpeed, FallbackValue='32.5 kb/s'}"/>
-                    <GridViewColumn Header="Time Left" Width="90" DisplayMemberBinding="{Binding RemainingTime, FallbackValue='54 sec'}"/>
+                    <GridViewColumn Header="{DynamicResource Speed}" Width="90" DisplayMemberBinding="{Binding DownloadSpeed, FallbackValue='32.5 kb/s'}"/>
+                    <GridViewColumn Header="{DynamicResource TimeLeft}" Width="90" DisplayMemberBinding="{Binding RemainingTime, FallbackValue='54 sec'}"/>
 
                 </GridView>
             </ListView.View>
@@ -179,7 +179,7 @@
 
             <Button x:Name="btnCancel"
                     TabIndex="14"
-                    ToolTip="Cancel Selected Download"
+                    ToolTip="{DynamicResource CancelDownloadTooltip}"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconCloudStop}"
                     Click="btnCancel_Click"/>

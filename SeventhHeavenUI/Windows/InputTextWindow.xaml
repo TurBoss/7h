@@ -48,6 +48,6 @@
                 VerticalAlignment="Bottom"
                 Margin="0,0,0,5"
                 Width="80"
-                Content="OK"/>
+                Content="{DynamicResource OK}"/>
     </Grid>
 </Window>

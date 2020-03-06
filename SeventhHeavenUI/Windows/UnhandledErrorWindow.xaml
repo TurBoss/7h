@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         mc:Ignorable="d"
-        Title="7th Heaven - Unexpected Error!" 
+        Title="{DynamicResource UnexpectedErrorWindowTitle}" 
         Style="{StaticResource MainWindowStyle}"
         Height="450" Width="800">
     <Grid>
@@ -48,7 +48,7 @@
 
         <Button x:Name="btnOkay"
                 Click="btnOkay_Click"
-                Content="OK"
+                Content="{DynamicResource OK}"
                 Width="80"
                 Grid.Row="2"
                 HorizontalAlignment="Right"

@@ -10,7 +10,7 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Topmost="True"
-        Title="Launching Game" Height="320" Width="800">
+        Title="{DynamicResource GameLauncherWindowTitle}" Height="320" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -36,7 +36,7 @@
                      Height="15"/>
 
         <Button x:Name="btnOk"
-                Content="OK"
+                Content="{DynamicResource OK}"
                 Click="btnOk_Click"
                 Grid.Row="1"
                 Width="90"

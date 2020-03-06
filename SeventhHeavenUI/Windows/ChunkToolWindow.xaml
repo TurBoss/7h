@@ -22,13 +22,13 @@
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Text="Select FLEVEL:"
+        <TextBlock Text="{DynamicResource SelectFlevelLabel}"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Top"
                    Margin="10,10,0,0"/>
 
 
-        <TextBlock Text="Output Folder:"
+        <TextBlock Text="{DynamicResource OutputFolderLabel}"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Top"
                    Margin="10,38,0,0"/>
@@ -68,7 +68,7 @@
                  Margin="5,38,0,0"/>
 
 
-        <GroupBox Header=" Section # "
+        <GroupBox Header="{DynamicResource SectionHeader}"
                   Margin="10,0,10,10"
                   Grid.ColumnSpan="3"
                   Grid.Row="1">
@@ -79,35 +79,35 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel VerticalAlignment="Top">
-                    <CheckBox Content="Section 1 Field Script Dialog"
+                    <CheckBox Content="{DynamicResource Section1}"
                               IsChecked="{Binding SectionOneIsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding IsNotExtracting}"
                               VerticalAlignment="Top"
                               HorizontalAlignment="Left"
                               Margin="0,0,0,5"/>
 
-                    <CheckBox Content="Section 2 Camera Matrix"
+                    <CheckBox Content="{DynamicResource Section2}"
                               IsChecked="{Binding SectionTwoIsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding IsNotExtracting}"
                               VerticalAlignment="Top"
                               HorizontalAlignment="Left"
                               Margin="0,0,0,5"/>
 
-                    <CheckBox Content="Section 3 Model Loader"
+                    <CheckBox Content="{DynamicResource Section3}"
                               IsChecked="{Binding SectionThreeIsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding IsNotExtracting}"
                               VerticalAlignment="Top"
                               HorizontalAlignment="Left"
                               Margin="0,0,0,5"/>
 
-                    <CheckBox Content="Section 4 Palette"
+                    <CheckBox Content="{DynamicResource Section4}"
                               IsChecked="{Binding SectionFourIsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding IsNotExtracting}"
                               VerticalAlignment="Top"
                               HorizontalAlignment="Left"
                               Margin="0,0,0,5"/>
 
-                    <CheckBox Content="Section 5 Walkmesh"
+                    <CheckBox Content="{DynamicResource Section5}"
                               IsChecked="{Binding SectionFiveIsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding IsNotExtracting}"
                               VerticalAlignment="Top"
@@ -116,28 +116,28 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" VerticalAlignment="Top">
-                    <CheckBox Content="Section 6 TileMap (Unused)"
+                    <CheckBox Content="{DynamicResource Section6}"
                               IsChecked="{Binding SectionSixIsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding IsNotExtracting}"
                               VerticalAlignment="Top"
                               HorizontalAlignment="Left"
                               Margin="0,0,0,5"/>
 
-                    <CheckBox Content="Section 7 Encounter"
+                    <CheckBox Content="{DynamicResource Section7}"
                               IsChecked="{Binding SectionSevenIsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding IsNotExtracting}"
                               VerticalAlignment="Top"
                               HorizontalAlignment="Left"
                               Margin="0,0,0,5"/>
 
-                    <CheckBox Content="Section 8 Triggers"
+                    <CheckBox Content="{DynamicResource Section8}"
                               IsChecked="{Binding SectionEightIsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding IsNotExtracting}"
                               VerticalAlignment="Top"
                               HorizontalAlignment="Left"
                               Margin="0,0,0,5"/>
 
-                    <CheckBox Content="Section 9 Background"
+                    <CheckBox Content="{DynamicResource Section9}"
                               IsChecked="{Binding SectionNineIsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding IsNotExtracting}"
                               VerticalAlignment="Top"
@@ -172,6 +172,6 @@
                 Grid.ColumnSpan="3"
                 Margin="5"
                 HorizontalAlignment="Center"
-                Content="Extract"/>
+                Content="{DynamicResource Extract}"/>
     </Grid>
 </Window>

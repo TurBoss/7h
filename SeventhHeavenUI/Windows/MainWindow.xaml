@@ -33,22 +33,22 @@
         </Style>
 
         <Style x:Key="ReadMeStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource HyperlinkButton}">
-            <Setter Property="Content" Value="Click Here"/>
+            <Setter Property="Content" Value="{DynamicResource ClickHere}"/>
             <Setter Property="Padding" Value="5,2,2,2"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding PreviewModHasReadMe}" Value="False">
-                    <Setter Property="Content" Value="None"/>
+                    <Setter Property="Content" Value="{DynamicResource None}"/>
                     <Setter Property="Padding" Value="2"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
 
         <Style x:Key="OpenLinkStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource HyperlinkButton}">
-            <Setter Property="Content" Value="Click Here"/>
+            <Setter Property="Content" Value="{DynamicResource ClickHere}"/>
             <Setter Property="Padding" Value="5,2,2,2"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding PreviewModHasLink, FallbackValue='False'}" Value="False">
-                    <Setter Property="Content" Value="None"/>
+                    <Setter Property="Content" Value="{DynamicResource None}"/>
                     <Setter Property="Padding" Value="2"/>
                 </DataTrigger>
             </Style.Triggers>
@@ -108,7 +108,7 @@
             <WrapPanel>
                 <cls:ButtonWithImage x:Name="btnPlay" 
                                      Click="btnPlay_Click" 
-                                     Content="Play" 
+                                     Content="{DynamicResource Play}" 
                                      Margin="5,0,0,0"
                                      Padding="0,8,10,0"
                                      IsEnabled="{Binding IsPlayButtonEnabled}"
@@ -122,23 +122,23 @@
                               ContextMenuService.Placement="Bottom">
                     <ToggleButton.ContextMenu>
                         <ContextMenu x:Name="menuPlayOptions" Closed="menuPlayOptions_Closed">
-                            <MenuItem x:Name="menuPlayWithMods" Header="Play With Mods (default)" Click="menuPlayWithMods_Click"/>
-                            <MenuItem x:Name="menuPlayWithoutMods" Header="Play Without Mods" Click="menuPlayWithoutMods_Click"/>
+                            <MenuItem x:Name="menuPlayWithMods" Header="{DynamicResource PlayWithMods}" Click="menuPlayWithMods_Click"/>
+                            <MenuItem x:Name="menuPlayWithoutMods" Header="{DynamicResource PlayWithNoMods}" Click="menuPlayWithoutMods_Click"/>
                             <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
-                            <MenuItem x:Name="menuPlayDebugLog" Header="Play With Debug Log" Click="menuPlayDebugLog_Click"/>
-                            <MenuItem x:Name="menuPlayVariableDump" Header="Play With Variable Dump" Click="menuPlayVariableDump_Click"/>
+                            <MenuItem x:Name="menuPlayDebugLog" Header="{DynamicResource PlayWithDebugLog}" Click="menuPlayDebugLog_Click"/>
+                            <MenuItem x:Name="menuPlayVariableDump" Header="{DynamicResource PlayWithVariableDump}" Click="menuPlayVariableDump_Click"/>
                         </ContextMenu>
                     </ToggleButton.ContextMenu>
                 </ToggleButton>
 
 
-                <cls:ButtonWithImage x:Name="btnSettings" Content="Settings" Margin="0,0,0,0" Style="{StaticResource ButtonWithImageAndDownArrow}" TemplateSource="{StaticResource iconSettings}" ContextMenuService.Placement="Bottom" Click="btnSettings_Click">
+                <cls:ButtonWithImage x:Name="btnSettings" Content="{DynamicResource Settings}" Margin="0,0,0,0" Style="{StaticResource ButtonWithImageAndDownArrow}" TemplateSource="{StaticResource iconSettings}" ContextMenuService.Placement="Bottom" Click="btnSettings_Click">
                     <cls:ButtonWithImage.ContextMenu>
                         <ContextMenu x:Name="menuSettings" Closed="menuSettings_Closed">
-                            <MenuItem x:Name="menuItemThemeSettings" Header="Change Color Theme..." Click="menuItemThemeSettings_Click"/>
-                            <MenuItem x:Name="menuItemGeneralSettings" Header="General Settings..." Click="menuItemGeneralSettings_Click"/>
-                            <MenuItem x:Name="menuItemAaliSettings" Header="Game Driver..." Click="menuItemAaliSettings_Click"/>
-                            <MenuItem x:Name="menuItemLaunchSettings" Header="Game Launcher..." Click="menuItemLaunchSettings_Click"/>
+                            <MenuItem x:Name="menuItemThemeSettings" Header="{DynamicResource ChangeColorTheme}" Click="menuItemThemeSettings_Click"/>
+                            <MenuItem x:Name="menuItemGeneralSettings" Header="{DynamicResource GeneralSettings}" Click="menuItemGeneralSettings_Click"/>
+                            <MenuItem x:Name="menuItemAaliSettings" Header="{DynamicResource GameDriver}" Click="menuItemAaliSettings_Click"/>
+                            <MenuItem x:Name="menuItemLaunchSettings" Header="{DynamicResource GameLauncher}" Click="menuItemLaunchSettings_Click"/>
 
                             <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
                             <MenuItem x:Name="menuItemOpenProfile" Header="Profiles..." Click="menuItemOpenProfile_Click"/>
@@ -146,23 +146,23 @@
                     </cls:ButtonWithImage.ContextMenu>
                 </cls:ButtonWithImage>
 
-                <cls:ButtonWithImage x:Name="btnTools" Content="Tools" Margin="0,0,0,0" Style="{StaticResource ButtonWithImageAndDownArrow}" TemplateSource="{StaticResource iconTools}" ContextMenuService.Placement="Bottom" Click="btnTools_Click">
+                <cls:ButtonWithImage x:Name="btnTools" Content="{DynamicResource Tools}" Margin="0,0,0,0" Style="{StaticResource ButtonWithImageAndDownArrow}" TemplateSource="{StaticResource iconTools}" ContextMenuService.Placement="Bottom" Click="btnTools_Click">
                     <cls:ButtonWithImage.ContextMenu>
-                        <ContextMenu x:Name="menuTools" PlacementTarget="{Binding ElementName=btnTools}" Closed="menuTools_Closed">
-                            <MenuItem x:Name="menuItemCatalogCreation" Header="Catalog/Mod Creation Tool..." Click="menuItemCatalogCreation_Click"/>
-                            <MenuItem x:Name="menuItemChunkTool" Header="Chunk Tool..." Click="menuItemChunkTool_Click"/>
-                            <MenuItem x:Name="menuItemIroCreation" Header="IRO Tools..." Click="menuItemIroCreation_Click"/>
+                        <ContextMenu x:Name="menuTools" Closed="menuTools_Closed">
+                            <MenuItem x:Name="menuItemCatalogCreation" Header="{DynamicResource CatalogModCreationTool}" Click="menuItemCatalogCreation_Click"/>
+                            <MenuItem x:Name="menuItemChunkTool" Header="{DynamicResource ChunkTool}" Click="menuItemChunkTool_Click"/>
+                            <MenuItem x:Name="menuItemIroCreation" Header="{DynamicResource IROTools}" Click="menuItemIroCreation_Click"/>
                         </ContextMenu>
                     </cls:ButtonWithImage.ContextMenu>
                 </cls:ButtonWithImage>
 
-                <cls:ButtonWithImage x:Name="btnHelp" Content="Help" TemplateSource="{StaticResource iconHelp}" Margin="0,0,5,0" Padding="0,8,10,0" Click="btnHelp_Click"/>
+                <cls:ButtonWithImage x:Name="btnHelp" Content="{DynamicResource Help}" TemplateSource="{StaticResource iconHelp}" Margin="0,0,5,0" Padding="0,8,10,0" Click="btnHelp_Click"/>
 
             </WrapPanel>
         </Viewbox>
 
 
-        <GroupBox Header=" Mod Info "
+        <GroupBox Header="{DynamicResource ModInfoHeader}"
                   Background="{DynamicResource SecondaryAppBackground}"
                   Grid.Row="1"
                   Margin="5,-7,3,1" Grid.ColumnSpan="2">
@@ -188,31 +188,31 @@
 
 
                         <WrapPanel Margin="3,5,3,0" Grid.Row="0">
-                            <TextBlock Text="Name:" Style="{StaticResource ModInfoLabelStyle}"/>
+                            <TextBlock Text="{DynamicResource NameLabel}" Style="{StaticResource ModInfoLabelStyle}"/>
                             <TextBlock Text="{Binding PreviewModName, FallbackValue='My Cool New Mod'}" 
                                Style="{StaticResource ModInfoDetailsStyle}"/>
                         </WrapPanel>
 
                         <WrapPanel Margin="3,0,3,0" Grid.Row="1">
-                            <TextBlock Text="Author:" Style="{StaticResource ModInfoLabelStyle}"/>
+                            <TextBlock Text="{DynamicResource AuthorLabel}" Style="{StaticResource ModInfoLabelStyle}"/>
                             <TextBlock Text="{Binding PreviewModAuthor, FallbackValue='FF7ModDude'}" 
                                Style="{StaticResource ModInfoDetailsStyle}"/>
                         </WrapPanel>
 
                         <WrapPanel Margin="3,0,3,0" Grid.Row="2">
-                            <TextBlock Text="Released:" Style="{StaticResource ModInfoLabelStyle}"/>
+                            <TextBlock Text="{DynamicResource ReleasedLabel}" Style="{StaticResource ModInfoLabelStyle}"/>
                             <TextBlock Text="{Binding PreviewModReleaseDate, FallbackValue='11/27/2019'}"
                                        Margin="2,0,10,1"
                                        Style="{StaticResource ModInfoDetailsStyle}"/>
 
-                            <TextBlock Text="Category:" Style="{StaticResource ModInfoLabelStyle}"/>
+                            <TextBlock Text="{DynamicResource CategoryLabel}" Style="{StaticResource ModInfoLabelStyle}"/>
                             <TextBlock Text="{Binding PreviewModCategory, FallbackValue='Animatons'}"
                                        Margin="2,0,0,1"
                                        Style="{StaticResource ModInfoDetailsStyle}"/>
                         </WrapPanel>
 
                         <WrapPanel Margin="3,3,3,0" Grid.Row="3">
-                            <TextBlock Text="Version:" Style="{StaticResource ModInfoLabelStyle}"
+                            <TextBlock Text="{DynamicResource VersionLabel}" Style="{StaticResource ModInfoLabelStyle}"
                                        Margin="0,0,3,1"/>
                             <TextBlock Text="{Binding PreviewModVersion, FallbackValue='1.3'}"
                                        Margin="2,0,3,1"
@@ -242,21 +242,21 @@
                                HorizontalOffset="-116">
                             <Border x:Name="bd" BorderBrush="{DynamicResource PrimaryControlBackground}" BorderThickness="1">
                                 <StackPanel Background="{DynamicResource SecondaryAppBackground}">
-                                    <RadioButton FontSize="12" IsChecked="{Binding PreviewIsAutoUpdateModsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="Auto Update/Install" Margin="5,3,5,3" GroupName="modUpdateType"/>
-                                    <RadioButton FontSize="12" IsChecked="{Binding PreviewIgnoreModUpdatesChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="Ignore" Margin="5,3,5,3" GroupName="modUpdateType"/>
-                                    <RadioButton FontSize="12" IsChecked="{Binding PreviewIsNotifyAboutUpdatesChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="Notify" Margin="5,3,5,3" GroupName="modUpdateType"/>
+                                    <RadioButton FontSize="12" IsChecked="{Binding PreviewIsAutoUpdateModsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{DynamicResource AutoUpdateInstall}" Margin="5,3,5,3" GroupName="modUpdateType"/>
+                                    <RadioButton FontSize="12" IsChecked="{Binding PreviewIgnoreModUpdatesChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{DynamicResource Ignore}" Margin="5,3,5,3" GroupName="modUpdateType"/>
+                                    <RadioButton FontSize="12" IsChecked="{Binding PreviewIsNotifyAboutUpdatesChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Content="{DynamicResource Notify}" Margin="5,3,5,3" GroupName="modUpdateType"/>
                                 </StackPanel>
                             </Border>
                         </Popup>
 
                         <WrapPanel Margin="3,0,3,0" Grid.Row="4">
-                            <TextBlock Text="Description:" Style="{StaticResource ModInfoLabelStyle}"/>
+                            <TextBlock Text="{DynamicResource DescriptionLabel}" Style="{StaticResource ModInfoLabelStyle}"/>
                             <TextBlock Text="{Binding PreviewModDescription, FallbackValue='This is a short description of my cool new mod and it does these things like a and b and even x and y.'}" 
                                Style="{StaticResource ModInfoDetailsStyle}"/>
                         </WrapPanel>
 
                         <WrapPanel Margin="3,0,3,0" Grid.Row="5">
-                            <TextBlock Text="Link:" Style="{StaticResource ModInfoLabelStyle}" Margin="0,1,0,3"/>
+                            <TextBlock Text="{DynamicResource LinkLabel}" Style="{StaticResource ModInfoLabelStyle}" Margin="0,1,0,3"/>
                             <Button x:Name="btnOpenModLink" 
                                     Width="80"
                                     FontSize="12"
@@ -267,7 +267,7 @@
                                     IsEnabled="{Binding PreviewModHasLink, FallbackValue='False'}"
                                     Style="{StaticResource OpenLinkStyle}"/>
 
-                            <TextBlock Text="Readme:" Style="{StaticResource ModInfoLabelStyle}" Margin="0,1,0,3"
+                            <TextBlock Text="{DynamicResource ReadmeLabel}" Style="{StaticResource ModInfoLabelStyle}" Margin="0,1,0,3"
                                        Visibility="{Binding ReadmeVisibility, FallbackValue='Visible'}"/>
                             <Button x:Name="btnOpenModReadme"
                                     Click="btnOpenModReadme_Click"
@@ -282,7 +282,7 @@
 
 
                         <WrapPanel Margin="3,0,3,0" Grid.Row="6">
-                            <TextBlock Text="Release Notes:" Style="{StaticResource ModInfoLabelStyle}"/>
+                            <TextBlock Text="{DynamicResource ReleaseNotesLabel}" Style="{StaticResource ModInfoLabelStyle}"/>
                             <TextBlock Text="{Binding PreviewModReleaseNotes, FallbackValue='Some notes about this mod...'}" 
                                        Style="{StaticResource ModInfoDetailsStyle}"/>
                         </WrapPanel>
@@ -331,7 +331,7 @@
                            Visibility="{Binding NoImageTextVisibility}"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"
-                           Text="No Preview Image"/>
+                           Text="{DynamicResource NoPreviewImage}"/>
 
 
             </Grid>
@@ -344,24 +344,21 @@
                     SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     SelectionChanged="tabCtrlMain_SelectionChanged"
                     Margin="0,23,5,-2">
-            <TabItem Padding="10,0,10,0" 
-                     
+            <TabItem Padding="10,0,10,0"
+                     ToolTip="{DynamicResource MyModsTooltip}"
                      MouseRightButtonUp="MyModsTabItem_MouseRightButtonUp">
                 <TabItem.Header>
-                    <TextBlock Text="My Mods"
-                               ToolTip="Right-click My Mods tab to open your Mod Library Folder"
-                               ToolTipService.InitialShowDelay="1500"
+                    <TextBlock Text="{DynamicResource MyMods}"
                                PreviewMouseRightButtonUp="MyModsTabItem_MouseRightButtonUp"
                                Padding="0"/>
                 </TabItem.Header>
                 
                 <ctrl:MyModsUserControl x:Name="ctrlMyMods"/>
             </TabItem>
-            <TabItem MouseRightButtonUp="BrowseCatalogTabItem_MouseRightButtonUp">
+            <TabItem MouseRightButtonUp="BrowseCatalogTabItem_MouseRightButtonUp"
+                     ToolTip="{DynamicResource BrowseCatalogTooltip}">
                 <TabItem.Header>
-                    <TextBlock Text="Browse Catalog"
-                               ToolTip="Right-click Browse Catalog tab to open your Catalog settings"
-                               ToolTipService.InitialShowDelay="1200"
+                    <TextBlock Text="{DynamicResource BrowseCatalog}"
                                PreviewMouseRightButtonUp="BrowseCatalogTabItem_MouseRightButtonUp"
                                Padding="0"/>
                 </TabItem.Header>
@@ -383,7 +380,7 @@
                  Width="260"
                  Height="24"/>
 
-        <TextBlock Text="Type here to search ..."
+        <TextBlock Text="{DynamicResource SearchHint}"
                    Foreground="{DynamicResource PrimaryControlDisabledForeground}"
                    Grid.Column="2"
                    IsHitTestVisible="False"
@@ -406,7 +403,7 @@
         <ToggleButton x:Name="btnFilters"
                       ClickMode="Release"
                       Click="btnFilters_Click"
-                      ToolTip="Click to select what categories and tags to filter by."
+                      ToolTip="{DynamicResource FiltersTooltip}"
                       Style="{StaticResource DownArrowToggleButton}"
                       Background="Transparent"
                       Width="24"
@@ -451,7 +448,8 @@
                                                     Height="{TemplateBinding Height}"
                                                     Style="{StaticResource MainButtonStyleWithNoTriggers}"
                                                     Cursor="Hand"
-                                                    ToolTip="Click to view app log"
+                                                    ToolTip="{DynamicResource StatusBarTooltip}"
+                                                    ToolTipService.InitialShowDelay="250"
                                                     IsTabStop="False"
                                                     Background="Transparent"/>
 

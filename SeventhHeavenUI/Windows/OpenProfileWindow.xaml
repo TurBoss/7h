@@ -73,7 +73,7 @@
 
         <Button x:Name="btnClose"
                 Grid.Row="2"
-                Content="Close"
+                Content="{DynamicResource Close}"
                 HorizontalAlignment="Center"
                 Margin="94,0,0,5"
                 Width="95"
