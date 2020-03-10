@@ -1,6 +1,7 @@
 ﻿using Iros._7th;
 using Iros._7th.Workshop;
 using Iros.Mega;
+using SeventhHeaven.Classes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -111,11 +112,14 @@ namespace SeventhHeavenUI.ViewModels
             if (categories == null)
                 categories = new List<FilterItemViewModel>();
 
-            string modCategory = mod.Category;
+            string modCategory = mod?.Category;
+
+            // treat missing mod category as 'Unknown'
+            if (string.IsNullOrWhiteSpace(modCategory))
+                modCategory = ResourceHelper.GetString(StringKey.Unknown);
 
             return categories.Count() == 0 ||
-                   categories.Any(c => c.Name.Equals(modCategory, StringComparison.InvariantCultureIgnoreCase)) ||
-                   (categories.Any(c => c.Name == MainWindowViewModel._unknownText) && string.IsNullOrEmpty(modCategory));
+                   categories.Any(c => c.Name.Equals(modCategory, StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }

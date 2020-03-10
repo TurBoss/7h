@@ -30,33 +30,8 @@ namespace SeventhHeavenUI.ViewModels
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        internal const string _msgReqMissing =
-    @"This mod requires the following mods to also be active, but they could not be found:
-{0}
-It may not work correctly unless you install them.";
-
-        internal const string _msgBadVer =
-            @"This mod requires the following mods, but you do not have a supported version:
-{0}
-You may need to update these mods.";
-
-        internal const string _msgRequired =
-            @"This mod requires that you activate the following mods:
-{0}
-They will be automatically turned on.";
-
-        internal const string _msgRemove =
-            @"This mod requires that you deactivate the following mods:
-{0}
-They will be automatically turned off.";
-
-        internal const string _forbidMain =
-            @"You cannot activate this mod, because it is incompatible with {0}. You will have to deactivate {0} before you can enable this mod.";
-
-        internal const string _forbidDependent =
-            @"You cannot activate this mod, because it requires {0} to be active, but {0} is incompatible with {1}. You will have to deactivate {1} before you can enable this mod.";
-        internal const string _showAllText = "Select All";
-        internal const string _unknownText = "Unknown";
+        internal string _showAllText;
+        internal string _unknownText;
 
         public List<string> AppHints = new List<string>()
         {
@@ -438,11 +413,11 @@ They will be automatically turned off.";
                         ModStatus status = Sys.GetStatus(selected.InstallInfo.ModID);
                         if (status != ModStatus.Downloading && status != ModStatus.Updating)
                         {
-                            return "Update Available";
+                            return ResourceHelper.GetString(StringKey.UpdateAvailable);
                         }
                         else
                         {
-                            return "Update Downloading";
+                            return ResourceHelper.GetString(StringKey.UpdateDownloading);
                         }
                     }
                     else
@@ -450,13 +425,13 @@ They will be automatically turned off.";
                         switch (selected.InstallInfo.UpdateType)
                         {
                             case UpdateType.Notify:
-                                return "No Updates";
+                                return ResourceHelper.GetString(StringKey.NoUpdates);
 
                             case UpdateType.Ignore:
-                                return "Updates Ignored";
+                                return ResourceHelper.GetString(StringKey.UpdatesIgnored);
 
                             case UpdateType.Install:
-                                return "Auto Update";
+                                return ResourceHelper.GetString(StringKey.AutoUpdate);
                         }
                     }
                 }
@@ -610,12 +585,6 @@ They will be automatically turned off.";
             }
         }
 
-        internal void ShowCatalogCreationTool()
-        {
-            CatalogCreationToolWindow window = new CatalogCreationToolWindow();
-            window.Show();
-        }
-
         public bool IsGameLaunching
         {
             get
@@ -647,6 +616,14 @@ They will be automatically turned off.";
             CatalogMods.SelectedModChanged += CatalogViewModel_SelectedModChanged;
 
             LoadingGifVisibility = Visibility.Hidden;
+
+            InitStringsForLanguage();
+        }
+
+        private void InitStringsForLanguage()
+        {
+            _showAllText = ResourceHelper.GetString(StringKey.SelectAll);
+            _unknownText = ResourceHelper.GetString(StringKey.Unknown);
         }
 
 
@@ -706,9 +683,9 @@ They will be automatically turned off.";
                 IEnumerable<string> errors = Sys.Settings.VerifySettings();
                 if (errors.Any())
                 {
-                    string msg = "The following errors were found in your configuration:\n" + string.Join("\n", errors);
+                    string msg = $"{ResourceHelper.GetString(StringKey.FollowingErrorsFoundInConfiguration)}\n" + string.Join("\n", errors);
                     Logger.Warn(msg);
-                    Sys.Message(new WMessage("Errors found in general settings. View app.log for details on error(s)."));
+                    Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.ErrorsFoundInGeneralSettingsViewAppLog)));
                     showSettings = true;
                 }
             }
@@ -726,7 +703,7 @@ They will be automatically turned off.";
 
 
             CatalogMods.ReloadModList();
-            CatalogMods.CheckForCatalogUpdatesAsync(new CatCheckOptions());
+            CatalogMods.CheckForCatalogUpdatesAsync();
 
 
             ReloadAvailableFilters();
@@ -735,10 +712,10 @@ They will be automatically turned off.";
             // ... the temp images are used for the configure mod window
             // ... the app does not release the file lock on the images at runtime of the app so 
             // ... this will ensure the images from last app session are deleted
-            ConfigureModViewModel.DeleteTempFolder();
+            ConfigureModViewModel.DeleteTempConfigModFolder();
 
             Sys.AppVersion = App.GetAppVersion();
-            StatusMessage = $"{App.GetAppName()} v{Sys.AppVersion.ToString()} started - Click here to view the app log.  |  Hint: {GetRandomHint()}";
+            StatusMessage = $"{App.GetAppName()} v{Sys.AppVersion.ToString()} {ResourceHelper.GetString(StringKey.StartedClickHereToViewAppLog)}  |  {ResourceHelper.GetString(StringKey.HintLabel)} {GetRandomHint()}";
 
             MyMods.ScanForModUpdates();
 
@@ -748,7 +725,7 @@ They will be automatically turned off.";
                 Task.Factory.StartNew(() =>
                 {
                     System.Threading.Thread.Sleep(5000); // wait 5 seconds after init before checking for update to let UI render
-                    Sys.Message(new WMessage("Checking for app updates ...", WMessageLogLevel.LogOnly));
+                    Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.CheckingForUpdates), WMessageLogLevel.LogOnly));
                     UpdateChecker.Instance.CheckForUpdates();
                 });
             }
@@ -758,8 +735,8 @@ They will be automatically turned off.";
         {
             if (wasSuccessful && UpdateChecker.IsNewVersionAvailable(Sys.LastCheckedVersion))
             {
-                string message = $"An update is available for {App.GetAppName()} - {App.GetAppVersion()}\nClick 'Yes' to open the download page in a browser.\n\n{Sys.LastCheckedVersion.Version} Release Notes: {Sys.LastCheckedVersion.ReleaseNotes}";
-                var dialogResult = MessageDialogWindow.Show(message, $"New Version ({Sys.LastCheckedVersion.Version}) Available!", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                string message = string.Format(ResourceHelper.GetString(StringKey.AppUpdateIsAvailableMessage), $"{App.GetAppName()} - {App.GetAppVersion()}", Sys.LastCheckedVersion.Version, Sys.LastCheckedVersion.ReleaseNotes);
+                var dialogResult = MessageDialogWindow.Show(message, ResourceHelper.GetString(StringKey.NewVersionAvailable), MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
 
                 if (dialogResult.Result == MessageBoxResult.Yes)
                 {
@@ -1028,7 +1005,8 @@ They will be automatically turned off.";
                 }
                 catch (Exception e)
                 {
-                    Logger.Warn(e, "Failed to load current profile xml ... Setting current profile to null");
+                    Logger.Warn(e);
+                    Logger.Warn("Failed to load current profile xml ... Setting current profile to null");
                     Sys.Settings.CurrentProfile = null;
                 }
             }
@@ -1153,7 +1131,8 @@ They will be automatically turned off.";
             }
             catch (Exception e)
             {
-                Logger.Warn(e, "failed to load catalog.xml - initializing empty catalog ...");
+                Logger.Warn(e);
+                Logger.Warn("failed to load catalog.xml - initializing empty catalog ...");
                 Sys.SetNewCatalog(new Catalog());
             }
         }
@@ -1197,8 +1176,7 @@ They will be automatically turned off.";
                 // invoke the message on the Dispatcher UI Thread since this could be called from background threads
                 return App.Current.Dispatcher.Invoke(() =>
                 {
-                    string msg = "This mod '{0}' contains data that could potentially harm your computer. You should only activate mods you trust.\n\nDo you still want to activate this mod?";
-                    msg = String.Format(msg, mod.CachedDetails.Name);
+                    string msg = String.Format(ResourceHelper.GetString(StringKey.ThisModContainsDataThatCouldHarm), mod.CachedDetails.Name);
 
                     AllowModToRunWindow warningWindow = new AllowModToRunWindow(msg);
                     warningWindow.ShowDialog();
@@ -1353,74 +1331,6 @@ They will be automatically turned off.";
         }
 
         /// <summary>
-        /// Opens the 'Profiles' window to manage and switch profiles
-        /// </summary>
-        internal void ShowProfilesWindow()
-        {
-            SaveActiveProfile(); // ensure current profile is saved to disk so it shows in list of profiles
-
-            OpenProfileWindow profileWindow = new OpenProfileWindow();
-            bool? dialogResult = profileWindow.ShowDialog();
-
-            if (dialogResult.GetValueOrDefault(false))
-            {
-                RefreshProfile();
-            }
-        }
-
-        internal void ShowChunkToolWindow()
-        {
-            ChunkToolWindow toolWindow = new ChunkToolWindow()
-            {
-                WindowStartupLocation = WindowStartupLocation.CenterScreen
-            };
-            toolWindow.ShowDialog();
-        }
-
-        internal void ShowGeneralSettingsWindow()
-        {
-            GeneralSettingsWindow settingsWindow = new GeneralSettingsWindow()
-            {
-                WindowStartupLocation = WindowStartupLocation.CenterScreen
-            };
-            bool? didSave = settingsWindow.ShowDialog();
-
-            if (didSave.GetValueOrDefault(false))
-            {
-                if (settingsWindow.ViewModel.SubscriptionsChanged)
-                {
-                    CatalogMods.ForceCheckCatalogUpdateAsync();
-                }
-
-                if (settingsWindow.ViewModel.HasChangedInstalledModUpdateTypes && SelectedTabIndex == (int)TabIndex.MyMods)
-                {
-                    MyMods.ScanForModUpdates();
-                    UpdateModPreviewInfo(MyMods.GetSelectedMod(), true);
-                }
-            }
-        }
-
-        internal void ShowIroToolsWindow()
-        {
-            IroCreateWindow createWindow = new IroCreateWindow()
-            {
-                WindowStartupLocation = WindowStartupLocation.CenterScreen
-            };
-            createWindow.ShowDialog();
-        }
-
-        internal void ShowGameDriverConfigWindow()
-        {
-            string uiXml = Path.Combine(Sys._7HFolder, "7H_GameDriver_UI.xml");
-            string driverCfg = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "7H_GameDriver.cfg");
-
-            ConfigureGLWindow gLWindow = new ConfigureGLWindow() { WindowStartupLocation = WindowStartupLocation.CenterScreen };
-            gLWindow.Init(uiXml, driverCfg);
-            gLWindow.ShowDialog();
-        }
-
-
-        /// <summary>
         /// sets IsChecked to value of <paramref name="isChecked"/> for all items in <paramref name="filterItems"/> except for the 'Show All' category 
         /// </summary>
         private void ToggleIsCheckedForAll(bool isChecked, List<FilterItemViewModel> filterItems)
@@ -1483,7 +1393,7 @@ They will be automatically turned off.";
                 categories = Sys.Catalog.Mods.Select(c =>
                                                 {
                                                     if (string.IsNullOrEmpty(c.Category))
-                                                        return "Unknown";
+                                                        return _unknownText;
 
                                                     return c.Category;
                                                 })
@@ -1494,7 +1404,7 @@ They will be automatically turned off.";
                 categories = MyMods.ModList.Select(c =>
                                                 {
                                                     if (string.IsNullOrEmpty(c.Category))
-                                                        return "Unknown";
+                                                        return _unknownText;
 
                                                     return c.Category;
                                                 })
@@ -1588,7 +1498,7 @@ They will be automatically turned off.";
 
             if (!File.Exists(helpFile))
             {
-                Sys.Message(new WMessage("Cannot open help - Resources/Help/index.html file not found"));
+                Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.CannotOpenHelp)));
                 return;
             }
 
@@ -1611,12 +1521,6 @@ They will be automatically turned off.";
             return AppHints[r.Next(0, AppHints.Count)];
         }
 
-        internal void ShowGameLaunchSettingsWindow()
-        {
-            GameLaunchSettingsWindow launchSettingsWindow = new GameLaunchSettingsWindow();
-            launchSettingsWindow.ShowDialog();
-        }
-
         internal void LaunchGame(bool variableDump = false, bool debugLogging = false, bool noMods = false)
         {
             IsGameLaunching = true;
@@ -1636,21 +1540,21 @@ They will be automatically turned off.";
             {
                 if (Sys.Settings.Subscriptions.Any(s => s.Url.Equals(irosUrl, StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    Sys.Message(new WMessage($"The subscription {irosUrl} is already added.", true));
+                    Sys.Message(new WMessage(string.Format(ResourceHelper.GetString(StringKey.SubscriptionIsAlreadyAdded), irosUrl), true));
                     return;
                 }
 
                 GeneralSettingsViewModel.ResolveCatalogNameFromUrl(irosUrl, name =>
                 {
                     Sys.Settings.Subscriptions.Add(new Subscription() { Url = irosUrl, Name = name });
-                    Sys.Message(new WMessage($"Added {irosUrl} to subscriptions.", true));
+                    Sys.Message(new WMessage(string.Format(ResourceHelper.GetString(StringKey.AddedToSubscriptions), irosUrl), true));
 
                     CatalogMods.ForceCheckCatalogUpdateAsync();
                 });
             }
             else
             {
-                Sys.Message(new WMessage($"The iros:// link {irosUrl} may be formatted incorrectly. Could not add to subscriptions.", WMessageLogLevel.LogOnly));
+                Sys.Message(new WMessage(string.Format(ResourceHelper.GetString(StringKey.IrosLinkMayBeFormatedIncorrectly), irosUrl), WMessageLogLevel.LogOnly));
             }
         }
 
@@ -1703,7 +1607,6 @@ They will be automatically turned off.";
             }
         }
 
-
         internal void UpdateBackgroundImage(byte[] newImage)
         {
             try
@@ -1730,18 +1633,96 @@ They will be automatically turned off.";
             catch (Exception e)
             {
                 Logger.Warn(e);
-                Sys.Message(new WMessage("Failed to set background image from theme.", true));
+                Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.FailedToSetBackgroundImageFromTheme), true));
 
                 MyMods.ThemeImage = null;
                 CatalogMods.ThemeImage = null;
             }
 
         }
-    }
 
-    internal class CatCheckOptions
-    {
-        public bool ForceCheck { get; set; }
-    }
+        #region Show Window Methods
 
+        /// <summary>
+        /// Opens the 'Profiles' window to manage and switch profiles
+        /// </summary>
+        internal void ShowProfilesWindow()
+        {
+            SaveActiveProfile(); // ensure current profile is saved to disk so it shows in list of profiles
+
+            OpenProfileWindow profileWindow = new OpenProfileWindow();
+            bool? dialogResult = profileWindow.ShowDialog();
+
+            if (dialogResult.GetValueOrDefault(false))
+            {
+                RefreshProfile();
+            }
+        }
+
+        internal void ShowChunkToolWindow()
+        {
+            ChunkToolWindow toolWindow = new ChunkToolWindow()
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+            toolWindow.ShowDialog();
+        }
+
+        internal void ShowGeneralSettingsWindow()
+        {
+            GeneralSettingsWindow settingsWindow = new GeneralSettingsWindow()
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+            bool? didSave = settingsWindow.ShowDialog();
+
+            if (didSave.GetValueOrDefault(false))
+            {
+                if (settingsWindow.ViewModel.SubscriptionsChanged)
+                {
+                    CatalogMods.ForceCheckCatalogUpdateAsync();
+                }
+
+                if (settingsWindow.ViewModel.HasChangedInstalledModUpdateTypes && SelectedTabIndex == (int)TabIndex.MyMods)
+                {
+                    MyMods.ScanForModUpdates();
+                    UpdateModPreviewInfo(MyMods.GetSelectedMod(), true);
+                }
+            }
+        }
+
+        internal void ShowIroToolsWindow()
+        {
+            IroCreateWindow createWindow = new IroCreateWindow()
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+            createWindow.ShowDialog();
+        }
+
+        internal void ShowGameDriverConfigWindow()
+        {
+            string uiXml = Path.Combine(Sys._7HFolder, "7H_GameDriver_UI.xml");
+            string driverCfg = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "7H_GameDriver.cfg");
+
+            ConfigureGLWindow gLWindow = new ConfigureGLWindow() { WindowStartupLocation = WindowStartupLocation.CenterScreen };
+            gLWindow.Init(uiXml, driverCfg);
+            gLWindow.ShowDialog();
+        }
+
+        internal void ShowGameLaunchSettingsWindow()
+        {
+            GameLaunchSettingsWindow launchSettingsWindow = new GameLaunchSettingsWindow();
+            launchSettingsWindow.ShowDialog();
+        }
+
+        internal void ShowCatalogCreationTool()
+        {
+            CatalogCreationToolWindow window = new CatalogCreationToolWindow();
+            window.Show();
+        }
+
+        #endregion
+
+    }
 }

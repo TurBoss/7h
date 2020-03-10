@@ -20,6 +20,19 @@ namespace SeventhHeavenUI.ViewModels
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
+        internal string _msgReqMissing;
+
+        internal string _msgBadVer;
+
+        internal string _msgRequired;
+
+        internal string _msgRemove;
+
+        internal string _forbidMain;
+
+        internal string _forbidDependent;
+
+
         public delegate void OnSelectionChanged(object sender, InstalledModViewModel selected);
         public event OnSelectionChanged SelectedModChanged;
 
@@ -89,6 +102,13 @@ namespace SeventhHeavenUI.ViewModels
         public MyModsViewModel()
         {
             _previousReloadOptions = new ReloadListOption();
+
+            _msgReqMissing = ResourceHelper.GetString(StringKey.ModRequiresModsIsMissingWarning);
+            _msgBadVer = ResourceHelper.GetString(StringKey.UnsupportedModVersionsWarning);
+            _msgRequired = ResourceHelper.GetString(StringKey.ThisModRequiresYouActivateFollowingMods);
+            _msgRemove = ResourceHelper.GetString(StringKey.ModRequiresYouDeactivateTheFollowingMods);
+            _forbidMain = ResourceHelper.GetString(StringKey.CannotActivateModBecauseItIsIncompatibleWithOtherMod);
+            _forbidDependent = ResourceHelper.GetString(StringKey.CannotActivateModBecauseDependentIsIncompatible);
         }
 
         /// <summary>
@@ -513,9 +533,9 @@ namespace SeventhHeavenUI.ViewModels
                             if (!forbid.Versions.Any() || forbid.Versions.Contains(Sys.Library.GetItem(mID).LatestInstalled.VersionDetails.Version))
                             {
                                 if (mID.Equals(modID))
-                                    MessageDialogWindow.Show(String.Format(MainWindowViewModel._forbidMain, Sys.Library.GetItem(active.ModID).CachedDetails.Name), "Warning");
+                                    MessageDialogWindow.Show(String.Format(_forbidMain, Sys.Library.GetItem(active.ModID).CachedDetails.Name), "Warning");
                                 else
-                                    MessageDialogWindow.Show(String.Format(MainWindowViewModel._forbidDependent, Sys.Library.GetItem(mID).CachedDetails.Name, Sys.Library.GetItem(active.ModID).CachedDetails.Name), "Warning");
+                                    MessageDialogWindow.Show(String.Format(_forbidDependent, Sys.Library.GetItem(mID).CachedDetails.Name, Sys.Library.GetItem(active.ModID).CachedDetails.Name), "Warning");
                                 return;
                             }
                         }
@@ -524,19 +544,19 @@ namespace SeventhHeavenUI.ViewModels
 
                 if (missing.Any())
                 {
-                    MessageDialogWindow.Show(String.Format(MainWindowViewModel._msgReqMissing, String.Join("\n", missing)), "Missing Requirements");
+                    MessageDialogWindow.Show(String.Format(_msgReqMissing, String.Join("\n", missing)), "Missing Requirements");
                 }
                 if (badVersion.Any())
                 {
-                    MessageDialogWindow.Show(String.Format(MainWindowViewModel._msgBadVer, String.Join("\n", badVersion.Select(ii => ii.CachedDetails.Name))), "Unsupported Version");
+                    MessageDialogWindow.Show(String.Format(_msgBadVer, String.Join("\n", badVersion.Select(ii => ii.CachedDetails.Name))), "Unsupported Version");
                 }
                 if (pulledIn.Any())
                 {
-                    MessageDialogWindow.Show(String.Format(MainWindowViewModel._msgRequired, String.Join("\n", pulledIn.Select(ii => ii.CachedDetails.Name))), "Missing Required Active Mods");
+                    MessageDialogWindow.Show(String.Format(_msgRequired, String.Join("\n", pulledIn.Select(ii => ii.CachedDetails.Name))), "Missing Required Active Mods");
                 }
                 if (remove.Any())
                 {
-                    MessageDialogWindow.Show(String.Format(MainWindowViewModel._msgRemove, String.Join("\n", remove.Select(pi => Sys.Library.GetItem(pi.ModID).CachedDetails.Name))), "Deactivate Mods Warning");
+                    MessageDialogWindow.Show(String.Format(_msgRemove, String.Join("\n", remove.Select(pi => Sys.Library.GetItem(pi.ModID).CachedDetails.Name))), "Deactivate Mods Warning");
                 }
 
                 DoActivate(modID, reloadList);
@@ -801,7 +821,8 @@ namespace SeventhHeavenUI.ViewModels
                             }
                             catch (Exception e)
                             {
-                                Logger.Warn(e, "Failed to write image to file");
+                                Logger.Warn(e);
+                                Logger.Warn("Failed to write image to file");
                                 return null;
                             }
                         }

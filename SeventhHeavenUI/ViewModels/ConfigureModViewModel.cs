@@ -597,7 +597,7 @@ namespace SeventhHeaven.ViewModels
             _values[_selectedOption.Option.ID] = o.Value;
         }
 
-        internal static void DeleteTempFolder()
+        internal static void DeleteTempConfigModFolder()
         {
             string config_temp_folder = Path.Combine(Sys.PathToTempFolder, "configmod");
             if (Directory.Exists(config_temp_folder))

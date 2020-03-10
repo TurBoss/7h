@@ -383,14 +383,13 @@ It may not work properly unless you find and install the requirements.";
             return selected;
         }
 
-        internal Task CheckForCatalogUpdatesAsync(object state)
+        internal Task CheckForCatalogUpdatesAsync(bool forceCheck = false)
         {
             object countLock = new object();
 
             Task t = Task.Factory.StartNew(() =>
             {
                 List<Guid> pingIDs = null;
-                var options = (CatCheckOptions)state;
                 string catFile = Path.Combine(Sys.SysFolder, "catalog.xml");
 
                 Directory.CreateDirectory(Path.Combine(Sys.SysFolder, "temp"));
@@ -398,7 +397,7 @@ It may not work properly unless you find and install the requirements.";
                 int subTotalCount = Sys.Settings.SubscribedUrls.Count; // amount of subscriptions to update
                 int subUpdateCount = 0; // amount of subscriptions updated
 
-                if (options.ForceCheck)
+                if (forceCheck)
                 {
                     // on force check, initialize a new catalog to ignore any cached items
                     Sys.SetNewCatalog(new Catalog());
@@ -423,7 +422,7 @@ It may not work properly unless you find and install the requirements.";
                         Sys.Settings.Subscriptions.Add(sub);
                     }
 
-                    if ((sub.LastSuccessfulCheck < DateTime.Now.AddDays(-1)) || options.ForceCheck)
+                    if ((sub.LastSuccessfulCheck < DateTime.Now.AddDays(-1)) || forceCheck)
                     {
                         Logger.Info($"Checking subscription {sub.Url}");
 
@@ -559,7 +558,7 @@ It may not work properly unless you find and install the requirements.";
 
         internal void ForceCheckCatalogUpdateAsync()
         {
-            Task t = CheckForCatalogUpdatesAsync(new CatCheckOptions() { ForceCheck = true });
+            Task t = CheckForCatalogUpdatesAsync(forceCheck: true);
 
             t.ContinueWith((taskResult) =>
             {

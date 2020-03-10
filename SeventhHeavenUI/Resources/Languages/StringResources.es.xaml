@@ -1,9 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
-    
-    <!--TODO: TRANSLATION NEEDED-->
 
+    <!--TODO: TRANSLATION NEEDED-->
+    
     <!--Main Window Buttons-->
     <system:String x:Key="Play">Play</system:String>
     <system:String x:Key="PlayWithMods">Play With Mods (default)</system:String>
@@ -235,5 +235,79 @@
     <system:String x:Key="Preview">Preview</system:String>
     <system:String x:Key="Stop">Stop</system:String>
     <system:String x:Key="ResetToModDefaults">Reset to Mod Defaults</system:String>
+
+    <!--MainWindowViewModel Strings-->
+    <system:String x:Key="StartedClickHereToViewAppLog">started - Click here to view the app log.</system:String>
+    <system:String x:Key="HintLabel">Hint:</system:String>
+    <system:String x:Key="CheckingForUpdates">Checking for app updates ...</system:String>
+    <system:String x:Key="SelectAll">Select All</system:String>
+    <system:String x:Key="Unknown">Unknown</system:String>
+
+    <system:String x:Key="UpdateAvailable">Update Available</system:String>
+    <system:String x:Key="UpdateDownloading">Update Downloading</system:String>
+
+    <system:String x:Key="NoUpdates">No Updates</system:String>
+    <system:String x:Key="UpdatesIgnored">Updates Ignored</system:String>
+    <system:String x:Key="AutoUpdate">Auto Update</system:String>
+
+    <system:String x:Key="FollowingErrorsFoundInConfiguration">The following errors were found in your configuration:</system:String>
+    <system:String x:Key="ErrorsFoundInGeneralSettingsViewAppLog">Errors found in general settings. View app.log for details on error(s).</system:String>
+
+    <system:String x:Key="AppUpdateIsAvailableMessage" xml:space="preserve">An update is available for {0}
+Click 'Yes' to open the download page in a browser.
+        
+{1} Release Notes: {2}
+    </system:String>
+    <system:String x:Key="NewVersionAvailable">New Version Available!</system:String>
+
+    <system:String x:Key="ThisModContainsDataThatCouldHarm" xml:space="preserve">This mod '{0}' contains data that could potentially harm your computer. You should only activate mods you trust.
+        
+Do you still want to activate this mod?</system:String>
+
+    <system:String x:Key="CannotOpenHelp">Cannot open help - Resources/Help/index.html file not found</system:String>
+
+    <system:String x:Key="SubscriptionIsAlreadyAdded">The subscription {0} is already added.</system:String>
+    <system:String x:Key="AddedToSubscriptions">Added {0} to subscriptions.</system:String>
+    <system:String x:Key="IrosLinkMayBeFormatedIncorrectly">The iros:// link {0} may be formatted incorrectly. Could not add to subscriptions.</system:String>
+
+    <system:String x:Key="FailedToSetBackgroundImageFromTheme">Failed to set background image from theme.</system:String>
+
+
+
+
+
+
+
+
+
+
+    <!--MyModsViewModel Strings-->
+
+    <system:String x:Key="ModRequiresModsIsMissingWarning" xml:space="preserve">This mod requires the following mods to also be active, but they could not be found:
+{0}
+It may not work correctly unless you install them.</system:String>
+
+    <system:String x:Key="UnsupportedModVersionsWarning" xml:space="preserve">This mod requires the following mods, but you do not have a supported version:
+{0}
+You may need to update these mods.</system:String>
+
+    <system:String x:Key="ThisModRequiresYouActivateFollowingMods" xml:space="preserve">This mod requires that you activate the following mods:
+{0}
+They will be automatically turned on.</system:String>
+
+    <system:String x:Key="ModRequiresYouDeactivateTheFollowingMods" xml:space="preserve">This mod requires that you deactivate the following mods:
+{0}
+They will be automatically turned off.</system:String>
+
+
+    <system:String x:Key="CannotActivateModBecauseItIsIncompatibleWithOtherMod" xml:space="preserve">You cannot activate this mod, because it is incompatible with {0}. You will have to deactivate {0} before you can enable this mod.</system:String>
+
+    <system:String x:Key="CannotActivateModBecauseDependentIsIncompatible" xml:space="preserve">You cannot activate this mod, because it requires {0} to be active, but {0} is incompatible with {1}. You will have to deactivate {1} before you can enable this mod.</system:String>
+
+
+
+
+
+
 
 </ResourceDictionary>
