@@ -2,6 +2,7 @@
 using Iros._7th;
 using Iros._7th.Workshop;
 using Iros.Mega;
+using SeventhHeaven.Classes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,7 +24,17 @@ namespace SeventhHeavenUI.ViewModels
         {
             get
             {
-                return Download.ItemName;
+                // replace text with translated text
+                if (Download?.ItemName == "Downloading preview image")
+                {
+                    Download.ItemName = ResourceHelper.GetString(StringKey.DownloadingPreviewImage);
+                }
+                else if (Download?.ItemName.StartsWith("Downloading ") == true)
+                {
+                    Download.ItemName = Download.ItemName.Replace("Downloading", ResourceHelper.GetString(StringKey.Downloading));
+                }
+
+                return Download?.ItemName;
             }
             set
             {

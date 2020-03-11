@@ -1,4 +1,5 @@
-﻿using SeventhHeaven.ViewModels;
+﻿using SeventhHeaven.Classes;
+using SeventhHeaven.ViewModels;
 using System.Windows;
 
 namespace SeventhHeaven.Windows
@@ -17,7 +18,7 @@ namespace SeventhHeaven.Windows
             ViewModel = new AllowModToRunViewModel()
             {
                 Message = message,
-                WindowTitle = "Allow Mod To Run?",
+                WindowTitle = ResourceHelper.GetString(StringKey.AllowModToRun),
                 CheckboxVisibility = Visibility.Visible,
             };
             this.DataContext = ViewModel;

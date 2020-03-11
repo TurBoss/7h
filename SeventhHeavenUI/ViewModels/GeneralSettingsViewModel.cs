@@ -367,7 +367,7 @@ namespace SeventhHeaven.ViewModels
             SubscriptionsChanged = false;
             IsResolvingName = false;
             SubscriptionNameTextBoxIsEnabled = true;
-            SubscriptionNameHintText = "Enter name for catalog";
+            SubscriptionNameHintText = ResourceHelper.GetString(StringKey.EnterNameForCatalog);
             HasChangedInstalledModUpdateTypes = false;
         }
 
@@ -500,7 +500,7 @@ namespace SeventhHeaven.ViewModels
 
             Directory.CreateDirectory(Sys.Settings.LibraryLocation);
 
-            Sys.Message(new WMessage() { Text = "General settings have been updated!" });
+            Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.GeneralSettingsHaveBeenUpdated)));
 
             return true;
         }
@@ -639,31 +639,31 @@ namespace SeventhHeaven.ViewModels
 
             if (string.IsNullOrWhiteSpace(FF7ExePathInput))
             {
-                validationMessage = "Missing FF7 Exe path.";
+                validationMessage = ResourceHelper.GetString(StringKey.MissingFf7ExePath);
                 isValid = false;
             }
 
             if (string.IsNullOrWhiteSpace(LibraryPathInput))
             {
-                validationMessage = "Missing Library path.";
+                validationMessage = ResourceHelper.GetString(StringKey.MissingLibraryPath);
                 isValid = false;
             }
 
             if (string.IsNullOrWhiteSpace(TexturesPathInput))
             {
-                validationMessage = "Missing Textures (Aali OpenGL) path.";
+                validationMessage = ResourceHelper.GetString(StringKey.MissingTexturesPath);
                 isValid = false;
             }
 
             if (string.IsNullOrWhiteSpace(MoviesPathInput))
             {
-                validationMessage = "Missing Movie path.";
+                validationMessage = ResourceHelper.GetString(StringKey.MissingMoviePath);
                 isValid = false;
             }
 
             if (showMessage && !isValid)
             {
-                MessageDialogWindow.Show(validationMessage, "Settings Not Valid", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show(validationMessage, ResourceHelper.GetString(StringKey.SettingsNotValid), MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             return isValid;
@@ -935,7 +935,7 @@ namespace SeventhHeaven.ViewModels
             catch (Exception e)
             {
                 Logger.Error(e);
-                Sys.Message(new WMessage("Failed to register .iro mod files with 7th Heaven"));
+                Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.FailedToRegisterIroModFilesWith7thHeaven)));
                 return false;
             }
 
@@ -959,7 +959,7 @@ namespace SeventhHeaven.ViewModels
             catch (Exception e)
             {
                 Logger.Error(e);
-                Sys.Message(new WMessage("Failed to un-register .iro mod files with 7th Heaven"));
+                Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.FailedToUnregisterIroModFilesWith7thHeaven)));
                 return false;
             }
         }
@@ -981,7 +981,7 @@ namespace SeventhHeaven.ViewModels
             catch (Exception e)
             {
                 Logger.Error(e);
-                Sys.Message(new WMessage("Failed to un-register iros:// links with 7th Heaven"));
+                Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.FailedToUnregisterIrosLinksWith7thHeaven)));
                 return false;
             }
         }
@@ -1001,7 +1001,7 @@ namespace SeventhHeaven.ViewModels
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage("Failed to create 7th Heaven Context Menu entries in Windows Explorer", WMessageLogLevel.Error, e));
+                Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.FailedToCreate7thHeavenContextMenuEntries), WMessageLogLevel.Error, e));
                 return false;
             }
         }
@@ -1021,7 +1021,7 @@ namespace SeventhHeaven.ViewModels
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage("Failed to remove 7th Heaven Context Menu entries in Windows Explorer", WMessageLogLevel.Error, e));
+                Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.FailedToRemove7thHeavenContextMenuEntries), WMessageLogLevel.Error, e));
                 return false;
             }
         }
@@ -1042,7 +1042,7 @@ namespace SeventhHeaven.ViewModels
             catch (Exception e)
             {
                 Logger.Error(e);
-                Sys.Message(new WMessage("Failed to register iros:// links with 7th Heaven"));
+                Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.FailedToRegisterIrosLinksWith7thHeaven)));
                 return false;
             }
         }
@@ -1059,7 +1059,7 @@ namespace SeventhHeaven.ViewModels
         {
             IsEditingSubscription = false;
             SubscriptionNameTextBoxIsEnabled = false;
-            SubscriptionNameHintText = "Catalog Name will auto resolve on save";
+            SubscriptionNameHintText = ResourceHelper.GetString(StringKey.CatalogNameWillAutoResolveOnSave);
             IsSubscriptionPopupOpen = true;
             string clipboardContent = "";
 
@@ -1081,14 +1081,14 @@ namespace SeventhHeaven.ViewModels
         {
             if (!NewUrlText.StartsWith("iros://"))
             {
-                StatusMessage = "URL must be in iros:// format";
+                StatusMessage = ResourceHelper.GetString(StringKey.UrlMustBeInIrosFormat);
                 return false;
             }
 
             if (!SubscriptionList.Any(s => s.Url == NewUrlText))
             {
                 IsResolvingName = true;
-                SubscriptionNameHintText = "Resolving catalog name ...";
+                SubscriptionNameHintText = ResourceHelper.GetString(StringKey.ResolvingCatalogName);
                 ResolveCatalogNameFromUrl(NewUrlText, resolvedName =>
                 {
                     NewNameText = resolvedName;
@@ -1126,7 +1126,7 @@ namespace SeventhHeaven.ViewModels
             NewUrlText = "";
             NewNameText = "";
             SubscriptionNameTextBoxIsEnabled = true;
-            SubscriptionNameHintText = "Enter name for catalog";
+            SubscriptionNameHintText = ResourceHelper.GetString(StringKey.EnterNameForCatalog);
         }
 
         internal void MoveSelectedSubscription(SubscriptionSettingViewModel selected, int toAdd)
@@ -1220,7 +1220,7 @@ namespace SeventhHeaven.ViewModels
                 Links = new List<string>() { catalogUrl },
                 SaveFilePath = path,
                 Category = DownloadCategory.Catalog,
-                ItemName = $"Resolving catalog name for {catalogUrl}",
+                ItemName = $"{ResourceHelper.GetString(StringKey.ResolvingCatalogNameFor)} {catalogUrl}",
                 IProc = downloadCallback,
                 OnCancel = onCancel
             };

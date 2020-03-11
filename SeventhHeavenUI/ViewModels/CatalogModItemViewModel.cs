@@ -2,6 +2,7 @@
 using Iros._7th;
 using Iros._7th.Workshop;
 using Iros.Mega;
+using SeventhHeaven.Classes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -205,7 +206,7 @@ namespace SeventhHeavenUI.ViewModels
 
             if (string.IsNullOrWhiteSpace(Category))
             {
-                Category = ModCategory.Unknown.ToString();
+                Category = ResourceHelper.GetString(StringKey.Unknown);
             }
 
             NotifyPropertyChanged(nameof(IsInstalled));

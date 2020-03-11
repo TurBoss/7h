@@ -672,7 +672,7 @@ namespace SeventhHeaven.ViewModels
             {
                 List<string> discsToInsert = GetDiscsToInsertForMissingMovies(missingMovies);
 
-                ImportStatusMessage = $"Insert {discsToInsert[0]} and click 'Import'.";
+                ImportStatusMessage = string.Format(ResourceHelper.GetString(StringKey.InsertAndClickImport), discsToInsert[0]);
             }
         }
 
@@ -821,12 +821,12 @@ namespace SeventhHeaven.ViewModels
 
                 Sys.Save();
 
-                Sys.Message(new WMessage("Game Launcher settings updated!"));
+                Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.GameLauncherSettingsUpdated)));
                 return true;
             }
             catch (Exception e)
             {
-                StatusMessage = $"Failed to save launch settings: {e.Message}";
+                StatusMessage = $"{ResourceHelper.GetString(StringKey.FailedToSaveLaunchSettings)}: {e.Message}";
                 Logger.Error(e);
                 return false;
             }
@@ -855,18 +855,18 @@ namespace SeventhHeaven.ViewModels
                     catch (Exception ex)
                     {
                         Logger.Error(ex);
-                        StatusMessage = $"Error copying ff7input.cfg: {ex.Message}";
+                        StatusMessage = $"{ResourceHelper.GetString(StringKey.ErrorCopyingFf7InputCfg)} {ex.Message}";
                     }
                 }
                 else
                 {
-                    StatusMessage = $"No ff7input.cfg found at {pathToInputCfg}";
+                    StatusMessage = $"{ResourceHelper.GetString(StringKey.NoFf7InputCfgFoundAt)} {pathToInputCfg}";
                     Logger.Warn(StatusMessage);
                 }
             }
             else
             {
-                StatusMessage = $"{customFileName} already exists at {Sys.PathToControlsFolder}";
+                StatusMessage = $"{customFileName} {ResourceHelper.GetString(StringKey.AlreadyExistsAt)} {Sys.PathToControlsFolder}";
                 Logger.Warn(StatusMessage);
             }
 
@@ -1081,7 +1081,7 @@ namespace SeventhHeaven.ViewModels
 
             if (!SelectedRenderer.Equals("Custom 7H Game Driver", StringComparison.InvariantCultureIgnoreCase))
             {
-                MessageDialogWindow.Show("Choosing any other option besides 'Custom 7H Game Driver' will cause mods installed with 7H not to work anymore!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.ChoosingAnyOtherOptionBesidesCustom7HGameDriver), ResourceHelper.GetString(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -1095,8 +1095,8 @@ namespace SeventhHeaven.ViewModels
 
             if (GameLauncher.IsReunionModInstalled() && !DisableReunionChecked)
             {
-                string warningMsg = "Reunion R06 and newer, even when disabled in Options.ini, forces a custom game driver to load when you run FF7. This conflicts with 7th Heaven's game driver, breaks your graphics settings, and you will experience problems.\n\nIf you wish to play Reunion, do so using a compatible modded version built for 7th Heaven.\n\nAre you sure?";
-                var result = MessageDialogWindow.Show(warningMsg, "You should leave this setting ON!", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                string warningMsg = ResourceHelper.GetString(StringKey.ReunionWarningMessage);
+                var result = MessageDialogWindow.Show(warningMsg, ResourceHelper.GetString(StringKey.YouShouldLeaveThisSettingOn), MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
                 if (result.Result == MessageBoxResult.No)
                 {
@@ -1125,7 +1125,7 @@ namespace SeventhHeaven.ViewModels
         {
             if (!File.Exists(NewProgramPathText))
             {
-                StatusMessage = "Program to run not found";
+                StatusMessage = ResourceHelper.GetString(StringKey.ProgramToRunNotFound);
                 return false;
             }
 
@@ -1183,8 +1183,8 @@ namespace SeventhHeaven.ViewModels
 
         internal void ImportMissingMovies()
         {
-            string warningMessage = $"This will copy missing movie files from your game discs to your movie path in 'General Settings'.\n\nThis process will overwrite any movie files already in {Sys.Settings.MovieFolder}.\n\nDo you want to proceed?";
-            MessageDialogViewModel result = MessageDialogWindow.Show(warningMessage, "Import Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            string warningMessage = string.Format(ResourceHelper.GetString(StringKey.ImportMissingMoviesWarningMessage), Sys.Settings.MovieFolder); 
+            MessageDialogViewModel result = MessageDialogWindow.Show(warningMessage, ResourceHelper.GetString(StringKey.Warning), MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result.Result == MessageBoxResult.No)
             {
@@ -1211,17 +1211,17 @@ namespace SeventhHeaven.ViewModels
 
                     do
                     {
-                        SetImportStatus($"Looking for {disc} ...");
+                        SetImportStatus($"{ResourceHelper.GetString(StringKey.LookingFor)} {disc} ...");
                         driveLetters = GameLauncher.GetDriveLetters(disc);
 
                         if (driveLetters.Count == 0)
                         {
-                            SetImportStatus($"Insert {disc} to continue.");
+                            SetImportStatus(string.Format(ResourceHelper.GetString(StringKey.InsertToContinue), disc));
 
                             App.Current.Dispatcher.Invoke(() =>
                             {
-                                string discNotFoundMessage = $"Please insert {disc} to continue copying missing movie files.\n\nClick 'Cancel' to stop the process.";
-                                MessageDialogViewModel insertDiscResult = MessageDialogWindow.Show(discNotFoundMessage, "Insert Disc", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                                string discNotFoundMessage = string.Format(ResourceHelper.GetString(StringKey.PleaseInsertToContinueCopying), disc);
+                                MessageDialogViewModel insertDiscResult = MessageDialogWindow.Show(discNotFoundMessage, ResourceHelper.GetString(StringKey.InsertDisc), MessageBoxButton.OKCancel, MessageBoxImage.Warning);
 
                                 cancelProcess = (insertDiscResult.Result == MessageBoxResult.Cancel);
                             });
@@ -1234,7 +1234,7 @@ namespace SeventhHeaven.ViewModels
 
                     } while (driveLetters.Count == 0);
 
-                    SetImportStatus($"Found {disc} at {string.Join("  ", driveLetters)} ...");
+                    SetImportStatus($"{string.Format(ResourceHelper.GetString(StringKey.FoundDiscAt), disc)} {string.Join("  ", driveLetters)} ...");
 
                     // loop over missing files on the found disc and copy to data/movies destination
                     foreach (string movieFile in missingMovies.Where(kv => kv.Value.Any(s => s.Equals(disc, StringComparison.InvariantCultureIgnoreCase)))
@@ -1250,11 +1250,11 @@ namespace SeventhHeaven.ViewModels
                             {
                                 if (File.Exists(fullTargetPath))
                                 {
-                                    SetImportStatus($"Overwriting {movieFile} ...");
+                                    SetImportStatus($"{ResourceHelper.GetString(StringKey.Overwriting)} {movieFile} ...");
                                 }
                                 else
                                 {
-                                    SetImportStatus($"Copying {movieFile} ...");
+                                    SetImportStatus($"{ResourceHelper.GetString(StringKey.Copying)} {movieFile} ...");
                                 }
 
                                 File.Copy(sourceFilePath, fullTargetPath, true);
@@ -1264,7 +1264,7 @@ namespace SeventhHeaven.ViewModels
                             }
                             else
                             {
-                                SetImportStatus($"Failed to find {movieFile} at {sourceFilePath}");
+                                SetImportStatus(string.Format(ResourceHelper.GetString(StringKey.FailedToFindAt), movieFile, sourceFilePath));
                             }
                         }
                     }
@@ -1276,7 +1276,7 @@ namespace SeventhHeaven.ViewModels
                 if (taskResult.IsFaulted)
                 {
                     Logger.Error(taskResult.Exception);
-                    SetImportStatus($"An error occurred while copying movies: {taskResult.Exception.GetBaseException().Message}");
+                    SetImportStatus($"{ResourceHelper.GetString(StringKey.AnErrorOccurredCopyingMovies)}: {taskResult.Exception.GetBaseException().Message}");
                 }
                 else if (cancelProcess)
                 {
@@ -1286,11 +1286,11 @@ namespace SeventhHeaven.ViewModels
                 {
                     if (filesCopied == totalFiles)
                     {
-                        SetImportStatus("Successfully copied movies.");
+                        SetImportStatus(ResourceHelper.GetString(StringKey.SuccessfullyCopiedMovies));
                     }
                     else
                     {
-                        SetImportStatus("Finished copying movies. Some movies failed to copy. Check app log for details.");
+                        SetImportStatus(ResourceHelper.GetString(StringKey.FinishedCopyingMoviesSomeFailed));
                     }
 
                     ImportButtonIsEnabled = !GameConverter.AllMovieFilesExist(Sys.Settings.MovieFolder);
@@ -1346,8 +1346,8 @@ namespace SeventhHeaven.ViewModels
         internal void SaveNewCustomControl()
         {
             bool isValid = true;
-            string title = "Save Control Configuration";
-            string prompt = "Import current controls from game and save as...";
+            string title = ResourceHelper.GetString(StringKey.SaveControlConfiguration);
+            string prompt = ResourceHelper.GetString(StringKey.ImportCurrentControlsFromGameAndSaveAs);
             string controlName;
             string pathToFile;
 
@@ -1368,14 +1368,14 @@ namespace SeventhHeaven.ViewModels
                 if (string.IsNullOrEmpty(controlName))
                 {
                     isValid = false;
-                    MessageDialogWindow.Show("Control name is empty.", "Save Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.ControlNameIsEmpty), ResourceHelper.GetString(StringKey.SaveError), MessageBoxButton.OK, MessageBoxImage.Error);
                     continue;
                 }
 
                 if (Path.GetInvalidFileNameChars().Any(c => controlName.Contains(c)))
                 {
                     isValid = false;
-                    MessageDialogWindow.Show("Control name contains invalid characters.", "Save Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.ControlNameContainsInvalidChars), ResourceHelper.GetString(StringKey.SaveError), MessageBoxButton.OK, MessageBoxImage.Error);
                     continue;
                 }
 
@@ -1392,7 +1392,7 @@ namespace SeventhHeaven.ViewModels
                     if (File.Exists(pathToFile))
                     {
                         isValid = false;
-                        MessageDialogWindow.Show("Custom controls with that name already exist.", "Save Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.ControlsWithThatNameAlreadyExist), ResourceHelper.GetString(StringKey.SaveError), MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
 
@@ -1403,13 +1403,13 @@ namespace SeventhHeaven.ViewModels
                 CopyInputCfgToCustomCfg(true, $"{controlName}.cfg");
                 InitInGameConfigOptions();
                 SelectedGameConfigOption = controlName;
-                StatusMessage = $"Successfully created custom controls.";
+                StatusMessage = ResourceHelper.GetString(StringKey.SuccessfullyCreatedCustomControls);
 
             }
             catch (Exception e)
             {
                 Logger.Error(e);
-                StatusMessage = $"Failed to create custom controls: {e.Message}";
+                StatusMessage = $"{ResourceHelper.GetString(StringKey.FailedToCreateCustomControls)}: {e.Message}";
             }
         }
 
@@ -1426,6 +1426,7 @@ namespace SeventhHeaven.ViewModels
             if (!File.Exists(pathToFile))
             {
                 Logger.Warn($"Can not delete custom contols: no file found at {pathToFile}");
+                return;
             }
 
             try
@@ -1433,12 +1434,12 @@ namespace SeventhHeaven.ViewModels
                 File.Delete(pathToFile);
                 InitInGameConfigOptions();
                 SelectedGameConfigOption = InGameConfigurationMap.Keys.ToArray()[0];
-                StatusMessage = $"Successfully deleted custom controls {fileName}.";
+                StatusMessage = $"{ResourceHelper.GetString(StringKey.SuccessfullyDeletedCustomControls)} {fileName}.";
             }
             catch (Exception e)
             {
                 Logger.Error(e);
-                StatusMessage = $"Failed to delete custom controls: {e.Message}";
+                StatusMessage = $"{ResourceHelper.GetString(StringKey.FailedToDeleteCustomControls)}: {e.Message}";
             }
         }
     }

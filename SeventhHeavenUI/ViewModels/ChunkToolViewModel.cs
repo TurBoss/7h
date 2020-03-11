@@ -1,4 +1,5 @@
-﻿using SeventhHeaven.Windows;
+﻿using SeventhHeaven.Classes;
+using SeventhHeaven.Windows;
 using SeventhHeavenUI;
 using SeventhHeavenUI.ViewModels;
 using System;
@@ -229,31 +230,31 @@ namespace SeventhHeaven.ViewModels
         {
             if (string.IsNullOrWhiteSpace(PathToFlevelFile))
             {
-                MessageDialogWindow.Show("Path to Flevel required.", "Missing path", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.PathToFlevelRequired), ResourceHelper.GetString(StringKey.MissingPath), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(PathToOutputFolder))
             {
-                MessageDialogWindow.Show("Path to output folder required.", "Missing path", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.PathToOutputFolderRequired), ResourceHelper.GetString(StringKey.MissingPath), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (GetSelectedChunks()?.Count == 0)
             {
-                MessageDialogWindow.Show("Select the sections to extract.", "Missing path", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.SelectTheSectionsToExtract), ResourceHelper.GetString(StringKey.MissingPath), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (!File.Exists(PathToFlevelFile))
             {
-                MessageDialogWindow.Show("Flevel file does not exist at given path.", "Missing path", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.FlevelFileDoesNotExistAtGivenPath), ResourceHelper.GetString(StringKey.MissingPath), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (!Directory.Exists(PathToOutputFolder))
             {
-                MessageDialogWindow.Show("Output folder does not exist.", "Missing path", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.OutputFolderDoesNotExist), ResourceHelper.GetString(StringKey.MissingPath), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -262,15 +263,15 @@ namespace SeventhHeaven.ViewModels
 
             t.ContinueWith((taskResult) =>
             {
-                string message = "Complete!";
+                string message = ResourceHelper.GetString(StringKey.Complete);
 
                 if (taskResult.IsFaulted)
                 {
                     Logger.Error(taskResult.Exception?.GetBaseException());
-                    message = "Failed to extract. the error has been logged";
+                    message = ResourceHelper.GetString(StringKey.FailedToExtractTheErrorHasBeenLogged);
                 }
 
-                MessageDialogWindow.Show(message, "Extract Complete.");
+                MessageDialogWindow.Show(message, ResourceHelper.GetString(StringKey.ExtractComplete));
                 ProgressValue = 0;
             });
         }

@@ -20,19 +20,6 @@ namespace SeventhHeavenUI.ViewModels
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        internal string _msgReqMissing;
-
-        internal string _msgBadVer;
-
-        internal string _msgRequired;
-
-        internal string _msgRemove;
-
-        internal string _forbidMain;
-
-        internal string _forbidDependent;
-
-
         public delegate void OnSelectionChanged(object sender, InstalledModViewModel selected);
         public event OnSelectionChanged SelectedModChanged;
 
@@ -102,13 +89,6 @@ namespace SeventhHeavenUI.ViewModels
         public MyModsViewModel()
         {
             _previousReloadOptions = new ReloadListOption();
-
-            _msgReqMissing = ResourceHelper.GetString(StringKey.ModRequiresModsIsMissingWarning);
-            _msgBadVer = ResourceHelper.GetString(StringKey.UnsupportedModVersionsWarning);
-            _msgRequired = ResourceHelper.GetString(StringKey.ThisModRequiresYouActivateFollowingMods);
-            _msgRemove = ResourceHelper.GetString(StringKey.ModRequiresYouDeactivateTheFollowingMods);
-            _forbidMain = ResourceHelper.GetString(StringKey.CannotActivateModBecauseItIsIncompatibleWithOtherMod);
-            _forbidDependent = ResourceHelper.GetString(StringKey.CannotActivateModBecauseDependentIsIncompatible);
         }
 
         /// <summary>
@@ -269,11 +249,10 @@ namespace SeventhHeavenUI.ViewModels
 
             if (allMods.Count == 0)
             {
-                Sys.Message(new WMessage("No results found", true));
-
                 if (isFilteredBySearch && !string.IsNullOrWhiteSpace(searchText))
                 {
                     // when searching by text clear the list to visually show to the user no results were found
+                    Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.NoResultsFound), true));
                     ClearModList();
                 }
 
@@ -533,9 +512,9 @@ namespace SeventhHeavenUI.ViewModels
                             if (!forbid.Versions.Any() || forbid.Versions.Contains(Sys.Library.GetItem(mID).LatestInstalled.VersionDetails.Version))
                             {
                                 if (mID.Equals(modID))
-                                    MessageDialogWindow.Show(String.Format(_forbidMain, Sys.Library.GetItem(active.ModID).CachedDetails.Name), "Warning");
+                                    MessageDialogWindow.Show(String.Format(ResourceHelper.GetString(StringKey.CannotActivateModBecauseItIsIncompatibleWithOtherMod), Sys.Library.GetItem(active.ModID).CachedDetails.Name), ResourceHelper.GetString(StringKey.Warning));
                                 else
-                                    MessageDialogWindow.Show(String.Format(_forbidDependent, Sys.Library.GetItem(mID).CachedDetails.Name, Sys.Library.GetItem(active.ModID).CachedDetails.Name), "Warning");
+                                    MessageDialogWindow.Show(String.Format(ResourceHelper.GetString(StringKey.CannotActivateModBecauseDependentIsIncompatible), Sys.Library.GetItem(mID).CachedDetails.Name, Sys.Library.GetItem(active.ModID).CachedDetails.Name), ResourceHelper.GetString(StringKey.Warning));
                                 return;
                             }
                         }
@@ -544,19 +523,19 @@ namespace SeventhHeavenUI.ViewModels
 
                 if (missing.Any())
                 {
-                    MessageDialogWindow.Show(String.Format(_msgReqMissing, String.Join("\n", missing)), "Missing Requirements");
+                    MessageDialogWindow.Show(String.Format(ResourceHelper.GetString(StringKey.ModRequiresModsIsMissingWarning), String.Join("\n", missing)), ResourceHelper.GetString(StringKey.MissingRequirements));
                 }
                 if (badVersion.Any())
                 {
-                    MessageDialogWindow.Show(String.Format(_msgBadVer, String.Join("\n", badVersion.Select(ii => ii.CachedDetails.Name))), "Unsupported Version");
+                    MessageDialogWindow.Show(String.Format(ResourceHelper.GetString(StringKey.UnsupportedModVersionsWarning), String.Join("\n", badVersion.Select(ii => ii.CachedDetails.Name))), ResourceHelper.GetString(StringKey.UnsupportedVersion));
                 }
                 if (pulledIn.Any())
                 {
-                    MessageDialogWindow.Show(String.Format(_msgRequired, String.Join("\n", pulledIn.Select(ii => ii.CachedDetails.Name))), "Missing Required Active Mods");
+                    MessageDialogWindow.Show(String.Format(ResourceHelper.GetString(StringKey.ThisModRequiresYouActivateFollowingMods), String.Join("\n", pulledIn.Select(ii => ii.CachedDetails.Name))), ResourceHelper.GetString(StringKey.MissingRequiredActiveMods));
                 }
                 if (remove.Any())
                 {
-                    MessageDialogWindow.Show(String.Format(_msgRemove, String.Join("\n", remove.Select(pi => Sys.Library.GetItem(pi.ModID).CachedDetails.Name))), "Deactivate Mods Warning");
+                    MessageDialogWindow.Show(String.Format(ResourceHelper.GetString(StringKey.ModRequiresYouDeactivateTheFollowingMods), String.Join("\n", remove.Select(pi => Sys.Library.GetItem(pi.ModID).CachedDetails.Name))), ResourceHelper.GetString(StringKey.DeactivateModsWarning));
                 }
 
                 DoActivate(modID, reloadList);
@@ -582,8 +561,10 @@ namespace SeventhHeavenUI.ViewModels
                 DoDeactivate(item, reloadList);
             }
 
-            if (reloadList) 
+            if (reloadList)
+            {
                 Sys.Ping(modID);
+            }
         }
 
         private void DoDeactivate(ProfileItem item, bool reloadList = true)
@@ -655,7 +636,7 @@ namespace SeventhHeavenUI.ViewModels
             }
 
             Install.Uninstall(installed);
-            Sys.Message(new WMessage() { Text = "Uninstalled " + installed.CachedDetails.Name });
+            Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.Uninstalled)} {installed.CachedDetails.Name}"));
             ReloadModList();
         }
 
@@ -670,7 +651,7 @@ namespace SeventhHeavenUI.ViewModels
             if (!mod.InstallInfo.ModExistsOnFileSystem())
             {
                 Sys.ValidateAndRemoveDeletedMods();
-                Sys.Message(new WMessage($"Can not re-order mod. It seems {mod.Name} has been removed from the file system.", true));
+                Sys.Message(new WMessage(string.Format(ResourceHelper.GetString(StringKey.CanNotReOrderModItHasBeenRemoved), mod.Name), true));
                 ReloadModListFromUIThread();
                 return;
             }
@@ -703,7 +684,7 @@ namespace SeventhHeavenUI.ViewModels
             if (!mod.InstallInfo.ModExistsOnFileSystem())
             {
                 Sys.ValidateAndRemoveDeletedMods();
-                Sys.Message(new WMessage($"Can not re-order mod. It seems {mod.Name} has been removed from the file system.", true));
+                Sys.Message(new WMessage(string.Format(ResourceHelper.GetString(StringKey.CanNotReOrderModItHasBeenRemoved), mod.Name), true));
                 ReloadModListFromUIThread();
                 return;
             }
@@ -731,7 +712,7 @@ namespace SeventhHeavenUI.ViewModels
             if (!mod.InstallInfo.ModExistsOnFileSystem())
             {
                 Sys.ValidateAndRemoveDeletedMods();
-                Sys.Message(new WMessage($"Can not re-order mod. It seems {mod.Name} has been removed from the file system.", true));
+                Sys.Message(new WMessage(string.Format(ResourceHelper.GetString(StringKey.CanNotReOrderModItHasBeenRemoved), mod.Name), true));
                 ReloadModListFromUIThread();
                 return;
             }
@@ -763,7 +744,7 @@ namespace SeventhHeavenUI.ViewModels
             if (!modToConfigure.InstallInfo.ModExistsOnFileSystem())
             {
                 Sys.ValidateAndRemoveDeletedMods();
-                Sys.Message(new WMessage($"Can not configure mod. It seems {modToConfigure.Name} has been removed from the file system.", true));
+                Sys.Message(new WMessage(string.Format(ResourceHelper.GetString(StringKey.CanNotConfigureModItHasBeenRemoved), modToConfigure.Name), true));
                 ReloadModListFromUIThread();
                 return;
             }
@@ -771,7 +752,7 @@ namespace SeventhHeavenUI.ViewModels
             _7thWrapperLib.ModInfo info = modToConfigure.InstallInfo.GetModInfo();
             if (info == null)
             {
-                Sys.Message(new WMessage($"Can not configure mod {modToConfigure.Name} - Failed to read mod.xml", true));
+                Sys.Message(new WMessage(string.Format(ResourceHelper.GetString(StringKey.CanNotConfigureModFailedToReadModXml), modToConfigure.Name), true));
                 return;
             }
 
@@ -871,7 +852,7 @@ namespace SeventhHeavenUI.ViewModels
                 info = info ?? new _7thWrapperLib.ModInfo();
                 if (info.Options.Count == 0)
                 {
-                    MessageDialogWindow.Show("There are no options to configure for this mod.", "No Options", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.ThereAreNoOptionsToConfigureForThisMod), ResourceHelper.GetString(StringKey.NoOptions), MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
@@ -980,7 +961,7 @@ namespace SeventhHeavenUI.ViewModels
                     switch (inst.UpdateType)
                     {
                         case UpdateType.Notify:
-                            Sys.Message(new WMessage($"New version of {cat.Name} available"));
+                            Sys.Message(new WMessage(string.Format(ResourceHelper.GetString(StringKey.NewVersionOfModAvailable), cat.Name)));
                             Sys.PingInfoChange(inst.ModID);
                             break;
 

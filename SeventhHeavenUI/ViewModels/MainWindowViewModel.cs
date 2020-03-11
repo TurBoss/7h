@@ -1021,7 +1021,6 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
-
         /// <summary>
         /// Sets <see cref="CurrentProfile"/> to match what is in <see cref="Sys.Settings"/> and Reloads 'My Mods' list for the profile.
         /// </summary>

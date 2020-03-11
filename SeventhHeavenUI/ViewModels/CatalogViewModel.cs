@@ -26,16 +26,6 @@ namespace SeventhHeavenUI.ViewModels
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private const string _msgDownloadReq =
-    @"This mod also requires you to download the following mods:
-{0}
-Download and install them?";
-
-        private const string _msgMissingReq =
-            @"This mod requires the following mods to also be installed, but they could not be found in any catalog:
-{0}
-It may not work properly unless you find and install the requirements.";
-
         public delegate void OnSelectionChanged(object sender, CatalogModItemViewModel selected);
         public event OnSelectionChanged SelectedModChanged;
 
@@ -180,7 +170,7 @@ It may not work properly unless you find and install the requirements.";
         public CatalogViewModel()
         {
             DownloadList = new ObservableCollection<DownloadItemViewModel>();
-            PauseDownloadToolTip = "Pause/Resume Selected Download";
+            PauseDownloadToolTip = ResourceHelper.GetString(StringKey.PauseResumeSelectedDownload);
             PauseDownloadIsEnabled = false;
             IsSelectedDownloadPaused = false;
             _previousReloadOptions = new ReloadListOption();
@@ -316,7 +306,7 @@ It may not work properly unless you find and install the requirements.";
             {
                 if (newList.Count == 0)
                 {
-                    Sys.Message(new WMessage("No results found", true));
+                    Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.NoResultsFound), true));
 
                     if (!string.IsNullOrWhiteSpace(searchText))
                     {
@@ -424,7 +414,7 @@ It may not work properly unless you find and install the requirements.";
 
                     if ((sub.LastSuccessfulCheck < DateTime.Now.AddDays(-1)) || forceCheck)
                     {
-                        Logger.Info($"Checking subscription {sub.Url}");
+                        Logger.Info($"{ResourceHelper.GetString(StringKey.CheckingSubscription)} {sub.Url}");
 
                         string uniqueFileName = $"cattemp{Path.GetRandomFileName()}.xml"; // save temp catalog update to unique filename so multiple catalog updates can download async
                         string path = Path.Combine(Sys.SysFolder, "temp", uniqueFileName);
@@ -434,7 +424,7 @@ It may not work properly unless you find and install the requirements.";
                             Links = new List<string>() { subUrl },
                             SaveFilePath = path,
                             Category = DownloadCategory.Catalog,
-                            ItemName = $"Checking catalog {subUrl}"
+                            ItemName = $"{ResourceHelper.GetString(StringKey.CheckingCatalog)} {subUrl}"
                         };
 
                         download.IProc = new Install.InstallProcedureCallback(e =>
@@ -472,7 +462,7 @@ It may not work properly unless you find and install the requirements.";
                                         }
                                     }
 
-                                    Sys.Message(new WMessage() { Text = $"Updated catalog from {subUrl}" });
+                                    Sys.Message(new WMessage() { Text = $"{ResourceHelper.GetString(StringKey.UpdatedCatalogFrom)} {subUrl}" });
 
                                     sub.LastSuccessfulCheck = DateTime.Now;
                                     sub.FailureCount = 0;
@@ -485,7 +475,7 @@ It may not work properly unless you find and install the requirements.";
                                 catch (Exception ex)
                                 {
                                     sub.FailureCount++;
-                                    Sys.Message(new WMessage() { Text = $"Failed to load subscription {subUrl}: {ex.Message}", LoggedException = ex });
+                                    Sys.Message(new WMessage() { Text = $"{ResourceHelper.GetString(StringKey.FailedToLoadSubscription)} {subUrl}: {ex.Message}", LoggedException = ex });
                                 }
                                 finally
                                 {
@@ -498,7 +488,8 @@ It may not work properly unless you find and install the requirements.";
                             }
                             else
                             {
-                                Logger.Warn(e.Error?.Message, "catalog download failed");
+                                Logger.Warn(e.Error);
+                                Logger.Warn(ResourceHelper.GetString(StringKey.CatalogDownloadFailed));
                                 sub.FailureCount++;
                             }
 
@@ -542,13 +533,13 @@ It may not work properly unless you find and install the requirements.";
 
             if (downloadItem.Download.FileDownloadTask?.IsPaused == true)
             {
-                downloadItem.DownloadSpeed = "Resuming...";
+                downloadItem.DownloadSpeed = ResourceHelper.GetString(StringKey.Resuming);
                 downloadItem.Download.FileDownloadTask.Start();
             }
             else
             {
-                downloadItem.DownloadSpeed = "Paused...";
-                downloadItem.RemainingTime = "Unknown";
+                downloadItem.DownloadSpeed = ResourceHelper.GetString(StringKey.Paused);
+                downloadItem.RemainingTime = ResourceHelper.GetString(StringKey.Unknown);
                 downloadItem.Download.FileDownloadTask.Pause();
                 StartNextModDownload(); // have the next mod in the download queue start automatically
             }
@@ -580,14 +571,14 @@ It may not work properly unless you find and install the requirements.";
 
             if (SelectedDownload.Download.Category != DownloadCategory.Mod || SelectedDownload.Download.FileDownloadTask == null)
             {
-                PauseDownloadToolTip = "Pause/Resume Selected Download";
+                PauseDownloadToolTip = ResourceHelper.GetString(StringKey.PauseResumeSelectedDownload);
                 PauseDownloadIsEnabled = false;
                 return;
             }
 
             if (!SelectedDownload.Download.FileDownloadTask.IsStarted)
             {
-                PauseDownloadToolTip = "Pause Selected Download";
+                PauseDownloadToolTip = ResourceHelper.GetString(StringKey.PauseSelectedDownload);
                 PauseDownloadIsEnabled = false;
                 return;
             }
@@ -597,7 +588,7 @@ It may not work properly unless you find and install the requirements.";
             {
                 if (downloadType != LocationType.Url && downloadType != LocationType.GDrive) // current implementation only supports Url/GDrive
                 {
-                    PauseDownloadToolTip = "Pause/Resume Selected Download";
+                    PauseDownloadToolTip = ResourceHelper.GetString(StringKey.PauseResumeSelectedDownload);
                     PauseDownloadIsEnabled = false;
                     return;
                 }
@@ -616,11 +607,11 @@ It may not work properly unless you find and install the requirements.";
             IsSelectedDownloadPaused = SelectedDownload.Download.FileDownloadTask.IsPaused;
             if (IsSelectedDownloadPaused)
             {
-                PauseDownloadToolTip = "Resume Selected Download";
+                PauseDownloadToolTip = ResourceHelper.GetString(StringKey.ResumeSelectedDownload); ;
             }
             else
             {
-                PauseDownloadToolTip = "Pause Selected Download";
+                PauseDownloadToolTip = ResourceHelper.GetString(StringKey.PauseSelectedDownload); ;
             }
         }
 
@@ -633,7 +624,7 @@ It may not work properly unless you find and install the requirements.";
                 downloadItemViewModel.Download.PerformCancel?.Invoke(); // PerformCancel will happen during download and internally calls OnCancel
             }
 
-            Sys.Message(new WMessage($"Canceled {downloadItemViewModel?.ItemName}"));
+            Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.Canceled)} {downloadItemViewModel?.ItemName}"));
         }
 
         internal void DownloadMod(CatalogModItemViewModel catalogModItemViewModel)
@@ -643,13 +634,13 @@ It may not work properly unless you find and install the requirements.";
 
             if (status == ModStatus.Downloading)
             {
-                MessageDialogWindow.Show($"{modToDownload.Name} is already downloading!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show($"{modToDownload.Name} {ResourceHelper.GetString(StringKey.IsAlreadyDownloading)}", ResourceHelper.GetString(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (status == ModStatus.Updating)
             {
-                MessageDialogWindow.Show($"{modToDownload.Name} is already updating!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show($"{modToDownload.Name} {ResourceHelper.GetString(StringKey.IsAlreadyUpdating)}", ResourceHelper.GetString(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -659,7 +650,7 @@ It may not work properly unless you find and install the requirements.";
 
                 if (installedItem != null && !installedItem.IsUpdateAvailable)
                 {
-                    MessageDialogWindow.Show($"{modToDownload.Name} is already downloaded and installed!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageDialogWindow.Show($"{modToDownload.Name} {ResourceHelper.GetString(StringKey.IsAlreadyDownloadedAndInstalled)}", ResourceHelper.GetString(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
                 else
@@ -694,7 +685,7 @@ It may not work properly unless you find and install the requirements.";
 
             if (required.Any())
             {
-                if (MessageDialogWindow.Show(String.Format(_msgDownloadReq, String.Join("\n", required.Select(m => m.Name))), "Requirements", MessageBoxButton.YesNo, MessageBoxImage.Question).Result == MessageBoxResult.Yes)
+                if (MessageDialogWindow.Show(String.Format(ResourceHelper.GetString(StringKey.ThisModAlsoRequiresYouDownloadTheFollowing), String.Join("\n", required.Select(m => m.Name))), ResourceHelper.GetString(StringKey.Requirements), MessageBoxButton.YesNo, MessageBoxImage.Question).Result == MessageBoxResult.Yes)
                 {
                     foreach (Mod rMod in required)
                     {
@@ -705,7 +696,7 @@ It may not work properly unless you find and install the requirements.";
 
             if (notFound.Any())
             {
-                MessageDialogWindow.Show(String.Format(_msgMissingReq, String.Join("\n", notFound)), "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show(String.Format(ResourceHelper.GetString(StringKey.ThisModRequiresTheFollowingButCouldNotBeFoundInCatalog), String.Join("\n", notFound)), ResourceHelper.GetString(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -721,7 +712,7 @@ It may not work properly unless you find and install the requirements.";
             Action onError = () =>
             {
                 RemoveFromDownloadList(downloadInfo);
-                downloadInfo.IProc.Error?.Invoke(new Exception($"Failed {downloadInfo.ItemName}"));
+                downloadInfo.IProc.Error?.Invoke(new Exception($"{ResourceHelper.GetString(StringKey.Failed)} {downloadInfo.ItemName}"));
             };
 
             if (links?.Count() > 1)
@@ -739,7 +730,7 @@ It may not work properly unless you find and install the requirements.";
                         backupLinks[1] = backupLinks[0].Replace("iros://Url", "iros://ExternalUrl");
                     }
 
-                    Sys.Message(new WMessage($"{downloadInfo.ItemName} - switching to backup url {backupLinks[1]}"));
+                    Sys.Message(new WMessage($"{downloadInfo.ItemName} - {ResourceHelper.GetString(StringKey.SwitchingToBackupUrl)} {backupLinks[1]}"));
                     Download(backupLinks.Skip(1), downloadInfo);
                 };
             }
@@ -748,7 +739,7 @@ It may not work properly unless you find and install the requirements.";
 
             if (links == null || links?.Count() == 0)
             {
-                Sys.Message(new WMessage($"No links for {downloadInfo.ItemName}", true));
+                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.NoLinksFor)} {downloadInfo.ItemName}", true));
                 downloadInfo.OnError?.Invoke();
                 return;
             }
@@ -756,7 +747,7 @@ It may not work properly unless you find and install the requirements.";
             string link = links.First();
             if (!LocationUtil.TryParse(link, out LocationType type, out string location))
             {
-                Sys.Message(new WMessage($"Failed to parse link for {downloadInfo.ItemName}", true));
+                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.FailedToParseLinkFor)} {downloadInfo.ItemName}", true));
                 downloadInfo.OnError?.Invoke();
                 return;
             }
@@ -770,12 +761,12 @@ It may not work properly unless you find and install the requirements.";
 
                         App.Current.Dispatcher.Invoke(() =>
                         {
-                            dialogViewModel = MessageDialogWindow.Show(downloadInfo.ExternalUrlDownloadMessage, "External Download?", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                            dialogViewModel = MessageDialogWindow.Show(downloadInfo.ExternalUrlDownloadMessage, ResourceHelper.GetString(StringKey.ExternalDownload), MessageBoxButton.YesNo, MessageBoxImage.Information);
                         });
 
                         if (dialogViewModel?.Result == MessageBoxResult.Yes)
                         {
-                            Sys.Message(new WMessage($"Opening external url in browser for {downloadInfo.ItemName} - {location}"));
+                            Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.OpeningExternalUrlInBrowserFor)} {downloadInfo.ItemName} - {location}"));
                             ProcessStartInfo startInfo = new ProcessStartInfo(location);
                             Process.Start(startInfo);
                         }
@@ -837,13 +828,13 @@ It may not work properly unless you find and install the requirements.";
                                     break;
 
                                 case MegaIros.TransferState.Failed:
-                                    Sys.Message(new WMessage() { Text = "Error downloading " + downloadInfo.ItemName });
+                                    Sys.Message(new WMessage() { Text = $"{ResourceHelper.GetString(StringKey.ErrorDownloading)} {downloadInfo.ItemName}"  });
                                     downloadInfo.OnError?.Invoke();
                                     break;
 
                                 case MegaIros.TransferState.Canceled:
                                     RemoveFromDownloadList(downloadInfo);
-                                    Sys.Message(new WMessage() { Text = $"{downloadInfo.ItemName} was canceled" });
+                                    Sys.Message(new WMessage() { Text = $"{downloadInfo.ItemName} {ResourceHelper.GetString(StringKey.WasCanceled)}" });
                                     break;
 
                                 default:
@@ -863,7 +854,7 @@ It may not work properly unless you find and install the requirements.";
             }
             catch (Exception e)
             {
-                string msg = $"Error {downloadInfo.ItemName} - {e.Message}";
+                string msg = $"{ResourceHelper.GetString(StringKey.Error)} {downloadInfo.ItemName} - {e.Message}";
                 Sys.Message(new WMessage(msg, WMessageLogLevel.Error, e));
                 downloadInfo.OnError?.Invoke();
             }
@@ -915,7 +906,7 @@ It may not work properly unless you find and install the requirements.";
                 {
                     if (downloadType == LocationType.ExternalUrl)
                     {
-                        newDownload.ExternalUrlDownloadMessage = "This mod is only available by downloading it from an external web site.\n\nWould you like to open your web browser to download it now?";
+                        newDownload.ExternalUrlDownloadMessage = ResourceHelper.GetString(StringKey.ExternalUrlDownloadMessage1);
                     }
                 }
             }
@@ -939,7 +930,7 @@ It may not work properly unless you find and install the requirements.";
             if (downloadCount == 1)
             {
                 // only item in queue so start downloading right away
-                downloadViewModel.DownloadSpeed = "Starting...";
+                downloadViewModel.DownloadSpeed = ResourceHelper.GetString(StringKey.Starting);
                 Download(newDownload.Links, newDownload);
             }
             else if (downloadCount > 1)
@@ -969,7 +960,7 @@ It may not work properly unless you find and install the requirements.";
                 //start the next catalog/image download if no other catalogs/images are being downloaded
                 if (!isAlreadyDownloadingImageOrCat && nextDownload != null)
                 {
-                    downloadViewModel.DownloadSpeed = "Starting...";
+                    downloadViewModel.DownloadSpeed = ResourceHelper.GetString(StringKey.Starting);
                     Download(nextDownload.Links, nextDownload);
                 }
             }
@@ -998,7 +989,7 @@ It may not work properly unless you find and install the requirements.";
             }
             else if (e.Error != null)
             {
-                string msg = $"Error {item.ItemName} - {e.Error.GetBaseException().Message}";
+                string msg = $"{ResourceHelper.GetString(StringKey.Error)} {item.ItemName} - {e.Error.GetBaseException().Message}";
                 Sys.Message(new WMessage(msg, WMessageLogLevel.Error, e.Error.GetBaseException()));
                 item.OnError?.Invoke();
             }
@@ -1064,7 +1055,7 @@ It may not work properly unless you find and install the requirements.";
 
                 if (nextDownload != null)
                 {
-                    nextDownload.DownloadSpeed = "Starting...";
+                    nextDownload.DownloadSpeed = ResourceHelper.GetString(StringKey.Starting);
                     Download(nextDownload.Download.Links, nextDownload.Download);
                 }
             }
@@ -1094,7 +1085,7 @@ It may not work properly unless you find and install the requirements.";
 
                 if (nextDownload != null)
                 {
-                    nextDownload.DownloadSpeed = "Starting...";
+                    nextDownload.DownloadSpeed = ResourceHelper.GetString(StringKey.Starting);
                     Download(nextDownload.Download.Links, nextDownload.Download);
                 }
             }
@@ -1151,9 +1142,9 @@ It may not work properly unless you find and install the requirements.";
 
             if (item.Category == DownloadCategory.Mod && itemViewModel != null)
             {
-                itemViewModel.ItemName = item.ItemName.Replace("Downloading ", "Installing ");
+                itemViewModel.ItemName = item.ItemName.Replace(ResourceHelper.GetString(StringKey.Downloading), ResourceHelper.GetString(StringKey.Installing));
                 itemViewModel.DownloadSpeed = "N/A";
-                itemViewModel.RemainingTime = "Unknown";
+                itemViewModel.RemainingTime = ResourceHelper.GetString(StringKey.Unknown);
             }
 
             if (itemViewModel != null)

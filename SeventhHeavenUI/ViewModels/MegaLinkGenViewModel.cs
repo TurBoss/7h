@@ -1,4 +1,5 @@
 ﻿using Iros.Mega;
+using SeventhHeaven.Classes;
 using SeventhHeavenUI.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -73,7 +74,7 @@ namespace SeventhHeaven.ViewModels
         public Task GenerateLinksAsync()
         {
             IsGenerating = true;
-            LinkOutput = "Generating links ...";
+            LinkOutput = ResourceHelper.GetString(StringKey.GeneratingLinks);
 
             Task t = Task.Factory.StartNew(() =>
             {
@@ -86,7 +87,7 @@ namespace SeventhHeaven.ViewModels
 
                 if (result.IsFaulted)
                 {
-                    LinkOutput = $"Failed to generate links: {result.Exception.GetBaseException()?.Message}.";
+                    LinkOutput = $"{ResourceHelper.GetString(StringKey.FailedToGenerateLinks)}: {result.Exception.GetBaseException()?.Message}.";
                     Logger.Warn(result.Exception.GetBaseException());
                 }
             });
@@ -100,7 +101,7 @@ namespace SeventhHeaven.ViewModels
 
             if (string.IsNullOrWhiteSpace(megaFolderId))
             {
-                LinkOutput = $"Enter a Mega Folder ID to generate links.";
+                LinkOutput = ResourceHelper.GetString(StringKey.EnterMegaFolderIdToGenerateLinks);
                 return;
             }
 
@@ -117,7 +118,7 @@ namespace SeventhHeaven.ViewModels
 
             if (!mega.GetNodes().Any())
             {
-                LinkOutput = $"No links found in folder: {megaFolderId}";
+                LinkOutput = $"{ResourceHelper.GetString(StringKey.NoLinksFoundInFolder)}: {megaFolderId}";
                 return;
             }
 

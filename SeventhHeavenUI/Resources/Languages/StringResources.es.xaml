@@ -3,7 +3,7 @@
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
     <!--TODO: TRANSLATION NEEDED-->
-    
+
     <!--Main Window Buttons-->
     <system:String x:Key="Play">Play</system:String>
     <system:String x:Key="PlayWithMods">Play With Mods (default)</system:String>
@@ -112,6 +112,16 @@
     <system:String x:Key="CatalogCreationWindowTitle">Catalog and Mod Creation Tool</system:String>
     <system:String x:Key="GameDriverWindowTitle">Configure Game Driver Settings</system:String>
     <system:String x:Key="UnexpectedErrorWindowTitle">7th Heaven - Unexpected Error!</system:String>
+    <system:String x:Key="AllowModToRun">Allow Mod To Run?</system:String>
+    <system:String x:Key="Warning">Warning</system:String>
+    <system:String x:Key="Requirements">Requirements</system:String>
+    <system:String x:Key="ExternalDownload">External Download?</system:String>
+    <system:String x:Key="MissingPath">Missing Path</system:String>
+    <system:String x:Key="ExtractComplete">Extract Complete</system:String>
+    <system:String x:Key="InsertDisc">Insert Disc</system:String>
+
+
+
 
 
 
@@ -275,12 +285,6 @@ Do you still want to activate this mod?</system:String>
 
 
 
-
-
-
-
-
-
     <!--MyModsViewModel Strings-->
 
     <system:String x:Key="ModRequiresModsIsMissingWarning" xml:space="preserve">This mod requires the following mods to also be active, but they could not be found:
@@ -304,10 +308,205 @@ They will be automatically turned off.</system:String>
 
     <system:String x:Key="CannotActivateModBecauseDependentIsIncompatible" xml:space="preserve">You cannot activate this mod, because it requires {0} to be active, but {0} is incompatible with {1}. You will have to deactivate {1} before you can enable this mod.</system:String>
 
+    <system:String x:Key="MissingRequirements">Missing Requirements</system:String>
+    <system:String x:Key="UnsupportedVersion">Unsupported Version</system:String>
+    <system:String x:Key="MissingRequiredActiveMods">Missing Required Active Mods</system:String>
+    <system:String x:Key="DeactivateModsWarning">Deactivate Mods Warning</system:String>
+    <system:String x:Key="Uninstalled">Uninstalled</system:String>
+
+    <system:String x:Key="CanNotReOrderModItHasBeenRemoved">Can not re-order mod. It seems {0} has been removed from the file system.</system:String>
+    <system:String x:Key="CanNotConfigureModItHasBeenRemoved">Can not configure mod. It seems {0} has been removed from the file system.</system:String>
+    <system:String x:Key="CanNotConfigureModFailedToReadModXml">Can not configure mod {0} - Failed to read mod.xml</system:String>
+
+    <system:String x:Key="NoOptions">No Options</system:String>
+    <system:String x:Key="ThereAreNoOptionsToConfigureForThisMod">There are no options to configure for this mod.</system:String>
+
+    <system:String x:Key="NewVersionOfModAvailable">New version of {0} available</system:String>
+
+
+    <!--CatalogViewModel Strings-->
+
+    <system:String x:Key="ThisModAlsoRequiresYouDownloadTheFollowing" xml:space="preserve">This mod also requires you to download the following mods:
+{0}
+Download and install them?</system:String>
+
+    <system:String x:Key="ThisModRequiresTheFollowingButCouldNotBeFoundInCatalog" xml:space="preserve">This mod requires the following mods to also be installed, but they could not be found in any catalog:
+{0}
+It may not work properly unless you find and install the requirements.</system:String>
+
+    <system:String x:Key="PauseResumeSelectedDownload">Pause/Resume Selected Download</system:String>
+    <system:String x:Key="PauseSelectedDownload">Pause Selected Download</system:String>
+    <system:String x:Key="ResumeSelectedDownload">Resume Selected Download</system:String>
+
+    <system:String x:Key="NoResultsFound">No results found</system:String>
+    <system:String x:Key="CheckingSubscription">Checking subscription</system:String>
+    <system:String x:Key="CheckingCatalog">Checking catalog</system:String>
+    <system:String x:Key="UpdatedCatalogFrom">Updated catalog from</system:String>
+    <system:String x:Key="FailedToLoadSubscription">Failed to load subscription</system:String>
+    <system:String x:Key="CatalogDownloadFailed">catalog download failed</system:String>
+
+    <system:String x:Key="Starting">Starting...</system:String>
+    <system:String x:Key="Pending">Pending...</system:String>
+    <system:String x:Key="Resuming">Resuming...</system:String>
+    <system:String x:Key="Paused">Paused...</system:String>
+    <system:String x:Key="Canceled">Canceled</system:String>
+    <system:String x:Key="Failed">Failed</system:String>
+
+    <system:String x:Key="IsAlreadyDownloading">is already downloading!</system:String>
+    <system:String x:Key="IsAlreadyUpdating">is already updating!</system:String>
+    <system:String x:Key="IsAlreadyDownloadedAndInstalled">is already downloaded and installed!</system:String>
+
+    <system:String x:Key="NoLinksFor">No links for</system:String>
+    <system:String x:Key="FailedToParseLinkFor">Failed to parse link for</system:String>
+    <system:String x:Key="OpeningExternalUrlInBrowserFor">Opening external url in browser for</system:String>
+
+    <system:String x:Key="ErrorDownloading">Error downloading</system:String>
+    <system:String x:Key="WasCanceled">was canceled</system:String>
+    <system:String x:Key="Error">Error</system:String>
+
+    <system:String x:Key="ExternalUrlDownloadMessage1" xml:space="preserve">This mod is only available by downloading it from an external web site.
+
+Would you like to open your web browser to download it now?</system:String>
+
+    <system:String x:Key="ExternalUrlDownloadMessage2" xml:space="preserve">The mod failed to automatically download. An external link to download this mod is available.
+
+Would you like to open your web browser to download it now?</system:String>
+
+    <system:String x:Key="SwitchingToBackupUrl">switching to backup url</system:String>
+    <system:String x:Key="Downloading">Downloading</system:String>
+    <system:String x:Key="Installing">Installing</system:String>
+
+
+    <!--ChunkToolViewModel Strings-->
+    <system:String x:Key="PathToFlevelRequired">Path to Flevel required.</system:String>
+    <system:String x:Key="PathToOutputFolderRequired">Path to output folder required.</system:String>
+    <system:String x:Key="SelectTheSectionsToExtract">Select the sections to extract.</system:String>
+    <system:String x:Key="FlevelFileDoesNotExistAtGivenPath">Flevel file does not exist at given path.</system:String>
+    <system:String x:Key="OutputFolderDoesNotExist">Output folder does not exist.</system:String>
+
+    <system:String x:Key="Complete">Complete!</system:String>
+    <system:String x:Key="FailedToExtractTheErrorHasBeenLogged">Failed to extract. the error has been logged</system:String>
+
+
+    <!--ConfigureModViewModel Strings-->
+    <system:String x:Key="ConfigureMod">Configure Mod</system:String>
+
+    <system:String x:Key="ThisOptionCannotBeChangedDueToCompatibility">This option cannot be changed due to compatibility with other mods</system:String>
+    <system:String x:Key="TheFollowingValuesHaveBeenRemovedDueToCompatibility">The following values: {0} have been removed due to compatibility with other mods ({1})</system:String>
+
+    <system:String x:Key="FailedToPlayPreviewAudio">Failed to play preview audio</system:String>
+
+
+    <!--DownloadItemViewModel Strings-->
+    <system:String x:Key="DownloadingPreviewImage">Downloading preview image</system:String>
 
 
 
+    <!--GameLaunchSettingsViewModel Strings-->
+    <system:String x:Key="InsertAndClickImport">Insert {0} and click 'Import'.</system:String>
+    <system:String x:Key="GameLauncherSettingsUpdated">Game Launcher settings updated!</system:String>
+    <system:String x:Key="FailedToSaveLaunchSettings">Failed to save game launcher settings</system:String>
 
+    <system:String x:Key="ErrorCopyingFf7InputCfg">Error copying ff7input.cfg</system:String>
+    <system:String x:Key="NoFf7InputCfgFoundAt">No ff7input.cfg found at</system:String>
+    <system:String x:Key="AlreadyExistsAt">already exists at</system:String>
+
+    <system:String x:Key="ChoosingAnyOtherOptionBesidesCustom7HGameDriver">Choosing any other option besides 'Custom 7H Game Driver' will cause mods installed with 7H not to work anymore!</system:String>
+
+    <system:String x:Key="ReunionWarningMessage" xml:space="preserve">Reunion R06 and newer, even when disabled in Options.ini, forces a custom game driver to load when you run FF7. This conflicts with 7th Heaven's game driver, breaks your graphics settings, and you will experience problems.
+
+If you wish to play Reunion, do so using a compatible modded version built for 7th Heaven.
+
+Are you sure?</system:String>
+
+    <system:String x:Key="YouShouldLeaveThisSettingOn">You should leave this setting ON!</system:String>
+    <system:String x:Key="ProgramToRunNotFound">Program to run not found</system:String>
+
+    <system:String x:Key="ImportMissingMoviesWarningMessage" xml:space="preserve">This will copy missing movie files from your game discs to your movie path in 'General Settings'.
+This process will overwrite any movie files already in {0}.
+
+Do you want to proceed?</system:String>
+
+    <system:String x:Key="LookingFor">Looking for</system:String>
+    <system:String x:Key="InsertToContinue">Insert {0} to continue.</system:String>
+
+    <system:String x:Key="PleaseInsertToContinueCopying" xml:space="preserve">Please insert {0} to continue copying missing movie files.
+
+Click 'Cancel' to stop the process.</system:String>
+
+    <system:String x:Key="FoundDiscAt">Found {0} at</system:String>
+    <system:String x:Key="Overwriting">Overwriting</system:String>
+    <system:String x:Key="Copying">Copying</system:String>
+    <system:String x:Key="FailedToFindAt">Failed to find {0} at {1}</system:String>
+    <system:String x:Key="AnErrorOccurredCopyingMovies">An error occurred while copying movies</system:String>
+    <system:String x:Key="SuccessfullyCopiedMovies">Successfully copied movies.</system:String>
+    <system:String x:Key="FinishedCopyingMoviesSomeFailed">Finished copying movies. Some movies failed to copy. Check app log for details.</system:String>
+
+    <system:String x:Key="SaveControlConfiguration">Save Control Configuration</system:String>
+    <system:String x:Key="ImportCurrentControlsFromGameAndSaveAs">Import current controls from game and save as...</system:String>
+    <system:String x:Key="SaveError">Save Error</system:String>
+    <system:String x:Key="ControlNameIsEmpty">Control name is empty.</system:String>
+    <system:String x:Key="ControlNameContainsInvalidChars">Control name contains invalid characters.</system:String>
+
+    <system:String x:Key="ControlsWithThatNameAlreadyExist">Custom controls with that name already exist.</system:String>
+
+    <system:String x:Key="SuccessfullyCreatedCustomControls">Successfully created custom controls.</system:String>
+    <system:String x:Key="FailedToCreateCustomControls">Failed to create custom controls</system:String>
+
+    <system:String x:Key="SuccessfullyDeletedCustomControls">Successfully deleted custom controls</system:String>
+    <system:String x:Key="FailedToDeleteCustomControls">Failed to delete custom controls</system:String>
+
+
+    <!--GeneralSettingsViewModel Strings-->
+    <system:String x:Key="EnterNameForCatalog">Enter name for catalog</system:String>
+    <system:String x:Key="GeneralSettingsHaveBeenUpdated">General settings have been updated!</system:String>
+
+    <system:String x:Key="SettingsNotValid">Settings Not Valid</system:String>
+    <system:String x:Key="MissingFf7ExePath">Missing FF7 Exe path.</system:String>
+    <system:String x:Key="MissingLibraryPath">Missing Library path.</system:String>
+    <system:String x:Key="MissingTexturesPath">Missing Textures (Aali OpenGL) path.</system:String>
+    <system:String x:Key="MissingMoviePath">Missing Movie path.</system:String>
+
+    <system:String x:Key="FailedToRegisterIroModFilesWith7thHeaven">Failed to register .iro mod files with 7th Heaven</system:String>
+    <system:String x:Key="FailedToUnregisterIroModFilesWith7thHeaven">Failed to un-register .iro mod files with 7th Heaven</system:String>
+    <system:String x:Key="FailedToUnregisterIrosLinksWith7thHeaven">Failed to un-register iros:// links with 7th Heaven</system:String>
+    <system:String x:Key="FailedToRegisterIrosLinksWith7thHeaven">Failed to register iros:// links with 7th Heaven</system:String>
+    <system:String x:Key="FailedToCreate7thHeavenContextMenuEntries">Failed to create 7th Heaven Context Menu entries in Windows Explorer</system:String>
+    <system:String x:Key="FailedToRemove7thHeavenContextMenuEntries">Failed to remove 7th Heaven Context Menu entries in Windows Explorer</system:String>
+
+    <system:String x:Key="CatalogNameWillAutoResolveOnSave">Catalog Name will auto resolve on save</system:String>
+    <system:String x:Key="ResolvingCatalogName">Resolving catalog name ...</system:String>
+    <system:String x:Key="UrlMustBeInIrosFormat">URL must be in iros:// format</system:String>
+    <system:String x:Key="ResolvingCatalogNameFor">Resolving catalog name for</system:String>
+
+
+    <!--ImportModViewModel Strings-->
+    <system:String x:Key="SelectAnIroFileToImport">Select an .iro file to import into the library folder.</system:String>
+    <system:String x:Key="SelectAFolderThatContainsModFiles">Select a folder that contains mod files. The mod file(s) will be copied into the library folder.</system:String>
+    <system:String x:Key="SelectAFolderThatContainsIroModFilesAndFolders">Select a folder that contains .iro mod files and mod folders. All mod files found will be copied into the library folder.</system:String>
+    <system:String x:Key="ImportingModsPleaseWait">Importing mod(s)... Please wait ...</system:String>
+
+    <system:String x:Key="ValidationError">Validation Error</system:String>
+    <system:String x:Key="ImportError">Import Error</system:String>
+
+    <system:String x:Key="EnterPathToAnIroFile">Enter a path to an .iro file.</system:String>
+    <system:String x:Key="IroFileDoesNotExist">.iro file does not exist.</system:String>
+
+    <system:String x:Key="SuccessfullyImported">Successfully imported</system:String>
+    <system:String x:Key="CanNotImportMod">Can not import mod.</system:String>
+    <system:String x:Key="FailedToImportModTheErrorHasBeenLogged">Failed to import mod. The error has been logged.</system:String>
+
+    <system:String x:Key="EnterPathToFolderContainingModFiles">Enter a path to a folder containing mod files.</system:String>
+    <system:String x:Key="DirectoryDoesNotExist">Directory does not exist.</system:String>
+
+    <system:String x:Key="EnterPathToFolderContainingIroFilesOrModFolders">Enter a path to a folder containing .iro files and/or mod folders.</system:String>
+
+
+    <!--MegaLinkGenViewModel Strings-->
+    <system:String x:Key="GeneratingLinks">Generating links ...</system:String>
+    <system:String x:Key="FailedToGenerateLinks">Failed to generate links</system:String>
+    <system:String x:Key="EnterMegaFolderIdToGenerateLinks">Enter a Mega Folder ID to generate links.</system:String>
+    <system:String x:Key="NoLinksFoundInFolder">No links found in folder</system:String>
 
 
 </ResourceDictionary>
