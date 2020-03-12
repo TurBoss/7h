@@ -1,4 +1,5 @@
-﻿using SeventhHeaven.Windows;
+﻿using SeventhHeaven.Classes;
+using SeventhHeaven.Windows;
 using SeventhHeavenUI;
 using SeventhHeavenUI.ViewModels;
 using System;
@@ -207,34 +208,34 @@ namespace SeventhHeaven.ViewModels
 
             if (string.IsNullOrEmpty(PathToOriginalIroFile) && !IsAdvancedMode)
             {
-                errorMsg = "Path to original iro is required";
+                errorMsg = ResourceHelper.GetString(StringKey.PathToOriginalIroIsRequired);
                 isValid = false;
             }
             else if (string.IsNullOrEmpty(PathToNewIroFile) && !IsAdvancedMode)
             {
-                errorMsg = "Path to new iro file is required";
+                errorMsg = ResourceHelper.GetString(StringKey.PathToNewIroFileIsRequired);
                 isValid = false;
             }
             else if (string.IsNullOrEmpty(PathToSourceFolder) && IsAdvancedMode)
             {
-                errorMsg = "Path to source folder is required";
+                errorMsg = ResourceHelper.GetString(StringKey.PathToSourceFolderIsRequired);
                 isValid = false;
             }
             else if (string.IsNullOrEmpty(PathToIropFile))
             {
-                errorMsg = "Path to irop file to save is required";
+                errorMsg = ResourceHelper.GetString(StringKey.PathToIropFileIsRequired);
                 isValid = false;
             }
             else if (CompressionSelectedIndex < 0)
             {
-                errorMsg = "Select a compression option";
+                errorMsg = ResourceHelper.GetString(StringKey.SelectCompressionOption);
                 isValid = false;
             }
 
             if (!isValid && showErrorMsg)
             {
-                Logger.Warn($"invalid pack iro options: {errorMsg}");
-                MessageDialogWindow.Show(errorMsg, "Missing Required Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Logger.Warn($"{ResourceHelper.GetString(StringKey.InvalidPackIroOptions)}: {errorMsg}");
+                MessageDialogWindow.Show(errorMsg, ResourceHelper.GetString(StringKey.MissingRequiredInput), MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
             return isValid;
@@ -269,11 +270,11 @@ namespace SeventhHeaven.ViewModels
                 if (result.IsFaulted)
                 {
                     Logger.Warn(result.Exception.GetBaseException());
-                    StatusText = $"An error occured while patching: {result.Exception.GetBaseException().Message}";
+                    StatusText = $"{ResourceHelper.GetString(StringKey.AnErrorOccuredWhilePatching)}: {result.Exception.GetBaseException().Message}";
                     return;
                 }
 
-                StatusText = "Patching complete!";
+                StatusText = ResourceHelper.GetString(StringKey.PatchingComplete);
             });
         }
 
@@ -315,11 +316,11 @@ namespace SeventhHeaven.ViewModels
                 if (result.IsFaulted)
                 {
                     Logger.Warn(result.Exception.GetBaseException());
-                    StatusText = $"An error occured while patching: {result.Exception.GetBaseException().Message}";
+                    StatusText = $"{ResourceHelper.GetString(StringKey.AnErrorOccuredWhilePatching)}: {result.Exception.GetBaseException().Message}";
                     return;
                 }
 
-                StatusText = "Patching complete!";
+                StatusText = ResourceHelper.GetString(StringKey.PatchingComplete);
             });
         }
 

@@ -52,7 +52,7 @@ namespace SeventhHeaven.Windows
             catch (Exception e)
             {
                 Logger.Error(e);
-                MessageDialogWindow.Show("Failed to read the required spec xml file to display settings. The window mus close.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.FailedToReadRequiredSpecXmlFile), ResourceHelper.GetString(StringKey.Error), MessageBoxButton.OK, MessageBoxImage.Error);
                 this.Close();
                 return;
             }
@@ -110,8 +110,8 @@ namespace SeventhHeaven.Windows
                     // add clear texture cache button
                     btnClearTextureCache = new Button()
                     {
-                        Content = "Clear Texture Cache",
-                        ToolTip = $"Will delete everything under {Path.Combine(Sys.Settings.AaliFolder, "cache")}",
+                        Content = ResourceHelper.GetString(StringKey.ClearTextureCache),
+                        ToolTip = $"{ResourceHelper.GetString(StringKey.WillDeleteEverythingUnder)} {Path.Combine(Sys.Settings.AaliFolder, "cache")}",
                         HorizontalAlignment = HorizontalAlignment.Left,
                         VerticalAlignment = VerticalAlignment.Top,
                         Margin = new Thickness(5, 0, 0, 0)
@@ -139,7 +139,7 @@ namespace SeventhHeaven.Windows
 
             if (!Directory.Exists(pathToCache))
             {
-                SetStatusMessage("Path to cache folder does not exist.");
+                SetStatusMessage(ResourceHelper.GetString(StringKey.PathToCacheFolderDoesNotExist));
                 return;
             }
 
@@ -160,12 +160,12 @@ namespace SeventhHeaven.Windows
                 // delete empty folders recursively
                 FileUtils.DeleteEmptyFolders(pathToCache);
 
-                SetStatusMessage("Texture cache cleared!");
+                SetStatusMessage(ResourceHelper.GetString(StringKey.TextureCacheCleared));
             }
             catch (Exception ex)
             {
                 Logger.Error(ex);
-                SetStatusMessage($"Failed to clear texture cache: {ex.Message}");
+                SetStatusMessage($"{ResourceHelper.GetString(StringKey.FailedToClearTextureCache)}: {ex.Message}");
             }
         }
 
@@ -202,17 +202,17 @@ namespace SeventhHeaven.Windows
 
                 File.WriteAllLines(_file, _settings.GetOutput());
 
-                Sys.Message(new WMessage("Game Driver settings saved!"));
+                Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.GameDriverSettingsSaved)));
                 this.Close();
             }
             catch (UnauthorizedAccessException)
             {
-                MessageDialogWindow.Show("Could not write to 7H_GameDriver.cfg file. Check that it is not set to read only, and that FF7 is installed in a folder you have full write access to.", "Save Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.CouldNotWriteTo7HGameDriverCfg), ResourceHelper.GetString(StringKey.SaveError), MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex);
-                SetStatusMessage("Unknown error while saving. error has been logged.");
+                SetStatusMessage(ResourceHelper.GetString(StringKey.UnknownErrorWhileSaving));
             }
         }
 
@@ -223,7 +223,7 @@ namespace SeventhHeaven.Windows
                 item.ResetToDefault(_settings);
             }
 
-            SetStatusMessage("Game Driver settings reset to defaults. Click 'Save' to save changes.");
+            SetStatusMessage(ResourceHelper.GetString(StringKey.GameDriverSettingsResetToDefaults));
         }
 
         private void Window_Closed(object sender, EventArgs e)

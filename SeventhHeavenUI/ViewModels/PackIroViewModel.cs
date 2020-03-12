@@ -1,4 +1,5 @@
-﻿using SeventhHeaven.Windows;
+﻿using SeventhHeaven.Classes;
+using SeventhHeaven.Windows;
 using SeventhHeavenUI;
 using SeventhHeavenUI.ViewModels;
 using System;
@@ -153,24 +154,24 @@ namespace SeventhHeaven.ViewModels
 
             if (string.IsNullOrEmpty(PathToSourceFolder))
             {
-                errorMsg = "Path to source folder is required";
+                errorMsg = ResourceHelper.GetString(StringKey.PathToSourceFolderIsRequired);
                 isValid = false;
             }
             else if (string.IsNullOrEmpty(PathToOutputFile))
             {
-                errorMsg = "Path to output iro file is required";
+                errorMsg = ResourceHelper.GetString(StringKey.PathToOutputIroFileIsRequired);
                 isValid = false;
             }
             else if (CompressionSelectedIndex < 0)
             {
-                errorMsg = "Select a compression option";
+                errorMsg = ResourceHelper.GetString(StringKey.SelectCompressionOption);
                 isValid = false;
             }
 
             if (!isValid && showErrorMsg)
             {
-                Logger.Warn($"invalid pack iro options: {errorMsg}");
-                MessageDialogWindow.Show(errorMsg, "Missing Required Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Logger.Warn($"{ResourceHelper.GetString(StringKey.InvalidPackIroOptions)}: {errorMsg}");
+                MessageDialogWindow.Show(errorMsg, ResourceHelper.GetString(StringKey.MissingRequiredInput), MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
             return isValid;
@@ -203,11 +204,11 @@ namespace SeventhHeaven.ViewModels
                 if (result.IsFaulted)
                 {
                     Logger.Warn(result.Exception.GetBaseException());
-                    StatusText = $"An error occured while packing: {result.Exception.GetBaseException().Message}";
+                    StatusText = $"{ResourceHelper.GetString(StringKey.AnErrorOccuredWhilePacking)}: {result.Exception.GetBaseException().Message}";
                     return;
                 }
 
-                StatusText = "Packing complete!";
+                StatusText = ResourceHelper.GetString(StringKey.PackingComplete);
             });
 
             return packTask;

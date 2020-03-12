@@ -141,7 +141,7 @@
                 Margin="50,10,50,5"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Bottom"
-                Content="Go"/>
+                Content="{DynamicResource Go}"/>
 
     </Grid>
 </UserControl>

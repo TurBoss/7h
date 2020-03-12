@@ -1,4 +1,5 @@
-﻿using SeventhHeaven.Windows;
+﻿using SeventhHeaven.Classes;
+using SeventhHeaven.Windows;
 using SeventhHeavenUI;
 using SeventhHeavenUI.ViewModels;
 using System;
@@ -112,19 +113,19 @@ namespace SeventhHeaven.ViewModels
 
             if (string.IsNullOrEmpty(PathToOutputFolder))
             {
-                errorMsg = "Path to output folder is required";
+                errorMsg = ResourceHelper.GetString(StringKey.PathToOutputFolderRequired);
                 isValid = false;
             }
             else if (string.IsNullOrEmpty(PathToIroFile))
             {
-                errorMsg = "Path to source iro file is required";
+                errorMsg = ResourceHelper.GetString(StringKey.PathToSourceIroFileIsRequired);
                 isValid = false;
             }
 
             if (!isValid && showErrorMsg)
             {
-                Logger.Warn($"invalid unpack iro options: {errorMsg}");
-                MessageDialogWindow.Show(errorMsg, "Missing Required Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Logger.Warn($"{ResourceHelper.GetString(StringKey.InvalidUnpackIroOptions)}: {errorMsg}");
+                MessageDialogWindow.Show(errorMsg, ResourceHelper.GetString(StringKey.MissingRequiredInput), MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
             return isValid;
@@ -164,11 +165,11 @@ namespace SeventhHeaven.ViewModels
                 if (result.IsFaulted)
                 {
                     Logger.Warn(result.Exception.GetBaseException());
-                    StatusText = $"An error occured while unpacking: {result.Exception.GetBaseException().Message}";
+                    StatusText = $"{ResourceHelper.GetString(StringKey.AnErrorOccuredWhileUnpacking)}: {result.Exception.GetBaseException().Message}";
                     return;
                 }
 
-                StatusText = "Unpacking complete!";
+                StatusText = ResourceHelper.GetString(StringKey.UnpackingComplete);
             });
 
             return unpackTask;

@@ -1,4 +1,5 @@
-﻿using SeventhHeaven.ViewModels;
+﻿using SeventhHeaven.Classes;
+using SeventhHeaven.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,7 +57,7 @@ namespace SeventhHeaven.Windows
 
             string selected = (string)lstProfiles.SelectedItem;
 
-            if (MessageDialogWindow.Show($"Are you sure you want to delete the selected profile ({selected})?", "Delete Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning).Result == MessageBoxResult.Yes)
+            if (MessageDialogWindow.Show($"{ResourceHelper.GetString(StringKey.AreYouSureYouWantToDeleteSelectedProfile)} ({selected})?", ResourceHelper.GetString(StringKey.Warning), MessageBoxButton.YesNo, MessageBoxImage.Warning).Result == MessageBoxResult.Yes)
             {
                 ViewModel.DeleteProfile(selected);
             }
@@ -110,7 +111,7 @@ namespace SeventhHeaven.Windows
         {
             if (lstProfiles.SelectedItem == null)
             {
-                MessageDialogWindow.Show("Select a Profile first.", "No Profile Selected", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.SelectProfileToContinue), ResourceHelper.GetString(StringKey.NoProfileSelected), MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return false;
             }
 

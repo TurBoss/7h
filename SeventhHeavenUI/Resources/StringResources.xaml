@@ -102,6 +102,7 @@
     <system:String x:Key="On">On</system:String>
     <system:String x:Key="ResetDefaults">Reset Defaults</system:String>
     <system:String x:Key="Save">Save</system:String>
+    <system:String x:Key="Load">Load</system:String>
     <system:String x:Key="Go">Go</system:String>
 
 
@@ -117,7 +118,10 @@
     <system:String x:Key="MissingPath">Missing Path</system:String>
     <system:String x:Key="ExtractComplete">Extract Complete</system:String>
     <system:String x:Key="InsertDisc">Insert Disc</system:String>
-
+    <system:String x:Key="MissingRequiredInput">Missing Required Input</system:String>
+    <system:String x:Key="IROToolsWindowTitle">IRO Tools</system:String>
+    <system:String x:Key="ChunkToolWindowTitle">Chunk Tool</system:String>
+    <system:String x:Key="ManageProfiles">Manage Profiles</system:String>
 
 
 
@@ -244,6 +248,14 @@
     <system:String x:Key="Stop">Stop</system:String>
     <system:String x:Key="ResetToModDefaults">Reset to Mod Defaults</system:String>
     
+    <!--MainWindow.xaml.cs Strings-->
+    <system:String x:Key="AreYouSureYouWantToPlayDebugWarning" xml:space="preserve">Are you sure you want to play FF7 in this mode? Playing FF7 this way can cause extreme slowness and use a lot of disk space.
+
+You should only use this option while troubleshooting a single active mod so that you can troubleshoot and provide bug reports to the mod author and/or to the 7H developers.</system:String>
+
+    <system:String x:Key="AreYouSureYouWantToExitPendingDownloads">Are you sure you want to exit? You have downloads pending.</system:String>
+    <system:String x:Key="ConfirmExit">Confirm Exit</system:String>
+
     <!--MainWindowViewModel Strings-->
     <system:String x:Key="StartedClickHereToViewAppLog">started - Click here to view the app log.</system:String>
     <system:String x:Key="HintLabel">Hint:</system:String>
@@ -499,12 +511,194 @@ Click 'Cancel' to stop the process.</system:String>
 
     <system:String x:Key="EnterPathToFolderContainingIroFilesOrModFolders">Enter a path to a folder containing .iro files and/or mod folders.</system:String>
 
-    
+    <!--MegaLinkGenUserControl Strings-->
+    <system:String x:Key="GenerateLinks">Generate Links</system:String>
+
     <!--MegaLinkGenViewModel Strings-->
     <system:String x:Key="GeneratingLinks">Generating links ...</system:String>
     <system:String x:Key="FailedToGenerateLinks">Failed to generate links</system:String>
     <system:String x:Key="EnterMegaFolderIdToGenerateLinks">Enter a Mega Folder ID to generate links.</system:String>
     <system:String x:Key="NoLinksFoundInFolder">No links found in folder</system:String>
+    
+    
+    <!--CreateModUserControl Strings-->
+    <system:String x:Key="Generate">Generate</system:String>
+
+    <!--ModCreationViewModel Strings-->
+    <system:String x:Key="CouldNotLoadModXml">Could not load mod xml</system:String>
+    <system:String x:Key="CouldNotSaveModXml">Could not save mod xml</system:String>
+    <system:String x:Key="SuccessfullySavedTo">Successfully saved to</system:String>
+    
+    
+    <!--OpenProfileWindow Strings-->
+    <system:String x:Key="Load Profile">Load Profile</system:String>
+    <system:String x:Key="SaveCurrentProfileAs">Save Current Profile As ...</system:String>
+    <system:String x:Key="CopySelectedProfileToNewProfile">Copy Selected Profile To New Profile</system:String>
+    <system:String x:Key="DeleteSelectedProfile">Delete Selected Profile</system:String>
+    <system:String x:Key="ViewSelectedProfileDetails">View Selected Profile Details</system:String>
+
+    <system:String x:Key="AreYouSureYouWantToDeleteSelectedProfile">Are you sure you want to delete the selected profile</system:String>
+
+    <system:String x:Key="NoProfileSelected">No Profile Selected</system:String>
+    <system:String x:Key="SelectProfileToContinue">Select a Profile to continue</system:String>
+
+
+    <!--OpenProfileViewModel Strings-->
+    <system:String x:Key="ActiveProfileFileDoesNotExist">Active profile file does not exist</system:String>
+    <system:String x:Key="EnterProfileName">Enter profile name:</system:String>
+    <system:String x:Key="SaveActiveProfile">Save Active Profile</system:String>
+    <system:String x:Key="SuccessfullySavedAsNewProfile">Successfully saved {0} as new profile {1}!</system:String>
+    <system:String x:Key="FailToSaveAsNewProfile">Failed to save {0} as new profile {1}: {2}</system:String>
+
+    <system:String x:Key="ProfileDoesNotExist">profile does not exist</system:String>
+    <system:String x:Key="HasItBeenDeletedAlready">Has it been deleted already?</system:String>
+    <system:String x:Key="SuccessfullyDeletedProfile">Successfully deleted profile</system:String>
+    <system:String x:Key="FailedToDeleteProfile">Failed to delete profile</system:String>
+
+    <system:String x:Key="EnterProfileNameForTheCopy">Enter a profile name for the copy:</system:String>
+    <system:String x:Key="CopyProfile">Copy Profile</system:String>
+    <system:String x:Key="NewProfile">New Profile</system:String>
+    <system:String x:Key="SuccessfullyCopiedProfile">Successfully copied profile {0} to the new profile {1}</system:String>
+    <system:String x:Key="FailedToCopyProfile">Failed to copy profile {0} to {1}</system:String>
+
+    <system:String x:Key="FailedToOpenProfileDetails">Failed to open profile details</system:String>
+    <system:String x:Key="ProfileNameIsEmpty">Profile Name is empty.</system:String>
+    <system:String x:Key="ProfileError">Profile Error</system:String>
+
+    <system:String x:Key="WarningProfileXmlDoesNotExistCanNotSwitch">Warning: profile xml file for {0} does not exist. Can not switch profile!</system:String>
+    <system:String x:Key="LoadedProfile">Loaded profile</system:String>
+    <system:String x:Key="FailedToSwitchToProfile">Failed to switch to profile</system:String>
+
+
+    <!--PackIroViewModel Strings-->
+    <system:String x:Key="PathToSourceFolderIsRequired">Path to source folder is required</system:String>
+    <system:String x:Key="PathToOutputIroFileIsRequired">Path to output iro file is required</system:String>
+    <system:String x:Key="SelectCompressionOption">Select a compression option</system:String>
+    <system:String x:Key="InvalidPackIroOptions">invalid pack iro options</system:String>
+    <system:String x:Key="AnErrorOccuredWhilePacking">An error occured while packing</system:String>
+    <system:String x:Key="PackingComplete">Packing complete!</system:String>
+
+    
+    <!--PatchIroViewModel Strings-->
+    <system:String x:Key="PathToOriginalIroIsRequired">Path to original iro is required</system:String>
+    <system:String x:Key="PathToNewIroFileIsRequired">Path to new iro file is required</system:String>
+    <system:String x:Key="PathToIropFileIsRequired">Path to irop file to save is required</system:String>
+    <system:String x:Key="AnErrorOccuredWhilePatching">An error occured while patching</system:String>
+    <system:String x:Key="PatchingComplete">Patching complete!</system:String>
+    
+    
+    <!--ThemeSettingsWindow Strings-->
+    <system:String x:Key="ChangeColorThemeWindowTitle">Change Color Theme</system:String>
+    <system:String x:Key="ExportTheme">Export Theme ...</system:String>
+
+    <!--ThemeSettingsViewModel Strings-->
+    <system:String x:Key="ThemeSaved">Theme saved!</system:String>
+    <system:String x:Key="ThemeSavedAs">Theme saved as</system:String>
+    <system:String x:Key="FailedToSaveTheme">Failed to save theme...</system:String>
+    <system:String x:Key="FailedToLoadTheme">Failed to load theme</system:String>
+    <system:String x:Key="ThemeLoadedClickSavveToSaveThis">Theme loaded! Click 'Save' to save this theme as the default ...</system:String>
+    <system:String x:Key="SelectBackgroundImageFile">Select Background Image File</system:String>
+
+    
+    <!--UnpackIroViewModel Strings-->
+    <system:String x:Key="PathToSourceIroFileIsRequired">Path to source iro file is required</system:String>
+    <system:String x:Key="InvalidUnpackIroOptions">invalid unpack iro options</system:String>
+    <system:String x:Key="AnErrorOccuredWhileUnpacking">An error occured while unpacking</system:String>
+    <system:String x:Key="UnpackingComplete">Unpacking complete!</system:String>
+
+    
+    <!--CreateCatalogUserControl Strings-->
+    <system:String x:Key="RemoveMod">Remove Mod</system:String>
+    <system:String x:Key="Add">Add</system:String>
+
+    <!--CatalogCreationViewModel Strings-->
+    <system:String x:Key="CouldNotLoadModXmlFromIroFile">Could not load mod xml from .iro file</system:String>
+    <system:String x:Key="CouldNotLoadCatalogXml">Could not load catalog xml</system:String>
+
+    
+    <!--ConfigureGLWindow.xaml.cs Strings-->
+    <system:String x:Key="FailedToReadRequiredSpecXmlFile">Failed to read the required spec xml file to display settings. The window must close.</system:String>
+    <system:String x:Key="ClearTextureCache">Clear Texture Cache</system:String>
+    <system:String x:Key="WillDeleteEverythingUnder">Will delete everything under</system:String>
+    <system:String x:Key="PathToCacheFolderDoesNotExist">Path to cache folder does not exist.</system:String>
+    <system:String x:Key="TextureCacheCleared">Texture cache cleared!</system:String>
+    <system:String x:Key="FailedToClearTextureCache">Failed to clear texture cache</system:String>
+    <system:String x:Key="GameDriverSettingsSaved">Game Driver settings saved!</system:String>
+    <system:String x:Key="CouldNotWriteTo7HGameDriverCfg">Could not write to 7H_GameDriver.cfg file. Check that it is not set to read only, and that FF7 is installed in a folder you have full write access to.</system:String>
+    <system:String x:Key="UnknownErrorWhileSaving">Unknown error while saving. error has been logged.</system:String>
+    <system:String x:Key="GameDriverSettingsResetToDefaults">Game Driver settings reset to defaults. Click 'Save' to save changes.</system:String>
+    
+    
+    <!--GameLaunchSettingsWindow.xaml.cs Strings-->
+    <system:String x:Key="SelectProgramToRemove">Selet a program to remove.</system:String>
+    <system:String x:Key="SelectProgramToEdit">Select a program to edit.</system:String>
+    <system:String x:Key="SelectProgramToMove">Select a program to move.</system:String>
+    <system:String x:Key="SelectProgramToRunSuchAs">Select a program to run such as an .exe or script</system:String>
+    
+    
+    <!--GameLaunchWindow.xaml.cs Strings-->
+    <system:String x:Key="LaunchingFinalFantasyVII">Launching Final Fantasy VII</system:String>
+    <system:String x:Key="UnknownErrorWhenLaunchingGame">Unknown error when launching the game</system:String>
+    <system:String x:Key="GameLaunchProcessCanceled">game launch process canceled</system:String>
+    <system:String x:Key="FailedToLaunchFf7ViewLogForDetails">Failed to launch FF7. View the above log for details.</system:String>
+    <system:String x:Key="SuccessfullyLaunchedFf7">Successfully launched FF7!</system:String>
+    
+    
+    <!--GeneralSettingsWindow Strings-->
+    <system:String x:Key="ActivateNewlyInstalledModsAutomatically">Activate Newly Installed Mods Automatically</system:String>
+    <system:String x:Key="ImportModsFromLibraryAutomatically">Import Mods From Library Automatically</system:String>
+    <system:String x:Key="WarnWhenModContainsCode">Warn When Mod Contains Code</system:String>
+    <system:String x:Key="AutoUpdateModsByDefault">Auto Update Mods By Default</system:String>
+    <system:String x:Key="IgnoreModCompatibilityRestrictions">Ignore Mod Compatibility Restrictions</system:String>
+    <system:String x:Key="CheckFor7thHeavenUpdatesAutomatically">Check For 7th Heaven Updates Automatically</system:String>
+
+    <system:String x:Key="OpenIrosLinksWith7thHeaven">Open iros:// links with 7th Heaven</system:String>
+    <system:String x:Key="OpenModFilesWith7thHeaven">Open Mod Files with 7th Heaven</system:String>
+    <system:String x:Key="ContextMenuInExplorer">Context Menu in Explorer</system:String>
+
+    <system:String x:Key="PathsHeader" xml:space="preserve"> Paths </system:String>
+    <system:String x:Key="ShellIntegrationHeader" xml:space="preserve"> Shell Integration </system:String>
+    <system:String x:Key="CatalogSubscriptionsHeader" xml:space="preserve"> Catalog Subscriptions: </system:String>
+    <system:String x:Key="AdditionalFoldersToMonitorHeader" xml:space="preserve"> Additional Folders to Monitor: </system:String>
+
+    <system:String x:Key="Url">Url</system:String>
+
+    <system:String x:Key="ErrorIncorrectExe">Error - Incorrect Exe</system:String>
+    <system:String x:Key="ThisExeIsUsedForSteamReleaseFailedToCopyExe">This exe is used for the Steam release of FF7, which 7th Heaven does not support. The 1.02 patch ff7.exe failed to copy and could not be auto selected for you.</system:String>
+    <system:String x:Key="ThisExeIsUsedForSteamReleaseCopiedSelectedForYou">This exe is used for the Steam release of FF7, which 7th Heaven does not support. The 1.02 patch ff7.exe was {copyOrSelectMessage} for you to ensure 7th Heaven works.</system:String>
+    <system:String x:Key="Selected">selected</system:String>
+    <system:String x:Key="CopiedAndSelected">copied and selected</system:String>
+    <system:String x:Key="ThisExeIsUsedForConfiguringFf7Settings">This exe is used for configuring FF7 settings and is not the correct game exe. Please select a different FF7 EXE file.</system:String>
+
+    <system:String x:Key="SelectFf7Exe">Select FF7.exe</system:String>
+    <system:String x:Key="SelectMoviesFolder">Select Movies Folder</system:String>
+    <system:String x:Key="SelectTexturesFolder">Select Textures Folder</system:String>
+    <system:String x:Key="Select7thHeavenLibraryFolder">Select 7th Heaven Library Folder</system:String>
+
+    <system:String x:Key="SelectSubscriptionToEdit">Select a subscription to edit.</system:String>
+    <system:String x:Key="SelectSubscriptionToRemove">Select a subscription to remove.</system:String>
+    <system:String x:Key="SelectSubscriptionToMove">Select a subscription to move.</system:String>
+
+    <system:String x:Key="SelectFolderToRemove">Select a folder to remove.</system:String>
+    <system:String x:Key="SelectFolderToMove">Select a folder to move.</system:String>
+    
+    
+    <!--ImportModWindow Strings-->
+    <system:String x:Key="FromIROFile">From IRO File</system:String>
+    <system:String x:Key="FromFolder">From Folder</system:String>
+    <system:String x:Key="BatchImport">Batch Import</system:String>
+    <system:String x:Key="SelectIroFile">Select .iro File</system:String>
+
+
+    <!--IroCreateWindow Strings-->
+    <system:String x:Key="PackIRO">Pack IRO</system:String>
+    <system:String x:Key="UnpackIRO">Unpack IRO</system:String>
+    <system:String x:Key="PatchIRO">Patch IRO</system:String>
+    <system:String x:Key="PatchIROAdvanced">Patch IRO (Advanced)</system:String>
+
+
+    <!--UnhandledErrorWindow Strings-->
+    <system:String x:Key="AnUnhandledExceptionOccurredAppMustClose">An unhandled exception has occurred and the app must close.</system:String>
 
 
 </ResourceDictionary>

@@ -31,7 +31,7 @@
                    Margin="10"
                    FontSize="20"
                    TextWrapping="Wrap"
-                   Text="An unhandled exception has occurred and the app must close."/>
+                   Text="{DynamicResource AnUnhandledExceptionOccurredAppMustClose}"/>
 
         <TextBox x:Name="txtMessage"
                  Style="{StaticResource PrimaryTextBoxStyle}"

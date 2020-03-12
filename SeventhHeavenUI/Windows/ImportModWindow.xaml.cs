@@ -45,7 +45,7 @@ namespace SeventhHeaven.Windows
                 
                 if (taskResult.IsFaulted)
                 {
-                    Sys.Message(new WMessage($"Failed to import - {taskResult.Exception.GetBaseException()?.Message}", true) { LoggedException = taskResult.Exception.GetBaseException() });
+                    Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.FailedToImportModTheErrorHasBeenLogged)} {taskResult.Exception.GetBaseException()?.Message}", true) { LoggedException = taskResult.Exception.GetBaseException() });
                     return;
                 }
 
@@ -69,7 +69,7 @@ namespace SeventhHeaven.Windows
 
         private void btnBrowseIro_Click(object sender, RoutedEventArgs e)
         {
-            string selectedFile = FileDialogHelper.BrowseForFile("iro file (*.iro)|*.iro", "Select .iro File");
+            string selectedFile = FileDialogHelper.BrowseForFile("iro file (*.iro)|*.iro", ResourceHelper.GetString(StringKey.SelectIroFile));
 
             if (!string.IsNullOrEmpty(selectedFile))
             {

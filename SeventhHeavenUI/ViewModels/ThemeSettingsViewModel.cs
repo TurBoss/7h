@@ -343,7 +343,7 @@ namespace SeventhHeaven.ViewModels
         {
             string pathToThemeFile = Path.Combine(Sys.SysFolder, "theme.xml");
             SaveTheme(pathToThemeFile);
-            StatusText = "Theme saved!";
+            StatusText = ResourceHelper.GetString(StringKey.ThemeSaved);
         }
 
         internal void SaveTheme(string pathToTheme)
@@ -381,12 +381,12 @@ namespace SeventhHeaven.ViewModels
                     Util.Serialize(settings, file);
                 }
 
-                StatusText = $"Theme saved as {Path.GetFileName(pathToTheme)}";
+                StatusText = $"{ResourceHelper.GetString(StringKey.ThemeSavedAs)} {Path.GetFileName(pathToTheme)}";
             }
             catch (Exception e)
             {
                 Logger.Error(e);
-                StatusText = "Failed to save theme...";
+                StatusText = ResourceHelper.GetString(StringKey.FailedToSaveTheme);
             }
 
         }
@@ -510,12 +510,12 @@ namespace SeventhHeaven.ViewModels
                 UpdateAppBrushesAndColors();
                 SetThemeToCustom();
 
-                StatusText = "Theme loaded! Click 'Save' to save this theme as the default ...";
+                StatusText = ResourceHelper.GetString(StringKey.ThemeLoadedClickSavveToSaveThis);
             }
             catch (Exception e)
             {
                 Logger.Warn(e);
-                StatusText = $"Failed to load theme: {e.Message}";
+                StatusText = $"{ResourceHelper.GetString(StringKey.FailedToLoadTheme)}: {e.Message}";
             }
         }
 
@@ -600,7 +600,7 @@ namespace SeventhHeaven.ViewModels
 
         internal void SelectBackgroundImage()
         {
-            string pathToFile = FileDialogHelper.BrowseForFile("*.png,*.jpg,*.jpeg|*.png;*.jpg;*.jpeg", "Select Background Image File");
+            string pathToFile = FileDialogHelper.BrowseForFile("*.png,*.jpg,*.jpeg|*.png;*.jpg;*.jpeg", ResourceHelper.GetString(StringKey.SelectBackgroundImageFile));
 
             if (!string.IsNullOrEmpty(pathToFile))
             {

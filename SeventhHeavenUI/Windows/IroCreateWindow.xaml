@@ -7,22 +7,22 @@
         xmlns:ctl="clr-namespace:SeventhHeaven.UserControls"
         mc:Ignorable="d"
         Style="{StaticResource MainWindowStyle}"
-        Title="IRO Tools"
+        Title="{DynamicResource IROToolsWindowTitle}"
         ResizeMode="NoResize"
         Height="325" Width="500">
     <Grid>
         <TabControl Margin="0,3,0,0"
                     BorderThickness="0,1,0,0">
-            <TabItem Header="Pack IRO">
+            <TabItem Header="{DynamicResource PackIRO}">
                 <ctl:PackIroUserControl x:Name="ctrlPack"/>
             </TabItem>
-            <TabItem Header="Unpack IRO">
+            <TabItem Header="{DynamicResource UnpackIRO}">
                 <ctl:UnpackIroUserControl x:Name="ctrlUnpack"/>
             </TabItem>
-            <TabItem Header="Patch IRO">
+            <TabItem Header="{DynamicResource PatchIRO}">
                 <ctl:PatchIroUserControl x:Name="ctrlPatch"/>
             </TabItem>
-            <TabItem Header="Patch IRO (Advanced)">
+            <TabItem Header="{DynamicResource PatchIROAdvanced}">
                 <ctl:PatchIroAdvancedUserControl x:Name="ctrlPatchAdvanced"/>
             </TabItem>
         </TabControl>

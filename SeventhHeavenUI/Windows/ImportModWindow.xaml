@@ -18,7 +18,7 @@
         <TabControl SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     BorderThickness="0,1,0,0"
                     Margin="0,1,0,0">
-            <TabItem Header="From IRO File">
+            <TabItem Header="{DynamicResource FromIROFile}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="70"/>
@@ -55,7 +55,7 @@
                             Margin="0,0,15,0"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="From Folder">
+            <TabItem Header="{DynamicResource FromFolder}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="65"/>
@@ -92,7 +92,7 @@
                             Margin="0,0,15,0"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Batch Import">
+            <TabItem Header="{DynamicResource BatchImport}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="65"/>
@@ -145,7 +145,7 @@
                 Grid.Row="2"
                 HorizontalAlignment="Right"
                 Margin="0,0,80,5"
-                Content="OK"/>
+                Content="{DynamicResource OK}"/>
 
         <Button x:Name="btnCancel"
                 Click="btnCancel_Click"
@@ -153,6 +153,6 @@
                 Grid.Row="2"
                 HorizontalAlignment="Right"
                 Margin="0,0,15,5"
-                Content="Cancel"/>
+                Content="{DynamicResource Cancel}"/>
     </Grid>
 </Window>

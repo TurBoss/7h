@@ -2,13 +2,11 @@
 using _7thWrapperLib;
 using Iros._7th;
 using Iros._7th.Workshop;
-using Iros.Mega;
+using SeventhHeaven.Classes;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeventhHeavenUI.ViewModels
 {
@@ -101,7 +99,12 @@ namespace SeventhHeavenUI.ViewModels
             {
                 if (_categoryList == null)
                 {
-                    _categoryList = ModLoadOrder.Orders.Keys.OrderBy(s => s).ToList();
+                    _categoryList = ModLoadOrder.Orders.Keys.ToList();
+
+                    // add translated text for 'Unknown' category
+                    _categoryList.Remove(ModCategory.Unknown.ToString());
+                    _categoryList.Add(ResourceHelper.GetString(StringKey.Unknown));
+                    _categoryList = _categoryList.OrderBy(s => s).ToList();
                 }
 
                 return _categoryList;
@@ -223,7 +226,7 @@ namespace SeventhHeavenUI.ViewModels
         {
             IDInput = Guid.NewGuid().ToString();
             NameInput = "";
-            CategoryInput = "Unknown";
+            CategoryInput = ResourceHelper.GetString(StringKey.Unknown);
             AuthorInput = "";
             DescriptionInput = "";
             VersionInput = "1.0";
@@ -239,6 +242,12 @@ namespace SeventhHeavenUI.ViewModels
             decimal.TryParse(VersionInput, System.Globalization.NumberStyles.AllowDecimalPoint, new System.Globalization.CultureInfo(""), out decimal parsedVersion);
             Guid.TryParse(IDInput, out Guid parsedId);
 
+            string translatedCategory = CategoryInput;
+            if (translatedCategory == ResourceHelper.GetString(StringKey.Unknown))
+            {
+                translatedCategory = ModCategory.Unknown.ToString(); // generated mod will have 'Unknown' as category instead of the translated version of the text
+            }
+
             if (LoadedMod == null)
             {
                 LoadedMod = new ModInfo()
@@ -247,7 +256,7 @@ namespace SeventhHeavenUI.ViewModels
                     Name = NameInput,
                     Author = AuthorInput,
                     Version = parsedVersion,
-                    Category = CategoryInput,
+                    Category = translatedCategory,
                     Description = DescriptionInput,
                     Link = InfoLinkInput,
                     PreviewFile = PreviewImageInput,
@@ -261,7 +270,7 @@ namespace SeventhHeavenUI.ViewModels
                 LoadedMod.Name = NameInput;
                 LoadedMod.Author = AuthorInput;
                 LoadedMod.Version = parsedVersion;
-                LoadedMod.Category = CategoryInput;
+                LoadedMod.Category = translatedCategory;
                 LoadedMod.Description = DescriptionInput;
                 LoadedMod.Link = InfoLinkInput;
                 LoadedMod.PreviewFile = PreviewImageInput;
@@ -363,7 +372,7 @@ namespace SeventhHeavenUI.ViewModels
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage($"Could not load mod xml: {e.Message}", true)
+                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.CouldNotLoadModXml)}: {e.Message}", true)
                 {
                     LoggedException = e
                 });
@@ -376,11 +385,11 @@ namespace SeventhHeavenUI.ViewModels
             {
                 GenerateModOutput();
                 File.WriteAllText(pathToFile, ModOutput);
-                Sys.Message(new WMessage($"Successfully saved to {pathToFile}", true));
+                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.SuccessfullySavedTo)} {pathToFile}", true));
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage($"Could not save mod xml: {e.Message}", true)
+                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.CouldNotSaveModXml)}: {e.Message}", true)
                 {
                     LoggedException = e
                 });

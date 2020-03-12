@@ -11,7 +11,7 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Style="{StaticResource MainWindowStyle}"
-        Title="Change Color Theme" Height="375" Width="500">
+        Title="{DynamicResource ChangeColorThemeWindowTitle}" Height="375" Width="500">
     <Window.Resources>
 
         <DataTemplate x:Key="selectedThemeTemplate">
@@ -80,7 +80,7 @@
 
             <Button x:Name="btnLoad"
                     Grid.Column="1"
-                    Content="Import"
+                    Content="{DynamicResource Import}"
                     Click="btnLoad_Click"
                     ToolTip="Import Theme"
                     HorizontalAlignment="Left"
@@ -354,7 +354,7 @@
 
         <Button x:Name="btnSave"
                 Click="btnSave_Click"
-                Content="Save"
+                Content="{DynamicResource Save}"
                 Grid.Row="2"
                 Grid.Column="2"
                 Margin="0,0,146,5"
@@ -373,13 +373,13 @@
                       Style="{StaticResource DownArrowToggleButton}">
             <ToggleButton.ContextMenu>
                 <ContextMenu x:Name="menuSaveOptions" Closed="menuSaveOptions_Closed" ContextMenuService.Placement="Bottom">
-                    <MenuItem x:Name="menuExport" Header="Export Theme ..." Click="menuExport_Click"/>
+                    <MenuItem x:Name="menuExport" Header="{DynamicResource ExportTheme}" Click="menuExport_Click"/>
                 </ContextMenu>
             </ToggleButton.ContextMenu>
         </ToggleButton>
 
         <Button x:Name="btnCancel"
-                Content="Cancel"
+                Content="{DynamicResource Cancel}"
                 Click="btnCancel_Click"
                 Grid.Row="2"
                 Grid.Column="2"

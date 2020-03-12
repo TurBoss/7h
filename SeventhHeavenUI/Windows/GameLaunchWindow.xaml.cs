@@ -62,7 +62,7 @@ namespace SeventhHeaven.Windows
         /// </summary>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ViewModel.LogStatus("### Launching Final Fantasy VII ###");
+            ViewModel.LogStatus($"### {ResourceHelper.GetString(StringKey.LaunchingFinalFantasyVII)} ###");
             App.ForceUpdateUI();
 
             // Wait 1 second before starting actual launch process so the window is fully loaded
@@ -90,25 +90,25 @@ namespace SeventhHeaven.Windows
                 if (taskResult.IsFaulted)
                 {
                     Logger.Error(taskResult.Exception);
-                    ViewModel.LogStatus($"Unknown error when launching the game: {taskResult.Exception.GetBaseException().Message}");
+                    ViewModel.LogStatus($"{ResourceHelper.GetString(StringKey.UnknownErrorWhenLaunchingGame)}: {taskResult.Exception.GetBaseException().Message}");
                     ShowOkButton();
                     return;
                 }
 
                 if (taskResult.IsCanceled)
                 {
-                    ViewModel.LogStatus("game launch process canceled");
+                    ViewModel.LogStatus(ResourceHelper.GetString(StringKey.GameLaunchProcessCanceled));
                     return;
                 }
 
                 if (!taskResult.Result)
                 {
-                    ViewModel.LogStatus("Failed to launch FF7. View the above log for details.");
+                    ViewModel.LogStatus(ResourceHelper.GetString(StringKey.FailedToLaunchFf7ViewLogForDetails));
                     ShowOkButton();
                 }
                 else
                 {
-                    Sys.Message(new WMessage("Successfully launched FF7!"));
+                    Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.SuccessfullyLaunchedFf7)));
                     App.Current.Dispatcher.Invoke(() =>
                     {
                         this.Close();

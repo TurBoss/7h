@@ -1,6 +1,7 @@
 ﻿using Iros._7th;
 using Iros._7th.Workshop;
 using Microsoft.Win32;
+using SeventhHeaven.Classes;
 using SeventhHeaven.Windows;
 using SeventhHeavenUI.ViewModels;
 using System;
@@ -86,12 +87,12 @@ namespace SeventhHeaven.ViewModels
         {
             if (!File.Exists(Sys.PathToCurrentProfileFile))
             {
-                Sys.Message(new WMessage($"Active profile file does not exist: {Sys.PathToCurrentProfileFile}", true));
+                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.ActiveProfileFileDoesNotExist)}: {Sys.PathToCurrentProfileFile}", true));
                 ReloadProfiles();
                 return;
             }
 
-            string profileName = InputNewProfileName("Enter profile name:", $"Save Active Profile");
+            string profileName = InputNewProfileName(ResourceHelper.GetString(StringKey.EnterProfileName), ResourceHelper.GetString(StringKey.SaveActiveProfile));
 
             if (profileName == null)
             {
@@ -108,11 +109,12 @@ namespace SeventhHeaven.ViewModels
                 ReloadProfiles();
                 SelectedProfile = profileName;
 
-                Sys.Message(new WMessage($"Successfully saved {Sys.Settings.CurrentProfile} as new profile {profileName}!", true));
+                Sys.Message(new WMessage(string.Format(ResourceHelper.GetString(StringKey.SuccessfullySavedAsNewProfile), Sys.Settings.CurrentProfile, profileName), true));
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage($"Failed to save {Sys.Settings.CurrentProfile} as new profile {profileName}: {e.Message}", true));
+                string errorMsg = string.Format(ResourceHelper.GetString(StringKey.FailToSaveAsNewProfile), Sys.Settings.CurrentProfile, profileName, e.Message);
+                Sys.Message(new WMessage(errorMsg, true) { LoggedException = e });
             }
         }
 
@@ -122,7 +124,7 @@ namespace SeventhHeaven.ViewModels
 
             if (!File.Exists(pathToProfile))
             {
-                Sys.Message(new WMessage($"profile does not exist: {pathToProfile}. Has it been deleted already?", true));
+                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.ProfileDoesNotExist)}: {pathToProfile} {ResourceHelper.GetString(StringKey.HasItBeenDeletedAlready)}", true));
                 ReloadProfiles();
                 return;
             }
@@ -130,12 +132,11 @@ namespace SeventhHeaven.ViewModels
             try
             {
                 File.Delete(pathToProfile);
-                Sys.Message(new WMessage($"Successfully deleted profile {name}", true));
+                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.SuccessfullyDeletedProfile)} {name}", true));
             }
             catch (Exception e)
             {
-                Logger.Error(e);
-                Sys.Message(new WMessage($"Failed to delete profile: {name}", true));
+                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.FailedToDeleteProfile)}: {name}", true) { LoggedException = e });
             }
 
             ReloadProfiles();
@@ -147,7 +148,7 @@ namespace SeventhHeaven.ViewModels
 
             if (!File.Exists(pathToProfile))
             {
-                Logger.Warn($"profile does not exist: {pathToProfile}");
+                Logger.Warn($"{ResourceHelper.GetString(StringKey.ProfileDoesNotExist)}: {pathToProfile}");
                 ReloadProfiles();
                 return;
             }
@@ -156,7 +157,7 @@ namespace SeventhHeaven.ViewModels
 
             try
             {
-                newProfileName = InputNewProfileName("Enter a profile name for the copy:", "Copy Profile");
+                newProfileName = InputNewProfileName(ResourceHelper.GetString(StringKey.EnterProfileNameForTheCopy), ResourceHelper.GetString(StringKey.CopyProfile));
 
                 if (newProfileName == null)
                 {
@@ -164,15 +165,17 @@ namespace SeventhHeaven.ViewModels
                 }
 
                 File.Copy(pathToProfile, Path.Combine(Sys.PathToProfiles, $"{newProfileName}.xml"));
-                Sys.Message(new WMessage($"Successfully copied profile {name} to the new profile {newProfileName}", true));
+
+                string successMsg = string.Format(ResourceHelper.GetString(StringKey.SuccessfullyCopiedProfile), name, newProfileName);
+                Sys.Message(new WMessage(successMsg, true));
 
                 ReloadProfiles();
                 SelectedProfile = newProfileName;
             }
             catch (Exception e)
             {
-                Logger.Error(e);
-                Sys.Message(new WMessage($"Failed to copy profile {name} to {newProfileName}", true));
+                string errorMsg = string.Format(ResourceHelper.GetString(StringKey.FailedToCopyProfile), name, newProfileName);
+                Sys.Message(new WMessage(errorMsg, true) { LoggedException = e });
             }
         }
 
@@ -187,7 +190,7 @@ namespace SeventhHeaven.ViewModels
 
             if (!File.Exists(pathToProfile))
             {
-                Logger.Warn($"profile does not exist: {pathToProfile}");
+                Logger.Warn($"{ResourceHelper.GetString(StringKey.ProfileDoesNotExist)}: {pathToProfile}");
                 ReloadProfiles();
                 return;
             }
@@ -208,7 +211,7 @@ namespace SeventhHeaven.ViewModels
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage($"Failed to open profile details: {e.Message}", true) { LoggedException = e });
+                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.FailedToOpenProfileDetails)}: {e.Message}", true) { LoggedException = e });
             }
         }
 
@@ -216,12 +219,12 @@ namespace SeventhHeaven.ViewModels
         {
             if (string.IsNullOrWhiteSpace(prompt))
             {
-                prompt = "Enter new profile name:";
+                prompt = ResourceHelper.GetString(StringKey.EnterProfileName);
             }
 
             if (string.IsNullOrWhiteSpace(title))
             {
-                title = "New Profile";
+                title = ResourceHelper.GetString(StringKey.NewProfile);
             }
 
             string profileName = null;
@@ -243,7 +246,7 @@ namespace SeventhHeaven.ViewModels
                 if (string.IsNullOrEmpty(profileName))
                 {
                     isValid = false;
-                    MessageDialogWindow.Show("Profile Name is empty.", "Profile Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.ProfileNameIsEmpty), ResourceHelper.GetString(StringKey.ProfileError), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
             } while (!isValid);
@@ -284,7 +287,7 @@ namespace SeventhHeaven.ViewModels
 
             if (!File.Exists(xmlFile))
             {
-                Sys.Message(new WMessage($"Warning: profile xml file for {selectedProfile} does not exist. Can not switch profile!", true));
+                Sys.Message(new WMessage(string.Format(ResourceHelper.GetString(StringKey.WarningProfileXmlDoesNotExistCanNotSwitch), selectedProfile), true));
                 ReloadProfiles();
                 return false;
             }
@@ -296,15 +299,14 @@ namespace SeventhHeaven.ViewModels
                 Sys.Settings.CurrentProfile = SelectedProfile;
                 Sys.ActiveProfile = Util.Deserialize<Profile>(Sys.PathToCurrentProfileFile);
 
-                Sys.Message(new WMessage($"Loaded profile {selectedProfile}"));
+                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.LoadedProfile)} {selectedProfile}"));
                 Sys.ActiveProfile.RemoveDeletedItems(doWarn: true);
 
                 return true;
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage($"Failed to switch to profile {selectedProfile}", true));
-                Logger.Warn(e);
+                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.FailedToSwitchToProfile)} {selectedProfile}", true) { LoggedException = e });
                 return false;
             }
         }

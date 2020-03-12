@@ -22,8 +22,6 @@ namespace SeventhHeavenUI
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        internal const string _warningMessage = "Are you sure you want to play FF7 in this mode? Playing FF7 this way can cause extreme slowness and use a lot of disk space.\n\nYou should only use this option while troubleshooting a single active mod so that you can troubleshoot and provide bug reports to the mod author and/or to the 7H developers.";
-
         internal MainWindowViewModel ViewModel { get; set; }
 
         private int _currentTabIndex = 0;
@@ -100,7 +98,7 @@ namespace SeventhHeavenUI
         {
             if (ViewModel.CatalogMods.DownloadList.Count > 0)
             {
-                var result = MessageDialogWindow.Show("Are you sure you want to exit? You have downloads pending.", "Confirm Exit", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                var result = MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.AreYouSureYouWantToExitPendingDownloads), ResourceHelper.GetString(StringKey.ConfirmExit), MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
                 if (result.Result == MessageBoxResult.No)
                 {
@@ -182,7 +180,7 @@ namespace SeventhHeavenUI
 
         private void menuPlayVariableDump_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageDialogWindow.Show(_warningMessage, "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning).Result == MessageBoxResult.Yes)
+            if (MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.AreYouSureYouWantToPlayDebugWarning), ResourceHelper.GetString(StringKey.Warning), MessageBoxButton.YesNo, MessageBoxImage.Warning).Result == MessageBoxResult.Yes)
             {
                 ViewModel.LaunchGame(variableDump: true, debugLogging: false);
             }
@@ -190,7 +188,7 @@ namespace SeventhHeavenUI
 
         private void menuPlayDebugLog_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageDialogWindow.Show(_warningMessage, "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning).Result == MessageBoxResult.Yes)
+            if (MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.AreYouSureYouWantToPlayDebugWarning), ResourceHelper.GetString(StringKey.Warning), MessageBoxButton.YesNo, MessageBoxImage.Warning).Result == MessageBoxResult.Yes)
             {
                 ViewModel.LaunchGame(variableDump: false, debugLogging: true);
             }

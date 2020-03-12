@@ -82,7 +82,7 @@
 
             <Button x:Name="btnGenerate"
                     Click="btnGenerate_Click"
-                    Content="Generate"
+                    Content="{DynamicResource Generate}"
                     ToolTip="Ouputs current catalog.xml to below text area."
                     HorizontalAlignment="Left"
                     Width="80"
@@ -90,7 +90,7 @@
 
             <Button x:Name="btnSave"
                     Click="btnSave_Click"
-                    Content="Save"
+                    Content="{DynamicResource Save}"
                     Width="80"
                     ToolTip="Save catalog.xml to file"
                     HorizontalAlignment="Left"
@@ -98,7 +98,7 @@
 
             <Button x:Name="btnLoad"
                     Click="btnLoad_Click"
-                    Content="Load"
+                    Content="{DynamicResource Load}"
                     ToolTip="Load a catalog.xml file to edit"
                     HorizontalAlignment="Left"
                     Width="80"
@@ -107,7 +107,7 @@
             <Button x:Name="btnAdd"
                     Grid.Column="1"
                     Click="btnAdd_Click"
-                    Content="Add"
+                    Content="{DynamicResource Add}"
                     ToolTip="Add mod to catalog"
                     HorizontalAlignment="Right"
                     Width="80"
@@ -116,7 +116,7 @@
             <Button x:Name="btnImport"
                     Grid.Column="1"
                     Click="btnImport_Click"
-                    Content="Import"
+                    Content="{DynamicResource Import}"
                     ToolTip="Import mod from mod.xml or .iro"
                     HorizontalAlignment="Right"
                     Width="80"
@@ -131,15 +131,15 @@
                       Margin="5,0,0,0">
                 <ListView.ContextMenu>
                     <ContextMenu>
-                        <MenuItem x:Name="menuDeleteMod" Header="Remove Mod" Click="menuDeleteMod_Click"/>
+                        <MenuItem x:Name="menuDeleteMod" Header="{DynamicResource RemoveMod}" Click="menuDeleteMod_Click"/>
                     </ContextMenu>
                 </ListView.ContextMenu>
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="Auto"/>
-                        <GridViewColumn Header="Author" DisplayMemberBinding="{Binding Author}" Width="Auto"/>
-                        <GridViewColumn Header="Category" DisplayMemberBinding="{Binding Category}" Width="Auto"/>
-                        <GridViewColumn Header="Released" DisplayMemberBinding="{Binding ReleaseDate}" Width="Auto"/>
+                        <GridViewColumn Header="{DynamicResource Name}" DisplayMemberBinding="{Binding Name}" Width="Auto"/>
+                        <GridViewColumn Header="{DynamicResource Author}" DisplayMemberBinding="{Binding Author}" Width="Auto"/>
+                        <GridViewColumn Header="{DynamicResource Category}" DisplayMemberBinding="{Binding Category}" Width="Auto"/>
+                        <GridViewColumn Header="{DynamicResource Released}" DisplayMemberBinding="{Binding ReleaseDate}" Width="Auto"/>
                     </GridView>
                 </ListView.View>
             </ListView>
@@ -203,7 +203,7 @@
                              Style="{StaticResource createTextboxStyle}"
                              Grid.Column="1"/>
 
-                    <TextBlock Text="Author:"
+                    <TextBlock Text="{DynamicResource AuthorLabel}"
                         Style="{StaticResource createLabelStyle}"
                         Grid.Column="0"
                         Grid.Row="2"/>
@@ -211,14 +211,14 @@
                         Style="{StaticResource createTextboxStyle}"
                         Grid.Column="1" Grid.Row="2"/>
 
-                    <TextBlock Text="Name:"
+                    <TextBlock Text="{DynamicResource NameLabel}"
                         Style="{StaticResource createLabelStyle}"
                         Grid.Row="1"/>
                     <TextBox Text="{Binding NameInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Style="{StaticResource createTextboxStyle}"
                         Grid.Column="1" Grid.Row="1"/>
 
-                    <TextBlock Text="Description:"
+                    <TextBlock Text="{DynamicResource DescriptionLabel}"
                         Style="{StaticResource createLabelStyle}"
                         Grid.Column="0"
                         Grid.Row="3"/>
@@ -232,7 +232,7 @@
                              Height="100"
                              Grid.Column="1" Grid.Row="3"/>
 
-                    <TextBlock Text="Category:"
+                    <TextBlock Text="{DynamicResource CategoryLabel}"
                                Style="{StaticResource createLabelStyle}"
                                VerticalAlignment="Top"
                                Grid.Row="4"/>
@@ -259,7 +259,7 @@
                              Height="50"
                              Grid.Column="1" Grid.Row="5"/>
 
-                    <TextBlock Text="Version:"
+                    <TextBlock Text="{DynamicResource VersionLabel}"
                                Style="{StaticResource createLabelStyle}"
                                Grid.Column="0"
                                Grid.Row="6"/>
@@ -287,7 +287,7 @@
                     </Grid>
 
 
-                    <TextBlock Text="Release Notes:"
+                    <TextBlock Text="{DynamicResource ReleaseNotesLabel}"
                         Style="{StaticResource createLabelStyle}"
                         Grid.Column="0"
                         Grid.Row="7"/>

@@ -31,7 +31,7 @@
 
         <Button x:Name="btnLoad"
                 Click="btnLoad_Click"
-                Content="Generate Links"
+                Content="{DynamicResource GenerateLinks}"
                 IsEnabled="{Binding IsNotGenerating}"
                 HorizontalAlignment="Left"
                 Grid.Column="2"

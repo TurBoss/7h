@@ -3,6 +3,7 @@ using _7thWrapperLib;
 using Iros._7th;
 using Iros._7th.Workshop;
 using Iros.Mega;
+using SeventhHeaven.Classes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -403,7 +404,7 @@ namespace SeventhHeavenUI.ViewModels
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage($"Could not load mod xml: {e.Message}", true)
+                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.CouldNotLoadModXml)}: {e.Message}", true)
                 {
                     LoggedException = e
                 });
@@ -418,7 +419,7 @@ namespace SeventhHeavenUI.ViewModels
 
                 if (parsedMod == null)
                 {
-                    Sys.Message(new WMessage($"Could not load mod xml from .iro file", true));
+                    Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.CouldNotLoadModXmlFromIroFile), true));
                     return;
                 }
 
@@ -446,7 +447,7 @@ namespace SeventhHeavenUI.ViewModels
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage($"Could not load mod xml from .iro: {e.Message}", true)
+                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.CouldNotLoadModXmlFromIroFile)}: {e.Message}", true)
                 {
                     LoggedException = e
                 });
@@ -458,7 +459,7 @@ namespace SeventhHeavenUI.ViewModels
             try
             {
                 File.WriteAllText(pathToFile, GenerateCatalogOutput());
-                Sys.Message(new WMessage($"Successfully saved to {pathToFile}", true));
+                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.SuccessfullySavedTo)} {pathToFile}", true));
             }
             catch (Exception e)
             {
@@ -482,7 +483,7 @@ namespace SeventhHeavenUI.ViewModels
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage($"Could not load catalog xml: {e.Message}", true)
+                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.CouldNotLoadCatalogXml)}: {e.Message}", true)
                 {
                     LoggedException = e
                 });

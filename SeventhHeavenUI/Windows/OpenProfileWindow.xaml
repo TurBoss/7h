@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         mc:Ignorable="d"
         Style="{StaticResource MainWindowStyle}"
+        Title="{DynamicResource ManageProfiles}" 
         WindowStartupLocation="CenterScreen"
         Closing="Window_Closing"
-        Title="Manage Profiles" 
         ResizeMode="NoResize"
         Width="325" Height="400">
     <Window.Resources>
@@ -29,28 +29,28 @@
                     Click="SaveActiveProfile_Click"
                     Style="{StaticResource ImageButton}"
                     Content="{StaticResource iconSave}"
-                    ToolTip="Save Current Profile As ..."
+                    ToolTip="{DynamicResource SaveCurrentProfileAs}"
                     Height="32"
                     Width="32"/>
             <Button x:Name="btnCopyProfile"
                     Click="CopyProfile_Click"
                     Style="{StaticResource ImageButton}"
                     Content="{StaticResource iconCopy}"
-                    ToolTip="Copy Selected Profile To New Profile"
+                    ToolTip="{DynamicResource CopySelectedProfileToNewProfile}"
                     Height="32"
                     Width="32"/>
             <Button x:Name="btnDeleteProfile"
                     Click="DeleteProfile_Click"
                     Style="{StaticResource ImageButton}"
                     Content="{StaticResource iconDelete}"
-                    ToolTip="Delete Selected Profile"
+                    ToolTip="{DynamicResource DeleteSelectedProfile}"
                     Height="32"
                     Width="32"/>
             <Button x:Name="btnProfileDetails"
                     Click="ViewDetails_Click"
                     Style="{StaticResource ImageButton}"
                     Content="{StaticResource iconEye}"
-                    ToolTip="View Selected Profile Details"
+                    ToolTip="{DynamicResource ViewSelectedProfileDetails}"
                     Height="32"
                     Width="32"/>
         </WrapPanel>
@@ -64,7 +64,7 @@
 
         <Button x:Name="btnOk"
                 Grid.Row="2"
-                Content="Load Profile"
+                Content="{DynamicResource Load Profile}"
                 HorizontalAlignment="Center"
                 Margin="0,0,95,5"
                 Width="95"
