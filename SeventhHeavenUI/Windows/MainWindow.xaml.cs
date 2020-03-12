@@ -362,5 +362,11 @@ namespace SeventhHeavenUI
         {
             btnUpdateModType.IsEnabled = true;
         }
+
+        private void menuItemSetLanguage_Click(object sender, RoutedEventArgs e)
+        {
+            SetLanguageWindow languageWindow = new SetLanguageWindow();
+            languageWindow.ShowDialog();
+        }
     }
 }

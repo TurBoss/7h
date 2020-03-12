@@ -141,7 +141,8 @@
                             <MenuItem x:Name="menuItemLaunchSettings" Header="{DynamicResource GameLauncher}" Click="menuItemLaunchSettings_Click"/>
 
                             <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
-                            <MenuItem x:Name="menuItemOpenProfile" Header="Profiles..." Click="menuItemOpenProfile_Click"/>
+                            <MenuItem x:Name="menuItemOpenProfile" Header="{DynamicResource Profiles}" Click="menuItemOpenProfile_Click"/>
+                            <MenuItem x:Name="menuItemSetLanguage" Header="{DynamicResource Language}" Click="menuItemSetLanguage_Click"/>
                         </ContextMenu>
                     </cls:ButtonWithImage.ContextMenu>
                 </cls:ButtonWithImage>

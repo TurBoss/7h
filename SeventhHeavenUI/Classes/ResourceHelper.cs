@@ -252,6 +252,10 @@ namespace SeventhHeaven.Classes
         AreYouSureYouWantToDeleteSelectedProfile,
         SelectProfileToContinue,
         NoProfileSelected,
+        English,
+        French,
+        German,
+        Spanish,
 
     }
 

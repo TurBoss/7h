@@ -5,7 +5,7 @@
     <!--TODO: TRANSLATION NEEDED-->
 
     <!--Main Window Buttons-->
-    <system:String x:Key="Play">Play</system:String>
+    <system:String x:Key="Play">Spielen</system:String>
     <system:String x:Key="PlayWithMods">Play With Mods (default)</system:String>
     <system:String x:Key="PlayWithNoMods">Play Without Mods</system:String>
     <system:String x:Key="PlayWithDebugLog">Play With Debug Log</system:String>
@@ -16,6 +16,9 @@
     <system:String x:Key="GeneralSettings">General Settings...</system:String>
     <system:String x:Key="GameDriver">Game Driver...</system:String>
     <system:String x:Key="GameLauncher">Game Launcher...</system:String>
+    <system:String x:Key="Profiles">Profiles...</system:String>
+    <system:String x:Key="Language">Language...</system:String>
+
 
     <system:String x:Key="Tools">Tools</system:String>
     <system:String x:Key="CatalogModCreationTool">Catalog/Mod Creation Tool...</system:String>
@@ -124,6 +127,7 @@
     <system:String x:Key="IROToolsWindowTitle">IRO Tools</system:String>
     <system:String x:Key="ChunkToolWindowTitle">Chunk Tool</system:String>
     <system:String x:Key="ManageProfiles">Manage Profiles</system:String>
+    <system:String x:Key="SetLanguageWindowTitle">Set Language</system:String>
 
 
 
@@ -701,6 +705,14 @@ Click 'Cancel' to stop the process.</system:String>
 
     <!--UnhandledErrorWindow Strings-->
     <system:String x:Key="AnUnhandledExceptionOccurredAppMustClose">An unhandled exception has occurred and the app must close.</system:String>
+
+
+    <system:String x:Key="SelectLanguage">Select Language:</system:String>
+    <system:String x:Key="English">English</system:String>
+    <system:String x:Key="French">French</system:String>
+    <system:String x:Key="German">German</system:String>
+    <system:String x:Key="Spanish">Spanish</system:String>
+
 
 
 </ResourceDictionary>

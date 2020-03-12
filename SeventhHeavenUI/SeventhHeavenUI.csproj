@@ -199,6 +199,7 @@
     <Compile Include="ViewModels\ProgramToRunViewModel.cs" />
     <Compile Include="Classes\SilenceWaveProvider.cs" />
     <Compile Include="ViewModels\DownloadLinkViewModel.cs" />
+    <Compile Include="ViewModels\SetLanguageViewModel.cs" />
     <Compile Include="ViewModels\SubscriptionSettingViewModel.cs" />
     <Compile Include="ViewModels\GLSettingViewModel.cs" />
     <Compile Include="ViewModels\MessageDialogViewModel.cs" />
@@ -252,6 +253,9 @@
     </Compile>
     <Compile Include="Windows\OpenProfileWindow.xaml.cs">
       <DependentUpon>OpenProfileWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SetLanguageWindow.xaml.cs">
+      <DependentUpon>SetLanguageWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\ThemeSettingsWindow.xaml.cs">
       <DependentUpon>ThemeSettingsWindow.xaml</DependentUpon>
@@ -386,6 +390,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\OpenProfileWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\SetLanguageWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

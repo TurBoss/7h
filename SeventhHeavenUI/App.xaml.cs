@@ -6,6 +6,7 @@ using SeventhHeaven.Classes.WCF;
 using SeventhHeaven.ViewModels;
 using SeventhHeaven.Windows;
 using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -273,7 +274,23 @@ namespace SeventhHeavenUI
             System.Windows.Forms.Application.EnableVisualStyles();
             System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
 
-            SetLanguageDictionary();
+            string defaultLang;
+            try
+            {
+                // check if default language saved in app settings; otherwise detect language from thread
+                defaultLang = ConfigurationManager.AppSettings["DefaultAppLanguage"];
+            }
+            catch (Exception)
+            {
+                defaultLang = GetCultureFromCurrentThread();
+            }
+
+            if (string.IsNullOrWhiteSpace(defaultLang))
+            {
+                defaultLang = GetCultureFromCurrentThread();
+            }
+
+            SetLanguageDictionary(defaultLang);
             SetupExceptionHandling();
         }
 
@@ -315,17 +332,21 @@ namespace SeventhHeavenUI
             Dispatcher.PushFrame(frame);
         }
 
-        private void SetLanguageDictionary()
+        public static string GetCultureFromCurrentThread()
+        {
+            return Thread.CurrentThread.CurrentCulture.ToString();
+        }
+
+        internal void SetLanguageDictionary(string cultureCode)
         {
             ResourceDictionary dict = new ResourceDictionary();
-            string detectedCulture = Thread.CurrentThread.CurrentCulture.ToString();
 
-            if (string.IsNullOrEmpty(detectedCulture) || detectedCulture.Length < 2)
+            if (string.IsNullOrWhiteSpace(cultureCode) || cultureCode.Length < 2)
             {
                 return; // could not determine culture from thread so default language resource (English) will be used
             }
 
-            switch (detectedCulture.Substring(0,2))
+            switch (cultureCode.Substring(0, 2))
             {
                 case "en":
                     dict.Source = new Uri("Resources\\StringResources.xaml", UriKind.Relative);
