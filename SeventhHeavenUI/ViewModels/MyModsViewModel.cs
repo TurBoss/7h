@@ -898,6 +898,8 @@ namespace SeventhHeavenUI.ViewModels
                     continue;
                 }
 
+                int currentIndex = i; // starts at i but could be changed due to order constraints
+
                 foreach (Guid after in info.OrderAfter)
                 {
                     int afterIndex = sortedList.FindIndex(m => m.InstallInfo.ModID.Equals(after));
@@ -908,11 +910,12 @@ namespace SeventhHeavenUI.ViewModels
                         continue;
                     }
 
-                    if (afterIndex > i)
+                    if (afterIndex > currentIndex)
                     {
                         // move mod to come after this guid
-                        sortedList.RemoveAt(i);
+                        sortedList.RemoveAt(currentIndex);
                         sortedList.Insert(afterIndex, installedMod);
+                        currentIndex = afterIndex;
                     }
                 }
 
@@ -926,11 +929,12 @@ namespace SeventhHeavenUI.ViewModels
                         continue;
                     }
 
-                    if (beforeIndex < i)
+                    if (beforeIndex < currentIndex)
                     {
                         // move mod to come before this guid
-                        sortedList.RemoveAt(i);
+                        sortedList.RemoveAt(currentIndex);
                         sortedList.Insert(beforeIndex, installedMod);
+                        currentIndex = beforeIndex;
                     }
                 }
 
