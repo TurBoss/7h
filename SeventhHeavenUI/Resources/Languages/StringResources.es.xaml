@@ -3,7 +3,6 @@
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
     <!--TODO: TRANSLATION NEEDED-->
-
     <!--Main Window Buttons-->
     <system:String x:Key="Play">Jugar</system:String>
     <system:String x:Key="PlayWithMods">Play With Mods (default)</system:String>
@@ -713,6 +712,230 @@ Click 'Cancel' to stop the process.</system:String>
     <system:String x:Key="German">German</system:String>
     <system:String x:Key="Spanish">Spanish</system:String>
 
+    <!--GameLauncher Strings-->
+    <system:String x:Key="CheckingFf7IsNotRunning">Checking FF7 is not running ...</system:String>
+    <system:String x:Key="Ff7IsAlreadyRunning">FF7 Is Already Running!</system:String>
+    <system:String x:Key="Ff7IsAlreadyRunningDoYouWantToForceClose" xml:space="preserve">FF7 is already running. Do you want to force close it?
+
+Click Yes to close all current instances of FF7. Click No to start another instance.</system:String>
+
+    <system:String x:Key="ForceClosingAllInstancesFf7">force closing all instances of FF7 ...</system:String>
+    <system:String x:Key="Aborting">Aborting ...</system:String>
+    <system:String x:Key="FailedToCloseProcess">failed to close process</system:String>
+    <system:String x:Key="CheckingFf7ExeExistsAt">Checking FF7 .exe exists at</system:String>
+    <system:String x:Key="FileNotFoundAborting">file not found. Aborting ...</system:String>
+    <system:String x:Key="Ff7ExeNotFoundYouMayNeedToConfigure">FF7.exe not found. You may need to configure 7H using the Settings>General Settings menu.</system:String>
+    <system:String x:Key="VerifyingInstalledGameIsCompatible">Verifying installed game is compatible ...</system:String>
+    <system:String x:Key="ErrorCodeYarr">Error code: YARR! Unable to continue. Please report this error on the Qhimm forums.</system:String>
+    <system:String x:Key="VerifyingGameIsNotInstalledInProtectedFolder">Verifying game is not installed in a System/Protected folder ...</system:String>
+
+    <system:String x:Key="Ff7IsCurrentlyInstalledInASystemFolder" xml:space="preserve">FF7 is currently installed in a System folder which can cause mods not to work. It is recommended you install it at C:\Games\Final Fantasy VII
+
+Would you like to automatically copy your installation to C:\Games\Final Fantasy VII to continue?</system:String>
+
+    <system:String x:Key="CanNotContinueDueToFf7nstalledInProtectedFolder">can not continue due to FF7 being installed in System/Protected folder. Aborting...</system:String>
+    <system:String x:Key="CannotContinue">Cannot Continue!</system:String>
+
+    <system:String x:Key="CopyingGameFilesTo">copying game files to</system:String>
+    <system:String x:Key="FailedToCopyFf7To">failed to copy FF7 to</system:String>
+
+    <system:String x:Key="VerifyingGameIsMaxInstall">Verifying game is full/max install ...</system:String>
+    <system:String x:Key="YourFf7InstallationFolderIsMissingCriticalFiles" xml:space="preserve">Your FF7 installation folder is missing critical file(s). When you installed FF7, you may have accidentally chosen to install the 'Standard Install', but the 'Maximum Install' is required.
+
+7th Heaven can repair this for you automatically. Simply insert one of your game discs and try again.</system:String>
+
+    <system:String x:Key="CreatingMissingRequiredDirectories">Creating missing required directories ...</system:String>
+    <system:String x:Key="VerifyingAdditionalFilesForBattleAndKernelFoldersExist">Verifying additional files for 'battle' and 'kernel' folders exist ...</system:String>
+    <system:String x:Key="FailedToVerifyCopyMissingAdditionalFiles">Failed to verify/copy missing additional files. Aborting...</system:String>
+
+    <system:String x:Key="VerifyingAllMovieFilesExist">Verifying all movie files exist ...</system:String>
+    <system:String x:Key="CouldNotFindAllMovieFilesAt">could not find all movie files at</system:String>
+    <system:String x:Key="AllFilesFoundAt">all files found at</system:String>
+    <system:String x:Key="UpdatingMoviePathSetting">Updating movie path setting.</system:String>
+    <system:String x:Key="AttemptingToCopyMovieFiles">attempting to copy movie files ...</system:String>
+
+    <system:String x:Key="MovieFilesAreMissing">Movie files are missing!</system:String>
+    <system:String x:Key="InOrderToSeeInGameMoviesYouWillNeedMessage" xml:space="preserve">In order to see in-game movies, you will need to download and activate a movie mod.
+
+Alternatively, you can import your movie files from disc by going to Settings>Game Launcher... > Import Movies from Disc.
+
+Lastly, you can set your movie path in 'General Settings' to point to your game disc's 'FF7\Movies' folder, but you will be required to change discs while playing the game.</system:String>
+
+    <system:String x:Key="VerifyingMusicFilesExist">Verifying music files exist ...</system:String>
+    <system:String x:Key="CouldNotFindAllMusicFilesAt">could not find all music files at</system:String>
+    <system:String x:Key="AttemptingToCopyMusicFiles">attempting to copy music files ...</system:String>
+
+    <system:String x:Key="OggMusicFilesAreMissing">.OGG music files are missing!</system:String>
+    <system:String x:Key="InOrderToHearHighQualityMusicYouWillNeedMessage" xml:space="preserve">In order to hear high quality background music, you will need to download and activate a music mod.
+
+Alternatively, you can listen to the game's original low quality MIDI music, but you will need to select 'Original MIDI' for your 'Music Option' which can be found under Settings>Game Driver... > Advanced tab.
+
+Later, if you wish to use high quality .OGG files, switch the setting back to 'VGMstream'.</system:String>
+
+    <system:String x:Key="VerifyingLatestGameDriverIsInstalled">Verifying latest game driver is installed ...</system:String>
+    <system:String x:Key="SomethingWentWrongTryingToDetectGameDriver">Something went wrong trying to detect/install game driver. Aborting ...</system:String>
+    <system:String x:Key="VerifyingGameDriverShadersFoldersExist">Verifying game driver shaders folders exist ...</system:String>
+
+    <system:String x:Key="VerifyingFf7Exe">Verifying ff7 exe ...</system:String>
+    <system:String x:Key="Ff7ExeDetectedToBeDifferent">ff7.exe detected to be different. creating backup and copying correct .exe ...</system:String>
+    <system:String x:Key="FailedToCopyFf7Exe">failed to copy ff7.exe. Aborting ...</system:String>
+    <system:String x:Key="FailedToCreateBackupOfFf7Exe">failed to create backup of ff7.exe. Aborting ...</system:String>
+
+    <system:String x:Key="Ff7ConfigExeDetectedToBeMissingOrDifferent">FF7Config.exe missing or detected to be different. creating backup (if exists) and copying correct .exe ...</system:String>
+    <system:String x:Key="FailedToCopyFf7ConfigExe">failed to copy FF7Config.exe. Aborting ...</system:String>
+    <system:String x:Key="FailedToCreateBackupOfFf7ConfigExe">failed to create backup of FF7Config.exe. Aborting ...</system:String>
+
+    <system:String x:Key="CheckingAProfileIsActive">Checking a profile is active ...</system:String>
+    <system:String x:Key="ActiveProfileNotFound">active profile not found. Aborting ...</system:String>
+    <system:String x:Key="CreateAProfileFirstAndTryAgain">Create a profile first in Settings>Profiles and try again.</system:String>
+
+    <system:String x:Key="CheckingModCompatibilityRequirements">Checking mod compatibility requirements ...</system:String>
+    <system:String x:Key="FailedModCompatibilityCheck">failed mod compatibility check. Aborting ...</system:String>
+
+    <system:String x:Key="CheckingModConstraintsForCompatibility">Checking mod constraints for compatibility ...</system:String>
+    <system:String x:Key="FailedModConstraintCheck">failed mod constraint check. Aborting ...</system:String>
+
+    <system:String x:Key="CheckingModLoadOrderRequirements">Checking mod load order requirements ...</system:String>
+    <system:String x:Key="FailedModLoadOrderCheck">failed mod load order check. Aborting ...</system:String>
+
+    <system:String x:Key="LookingForGameDisc">Looking for game disc ...</system:String>
+    <system:String x:Key="FoundGameDiscAt">Found game disc at</system:String>
+    <system:String x:Key="FailedToFindGameDisc">Failed to find game disc ...</system:String>
+    <system:String x:Key="OsDoesNotSupportAutoMounting">OS does not support auto mounting virtual disc. You must mount a virtual disc named FF7DISC1.ISO, insert a USB flash drive named FF7DISC1, or rename a Hard Drive to FF7DISC1 ...</system:String>
+    <system:String x:Key="AutoMountingVirtualGameDisc">Auto mounting virtual game disc ...</system:String>
+    <system:String x:Key="FailedToAutoMountVirtualDiscAt">Failed to auto mount virtual disc at</system:String>
+    <system:String x:Key="LookingForGameDiscAfterMounting">Looking for game disc after mounting ...</system:String>
+    <system:String x:Key="FailedToFindGameDiscAfterAutoMounting">Failed to find game disc after auto mounting ...</system:String>
+
+    <system:String x:Key="UserRequestedToPlayWithNoModsLaunchingGameAsVanilla">User requested to play with no mods. Launching game as 'vanilla' ...</system:String>
+    <system:String x:Key="NoModsActivatedLaunchingGameAsVanilla">No mods have been activated. Launching game as 'vanilla' ...</system:String>
+    <system:String x:Key="SelectedRendererIsNotSetToCustomLaunchingGameAsVanilla">Selected Renderer is not set to 'Custom 7H Game Driver'. Launching game as 'vanilla' ...</system:String>
+
+    <system:String x:Key="CreatingRuntimeProfile">Creating Runtime Profile ...</system:String>
+    <system:String x:Key="FailedToCreateRuntimeProfileForActiveMods">failed to create Runtime Profile for active mods ...</system:String>
+
+    <system:String x:Key="VariableDumpSetToTrueStartingTurboLog">Variable Dump set to true. Starting TurBoLog ...</system:String>
+    <system:String x:Key="CopyingEasyHookToFf7PathIfNotFoundOrOlder">Copying EasyHook.dll to FF7 path (if not found or older version detected) ...</system:String>
+
+    <system:String x:Key="CopyingFf7InputCfgToFf7Path">Copying ff7input.cfg to FF7 path ...</system:String>
+    <system:String x:Key="DebugLoggingSetToTrueDetailedLoggingWillBeWrittenTo">Debug Logging set to true. Detailed logging will be written to</system:String>
+
+    <system:String x:Key="CheckingIfReunionModIsInstalled">Checking if Reunion mod is installed ...</system:String>
+    <system:String x:Key="Found">found</system:String>
+    <system:String x:Key="DisablingReunionMod">Disabling Reunion mod (rename ddraw.dll -> Reunion.dll.bak) ...</system:String>
+    <system:String x:Key="ReenablingReunionMod">Re-enabling Reunion mod (rename ddraw.dll -> Reunion.dll.bak) ...</system:String>
+
+    <system:String x:Key="LaunchingAdditionalProgramsToRunIfAny">Launching additional programs to run (if any) ...</system:String>
+    <system:String x:Key="WritingTemporaryRuntimeProfileFileTo">Writing temporary runtime profile file to</system:String>
+
+    <system:String x:Key="AttemptingToInjectWithEasyHook">Attempting to inject with EasyHook: try # {0} (of {1}) ...</system:String>
+    <system:String x:Key="ReceivedErrors">received errors</system:String>
+    <system:String x:Key="ReachedTimeoutWaitingForInjection">reached timeout waiting for injection ...</system:String>
+    <system:String x:Key="ReceivedUnknownError">received unknown error</system:String>
+    <system:String x:Key="FailedToInjectAfterMaxAmountOfTries">Failed to inject after max amount of tries</system:String>
+
+    <system:String x:Key="ErrorFailedToStartGame">Error - Failed To Start Game</system:String>
+    <system:String x:Key="FailedToInjectWithEasyHookMessage" xml:space="preserve">Failed to inject with EasyHook after trying multiple times. This is usually fixed by setting the 'Code 5 Fix' to 'On' in the Game Launcher Settings.
+
+Do you want to apply the setting and try again?</system:String>
+
+    <system:String x:Key="SettingCompatibilityFixAndTryingAgain">Setting compatibility fix and trying again ...</system:String>
+    <system:String x:Key="StillFailedToInjectWithEasyHookAborting">Still failed to inject with EasyHook after setting compatibility fix. Aborting ...</system:String>
+    <system:String x:Key="FailedToInjectWithEasyHookAfterSettingFlags">Failed inject with EasyHook even after setting the compatibility flags</system:String>
+    <system:String x:Key="UserChoseNotToSetCompatibilityFix">user chose not to set compatibility fix. Aborting ...</system:String>
+
+    <system:String x:Key="GettingFf7Proc">Getting FF7 proc ...</system:String>
+    <system:String x:Key="FailedToGetFf7Proc">failed to get FF7 proc. Aborting ...</system:String>
+    <system:String x:Key="DebugLoggingSetToTrueWiringUpLogFile">Debug logging set to true. wiring up log file to open after game exit ...</system:String>
+    <system:String x:Key="FailedToStartProcessForDebugLog">Failed to start process for debug log</system:String>
+
+    <system:String x:Key="StartingProgramsForMods">Starting programs for mods ...</system:String>
+    <system:String x:Key="StartingPluginsForMods">Starting plugins for mods ...</system:String>
+    <system:String x:Key="SettingUpFf7ExeToStopPluginsAndModPrograms">Setting up FF7 .exe to stop plugins and mod programs after exiting ...</system:String>
+
+    <system:String x:Key="StoppingOtherProgramsForMods">Stopping other programs for mods started by 7H ...</system:String>
+    <system:String x:Key="AutoUnmountingGameDisc">Auto unmounting game disc ...</system:String>
+
+    <system:String x:Key="WaitingForFf7ExeToRespond">Waiting for FF7 .exe to respond ({0} seconds max) ...</system:String>
+    <system:String x:Key="ExceptionOccurredWhileTryingToStart">Exception occurred while trying to start FF7 ...</system:String>
+
+    <system:String x:Key="PluginAdded">plugin added</system:String>
+    <system:String x:Key="StartingPlugin">starting plugin</system:String>
+
+    <system:String x:Key="FailedToGetListOfRuntimeMods">failed to get list of Runtime Mods due to a missing variable for a mod</system:String>
+    <system:String x:Key="AddingPathsToMonitor">adding paths to monitor ...</system:String>
+
+    <system:String x:Key="DetectedToBeOlderVersion">detected to be older version</system:String>
+    <system:String x:Key="Copied">copied</system:String>
+    <system:String x:Key="SkippedCopying">skipped copying</system:String>
+
+    <system:String x:Key="AnExceptionOccurredTryingToStartFf7At">An exception occurred while trying to start FF7 at</system:String>
+
+    <system:String x:Key="ThereWasAnErrorVerifyingModConstraintSeeTheFollowingDetails">There was an error verifying the mod constraint. See the following details:</system:String>
+    <system:String x:Key="TheFollowingSettingsHaveBeenChangedToMakeTheseModsCompatible">The following settings have been changed to make these mods compatible:</system:String>
+
+
+    <system:String x:Key="ModRequiresYouToActivateAsWell">Mod {0} requires you to activate {1} as well.</system:String>
+    <system:String x:Key="ModRequiresYouToActivateButYouDoNotHaveCompatibleVersionInstalled">Mod {0} requires you to activate {1}, but you do not have a compatible version installed. Try updating it?</system:String>
+    <system:String x:Key="UnsupportedModVersion">Unsupported Mod Version</system:String>
+
+    <system:String x:Key="IncompatibleMod">Incompatible Mod</system:String>
+    <system:String x:Key="ModIsNotCompatibleWithTheVersionYouHaveInstalled">Mod {0} is not compatible with the version of {1} you have installed. Try updating it?</system:String>
+    <system:String x:Key="ModIsNotCompatibleWithYouWillNeedToDisableIt">Mod {0} is not compatible with {1}. You will need to disable it.</system:String>
+
+    <system:String x:Key="TheFollowingModsWillNotWorkProperlyInTheCurrentOrder">The following mods will not work properly in the current order. Do you want to continue anyway?</system:String>
+    <system:String x:Key="LoadOrderIncompatible">Load Order Incompatible</system:String>
+    <system:String x:Key="ModIsMeantToComeBelowModInTheLoadOrder">Mod {0} is meant to come BELOW mod {1} in the load order</system:String>
+    <system:String x:Key="ModIsMeantToComeAboveModInTheLoadOrder">Mod {0} is meant to come ABOVE mod {1} in the load order</system:String>
+
+    <system:String x:Key="CouldNotFindDdrawDllAt">could not find ddraw.dll at</system:String>
+    <system:String x:Key="CouldNotFindReunionDllBakAt">could not find Reunion.dll.bak at</system:String>
+    <system:String x:Key="Renamed">renamed</system:String>
+
+    <system:String x:Key="ApplyingChangedValuesToRegistry">Applying changed values to registry ...</system:String>
+    <system:String x:Key="ApplyingCompatibilityFlagsInRegistry">Applying compatibility flags in registry (if any) ...</system:String>
+    <system:String x:Key="Code5FixHighDpiFixSetToFalseDeletingFlags">Code 5 fix / High DPI fix set to false - deleting flags if exist ...</system:String>
+    <system:String x:Key="CompatibilityFlagsFoundDeleting">compatibility flags found - deleting</system:String>
+    <system:String x:Key="Code5FixSetToTrueApplyingCompatibilityFlag">Code 5 fix set to true - applying 640x480 compatibility flag in registry</system:String>
+    <system:String x:Key="HighDpiFixSetToTrueApplyingCompatibilityFlag">High DPI Fix set to true - applying HIGHDPIAWARE compatibility flag in registry</system:String>
+
+    <system:String x:Key="UsingControlConfigurationFile">using control configuration file</system:String>
+    <system:String x:Key="InputCfgFileNotFoundAt">input cfg file not found at</system:String>
+    <system:String x:Key="FailedToCopyCfgFile">failed to copy .cfg file</system:String>
+
+    <system:String x:Key="StartingProgram">starting program</system:String>
+    <system:String x:Key="Started">started ...</system:String>
+    <system:String x:Key="WaitingForProgramToInitializeAndShow">waiting for program to initialize and show ...</system:String>
+    <system:String x:Key="TimeoutReachedWaitingForProgramToShow">timeout (of {program.WaitTimeOutInSeconds} seconds) reached waiting for program to show. Continuing...</system:String>
+    <system:String x:Key="ProgramAlreadyRunning">program already running</system:String>
+
+
+
+
+    <!--GameConverter Class Strings-->
+    <system:String x:Key="NotFoundScanningDiscsForFiles">not found. Scanning disc(s) for files ...</system:String>
+    <system:String x:Key="FoundFileOnAtCopyingFile">found file on {0} at {1}. Copying file ...</system:String>
+    <system:String x:Key="FailedToCopyErrorHasBeenLogged">failed to copy. Error has been logged</system:String>
+    <system:String x:Key="FailedToFindOnAnyDisc">failed to find {file} on any disc ...</system:String>
+    <system:String x:Key="FileNotFound">file not found...</system:String>
+    <system:String x:Key="CannotCopySourceFileBecauseItIsMissingAt">cannot copy source file because it is missing at</system:String>
+    <system:String x:Key="CopyingFileFrom">copying file from</system:String>
+
+    <system:String x:Key="CannotCheckIfLatestDriverIsInstalledDueToMissingFile">cannot check if latest driver is installed due to missing file</system:String>
+    <system:String x:Key="GameDriverDllFileIsUpToDate">7H_GameDriver.dll file is up to date.</system:String>
+    <system:String x:Key="BackingUpExistingGameDriverTo">backing up existing game driver to</system:String>
+    <system:String x:Key="BackingUpExistingGameDriverCfgTo">backing up existing game driver .cfg to</system:String>
+    <system:String x:Key="GameDriverCfgFileMissingCopyingDefaultFrom">7H_GameDriver.cfg file is missing. Copying default from</system:String>
+    <system:String x:Key="CannotCreateDefaultCfgDueToMissingFile">cannot create default .cfg due to missing file</system:String>
+    <system:String x:Key="BackingUpExistingShadersFolderTo">backing up existing 'shaders' folder to</system:String>
+    <system:String x:Key="CopyingContentsOf">copying contents of</system:String>
+    <system:String x:Key="DirectoryMissingCreating">directory missing. creating</system:String>
+    <system:String x:Key="OldGameConverterRegistryKeysFoundBackingUp">Old Game Converter registry keys found. Backing up old converter files and registry ...</system:String>
+
+    <system:String x:Key="MissingShadersNolightFolderCreatingDirectory">missing shaders/nolight folder. Creating directory ...</system:String>
+    <system:String x:Key="MissingShadersComplexMultiShaderFolderCreatingDirectory">missing shaders/ComplexMultiShader_Nvidia folder. Creating directory ...</system:String>
+    <system:String x:Key="MissingShadersFolderCreatingDirectory">missing shaders folder. Copying from Resources/Game Driver/ ...</system:String>
+    <system:String x:Key="MissingShadersFilesCopyingFrom">missing shader file: {0}. Copying from {1} ...</system:String>
 
 
 </ResourceDictionary>

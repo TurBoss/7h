@@ -499,7 +499,7 @@ namespace SeventhHeaven.Classes
                     continue;
                 }
 
-                SendMessage($"...\t {file} not found. Scanning disc(s) for files ...", NLog.LogLevel.Warn);
+                SendMessage($"...\t {file} {ResourceHelper.GetString(StringKey.NotFoundScanningDiscsForFiles)}", NLog.LogLevel.Warn);
 
                 // search all drives for the file
                 bool foundFileOnDrive = false;
@@ -519,17 +519,17 @@ namespace SeventhHeaven.Classes
                         if (File.Exists(fullSourcePath))
                         {
                             foundFileOnDrive = true;
-                            SendMessage($"... \t found file on {label} at {driveLetter}. Copying file ...");
+                            SendMessage($"... \t {string.Format(ResourceHelper.GetString(StringKey.FoundFileOnAtCopyingFile), label, driveLetter)}");
                             try
                             {
                                 Directory.CreateDirectory(Path.GetDirectoryName(fullTargetPath)); // ensure all subfolders are created
                                 File.Copy(fullSourcePath, fullTargetPath, true);
-                                SendMessage($"... \t\t copied!");
+                                SendMessage($"... \t\t {ResourceHelper.GetString(StringKey.Copied)}!");
                             }
                             catch (Exception e)
                             {
                                 Logger.Error(e);
-                                SendMessage($"... \t\t failed to copy. Error has been logged", NLog.LogLevel.Warn);
+                                SendMessage($"... \t\t {ResourceHelper.GetString(StringKey.FailedToCopyErrorHasBeenLogged)}", NLog.LogLevel.Warn);
                             }
                         }
                     }
@@ -543,7 +543,7 @@ namespace SeventhHeaven.Classes
                 // at this point if file not found/copied on any drive then failed verification
                 if (!foundFileOnDrive)
                 {
-                    SendMessage($"... \t failed to find {file} on any disc ...", NLog.LogLevel.Warn);
+                    SendMessage($"... \t {string.Format(ResourceHelper.GetString(StringKey.FailedToFindOnAnyDisc), file)}", NLog.LogLevel.Warn);
                     foundAllFiles = false;
                 }
             }
@@ -579,25 +579,25 @@ namespace SeventhHeaven.Classes
                     continue; // file exists as expected
                 }
 
-                SendMessage($"... \t{file} file not found", NLog.LogLevel.Warn);
+                SendMessage($"... \t{file} {ResourceHelper.GetString(StringKey.FileNotFound)}", NLog.LogLevel.Warn);
 
                 string fullSourcePath = Path.Combine(InstallPath, "data", "lang-en", file);
                 if (!File.Exists(fullSourcePath))
                 {
-                    SendMessage($"... \tcannot copy source file because it is missing at {fullSourcePath}", NLog.LogLevel.Warn);
+                    SendMessage($"... \t{ResourceHelper.GetString(StringKey.CannotCopySourceFileBecauseItIsMissingAt)} {fullSourcePath}", NLog.LogLevel.Warn);
                     return false;
                 }
 
 
                 try
                 {
-                    SendMessage($"... \tcopying file from {fullSourcePath}");
+                    SendMessage($"... \t{ResourceHelper.GetString(StringKey.CopyingFileFrom)} {fullSourcePath}");
                     File.Copy(fullSourcePath, fullTargetPath, true);
                 }
                 catch (Exception e)
                 {
                     Logger.Error(e);
-                    SendMessage($"... \tfailed to copy: {e.Message}", NLog.LogLevel.Warn);
+                    SendMessage($"... \t{ResourceHelper.GetString(StringKey.FailedToCopyErrorHasBeenLogged)}: {e.Message}", NLog.LogLevel.Warn);
                     return false;
                 }
             }
@@ -662,7 +662,7 @@ namespace SeventhHeaven.Classes
                 string otherPath = Path.Combine(new string[] { InstallPath, "data", "lang-en", "movies", file });
                 if (File.Exists(otherPath))
                 {
-                    SendMessage($"\tcopying {otherPath} to {fullPath}");
+                    SendMessage($"\t{ResourceHelper.GetString(StringKey.Copying).ToLower()} {otherPath} -> {fullPath}");
                     File.Copy(otherPath, fullPath, true);
                     continue;
                 }
@@ -726,7 +726,7 @@ namespace SeventhHeaven.Classes
 
                 try
                 {
-                    SendMessage($"\tcopying music file {sourcePath} to {fullTargetPath}");
+                    SendMessage($"\t{ResourceHelper.GetString(StringKey.Copying).ToLower()} {sourcePath} -> {fullTargetPath}");
                     File.Copy(sourcePath, fullTargetPath, true);
                 }
                 catch (Exception e)
@@ -750,7 +750,7 @@ namespace SeventhHeaven.Classes
 
             if (!File.Exists(pathToLatestFile))
             {
-                SendMessage($"cannot check if latest driver is installed due to missing file: {pathToLatestFile}", NLog.LogLevel.Warn);
+                SendMessage($"{ResourceHelper.GetString(StringKey.CannotCheckIfLatestDriverIsInstalledDueToMissingFile)}: {pathToLatestFile}", NLog.LogLevel.Warn);
                 return true; // return true so it does not halt process
             }
 
@@ -764,7 +764,7 @@ namespace SeventhHeaven.Classes
 
             if (currentFileVersion != null && latestFileVersion != null && new Version(currentFileVersion.FileVersion).CompareTo(new Version(latestFileVersion.FileVersion)) >= 0)
             {
-                SendMessage("\t7H_GameDriver.dll file is up to date.");
+                SendMessage($"\t{ResourceHelper.GetString(StringKey.GameDriverDllFileIsUpToDate)}");
                 return true; // file exist and matches what is in /Game Driver folder
             }
 
@@ -773,14 +773,14 @@ namespace SeventhHeaven.Classes
                 if (File.Exists(pathToCurrentFile))
                 {
                     Directory.CreateDirectory(backupFolderPath);
-                    SendMessage($"\tbacking up existing game driver to {backupFolderPath} ...");
+                    SendMessage($"\t{ResourceHelper.GetString(StringKey.BackingUpExistingGameDriverTo)} {backupFolderPath} ...");
                     File.Copy(pathToCurrentFile, Path.Combine(backupFolderPath, "7H_GameDriver.dll"), true);
                 }
 
                 if (File.Exists(pathToCurrentCfg))
                 {
                     Directory.CreateDirectory(backupFolderPath);
-                    SendMessage($"\tbacking up existing game driver .cfg to {backupFolderPath} ...");
+                    SendMessage($"\t{ResourceHelper.GetString(StringKey.BackingUpExistingGameDriverCfgTo)} {backupFolderPath} ...");
                     File.Copy(pathToCurrentCfg, Path.Combine(backupFolderPath, "7H_GameDriver.cfg"), true);
                 }
                 else
@@ -788,12 +788,12 @@ namespace SeventhHeaven.Classes
                     // copy default .cfg if it is missing
                     if (File.Exists(pathToLatestCfg))
                     {
-                        SendMessage($"\t7H_GameDriver.cfg file is missing. Copying default from {Sys.PathToGameDriverFolder} ...", NLog.LogLevel.Warn);
+                        SendMessage($"\t{ResourceHelper.GetString(StringKey.GameDriverCfgFileMissingCopyingDefaultFrom)} {Sys.PathToGameDriverFolder} ...", NLog.LogLevel.Warn);
                         File.Copy(pathToLatestCfg, pathToCurrentCfg, true);
                     }
                     else
                     {
-                        SendMessage($"\tcannot create default .cfg due to missing file: {pathToLatestCfg} ...", NLog.LogLevel.Error);
+                        SendMessage($"\t{ResourceHelper.GetString(StringKey.CannotCreateDefaultCfgDueToMissingFile)}: {pathToLatestCfg} ...", NLog.LogLevel.Error);
                         return false;
                     }
                 }
@@ -801,7 +801,7 @@ namespace SeventhHeaven.Classes
                 string pathToShaders = Path.Combine(InstallPath, "shaders");
                 if (Directory.Exists(pathToShaders) && Directory.GetFiles(pathToShaders).Length > 0)
                 {
-                    SendMessage($"\tbacking up existing shaders folder to {backupFolderPath} ...");
+                    SendMessage($"\t{ResourceHelper.GetString(StringKey.BackingUpExistingShadersFolderTo)} {backupFolderPath} ...");
                     Directory.CreateDirectory(Path.Combine(backupFolderPath, "shaders"));
                     FileUtils.CopyDirectoryRecursively(Path.Combine(InstallPath, "shaders"), Path.Combine(backupFolderPath, "shaders"));
                 }
@@ -831,7 +831,7 @@ namespace SeventhHeaven.Classes
                     }
                 }
 
-                SendMessage($"\tcopying contents of {Sys.PathToGameDriverFolder} to {InstallPath} ...");
+                SendMessage($"\t{ResourceHelper.GetString(StringKey.CopyingContentsOf)} {Sys.PathToGameDriverFolder} -> {InstallPath} ...");
                 FileUtils.CopyDirectoryRecursively(Sys.PathToGameDriverFolder, InstallPath);
             }
             catch (Exception ex)
@@ -882,7 +882,7 @@ namespace SeventhHeaven.Classes
             {
                 if (!Directory.Exists(dir))
                 {
-                    Logger.Info($"\tdirectory missing. creating {dir}");
+                    Logger.Info($"\t{ResourceHelper.GetString(StringKey.DirectoryMissingCreating)} {dir}");
                     Directory.CreateDirectory(dir);
                 }
             }
@@ -902,7 +902,7 @@ namespace SeventhHeaven.Classes
 
             if (!string.IsNullOrWhiteSpace(regValue))
             {
-                SendMessage("Old Game Converter registry keys found. Backing up old converter files and registry ...");
+                SendMessage(ResourceHelper.GetString(StringKey.OldGameConverterRegistryKeysFoundBackingUp));
                 MoveOriginalAppFilesToBackup(pathToBackup);
                 MoveOriginalConverterFilesToBackup(pathToBackup);
                 BackupRegistry(pathToBackup);
@@ -922,19 +922,19 @@ namespace SeventhHeaven.Classes
             // create missing directories
             if (!Directory.Exists(pathToNoLight))
             {
-                SendMessage("\tmissing shaders/nolight folder. Creating directory ...");
+                SendMessage($"\t{ResourceHelper.GetString(StringKey.MissingShadersNolightFolderCreatingDirectory)}");
                 Directory.CreateDirectory(pathToNoLight);
             }
 
             if (!Directory.Exists(pathToNvidia))
             {
-                SendMessage("\tmissing shaders/ComplexMultiShader_Nvidia folder. Creating directory ...");
+                SendMessage($"\t{ResourceHelper.GetString(StringKey.MissingShadersComplexMultiShaderFolderCreatingDirectory)}");
                 Directory.CreateDirectory(pathToNvidia);
             }
 
             if (!Directory.Exists(pathToShaders))
             {
-                SendMessage("\tmissing shaders folder. Copying from Resources/Game Driver/ ...");
+                SendMessage($"\t{ResourceHelper.GetString(StringKey.MissingShadersFolderCreatingDirectory)}");
                 Directory.CreateDirectory(pathToShaders);
             }
 
@@ -948,7 +948,7 @@ namespace SeventhHeaven.Classes
 
                 if (!File.Exists(targetPath))
                 {
-                    SendMessage($"\tmissing shader file: {targetPath}. Copying from {sourcePath} ...");
+                    SendMessage($"\t{string.Format(ResourceHelper.GetString(StringKey.MissingShadersNolightFolderCreatingDirectory), targetPath, sourcePath)}");
                     Directory.CreateDirectory(Path.GetDirectoryName(targetPath)); // ensure any missing sub folders are created
                     File.Copy(shaderFile, targetPath, true);
                 }
