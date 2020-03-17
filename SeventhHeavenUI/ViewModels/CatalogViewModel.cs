@@ -619,6 +619,13 @@ namespace SeventhHeavenUI.ViewModels
 
         internal void CancelDownload(DownloadItemViewModel downloadItemViewModel)
         {
+            if (downloadItemViewModel.IsCancelling)
+            {
+                return; // the download has already been marked as being canceled so just return (the cancel is async so it takes a second for it to be removed from download list)
+            }
+
+            downloadItemViewModel.IsCancelling = true;
+
             if (downloadItemViewModel?.Download?.PerformCancel != null)
             {
                 downloadItemViewModel.Download.PerformCancel?.Invoke(); // PerformCancel will happen during download and internally calls OnCancel

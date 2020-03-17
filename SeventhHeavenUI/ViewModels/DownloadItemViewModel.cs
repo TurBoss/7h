@@ -17,6 +17,7 @@ namespace SeventhHeavenUI.ViewModels
     public class DownloadItemViewModel : ViewModelBase
     {
         private bool _isSelected;
+        private bool _isCancelling;
 
         public DownloadItem Download { get; set; }
 
@@ -101,10 +102,23 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
+        public bool IsCancelling
+        {
+            get
+            {
+                return _isCancelling;
+            }
+            set
+            {
+                _isCancelling = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         public DownloadItemViewModel(DownloadItem download)
         {
             this.Download = download;
+            IsCancelling = false;
         }
 
     }
