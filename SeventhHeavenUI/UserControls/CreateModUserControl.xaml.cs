@@ -28,7 +28,7 @@ namespace SeventhHeaven.UserControls
             if (!string.IsNullOrEmpty(pathToFile))
             {
                 ViewModel.PreviewImageInput = System.IO.Path.GetFileName(pathToFile);
-                MessageDialogWindow.Show($"Make sure to copy {ViewModel.PreviewImageInput} to the root folder of your mod so the preview image loads correctly.", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageDialogWindow.Show(string.Format(ResourceHelper.GetString(StringKey.MakeSureToCopyToTheRootFolder), ViewModel.PreviewImageInput), ResourceHelper.GetString(StringKey.Info), MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 

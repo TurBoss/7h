@@ -527,6 +527,8 @@ Click 'Cancel' to stop the process.</system:String>
     
     <!--CreateModUserControl Strings-->
     <system:String x:Key="Generate">Generate</system:String>
+    <system:String x:Key="Info">Info</system:String>
+    <system:String x:Key="MakeSureToCopyToTheRootFolder">Make sure to copy {0} to the root folder of your mod so the preview image loads correctly.</system:String>
 
     <!--ModCreationViewModel Strings-->
     <system:String x:Key="CouldNotLoadModXml">Could not load mod xml</system:String>
@@ -937,4 +939,9 @@ Do you want to apply the setting and try again?</system:String>
     <system:String x:Key="MissingShadersFilesCopyingFrom">missing shader file: {0}. Copying from {1} ...</system:String>
     
     
+    <!--UpdateChecker Class Strings-->
+    <system:String x:Key="CheckingForUpdatesAt">Checking for updates at</system:String>
+    <system:String x:Key="FailedToCheckForUpdatesAt">Failed to check for updates at</system:String>
+
+
 </ResourceDictionary>

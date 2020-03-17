@@ -412,6 +412,10 @@ namespace SeventhHeaven.Classes
         MissingShadersComplexMultiShaderFolderCreatingDirectory,
         MissingShadersFolderCreatingDirectory,
         MissingShadersFilesCopyingFrom,
+        CheckingForUpdatesAt,
+        FailedToCheckForUpdatesAt,
+        MakeSureToCopyToTheRootFolder,
+        Info,
 
     }
 
