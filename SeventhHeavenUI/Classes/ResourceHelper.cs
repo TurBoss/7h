@@ -422,7 +422,8 @@ namespace SeventhHeaven.Classes
         Category,
         Size,
         Inst,
-        Active
+        Active,
+        Japanese
     }
 
     public static class ResourceHelper

@@ -2,9 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
-    <!--TODO: TRANSLATION NEEDED-->
     <!--Main Window Buttons-->
-    <system:String x:Key="Play">Spielen</system:String>
+    <system:String x:Key="Play">演奏する</system:String>
     <system:String x:Key="PlayWithMods">Play With Mods (default)</system:String>
     <system:String x:Key="PlayWithNoMods">Play Without Mods</system:String>
     <system:String x:Key="PlayWithDebugLog">Play With Debug Log</system:String>
@@ -37,7 +36,7 @@
 
     <system:String x:Key="StatusBarTooltip">Click to view app log</system:String>
 
-
+    
     <!--Mod Info Panel-->
     <system:String x:Key="ModInfoHeader" xml:space="preserve"> Mod Info </system:String>
     <system:String x:Key="NameLabel">Name:</system:String>
@@ -60,7 +59,7 @@
 
     <system:String x:Key="NoPreviewImage">No Preview Image</system:String>
 
-
+    
     <!-- Browse Catalog Tab -->
     <system:String x:Key="Name">Name</system:String>
     <system:String x:Key="Author">Author</system:String>
@@ -81,7 +80,7 @@
 
     <system:String x:Key="CancelDownloadTooltip">Cancel Selected Download</system:String>
 
-
+    
     <!--My Mods Tab-->
     <system:String x:Key="Active">Active</system:String>
 
@@ -94,8 +93,8 @@
     <system:String x:Key="DeactivateAllTooltip">Deactivate All Mods</system:String>
     <system:String x:Key="RefreshListTooltip">Refresh List</system:String>
     <system:String x:Key="UninstallModTooltip">Uninstall Mod</system:String>
-
-
+    
+    
     <!--Generic MessageBox Buttons-->
     <system:String x:Key="OK">OK</system:String>
     <system:String x:Key="Cancel">Cancel</system:String>
@@ -136,7 +135,7 @@
     <system:String x:Key="NoDontActivateThisMod">No, don't activate this mod</system:String>
     <system:String x:Key="YesActivateThisMod">Yes, activate this mod</system:String>
     <system:String x:Key="DontAskAgainForAnyMods">Don't ask me again for ANY mods</system:String>
-
+    
     <!--Game Launcher Settings Window-->
     <system:String x:Key="OptionsHeader" xml:space="preserve"> Options </system:String>
     <system:String x:Key="AutoMountDisc">Auto-Mount Game Disc</system:String>
@@ -156,7 +155,7 @@
 
     <system:String x:Key="SaveControlsTooltip">Save your current in-game control configuration.</system:String>
     <system:String x:Key="DeleteControlsTooltip">Delete the selected custom control configuration.</system:String>
-
+    
     <system:String x:Key="CompatibilityHeader" xml:space="preserve"> Compatibility </system:String>
     <system:String x:Key="HighDpiScalingFix">High-DPI Scaling Fix</system:String>
     <system:String x:Key="HighDpiScalingFixTooltip">May fix game screen being cut off and/or not being centered. Use with high-DPI displays. Alternatively, change your Windows Display Settings to 100% scaling.</system:String>
@@ -222,13 +221,13 @@
     <system:String x:Key="BrowseProgramTooltip">Browse for program to run</system:String>
 
     <system:String x:Key="ResetLauncherDefaultsTooltip">Reset game launcher settings to the default values.</system:String>
-
+    
     <!--Catalog Creation Window-->
     <system:String x:Key="CreateMod">Create Mod</system:String>
     <system:String x:Key="CreateCatalog">Create Catalog</system:String>
     <system:String x:Key="MegaLinkGenerator">Mega Link Generator</system:String>
 
-
+    
     <!--Chunk Tool Window-->
     <system:String x:Key="SelectFlevelLabel">Select FLEVEL:</system:String>
     <system:String x:Key="OutputFolderLabel">Output Folder:</system:String>
@@ -252,7 +251,7 @@
     <system:String x:Key="Preview">Preview</system:String>
     <system:String x:Key="Stop">Stop</system:String>
     <system:String x:Key="ResetToModDefaults">Reset to Mod Defaults</system:String>
-
+    
     <!--MainWindow.xaml.cs Strings-->
     <system:String x:Key="AreYouSureYouWantToPlayDebugWarning" xml:space="preserve">Are you sure you want to play FF7 in this mode? Playing FF7 this way can cause extreme slowness and use a lot of disk space.
 
@@ -301,7 +300,7 @@ Do you still want to activate this mod?</system:String>
 
 
     <!--MyModsViewModel Strings-->
-
+    
     <system:String x:Key="ModRequiresModsIsMissingWarning" xml:space="preserve">This mod requires the following mods to also be active, but they could not be found:
 {0}
 It may not work correctly unless you install them.</system:String>
@@ -378,7 +377,7 @@ It may not work properly unless you find and install the requirements.</system:S
     <system:String x:Key="ErrorDownloading">Error downloading</system:String>
     <system:String x:Key="WasCanceled">was canceled</system:String>
     <system:String x:Key="Error">Error</system:String>
-
+    
     <system:String x:Key="ExternalUrlDownloadMessage1" xml:space="preserve">This mod is only available by downloading it from an external web site.
 
 Would you like to open your web browser to download it now?</system:String>
@@ -415,8 +414,8 @@ Would you like to open your web browser to download it now?</system:String>
     <!--DownloadItemViewModel Strings-->
     <system:String x:Key="DownloadingPreviewImage">Downloading preview image</system:String>
 
-
-
+    
+    
     <!--GameLaunchSettingsViewModel Strings-->
     <system:String x:Key="InsertAndClickImport">Insert {0} and click 'Import'.</system:String>
     <system:String x:Key="GameLauncherSettingsUpdated">Game Launcher settings updated!</system:String>
@@ -427,7 +426,7 @@ Would you like to open your web browser to download it now?</system:String>
     <system:String x:Key="AlreadyExistsAt">already exists at</system:String>
 
     <system:String x:Key="ChoosingAnyOtherOptionBesidesCustom7HGameDriver">Choosing any other option besides 'Custom 7H Game Driver' will cause mods installed with 7H not to work anymore!</system:String>
-
+    
     <system:String x:Key="ReunionWarningMessage" xml:space="preserve">Reunion R06 and newer, even when disabled in Options.ini, forces a custom game driver to load when you run FF7. This conflicts with 7th Heaven's game driver, breaks your graphics settings, and you will experience problems.
 
 If you wish to play Reunion, do so using a compatible modded version built for 7th Heaven.
@@ -444,7 +443,7 @@ Do you want to proceed?</system:String>
 
     <system:String x:Key="LookingFor">Looking for</system:String>
     <system:String x:Key="InsertToContinue">Insert {0} to continue.</system:String>
-
+    
     <system:String x:Key="PleaseInsertToContinueCopying" xml:space="preserve">Please insert {0} to continue copying missing movie files.
 
 Click 'Cancel' to stop the process.</system:String>
@@ -470,8 +469,8 @@ Click 'Cancel' to stop the process.</system:String>
 
     <system:String x:Key="SuccessfullyDeletedCustomControls">Successfully deleted custom controls</system:String>
     <system:String x:Key="FailedToDeleteCustomControls">Failed to delete custom controls</system:String>
-
-
+    
+    
     <!--GeneralSettingsViewModel Strings-->
     <system:String x:Key="EnterNameForCatalog">Enter name for catalog</system:String>
     <system:String x:Key="GeneralSettingsHaveBeenUpdated">General settings have been updated!</system:String>
@@ -493,8 +492,8 @@ Click 'Cancel' to stop the process.</system:String>
     <system:String x:Key="ResolvingCatalogName">Resolving catalog name ...</system:String>
     <system:String x:Key="UrlMustBeInIrosFormat">URL must be in iros:// format</system:String>
     <system:String x:Key="ResolvingCatalogNameFor">Resolving catalog name for</system:String>
-
-
+    
+    
     <!--ImportModViewModel Strings-->
     <system:String x:Key="SelectAnIroFileToImport">Select an .iro file to import into the library folder.</system:String>
     <system:String x:Key="SelectAFolderThatContainsModFiles">Select a folder that contains mod files. The mod file(s) will be copied into the library folder.</system:String>
@@ -524,8 +523,8 @@ Click 'Cancel' to stop the process.</system:String>
     <system:String x:Key="FailedToGenerateLinks">Failed to generate links</system:String>
     <system:String x:Key="EnterMegaFolderIdToGenerateLinks">Enter a Mega Folder ID to generate links.</system:String>
     <system:String x:Key="NoLinksFoundInFolder">No links found in folder</system:String>
-
-
+    
+    
     <!--CreateModUserControl Strings-->
     <system:String x:Key="Generate">Generate</system:String>
     <system:String x:Key="Info">Info</system:String>
@@ -535,8 +534,8 @@ Click 'Cancel' to stop the process.</system:String>
     <system:String x:Key="CouldNotLoadModXml">Could not load mod xml</system:String>
     <system:String x:Key="CouldNotSaveModXml">Could not save mod xml</system:String>
     <system:String x:Key="SuccessfullySavedTo">Successfully saved to</system:String>
-
-
+    
+    
     <!--OpenProfileWindow Strings-->
     <system:String x:Key="Load Profile">Load Profile</system:String>
     <system:String x:Key="SaveCurrentProfileAs">Save Current Profile As ...</system:String>
@@ -585,15 +584,15 @@ Click 'Cancel' to stop the process.</system:String>
     <system:String x:Key="AnErrorOccuredWhilePacking">An error occured while packing</system:String>
     <system:String x:Key="PackingComplete">Packing complete!</system:String>
 
-
+    
     <!--PatchIroViewModel Strings-->
     <system:String x:Key="PathToOriginalIroIsRequired">Path to original iro is required</system:String>
     <system:String x:Key="PathToNewIroFileIsRequired">Path to new iro file is required</system:String>
     <system:String x:Key="PathToIropFileIsRequired">Path to irop file to save is required</system:String>
     <system:String x:Key="AnErrorOccuredWhilePatching">An error occured while patching</system:String>
     <system:String x:Key="PatchingComplete">Patching complete!</system:String>
-
-
+    
+    
     <!--ThemeSettingsWindow Strings-->
     <system:String x:Key="ChangeColorThemeWindowTitle">Change Color Theme</system:String>
     <system:String x:Key="ExportTheme">Export Theme ...</system:String>
@@ -606,14 +605,14 @@ Click 'Cancel' to stop the process.</system:String>
     <system:String x:Key="ThemeLoadedClickSavveToSaveThis">Theme loaded! Click 'Save' to save this theme as the default ...</system:String>
     <system:String x:Key="SelectBackgroundImageFile">Select Background Image File</system:String>
 
-
+    
     <!--UnpackIroViewModel Strings-->
     <system:String x:Key="PathToSourceIroFileIsRequired">Path to source iro file is required</system:String>
     <system:String x:Key="InvalidUnpackIroOptions">invalid unpack iro options</system:String>
     <system:String x:Key="AnErrorOccuredWhileUnpacking">An error occured while unpacking</system:String>
     <system:String x:Key="UnpackingComplete">Unpacking complete!</system:String>
 
-
+    
     <!--CreateCatalogUserControl Strings-->
     <system:String x:Key="RemoveMod">Remove Mod</system:String>
     <system:String x:Key="Add">Add</system:String>
@@ -622,7 +621,7 @@ Click 'Cancel' to stop the process.</system:String>
     <system:String x:Key="CouldNotLoadModXmlFromIroFile">Could not load mod xml from .iro file</system:String>
     <system:String x:Key="CouldNotLoadCatalogXml">Could not load catalog xml</system:String>
 
-
+    
     <!--ConfigureGLWindow.xaml.cs Strings-->
     <system:String x:Key="FailedToReadRequiredSpecXmlFile">Failed to read the required spec xml file to display settings. The window must close.</system:String>
     <system:String x:Key="ClearTextureCache">Clear Texture Cache</system:String>
@@ -634,23 +633,23 @@ Click 'Cancel' to stop the process.</system:String>
     <system:String x:Key="CouldNotWriteTo7HGameDriverCfg">Could not write to 7H_GameDriver.cfg file. Check that it is not set to read only, and that FF7 is installed in a folder you have full write access to.</system:String>
     <system:String x:Key="UnknownErrorWhileSaving">Unknown error while saving. error has been logged.</system:String>
     <system:String x:Key="GameDriverSettingsResetToDefaults">Game Driver settings reset to defaults. Click 'Save' to save changes.</system:String>
-
-
+    
+    
     <!--GameLaunchSettingsWindow.xaml.cs Strings-->
     <system:String x:Key="SelectProgramToRemove">Selet a program to remove.</system:String>
     <system:String x:Key="SelectProgramToEdit">Select a program to edit.</system:String>
     <system:String x:Key="SelectProgramToMove">Select a program to move.</system:String>
     <system:String x:Key="SelectProgramToRunSuchAs">Select a program to run such as an .exe or script</system:String>
-
-
+    
+    
     <!--GameLaunchWindow.xaml.cs Strings-->
     <system:String x:Key="LaunchingFinalFantasyVII">Launching Final Fantasy VII</system:String>
     <system:String x:Key="UnknownErrorWhenLaunchingGame">Unknown error when launching the game</system:String>
     <system:String x:Key="GameLaunchProcessCanceled">game launch process canceled</system:String>
     <system:String x:Key="FailedToLaunchFf7ViewLogForDetails">Failed to launch FF7. View the above log for details.</system:String>
     <system:String x:Key="SuccessfullyLaunchedFf7">Successfully launched FF7!</system:String>
-
-
+    
+    
     <!--GeneralSettingsWindow Strings-->
     <system:String x:Key="ActivateNewlyInstalledModsAutomatically">Activate Newly Installed Mods Automatically</system:String>
     <system:String x:Key="ImportModsFromLibraryAutomatically">Import Mods From Library Automatically</system:String>
@@ -688,8 +687,8 @@ Click 'Cancel' to stop the process.</system:String>
 
     <system:String x:Key="SelectFolderToRemove">Select a folder to remove.</system:String>
     <system:String x:Key="SelectFolderToMove">Select a folder to move.</system:String>
-
-
+    
+    
     <!--ImportModWindow Strings-->
     <system:String x:Key="FromIROFile">From IRO File</system:String>
     <system:String x:Key="FromFolder">From Folder</system:String>
@@ -911,10 +910,10 @@ Do you want to apply the setting and try again?</system:String>
     <system:String x:Key="WaitingForProgramToInitializeAndShow">waiting for program to initialize and show ...</system:String>
     <system:String x:Key="TimeoutReachedWaitingForProgramToShow">timeout (of {program.WaitTimeOutInSeconds} seconds) reached waiting for program to show. Continuing...</system:String>
     <system:String x:Key="ProgramAlreadyRunning">program already running</system:String>
-
-
-
-
+    
+    
+    
+    
     <!--GameConverter Class Strings-->
     <system:String x:Key="NotFoundScanningDiscsForFiles">not found. Scanning disc(s) for files ...</system:String>
     <system:String x:Key="FoundFileOnAtCopyingFile">found file on {0} at {1}. Copying file ...</system:String>
@@ -939,8 +938,8 @@ Do you want to apply the setting and try again?</system:String>
     <system:String x:Key="MissingShadersComplexMultiShaderFolderCreatingDirectory">missing shaders/ComplexMultiShader_Nvidia folder. Creating directory ...</system:String>
     <system:String x:Key="MissingShadersFolderCreatingDirectory">missing shaders folder. Copying from Resources/Game Driver/ ...</system:String>
     <system:String x:Key="MissingShadersFilesCopyingFrom">missing shader file: {0}. Copying from {1} ...</system:String>
-
-
+    
+    
     <!--UpdateChecker Class Strings-->
     <system:String x:Key="CheckingForUpdatesAt">Checking for updates at</system:String>
     <system:String x:Key="FailedToCheckForUpdatesAt">Failed to check for updates at</system:String>
