@@ -62,7 +62,7 @@ namespace SeventhHeaven.Windows
         /// </summary>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ViewModel.LogStatus($"### {ResourceHelper.GetString(StringKey.LaunchingFinalFantasyVII)} ###");
+            ViewModel.LogStatus($"### {ResourceHelper.Get(StringKey.LaunchingFinalFantasyVII)} ###");
             App.ForceUpdateUI();
 
             // Wait 1 second before starting actual launch process so the window is fully loaded
@@ -90,25 +90,25 @@ namespace SeventhHeaven.Windows
                 if (taskResult.IsFaulted)
                 {
                     Logger.Error(taskResult.Exception);
-                    ViewModel.LogStatus($"{ResourceHelper.GetString(StringKey.UnknownErrorWhenLaunchingGame)}: {taskResult.Exception.GetBaseException().Message}");
+                    ViewModel.LogStatus($"{ResourceHelper.Get(StringKey.UnknownErrorWhenLaunchingGame)}: {taskResult.Exception.GetBaseException().Message}");
                     ShowOkButton();
                     return;
                 }
 
                 if (taskResult.IsCanceled)
                 {
-                    ViewModel.LogStatus(ResourceHelper.GetString(StringKey.GameLaunchProcessCanceled));
+                    ViewModel.LogStatus(ResourceHelper.Get(StringKey.GameLaunchProcessCanceled));
                     return;
                 }
 
                 if (!taskResult.Result)
                 {
-                    ViewModel.LogStatus(ResourceHelper.GetString(StringKey.FailedToLaunchFf7ViewLogForDetails));
+                    ViewModel.LogStatus(ResourceHelper.Get(StringKey.FailedToLaunchFf7ViewLogForDetails));
                     ShowOkButton();
                 }
                 else
                 {
-                    Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.SuccessfullyLaunchedFf7)));
+                    Sys.Message(new WMessage(ResourceHelper.Get(StringKey.SuccessfullyLaunchedFf7)));
                     App.Current.Dispatcher.Invoke(() =>
                     {
                         this.Close();

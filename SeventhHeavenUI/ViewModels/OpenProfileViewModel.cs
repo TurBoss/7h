@@ -87,12 +87,12 @@ namespace SeventhHeaven.ViewModels
         {
             if (!File.Exists(Sys.PathToCurrentProfileFile))
             {
-                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.ActiveProfileFileDoesNotExist)}: {Sys.PathToCurrentProfileFile}", true));
+                Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.ActiveProfileFileDoesNotExist)}: {Sys.PathToCurrentProfileFile}", true));
                 ReloadProfiles();
                 return;
             }
 
-            string profileName = InputNewProfileName(ResourceHelper.GetString(StringKey.EnterProfileName), ResourceHelper.GetString(StringKey.SaveActiveProfile));
+            string profileName = InputNewProfileName(ResourceHelper.Get(StringKey.EnterProfileName), ResourceHelper.Get(StringKey.SaveActiveProfile));
 
             if (profileName == null)
             {
@@ -109,11 +109,11 @@ namespace SeventhHeaven.ViewModels
                 ReloadProfiles();
                 SelectedProfile = profileName;
 
-                Sys.Message(new WMessage(string.Format(ResourceHelper.GetString(StringKey.SuccessfullySavedAsNewProfile), Sys.Settings.CurrentProfile, profileName), true));
+                Sys.Message(new WMessage(string.Format(ResourceHelper.Get(StringKey.SuccessfullySavedAsNewProfile), Sys.Settings.CurrentProfile, profileName), true));
             }
             catch (Exception e)
             {
-                string errorMsg = string.Format(ResourceHelper.GetString(StringKey.FailToSaveAsNewProfile), Sys.Settings.CurrentProfile, profileName, e.Message);
+                string errorMsg = string.Format(ResourceHelper.Get(StringKey.FailToSaveAsNewProfile), Sys.Settings.CurrentProfile, profileName, e.Message);
                 Sys.Message(new WMessage(errorMsg, true) { LoggedException = e });
             }
         }
@@ -124,7 +124,7 @@ namespace SeventhHeaven.ViewModels
 
             if (!File.Exists(pathToProfile))
             {
-                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.ProfileDoesNotExist)}: {pathToProfile} {ResourceHelper.GetString(StringKey.HasItBeenDeletedAlready)}", true));
+                Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.ProfileDoesNotExist)}: {pathToProfile} {ResourceHelper.Get(StringKey.HasItBeenDeletedAlready)}", true));
                 ReloadProfiles();
                 return;
             }
@@ -132,11 +132,11 @@ namespace SeventhHeaven.ViewModels
             try
             {
                 File.Delete(pathToProfile);
-                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.SuccessfullyDeletedProfile)} {name}", true));
+                Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.SuccessfullyDeletedProfile)} {name}", true));
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.FailedToDeleteProfile)}: {name}", true) { LoggedException = e });
+                Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.FailedToDeleteProfile)}: {name}", true) { LoggedException = e });
             }
 
             ReloadProfiles();
@@ -148,7 +148,7 @@ namespace SeventhHeaven.ViewModels
 
             if (!File.Exists(pathToProfile))
             {
-                Logger.Warn($"{ResourceHelper.GetString(StringKey.ProfileDoesNotExist)}: {pathToProfile}");
+                Logger.Warn($"{ResourceHelper.Get(StringKey.ProfileDoesNotExist)}: {pathToProfile}");
                 ReloadProfiles();
                 return;
             }
@@ -157,7 +157,7 @@ namespace SeventhHeaven.ViewModels
 
             try
             {
-                newProfileName = InputNewProfileName(ResourceHelper.GetString(StringKey.EnterProfileNameForTheCopy), ResourceHelper.GetString(StringKey.CopyProfile));
+                newProfileName = InputNewProfileName(ResourceHelper.Get(StringKey.EnterProfileNameForTheCopy), ResourceHelper.Get(StringKey.CopyProfile));
 
                 if (newProfileName == null)
                 {
@@ -166,7 +166,7 @@ namespace SeventhHeaven.ViewModels
 
                 File.Copy(pathToProfile, Path.Combine(Sys.PathToProfiles, $"{newProfileName}.xml"));
 
-                string successMsg = string.Format(ResourceHelper.GetString(StringKey.SuccessfullyCopiedProfile), name, newProfileName);
+                string successMsg = string.Format(ResourceHelper.Get(StringKey.SuccessfullyCopiedProfile), name, newProfileName);
                 Sys.Message(new WMessage(successMsg, true));
 
                 ReloadProfiles();
@@ -174,7 +174,7 @@ namespace SeventhHeaven.ViewModels
             }
             catch (Exception e)
             {
-                string errorMsg = string.Format(ResourceHelper.GetString(StringKey.FailedToCopyProfile), name, newProfileName);
+                string errorMsg = string.Format(ResourceHelper.Get(StringKey.FailedToCopyProfile), name, newProfileName);
                 Sys.Message(new WMessage(errorMsg, true) { LoggedException = e });
             }
         }
@@ -190,7 +190,7 @@ namespace SeventhHeaven.ViewModels
 
             if (!File.Exists(pathToProfile))
             {
-                Logger.Warn($"{ResourceHelper.GetString(StringKey.ProfileDoesNotExist)}: {pathToProfile}");
+                Logger.Warn($"{ResourceHelper.Get(StringKey.ProfileDoesNotExist)}: {pathToProfile}");
                 ReloadProfiles();
                 return;
             }
@@ -211,7 +211,7 @@ namespace SeventhHeaven.ViewModels
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.FailedToOpenProfileDetails)}: {e.Message}", true) { LoggedException = e });
+                Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.FailedToOpenProfileDetails)}: {e.Message}", true) { LoggedException = e });
             }
         }
 
@@ -219,12 +219,12 @@ namespace SeventhHeaven.ViewModels
         {
             if (string.IsNullOrWhiteSpace(prompt))
             {
-                prompt = ResourceHelper.GetString(StringKey.EnterProfileName);
+                prompt = ResourceHelper.Get(StringKey.EnterProfileName);
             }
 
             if (string.IsNullOrWhiteSpace(title))
             {
-                title = ResourceHelper.GetString(StringKey.NewProfile);
+                title = ResourceHelper.Get(StringKey.NewProfile);
             }
 
             string profileName = null;
@@ -246,7 +246,7 @@ namespace SeventhHeaven.ViewModels
                 if (string.IsNullOrEmpty(profileName))
                 {
                     isValid = false;
-                    MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.ProfileNameIsEmpty), ResourceHelper.GetString(StringKey.ProfileError), MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageDialogWindow.Show(ResourceHelper.Get(StringKey.ProfileNameIsEmpty), ResourceHelper.Get(StringKey.ProfileError), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
             } while (!isValid);
@@ -287,7 +287,7 @@ namespace SeventhHeaven.ViewModels
 
             if (!File.Exists(xmlFile))
             {
-                Sys.Message(new WMessage(string.Format(ResourceHelper.GetString(StringKey.WarningProfileXmlDoesNotExistCanNotSwitch), selectedProfile), true));
+                Sys.Message(new WMessage(string.Format(ResourceHelper.Get(StringKey.WarningProfileXmlDoesNotExistCanNotSwitch), selectedProfile), true));
                 ReloadProfiles();
                 return false;
             }
@@ -299,14 +299,14 @@ namespace SeventhHeaven.ViewModels
                 Sys.Settings.CurrentProfile = SelectedProfile;
                 Sys.ActiveProfile = Util.Deserialize<Profile>(Sys.PathToCurrentProfileFile);
 
-                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.LoadedProfile)} {selectedProfile}"));
+                Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.LoadedProfile)} {selectedProfile}"));
                 Sys.ActiveProfile.RemoveDeletedItems(doWarn: true);
 
                 return true;
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.FailedToSwitchToProfile)} {selectedProfile}", true) { LoggedException = e });
+                Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.FailedToSwitchToProfile)} {selectedProfile}", true) { LoggedException = e });
                 return false;
             }
         }

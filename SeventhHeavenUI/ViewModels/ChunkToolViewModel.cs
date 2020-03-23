@@ -230,31 +230,31 @@ namespace SeventhHeaven.ViewModels
         {
             if (string.IsNullOrWhiteSpace(PathToFlevelFile))
             {
-                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.PathToFlevelRequired), ResourceHelper.GetString(StringKey.MissingPath), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.PathToFlevelRequired), ResourceHelper.Get(StringKey.MissingPath), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(PathToOutputFolder))
             {
-                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.PathToOutputFolderRequired), ResourceHelper.GetString(StringKey.MissingPath), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.PathToOutputFolderRequired), ResourceHelper.Get(StringKey.MissingPath), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (GetSelectedChunks()?.Count == 0)
             {
-                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.SelectTheSectionsToExtract), ResourceHelper.GetString(StringKey.MissingPath), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.SelectTheSectionsToExtract), ResourceHelper.Get(StringKey.MissingPath), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (!File.Exists(PathToFlevelFile))
             {
-                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.FlevelFileDoesNotExistAtGivenPath), ResourceHelper.GetString(StringKey.MissingPath), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.FlevelFileDoesNotExistAtGivenPath), ResourceHelper.Get(StringKey.MissingPath), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (!Directory.Exists(PathToOutputFolder))
             {
-                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.OutputFolderDoesNotExist), ResourceHelper.GetString(StringKey.MissingPath), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.OutputFolderDoesNotExist), ResourceHelper.Get(StringKey.MissingPath), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -263,15 +263,15 @@ namespace SeventhHeaven.ViewModels
 
             t.ContinueWith((taskResult) =>
             {
-                string message = ResourceHelper.GetString(StringKey.Complete);
+                string message = ResourceHelper.Get(StringKey.Complete);
 
                 if (taskResult.IsFaulted)
                 {
                     Logger.Error(taskResult.Exception?.GetBaseException());
-                    message = ResourceHelper.GetString(StringKey.FailedToExtractTheErrorHasBeenLogged);
+                    message = ResourceHelper.Get(StringKey.FailedToExtractTheErrorHasBeenLogged);
                 }
 
-                MessageDialogWindow.Show(message, ResourceHelper.GetString(StringKey.ExtractComplete));
+                MessageDialogWindow.Show(message, ResourceHelper.Get(StringKey.ExtractComplete));
                 ProgressValue = 0;
             });
         }

@@ -28,7 +28,7 @@ namespace SeventhHeaven.UserControls
             if (!string.IsNullOrEmpty(pathToFile))
             {
                 ViewModel.PreviewImageInput = System.IO.Path.GetFileName(pathToFile);
-                MessageDialogWindow.Show(string.Format(ResourceHelper.GetString(StringKey.MakeSureToCopyToTheRootFolder), ViewModel.PreviewImageInput), ResourceHelper.GetString(StringKey.Info), MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageDialogWindow.Show(string.Format(ResourceHelper.Get(StringKey.MakeSureToCopyToTheRootFolder), ViewModel.PreviewImageInput), ResourceHelper.Get(StringKey.Info), MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 

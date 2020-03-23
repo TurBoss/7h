@@ -413,11 +413,11 @@ namespace SeventhHeavenUI.ViewModels
                         ModStatus status = Sys.GetStatus(selected.InstallInfo.ModID);
                         if (status != ModStatus.Downloading && status != ModStatus.Updating)
                         {
-                            return ResourceHelper.GetString(StringKey.UpdateAvailable);
+                            return ResourceHelper.Get(StringKey.UpdateAvailable);
                         }
                         else
                         {
-                            return ResourceHelper.GetString(StringKey.UpdateDownloading);
+                            return ResourceHelper.Get(StringKey.UpdateDownloading);
                         }
                     }
                     else
@@ -425,13 +425,13 @@ namespace SeventhHeavenUI.ViewModels
                         switch (selected.InstallInfo.UpdateType)
                         {
                             case UpdateType.Notify:
-                                return ResourceHelper.GetString(StringKey.NoUpdates);
+                                return ResourceHelper.Get(StringKey.NoUpdates);
 
                             case UpdateType.Ignore:
-                                return ResourceHelper.GetString(StringKey.UpdatesIgnored);
+                                return ResourceHelper.Get(StringKey.UpdatesIgnored);
 
                             case UpdateType.Install:
-                                return ResourceHelper.GetString(StringKey.AutoUpdate);
+                                return ResourceHelper.Get(StringKey.AutoUpdate);
                         }
                     }
                 }
@@ -622,8 +622,8 @@ namespace SeventhHeavenUI.ViewModels
 
         private void InitStringsForLanguage()
         {
-            _showAllText = ResourceHelper.GetString(StringKey.SelectAll);
-            _unknownText = ResourceHelper.GetString(StringKey.Unknown);
+            _showAllText = ResourceHelper.Get(StringKey.SelectAll);
+            _unknownText = ResourceHelper.Get(StringKey.Unknown);
         }
 
 
@@ -683,9 +683,9 @@ namespace SeventhHeavenUI.ViewModels
                 IEnumerable<string> errors = Sys.Settings.VerifySettings();
                 if (errors.Any())
                 {
-                    string msg = $"{ResourceHelper.GetString(StringKey.FollowingErrorsFoundInConfiguration)}\n" + string.Join("\n", errors);
+                    string msg = $"{ResourceHelper.Get(StringKey.FollowingErrorsFoundInConfiguration)}\n" + string.Join("\n", errors);
                     Logger.Warn(msg);
-                    Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.ErrorsFoundInGeneralSettingsViewAppLog)));
+                    Sys.Message(new WMessage(ResourceHelper.Get(StringKey.ErrorsFoundInGeneralSettingsViewAppLog)));
                     showSettings = true;
                 }
             }
@@ -715,7 +715,7 @@ namespace SeventhHeavenUI.ViewModels
             ConfigureModViewModel.DeleteTempConfigModFolder();
 
             Sys.AppVersion = App.GetAppVersion();
-            StatusMessage = $"{App.GetAppName()} v{Sys.AppVersion.ToString()} {ResourceHelper.GetString(StringKey.StartedClickHereToViewAppLog)}  |  {ResourceHelper.GetString(StringKey.HintLabel)} {GetRandomHint()}";
+            StatusMessage = $"{App.GetAppName()} v{Sys.AppVersion.ToString()} {ResourceHelper.Get(StringKey.StartedClickHereToViewAppLog)}  |  {ResourceHelper.Get(StringKey.HintLabel)} {GetRandomHint()}";
 
             MyMods.ScanForModUpdates();
 
@@ -725,7 +725,7 @@ namespace SeventhHeavenUI.ViewModels
                 Task.Factory.StartNew(() =>
                 {
                     System.Threading.Thread.Sleep(5000); // wait 5 seconds after init before checking for update to let UI render
-                    Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.CheckingForUpdates), WMessageLogLevel.LogOnly));
+                    Sys.Message(new WMessage(ResourceHelper.Get(StringKey.CheckingForUpdates), WMessageLogLevel.LogOnly));
                     UpdateChecker.Instance.CheckForUpdates();
                 });
             }
@@ -735,8 +735,8 @@ namespace SeventhHeavenUI.ViewModels
         {
             if (wasSuccessful && UpdateChecker.IsNewVersionAvailable(Sys.LastCheckedVersion))
             {
-                string message = string.Format(ResourceHelper.GetString(StringKey.AppUpdateIsAvailableMessage), $"{App.GetAppName()} - {App.GetAppVersion()}", Sys.LastCheckedVersion.Version, Sys.LastCheckedVersion.ReleaseNotes);
-                var dialogResult = MessageDialogWindow.Show(message, ResourceHelper.GetString(StringKey.NewVersionAvailable), MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                string message = string.Format(ResourceHelper.Get(StringKey.AppUpdateIsAvailableMessage), $"{App.GetAppName()} - {App.GetAppVersion()}", Sys.LastCheckedVersion.Version, Sys.LastCheckedVersion.ReleaseNotes);
+                var dialogResult = MessageDialogWindow.Show(message, ResourceHelper.Get(StringKey.NewVersionAvailable), MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
 
                 if (dialogResult.Result == MessageBoxResult.Yes)
                 {
@@ -1175,7 +1175,7 @@ namespace SeventhHeavenUI.ViewModels
                 // invoke the message on the Dispatcher UI Thread since this could be called from background threads
                 return App.Current.Dispatcher.Invoke(() =>
                 {
-                    string msg = String.Format(ResourceHelper.GetString(StringKey.ThisModContainsDataThatCouldHarm), mod.CachedDetails.Name);
+                    string msg = String.Format(ResourceHelper.Get(StringKey.ThisModContainsDataThatCouldHarm), mod.CachedDetails.Name);
 
                     AllowModToRunWindow warningWindow = new AllowModToRunWindow(msg);
                     warningWindow.ShowDialog();
@@ -1497,7 +1497,7 @@ namespace SeventhHeavenUI.ViewModels
 
             if (!File.Exists(helpFile))
             {
-                Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.CannotOpenHelp)));
+                Sys.Message(new WMessage(ResourceHelper.Get(StringKey.CannotOpenHelp)));
                 return;
             }
 
@@ -1539,21 +1539,21 @@ namespace SeventhHeavenUI.ViewModels
             {
                 if (Sys.Settings.Subscriptions.Any(s => s.Url.Equals(irosUrl, StringComparison.InvariantCultureIgnoreCase)))
                 {
-                    Sys.Message(new WMessage(string.Format(ResourceHelper.GetString(StringKey.SubscriptionIsAlreadyAdded), irosUrl), true));
+                    Sys.Message(new WMessage(string.Format(ResourceHelper.Get(StringKey.SubscriptionIsAlreadyAdded), irosUrl), true));
                     return;
                 }
 
                 GeneralSettingsViewModel.ResolveCatalogNameFromUrl(irosUrl, name =>
                 {
                     Sys.Settings.Subscriptions.Add(new Subscription() { Url = irosUrl, Name = name });
-                    Sys.Message(new WMessage(string.Format(ResourceHelper.GetString(StringKey.AddedToSubscriptions), irosUrl), true));
+                    Sys.Message(new WMessage(string.Format(ResourceHelper.Get(StringKey.AddedToSubscriptions), irosUrl), true));
 
                     CatalogMods.ForceCheckCatalogUpdateAsync();
                 });
             }
             else
             {
-                Sys.Message(new WMessage(string.Format(ResourceHelper.GetString(StringKey.IrosLinkMayBeFormatedIncorrectly), irosUrl), WMessageLogLevel.LogOnly));
+                Sys.Message(new WMessage(string.Format(ResourceHelper.Get(StringKey.IrosLinkMayBeFormatedIncorrectly), irosUrl), WMessageLogLevel.LogOnly));
             }
         }
 
@@ -1632,7 +1632,7 @@ namespace SeventhHeavenUI.ViewModels
             catch (Exception e)
             {
                 Logger.Warn(e);
-                Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.FailedToSetBackgroundImageFromTheme), true));
+                Sys.Message(new WMessage(ResourceHelper.Get(StringKey.FailedToSetBackgroundImageFromTheme), true));
 
                 MyMods.ThemeImage = null;
                 CatalogMods.ThemeImage = null;

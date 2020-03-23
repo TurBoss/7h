@@ -161,15 +161,15 @@ namespace SeventhHeaven.ViewModels
         {
             if ((ImportTabIndex)SelectedTabIndex == ImportTabIndex.FromIro)
             {
-                HelpText = ResourceHelper.GetString(StringKey.SelectAnIroFileToImport);
+                HelpText = ResourceHelper.Get(StringKey.SelectAnIroFileToImport);
             }
             else if ((ImportTabIndex)SelectedTabIndex == ImportTabIndex.FromFolder)
             {
-                HelpText = ResourceHelper.GetString(StringKey.SelectAFolderThatContainsModFiles);
+                HelpText = ResourceHelper.Get(StringKey.SelectAFolderThatContainsModFiles);
             }
             else
             {
-                HelpText = ResourceHelper.GetString(StringKey.SelectAFolderThatContainsIroModFilesAndFolders);
+                HelpText = ResourceHelper.Get(StringKey.SelectAFolderThatContainsIroModFilesAndFolders);
             }
         }
 
@@ -178,7 +178,7 @@ namespace SeventhHeaven.ViewModels
         {
             IsImporting = true;
             ProgressValue = 10;
-            Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.ImportingModsPleaseWait)));
+            Sys.Message(new WMessage(ResourceHelper.Get(StringKey.ImportingModsPleaseWait)));
 
             Task<bool> t = Task.Factory.StartNew(() =>
             {
@@ -213,13 +213,13 @@ namespace SeventhHeaven.ViewModels
         {
             if (string.IsNullOrWhiteSpace(PathToIroArchiveInput))
             {
-                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.EnterPathToAnIroFile), ResourceHelper.GetString(StringKey.ValidationError), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.EnterPathToAnIroFile), ResourceHelper.Get(StringKey.ValidationError), MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
             if (!File.Exists(PathToIroArchiveInput))
             {
-                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.IroFileDoesNotExist), ResourceHelper.GetString(StringKey.ValidationError), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.IroFileDoesNotExist), ResourceHelper.Get(StringKey.ValidationError), MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
@@ -232,19 +232,19 @@ namespace SeventhHeaven.ViewModels
                 importer.ImportProgressChanged += Importer_ImportProgressChanged;
                 importer.Import(PathToIroArchiveInput, ModImporter.ParseNameFromFileOrFolder(fileName), true, false);
 
-                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.SuccessfullyImported)} {fileName}!"));
+                Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.SuccessfullyImported)} {fileName}!"));
                 return true;
             }
             catch (DuplicateModException de)
             {
                 Logger.Error(de);
-                MessageDialogWindow.Show($"{ResourceHelper.GetString(StringKey.CanNotImportMod)} {de.Message}", ResourceHelper.GetString(StringKey.ImportError), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show($"{ResourceHelper.Get(StringKey.CanNotImportMod)} {de.Message}", ResourceHelper.Get(StringKey.ImportError), MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
             catch (Exception e)
             {
                 Logger.Error(e);
-                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.FailedToImportModTheErrorHasBeenLogged), ResourceHelper.GetString(StringKey.ImportError), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.FailedToImportModTheErrorHasBeenLogged), ResourceHelper.Get(StringKey.ImportError), MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
             finally
@@ -266,13 +266,13 @@ namespace SeventhHeaven.ViewModels
         {
             if (string.IsNullOrWhiteSpace(PathToModFolderInput))
             {
-                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.EnterPathToFolderContainingModFiles), ResourceHelper.GetString(StringKey.ValidationError), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.EnterPathToFolderContainingModFiles), ResourceHelper.Get(StringKey.ValidationError), MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
             if (!Directory.Exists(PathToModFolderInput))
             {
-                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.DirectoryDoesNotExist), ResourceHelper.GetString(StringKey.ValidationError), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.DirectoryDoesNotExist), ResourceHelper.Get(StringKey.ValidationError), MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
@@ -285,19 +285,19 @@ namespace SeventhHeaven.ViewModels
                 importer.ImportProgressChanged += Importer_ImportProgressChanged;
                 importer.Import(PathToModFolderInput, ModImporter.ParseNameFromFileOrFolder(folderName), false, false);
 
-                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.SuccessfullyImported)} {folderName}!", true));
+                Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.SuccessfullyImported)} {folderName}!", true));
                 return true;
             }
             catch (DuplicateModException de)
             {
                 Logger.Error(de);
-                MessageDialogWindow.Show($"{ResourceHelper.GetString(StringKey.CanNotImportMod)} {de.Message}", ResourceHelper.GetString(StringKey.ImportError), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show($"{ResourceHelper.Get(StringKey.CanNotImportMod)} {de.Message}", ResourceHelper.Get(StringKey.ImportError), MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
             catch (Exception e)
             {
                 Logger.Error(e);
-                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.FailedToImportModTheErrorHasBeenLogged), ResourceHelper.GetString(StringKey.ImportError), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.FailedToImportModTheErrorHasBeenLogged), ResourceHelper.Get(StringKey.ImportError), MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
             finally
@@ -310,13 +310,13 @@ namespace SeventhHeaven.ViewModels
         {
             if (string.IsNullOrWhiteSpace(PathToBatchFolderInput))
             {
-                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.EnterPathToFolderContainingIroFilesOrModFolders), ResourceHelper.GetString(StringKey.ValidationError), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.EnterPathToFolderContainingIroFilesOrModFolders), ResourceHelper.Get(StringKey.ValidationError), MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
             if (!Directory.Exists(PathToBatchFolderInput))
             {
-                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.DirectoryDoesNotExist), ResourceHelper.GetString(StringKey.ValidationError), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.DirectoryDoesNotExist), ResourceHelper.Get(StringKey.ValidationError), MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
@@ -343,19 +343,19 @@ namespace SeventhHeaven.ViewModels
                     modImportCount++;
                 }
 
-                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.SuccessfullyImported)} {modImportCount} mod(s)!", true));
+                Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.SuccessfullyImported)} {modImportCount} mod(s)!", true));
                 return true;
             }
             catch (DuplicateModException de)
             {
                 Logger.Error(de);
-                MessageDialogWindow.Show($"{ResourceHelper.GetString(StringKey.CanNotImportMod)}(s). {de.Message}", ResourceHelper.GetString(StringKey.ImportError), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show($"{ResourceHelper.Get(StringKey.CanNotImportMod)}(s). {de.Message}", ResourceHelper.Get(StringKey.ImportError), MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
             catch (Exception e)
             {
                 Logger.Error(e);
-                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.FailedToImportModTheErrorHasBeenLogged), ResourceHelper.GetString(StringKey.ImportError), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.FailedToImportModTheErrorHasBeenLogged), ResourceHelper.Get(StringKey.ImportError), MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
             finally

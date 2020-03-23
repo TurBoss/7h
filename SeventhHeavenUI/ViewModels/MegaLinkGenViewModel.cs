@@ -74,7 +74,7 @@ namespace SeventhHeaven.ViewModels
         public Task GenerateLinksAsync()
         {
             IsGenerating = true;
-            LinkOutput = ResourceHelper.GetString(StringKey.GeneratingLinks);
+            LinkOutput = ResourceHelper.Get(StringKey.GeneratingLinks);
 
             Task t = Task.Factory.StartNew(() =>
             {
@@ -87,7 +87,7 @@ namespace SeventhHeaven.ViewModels
 
                 if (result.IsFaulted)
                 {
-                    LinkOutput = $"{ResourceHelper.GetString(StringKey.FailedToGenerateLinks)}: {result.Exception.GetBaseException()?.Message}.";
+                    LinkOutput = $"{ResourceHelper.Get(StringKey.FailedToGenerateLinks)}: {result.Exception.GetBaseException()?.Message}.";
                     Logger.Warn(result.Exception.GetBaseException());
                 }
             });
@@ -101,7 +101,7 @@ namespace SeventhHeaven.ViewModels
 
             if (string.IsNullOrWhiteSpace(megaFolderId))
             {
-                LinkOutput = ResourceHelper.GetString(StringKey.EnterMegaFolderIdToGenerateLinks);
+                LinkOutput = ResourceHelper.Get(StringKey.EnterMegaFolderIdToGenerateLinks);
                 return;
             }
 
@@ -118,7 +118,7 @@ namespace SeventhHeaven.ViewModels
 
             if (!mega.GetNodes().Any())
             {
-                LinkOutput = $"{ResourceHelper.GetString(StringKey.NoLinksFoundInFolder)}: {megaFolderId}";
+                LinkOutput = $"{ResourceHelper.Get(StringKey.NoLinksFoundInFolder)}: {megaFolderId}";
                 return;
             }
 

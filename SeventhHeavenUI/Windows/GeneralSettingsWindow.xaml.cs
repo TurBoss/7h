@@ -59,7 +59,7 @@ namespace SeventhHeaven.Windows
                 initialDir = Path.GetDirectoryName(ViewModel.FF7ExePathInput);
             }
 
-            string exePath = FileDialogHelper.BrowseForFile("exe file (*.exe)|*.exe", ResourceHelper.GetString(StringKey.SelectFf7Exe), initialDir);
+            string exePath = FileDialogHelper.BrowseForFile("exe file (*.exe)|*.exe", ResourceHelper.Get(StringKey.SelectFf7Exe), initialDir);
 
             if (!string.IsNullOrEmpty(exePath))
             {
@@ -68,7 +68,7 @@ namespace SeventhHeaven.Windows
                 {
                     // User selected the exe's for Steam release so we try to auto copy the 1.02 patched exe and select it for them
                     string targetPathToFf7Exe = Path.Combine(fileSelected.DirectoryName, "ff7.exe");
-                    string copyOrSelectMessage = ResourceHelper.GetString(StringKey.Selected);
+                    string copyOrSelectMessage = ResourceHelper.Get(StringKey.Selected);
 
                     if (!File.Exists(targetPathToFf7Exe))
                     {
@@ -76,20 +76,20 @@ namespace SeventhHeaven.Windows
                         var gc = new GameConverter(new ConversionSettings() { InstallPath = fileSelected.DirectoryName });
                         if (!gc.CopyFF7ExeToGame())
                         {
-                            MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.ThisExeIsUsedForSteamReleaseFailedToCopyExe),
-                                                     ResourceHelper.GetString(StringKey.ErrorIncorrectExe),
+                            MessageDialogWindow.Show(ResourceHelper.Get(StringKey.ThisExeIsUsedForSteamReleaseFailedToCopyExe),
+                                                     ResourceHelper.Get(StringKey.ErrorIncorrectExe),
                                                      MessageBoxButton.OK,
                                                      MessageBoxImage.Error);
                             return;
                         }
 
-                        copyOrSelectMessage = ResourceHelper.GetString(StringKey.CopiedAndSelected);
+                        copyOrSelectMessage = ResourceHelper.Get(StringKey.CopiedAndSelected);
                     }
 
                     ViewModel.FF7ExePathInput = targetPathToFf7Exe;
 
-                    MessageDialogWindow.Show(string.Format(ResourceHelper.GetString(StringKey.ThisExeIsUsedForSteamReleaseCopiedSelectedForYou), copyOrSelectMessage),
-                                             ResourceHelper.GetString(StringKey.ErrorIncorrectExe),
+                    MessageDialogWindow.Show(string.Format(ResourceHelper.Get(StringKey.ThisExeIsUsedForSteamReleaseCopiedSelectedForYou), copyOrSelectMessage),
+                                             ResourceHelper.Get(StringKey.ErrorIncorrectExe),
                                              MessageBoxButton.OK,
                                              MessageBoxImage.Warning);
 
@@ -98,8 +98,8 @@ namespace SeventhHeaven.Windows
 
                 if (fileSelected.Name.Equals("FF7Config.exe", System.StringComparison.InvariantCultureIgnoreCase))
                 {
-                    MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.ThisExeIsUsedForConfiguringFf7Settings),
-                                             ResourceHelper.GetString(StringKey.ErrorIncorrectExe),
+                    MessageDialogWindow.Show(ResourceHelper.Get(StringKey.ThisExeIsUsedForConfiguringFf7Settings),
+                                             ResourceHelper.Get(StringKey.ErrorIncorrectExe),
                                              MessageBoxButton.OK,
                                              MessageBoxImage.Error);
                     return;
@@ -111,7 +111,7 @@ namespace SeventhHeaven.Windows
 
         private void btnMovies_Click(object sender, RoutedEventArgs e)
         {
-            string folderPath = FileDialogHelper.BrowseForFolder(ResourceHelper.GetString(StringKey.SelectMoviesFolder), ViewModel.MoviesPathInput);
+            string folderPath = FileDialogHelper.BrowseForFolder(ResourceHelper.Get(StringKey.SelectMoviesFolder), ViewModel.MoviesPathInput);
 
             if (!string.IsNullOrEmpty(folderPath))
             {
@@ -121,7 +121,7 @@ namespace SeventhHeaven.Windows
 
         private void btnTextures_Click(object sender, RoutedEventArgs e)
         {
-            string folderPath = FileDialogHelper.BrowseForFolder(ResourceHelper.GetString(StringKey.SelectTexturesFolder), ViewModel.TexturesPathInput);
+            string folderPath = FileDialogHelper.BrowseForFolder(ResourceHelper.Get(StringKey.SelectTexturesFolder), ViewModel.TexturesPathInput);
 
             if (!string.IsNullOrEmpty(folderPath))
             {
@@ -131,7 +131,7 @@ namespace SeventhHeaven.Windows
 
         private void btnLibrary_Click(object sender, RoutedEventArgs e)
         {
-            string folderPath = FileDialogHelper.BrowseForFolder(ResourceHelper.GetString(StringKey.Select7thHeavenLibraryFolder), ViewModel.LibraryPathInput);
+            string folderPath = FileDialogHelper.BrowseForFolder(ResourceHelper.Get(StringKey.Select7thHeavenLibraryFolder), ViewModel.LibraryPathInput);
 
             if (!string.IsNullOrEmpty(folderPath))
             {
@@ -198,7 +198,7 @@ namespace SeventhHeaven.Windows
 
             if (lstSubscriptions.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.GetString(StringKey.SelectSubscriptionToEdit);
+                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectSubscriptionToEdit);
                 return;
             }
 
@@ -214,7 +214,7 @@ namespace SeventhHeaven.Windows
 
             if (lstSubscriptions.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.GetString(StringKey.SelectSubscriptionToRemove);
+                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectSubscriptionToRemove);
                 return;
             }
 
@@ -243,7 +243,7 @@ namespace SeventhHeaven.Windows
 
             if (lstSubscriptions.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.GetString(StringKey.SelectSubscriptionToMove);
+                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectSubscriptionToMove);
                 return;
             }
 
@@ -259,7 +259,7 @@ namespace SeventhHeaven.Windows
 
             if (lstSubscriptions.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.GetString(StringKey.SelectSubscriptionToMove);
+                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectSubscriptionToMove);
                 return;
             }
 
@@ -313,7 +313,7 @@ namespace SeventhHeaven.Windows
         {
             if (lstExtraFolders.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.GetString(StringKey.SelectFolderToRemove);
+                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectFolderToRemove);
                 return;
             }
 
@@ -329,7 +329,7 @@ namespace SeventhHeaven.Windows
 
             if (lstSubscriptions.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.GetString(StringKey.SelectSubscriptionToMove);
+                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectSubscriptionToMove);
                 return;
             }
 
@@ -346,7 +346,7 @@ namespace SeventhHeaven.Windows
 
             if (lstSubscriptions.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.GetString(StringKey.SelectSubscriptionToMove);
+                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectSubscriptionToMove);
                 return;
             }
 
@@ -358,7 +358,7 @@ namespace SeventhHeaven.Windows
         {
             if (lstExtraFolders.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.GetString(StringKey.SelectFolderToMove);
+                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectFolderToMove);
                 return;
             }
 
@@ -369,7 +369,7 @@ namespace SeventhHeaven.Windows
         {
             if (lstExtraFolders.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.GetString(StringKey.SelectFolderToMove);
+                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectFolderToMove);
                 return;
             }
 
@@ -380,7 +380,7 @@ namespace SeventhHeaven.Windows
         {
             if (lstExtraFolders.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.GetString(StringKey.SelectFolderToMove);
+                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectFolderToMove);
                 return;
             }
 
@@ -391,7 +391,7 @@ namespace SeventhHeaven.Windows
         {
             if (lstExtraFolders.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.GetString(StringKey.SelectFolderToMove);
+                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectFolderToMove);
                 return;
             }
 

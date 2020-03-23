@@ -87,7 +87,7 @@ namespace SeventhHeaven.Windows
         {
             if (lstPrograms.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.GetString(StringKey.SelectProgramToRemove);
+                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectProgramToRemove);
                 return;
             }
 
@@ -103,7 +103,7 @@ namespace SeventhHeaven.Windows
 
             if (lstPrograms.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.GetString(StringKey.SelectProgramToEdit);
+                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectProgramToEdit);
                 return;
             }
 
@@ -122,7 +122,7 @@ namespace SeventhHeaven.Windows
 
         private void btnBrowseProgram_Click(object sender, RoutedEventArgs e)
         {
-            string pathToProgram = FileDialogHelper.BrowseForFile("All files|*.*", ResourceHelper.GetString(StringKey.SelectProgramToRunSuchAs), ViewModel.NewProgramPathText);
+            string pathToProgram = FileDialogHelper.BrowseForFile("All files|*.*", ResourceHelper.Get(StringKey.SelectProgramToRunSuchAs), ViewModel.NewProgramPathText);
 
             ViewModel.IsProgramPopupOpen = true; // opening file dialog closes popup so re-open it
 
@@ -151,7 +151,7 @@ namespace SeventhHeaven.Windows
 
             if (lstPrograms.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.GetString(StringKey.SelectProgramToMove);
+                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectProgramToMove);
                 return;
             }
 
@@ -167,7 +167,7 @@ namespace SeventhHeaven.Windows
 
             if (lstPrograms.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.GetString(StringKey.SelectProgramToMove);
+                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectProgramToMove);
                 return;
             }
 
@@ -216,7 +216,7 @@ namespace SeventhHeaven.Windows
 
             if (lstPrograms.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.GetString(StringKey.SelectProgramToMove);
+                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectProgramToMove);
                 return;
             }
 
@@ -232,7 +232,7 @@ namespace SeventhHeaven.Windows
 
             if (lstPrograms.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.GetString(StringKey.SelectProgramToMove);
+                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectProgramToMove);
                 return;
             }
 

@@ -34,6 +34,23 @@ namespace SeventhHeaven.UserControls
             { "Inst.", 30 }
         };
 
+        Dictionary<string, string> ColumnTranslations
+        {
+            get
+            {
+                return new Dictionary<string, string>()
+                {
+                    { ResourceHelper.Get(StringKey.Name), "Name" },
+                    { ResourceHelper.Get(StringKey.Author), "Author" },
+                    { ResourceHelper.Get(StringKey.Released), "Released" },
+                    { ResourceHelper.Get(StringKey.Category), "Category" },
+                    { ResourceHelper.Get(StringKey.Size), "Size" },
+                    { ResourceHelper.Get(StringKey.Inst), "Inst." }
+                };
+            }
+        }
+
+
         public CatalogUserControl()
         {
             InitializeComponent();
@@ -247,18 +264,17 @@ namespace SeventhHeaven.UserControls
                     return;
                 }
 
-                propertyNameToSortBy = headerBinding.Path?.Path;
+                propertyNameToSortBy = ColumnTranslations[headerBinding.Path?.Path];
             }
             else
             {
-                switch (headerClicked.Content)
+                if (ColumnTranslations[headerClicked.Content.ToString()] == "Inst.")
                 {
-                    case "Inst.":
-                        propertyNameToSortBy = "IsInstalled";
-                        break;
-
-                    default:
-                        return; // exit if unknown
+                    propertyNameToSortBy = "IsInstalled";
+                }
+                else
+                {
+                    return;
                 }
             }
 
@@ -317,9 +333,9 @@ namespace SeventhHeaven.UserControls
 
             return columns.Select(c => new ColumnInfo()
             {
-                Name = (c.Header as GridViewColumnHeader).Content as string,
+                Name = ColumnTranslations[(c.Header as GridViewColumnHeader).Content as string],
                 Width = c.ActualWidth,
-                AutoResize = columnsThatAutoResize.Contains((c.Header as GridViewColumnHeader).Content as string)
+                AutoResize = columnsThatAutoResize.Contains(ColumnTranslations[((c.Header as GridViewColumnHeader).Content as string)])
             }).ToList();
         }
 
@@ -331,10 +347,10 @@ namespace SeventhHeaven.UserControls
         {
             string columnName = (e.OriginalSource as GridViewColumnHeader).Content as string;
 
-            if (e.NewSize.Width < MinColumnWidths[columnName])
+            if (e.NewSize.Width < MinColumnWidths[ColumnTranslations[columnName]])
             {
                 e.Handled = true;
-                ((GridViewColumnHeader)sender).Column.Width = MinColumnWidths[columnName];
+                ((GridViewColumnHeader)sender).Column.Width = MinColumnWidths[ColumnTranslations[columnName]];
             }
         }
 
@@ -362,7 +378,7 @@ namespace SeventhHeaven.UserControls
             for (int i = 0; i < newColumns.Count; i++)
             {
                 // get the current index of the column
-                int colIndex = columns.ToList().FindIndex(c => ((c.Header as GridViewColumnHeader).Content as string) == newColumns[i].Name);
+                int colIndex = columns.ToList().FindIndex(c => ColumnTranslations[((c.Header as GridViewColumnHeader).Content as string)] == newColumns[i].Name);
 
                 // apply the new width if the column does not auto resize
                 if (!newColumns[i].AutoResize)

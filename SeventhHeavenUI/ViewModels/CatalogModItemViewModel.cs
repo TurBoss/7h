@@ -206,7 +206,7 @@ namespace SeventhHeavenUI.ViewModels
 
             if (string.IsNullOrWhiteSpace(Category))
             {
-                Category = ResourceHelper.GetString(StringKey.Unknown);
+                Category = ResourceHelper.Get(StringKey.Unknown);
             }
 
             NotifyPropertyChanged(nameof(IsInstalled));

@@ -91,32 +91,32 @@ namespace SeventhHeaven.Classes
 
         public static bool LaunchGame(bool varDump, bool debug, bool launchWithNoMods = false)
         {
-            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.CheckingFf7IsNotRunning));
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CheckingFf7IsNotRunning));
             if (IsFF7Running())
             {
-                string title = ResourceHelper.GetString(StringKey.Ff7IsAlreadyRunning);
-                string message = ResourceHelper.GetString(StringKey.Ff7IsAlreadyRunningDoYouWantToForceClose);
+                string title = ResourceHelper.Get(StringKey.Ff7IsAlreadyRunning);
+                string message = ResourceHelper.Get(StringKey.Ff7IsAlreadyRunningDoYouWantToForceClose);
 
                 Instance.RaiseProgressChanged($"\t{title}", NLog.LogLevel.Warn);
 
                 var result = MessageDialogWindow.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (result.Result == MessageBoxResult.Yes)
                 {
-                    Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.ForceClosingAllInstancesFf7)}", NLog.LogLevel.Info);
+                    Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.ForceClosingAllInstancesFf7)}", NLog.LogLevel.Info);
 
                     if (!ForceKillFF7())
                     {
-                        Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.FailedToCloseProcess)} {Path.GetFileName(Sys.Settings.FF7Exe)}. {ResourceHelper.GetString(StringKey.Aborting)}", NLog.LogLevel.Error);
+                        Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.FailedToCloseProcess)} {Path.GetFileName(Sys.Settings.FF7Exe)}. {ResourceHelper.Get(StringKey.Aborting)}", NLog.LogLevel.Error);
                         return false;
                     }
                 }
             }
 
-            Instance.RaiseProgressChanged($"{ResourceHelper.GetString(StringKey.CheckingFf7ExeExistsAt)} {Sys.Settings.FF7Exe} ...");
+            Instance.RaiseProgressChanged($"{ResourceHelper.Get(StringKey.CheckingFf7ExeExistsAt)} {Sys.Settings.FF7Exe} ...");
             if (!File.Exists(Sys.Settings.FF7Exe))
             {
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.FileNotFoundAborting)}", NLog.LogLevel.Error);
-                Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.Ff7ExeNotFoundYouMayNeedToConfigure));
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.FileNotFoundAborting)}", NLog.LogLevel.Error);
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.Ff7ExeNotFoundYouMayNeedToConfigure));
                 return false;
             }
 
@@ -131,35 +131,35 @@ namespace SeventhHeaven.Classes
             converter.MessageSent += GameConverter_MessageSent;
 
 
-            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.VerifyingInstalledGameIsCompatible));
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingInstalledGameIsCompatible));
             if (converter.IsGamePirated())
             {
-                Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.ErrorCodeYarr), NLog.LogLevel.Error);
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.ErrorCodeYarr), NLog.LogLevel.Error);
                 Logger.Info(FileUtils.ListAllFiles(converter.InstallPath));
                 return false;
             }
 
-            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.VerifyingGameIsNotInstalledInProtectedFolder));
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingGameIsNotInstalledInProtectedFolder));
             if (converter.IsGameLocatedInSystemFolders())
             {
-                string message = ResourceHelper.GetString(StringKey.Ff7IsCurrentlyInstalledInASystemFolder);
-                var result = MessageDialogWindow.Show(message, ResourceHelper.GetString(StringKey.CannotContinue), MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                string message = ResourceHelper.Get(StringKey.Ff7IsCurrentlyInstalledInASystemFolder);
+                var result = MessageDialogWindow.Show(message, ResourceHelper.Get(StringKey.CannotContinue), MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
                 if (result.Result == MessageBoxResult.No)
                 {
-                    Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.CanNotContinueDueToFf7nstalledInProtectedFolder)}", NLog.LogLevel.Error);
+                    Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.CanNotContinueDueToFf7nstalledInProtectedFolder)}", NLog.LogLevel.Error);
                     return false;
                 }
 
 
                 // copy installation and update settings with new path
                 string newInstallationPath = @"C:\Games\Final Fantasy VII";
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.CopyingGameFilesTo)} {newInstallationPath}");
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.CopyingGameFilesTo)} {newInstallationPath}");
                 bool didCopy = converter.CopyGame(newInstallationPath);
 
                 if (!didCopy)
                 {
-                    Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.FailedToCopyFf7To)} {newInstallationPath}. {ResourceHelper.GetString(StringKey.Aborting)}", NLog.LogLevel.Error);
+                    Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.FailedToCopyFf7To)} {newInstallationPath}. {ResourceHelper.Get(StringKey.Aborting)}", NLog.LogLevel.Error);
                     return false;
                 }
 
@@ -169,55 +169,55 @@ namespace SeventhHeaven.Classes
                 converter.InstallPath = newInstallationPath;
             }
 
-            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.VerifyingGameIsMaxInstall));
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingGameIsMaxInstall));
             if (!converter.VerifyFullInstallation())
             {
-                Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.YourFf7InstallationFolderIsMissingCriticalFiles), NLog.LogLevel.Error);
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.YourFf7InstallationFolderIsMissingCriticalFiles), NLog.LogLevel.Error);
                 return false;
             }
 
 
-            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.CreatingMissingRequiredDirectories));
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CreatingMissingRequiredDirectories));
             converter.CreateMissingDirectories();
 
 
-            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.VerifyingAdditionalFilesForBattleAndKernelFoldersExist));
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingAdditionalFilesForBattleAndKernelFoldersExist));
             if (!converter.VerifyAdditionalFilesExist())
             {
-                Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.FailedToVerifyCopyMissingAdditionalFiles), NLog.LogLevel.Error);
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.FailedToVerifyCopyMissingAdditionalFiles), NLog.LogLevel.Error);
                 return false;
             }
 
             converter.CopyMovieFilesToFolder(Sys.Settings.MovieFolder);
 
-            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.VerifyingAllMovieFilesExist));
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingAllMovieFilesExist));
             if (!GameConverter.AllMovieFilesExist(Sys.Settings.MovieFolder))
             {
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.CouldNotFindAllMovieFilesAt)} {Sys.Settings.MovieFolder}", NLog.LogLevel.Warn);
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.CouldNotFindAllMovieFilesAt)} {Sys.Settings.MovieFolder}", NLog.LogLevel.Warn);
 
                 string otherMovieFolder = Path.Combine(converter.InstallPath, "data", "movies");
                 bool pathsAreSame = Sys.Settings.MovieFolder.Equals(otherMovieFolder);
                 if (!pathsAreSame && GameConverter.AllMovieFilesExist(otherMovieFolder)) // only check other location if different then what is already set in General Settings
                 {
-                    Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.AllFilesFoundAt)} {otherMovieFolder}. {ResourceHelper.GetString(StringKey.UpdatingMoviePathSetting)}");
+                    Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.AllFilesFoundAt)} {otherMovieFolder}. {ResourceHelper.Get(StringKey.UpdatingMoviePathSetting)}");
                     Sys.Settings.MovieFolder = otherMovieFolder;
                 }
                 else
                 {
                     if (!pathsAreSame)
                     {
-                        Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.CouldNotFindAllMovieFilesAt)} {otherMovieFolder}", NLog.LogLevel.Warn);
+                        Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.CouldNotFindAllMovieFilesAt)} {otherMovieFolder}", NLog.LogLevel.Warn);
                     }
 
-                    Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.AttemptingToCopyMovieFiles)}");
+                    Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.AttemptingToCopyMovieFiles)}");
 
                     if (!converter.CopyMovieFilesToFolder(Sys.Settings.MovieFolder))
                     {
                         // skip warning if an active mod contains movie files
                         bool activeModsHasMovies = Sys.ActiveProfile.ActiveItems.Any(a => Sys.Library.GetItem(a.ModID).CachedDetails.ContainsMovies);
 
-                        string title = ResourceHelper.GetString(StringKey.MovieFilesAreMissing);
-                        string message = ResourceHelper.GetString(StringKey.InOrderToSeeInGameMoviesYouWillNeedMessage);
+                        string title = ResourceHelper.Get(StringKey.MovieFilesAreMissing);
+                        string message = ResourceHelper.Get(StringKey.InOrderToSeeInGameMoviesYouWillNeedMessage);
                         if (!Sys.Settings.GameLaunchSettings.HasDisplayedMovieWarning && !activeModsHasMovies)
                         {
                             Sys.Settings.GameLaunchSettings.HasDisplayedMovieWarning = true;
@@ -234,12 +234,12 @@ namespace SeventhHeaven.Classes
                 }
             }
 
-            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.VerifyingMusicFilesExist));
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingMusicFilesExist));
             if (!converter.AllMusicFilesExist())
             {
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.CouldNotFindAllMusicFilesAt)} {Path.Combine(converter.InstallPath, "music", "vgmstream")}", NLog.LogLevel.Warn);
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.CouldNotFindAllMusicFilesAt)} {Path.Combine(converter.InstallPath, "music", "vgmstream")}", NLog.LogLevel.Warn);
 
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.AttemptingToCopyMusicFiles)}");
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.AttemptingToCopyMusicFiles)}");
                 converter.CopyMusicFiles();
 
                 if (!converter.AllMusicFilesExist())
@@ -247,8 +247,8 @@ namespace SeventhHeaven.Classes
                     // skip warning if an active mod contains music files
                     bool activeModsHasMusic = Sys.ActiveProfile.ActiveItems.Any(a => Sys.Library.GetItem(a.ModID).CachedDetails.ContainsMusic);
 
-                    string title = ResourceHelper.GetString(StringKey.OggMusicFilesAreMissing);
-                    string message = ResourceHelper.GetString(StringKey.InOrderToHearHighQualityMusicYouWillNeedMessage);
+                    string title = ResourceHelper.Get(StringKey.OggMusicFilesAreMissing);
+                    string message = ResourceHelper.Get(StringKey.InOrderToHearHighQualityMusicYouWillNeedMessage);
                     if (!Sys.Settings.GameLaunchSettings.HasDisplayedOggMusicWarning && !activeModsHasMusic)
                     {
                         Sys.Settings.GameLaunchSettings.HasDisplayedOggMusicWarning = true;
@@ -270,37 +270,37 @@ namespace SeventhHeaven.Classes
             converter.CheckAndCopyOldGameConverterFiles(backupFolderPath);
 
 
-            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.VerifyingLatestGameDriverIsInstalled));
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingLatestGameDriverIsInstalled));
             if (!converter.InstallLatestGameDriver(backupFolderPath))
             {
-                Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.SomethingWentWrongTryingToDetectGameDriver), NLog.LogLevel.Error);
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.SomethingWentWrongTryingToDetectGameDriver), NLog.LogLevel.Error);
                 return false;
             }
 
 
-            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.VerifyingGameDriverShadersFoldersExist));
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingGameDriverShadersFoldersExist));
             converter.CopyMissingShaders();
 
 
-            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.VerifyingFf7Exe));
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingFf7Exe));
             if (new FileInfo(Sys.Settings.FF7Exe).Name.Equals("ff7.exe", StringComparison.InvariantCultureIgnoreCase))
             {
                 // only compare exes are different if ff7.exe set in Settings (and not something like ff7_bc.exe)
                 if (converter.IsExeDifferent())
                 {
-                    Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.Ff7ExeDetectedToBeDifferent)}");
+                    Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.Ff7ExeDetectedToBeDifferent)}");
                     if (converter.BackupExe(backupFolderPath))
                     {
                         bool didCopy = converter.CopyFF7ExeToGame();
                         if (!didCopy)
                         {
-                            Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.FailedToCopyFf7Exe)}", NLog.LogLevel.Error);
+                            Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.FailedToCopyFf7Exe)}", NLog.LogLevel.Error);
                             return false;
                         }
                     }
                     else
                     {
-                        Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.FailedToCreateBackupOfFf7Exe)}", NLog.LogLevel.Error);
+                        Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.FailedToCreateBackupOfFf7Exe)}", NLog.LogLevel.Error);
                         return false;
                     }
                 }
@@ -308,19 +308,19 @@ namespace SeventhHeaven.Classes
 
             if (converter.IsConfigExeDifferent())
             {
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.Ff7ConfigExeDetectedToBeMissingOrDifferent)}");
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.Ff7ConfigExeDetectedToBeMissingOrDifferent)}");
                 if (converter.BackupFF7ConfigExe(backupFolderPath))
                 {
                     bool didCopy = converter.CopyFF7ConfigExeToGame();
                     if (!didCopy)
                     {
-                        Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.FailedToCopyFf7ConfigExe)}", NLog.LogLevel.Error);
+                        Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.FailedToCopyFf7ConfigExe)}", NLog.LogLevel.Error);
                         return false;
                     }
                 }
                 else
                 {
-                    Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.FailedToCreateBackupOfFf7ConfigExe)}", NLog.LogLevel.Error);
+                    Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.FailedToCreateBackupOfFf7ConfigExe)}", NLog.LogLevel.Error);
                     return false;
                 }
             }
@@ -331,32 +331,32 @@ namespace SeventhHeaven.Classes
             //
             // GAME SHOULD BE FULLY 'CONVERTED' AND READY TO LAUNCH FOR MODS AT THIS POINT
             //
-            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.CheckingAProfileIsActive));
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CheckingAProfileIsActive));
             if (Sys.ActiveProfile == null)
             {
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.ActiveProfileNotFound)}", NLog.LogLevel.Error);
-                Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.CreateAProfileFirstAndTryAgain));
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.ActiveProfileNotFound)}", NLog.LogLevel.Error);
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CreateAProfileFirstAndTryAgain));
                 return false;
             }
 
-            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.CheckingModCompatibilityRequirements));
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CheckingModCompatibilityRequirements));
             if (!SanityCheckCompatibility())
             {
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.FailedModCompatibilityCheck)}", NLog.LogLevel.Error);
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.FailedModCompatibilityCheck)}", NLog.LogLevel.Error);
                 return false;
             }
 
-            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.CheckingModConstraintsForCompatibility));
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CheckingModConstraintsForCompatibility));
             if (!SanityCheckSettings())
             {
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.FailedModConstraintCheck)}", NLog.LogLevel.Error);
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.FailedModConstraintCheck)}", NLog.LogLevel.Error);
                 return false;
             }
 
-            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.CheckingModLoadOrderRequirements));
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CheckingModLoadOrderRequirements));
             if (!VerifyOrdering())
             {
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.FailedModLoadOrderCheck)}", NLog.LogLevel.Error);
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.FailedModLoadOrderCheck)}", NLog.LogLevel.Error);
                 return false;
             }
 
@@ -366,46 +366,46 @@ namespace SeventhHeaven.Classes
             //
             Instance.DidMountVirtualDisc = false;
 
-            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.LookingForGameDisc));
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.LookingForGameDisc));
             Instance.DriveLetter = GetDriveLetter();
 
             if (!string.IsNullOrEmpty(Instance.DriveLetter))
             {
-                Instance.RaiseProgressChanged($"{ResourceHelper.GetString(StringKey.FoundGameDiscAt)} {Instance.DriveLetter} ...");
+                Instance.RaiseProgressChanged($"{ResourceHelper.Get(StringKey.FoundGameDiscAt)} {Instance.DriveLetter} ...");
             }
             else
             {
-                Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.FailedToFindGameDisc), NLog.LogLevel.Warn);
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.FailedToFindGameDisc), NLog.LogLevel.Warn);
 
                 if (!OSHasAutoMountSupport())
                 {
-                    Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.OsDoesNotSupportAutoMounting), NLog.LogLevel.Error);
+                    Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.OsDoesNotSupportAutoMounting), NLog.LogLevel.Error);
                     return false;
                 }
                 else
                 {
                     if (Sys.Settings.GameLaunchSettings.AutoMountGameDisc)
                     {
-                        Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.AutoMountingVirtualGameDisc));
+                        Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.AutoMountingVirtualGameDisc));
                         bool didMount = MountIso();
 
                         if (!didMount)
                         {
-                            Instance.RaiseProgressChanged($"{ResourceHelper.GetString(StringKey.FailedToAutoMountVirtualDiscAt)} {Path.Combine(Sys._7HFolder, "Resources", "FF7DISC1.ISO")} ...", NLog.LogLevel.Error);
+                            Instance.RaiseProgressChanged($"{ResourceHelper.Get(StringKey.FailedToAutoMountVirtualDiscAt)} {Path.Combine(Sys._7HFolder, "Resources", "FF7DISC1.ISO")} ...", NLog.LogLevel.Error);
                             return false;
                         }
 
                         Instance.DidMountVirtualDisc = true;
-                        Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.LookingForGameDiscAfterMounting));
+                        Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.LookingForGameDiscAfterMounting));
                         Instance.DriveLetter = GetDriveLetter();
 
                         if (string.IsNullOrEmpty(Instance.DriveLetter))
                         {
-                            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.FailedToFindGameDiscAfterAutoMounting), NLog.LogLevel.Error);
+                            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.FailedToFindGameDiscAfterAutoMounting), NLog.LogLevel.Error);
                             return false;
                         }
 
-                        Instance.RaiseProgressChanged($"{ResourceHelper.GetString(StringKey.FoundGameDiscAt)} {Instance.DriveLetter} ...");
+                        Instance.RaiseProgressChanged($"{ResourceHelper.Get(StringKey.FoundGameDiscAt)} {Instance.DriveLetter} ...");
                     }
                 }
             }
@@ -425,17 +425,17 @@ namespace SeventhHeaven.Classes
 
             if (launchWithNoMods)
             {
-                vanillaMsg = ResourceHelper.GetString(StringKey.UserRequestedToPlayWithNoModsLaunchingGameAsVanilla);
+                vanillaMsg = ResourceHelper.Get(StringKey.UserRequestedToPlayWithNoModsLaunchingGameAsVanilla);
                 runAsVanilla = true;
             }
             else if (Sys.ActiveProfile.ActiveItems.Count == 0)
             {
-                vanillaMsg = ResourceHelper.GetString(StringKey.NoModsActivatedLaunchingGameAsVanilla);
+                vanillaMsg = ResourceHelper.Get(StringKey.NoModsActivatedLaunchingGameAsVanilla);
                 runAsVanilla = true;
             }
             else if (Sys.Settings.GameLaunchSettings.SelectedRenderer != (int)GraphicsRenderer.CustomDriver)
             {
-                vanillaMsg = ResourceHelper.GetString(StringKey.SelectedRendererIsNotSetToCustomLaunchingGameAsVanilla);
+                vanillaMsg = ResourceHelper.Get(StringKey.SelectedRendererIsNotSetToCustomLaunchingGameAsVanilla);
                 runAsVanilla = true;
             }
 
@@ -448,12 +448,12 @@ namespace SeventhHeaven.Classes
                 //
                 // Create Runtime Profile for Active Mods
                 //
-                Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.CreatingRuntimeProfile));
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CreatingRuntimeProfile));
                 runtimeProfile = CreateRuntimeProfile();
 
                 if (runtimeProfile == null)
                 {
-                    Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.FailedToCreateRuntimeProfileForActiveMods)}", NLog.LogLevel.Error);
+                    Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.FailedToCreateRuntimeProfileForActiveMods)}", NLog.LogLevel.Error);
                     return false;
                 }
 
@@ -462,14 +462,14 @@ namespace SeventhHeaven.Classes
                 //
                 if (varDump)
                 {
-                    Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.VariableDumpSetToTrueStartingTurboLog));
+                    Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VariableDumpSetToTrueStartingTurboLog));
                     StartTurboLogForVariableDump(runtimeProfile);
                 }
 
                 //
                 // Copy EasyHook.dll to FF7
                 //
-                Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.CopyingEasyHookToFf7PathIfNotFoundOrOlder));
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CopyingEasyHookToFf7PathIfNotFoundOrOlder));
                 CopyEasyHookDlls();
             }
 
@@ -477,7 +477,7 @@ namespace SeventhHeaven.Classes
             //
             // Copy input.cfg to FF7
             //
-            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.CopyingFf7InputCfgToFf7Path));
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CopyingFf7InputCfgToFf7Path));
             bool didCopyCfg = CopyKeyboardInputCfg();
 
 
@@ -489,19 +489,19 @@ namespace SeventhHeaven.Classes
                 runtimeProfile.Options |= RuntimeOptions.DetailedLog;
                 runtimeProfile.LogFile = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "log.txt");
 
-                Instance.RaiseProgressChanged($"{ResourceHelper.GetString(StringKey.DebugLoggingSetToTrueDetailedLoggingWillBeWrittenTo)} {runtimeProfile.LogFile} ...");
+                Instance.RaiseProgressChanged($"{ResourceHelper.Get(StringKey.DebugLoggingSetToTrueDetailedLoggingWillBeWrittenTo)} {runtimeProfile.LogFile} ...");
             }
 
             //
             // Check/Disable Reunion Mod
             //
-            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.CheckingIfReunionModIsInstalled));
-            Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.Found)}: {IsReunionModInstalled()}");
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CheckingIfReunionModIsInstalled));
+            Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.Found)}: {IsReunionModInstalled()}");
 
             bool didDisableReunion = false;
             if (IsReunionModInstalled() && Sys.Settings.GameLaunchSettings.DisableReunionOnLaunch)
             {
-                Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.DisablingReunionMod));
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.DisablingReunionMod));
                 EnableOrDisableReunionMod(doEnable: false);
                 didDisableReunion = true;
             }
@@ -517,7 +517,7 @@ namespace SeventhHeaven.Classes
                     Task.Factory.StartNew(() =>
                     {
                         System.Threading.Thread.Sleep(5000); // wait 5 seconds before renaming the dll so the game and gl driver can fully initialize
-                        Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.ReenablingReunionMod));
+                        Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.ReenablingReunionMod));
                         EnableOrDisableReunionMod(doEnable: true);
                     });
                 }
@@ -531,7 +531,7 @@ namespace SeventhHeaven.Classes
             int pid;
             try
             {
-                Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.LaunchingAdditionalProgramsToRunIfAny));
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.LaunchingAdditionalProgramsToRunIfAny));
                 Instance.LaunchAdditionalProgramsToRunPrior();
 
                 RuntimeParams parms = new RuntimeParams
@@ -539,7 +539,7 @@ namespace SeventhHeaven.Classes
                     ProfileFile = Path.GetTempFileName()
                 };
 
-                Instance.RaiseProgressChanged($"{ResourceHelper.GetString(StringKey.WritingTemporaryRuntimeProfileFileTo)} {parms.ProfileFile} ...");
+                Instance.RaiseProgressChanged($"{ResourceHelper.Get(StringKey.WritingTemporaryRuntimeProfileFileTo)} {parms.ProfileFile} ...");
 
                 using (FileStream fs = new FileStream(parms.ProfileFile, FileMode.Create))
                     Util.SerializeBinary(runtimeProfile, fs);
@@ -560,7 +560,7 @@ namespace SeventhHeaven.Classes
 
                     try
                     {
-                        Instance.RaiseProgressChanged(string.Format(ResourceHelper.GetString(StringKey.AttemptingToInjectWithEasyHook), attemptCount + 1, totalAttempts));
+                        Instance.RaiseProgressChanged(string.Format(ResourceHelper.Get(StringKey.AttemptingToInjectWithEasyHook), attemptCount + 1, totalAttempts));
 
                         // attempt to inject on background thread so we can have a timeout if the process does not return in 10 seconds
                         // a successful injection should only take ~3 seconds
@@ -586,7 +586,7 @@ namespace SeventhHeaven.Classes
                                     }
                                 }
 
-                                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.ReceivedErrors)}: {errors} ...", NLog.LogLevel.Warn);
+                                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.ReceivedErrors)}: {errors} ...", NLog.LogLevel.Warn);
                             }
                             else
                             {
@@ -601,7 +601,7 @@ namespace SeventhHeaven.Classes
                             TimeSpan elapsed = DateTime.Now.Subtract(startTime);
                             if (elapsed.Seconds > 10)
                             {
-                                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.ReachedTimeoutWaitingForInjection)}", NLog.LogLevel.Warn);
+                                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.ReachedTimeoutWaitingForInjection)}", NLog.LogLevel.Warn);
                                 didInject = false;
                                 break;
                             }
@@ -609,7 +609,7 @@ namespace SeventhHeaven.Classes
                     }
                     catch (Exception e)
                     {
-                        Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.ReceivedUnknownError)}: {e.Message} ...", NLog.LogLevel.Warn);
+                        Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.ReceivedUnknownError)}: {e.Message} ...", NLog.LogLevel.Warn);
                     }
                     finally
                     {
@@ -632,18 +632,18 @@ namespace SeventhHeaven.Classes
 
                 if (!didInject)
                 {
-                    Instance.RaiseProgressChanged($"{ResourceHelper.GetString(StringKey.FailedToInjectAfterMaxAmountOfTries)} ({totalAttempts}) ...", NLog.LogLevel.Warn);
+                    Instance.RaiseProgressChanged($"{ResourceHelper.Get(StringKey.FailedToInjectAfterMaxAmountOfTries)} ({totalAttempts}) ...", NLog.LogLevel.Warn);
                     Sys.Settings.GameLaunchSettings.HasReceivedCode5Error = true; // update launch settings to notify that user has received a code 5 error in the code
 
                     // give user option to set compat flag and try again
-                    var viewModel = MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.FailedToInjectWithEasyHookMessage),
-                                                             ResourceHelper.GetString(StringKey.ErrorFailedToStartGame),
+                    var viewModel = MessageDialogWindow.Show(ResourceHelper.Get(StringKey.FailedToInjectWithEasyHookMessage),
+                                                             ResourceHelper.Get(StringKey.ErrorFailedToStartGame),
                                                              MessageBoxButton.YesNo,
                                                              MessageBoxImage.Warning);
 
                     if (viewModel.Result == MessageBoxResult.Yes)
                     {
-                        Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.SettingCompatibilityFixAndTryingAgain));
+                        Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.SettingCompatibilityFixAndTryingAgain));
                         Sys.Settings.GameLaunchSettings.Code5Fix = true;
 
                         Instance.SetCompatibilityFlagsInRegistry();
@@ -656,33 +656,33 @@ namespace SeventhHeaven.Classes
                         {
                             if (aex.Message.IndexOf("Unknown error in injected assembler code", StringComparison.InvariantCultureIgnoreCase) >= 0)
                             {
-                                Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.StillFailedToInjectWithEasyHookAborting), NLog.LogLevel.Error);
-                                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.FailedToInjectWithEasyHookAfterSettingFlags), ResourceHelper.GetString(StringKey.ErrorFailedToStartGame), MessageBoxButton.OK, MessageBoxImage.Error);
+                                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.StillFailedToInjectWithEasyHookAborting), NLog.LogLevel.Error);
+                                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.FailedToInjectWithEasyHookAfterSettingFlags), ResourceHelper.Get(StringKey.ErrorFailedToStartGame), MessageBoxButton.OK, MessageBoxImage.Error);
                                 return false;
                             }
                         }
                     }
                     else
                     {
-                        Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.UserChoseNotToSetCompatibilityFix)}");
+                        Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.UserChoseNotToSetCompatibilityFix)}");
                         return false;
                     }
                 }
 
 
-                Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.GettingFf7Proc));
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.GettingFf7Proc));
                 Process ff7Proc = Process.GetProcessById(pid);
 
                 if (ff7Proc == null)
                 {
-                    Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.FailedToGetFf7Proc)}", NLog.LogLevel.Error);
+                    Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.FailedToGetFf7Proc)}", NLog.LogLevel.Error);
                     return false;
                 }
 
                 ff7Proc.EnableRaisingEvents = true;
                 if (debug)
                 {
-                    Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.DebugLoggingSetToTrueWiringUpLogFile));
+                    Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.DebugLoggingSetToTrueWiringUpLogFile));
                     ff7Proc.Exited += (o, e) =>
                     {
                         try
@@ -699,28 +699,28 @@ namespace SeventhHeaven.Classes
                         catch (Exception ex)
                         {
                             Logger.Error(ex);
-                            Instance.RaiseProgressChanged($"{ResourceHelper.GetString(StringKey.FailedToStartProcessForDebugLog)}: {ex.Message}", NLog.LogLevel.Error);
+                            Instance.RaiseProgressChanged($"{ResourceHelper.Get(StringKey.FailedToStartProcessForDebugLog)}: {ex.Message}", NLog.LogLevel.Error);
                         }
                     };
                 }
 
                 /// sideload programs for mods before starting FF7 because FF7 losing focus while initializing can cause the intro movies to stop playing
                 /// ... Thus we load programs first so they don't steal window focus
-                Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.StartingProgramsForMods));
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.StartingProgramsForMods));
                 foreach (RuntimeMod mod in runtimeProfile.Mods)
                 {
                     Instance.LaunchProgramsForMod(mod);
                 }
 
                 /// load plugins for mods
-                Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.StartingPluginsForMods));
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.StartingPluginsForMods));
                 foreach (RuntimeMod mod in runtimeProfile.Mods)
                 {
                     StartPluginsForMod(mod);
                 }
 
                 // wire up process to stop plugins and side processes when proc has exited
-                Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.SettingUpFf7ExeToStopPluginsAndModPrograms));
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.SettingUpFf7ExeToStopPluginsAndModPrograms));
                 ff7Proc.Exited += (o, e) =>
                 {
                     for (int i = 0; i < Instance._plugins.Count; i++)
@@ -742,7 +742,7 @@ namespace SeventhHeaven.Classes
                     {
                         Instance._plugins.Clear();
 
-                        Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.StoppingOtherProgramsForMods));
+                        Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.StoppingOtherProgramsForMods));
                         Instance.StopAllSideProcessesForMods();
 
                         if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && Instance.DidMountVirtualDisc && IsVirtualIsoMounted(Instance.DriveLetter))
@@ -766,7 +766,7 @@ namespace SeventhHeaven.Classes
 
 
                 int secondsToWait = 120;
-                Instance.RaiseProgressChanged(string.Format(ResourceHelper.GetString(StringKey.WaitingForFf7ExeToRespond), secondsToWait));
+                Instance.RaiseProgressChanged(string.Format(ResourceHelper.Get(StringKey.WaitingForFf7ExeToRespond), secondsToWait));
                 DateTime start = DateTime.Now;
                 while (ff7Proc.Responding == false)
                 {
@@ -777,7 +777,7 @@ namespace SeventhHeaven.Classes
 
                 if (didDisableReunion)
                 {
-                    Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.ReenablingReunionMod));
+                    Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.ReenablingReunionMod));
                     EnableOrDisableReunionMod(doEnable: true);
                 }
 
@@ -793,8 +793,8 @@ namespace SeventhHeaven.Classes
             {
                 Logger.Error(e);
 
-                Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.ExceptionOccurredWhileTryingToStart), NLog.LogLevel.Error);
-                MessageDialogWindow.Show(e.ToString(), ResourceHelper.GetString(StringKey.ErrorFailedToStartGame), MessageBoxButton.OK, MessageBoxImage.Error);
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.ExceptionOccurredWhileTryingToStart), NLog.LogLevel.Error);
+                MessageDialogWindow.Show(e.ToString(), ResourceHelper.Get(StringKey.ErrorFailedToStartGame), MessageBoxButton.OK, MessageBoxImage.Error);
 
                 return false;
             }
@@ -824,10 +824,10 @@ namespace SeventhHeaven.Classes
                                 .Invoke(null) as _7HPlugin;
 
                     Instance._plugins.Add(dll, plugin);
-                    Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.PluginAdded)}: {dll}");
+                    Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.PluginAdded)}: {dll}");
                 }
 
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.StartingPlugin)}: {dll}");
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.StartingPlugin)}: {dll}");
 
                 // invoke on app dispatcher thread since accessing main window which is a UI object
                 App.Current.Dispatcher.Invoke(() =>
@@ -857,7 +857,7 @@ namespace SeventhHeaven.Classes
             }
             catch (VariableAliasNotFoundException aex)
             {
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.FailedToGetListOfRuntimeMods)}: {aex.Message}", NLog.LogLevel.Error);
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.FailedToGetListOfRuntimeMods)}: {aex.Message}", NLog.LogLevel.Error);
                 return null;
             }
             catch (Exception)
@@ -880,7 +880,7 @@ namespace SeventhHeaven.Classes
                 Mods = runtimeMods
             };
 
-            Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.AddingPathsToMonitor)}");
+            Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.AddingPathsToMonitor)}");
             runtimeProfiles.MonitorPaths.AddRange(Sys.Settings.ExtraFolders.Where(s => s.Length > 0).Select(s => Path.Combine(ff7Folder, s)));
             return runtimeProfiles;
         }
@@ -903,7 +903,7 @@ namespace SeventhHeaven.Classes
 
                 if (new Version(targetVersion.FileVersion).CompareTo(new Version(sourceVersion.FileVersion)) < 0)
                 {
-                    Instance.RaiseProgressChanged($"\tEasyHook.dll {ResourceHelper.GetString(StringKey.DetectedToBeOlderVersion)} ...");
+                    Instance.RaiseProgressChanged($"\tEasyHook.dll {ResourceHelper.Get(StringKey.DetectedToBeOlderVersion)} ...");
                     hasOldVersion = true;
                 }
             }
@@ -913,11 +913,11 @@ namespace SeventhHeaven.Classes
             if (!File.Exists(pathToTargetEasyHook) || hasOldVersion)
             {
                 File.Copy(pathToSourceEasyHook, pathToTargetEasyHook, true);
-                Instance.RaiseProgressChanged($"\tEasyHook.dll {ResourceHelper.GetString(StringKey.Copied)} ...");
+                Instance.RaiseProgressChanged($"\tEasyHook.dll {ResourceHelper.Get(StringKey.Copied)} ...");
             }
             else
             {
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.SkippedCopying)} EasyHook.dll ...");
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.SkippedCopying)} EasyHook.dll ...");
 
             }
 
@@ -934,7 +934,7 @@ namespace SeventhHeaven.Classes
 
                 if (new Version(targetVersion.FileVersion).CompareTo(new Version(sourceVersion.FileVersion)) < 0)
                 {
-                    Instance.RaiseProgressChanged($"\tEasyHook32.dll {ResourceHelper.GetString(StringKey.DetectedToBeOlderVersion)} ...");
+                    Instance.RaiseProgressChanged($"\tEasyHook32.dll {ResourceHelper.Get(StringKey.DetectedToBeOlderVersion)} ...");
                     hasOldVersion = true;
                 }
             }
@@ -943,11 +943,11 @@ namespace SeventhHeaven.Classes
             if (!File.Exists(pathToTargetEasyHook32) || hasOldVersion)
             {
                 File.Copy(pathToSourceEasyHook32, pathToTargetEasyHook32, true);
-                Instance.RaiseProgressChanged($"\tEasyHook32.dll {ResourceHelper.GetString(StringKey.Copied)} ...");
+                Instance.RaiseProgressChanged($"\tEasyHook32.dll {ResourceHelper.Get(StringKey.Copied)} ...");
             }
             else
             {
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.SkippedCopying)} EasyHook32.dll ...");
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.SkippedCopying)} EasyHook32.dll ...");
             }
         }
 
@@ -1000,7 +1000,7 @@ namespace SeventhHeaven.Classes
                     {
                         if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && Instance.DidMountVirtualDisc && IsVirtualIsoMounted(Instance.DriveLetter))
                         {
-                            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.AutoUnmountingGameDisc));
+                            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.AutoUnmountingGameDisc));
                             UnmountIso();
                         }
 
@@ -1020,7 +1020,7 @@ namespace SeventhHeaven.Classes
             }
             catch (Exception ex)
             {
-                Instance.RaiseProgressChanged($"{ResourceHelper.GetString(StringKey.AnExceptionOccurredTryingToStartFf7At)} {Sys.Settings.FF7Exe} ...", NLog.LogLevel.Error);
+                Instance.RaiseProgressChanged($"{ResourceHelper.Get(StringKey.AnExceptionOccurredTryingToStartFf7At)} {Sys.Settings.FF7Exe} ...", NLog.LogLevel.Error);
                 Logger.Error(ex);
                 return false;
             }
@@ -1034,7 +1034,7 @@ namespace SeventhHeaven.Classes
                 if (!constraint.Verify(out string msg))
                 {
                     Logger.Warn(msg);
-                    MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.ThereWasAnErrorVerifyingModConstraintSeeTheFollowingDetails), msg, ResourceHelper.GetString(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageDialogWindow.Show(ResourceHelper.Get(StringKey.ThereWasAnErrorVerifyingModConstraintSeeTheFollowingDetails), msg, ResourceHelper.Get(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
                     return false;
                 }
 
@@ -1047,7 +1047,7 @@ namespace SeventhHeaven.Classes
             if (changes.Any())
             {
                 Logger.Warn($"The following settings have been changed to make these mods compatible:\n{String.Join("\n", changes)}");
-                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.TheFollowingSettingsHaveBeenChangedToMakeTheseModsCompatible), String.Join("\n", changes), ResourceHelper.GetString(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.TheFollowingSettingsHaveBeenChangedToMakeTheseModsCompatible), String.Join("\n", changes), ResourceHelper.Get(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
             return true;
@@ -1076,12 +1076,12 @@ namespace SeventhHeaven.Classes
                     var rInst = activeInstalledMods.Find(i => i.ModID.Equals(req.ModID));
                     if (rInst == null)
                     {
-                        MessageDialogWindow.Show(string.Format(ResourceHelper.GetString(StringKey.ModRequiresYouToActivateAsWell), item.CachedDetails.Name, req.Description), ResourceHelper.GetString(StringKey.MissingRequiredActiveMods));
+                        MessageDialogWindow.Show(string.Format(ResourceHelper.Get(StringKey.ModRequiresYouToActivateAsWell), item.CachedDetails.Name, req.Description), ResourceHelper.Get(StringKey.MissingRequiredActiveMods));
                         return false;
                     }
                     else if (req.Versions.Any() && !req.Versions.Contains(rInst.LatestInstalled.VersionDetails.Version))
                     {
-                        MessageDialogWindow.Show(string.Format(ResourceHelper.GetString(StringKey.ModRequiresYouToActivateButYouDoNotHaveCompatibleVersionInstalled), item.CachedDetails.Name, rInst.CachedDetails.Name), ResourceHelper.GetString(StringKey.UnsupportedModVersion));
+                        MessageDialogWindow.Show(string.Format(ResourceHelper.Get(StringKey.ModRequiresYouToActivateButYouDoNotHaveCompatibleVersionInstalled), item.CachedDetails.Name, rInst.CachedDetails.Name), ResourceHelper.Get(StringKey.UnsupportedModVersion));
                         return false;
                     }
                 }
@@ -1096,12 +1096,12 @@ namespace SeventhHeaven.Classes
 
                     if (forbid.Versions.Any() && forbid.Versions.Contains(rInst.LatestInstalled.VersionDetails.Version))
                     {
-                        MessageDialogWindow.Show(string.Format(ResourceHelper.GetString(StringKey.ModIsNotCompatibleWithTheVersionYouHaveInstalled), item.CachedDetails.Name, rInst.CachedDetails.Name), ResourceHelper.GetString(StringKey.IncompatibleMod));
+                        MessageDialogWindow.Show(string.Format(ResourceHelper.Get(StringKey.ModIsNotCompatibleWithTheVersionYouHaveInstalled), item.CachedDetails.Name, rInst.CachedDetails.Name), ResourceHelper.Get(StringKey.IncompatibleMod));
                         return false;
                     }
                     else
                     {
-                        MessageDialogWindow.Show(string.Format(ResourceHelper.GetString(StringKey.ModIsNotCompatibleWithYouWillNeedToDisableIt), item.CachedDetails.Name, rInst.CachedDetails.Name), ResourceHelper.GetString(StringKey.IncompatibleMod));
+                        MessageDialogWindow.Show(string.Format(ResourceHelper.Get(StringKey.ModIsNotCompatibleWithYouWillNeedToDisableIt), item.CachedDetails.Name, rInst.CachedDetails.Name), ResourceHelper.Get(StringKey.IncompatibleMod));
                         return false;
                     }
                 }
@@ -1134,7 +1134,7 @@ namespace SeventhHeaven.Classes
                 {
                     if (Sys.ActiveProfile.ActiveItems.Skip(i).Any(pi => pi.ModID.Equals(after)))
                     {
-                        problems.Add(string.Format(ResourceHelper.GetString(StringKey.ModIsNotCompatibleWithYouWillNeedToDisableIt), details[mod.ModID].Mod.CachedDetails.Name, details[after].Mod.CachedDetails.Name));
+                        problems.Add(string.Format(ResourceHelper.Get(StringKey.ModIsNotCompatibleWithYouWillNeedToDisableIt), details[mod.ModID].Mod.CachedDetails.Name, details[after].Mod.CachedDetails.Name));
                     }
                 }
 
@@ -1142,14 +1142,14 @@ namespace SeventhHeaven.Classes
                 {
                     if (Sys.ActiveProfile.ActiveItems.Take(i).Any(pi => pi.ModID.Equals(before)))
                     {
-                        problems.Add(string.Format(ResourceHelper.GetString(StringKey.ModIsNotCompatibleWithYouWillNeedToDisableIt), details[mod.ModID].Mod.CachedDetails.Name, details[before].Mod.CachedDetails.Name));
+                        problems.Add(string.Format(ResourceHelper.Get(StringKey.ModIsNotCompatibleWithYouWillNeedToDisableIt), details[mod.ModID].Mod.CachedDetails.Name, details[before].Mod.CachedDetails.Name));
                     }
                 }
             }
 
             if (problems.Any())
             {
-                if (MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.TheFollowingModsWillNotWorkProperlyInTheCurrentOrder), String.Join("\n", problems), ResourceHelper.GetString(StringKey.LoadOrderIncompatible), MessageBoxButton.YesNo).Result != MessageBoxResult.Yes)
+                if (MessageDialogWindow.Show(ResourceHelper.Get(StringKey.TheFollowingModsWillNotWorkProperlyInTheCurrentOrder), String.Join("\n", problems), ResourceHelper.Get(StringKey.LoadOrderIncompatible), MessageBoxButton.YesNo).Result != MessageBoxResult.Yes)
                     return false;
             }
 
@@ -1275,7 +1275,7 @@ namespace SeventhHeaven.Classes
                     }
                     else
                     {
-                        Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.CouldNotFindDdrawDllAt)} {pathToDll}", NLog.LogLevel.Warn);
+                        Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.CouldNotFindDdrawDllAt)} {pathToDll}", NLog.LogLevel.Warn);
                         return false;
                     }
                 }
@@ -1284,12 +1284,12 @@ namespace SeventhHeaven.Classes
                     if (File.Exists(backupName))
                     {
                         File.Move(backupName, pathToDll);
-                        Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.Renamed)} {backupName} -> {pathToDll}");
+                        Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.Renamed)} {backupName} -> {pathToDll}");
                         return true;
                     }
                     else
                     {
-                        Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.CouldNotFindReunionDllBakAt)} {backupName}", NLog.LogLevel.Warn);
+                        Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.CouldNotFindReunionDllBakAt)} {backupName}", NLog.LogLevel.Warn);
                         return false;
                     }
                 }
@@ -1363,7 +1363,7 @@ namespace SeventhHeaven.Classes
         /// </summary>
         public void SetRegistryValues()
         {
-            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.ApplyingChangedValuesToRegistry));
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.ApplyingChangedValuesToRegistry));
 
             string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII";
             string virtualStorePath = $"{RegistryHelper.GetKeyPath(FF7RegKey.VirtualStoreKeyPath)}\\Final Fantasy VII";
@@ -1553,7 +1553,7 @@ namespace SeventhHeaven.Classes
         /// </summary>
         public void SetCompatibilityFlagsInRegistry()
         {
-            Instance.RaiseProgressChanged(ResourceHelper.GetString(StringKey.ApplyingCompatibilityFlagsInRegistry));
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.ApplyingCompatibilityFlagsInRegistry));
 
             RegistryKey ff7CompatKey;
             string keyPath = @"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers";
@@ -1561,12 +1561,12 @@ namespace SeventhHeaven.Classes
             // delete compatibility flags if set in launch settings
             if (!Sys.Settings.GameLaunchSettings.Code5Fix && !Sys.Settings.GameLaunchSettings.HighDpiFix)
             {
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.Code5FixHighDpiFixSetToFalseDeletingFlags)}");
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.Code5FixHighDpiFixSetToFalseDeletingFlags)}");
                 ff7CompatKey = Registry.CurrentUser.OpenSubKey(keyPath, true);
 
                 if (ff7CompatKey != null && ff7CompatKey.GetValue(Sys.Settings.FF7Exe) != null)
                 {
-                    Instance.RaiseProgressChanged($"\t\t{ResourceHelper.GetString(StringKey.CompatibilityFlagsFoundDeleting)}");
+                    Instance.RaiseProgressChanged($"\t\t{ResourceHelper.Get(StringKey.CompatibilityFlagsFoundDeleting)}");
                     ff7CompatKey.DeleteValue(Sys.Settings.FF7Exe);
                 }
 
@@ -1578,13 +1578,13 @@ namespace SeventhHeaven.Classes
             // Add 640x480 compatibility flag if set in settings
             if (Sys.Settings.GameLaunchSettings.Code5Fix)
             {
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.Code5FixSetToTrueApplyingCompatibilityFlag)}");
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.Code5FixSetToTrueApplyingCompatibilityFlag)}");
                 compatString += "640x480 ";
             }
 
             if (Sys.Settings.GameLaunchSettings.HighDpiFix)
             {
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.HighDpiFixSetToTrueApplyingCompatibilityFlag)}");
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.HighDpiFixSetToTrueApplyingCompatibilityFlag)}");
                 compatString += "HIGHDPIAWARE";
             }
 
@@ -1705,10 +1705,10 @@ namespace SeventhHeaven.Classes
             Directory.CreateDirectory(Sys.PathToControlsFolder);
             string pathToCfg = Path.Combine(Sys.PathToControlsFolder, Sys.Settings.GameLaunchSettings.InGameConfigOption);
 
-            Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.UsingControlConfigurationFile)} {Sys.Settings.GameLaunchSettings.InGameConfigOption} ...");
+            Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.UsingControlConfigurationFile)} {Sys.Settings.GameLaunchSettings.InGameConfigOption} ...");
             if (!File.Exists(pathToCfg))
             {
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.InputCfgFileNotFoundAt)} {pathToCfg}", NLog.LogLevel.Warn);
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.InputCfgFileNotFoundAt)} {pathToCfg}", NLog.LogLevel.Warn);
                 return false;
             }
 
@@ -1716,13 +1716,13 @@ namespace SeventhHeaven.Classes
             {
                 string targetPath = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "ff7input.cfg");
 
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.Copying)} {pathToCfg} -> {targetPath} ...");
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.Copying)} {pathToCfg} -> {targetPath} ...");
                 File.Copy(pathToCfg, targetPath, true);
             }
             catch (Exception e)
             {
                 Logger.Error(e);
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.FailedToCopyCfgFile)}: {e.Message}", NLog.LogLevel.Error);
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.FailedToCopyCfgFile)}: {e.Message}", NLog.LogLevel.Error);
                 return false;
             }
 
@@ -1797,7 +1797,7 @@ namespace SeventhHeaven.Classes
             {
                 if (!_sideLoadProcesses.ContainsKey(program))
                 {
-                    Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.StartingProgram)}: {program.PathToProgram}");
+                    Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.StartingProgram)}: {program.PathToProgram}");
                     ProcessStartInfo psi = new ProcessStartInfo()
                     {
                         WorkingDirectory = Path.GetDirectoryName(program.PathToProgram),
@@ -1811,13 +1811,13 @@ namespace SeventhHeaven.Classes
                     aproc.Exited += (_o, _e) => _sideLoadProcesses.Remove(program);
 
                     _sideLoadProcesses.Add(program, aproc);
-                    Instance.RaiseProgressChanged($"\t\t{ResourceHelper.GetString(StringKey.Started)}");
+                    Instance.RaiseProgressChanged($"\t\t{ResourceHelper.Get(StringKey.Started)}");
 
                     IntPtr mainWindowHandle = IntPtr.Zero;
 
                     if (program.WaitForWindowToShow)
                     {
-                        Instance.RaiseProgressChanged($"\t\t{ResourceHelper.GetString(StringKey.WaitingForProgramToInitializeAndShow)}");
+                        Instance.RaiseProgressChanged($"\t\t{ResourceHelper.Get(StringKey.WaitingForProgramToInitializeAndShow)}");
 
                         DateTime startTime = DateTime.Now;
 
@@ -1825,7 +1825,7 @@ namespace SeventhHeaven.Classes
                         {
                             if (program.WaitTimeOutInSeconds != 0 && DateTime.Now.Subtract(startTime).TotalSeconds > program.WaitTimeOutInSeconds)
                             {
-                                Instance.RaiseProgressChanged($"\t\t{string.Format(ResourceHelper.GetString(StringKey.TimeoutReachedWaitingForProgramToShow), program.WaitTimeOutInSeconds)}", NLog.LogLevel.Warn);
+                                Instance.RaiseProgressChanged($"\t\t{string.Format(ResourceHelper.Get(StringKey.TimeoutReachedWaitingForProgramToShow), program.WaitTimeOutInSeconds)}", NLog.LogLevel.Warn);
                                 break;
                             }
 
@@ -1855,7 +1855,7 @@ namespace SeventhHeaven.Classes
                 {
                     if (!_sideLoadProcesses[program].HasExited)
                     {
-                        Instance.RaiseProgressChanged($"\t{ResourceHelper.GetString(StringKey.ProgramAlreadyRunning)}: {program.PathToProgram}", NLog.LogLevel.Warn);
+                        Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.ProgramAlreadyRunning)}: {program.PathToProgram}", NLog.LogLevel.Warn);
                     }
                 }
             }

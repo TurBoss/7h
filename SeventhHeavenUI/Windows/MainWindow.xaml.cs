@@ -98,7 +98,7 @@ namespace SeventhHeavenUI
         {
             if (ViewModel.CatalogMods.DownloadList.Count > 0)
             {
-                var result = MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.AreYouSureYouWantToExitPendingDownloads), ResourceHelper.GetString(StringKey.ConfirmExit), MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                var result = MessageDialogWindow.Show(ResourceHelper.Get(StringKey.AreYouSureYouWantToExitPendingDownloads), ResourceHelper.Get(StringKey.ConfirmExit), MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
                 if (result.Result == MessageBoxResult.No)
                 {
@@ -180,7 +180,7 @@ namespace SeventhHeavenUI
 
         private void menuPlayVariableDump_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.AreYouSureYouWantToPlayDebugWarning), ResourceHelper.GetString(StringKey.Warning), MessageBoxButton.YesNo, MessageBoxImage.Warning).Result == MessageBoxResult.Yes)
+            if (MessageDialogWindow.Show(ResourceHelper.Get(StringKey.AreYouSureYouWantToPlayDebugWarning), ResourceHelper.Get(StringKey.Warning), MessageBoxButton.YesNo, MessageBoxImage.Warning).Result == MessageBoxResult.Yes)
             {
                 ViewModel.LaunchGame(variableDump: true, debugLogging: false);
             }
@@ -188,7 +188,7 @@ namespace SeventhHeavenUI
 
         private void menuPlayDebugLog_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.AreYouSureYouWantToPlayDebugWarning), ResourceHelper.GetString(StringKey.Warning), MessageBoxButton.YesNo, MessageBoxImage.Warning).Result == MessageBoxResult.Yes)
+            if (MessageDialogWindow.Show(ResourceHelper.Get(StringKey.AreYouSureYouWantToPlayDebugWarning), ResourceHelper.Get(StringKey.Warning), MessageBoxButton.YesNo, MessageBoxImage.Warning).Result == MessageBoxResult.Yes)
             {
                 ViewModel.LaunchGame(variableDump: false, debugLogging: true);
             }

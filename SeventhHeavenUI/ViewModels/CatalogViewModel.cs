@@ -170,7 +170,7 @@ namespace SeventhHeavenUI.ViewModels
         public CatalogViewModel()
         {
             DownloadList = new ObservableCollection<DownloadItemViewModel>();
-            PauseDownloadToolTip = ResourceHelper.GetString(StringKey.PauseResumeSelectedDownload);
+            PauseDownloadToolTip = ResourceHelper.Get(StringKey.PauseResumeSelectedDownload);
             PauseDownloadIsEnabled = false;
             IsSelectedDownloadPaused = false;
             _previousReloadOptions = new ReloadListOption();
@@ -306,7 +306,7 @@ namespace SeventhHeavenUI.ViewModels
             {
                 if (newList.Count == 0)
                 {
-                    Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.NoResultsFound), true));
+                    Sys.Message(new WMessage(ResourceHelper.Get(StringKey.NoResultsFound), true));
 
                     if (!string.IsNullOrWhiteSpace(searchText))
                     {
@@ -414,7 +414,7 @@ namespace SeventhHeavenUI.ViewModels
 
                     if ((sub.LastSuccessfulCheck < DateTime.Now.AddDays(-1)) || forceCheck)
                     {
-                        Logger.Info($"{ResourceHelper.GetString(StringKey.CheckingSubscription)} {sub.Url}");
+                        Logger.Info($"{ResourceHelper.Get(StringKey.CheckingSubscription)} {sub.Url}");
 
                         string uniqueFileName = $"cattemp{Path.GetRandomFileName()}.xml"; // save temp catalog update to unique filename so multiple catalog updates can download async
                         string path = Path.Combine(Sys.SysFolder, "temp", uniqueFileName);
@@ -424,7 +424,7 @@ namespace SeventhHeavenUI.ViewModels
                             Links = new List<string>() { subUrl },
                             SaveFilePath = path,
                             Category = DownloadCategory.Catalog,
-                            ItemName = $"{ResourceHelper.GetString(StringKey.CheckingCatalog)} {subUrl}"
+                            ItemName = $"{ResourceHelper.Get(StringKey.CheckingCatalog)} {subUrl}"
                         };
 
                         download.IProc = new Install.InstallProcedureCallback(e =>
@@ -462,7 +462,7 @@ namespace SeventhHeavenUI.ViewModels
                                         }
                                     }
 
-                                    Sys.Message(new WMessage() { Text = $"{ResourceHelper.GetString(StringKey.UpdatedCatalogFrom)} {subUrl}" });
+                                    Sys.Message(new WMessage() { Text = $"{ResourceHelper.Get(StringKey.UpdatedCatalogFrom)} {subUrl}" });
 
                                     sub.LastSuccessfulCheck = DateTime.Now;
                                     sub.FailureCount = 0;
@@ -475,7 +475,7 @@ namespace SeventhHeavenUI.ViewModels
                                 catch (Exception ex)
                                 {
                                     sub.FailureCount++;
-                                    Sys.Message(new WMessage() { Text = $"{ResourceHelper.GetString(StringKey.FailedToLoadSubscription)} {subUrl}: {ex.Message}", LoggedException = ex });
+                                    Sys.Message(new WMessage() { Text = $"{ResourceHelper.Get(StringKey.FailedToLoadSubscription)} {subUrl}: {ex.Message}", LoggedException = ex });
                                 }
                                 finally
                                 {
@@ -489,7 +489,7 @@ namespace SeventhHeavenUI.ViewModels
                             else
                             {
                                 Logger.Warn(e.Error);
-                                Logger.Warn(ResourceHelper.GetString(StringKey.CatalogDownloadFailed));
+                                Logger.Warn(ResourceHelper.Get(StringKey.CatalogDownloadFailed));
                                 sub.FailureCount++;
                             }
 
@@ -533,13 +533,13 @@ namespace SeventhHeavenUI.ViewModels
 
             if (downloadItem.Download.FileDownloadTask?.IsPaused == true)
             {
-                downloadItem.DownloadSpeed = ResourceHelper.GetString(StringKey.Resuming);
+                downloadItem.DownloadSpeed = ResourceHelper.Get(StringKey.Resuming);
                 downloadItem.Download.FileDownloadTask.Start();
             }
             else
             {
-                downloadItem.DownloadSpeed = ResourceHelper.GetString(StringKey.Paused);
-                downloadItem.RemainingTime = ResourceHelper.GetString(StringKey.Unknown);
+                downloadItem.DownloadSpeed = ResourceHelper.Get(StringKey.Paused);
+                downloadItem.RemainingTime = ResourceHelper.Get(StringKey.Unknown);
                 downloadItem.Download.FileDownloadTask.Pause();
                 StartNextModDownload(); // have the next mod in the download queue start automatically
             }
@@ -571,14 +571,14 @@ namespace SeventhHeavenUI.ViewModels
 
             if (SelectedDownload.Download.Category != DownloadCategory.Mod || SelectedDownload.Download.FileDownloadTask == null)
             {
-                PauseDownloadToolTip = ResourceHelper.GetString(StringKey.PauseResumeSelectedDownload);
+                PauseDownloadToolTip = ResourceHelper.Get(StringKey.PauseResumeSelectedDownload);
                 PauseDownloadIsEnabled = false;
                 return;
             }
 
             if (!SelectedDownload.Download.FileDownloadTask.IsStarted)
             {
-                PauseDownloadToolTip = ResourceHelper.GetString(StringKey.PauseSelectedDownload);
+                PauseDownloadToolTip = ResourceHelper.Get(StringKey.PauseSelectedDownload);
                 PauseDownloadIsEnabled = false;
                 return;
             }
@@ -588,7 +588,7 @@ namespace SeventhHeavenUI.ViewModels
             {
                 if (downloadType != LocationType.Url && downloadType != LocationType.GDrive) // current implementation only supports Url/GDrive
                 {
-                    PauseDownloadToolTip = ResourceHelper.GetString(StringKey.PauseResumeSelectedDownload);
+                    PauseDownloadToolTip = ResourceHelper.Get(StringKey.PauseResumeSelectedDownload);
                     PauseDownloadIsEnabled = false;
                     return;
                 }
@@ -607,11 +607,11 @@ namespace SeventhHeavenUI.ViewModels
             IsSelectedDownloadPaused = SelectedDownload.Download.FileDownloadTask.IsPaused;
             if (IsSelectedDownloadPaused)
             {
-                PauseDownloadToolTip = ResourceHelper.GetString(StringKey.ResumeSelectedDownload); ;
+                PauseDownloadToolTip = ResourceHelper.Get(StringKey.ResumeSelectedDownload); ;
             }
             else
             {
-                PauseDownloadToolTip = ResourceHelper.GetString(StringKey.PauseSelectedDownload); ;
+                PauseDownloadToolTip = ResourceHelper.Get(StringKey.PauseSelectedDownload); ;
             }
         }
 
@@ -631,7 +631,7 @@ namespace SeventhHeavenUI.ViewModels
                 downloadItemViewModel.Download.PerformCancel?.Invoke(); // PerformCancel will happen during download and internally calls OnCancel
             }
 
-            Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.Canceled)} {downloadItemViewModel?.ItemName}"));
+            Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.Canceled)} {downloadItemViewModel?.ItemName}"));
         }
 
         internal void DownloadMod(CatalogModItemViewModel catalogModItemViewModel)
@@ -641,13 +641,13 @@ namespace SeventhHeavenUI.ViewModels
 
             if (status == ModStatus.Downloading)
             {
-                MessageDialogWindow.Show($"{modToDownload.Name} {ResourceHelper.GetString(StringKey.IsAlreadyDownloading)}", ResourceHelper.GetString(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show($"{modToDownload.Name} {ResourceHelper.Get(StringKey.IsAlreadyDownloading)}", ResourceHelper.Get(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (status == ModStatus.Updating)
             {
-                MessageDialogWindow.Show($"{modToDownload.Name} {ResourceHelper.GetString(StringKey.IsAlreadyUpdating)}", ResourceHelper.GetString(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show($"{modToDownload.Name} {ResourceHelper.Get(StringKey.IsAlreadyUpdating)}", ResourceHelper.Get(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -657,7 +657,7 @@ namespace SeventhHeavenUI.ViewModels
 
                 if (installedItem != null && !installedItem.IsUpdateAvailable)
                 {
-                    MessageDialogWindow.Show($"{modToDownload.Name} {ResourceHelper.GetString(StringKey.IsAlreadyDownloadedAndInstalled)}", ResourceHelper.GetString(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageDialogWindow.Show($"{modToDownload.Name} {ResourceHelper.Get(StringKey.IsAlreadyDownloadedAndInstalled)}", ResourceHelper.Get(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
                 else
@@ -692,7 +692,7 @@ namespace SeventhHeavenUI.ViewModels
 
             if (required.Any())
             {
-                if (MessageDialogWindow.Show(String.Format(ResourceHelper.GetString(StringKey.ThisModAlsoRequiresYouDownloadTheFollowing), String.Join("\n", required.Select(m => m.Name))), ResourceHelper.GetString(StringKey.Requirements), MessageBoxButton.YesNo, MessageBoxImage.Question).Result == MessageBoxResult.Yes)
+                if (MessageDialogWindow.Show(String.Format(ResourceHelper.Get(StringKey.ThisModAlsoRequiresYouDownloadTheFollowing), String.Join("\n", required.Select(m => m.Name))), ResourceHelper.Get(StringKey.Requirements), MessageBoxButton.YesNo, MessageBoxImage.Question).Result == MessageBoxResult.Yes)
                 {
                     foreach (Mod rMod in required)
                     {
@@ -703,7 +703,7 @@ namespace SeventhHeavenUI.ViewModels
 
             if (notFound.Any())
             {
-                MessageDialogWindow.Show(String.Format(ResourceHelper.GetString(StringKey.ThisModRequiresTheFollowingButCouldNotBeFoundInCatalog), String.Join("\n", notFound)), ResourceHelper.GetString(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show(String.Format(ResourceHelper.Get(StringKey.ThisModRequiresTheFollowingButCouldNotBeFoundInCatalog), String.Join("\n", notFound)), ResourceHelper.Get(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -719,7 +719,7 @@ namespace SeventhHeavenUI.ViewModels
             Action onError = () =>
             {
                 RemoveFromDownloadList(downloadInfo);
-                downloadInfo.IProc.Error?.Invoke(new Exception($"{ResourceHelper.GetString(StringKey.Failed)} {downloadInfo.ItemName}"));
+                downloadInfo.IProc.Error?.Invoke(new Exception($"{ResourceHelper.Get(StringKey.Failed)} {downloadInfo.ItemName}"));
             };
 
             if (links?.Count() > 1)
@@ -737,7 +737,7 @@ namespace SeventhHeavenUI.ViewModels
                         backupLinks[1] = backupLinks[0].Replace("iros://Url", "iros://ExternalUrl");
                     }
 
-                    Sys.Message(new WMessage($"{downloadInfo.ItemName} - {ResourceHelper.GetString(StringKey.SwitchingToBackupUrl)} {backupLinks[1]}"));
+                    Sys.Message(new WMessage($"{downloadInfo.ItemName} - {ResourceHelper.Get(StringKey.SwitchingToBackupUrl)} {backupLinks[1]}"));
                     Download(backupLinks.Skip(1), downloadInfo);
                 };
             }
@@ -746,7 +746,7 @@ namespace SeventhHeavenUI.ViewModels
 
             if (links == null || links?.Count() == 0)
             {
-                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.NoLinksFor)} {downloadInfo.ItemName}", true));
+                Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.NoLinksFor)} {downloadInfo.ItemName}", true));
                 downloadInfo.OnError?.Invoke();
                 return;
             }
@@ -754,7 +754,7 @@ namespace SeventhHeavenUI.ViewModels
             string link = links.First();
             if (!LocationUtil.TryParse(link, out LocationType type, out string location))
             {
-                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.FailedToParseLinkFor)} {downloadInfo.ItemName}", true));
+                Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.FailedToParseLinkFor)} {downloadInfo.ItemName}", true));
                 downloadInfo.OnError?.Invoke();
                 return;
             }
@@ -768,12 +768,12 @@ namespace SeventhHeavenUI.ViewModels
 
                         App.Current.Dispatcher.Invoke(() =>
                         {
-                            dialogViewModel = MessageDialogWindow.Show(downloadInfo.ExternalUrlDownloadMessage, ResourceHelper.GetString(StringKey.ExternalDownload), MessageBoxButton.YesNo, MessageBoxImage.Information);
+                            dialogViewModel = MessageDialogWindow.Show(downloadInfo.ExternalUrlDownloadMessage, ResourceHelper.Get(StringKey.ExternalDownload), MessageBoxButton.YesNo, MessageBoxImage.Information);
                         });
 
                         if (dialogViewModel?.Result == MessageBoxResult.Yes)
                         {
-                            Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.OpeningExternalUrlInBrowserFor)} {downloadInfo.ItemName} - {location}"));
+                            Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.OpeningExternalUrlInBrowserFor)} {downloadInfo.ItemName} - {location}"));
                             ProcessStartInfo startInfo = new ProcessStartInfo(location);
                             Process.Start(startInfo);
                         }
@@ -835,13 +835,13 @@ namespace SeventhHeavenUI.ViewModels
                                     break;
 
                                 case MegaIros.TransferState.Failed:
-                                    Sys.Message(new WMessage() { Text = $"{ResourceHelper.GetString(StringKey.ErrorDownloading)} {downloadInfo.ItemName}"  });
+                                    Sys.Message(new WMessage() { Text = $"{ResourceHelper.Get(StringKey.ErrorDownloading)} {downloadInfo.ItemName}"  });
                                     downloadInfo.OnError?.Invoke();
                                     break;
 
                                 case MegaIros.TransferState.Canceled:
                                     RemoveFromDownloadList(downloadInfo);
-                                    Sys.Message(new WMessage() { Text = $"{downloadInfo.ItemName} {ResourceHelper.GetString(StringKey.WasCanceled)}" });
+                                    Sys.Message(new WMessage() { Text = $"{downloadInfo.ItemName} {ResourceHelper.Get(StringKey.WasCanceled)}" });
                                     break;
 
                                 default:
@@ -861,7 +861,7 @@ namespace SeventhHeavenUI.ViewModels
             }
             catch (Exception e)
             {
-                string msg = $"{ResourceHelper.GetString(StringKey.Error)} {downloadInfo.ItemName} - {e.Message}";
+                string msg = $"{ResourceHelper.Get(StringKey.Error)} {downloadInfo.ItemName} - {e.Message}";
                 Sys.Message(new WMessage(msg, WMessageLogLevel.Error, e));
                 downloadInfo.OnError?.Invoke();
             }
@@ -913,7 +913,7 @@ namespace SeventhHeavenUI.ViewModels
                 {
                     if (downloadType == LocationType.ExternalUrl)
                     {
-                        newDownload.ExternalUrlDownloadMessage = ResourceHelper.GetString(StringKey.ExternalUrlDownloadMessage1);
+                        newDownload.ExternalUrlDownloadMessage = ResourceHelper.Get(StringKey.ExternalUrlDownloadMessage1);
                     }
                 }
             }
@@ -937,7 +937,7 @@ namespace SeventhHeavenUI.ViewModels
             if (downloadCount == 1)
             {
                 // only item in queue so start downloading right away
-                downloadViewModel.DownloadSpeed = ResourceHelper.GetString(StringKey.Starting);
+                downloadViewModel.DownloadSpeed = ResourceHelper.Get(StringKey.Starting);
                 Download(newDownload.Links, newDownload);
             }
             else if (downloadCount > 1)
@@ -967,7 +967,7 @@ namespace SeventhHeavenUI.ViewModels
                 //start the next catalog/image download if no other catalogs/images are being downloaded
                 if (!isAlreadyDownloadingImageOrCat && nextDownload != null)
                 {
-                    downloadViewModel.DownloadSpeed = ResourceHelper.GetString(StringKey.Starting);
+                    downloadViewModel.DownloadSpeed = ResourceHelper.Get(StringKey.Starting);
                     Download(nextDownload.Links, nextDownload);
                 }
             }
@@ -996,7 +996,7 @@ namespace SeventhHeavenUI.ViewModels
             }
             else if (e.Error != null)
             {
-                string msg = $"{ResourceHelper.GetString(StringKey.Error)} {item.ItemName} - {e.Error.GetBaseException().Message}";
+                string msg = $"{ResourceHelper.Get(StringKey.Error)} {item.ItemName} - {e.Error.GetBaseException().Message}";
                 Sys.Message(new WMessage(msg, WMessageLogLevel.Error, e.Error.GetBaseException()));
                 item.OnError?.Invoke();
             }
@@ -1062,7 +1062,7 @@ namespace SeventhHeavenUI.ViewModels
 
                 if (nextDownload != null)
                 {
-                    nextDownload.DownloadSpeed = ResourceHelper.GetString(StringKey.Starting);
+                    nextDownload.DownloadSpeed = ResourceHelper.Get(StringKey.Starting);
                     Download(nextDownload.Download.Links, nextDownload.Download);
                 }
             }
@@ -1092,7 +1092,7 @@ namespace SeventhHeavenUI.ViewModels
 
                 if (nextDownload != null)
                 {
-                    nextDownload.DownloadSpeed = ResourceHelper.GetString(StringKey.Starting);
+                    nextDownload.DownloadSpeed = ResourceHelper.Get(StringKey.Starting);
                     Download(nextDownload.Download.Links, nextDownload.Download);
                 }
             }
@@ -1149,9 +1149,9 @@ namespace SeventhHeavenUI.ViewModels
 
             if (item.Category == DownloadCategory.Mod && itemViewModel != null)
             {
-                itemViewModel.ItemName = item.ItemName.Replace(ResourceHelper.GetString(StringKey.Downloading), ResourceHelper.GetString(StringKey.Installing));
+                itemViewModel.ItemName = item.ItemName.Replace(ResourceHelper.Get(StringKey.Downloading), ResourceHelper.Get(StringKey.Installing));
                 itemViewModel.DownloadSpeed = "N/A";
-                itemViewModel.RemainingTime = ResourceHelper.GetString(StringKey.Unknown);
+                itemViewModel.RemainingTime = ResourceHelper.Get(StringKey.Unknown);
             }
 
             if (itemViewModel != null)

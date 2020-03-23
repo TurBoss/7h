@@ -70,7 +70,7 @@
                         <GridViewColumnHeader Content="{DynamicResource Released}" SizeChanged="GridViewColumnHeader_SizeChanged"/>
                     </GridViewColumn>
                     <GridViewColumn Width="100" DisplayMemberBinding="{Binding Category}">
-                        <GridViewColumnHeader Content="Category" SizeChanged="GridViewColumnHeader_SizeChanged"/>
+                        <GridViewColumnHeader Content="{DynamicResource Category}" SizeChanged="GridViewColumnHeader_SizeChanged"/>
                     </GridViewColumn>
                     <GridViewColumn Width="60" DisplayMemberBinding="{Binding DownloadSize}">
                         <GridViewColumnHeader Content="{DynamicResource Size}" SizeChanged="GridViewColumnHeader_SizeChanged"/>

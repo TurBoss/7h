@@ -343,7 +343,7 @@ namespace SeventhHeaven.ViewModels
         {
             string pathToThemeFile = Path.Combine(Sys.SysFolder, "theme.xml");
             SaveTheme(pathToThemeFile);
-            StatusText = ResourceHelper.GetString(StringKey.ThemeSaved);
+            StatusText = ResourceHelper.Get(StringKey.ThemeSaved);
         }
 
         internal void SaveTheme(string pathToTheme)
@@ -381,12 +381,12 @@ namespace SeventhHeaven.ViewModels
                     Util.Serialize(settings, file);
                 }
 
-                StatusText = $"{ResourceHelper.GetString(StringKey.ThemeSavedAs)} {Path.GetFileName(pathToTheme)}";
+                StatusText = $"{ResourceHelper.Get(StringKey.ThemeSavedAs)} {Path.GetFileName(pathToTheme)}";
             }
             catch (Exception e)
             {
                 Logger.Error(e);
-                StatusText = ResourceHelper.GetString(StringKey.FailedToSaveTheme);
+                StatusText = ResourceHelper.Get(StringKey.FailedToSaveTheme);
             }
 
         }
@@ -510,12 +510,12 @@ namespace SeventhHeaven.ViewModels
                 UpdateAppBrushesAndColors();
                 SetThemeToCustom();
 
-                StatusText = ResourceHelper.GetString(StringKey.ThemeLoadedClickSavveToSaveThis);
+                StatusText = ResourceHelper.Get(StringKey.ThemeLoadedClickSavveToSaveThis);
             }
             catch (Exception e)
             {
                 Logger.Warn(e);
-                StatusText = $"{ResourceHelper.GetString(StringKey.FailedToLoadTheme)}: {e.Message}";
+                StatusText = $"{ResourceHelper.Get(StringKey.FailedToLoadTheme)}: {e.Message}";
             }
         }
 
@@ -600,7 +600,7 @@ namespace SeventhHeaven.ViewModels
 
         internal void SelectBackgroundImage()
         {
-            string pathToFile = FileDialogHelper.BrowseForFile("*.png,*.jpg,*.jpeg|*.png;*.jpg;*.jpeg", ResourceHelper.GetString(StringKey.SelectBackgroundImageFile));
+            string pathToFile = FileDialogHelper.BrowseForFile("*.png,*.jpg,*.jpeg|*.png;*.jpg;*.jpeg", ResourceHelper.Get(StringKey.SelectBackgroundImageFile));
 
             if (!string.IsNullOrEmpty(pathToFile))
             {

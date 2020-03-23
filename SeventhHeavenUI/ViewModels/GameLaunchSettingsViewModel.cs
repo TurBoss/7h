@@ -672,7 +672,7 @@ namespace SeventhHeaven.ViewModels
             {
                 List<string> discsToInsert = GetDiscsToInsertForMissingMovies(missingMovies);
 
-                ImportStatusMessage = string.Format(ResourceHelper.GetString(StringKey.InsertAndClickImport), discsToInsert[0]);
+                ImportStatusMessage = string.Format(ResourceHelper.Get(StringKey.InsertAndClickImport), discsToInsert[0]);
             }
         }
 
@@ -821,12 +821,12 @@ namespace SeventhHeaven.ViewModels
 
                 Sys.Save();
 
-                Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.GameLauncherSettingsUpdated)));
+                Sys.Message(new WMessage(ResourceHelper.Get(StringKey.GameLauncherSettingsUpdated)));
                 return true;
             }
             catch (Exception e)
             {
-                StatusMessage = $"{ResourceHelper.GetString(StringKey.FailedToSaveLaunchSettings)}: {e.Message}";
+                StatusMessage = $"{ResourceHelper.Get(StringKey.FailedToSaveLaunchSettings)}: {e.Message}";
                 Logger.Error(e);
                 return false;
             }
@@ -855,18 +855,18 @@ namespace SeventhHeaven.ViewModels
                     catch (Exception ex)
                     {
                         Logger.Error(ex);
-                        StatusMessage = $"{ResourceHelper.GetString(StringKey.ErrorCopyingFf7InputCfg)} {ex.Message}";
+                        StatusMessage = $"{ResourceHelper.Get(StringKey.ErrorCopyingFf7InputCfg)} {ex.Message}";
                     }
                 }
                 else
                 {
-                    StatusMessage = $"{ResourceHelper.GetString(StringKey.NoFf7InputCfgFoundAt)} {pathToInputCfg}";
+                    StatusMessage = $"{ResourceHelper.Get(StringKey.NoFf7InputCfgFoundAt)} {pathToInputCfg}";
                     Logger.Warn(StatusMessage);
                 }
             }
             else
             {
-                StatusMessage = $"{customFileName} {ResourceHelper.GetString(StringKey.AlreadyExistsAt)} {Sys.PathToControlsFolder}";
+                StatusMessage = $"{customFileName} {ResourceHelper.Get(StringKey.AlreadyExistsAt)} {Sys.PathToControlsFolder}";
                 Logger.Warn(StatusMessage);
             }
 
@@ -1081,7 +1081,7 @@ namespace SeventhHeaven.ViewModels
 
             if (!SelectedRenderer.Equals("Custom 7H Game Driver", StringComparison.InvariantCultureIgnoreCase))
             {
-                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.ChoosingAnyOtherOptionBesidesCustom7HGameDriver), ResourceHelper.GetString(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.ChoosingAnyOtherOptionBesidesCustom7HGameDriver), ResourceHelper.Get(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -1095,8 +1095,8 @@ namespace SeventhHeaven.ViewModels
 
             if (GameLauncher.IsReunionModInstalled() && !DisableReunionChecked)
             {
-                string warningMsg = ResourceHelper.GetString(StringKey.ReunionWarningMessage);
-                var result = MessageDialogWindow.Show(warningMsg, ResourceHelper.GetString(StringKey.YouShouldLeaveThisSettingOn), MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                string warningMsg = ResourceHelper.Get(StringKey.ReunionWarningMessage);
+                var result = MessageDialogWindow.Show(warningMsg, ResourceHelper.Get(StringKey.YouShouldLeaveThisSettingOn), MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
                 if (result.Result == MessageBoxResult.No)
                 {
@@ -1125,7 +1125,7 @@ namespace SeventhHeaven.ViewModels
         {
             if (!File.Exists(NewProgramPathText))
             {
-                StatusMessage = ResourceHelper.GetString(StringKey.ProgramToRunNotFound);
+                StatusMessage = ResourceHelper.Get(StringKey.ProgramToRunNotFound);
                 return false;
             }
 
@@ -1183,8 +1183,8 @@ namespace SeventhHeaven.ViewModels
 
         internal void ImportMissingMovies()
         {
-            string warningMessage = string.Format(ResourceHelper.GetString(StringKey.ImportMissingMoviesWarningMessage), Sys.Settings.MovieFolder); 
-            MessageDialogViewModel result = MessageDialogWindow.Show(warningMessage, ResourceHelper.GetString(StringKey.Warning), MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            string warningMessage = string.Format(ResourceHelper.Get(StringKey.ImportMissingMoviesWarningMessage), Sys.Settings.MovieFolder); 
+            MessageDialogViewModel result = MessageDialogWindow.Show(warningMessage, ResourceHelper.Get(StringKey.Warning), MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
             if (result.Result == MessageBoxResult.No)
             {
@@ -1211,17 +1211,17 @@ namespace SeventhHeaven.ViewModels
 
                     do
                     {
-                        SetImportStatus($"{ResourceHelper.GetString(StringKey.LookingFor)} {disc} ...");
+                        SetImportStatus($"{ResourceHelper.Get(StringKey.LookingFor)} {disc} ...");
                         driveLetters = GameLauncher.GetDriveLetters(disc);
 
                         if (driveLetters.Count == 0)
                         {
-                            SetImportStatus(string.Format(ResourceHelper.GetString(StringKey.InsertToContinue), disc));
+                            SetImportStatus(string.Format(ResourceHelper.Get(StringKey.InsertToContinue), disc));
 
                             App.Current.Dispatcher.Invoke(() =>
                             {
-                                string discNotFoundMessage = string.Format(ResourceHelper.GetString(StringKey.PleaseInsertToContinueCopying), disc);
-                                MessageDialogViewModel insertDiscResult = MessageDialogWindow.Show(discNotFoundMessage, ResourceHelper.GetString(StringKey.InsertDisc), MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                                string discNotFoundMessage = string.Format(ResourceHelper.Get(StringKey.PleaseInsertToContinueCopying), disc);
+                                MessageDialogViewModel insertDiscResult = MessageDialogWindow.Show(discNotFoundMessage, ResourceHelper.Get(StringKey.InsertDisc), MessageBoxButton.OKCancel, MessageBoxImage.Warning);
 
                                 cancelProcess = (insertDiscResult.Result == MessageBoxResult.Cancel);
                             });
@@ -1234,7 +1234,7 @@ namespace SeventhHeaven.ViewModels
 
                     } while (driveLetters.Count == 0);
 
-                    SetImportStatus($"{string.Format(ResourceHelper.GetString(StringKey.FoundDiscAt), disc)} {string.Join("  ", driveLetters)} ...");
+                    SetImportStatus($"{string.Format(ResourceHelper.Get(StringKey.FoundDiscAt), disc)} {string.Join("  ", driveLetters)} ...");
 
                     // loop over missing files on the found disc and copy to data/movies destination
                     foreach (string movieFile in missingMovies.Where(kv => kv.Value.Any(s => s.Equals(disc, StringComparison.InvariantCultureIgnoreCase)))
@@ -1250,11 +1250,11 @@ namespace SeventhHeaven.ViewModels
                             {
                                 if (File.Exists(fullTargetPath))
                                 {
-                                    SetImportStatus($"{ResourceHelper.GetString(StringKey.Overwriting)} {movieFile} ...");
+                                    SetImportStatus($"{ResourceHelper.Get(StringKey.Overwriting)} {movieFile} ...");
                                 }
                                 else
                                 {
-                                    SetImportStatus($"{ResourceHelper.GetString(StringKey.Copying)} {movieFile} ...");
+                                    SetImportStatus($"{ResourceHelper.Get(StringKey.Copying)} {movieFile} ...");
                                 }
 
                                 File.Copy(sourceFilePath, fullTargetPath, true);
@@ -1264,7 +1264,7 @@ namespace SeventhHeaven.ViewModels
                             }
                             else
                             {
-                                SetImportStatus(string.Format(ResourceHelper.GetString(StringKey.FailedToFindAt), movieFile, sourceFilePath));
+                                SetImportStatus(string.Format(ResourceHelper.Get(StringKey.FailedToFindAt), movieFile, sourceFilePath));
                             }
                         }
                     }
@@ -1276,7 +1276,7 @@ namespace SeventhHeaven.ViewModels
                 if (taskResult.IsFaulted)
                 {
                     Logger.Error(taskResult.Exception);
-                    SetImportStatus($"{ResourceHelper.GetString(StringKey.AnErrorOccurredCopyingMovies)}: {taskResult.Exception.GetBaseException().Message}");
+                    SetImportStatus($"{ResourceHelper.Get(StringKey.AnErrorOccurredCopyingMovies)}: {taskResult.Exception.GetBaseException().Message}");
                 }
                 else if (cancelProcess)
                 {
@@ -1286,11 +1286,11 @@ namespace SeventhHeaven.ViewModels
                 {
                     if (filesCopied == totalFiles)
                     {
-                        SetImportStatus(ResourceHelper.GetString(StringKey.SuccessfullyCopiedMovies));
+                        SetImportStatus(ResourceHelper.Get(StringKey.SuccessfullyCopiedMovies));
                     }
                     else
                     {
-                        SetImportStatus(ResourceHelper.GetString(StringKey.FinishedCopyingMoviesSomeFailed));
+                        SetImportStatus(ResourceHelper.Get(StringKey.FinishedCopyingMoviesSomeFailed));
                     }
 
                     ImportButtonIsEnabled = !GameConverter.AllMovieFilesExist(Sys.Settings.MovieFolder);
@@ -1346,8 +1346,8 @@ namespace SeventhHeaven.ViewModels
         internal void SaveNewCustomControl()
         {
             bool isValid = true;
-            string title = ResourceHelper.GetString(StringKey.SaveControlConfiguration);
-            string prompt = ResourceHelper.GetString(StringKey.ImportCurrentControlsFromGameAndSaveAs);
+            string title = ResourceHelper.Get(StringKey.SaveControlConfiguration);
+            string prompt = ResourceHelper.Get(StringKey.ImportCurrentControlsFromGameAndSaveAs);
             string controlName;
             string pathToFile;
 
@@ -1368,14 +1368,14 @@ namespace SeventhHeaven.ViewModels
                 if (string.IsNullOrEmpty(controlName))
                 {
                     isValid = false;
-                    MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.ControlNameIsEmpty), ResourceHelper.GetString(StringKey.SaveError), MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageDialogWindow.Show(ResourceHelper.Get(StringKey.ControlNameIsEmpty), ResourceHelper.Get(StringKey.SaveError), MessageBoxButton.OK, MessageBoxImage.Error);
                     continue;
                 }
 
                 if (Path.GetInvalidFileNameChars().Any(c => controlName.Contains(c)))
                 {
                     isValid = false;
-                    MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.ControlNameContainsInvalidChars), ResourceHelper.GetString(StringKey.SaveError), MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageDialogWindow.Show(ResourceHelper.Get(StringKey.ControlNameContainsInvalidChars), ResourceHelper.Get(StringKey.SaveError), MessageBoxButton.OK, MessageBoxImage.Error);
                     continue;
                 }
 
@@ -1392,7 +1392,7 @@ namespace SeventhHeaven.ViewModels
                     if (File.Exists(pathToFile))
                     {
                         isValid = false;
-                        MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.ControlsWithThatNameAlreadyExist), ResourceHelper.GetString(StringKey.SaveError), MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageDialogWindow.Show(ResourceHelper.Get(StringKey.ControlsWithThatNameAlreadyExist), ResourceHelper.Get(StringKey.SaveError), MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
 
@@ -1403,13 +1403,13 @@ namespace SeventhHeaven.ViewModels
                 CopyInputCfgToCustomCfg(true, $"{controlName}.cfg");
                 InitInGameConfigOptions();
                 SelectedGameConfigOption = controlName;
-                StatusMessage = ResourceHelper.GetString(StringKey.SuccessfullyCreatedCustomControls);
+                StatusMessage = ResourceHelper.Get(StringKey.SuccessfullyCreatedCustomControls);
 
             }
             catch (Exception e)
             {
                 Logger.Error(e);
-                StatusMessage = $"{ResourceHelper.GetString(StringKey.FailedToCreateCustomControls)}: {e.Message}";
+                StatusMessage = $"{ResourceHelper.Get(StringKey.FailedToCreateCustomControls)}: {e.Message}";
             }
         }
 
@@ -1434,12 +1434,12 @@ namespace SeventhHeaven.ViewModels
                 File.Delete(pathToFile);
                 InitInGameConfigOptions();
                 SelectedGameConfigOption = InGameConfigurationMap.Keys.ToArray()[0];
-                StatusMessage = $"{ResourceHelper.GetString(StringKey.SuccessfullyDeletedCustomControls)} {fileName}.";
+                StatusMessage = $"{ResourceHelper.Get(StringKey.SuccessfullyDeletedCustomControls)} {fileName}.";
             }
             catch (Exception e)
             {
                 Logger.Error(e);
-                StatusMessage = $"{ResourceHelper.GetString(StringKey.FailedToDeleteCustomControls)}: {e.Message}";
+                StatusMessage = $"{ResourceHelper.Get(StringKey.FailedToDeleteCustomControls)}: {e.Message}";
             }
         }
     }

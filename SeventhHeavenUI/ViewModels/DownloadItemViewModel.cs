@@ -28,11 +28,11 @@ namespace SeventhHeavenUI.ViewModels
                 // replace text with translated text
                 if (Download?.ItemName == "Downloading preview image")
                 {
-                    Download.ItemName = ResourceHelper.GetString(StringKey.DownloadingPreviewImage);
+                    Download.ItemName = ResourceHelper.Get(StringKey.DownloadingPreviewImage);
                 }
                 else if (Download?.ItemName.StartsWith("Downloading ") == true)
                 {
-                    Download.ItemName = Download.ItemName.Replace("Downloading", ResourceHelper.GetString(StringKey.Downloading));
+                    Download.ItemName = Download.ItemName.Replace("Downloading", ResourceHelper.Get(StringKey.Downloading));
                 }
 
                 return Download?.ItemName;

@@ -57,7 +57,7 @@ namespace SeventhHeaven.Classes
                 Links = new List<string>() { LocationUtil.FormatHttpUrl(linkToVersionXml) },
                 SaveFilePath = path,
                 Category = DownloadCategory.AppUpdate,
-                ItemName = $"{ResourceHelper.GetString(StringKey.CheckingForUpdatesAt)} {linkToVersionXml}"
+                ItemName = $"{ResourceHelper.Get(StringKey.CheckingForUpdatesAt)} {linkToVersionXml}"
             };
 
             download.IProc = new Install.InstallProcedureCallback(e =>
@@ -73,13 +73,13 @@ namespace SeventhHeaven.Classes
                     catch (Exception ex)
                     {
                         Sys.LastCheckedVersion = Sys.LastCheckedVersion ?? new AvailableUpdate(); // if currently null then initialize new instance
-                        Sys.Message(new WMessage() { Text = $"{ResourceHelper.GetString(StringKey.FailedToCheckForUpdatesAt)} {linkToVersionXml}: {ex.Message}", LoggedException = ex });
+                        Sys.Message(new WMessage() { Text = $"{ResourceHelper.Get(StringKey.FailedToCheckForUpdatesAt)} {linkToVersionXml}: {ex.Message}", LoggedException = ex });
                     }
                 }
                 else
                 {
                     Sys.LastCheckedVersion = Sys.LastCheckedVersion ?? new AvailableUpdate();
-                    Sys.Message(new WMessage() { Text = $"{ResourceHelper.GetString(StringKey.FailedToCheckForUpdatesAt)} {linkToVersionXml}", LoggedException = e.Error });
+                    Sys.Message(new WMessage() { Text = $"{ResourceHelper.Get(StringKey.FailedToCheckForUpdatesAt)} {linkToVersionXml}", LoggedException = e.Error });
                 }
 
                 UpdateCheckCompleted?.Invoke(success);

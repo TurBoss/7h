@@ -18,7 +18,7 @@ namespace SeventhHeaven.Windows
             ViewModel = new AllowModToRunViewModel()
             {
                 Message = message,
-                WindowTitle = ResourceHelper.GetString(StringKey.AllowModToRun),
+                WindowTitle = ResourceHelper.Get(StringKey.AllowModToRun),
                 CheckboxVisibility = Visibility.Visible,
             };
             this.DataContext = ViewModel;

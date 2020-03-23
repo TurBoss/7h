@@ -57,7 +57,7 @@ namespace SeventhHeaven.Windows
 
             string selected = (string)lstProfiles.SelectedItem;
 
-            if (MessageDialogWindow.Show($"{ResourceHelper.GetString(StringKey.AreYouSureYouWantToDeleteSelectedProfile)} ({selected})?", ResourceHelper.GetString(StringKey.Warning), MessageBoxButton.YesNo, MessageBoxImage.Warning).Result == MessageBoxResult.Yes)
+            if (MessageDialogWindow.Show($"{ResourceHelper.Get(StringKey.AreYouSureYouWantToDeleteSelectedProfile)} ({selected})?", ResourceHelper.Get(StringKey.Warning), MessageBoxButton.YesNo, MessageBoxImage.Warning).Result == MessageBoxResult.Yes)
             {
                 ViewModel.DeleteProfile(selected);
             }
@@ -111,7 +111,7 @@ namespace SeventhHeaven.Windows
         {
             if (lstProfiles.SelectedItem == null)
             {
-                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.SelectProfileToContinue), ResourceHelper.GetString(StringKey.NoProfileSelected), MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.SelectProfileToContinue), ResourceHelper.Get(StringKey.NoProfileSelected), MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return false;
             }
 

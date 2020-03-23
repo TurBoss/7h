@@ -416,12 +416,18 @@ namespace SeventhHeaven.Classes
         FailedToCheckForUpdatesAt,
         MakeSureToCopyToTheRootFolder,
         Info,
-
+        Name,
+        Author,
+        Released,
+        Category,
+        Size,
+        Inst,
+        Active
     }
 
     public static class ResourceHelper
     {
-        public static string GetString(StringKey key)
+        public static string Get(StringKey key)
         {
             try
             {

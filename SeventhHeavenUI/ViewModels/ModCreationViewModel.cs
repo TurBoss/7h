@@ -103,7 +103,7 @@ namespace SeventhHeavenUI.ViewModels
 
                     // add translated text for 'Unknown' category
                     _categoryList.Remove(ModCategory.Unknown.ToString());
-                    _categoryList.Add(ResourceHelper.GetString(StringKey.Unknown));
+                    _categoryList.Add(ResourceHelper.Get(StringKey.Unknown));
                     _categoryList = _categoryList.OrderBy(s => s).ToList();
                 }
 
@@ -226,7 +226,7 @@ namespace SeventhHeavenUI.ViewModels
         {
             IDInput = Guid.NewGuid().ToString();
             NameInput = "";
-            CategoryInput = ResourceHelper.GetString(StringKey.Unknown);
+            CategoryInput = ResourceHelper.Get(StringKey.Unknown);
             AuthorInput = "";
             DescriptionInput = "";
             VersionInput = "1.0";
@@ -243,7 +243,7 @@ namespace SeventhHeavenUI.ViewModels
             Guid.TryParse(IDInput, out Guid parsedId);
 
             string translatedCategory = CategoryInput;
-            if (translatedCategory == ResourceHelper.GetString(StringKey.Unknown))
+            if (translatedCategory == ResourceHelper.Get(StringKey.Unknown))
             {
                 translatedCategory = ModCategory.Unknown.ToString(); // generated mod will have 'Unknown' as category instead of the translated version of the text
             }
@@ -372,7 +372,7 @@ namespace SeventhHeavenUI.ViewModels
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.CouldNotLoadModXml)}: {e.Message}", true)
+                Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.CouldNotLoadModXml)}: {e.Message}", true)
                 {
                     LoggedException = e
                 });
@@ -385,11 +385,11 @@ namespace SeventhHeavenUI.ViewModels
             {
                 GenerateModOutput();
                 File.WriteAllText(pathToFile, ModOutput);
-                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.SuccessfullySavedTo)} {pathToFile}", true));
+                Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.SuccessfullySavedTo)} {pathToFile}", true));
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.CouldNotSaveModXml)}: {e.Message}", true)
+                Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.CouldNotSaveModXml)}: {e.Message}", true)
                 {
                     LoggedException = e
                 });

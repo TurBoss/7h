@@ -116,7 +116,7 @@ namespace SeventhHeavenUI.ViewModels
 
             // treat missing mod category as 'Unknown'
             if (string.IsNullOrWhiteSpace(modCategory))
-                modCategory = ResourceHelper.GetString(StringKey.Unknown);
+                modCategory = ResourceHelper.Get(StringKey.Unknown);
 
             return categories.Count() == 0 ||
                    categories.Any(c => c.Name.Equals(modCategory, StringComparison.InvariantCultureIgnoreCase));

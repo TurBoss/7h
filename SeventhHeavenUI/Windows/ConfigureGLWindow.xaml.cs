@@ -52,7 +52,7 @@ namespace SeventhHeaven.Windows
             catch (Exception e)
             {
                 Logger.Error(e);
-                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.FailedToReadRequiredSpecXmlFile), ResourceHelper.GetString(StringKey.Error), MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.FailedToReadRequiredSpecXmlFile), ResourceHelper.Get(StringKey.Error), MessageBoxButton.OK, MessageBoxImage.Error);
                 this.Close();
                 return;
             }
@@ -110,8 +110,8 @@ namespace SeventhHeaven.Windows
                     // add clear texture cache button
                     btnClearTextureCache = new Button()
                     {
-                        Content = ResourceHelper.GetString(StringKey.ClearTextureCache),
-                        ToolTip = $"{ResourceHelper.GetString(StringKey.WillDeleteEverythingUnder)} {Path.Combine(Sys.Settings.AaliFolder, "cache")}",
+                        Content = ResourceHelper.Get(StringKey.ClearTextureCache),
+                        ToolTip = $"{ResourceHelper.Get(StringKey.WillDeleteEverythingUnder)} {Path.Combine(Sys.Settings.AaliFolder, "cache")}",
                         HorizontalAlignment = HorizontalAlignment.Left,
                         VerticalAlignment = VerticalAlignment.Top,
                         Margin = new Thickness(5, 0, 0, 0)
@@ -139,7 +139,7 @@ namespace SeventhHeaven.Windows
 
             if (!Directory.Exists(pathToCache))
             {
-                SetStatusMessage(ResourceHelper.GetString(StringKey.PathToCacheFolderDoesNotExist));
+                SetStatusMessage(ResourceHelper.Get(StringKey.PathToCacheFolderDoesNotExist));
                 return;
             }
 
@@ -160,12 +160,12 @@ namespace SeventhHeaven.Windows
                 // delete empty folders recursively
                 FileUtils.DeleteEmptyFolders(pathToCache);
 
-                SetStatusMessage(ResourceHelper.GetString(StringKey.TextureCacheCleared));
+                SetStatusMessage(ResourceHelper.Get(StringKey.TextureCacheCleared));
             }
             catch (Exception ex)
             {
                 Logger.Error(ex);
-                SetStatusMessage($"{ResourceHelper.GetString(StringKey.FailedToClearTextureCache)}: {ex.Message}");
+                SetStatusMessage($"{ResourceHelper.Get(StringKey.FailedToClearTextureCache)}: {ex.Message}");
             }
         }
 
@@ -202,17 +202,17 @@ namespace SeventhHeaven.Windows
 
                 File.WriteAllLines(_file, _settings.GetOutput());
 
-                Sys.Message(new WMessage(ResourceHelper.GetString(StringKey.GameDriverSettingsSaved)));
+                Sys.Message(new WMessage(ResourceHelper.Get(StringKey.GameDriverSettingsSaved)));
                 this.Close();
             }
             catch (UnauthorizedAccessException)
             {
-                MessageDialogWindow.Show(ResourceHelper.GetString(StringKey.CouldNotWriteTo7HGameDriverCfg), ResourceHelper.GetString(StringKey.SaveError), MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.CouldNotWriteTo7HGameDriverCfg), ResourceHelper.Get(StringKey.SaveError), MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             catch (Exception ex)
             {
                 Logger.Error(ex);
-                SetStatusMessage(ResourceHelper.GetString(StringKey.UnknownErrorWhileSaving));
+                SetStatusMessage(ResourceHelper.Get(StringKey.UnknownErrorWhileSaving));
             }
         }
 
@@ -223,7 +223,7 @@ namespace SeventhHeaven.Windows
                 item.ResetToDefault(_settings);
             }
 
-            SetStatusMessage(ResourceHelper.GetString(StringKey.GameDriverSettingsResetToDefaults));
+            SetStatusMessage(ResourceHelper.Get(StringKey.GameDriverSettingsResetToDefaults));
         }
 
         private void Window_Closed(object sender, EventArgs e)

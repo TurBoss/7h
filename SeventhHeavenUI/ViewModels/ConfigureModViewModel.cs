@@ -360,7 +360,7 @@ namespace SeventhHeaven.ViewModels
                 ModOptions.AddRange(info.Options.Select(o => new ConfigOptionViewModel(o)).ToList());
             }
 
-            WindowTitle = $"{ResourceHelper.GetString(StringKey.ConfigureMod)} - {Sys.Library.GetItem(activeModInfo.ModID)?.CachedDetails.Name}";
+            WindowTitle = $"{ResourceHelper.Get(StringKey.ConfigureMod)} - {Sys.Library.GetItem(activeModInfo.ModID)?.CachedDetails.Name}";
 
             SelectedOption = ModOptions.Count > 0 ? ModOptions[0] : null;
         }
@@ -418,13 +418,13 @@ namespace SeventhHeaven.ViewModels
             if (ct.Require.Any())
             {
                 value = ct.Require[0];
-                CompatibilityNote = $"{ResourceHelper.GetString(StringKey.ThisOptionCannotBeChangedDueToCompatibility)} ({string.Join(", ", ct.ParticipatingMods.Values)})";
+                CompatibilityNote = $"{ResourceHelper.Get(StringKey.ThisOptionCannotBeChangedDueToCompatibility)} ({string.Join(", ", ct.ParticipatingMods.Values)})";
                 ComboBoxIsEnabled = false;
             }
             else if (ct.Forbid.Any())
             {
                 var remove = values.Where(v => ct.Forbid.Contains(v.Value));
-                CompatibilityNote = string.Format(ResourceHelper.GetString(StringKey.TheFollowingValuesHaveBeenRemovedDueToCompatibility), string.Join(", ", remove.Select(o => o.Name)), string.Join(", ", ct.ParticipatingMods.Values));
+                CompatibilityNote = string.Format(ResourceHelper.Get(StringKey.TheFollowingValuesHaveBeenRemovedDueToCompatibility), string.Join(", ", remove.Select(o => o.Name)), string.Join(", ", ct.ParticipatingMods.Values));
                 values = values.Except(remove);
                 if (!values.Any(v => v.Value == value)) value = values.First().Value;
                 ComboBoxIsEnabled = true;
@@ -448,13 +448,13 @@ namespace SeventhHeaven.ViewModels
             if (ct.Require.Any())
             {
                 value = ct.Require[0];
-                CompatibilityNote = $"{ResourceHelper.GetString(StringKey.ThisOptionCannotBeChangedDueToCompatibility)} ({string.Join(", ", ct.ParticipatingMods.Values)})";
+                CompatibilityNote = $"{ResourceHelper.Get(StringKey.ThisOptionCannotBeChangedDueToCompatibility)} ({string.Join(", ", ct.ParticipatingMods.Values)})";
                 CheckBoxIsEnabled = false;
             }
             else if (ct.Forbid.Any())
             {
                 value = new[] { 0, 1 }.Except(ct.Forbid).FirstOrDefault();
-                CompatibilityNote = $"{ResourceHelper.GetString(StringKey.ThisOptionCannotBeChangedDueToCompatibility)} ({string.Join(", ", ct.ParticipatingMods.Values)})";
+                CompatibilityNote = $"{ResourceHelper.Get(StringKey.ThisOptionCannotBeChangedDueToCompatibility)} ({string.Join(", ", ct.ParticipatingMods.Values)})";
                 CheckBoxIsEnabled = false;
             }
             else
@@ -687,7 +687,7 @@ namespace SeventhHeaven.ViewModels
                     }
                     else
                     {
-                        Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.FailedToPlayPreviewAudio)} {_audioFileName}"));
+                        Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.FailedToPlayPreviewAudio)} {_audioFileName}"));
                     }
 
                     NotifyPropertyChanged(nameof(IsPlayingAudio));
@@ -695,7 +695,7 @@ namespace SeventhHeaven.ViewModels
                 catch (Exception e)
                 {
                     Logger.Error(e);
-                    Sys.Message(new WMessage($"{ResourceHelper.GetString(StringKey.FailedToPlayPreviewAudio)} {_audioFileName}: {e.Message}"));
+                    Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.FailedToPlayPreviewAudio)} {_audioFileName}: {e.Message}"));
                 }
 
             }

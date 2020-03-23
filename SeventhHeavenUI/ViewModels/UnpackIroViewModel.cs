@@ -113,19 +113,19 @@ namespace SeventhHeaven.ViewModels
 
             if (string.IsNullOrEmpty(PathToOutputFolder))
             {
-                errorMsg = ResourceHelper.GetString(StringKey.PathToOutputFolderRequired);
+                errorMsg = ResourceHelper.Get(StringKey.PathToOutputFolderRequired);
                 isValid = false;
             }
             else if (string.IsNullOrEmpty(PathToIroFile))
             {
-                errorMsg = ResourceHelper.GetString(StringKey.PathToSourceIroFileIsRequired);
+                errorMsg = ResourceHelper.Get(StringKey.PathToSourceIroFileIsRequired);
                 isValid = false;
             }
 
             if (!isValid && showErrorMsg)
             {
-                Logger.Warn($"{ResourceHelper.GetString(StringKey.InvalidUnpackIroOptions)}: {errorMsg}");
-                MessageDialogWindow.Show(errorMsg, ResourceHelper.GetString(StringKey.MissingRequiredInput), MessageBoxButton.OK, MessageBoxImage.Warning);
+                Logger.Warn($"{ResourceHelper.Get(StringKey.InvalidUnpackIroOptions)}: {errorMsg}");
+                MessageDialogWindow.Show(errorMsg, ResourceHelper.Get(StringKey.MissingRequiredInput), MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
             return isValid;
@@ -165,11 +165,11 @@ namespace SeventhHeaven.ViewModels
                 if (result.IsFaulted)
                 {
                     Logger.Warn(result.Exception.GetBaseException());
-                    StatusText = $"{ResourceHelper.GetString(StringKey.AnErrorOccuredWhileUnpacking)}: {result.Exception.GetBaseException().Message}";
+                    StatusText = $"{ResourceHelper.Get(StringKey.AnErrorOccuredWhileUnpacking)}: {result.Exception.GetBaseException().Message}";
                     return;
                 }
 
-                StatusText = ResourceHelper.GetString(StringKey.UnpackingComplete);
+                StatusText = ResourceHelper.Get(StringKey.UnpackingComplete);
             });
 
             return unpackTask;
