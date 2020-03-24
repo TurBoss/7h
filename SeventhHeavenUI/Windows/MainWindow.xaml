@@ -368,53 +368,59 @@
             </TabItem>
         </TabControl>
 
-        <TextBox x:Name="txtSearch"
-                 Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 TextChanged="txtSearch_TextChanged"
-                 KeyDown="txtSearch_KeyDown"
-                 Grid.Column="2"
-                 HorizontalAlignment="Right"
-                 VerticalAlignment="Top"
-                 VerticalContentAlignment="Center"
-                 Panel.ZIndex="10"
-                 Margin="0,25,56,0"
-                 Width="260"
-                 Height="24"/>
+        <Grid Grid.Column="2"
+              Margin="0,25,56,0"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Top">
+            
+            <TextBox x:Name="txtSearch"
+                     Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     TextChanged="txtSearch_TextChanged"
+                     KeyDown="txtSearch_KeyDown"
+                     Grid.Column="2"
+                     HorizontalAlignment="Right"
+                     VerticalAlignment="Top"
+                     VerticalContentAlignment="Center"
+                     Panel.ZIndex="10"
+                     Width="260"
+                     Height="24"/>
 
-        <TextBlock Text="{DynamicResource SearchHint}"
-                   Foreground="{DynamicResource PrimaryControlDisabledForeground}"
-                   Grid.Column="2"
-                   IsHitTestVisible="False"
-                   Panel.ZIndex="10"
-                   HorizontalAlignment="Right"
-                   VerticalAlignment="Top"
-                   Margin="0,29,198,0">
-            <TextBlock.Style>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Visibility" Value="Hidden"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding SearchText, FallbackValue=''}" Value="">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
-        </TextBlock>
+            <TextBlock Text="{DynamicResource SearchHint}"
+                       Foreground="{DynamicResource PrimaryControlDisabledForeground}"
+                       Grid.Column="2"
+                       IsHitTestVisible="False"
+                       Panel.ZIndex="10"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Margin="5,4,0,0">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Hidden"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding SearchText, FallbackValue=''}" Value="">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
 
-        <ToggleButton x:Name="btnFilters"
-                      ClickMode="Release"
-                      Click="btnFilters_Click"
-                      ToolTip="{DynamicResource FiltersTooltip}"
-                      Style="{StaticResource DownArrowToggleButton}"
-                      Background="Transparent"
-                      Width="24"
-                      Height="22"
-                      Grid.Column="2"
-                      HorizontalAlignment="Right"
-                      VerticalAlignment="Top"
-                      VerticalContentAlignment="Center"
-                      Panel.ZIndex="10"
-                      Margin="0,26,57,0"/>
+            <ToggleButton x:Name="btnFilters"
+                          ClickMode="Release"
+                          Click="btnFilters_Click"
+                          ToolTip="{DynamicResource FiltersTooltip}"
+                          Style="{StaticResource DownArrowToggleButton}"
+                          Background="Transparent"
+                          Width="24"
+                          Height="22"
+                          Grid.Column="2"
+                          HorizontalAlignment="Right"
+                          VerticalAlignment="Top"
+                          VerticalContentAlignment="Center"
+                          Panel.ZIndex="10"
+                          Margin="0,1,0,0"/>
+        </Grid>
+
 
         <Popup x:Name="popupFilters"
                Closed="popupFilters_Closed"

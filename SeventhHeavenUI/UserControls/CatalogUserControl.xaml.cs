@@ -150,6 +150,11 @@ namespace SeventhHeaven.UserControls
         {
             var currentColumnSettings = GetColumnSettings();
 
+            if (currentColumnSettings == null)
+            {
+                return; // can not determine current column widths so return (translation problem?)
+            }
+
             double staticColumnWidth = currentColumnSettings.Where(c => !c.AutoResize).Sum(s => s.Width); // sum of columns with static widths
             double padding = 8;
 
@@ -264,7 +269,7 @@ namespace SeventhHeaven.UserControls
                     return;
                 }
 
-                propertyNameToSortBy = ColumnTranslations[headerBinding.Path?.Path];
+                propertyNameToSortBy = headerBinding.Path?.Path;
             }
             else
             {
@@ -327,6 +332,17 @@ namespace SeventhHeaven.UserControls
             if (columns == null)
             {
                 return null;
+            }
+
+            bool hasInvalidColumns = columns.Any(c =>
+            {
+                ColumnTranslations.TryGetValue((c.Header as GridViewColumnHeader).Content as string, out string translatedName);
+                return string.IsNullOrEmpty(translatedName);
+            });
+
+            if (hasInvalidColumns)
+            {
+                return null; // exit out if can not translate columns correctly (happens if not initialized in Visual Tree yet and switch languages)
             }
 
             List<string> columnsThatAutoResize = new List<string>() { "Name", "Author" };

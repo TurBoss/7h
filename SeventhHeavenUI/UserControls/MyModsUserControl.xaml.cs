@@ -305,6 +305,17 @@ namespace SeventhHeaven.UserControls
                 return null;
             }
 
+            bool hasInvalidColumns = columns.Any(c =>
+            {
+                ColumnTranslations.TryGetValue((c.Header as GridViewColumnHeader).Content as string, out string translatedName);
+                return string.IsNullOrEmpty(translatedName);
+            });
+
+            if (hasInvalidColumns)
+            {
+                return null; // exit out if can not translate columns correctly (happens if not initialized in Visual Tree yet and switch languages)
+            }
+
             List<string> columnsThatAutoResize = new List<string>() { "Name", "Author" };
 
             return columns.Select(c => new ColumnInfo()
