@@ -169,6 +169,14 @@ namespace SeventhHeaven.Classes
                 converter.InstallPath = newInstallationPath;
             }
 
+            Instance.RaiseProgressChanged($"Verifying english game files exist ...");
+            if (!converter.IsEnglishGameInstalled())
+            {
+                Instance.RaiseProgressChanged($"\tFound language installed: {converter.GetInstalledLanguage()}. Creating english game files...");
+                converter.ConvertToEnglishInstall();
+            }
+
+
             Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingGameIsMaxInstall));
             if (!converter.VerifyFullInstallation())
             {
@@ -263,7 +271,6 @@ namespace SeventhHeaven.Classes
 
                 }
             }
-
             string backupFolderPath = Path.Combine(converter.InstallPath, GameConverter.BackupFolderName, DateTime.Now.ToString("yyyyMMddHHmmss"));
 
 
@@ -1870,19 +1877,27 @@ namespace SeventhHeaven.Classes
             // launch other processes set in settings
             foreach (ProgramLaunchInfo al in Sys.Settings.ProgramsToLaunchPrior.Where(s => !String.IsNullOrWhiteSpace(s.PathToProgram)))
             {
-                if (!_alsoLaunchProcesses.ContainsKey(al.PathToProgram))
+                try
                 {
-                    ProcessStartInfo psi = new ProcessStartInfo()
+                    if (!_alsoLaunchProcesses.ContainsKey(al.PathToProgram))
                     {
-                        WorkingDirectory = Path.GetDirectoryName(al.PathToProgram),
-                        FileName = al.PathToProgram,
-                        Arguments = al.ProgramArgs
-                    };
-                    Process aproc = Process.Start(psi);
+                        ProcessStartInfo psi = new ProcessStartInfo()
+                        {
+                            WorkingDirectory = Path.GetDirectoryName(al.PathToProgram),
+                            FileName = al.PathToProgram,
+                            Arguments = al.ProgramArgs
+                        };
+                        Process aproc = Process.Start(psi);
 
-                    _alsoLaunchProcesses.Add(al.PathToProgram, aproc);
-                    aproc.EnableRaisingEvents = true;
-                    aproc.Exited += (_o, _e) => _alsoLaunchProcesses.Remove(al.PathToProgram);
+                        _alsoLaunchProcesses.Add(al.PathToProgram, aproc);
+                        aproc.EnableRaisingEvents = true;
+                        aproc.Exited += (_o, _e) => _alsoLaunchProcesses.Remove(al.PathToProgram);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logger.Warn(e);
+                    Instance.RaiseProgressChanged($"\tFailed to start additional program: {al.PathToProgram}", NLog.LogLevel.Warn);
                 }
             }
         }

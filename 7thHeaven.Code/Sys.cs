@@ -152,11 +152,19 @@ namespace Iros._7th.Workshop
             }
         }
 
-        public static string PathToProvidedExe
+        public static string PathToPatchedExeFolder
         {
             get
             {
                 return Path.Combine(_7HFolder, "Resources", "FF7_1.02_Eng_Patch");
+            }
+        }
+
+        public static string PathToUlgpExe
+        {
+            get
+            {
+                return Path.Combine(_7HFolder, "Resources", "ulgp_v1.3.2", "ulgp.exe");
             }
         }
 

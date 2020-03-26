@@ -5,153 +5,153 @@
     <!--TODO: TRANSLATION NEEDED-->
     <!--Main Window Buttons-->
     <system:String x:Key="Play">Spielen</system:String>
-    <system:String x:Key="PlayWithMods">Play With Mods (default)</system:String>
-    <system:String x:Key="PlayWithNoMods">Play Without Mods</system:String>
-    <system:String x:Key="PlayWithDebugLog">Play With Debug Log</system:String>
-    <system:String x:Key="PlayWithVariableDump">Play With Variable Dump</system:String>
+    <system:String x:Key="PlayWithMods">Spiel mit Mods starten (Standard)</system:String>
+    <system:String x:Key="PlayWithNoMods">Spiel ohne Mods starten</system:String>
+    <system:String x:Key="PlayWithDebugLog">Spiel mit Debug Log starten</system:String>
+    <system:String x:Key="PlayWithVariableDump">Spiel mit Variablen-Dump starten</system:String>
 
-    <system:String x:Key="Settings">Settings</system:String>
-    <system:String x:Key="ChangeColorTheme">Change Color Theme...</system:String>
-    <system:String x:Key="GeneralSettings">General Settings...</system:String>
-    <system:String x:Key="GameDriver">Game Driver...</system:String>
-    <system:String x:Key="GameLauncher">Game Launcher...</system:String>
-    <system:String x:Key="Profiles">Profiles...</system:String>
-    <system:String x:Key="Language">Language...</system:String>
+    <system:String x:Key="Settings">Einstellungen</system:String>
+    <system:String x:Key="ChangeColorTheme">Ändere Farbthema...</system:String>
+    <system:String x:Key="GeneralSettings">Generelle Einstellungen...</system:String>
+    <system:String x:Key="GameDriver">Spiele-Treiber...</system:String>
+    <system:String x:Key="GameLauncher">Spiele-Launcher...</system:String>
+    <system:String x:Key="Profiles">Profile...</system:String>
+    <system:String x:Key="Language">Sprache...</system:String>
 
 
     <system:String x:Key="Tools">Tools</system:String>
-    <system:String x:Key="CatalogModCreationTool">Catalog/Mod Creation Tool...</system:String>
-    <system:String x:Key="ChunkTool">Chunk Tool...</system:String>
-    <system:String x:Key="IROTools">IRO Tools...</system:String>
+    <system:String x:Key="CatalogModCreationTool">Katalog/Mod-Erstellungs-Tool...</system:String>
+    <system:String x:Key="ChunkTool">Chunk-Tool...</system:String>
+    <system:String x:Key="IROTools">IRO-Tools...</system:String>
 
-    <system:String x:Key="Help">Help</system:String>
+    <system:String x:Key="Help">Hilfe</system:String>
 
-    <system:String x:Key="MyMods">My Mods</system:String>
-    <system:String x:Key="MyModsTooltip">Right-click My Mods tab to open your Mod Library Folder</system:String>
+    <system:String x:Key="MyMods">Meine Mods</system:String>
+    <system:String x:Key="MyModsTooltip">Rechts-Klicke 'Meine Mods' Tab um dein Mod-Bibliotheksordner zu öffnen</system:String>
 
-    <system:String x:Key="BrowseCatalog">Browse Catalog</system:String>
-    <system:String x:Key="BrowseCatalogTooltip">Right-click Browse Catalog tab to open your Catalog settings</system:String>
+    <system:String x:Key="BrowseCatalog">Durchsuche Katalog</system:String>
+    <system:String x:Key="BrowseCatalogTooltip">Rechts-Klicke 'Durchsuche Katalog' Tab um deine Katalog-Einstellungen zu öffnen</system:String>
 
-    <system:String x:Key="SearchHint">Type here to search ...</system:String>
-    <system:String x:Key="FiltersTooltip">Click to select what categories and tags to filter by.</system:String>
+    <system:String x:Key="SearchHint">Tippe zum Suchen ...</system:String>
+    <system:String x:Key="FiltersTooltip">Klick hier um nach Kategorie und Tags zu filtern.</system:String>
 
-    <system:String x:Key="StatusBarTooltip">Click to view app log</system:String>
+    <system:String x:Key="StatusBarTooltip">Klick um den AppLog zu sehen</system:String>
 
 
     <!--Mod Info Panel-->
-    <system:String x:Key="ModInfoHeader" xml:space="preserve"> Mod Info </system:String>
+    <system:String x:Key="ModInfoHeader" xml:space="preserve"> Mod-Information </system:String>
     <system:String x:Key="NameLabel">Name:</system:String>
     <system:String x:Key="AuthorLabel">Author:</system:String>
     <system:String x:Key="ReleasedLabel">Released:</system:String>
-    <system:String x:Key="CategoryLabel">Category:</system:String>
+    <system:String x:Key="CategoryLabel">Kategorie:</system:String>
     <system:String x:Key="VersionLabel">Version:</system:String>
 
-    <system:String x:Key="ClickHere">Click Here</system:String>
-    <system:String x:Key="None">None</system:String>
+    <system:String x:Key="ClickHere">Klick hier</system:String>
+    <system:String x:Key="None">Keine</system:String>
 
-    <system:String x:Key="AutoUpdateInstall">Auto Update/Install</system:String>
-    <system:String x:Key="Ignore">Ignore</system:String>
-    <system:String x:Key="Notify">Notify</system:String>
+    <system:String x:Key="AutoUpdateInstall">Auto-Update/Installieren</system:String>
+    <system:String x:Key="Ignore">Ignorieren</system:String>
+    <system:String x:Key="Notify">Benachrichtigen</system:String>
 
-    <system:String x:Key="DescriptionLabel">Description:</system:String>
+    <system:String x:Key="DescriptionLabel">Beschreibung:</system:String>
     <system:String x:Key="LinkLabel">Link:</system:String>
     <system:String x:Key="ReadmeLabel">Readme:</system:String>
     <system:String x:Key="ReleaseNotesLabel">Release Notes:</system:String>
 
-    <system:String x:Key="NoPreviewImage">No Preview Image</system:String>
+    <system:String x:Key="NoPreviewImage">Kein Previewbild</system:String>
 
 
     <!-- Browse Catalog Tab -->
     <system:String x:Key="Name">Name</system:String>
     <system:String x:Key="Author">Author</system:String>
     <system:String x:Key="Released">Released</system:String>
-    <system:String x:Key="Category">Category</system:String>
-    <system:String x:Key="Size">Size</system:String>
+    <system:String x:Key="Category">Kategorie</system:String>
+    <system:String x:Key="Size">Größe</system:String>
     <system:String x:Key="Inst">Inst.</system:String>
 
 
-    <system:String x:Key="RefreshCatalogTooltip">Force Update All Subscriptions and Refresh Catalog</system:String>
-    <system:String x:Key="DownloadModTooltip">Download Selected Mod</system:String>
-    <system:String x:Key="ResetColumnsTooltip">Reset Columns</system:String>
+    <system:String x:Key="RefreshCatalogTooltip">Erzwinge Update aller Abbos und aktualosiere den Katalog</system:String>
+    <system:String x:Key="DownloadModTooltip">Lade ausgewählte Mod runter</system:String>
+    <system:String x:Key="ResetColumnsTooltip">Spaltenbreite zurücksetzen</system:String>
 
-    <system:String x:Key="Item">Item</system:String>
-    <system:String x:Key="Progress">Progress</system:String>
-    <system:String x:Key="Speed">Speed</system:String>
-    <system:String x:Key="TimeLeft">Time Left</system:String>
+    <system:String x:Key="Item">Element</system:String>
+    <system:String x:Key="Progress">Fortschritt</system:String>
+    <system:String x:Key="Speed">Geschwindigkeit</system:String>
+    <system:String x:Key="TimeLeft">Noch benötigte Zeit</system:String>
 
-    <system:String x:Key="CancelDownloadTooltip">Cancel Selected Download</system:String>
+    <system:String x:Key="CancelDownloadTooltip">Breche ausgewählten Download ab</system:String>
 
 
     <!--My Mods Tab-->
-    <system:String x:Key="Active">Active</system:String>
+    <system:String x:Key="Active">Aktiv</system:String>
 
-    <system:String x:Key="ImportModTooltip">Import Mod</system:String>
-    <system:String x:Key="MoveUpTooltip">Move Up/Right-Click to Move to Top</system:String>
-    <system:String x:Key="MoveDownTooltip">Move Down/Right-Click to Move to Bottom</system:String>
-    <system:String x:Key="AutoSortTooltip">Auto Sort Mods Based On Category Load Order</system:String>
-    <system:String x:Key="ConfigureModTooltip">Configure Mod</system:String>
-    <system:String x:Key="ActivateAllTooltip">Activate All Mods</system:String>
-    <system:String x:Key="DeactivateAllTooltip">Deactivate All Mods</system:String>
-    <system:String x:Key="RefreshListTooltip">Refresh List</system:String>
-    <system:String x:Key="UninstallModTooltip">Uninstall Mod</system:String>
+    <system:String x:Key="ImportModTooltip">Importiere Mod</system:String>
+    <system:String x:Key="MoveUpTooltip">Bewege Hoch/Rechts-Klicke um an die Spitze zu bewegen</system:String>
+    <system:String x:Key="MoveDownTooltip">Bewege Runter/Rechts-Klicke um an das Ende zu bewegen</system:String>
+    <system:String x:Key="AutoSortTooltip">Sortiere Mods basierend auf Kategorie-Laderreihenfolge</system:String>
+    <system:String x:Key="ConfigureModTooltip">Mod-Konfiguration</system:String>
+    <system:String x:Key="ActivateAllTooltip">Aktiviere alle Mods</system:String>
+    <system:String x:Key="DeactivateAllTooltip">Deaktiviere alle Mods</system:String>
+    <system:String x:Key="RefreshListTooltip">Aktualiesiere die Liste</system:String>
+    <system:String x:Key="UninstallModTooltip">Mod-Deinstallation</system:String>
 
 
     <!--Generic MessageBox Buttons-->
     <system:String x:Key="OK">OK</system:String>
-    <system:String x:Key="Cancel">Cancel</system:String>
-    <system:String x:Key="Close">Close</system:String>
-    <system:String x:Key="Yes">Yes</system:String>
-    <system:String x:Key="No">No</system:String>
-    <system:String x:Key="Off">Off</system:String>
-    <system:String x:Key="On">On</system:String>
-    <system:String x:Key="ResetDefaults">Reset Defaults</system:String>
-    <system:String x:Key="Save">Save</system:String>
-    <system:String x:Key="Load">Load</system:String>
-    <system:String x:Key="Go">Go</system:String>
+    <system:String x:Key="Cancel">Abbruch</system:String>
+    <system:String x:Key="Close">Schließen</system:String>
+    <system:String x:Key="Yes">Ja</system:String>
+    <system:String x:Key="No">Nein</system:String>
+    <system:String x:Key="Off">Aus</system:String>
+    <system:String x:Key="On">An</system:String>
+    <system:String x:Key="ResetDefaults">Auf Standard Zurücksetzen</system:String>
+    <system:String x:Key="Save">Speichern</system:String>
+    <system:String x:Key="Load">Laden</system:String>
+    <system:String x:Key="Go">Los</system:String>
 
 
     <!--Window Titles-->
-    <system:String x:Key="GameLauncherWindowTitle">Launching Game</system:String>
-    <system:String x:Key="CatalogCreationWindowTitle">Catalog and Mod Creation Tool</system:String>
-    <system:String x:Key="GameDriverWindowTitle">Configure Game Driver Settings</system:String>
-    <system:String x:Key="UnexpectedErrorWindowTitle">7th Heaven - Unexpected Error!</system:String>
-    <system:String x:Key="AllowModToRun">Allow Mod To Run?</system:String>
-    <system:String x:Key="Warning">Warning</system:String>
-    <system:String x:Key="Requirements">Requirements</system:String>
-    <system:String x:Key="ExternalDownload">External Download?</system:String>
-    <system:String x:Key="MissingPath">Missing Path</system:String>
+    <system:String x:Key="GameLauncherWindowTitle">Starte Spiel</system:String>
+    <system:String x:Key="CatalogCreationWindowTitle">Katalog und Mod-Erstellungs-Tool</system:String>
+    <system:String x:Key="GameDriverWindowTitle">Konfiguriere Spiele-Treiber Einstellungen</system:String>
+    <system:String x:Key="UnexpectedErrorWindowTitle">7th Heaven - Unerwarteter Fehler!</system:String>
+    <system:String x:Key="AllowModToRun">Erlaube Mod zu laufen?</system:String>
+    <system:String x:Key="Warning">Warnung</system:String>
+    <system:String x:Key="Requirements">Vorraussetzung</system:String>
+    <system:String x:Key="ExternalDownload">Externer Download?</system:String>
+    <system:String x:Key="MissingPath">Fehlender Pfad</system:String>
     <system:String x:Key="ExtractComplete">Extract Complete</system:String>
-    <system:String x:Key="InsertDisc">Insert Disc</system:String>
-    <system:String x:Key="MissingRequiredInput">Missing Required Input</system:String>
-    <system:String x:Key="IROToolsWindowTitle">IRO Tools</system:String>
-    <system:String x:Key="ChunkToolWindowTitle">Chunk Tool</system:String>
-    <system:String x:Key="ManageProfiles">Manage Profiles</system:String>
-    <system:String x:Key="SetLanguageWindowTitle">Set Language</system:String>
+    <system:String x:Key="InsertDisc">Disk einlegen</system:String>
+    <system:String x:Key="MissingRequiredInput">Fehlende benötigte Eingabe</system:String>
+    <system:String x:Key="IROToolsWindowTitle">IRO-Tools</system:String>
+    <system:String x:Key="ChunkToolWindowTitle">Chunk-Tool</system:String>
+    <system:String x:Key="ManageProfiles">Verwalte Profile</system:String>
+    <system:String x:Key="SetLanguageWindowTitle">Wähle Sprache</system:String>
 
 
 
 
 
     <!--Allow Mod To Run Window-->
-    <system:String x:Key="NoDontActivateThisMod">No, don't activate this mod</system:String>
-    <system:String x:Key="YesActivateThisMod">Yes, activate this mod</system:String>
-    <system:String x:Key="DontAskAgainForAnyMods">Don't ask me again for ANY mods</system:String>
+    <system:String x:Key="NoDontActivateThisMod">Nein, die Mod nicht aktivieren.</system:String>
+    <system:String x:Key="YesActivateThisMod">Ja, aktiviere die Mod.</system:String>
+    <system:String x:Key="DontAskAgainForAnyMods">Frage mich nicht nochmal für irgendeine andere Mod.</system:String>
 
     <!--Game Launcher Settings Window-->
-    <system:String x:Key="OptionsHeader" xml:space="preserve"> Options </system:String>
-    <system:String x:Key="AutoMountDisc">Auto-Mount Game Disc</system:String>
-    <system:String x:Key="AutoMountDiscTooltip">Auto-mount game disc ISO when starting game. Windows 8 and up only. If on Windows 7 or older, you will need to insert disc or mount ISO manually.</system:String>
+    <system:String x:Key="OptionsHeader" xml:space="preserve"> Optionen </system:String>
+    <system:String x:Key="AutoMountDisc">Auto-Mount Spiele-Disk</system:String>
+    <system:String x:Key="AutoMountDiscTooltip">Auto-Mount Spiele-Disk-ISO bei Spielstart. Nur ab Windows 8 und höher! Bei Windows 7 oder älter, muss die ISO manuell gemounted werden.</system:String>
 
-    <system:String x:Key="AutoDismountDisc">Auto-Dismount Game Disc</system:String>
-    <system:String x:Key="AutoDismountDiscTooltip">Auto-dismount game disc ISO when game closes. Windows 8 and up only. If on Windows 7 or older, you will need to eject disc or dismount ISO manually.</system:String>
+    <system:String x:Key="AutoDismountDisc">Auto-Dismount Spiele-Disk</system:String>
+    <system:String x:Key="AutoDismountDiscTooltip">Auto-Dismount Spiele-Disk-ISO bei Spielende. Windows 8 and up only. Nur ab Windows 8 und höher! Bei Windows 7 oder älter, muss die ISO manuell dismounted werden</system:String>
 
-    <system:String x:Key="AutoUpdatePath">Auto-Update Disc Path</system:String>
-    <system:String x:Key="AutoUpdatePathTooltip">Detects if disc has changed drive letters and auto-updates game to point to new location.</system:String>
+    <system:String x:Key="AutoUpdatePath">Auto-Update Disk-Pfad</system:String>
+    <system:String x:Key="AutoUpdatePathTooltip">Erkennt wenn die Disk einen neuen Laufwerk Buchstaben hat und auto-updates den Disk-Pfad.</system:String>
 
-    <system:String x:Key="ShowGameLauncher">Show Game Launcher</system:String>
+    <system:String x:Key="ShowGameLauncher">Zeige Spiele-Launcher im Fenster</system:String>
     <system:String x:Key="ShowGameLauncherTooltip">Shows the Game Launcher window when starting FF7 for detailed output of the launch process.</system:String>
 
-    <system:String x:Key="ControlsLabel">Controls:</system:String>
+    <system:String x:Key="ControlsLabel">Steuerung:</system:String>
     <system:String x:Key="ControlsTooltip">Sets your in-game keyboard and gamepad controls. Click save icon to save your current in game controls as a custom configuration.</system:String>
 
     <system:String x:Key="SaveControlsTooltip">Save your current in-game control configuration.</system:String>
@@ -713,7 +713,6 @@ Click 'Cancel' to stop the process.</system:String>
     <system:String x:Key="French">French</system:String>
     <system:String x:Key="German">German</system:String>
     <system:String x:Key="Spanish">Spanish</system:String>
-    <system:String x:Key="Japanese">Japanese</system:String>
 
     <!--GameLauncher Strings-->
     <system:String x:Key="CheckingFf7IsNotRunning">Checking FF7 is not running ...</system:String>
@@ -919,7 +918,7 @@ Do you want to apply the setting and try again?</system:String>
     <system:String x:Key="NotFoundScanningDiscsForFiles">not found. Scanning disc(s) for files ...</system:String>
     <system:String x:Key="FoundFileOnAtCopyingFile">found file on {0} at {1}. Copying file ...</system:String>
     <system:String x:Key="FailedToCopyErrorHasBeenLogged">failed to copy. Error has been logged</system:String>
-    <system:String x:Key="FailedToFindOnAnyDisc">failed to find {file} on any disc ...</system:String>
+    <system:String x:Key="FailedToFindOnAnyDisc">failed to find {0} on any disc ...</system:String>
     <system:String x:Key="FileNotFound">file not found...</system:String>
     <system:String x:Key="CannotCopySourceFileBecauseItIsMissingAt">cannot copy source file because it is missing at</system:String>
     <system:String x:Key="CopyingFileFrom">copying file from</system:String>

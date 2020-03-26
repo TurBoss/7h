@@ -445,11 +445,11 @@ namespace SeventhHeaven.ViewModels
                     // copy ff7.exe to install path if not found since Steam & Re-Release installation does not provide a ff7.exe
                     if (!File.Exists(settings.FF7Exe) && Path.GetFileName(settings.FF7Exe).Equals("ff7.exe", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        Logger.Info($"Copying ff7.exe from {Sys.PathToProvidedExe} to {settings.FF7Exe}");
+                        Logger.Info($"Copying ff7.exe from {Sys.PathToPatchedExeFolder} to {settings.FF7Exe}");
 
                         try
                         {
-                            File.Copy(Path.Combine(Sys.PathToProvidedExe, "ff7.exe"), settings.FF7Exe, true);
+                            File.Copy(Path.Combine(Sys.PathToPatchedExeFolder, "ff7.exe"), settings.FF7Exe, true);
                             Logger.Info($"\tcopied succesfully.");
                         }
                         catch (Exception ex)

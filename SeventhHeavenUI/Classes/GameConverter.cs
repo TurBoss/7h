@@ -386,7 +386,7 @@ namespace SeventhHeaven.Classes
                 return false;
             }
 
-            string ff7ExePath = Path.Combine(Sys.PathToProvidedExe, "ff7.exe");
+            string ff7ExePath = Path.Combine(Sys.PathToPatchedExeFolder, "ff7.exe");
 
             try
             {
@@ -407,7 +407,7 @@ namespace SeventhHeaven.Classes
                 return false;
             }
 
-            string ff7ConfigPath = Path.Combine(Sys.PathToProvidedExe, "FF7Config.exe");
+            string ff7ConfigPath = Path.Combine(Sys.PathToPatchedExeFolder, "FF7Config.exe");
 
             try
             {
@@ -553,7 +553,7 @@ namespace SeventhHeaven.Classes
 
         /// <summary>
         /// Verifies specific files exist in /data/[subfolder] where [subfolder] is battle, kernel, and movies.
-        /// If files not found then they are copied from /data/lang-en/[subfolder
+        /// If files not found then they are copied from /data/lang-en/[subfolder] (language folder could be different based on languaged installed)
         /// </summary>
         /// <returns></returns>
         internal bool VerifyAdditionalFilesExist()
@@ -570,6 +570,12 @@ namespace SeventhHeaven.Classes
                 @"kernel\WINDOW.BIN"
             };
 
+            string installedLang = GetInstalledLanguage();
+            if (installedLang == "")
+            {
+                installedLang = "en";
+            }
+
             foreach (string file in expectedFiles)
             {
                 string fullTargetPath = Path.Combine(InstallPath, "data", file);
@@ -581,7 +587,7 @@ namespace SeventhHeaven.Classes
 
                 SendMessage($"... \t{file} {ResourceHelper.Get(StringKey.FileNotFound)}", NLog.LogLevel.Warn);
 
-                string fullSourcePath = Path.Combine(InstallPath, "data", "lang-en", file);
+                string fullSourcePath = Path.Combine(InstallPath, "data", $"lang-{installedLang}", file);
                 if (!File.Exists(fullSourcePath))
                 {
                     SendMessage($"... \t{ResourceHelper.Get(StringKey.CannotCopySourceFileBecauseItIsMissingAt)} {fullSourcePath}", NLog.LogLevel.Warn);
@@ -606,9 +612,8 @@ namespace SeventhHeaven.Classes
         }
 
         /// <summary>
-        /// Returns true if all movies exist at 
+        /// Returns true if all movies exist in the given <paramref name="rootFolder"/>
         /// </summary>
-        /// <returns></returns>
         internal static bool AllMovieFilesExist(string rootFolder)
         {
             foreach (string file in FF7FileLister.GetMovieFiles().Keys)
@@ -659,7 +664,14 @@ namespace SeventhHeaven.Classes
                 }
 
                 // check if they exist at data/lang-en/movies location and copy them 
-                string otherPath = Path.Combine(new string[] { InstallPath, "data", "lang-en", "movies", file });
+                // ... note we get the installed language and copy from there e.g. "lang-en" "lang-es" "lang-fr" "land-de"
+                string language = GetInstalledLanguage();
+                if (language == "")
+                {
+                    language = "en";
+                }
+
+                string otherPath = Path.Combine(InstallPath, "data", $"lang-{language}", "movies", file);
                 if (File.Exists(otherPath))
                 {
                     SendMessage($"\t{ResourceHelper.Get(StringKey.Copying).ToLower()} {otherPath} -> {fullPath}");
@@ -957,14 +969,266 @@ namespace SeventhHeaven.Classes
 
         internal bool IsExeDifferent()
         {
-            string ff7ExePath = Path.Combine(Sys.PathToProvidedExe, "ff7.exe");
+            string ff7ExePath = Path.Combine(Sys.PathToPatchedExeFolder, "ff7.exe");
             return !FileUtils.AreFilesEqual(ff7ExePath, Path.Combine(InstallPath, "ff7.exe"));
         }
 
         internal bool IsConfigExeDifferent()
         {
-            string ff7ExePath = Path.Combine(Sys.PathToProvidedExe, "FF7Config.exe");
+            string ff7ExePath = Path.Combine(Sys.PathToPatchedExeFolder, "FF7Config.exe");
             return !FileUtils.AreFilesEqual(ff7ExePath, Path.Combine(InstallPath, "FF7Config.exe"));
+        }
+
+        /// <summary>
+        /// Returns true if the flevel.lgp file is found in '<see cref="InstallPath"/>/data/field' folder
+        /// </summary>
+        public bool IsEnglishGameInstalled()
+        {
+            string fullPath = Path.Combine(InstallPath, "data", "field", "flevel.lgp");
+            return File.Exists(fullPath);
+        }
+
+        /// <summary>
+        /// Copies files in 'data' for a different language and patches them using ulgp tool to work with the ff7.exe english patch
+        /// </summary>
+        /// <remarks>
+        /// Mods only work with the english patched .exe so different language installs need to be further converted to support the english .exe
+        /// The language specific files are copied to the correct english file names and then ulgp tool is used to encode the files correctly
+        /// </remarks>
+        public void ConvertToEnglishInstall()
+        {
+            string languageInstalled = GetInstalledLanguage();
+
+            string filePrefix;
+            string fileSuffix;
+            string fileSuffix2; // why does German files have two different suffixes???? 'ge' and 'gm'
+
+            switch (languageInstalled)
+            {
+                case "fr":
+                    filePrefix = "f";
+                    fileSuffix = "fr";
+                    fileSuffix2 = "fr";
+                    break;
+
+                case "de":
+                    filePrefix = "g";
+                    fileSuffix = "gm";
+                    fileSuffix2 = "ge";
+                    break;
+
+                case "es":
+                    filePrefix = "s";
+                    fileSuffix = "sp";
+                    fileSuffix2 = "sp";
+                    break;
+
+                default:
+                    return; // no other language files found so assume files are already copied/converted
+            }
+
+            //
+            // copy language Specific files and rename them to English specific file names
+            //
+
+            Dictionary<string, string> sourceFilesToCopy = new Dictionary<string, string>()
+            {
+                {Path.Combine(InstallPath, "data", "cd", $"cr_{fileSuffix}.lgp"), "cr_us.lgp"},
+                {Path.Combine(InstallPath, "data", "menu", $"menu_{fileSuffix}.lgp"), "menu_us.lgp"},
+                {Path.Combine(InstallPath, "data", "wm", $"world_{fileSuffix}.lgp"), "world_us.lgp"},
+                {Path.Combine(InstallPath, "data", "field", $"{filePrefix}flevel.lgp"), "flevel.lgp"},
+                {Path.Combine(InstallPath, "data", "minigame", $"{filePrefix}chocobo.lgp"), "chocobo.lgp"},
+                {Path.Combine(InstallPath, "data", "minigame", $"high-{fileSuffix2}.lgp"), "high-us.lgp"},
+            };
+
+            string destFilePath;
+
+            foreach (var sourceFile in sourceFilesToCopy)
+            {
+                if (File.Exists(sourceFile.Key))
+                {
+                    FileInfo info = new FileInfo(sourceFile.Key);
+                    destFilePath = Path.Combine(info.DirectoryName, sourceFile.Value);
+                    File.Copy(sourceFile.Key, destFilePath, true);
+                }
+                else
+                {
+                    SendMessage($"Could not find file to copy: {sourceFile.Key} ...", NLog.LogLevel.Warn);
+                }
+            }
+
+            SendMessage($"\tExtracting .lgp files ...");
+
+            string pathToDiscUs = Path.Combine(Sys.PathToTempFolder, "disc_us");
+            string pathToCondor = Path.Combine(Sys.PathToTempFolder, "condor");
+            string pathToSnowboard = Path.Combine(Sys.PathToTempFolder, "snowboard-us");
+            string pathToSub = Path.Combine(Sys.PathToTempFolder, "sub");
+
+            RunUlgp(Path.Combine(InstallPath, "data", "cd", $"disc_{fileSuffix}.lgp"), pathToDiscUs);
+            RunUlgp(Path.Combine(InstallPath, "data", "minigame", $"{filePrefix}condor.lgp"), pathToCondor);
+            RunUlgp(Path.Combine(InstallPath, "data", "minigame", $"snowboard-{fileSuffix2}.lgp"), pathToSnowboard);
+            RunUlgp(Path.Combine(InstallPath, "data", "minigame", $"{filePrefix}sub.lgp"), pathToSub);
+
+            // copy _pal specific Condor .tga files
+            string condorTranFolder = Path.Combine(Sys._7HFolder, "Resources", "Languages", "Condor_Tran");
+            FileUtils.CopyDirectoryRecursively(condorTranFolder, Path.Combine(Sys.PathToTempFolder, "condor"));
+
+            //
+            // Rename extracted files to match english file names
+            //
+            Dictionary<string, string> filesToRename = new Dictionary<string, string>()
+            {
+                {Path.Combine(pathToDiscUs, $"{filePrefix}disk1_a.tex"), "disk1_a.tex"},
+                {Path.Combine(pathToDiscUs, $"{filePrefix}disk1_b.tex"), "disk1_b.tex"},
+                {Path.Combine(pathToDiscUs, $"{filePrefix}disk1_x.tex"), "disk1_x.tex"},
+                {Path.Combine(pathToDiscUs, $"{filePrefix}disk2_a.tex"), "disk2_a.tex"},
+                {Path.Combine(pathToDiscUs, $"{filePrefix}disk2_b.tex"), "disk2_b.tex"},
+                {Path.Combine(pathToDiscUs, $"{filePrefix}disk2_x.tex"), "disk2_x.tex"},
+                {Path.Combine(pathToDiscUs, $"{filePrefix}disk3_a.tex"), "disk3_a.tex"},
+                {Path.Combine(pathToDiscUs, $"{filePrefix}disk3_b.tex"), "disk3_b.tex"},
+                {Path.Combine(pathToDiscUs, $"{filePrefix}disk3_x.tex"), "disk3_x.tex"},
+                {Path.Combine(pathToDiscUs, $"{filePrefix}_over_a.tex"), "e_over_a.tex"},
+                {Path.Combine(pathToDiscUs, $"{filePrefix}_over_b.tex"), "e_over_b.tex"},
+                {Path.Combine(pathToDiscUs, $"{filePrefix}_over_c.tex"), "e_over_c.tex"},
+                {Path.Combine(pathToDiscUs, $"{filePrefix}_over_d.tex"), "e_over_d.tex"},
+                {Path.Combine(pathToDiscUs, $"{filePrefix}_over_e.tex"), "e_over_e.tex"},
+                {Path.Combine(pathToDiscUs, $"{filePrefix}_over_f.tex"), "e_over_f.tex"},
+                {Path.Combine(pathToDiscUs, $"{filePrefix}_over_la.tex"), "e_over_la.tex"},
+                {Path.Combine(pathToDiscUs, $"{filePrefix}_over_lb.tex"), "e_over_lb.tex"},
+
+                {Path.Combine(pathToCondor, $"{filePrefix}help.tim"), "ehelp.tim" },
+                {Path.Combine(pathToCondor, $"{filePrefix}help_1.tim"), "ehelp_1.tim" },
+                {Path.Combine(pathToCondor, $"{filePrefix}mes00.tex"), "emes00.tex" },
+                {Path.Combine(pathToCondor, $"{filePrefix}mes00a.tex"), "emes00a.tex" },
+                {Path.Combine(pathToCondor, $"{filePrefix}mes00b.tex"), "emes00b.tex" },
+                {Path.Combine(pathToCondor, $"{filePrefix}mes00c.tex"), "emes00c.tex" },
+                {Path.Combine(pathToCondor, $"{filePrefix}mes00d.tex"), "emes00d.tex" },
+                {Path.Combine(pathToCondor, $"{filePrefix}mes01.tex"), "emes01.tex" },
+                {Path.Combine(pathToCondor, $"{filePrefix}mes01a.tex"), "emes01a.tex" },
+                {Path.Combine(pathToCondor, $"{filePrefix}mes01b.tex"), "emes01b.tex" },
+                {Path.Combine(pathToCondor, $"{filePrefix}mes08.tex"), "emes08.tex" },
+                {Path.Combine(pathToCondor, $"{filePrefix}unit00.tex"), "eunit00.tex" },
+                {Path.Combine(pathToCondor, $"{filePrefix}unit00a.tex"), "eunit00a.tex" },
+                {Path.Combine(pathToCondor, $"{filePrefix}unit00b.tex"), "eunit00b.tex" },
+                {Path.Combine(pathToCondor, $"{filePrefix}unit00c.tex"), "eunit00c.tex" },
+                {Path.Combine(pathToCondor, $"{filePrefix}unit00d.tex"), "eunit00d.tex" },
+                {Path.Combine(pathToCondor, $"{filePrefix}unit01.tex"), "eunit01.tex" },
+                {Path.Combine(pathToCondor, $"{filePrefix}unit01a.tex"), "eunit01a.tex" },
+                {Path.Combine(pathToCondor, $"{filePrefix}unit01b.tex"), "eunit01b.tex" },
+                {Path.Combine(pathToCondor, $"{filePrefix}unit01c.tex"), "eunit01c.tex" },
+
+                {Path.Combine(pathToSnowboard, $"{filePrefix}a.tex"), "ea_k.tex" },
+                {Path.Combine(pathToSnowboard, $"{filePrefix}b.tex"), "eb_k.tex" },
+                {Path.Combine(pathToSnowboard, $"{filePrefix}c.tex"), "ec_k.tex" },
+                {Path.Combine(pathToSnowboard, $"{filePrefix}g.tex"), "eg_k.tex" },
+                {Path.Combine(pathToSnowboard, $"{filePrefix}eita_k.tex"), "eita_k.tex" },
+                {Path.Combine(pathToSnowboard, $"{filePrefix}stamp0.tex"), "estamp0.tex" },
+                {Path.Combine(pathToSnowboard, $"{filePrefix}stamp1.tex"), "estamp1.tex" },
+                {Path.Combine(pathToSnowboard, $"{filePrefix}time1.tex"), "time1.tex" },
+                {Path.Combine(pathToSnowboard, $"{filePrefix}time2.tex"), "time2.tex" },
+
+                {Path.Combine(pathToSub, $"{filePrefix}hud.tex"), "hud.tex"},
+                {Path.Combine(pathToSub, $"{filePrefix}huda.tex"), "huda.tex"},
+                {Path.Combine(pathToSub, $"{filePrefix}hudb.tex"), "hudb.tex"},
+                {Path.Combine(pathToSub, $"{filePrefix}hudc.tex"), "hudc.tex"},
+                {Path.Combine(pathToSub, $"{filePrefix}hudd.tex"), "hudd.tex"},
+                {Path.Combine(pathToSub, $"{filePrefix}text.tex"), "text.tex"},
+                {Path.Combine(pathToSub, $"{filePrefix}texta.tex"), "texta.tex"},
+                {Path.Combine(pathToSub, $"{filePrefix}textb.tex"), "textb.tex"},
+                {Path.Combine(pathToSub, $"{filePrefix}textc.tex"), "textc.tex"},
+                {Path.Combine(pathToSub, $"{filePrefix}textd.tex"), "textd.tex"},
+            };
+
+            SendMessage($"\trenaming language specific files ...");
+
+            foreach (var file in filesToRename)
+            {
+                if (File.Exists(file.Key))
+                {
+                    FileInfo info = new FileInfo(file.Key);
+                    destFilePath = Path.Combine(info.DirectoryName, file.Value);
+                    File.Move(file.Key, destFilePath);
+                }
+                else
+                {
+                    SendMessage($"Could not find file to rename: {file.Key} ...", NLog.LogLevel.Warn);
+                }
+            }
+
+            // Run Ulgp to encode altered .lgp file
+            SendMessage($"\tEncoding new .lgp files ...");
+
+            RunUlgp(pathToDiscUs, Path.Combine(InstallPath, "data", "cd", "disc_us.lgp"));
+            RunUlgp(pathToCondor, Path.Combine(InstallPath, "data", "minigame", "condor.lgp"));
+            RunUlgp(pathToSnowboard, Path.Combine(InstallPath, "data", "minigame", "snowboard-us.lgp"));
+            RunUlgp(pathToSub, Path.Combine(InstallPath, "data", "minigame", "sub.lgp"));
+
+
+            SendMessage($"\tdeleting temporary files ...");
+            
+            string[] foldersToDelete = { pathToDiscUs, pathToCondor, pathToSnowboard, pathToSub };
+            foreach (string folder in foldersToDelete)
+            {
+                if (Directory.Exists(folder))
+                {
+                    Directory.Delete(folder, true);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Runs ulgp v1.3.2 with given arguments.
+        /// if <paramref name="sourcePath"/> is *.lgp then it will be dumped to <paramref name="destPath"/>,
+        /// otherwise <paramref name="sourcePath"/> is assumed to be a directory containing files to add to a new or existing .lgp
+        /// </summary>
+        private void RunUlgp(string sourcePath, string destPath)
+        {
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo()
+                {
+                    FileName = Sys.PathToUlgpExe,
+                    WorkingDirectory = Path.GetDirectoryName(Sys.PathToUlgpExe),
+                    Arguments = $"\"{sourcePath}\" \"{destPath}\"",
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    Verb = "runas", // ensures the process is started as Admin
+                };
+
+                using (Process proc = Process.Start(startInfo))
+                {
+                    proc.WaitForExit();
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                SendMessage("An error occurred starting ulgp.exe", NLog.LogLevel.Error);
+            }
+        }
+
+        /// <summary>
+        /// Returns 'fr' for french, 'de' for german, and 'es' for spanish installations.
+        /// Returns empty string if none of these languages found.
+        /// </summary>
+        public string GetInstalledLanguage()
+        {
+            string languageInstalled = "";
+
+            if (File.Exists(Path.Combine(InstallPath, "data", "field", "fflevel.lgp")))
+            {
+                languageInstalled = "fr";
+            }
+            else if (File.Exists(Path.Combine(InstallPath, "data", "field", "gflevel.lgp")))
+            {
+                languageInstalled = "de";
+            }
+            else if (File.Exists(Path.Combine(InstallPath, "data", "field", "sflevel.lgp")))
+            {
+                languageInstalled = "es";
+            }
+
+            return languageInstalled;
         }
     }
 
