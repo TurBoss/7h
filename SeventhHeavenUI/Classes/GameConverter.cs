@@ -28,12 +28,9 @@ namespace SeventhHeaven.Classes
 
         public string InstallPath { get; set; }
 
-        public ConversionSettings Settings { get; set; }
-
-        public GameConverter(ConversionSettings settings)
+        public GameConverter(string installPath)
         {
-            InstallPath = settings.InstallPath;
-            Settings = settings;
+            InstallPath = installPath;
         }
 
         public static string GetInstallLocation(FF7Version installedVersion)
@@ -1230,10 +1227,5 @@ namespace SeventhHeaven.Classes
 
             return languageInstalled;
         }
-    }
-
-    public class ConversionSettings
-    {
-        public string InstallPath { get; set; }
     }
 }

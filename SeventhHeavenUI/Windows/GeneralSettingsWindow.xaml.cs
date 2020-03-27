@@ -73,7 +73,7 @@ namespace SeventhHeaven.Windows
                     if (!File.Exists(targetPathToFf7Exe))
                     {
                         // use game converter to copy files over
-                        var gc = new GameConverter(new ConversionSettings() { InstallPath = fileSelected.DirectoryName });
+                        var gc = new GameConverter(fileSelected.DirectoryName);
                         if (!gc.CopyFF7ExeToGame())
                         {
                             MessageDialogWindow.Show(ResourceHelper.Get(StringKey.ThisExeIsUsedForSteamReleaseFailedToCopyExe),

@@ -1701,11 +1701,36 @@ namespace SeventhHeavenUI.ViewModels
 
         internal void ShowGameDriverConfigWindow()
         {
-            string uiXml = Path.Combine(Sys._7HFolder, "7H_GameDriver_UI.xml");
             string driverCfg = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "7H_GameDriver.cfg");
+            string appLanguage = App.GetAppLanguage();
+            string uiXmlPath;
 
-            ConfigureGLWindow gLWindow = new ConfigureGLWindow() { WindowStartupLocation = WindowStartupLocation.CenterScreen };
-            gLWindow.Init(uiXml, driverCfg);
+            switch (appLanguage)
+            {
+                case "de":
+                    uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.de.xml");
+                    break;
+                    
+                case "es":                                                
+                    uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.es.xml");
+                    break;
+                    
+                case "fr":                                                
+                    uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.fr.xml");
+                    break;
+                    
+                case "ja":                                                
+                    uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.ja.xml");
+                    break;
+
+                default:
+                    uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "7H_GameDriver_UI.xml"); // default to using english version
+                    break;
+            }
+
+
+            ConfigureGLWindow gLWindow = new ConfigureGLWindow();
+            gLWindow.Init(uiXmlPath, driverCfg);
             gLWindow.ShowDialog();
         }
 

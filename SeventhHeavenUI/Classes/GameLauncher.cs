@@ -124,10 +124,7 @@ namespace SeventhHeaven.Classes
             //
             // GAME CONVERTER - Make sure game is ready for mods
             // 
-            GameConverter converter = new GameConverter(new ConversionSettings()
-            {
-                InstallPath = Path.GetDirectoryName(Sys.Settings.FF7Exe)
-            });
+            GameConverter converter = new GameConverter(Path.GetDirectoryName(Sys.Settings.FF7Exe));
             converter.MessageSent += GameConverter_MessageSent;
 
 

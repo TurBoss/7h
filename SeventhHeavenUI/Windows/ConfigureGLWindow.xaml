@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Style="{StaticResource MainWindowStyle}"
         Title="{DynamicResource GameDriverWindowTitle}" 
         Closed="Window_Closed"

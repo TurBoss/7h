@@ -371,5 +371,24 @@ namespace SeventhHeavenUI
             this.Resources.MergedDictionaries.RemoveAt(1); // remove the default string resources dictionary (second in merged dictionary in App.xaml)
             this.Resources.MergedDictionaries.Add(dict);
         }
+
+        public static string GetAppLanguage()
+        {
+            try
+            {
+                string defaultLang = ConfigurationManager.AppSettings["DefaultAppLanguage"];
+
+                if (string.IsNullOrWhiteSpace(defaultLang))
+                {
+                    defaultLang = "en";
+                }
+
+                return defaultLang;
+            }
+            catch (Exception)
+            {
+                return "en";
+            }
+        }
     }
 }
