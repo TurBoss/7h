@@ -115,7 +115,7 @@
                    VerticalAlignment="Top"
                    TextWrapping="Wrap"
                    Margin="5,0,0,5"
-                   MaxWidth="455"
+                   MaxWidth="420"
                    Text="{Binding StatusMessage, FallbackValue='This is a description of a option or message to the user'}"/>
 
         <Button Grid.Row="1"
@@ -124,8 +124,7 @@
                 Content="{DynamicResource ResetDefaults}"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
-                Margin="0,0,187,5"
-                Width="110"/>
+                Margin="0,0,187,5"/>
 
         <Button Grid.Row="1"
                 Click="btnSave_Click"

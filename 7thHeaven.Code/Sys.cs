@@ -27,11 +27,6 @@ namespace Iros._7th.Workshop
         public WMessage Message { get; set; }
     }
 
-    public class LinkEventArgs : EventArgs
-    {
-        public string Link { get; set; }
-    }
-
     public enum WMessageLogLevel
     {
         Error,
@@ -46,6 +41,7 @@ namespace Iros._7th.Workshop
         {
             IsImportant = false;
             LogLevel = WMessageLogLevel.Info;
+            TextTranslationKey = null;
         }
 
         public WMessage(string message)
@@ -70,8 +66,18 @@ namespace Iros._7th.Workshop
             LoggedException = exceptionToLog;
         }
 
+        public WMessage(StringKey message, WMessageLogLevel level, Exception exceptionToLog = null)
+        {
+            Text = null;
+            TextTranslationKey = message;
+            LogLevel = level;
+            IsImportant = false;
+            LoggedException = exceptionToLog;
+        }
+
+
+        public StringKey? TextTranslationKey { get; set; }
         public string Text { get; set; }
-        public string Link { get; set; }
         public bool IsImportant { get; set; }
         public WMessageLogLevel LogLevel { get; set; }
 
@@ -179,16 +185,9 @@ namespace Iros._7th.Workshop
 
         public static event EventHandler<ModStatusEventArgs> StatusChanged;
         public static event EventHandler<MessageEventArgs> MessageReceived;
-        public static event EventHandler<LinkEventArgs> GotoLink;
 
         private static Dictionary<Guid, ModStatus> _statuses;
         private static List<WMessage> _pendingMessages = new List<WMessage>();
-
-        public static void TriggerLink(string link)
-        {
-            var e = new LinkEventArgs() { Link = link };
-            GotoLink(null, e);
-        }
 
         public static void Message(WMessage m)
         {
@@ -309,7 +308,7 @@ namespace Iros._7th.Workshop
                 }
                 catch(Exception e)
                 {
-                    Sys.Message(new WMessage("Error loading settings - please configure 7H using the Workshop/Settings menu", WMessageLogLevel.Error, e));
+                    Sys.Message(new WMessage(StringKey.ErrorLoadingSettingsPleaseConfigure7H, WMessageLogLevel.Error, e));
                 }
             }
             if (Settings == null)
@@ -327,7 +326,7 @@ namespace Iros._7th.Workshop
                 }
                 catch(Exception e)
                 {
-                    Sys.Message(new WMessage("Error loading library file", WMessageLogLevel.Error, e));
+                    Sys.Message(new WMessage(StringKey.ErrorLoadingLibraryFile, WMessageLogLevel.Error, e));
                 }
             }
 
@@ -341,7 +340,7 @@ namespace Iros._7th.Workshop
 
             _statuses = Library.Items.ToDictionary(i => i.ModID, _ => ModStatus.Installed);
 
-            ImageCache = new ImageCache(System.IO.Path.Combine(SysFolder, "cache"));
+            ImageCache = new ImageCache(Path.Combine(SysFolder, "cache"));
 
             AppVersion = new Version();
 
@@ -439,11 +438,11 @@ namespace Iros._7th.Workshop
                             }
                             catch (Exception ex)
                             {
-                                Sys.Message(new WMessage("Mod " + name + " failed to import: " + ex.ToString(), true) { LoggedException = ex });
+                                Sys.Message(new WMessage($"[{StringKey.FailedToImportMod}] {name}: " + ex.ToString(), true) { TextTranslationKey = StringKey.FailedToImportMod, LoggedException = ex });
                                 continue;
                             }
 
-                            Sys.Message(new WMessage() { Text = "Auto imported mod " + name });
+                            Sys.Message(new WMessage() { Text = $"[{StringKey.AutoImportedMod}] {name}", TextTranslationKey = StringKey.AutoImportedMod });
                         }
                     }
                 }
@@ -464,16 +463,16 @@ namespace Iros._7th.Workshop
                             }
                             catch (_7thWrapperLib.IrosArcException ae)
                             {
-                                Sys.Message(new WMessage($"Could not import .iro mod {Path.GetFileNameWithoutExtension(iro)}, file is corrupt", true) { LoggedException = ae });
+                                Sys.Message(new WMessage($"[{StringKey.CouldNotImportIroFileIsCorrupt}] - {Path.GetFileNameWithoutExtension(iro)}", true) { TextTranslationKey = StringKey.CouldNotImportIroFileIsCorrupt, LoggedException = ae });
                                 continue;
                             }
                             catch (Exception ex)
                             {
-                                Sys.Message(new WMessage("Mod " + name + " failed to import: " + ex.ToString(), true) { LoggedException = ex });
+                                Sys.Message(new WMessage($"[{StringKey.FailedToImportMod}] {name}: " + ex.ToString(), true) { TextTranslationKey = StringKey.FailedToImportMod, LoggedException = ex });
                                 continue;
                             }
 
-                            Sys.Message(new WMessage() { Text = $"Auto imported mod {name}" });
+                            Sys.Message(new WMessage() { Text = $"[{StringKey.AutoImportedMod}] {name}", TextTranslationKey = StringKey.AutoImportedMod });
                         }
                     }
                 }
@@ -496,7 +495,7 @@ namespace Iros._7th.Workshop
                     Sys.Library.RemoveInstall(mod);
                     Sys.ActiveProfile.Items.RemoveAll(p => p.ModID == mod.ModID);
                     Mod details = mod.CachedDetails ?? new Mod();
-                    Sys.Message(new WMessage { Text = $"Could not find mod {details.Name} - has it been deleted? Removed." });
+                    Sys.Message(new WMessage { Text = $"{details.Name} - [{StringKey.ModCouldNotBeFoundHasItBeenDeleted}]", TextTranslationKey = StringKey.ModCouldNotBeFoundHasItBeenDeleted });
                     deletedInvalidMod = true;
                 }
             }

@@ -25,7 +25,7 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
-        <ContentControl >
+        <ContentControl IsTabStop="False">
             <ContentControl.Style>
                 <Style TargetType="ContentControl">
                     <Setter Property="Template" Value="{StaticResource iconWarning}"/>

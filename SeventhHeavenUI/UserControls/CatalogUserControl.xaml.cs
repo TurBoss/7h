@@ -77,7 +77,7 @@ namespace SeventhHeaven.UserControls
         {
             if (lstCatalogMods.SelectedItem == null)
             {
-                Sys.Message(new WMessage("Select a mod to download first.", true));
+                Sys.Message(new WMessage(ResourceHelper.Get(StringKey.SelectModToDownloadFirst), true));
                 return;
             }
 
@@ -413,7 +413,7 @@ namespace SeventhHeaven.UserControls
         {
             if (lstDownloads.SelectedItem == null)
             {
-                Sys.Message(new WMessage("No Download selected.", true));
+                Sys.Message(new WMessage(ResourceHelper.Get(StringKey.NoDownloadSelected), true));
                 return;
             }
 
@@ -424,7 +424,7 @@ namespace SeventhHeaven.UserControls
         {
             if (lstDownloads.SelectedItem == null)
             {
-                Sys.Message(new WMessage("No Download selected.", true));
+                Sys.Message(new WMessage(ResourceHelper.Get(StringKey.NoDownloadSelected), true));
                 return;
             }
 

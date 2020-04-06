@@ -1,4 +1,5 @@
-﻿using Iros.Mega;
+﻿using _7thHeaven.Code;
+using Iros.Mega;
 using SeventhHeaven.Classes;
 using SeventhHeavenUI.ViewModels;
 using System;

@@ -3,6 +3,7 @@
   The original developer is Iros <irosff@outlook.com>
 */
 
+using _7thHeaven.Code;
 using _7thWrapperLib;
 using System;
 using System.Collections.Generic;
@@ -128,7 +129,7 @@ namespace Iros._7th.Workshop {
 
             if (removedMods.Count > 0 && doWarn)
             {
-                Sys.Message(new WMessage($"The following mod(s) were not found installed and have been removed from the profile: {string.Join(", ", removedMods)}", true));
+                Sys.Message(new WMessage($"[{StringKey.TheFollowingModsWereNotFoundInstalledAndHaveBeenRemoved}]: {string.Join(", ", removedMods)}", true) { TextTranslationKey = StringKey.TheFollowingModsWereNotFoundInstalledAndHaveBeenRemoved });
             }
         }
     }

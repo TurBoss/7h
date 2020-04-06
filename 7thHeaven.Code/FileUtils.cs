@@ -39,7 +39,7 @@ namespace _7thHeaven.Code
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage("failed to copy directory", WMessageLogLevel.LogOnly, e));
+                Sys.Message(new WMessage(StringKey.FailedToCopyDirectory, WMessageLogLevel.LogOnly, e));
             }
 
             return filesCopied;
@@ -60,7 +60,7 @@ namespace _7thHeaven.Code
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage("failed to copy directory", WMessageLogLevel.LogOnly, e));
+                Sys.Message(new WMessage(StringKey.FailedToCopyDirectory, WMessageLogLevel.LogOnly, e));
             }
         }
 
@@ -91,7 +91,7 @@ namespace _7thHeaven.Code
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage("failed to move directory", WMessageLogLevel.LogOnly, e));
+                Sys.Message(new WMessage(StringKey.FailedToMoveDirectory, WMessageLogLevel.LogOnly, e));
             }
         }
 
@@ -137,7 +137,7 @@ namespace _7thHeaven.Code
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage("failed to move directory", WMessageLogLevel.LogOnly, e));
+                Sys.Message(new WMessage(StringKey.FailedToMoveDirectory, WMessageLogLevel.LogOnly, e));
             }
         }
 
@@ -290,7 +290,7 @@ namespace _7thHeaven.Code
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage("failed to delete files", WMessageLogLevel.LogOnly, e));
+                Sys.Message(new WMessage(StringKey.FailedToDeleteFiles, WMessageLogLevel.LogOnly, e));
                 return false;
             }
         }

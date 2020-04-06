@@ -1,4 +1,5 @@
-﻿using Iros._7th;
+﻿using _7thHeaven.Code;
+using Iros._7th;
 using Iros._7th.Workshop;
 using Iros.Mega;
 using SeventhHeaven.Classes;
@@ -63,6 +64,7 @@ namespace SeventhHeavenUI.ViewModels
             LanguagesMap.Add($"{ResourceHelper.Get(StringKey.English)} (English)", "en");
             LanguagesMap.Add($"{ResourceHelper.Get(StringKey.Spanish)} (Español)", "es");
             LanguagesMap.Add($"{ResourceHelper.Get(StringKey.French)} (Français)", "fr");
+            LanguagesMap.Add($"{ResourceHelper.Get(StringKey.Greek)} (Ελληνικά)", "gr");
             LanguagesMap.Add($"{ResourceHelper.Get(StringKey.Japanese)} (\u65e5\u672c\u8a9e)", "ja");
 
 

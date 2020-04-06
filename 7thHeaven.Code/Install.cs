@@ -81,26 +81,26 @@ namespace Iros._7th.Workshop
             ModStatus status = Sys.GetStatus(m.ID);
             if (status == ModStatus.Downloading)
             {
-                Sys.Message(new WMessage($"{m.Name} is already downloading!", true));
+                Sys.Message(new WMessage($"{m.Name} [{StringKey.IsAlreadyDownloading}]", true) { TextTranslationKey = StringKey.IsAlreadyDownloading });
                 return;
             }
 
             if (status == ModStatus.Updating)
             {
-                Sys.Message(new WMessage($"{m.Name} is already updating!", true));
+                Sys.Message(new WMessage($"{m.Name} [{StringKey.IsAlreadyUpdating}]", true) { TextTranslationKey = StringKey.IsAlreadyUpdating });
                 return;
             }
 
             if (status == ModStatus.Installed && !isUpdatingMod)
             {
-                Sys.Message(new WMessage($"{m.Name} is already downloaded and installed!", true));
+                Sys.Message(new WMessage($"{m.Name} [{StringKey.IsAlreadyDownloadedAndInstalled}]", true) { TextTranslationKey = StringKey.IsAlreadyDownloadedAndInstalled });
                 return;
             }
 
             Action onCancel = () => Sys.RevertStatus(m.ID);
             Action<Exception> onError = ex =>
             {
-                Sys.Message(new WMessage($"Error occurred downloading/installing {m.Name} - {ex.Message}", WMessageLogLevel.Error, ex));
+                Sys.Message(new WMessage($"[{StringKey.ErrorOccurredDownloadingInstalling}] {m.Name} - {ex.Message}", WMessageLogLevel.Error, ex) { TextTranslationKey = StringKey.ErrorOccurredDownloadingInstalling });
                 Sys.RevertStatus(m.ID);
             };
 
@@ -124,7 +124,8 @@ namespace Iros._7th.Workshop
                         Links = patches.Select(p => p.Link).ToList(),
                         SaveFilePath = System.IO.Path.Combine(temppath, pfile),
                         Category = DownloadCategory.Mod,
-                        ItemName = "Downloading " + m.Name,
+                        ItemName = $"[{StringKey.Downloading}] {m.Name}",
+                        ItemNameTranslationKey = StringKey.Downloading,
                         OnCancel = onCancel
                     };
 
@@ -147,7 +148,8 @@ namespace Iros._7th.Workshop
                         Links = m.LatestVersion.Links,
                         SaveFilePath = System.IO.Path.Combine(temppath, file),
                         Category = DownloadCategory.Mod,
-                        ItemName = "Downloading " + m.Name,
+                        ItemName = $"[{StringKey.Downloading}] {m.Name}",
+                        ItemNameTranslationKey = StringKey.Downloading,
                         OnCancel = onCancel
                     };
 
@@ -179,7 +181,8 @@ namespace Iros._7th.Workshop
                 {
                     Links = m.LatestVersion.Links,
                     SaveFilePath = System.IO.Path.Combine(temppath, file),
-                    ItemName = "Downloading " + m.Name,
+                    ItemName = $"[{StringKey.Downloading}] {m.Name}",
+                    ItemNameTranslationKey = StringKey.Downloading,
                     Category = DownloadCategory.Mod,
                     OnCancel = onCancel
                 };
@@ -204,7 +207,8 @@ namespace Iros._7th.Workshop
                     {
                         Links = new List<string>() { p },
                         SaveFilePath = System.IO.Path.Combine(temppath, pfile),
-                        ItemName = "Downloading " + m.Name + " patch " + pCount,
+                        ItemName = $"[{StringKey.Downloading}] {m.Name} patch {pCount}",
+                        ItemNameTranslationKey = StringKey.Downloading,
                         Category = DownloadCategory.Mod,
                         OnCancel = () =>
                         {
@@ -237,7 +241,8 @@ namespace Iros._7th.Workshop
                     Links = m.LatestVersion.Links,
                     SaveFilePath = System.IO.Path.Combine(temppath, file),
                     Category = DownloadCategory.Mod,
-                    ItemName = "Downloading " + m.Name,
+                    ItemName = $"[{StringKey.Downloading}] {m.Name}",
+                    ItemNameTranslationKey = StringKey.Downloading,
                     OnCancel = onCancel
                 };
 
@@ -374,7 +379,7 @@ namespace Iros._7th.Workshop
             {
                 if (e.Error != null)
                 {
-                    Sys.Message(new WMessage() { Text = "Error downloading " + Mod.Name + "\r\n" + e.Error.ToString() });
+                    Sys.Message(new WMessage($"[{StringKey.ErrorDownloading}] {Mod.Name}", WMessageLogLevel.Error, e.Error) { TextTranslationKey = StringKey.ErrorDownloading });
                     Sys.RevertStatus(Mod.ID);
                 }
                 else
@@ -392,7 +397,7 @@ namespace Iros._7th.Workshop
                             UpdateType = Sys.Library.DefaultUpdate,
                             Versions = new List<InstalledVersion>() { new InstalledVersion() { InstalledLocation = System.IO.Path.GetFileName(_dest), VersionDetails = Mod.LatestVersion } }
                         });
-                        Sys.Message(new WMessage() { Text = "Installed " + Mod.Name, Link = "iros://" + Mod.ID.ToString() });
+                        Sys.Message(new WMessage($"[{StringKey.Installed}] {Mod.Name}") { TextTranslationKey = StringKey.Installed });
                         Sys.SetStatus(Mod.ID, ModStatus.Installed);
                     }
                     else
@@ -411,7 +416,7 @@ namespace Iros._7th.Workshop
                             inst.Versions.Clear();
                         }
                         inst.Versions.Add(new InstalledVersion() { InstalledLocation = System.IO.Path.GetFileName(_dest), VersionDetails = Mod.LatestVersion });
-                        Sys.Message(new WMessage() { Text = "Updated " + Mod.Name, Link = "iros://" + Mod.ID.ToString() });
+                        Sys.Message(new WMessage($"[{StringKey.Updated}] {Mod.Name}") { TextTranslationKey = StringKey.Updated });
                         Sys.SetStatus(Mod.ID, ModStatus.Installed);
                     }
                     Sys.Save();
@@ -482,14 +487,14 @@ namespace Iros._7th.Workshop
             {
                 if (e.Error != null)
                 {
-                    Sys.Message(new WMessage() { Text = "Error updating " + Mod.Name + "\r\n" + e.Error.ToString() });
+                    Sys.Message(new WMessage($"[{StringKey.ErrorUpdating}] {Mod.Name}") { TextTranslationKey = StringKey.ErrorUpdating, LoggedException = e.Error });
                     Sys.RevertStatus(Mod.ID);
                 }
                 else
                 {
                     Install.CachedDetails = Mod;
                     Install.LatestInstalled.VersionDetails = Mod.LatestVersion;
-                    Sys.Message(new WMessage() { Text = "Updated " + Mod.Name, Link = "iros://" + Mod.ID.ToString() });
+                    Sys.Message(new WMessage($"[{StringKey.Updated}] {Mod.Name}") { TextTranslationKey = StringKey.Updated  });
                     Sys.SetStatus(Mod.ID, ModStatus.Installed);
                 }
                 Sys.Save();
@@ -585,7 +590,7 @@ namespace Iros._7th.Workshop
             {
                 if (e.Error != null)
                 {
-                    Sys.Message(new WMessage() { Text = $"Error downloading {Mod.Name}\r\n{e.Error.ToString()}", LoggedException = e.Error });
+                    Sys.Message(new WMessage($"[{StringKey.ErrorDownloading}] {Mod.Name}") { TextTranslationKey = StringKey.ErrorDownloading, LoggedException = e.Error });
                     Sys.RevertStatus(Mod.ID);
                     return;
                 }
@@ -612,7 +617,7 @@ namespace Iros._7th.Workshop
                         return;
                     }
 
-                    Sys.Message(new WMessage() { Text = "Installed " + Mod.Name, Link = "iros://" + Mod.ID.ToString() });
+                    Sys.Message(new WMessage($"[{StringKey.Installed}] {Mod.Name}") { TextTranslationKey = StringKey.Installed });
                     Sys.SetStatus(Mod.ID, ModStatus.Installed);
                 }
                 else
@@ -653,7 +658,7 @@ namespace Iros._7th.Workshop
                         return;
                     }
 
-                    Sys.Message(new WMessage() { Text = "Updated " + Mod.Name, Link = "iros://" + Mod.ID.ToString() });
+                    Sys.Message(new WMessage($"[{StringKey.Updated}] {Mod.Name}") { TextTranslationKey = StringKey.Updated });
                     Sys.SetStatus(Mod.ID, ModStatus.Installed);
                 }
 

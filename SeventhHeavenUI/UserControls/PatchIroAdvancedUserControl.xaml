@@ -60,7 +60,7 @@
             <RowDefinition  Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Source Folder:"
+        <TextBlock Text="{DynamicResource SourceFolder}"
                    HorizontalAlignment="Right"
                    Margin="5,10,5,0"/>
 
@@ -84,7 +84,7 @@
 
 
 
-        <TextBlock Text="Save as IROP:"
+        <TextBlock Text="{DynamicResource SaveAsIrop}"
                    HorizontalAlignment="Right"
                    Grid.Row="2"
                    Margin="10,10,5,0"/>
@@ -109,7 +109,7 @@
 
 
 
-        <TextBlock Text="Compress:"
+        <TextBlock Text="{DynamicResource Compress}"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Top"
                    Grid.Row="3"
@@ -156,8 +156,8 @@
             </ProgressBar.Style>
         </ProgressBar>
 
-        
-        <TextBlock Text="Files To Delete:"
+
+        <TextBlock Text="{DynamicResource FilesToDelete}"
                    Grid.Column="0"
                    Grid.Row="4"
                    HorizontalAlignment="Right"

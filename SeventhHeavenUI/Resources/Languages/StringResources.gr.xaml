@@ -2,308 +2,309 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
+    <!--TODO: TRANSLATION NEEDED-->
     <!--Main Window Buttons-->
-    <system:String x:Key="Play">演奏する</system:String>
-    <system:String x:Key="PlayWithMods">Play With Mods (default)</system:String>
-    <system:String x:Key="PlayWithNoMods">Play Without Mods</system:String>
-    <system:String x:Key="PlayWithDebugLog">Play With Debug Log</system:String>
-    <system:String x:Key="PlayWithVariableDump">Play With Variable Dump</system:String>
+    <system:String x:Key="Play">Εναρξη</system:String>
+    <system:String x:Key="PlayWithMods">Εναρξη με τροποποιήσεις (προκαθορισμένες)</system:String>
+    <system:String x:Key="PlayWithNoMods">Εναρξη χωρίς τροποποιήσεις</system:String>
+    <system:String x:Key="PlayWithDebugLog">Εναρξη με το αρχείο καταγραφής εντοπισμού σφαλμάτων</system:String>
+    <system:String x:Key="PlayWithVariableDump">Εναρξη με το αρχείο μεταβλητής χωρητικότητας</system:String>
 
-    <system:String x:Key="Settings">Settings</system:String>
-    <system:String x:Key="ChangeColorTheme">Change Color Theme...</system:String>
-    <system:String x:Key="GeneralSettings">General Settings...</system:String>
-    <system:String x:Key="GameDriver">Game Driver...</system:String>
-    <system:String x:Key="GameLauncher">Game Launcher...</system:String>
-    <system:String x:Key="Profiles">Profiles...</system:String>
-    <system:String x:Key="Language">Language...</system:String>
+    <system:String x:Key="Settings">Ρυθμίσεις</system:String>
+    <system:String x:Key="ChangeColorTheme">Αλλαξε θέμα χρώματος...</system:String>
+    <system:String x:Key="GeneralSettings">Γενικές Ρυθμίσεις...</system:String>
+    <system:String x:Key="GameDriver">Πρόγραμμα οδήγησης παιχνιδιού...</system:String>
+    <system:String x:Key="GameLauncher">Εφαρμογή εκκίνησης παιχνιδιού...</system:String>
+    <system:String x:Key="Profiles">Προφίλ...</system:String>
+    <system:String x:Key="Language">Γλώσσα...</system:String>
 
 
-    <system:String x:Key="Tools">Tools</system:String>
-    <system:String x:Key="CatalogModCreationTool">Catalog/Mod Creation Tool...</system:String>
-    <system:String x:Key="ChunkTool">Chunk Tool...</system:String>
-    <system:String x:Key="IROTools">IRO Tools...</system:String>
+    <system:String x:Key="Tools">Εργαλεία</system:String>
+    <system:String x:Key="CatalogModCreationTool">Εργαλείο σχεδιασμού Καταλόγου/Τροποίησης...</system:String>
+    <system:String x:Key="ChunkTool">Εργαλείο Τμημάτων Μεγέθους...</system:String>
+    <system:String x:Key="IROTools">Εργαλεία IRO...</system:String>
 
-    <system:String x:Key="Help">Help</system:String>
+    <system:String x:Key="Help">Βοήθεια</system:String>
 
-    <system:String x:Key="MyMods">My Mods</system:String>
-    <system:String x:Key="MyModsTooltip">Right-click My Mods tab to open your Mod Library Folder</system:String>
+    <system:String x:Key="MyMods">Οι τροποποιήσεις μου</system:String>
+    <system:String x:Key="MyModsTooltip">Κάνε δεξί κλικ στην καρτέλα "Οι τροποποιήσεις μου" για να ανοίξεις τον φάκελο της Βιβλιοθήκης Τροποποιήσεων</system:String>
 
-    <system:String x:Key="BrowseCatalog">Browse Catalog</system:String>
-    <system:String x:Key="BrowseCatalogTooltip">Right-click Browse Catalog tab to open your Catalog settings</system:String>
+    <system:String x:Key="BrowseCatalog">Κατάλογος Αναζήτησης</system:String>
+    <system:String x:Key="BrowseCatalogTooltip">Κάνε δεξί κλικ στην καρτέλα "Κατάλογος Αναζήτησης" για να ανοίξεις τις δικές σου ρυθμίσεις Καταλόγου</system:String>
 
-    <system:String x:Key="SearchHint">Type here to search ...</system:String>
-    <system:String x:Key="FiltersTooltip">Click to select what categories and tags to filter by.</system:String>
+    <system:String x:Key="SearchHint">Πληκτρολόγησε εδώ για αναζήτηση ...</system:String>
+    <system:String x:Key="FiltersTooltip">Κάνε κλικ για να επιλέξεις κατηγορίες και λέξει κλειδιά που θες να φιλτράρεις.</system:String>
 
-    <system:String x:Key="StatusBarTooltip">Click to view app log</system:String>
+    <system:String x:Key="StatusBarTooltip">Κάνε κλικ για να δεις το αρχείο καταγραφής της εφαρμογής</system:String>
 
-    
+
     <!--Mod Info Panel-->
-    <system:String x:Key="ModInfoHeader" xml:space="preserve"> Mod Info </system:String>
-    <system:String x:Key="NameLabel">Name:</system:String>
-    <system:String x:Key="AuthorLabel">Author:</system:String>
-    <system:String x:Key="ReleasedLabel">Released:</system:String>
-    <system:String x:Key="CategoryLabel">Category:</system:String>
-    <system:String x:Key="VersionLabel">Version:</system:String>
+    <system:String x:Key="ModInfoHeader" xml:space="preserve"> Πληροφορίες Τροποποίησης </system:String>
+    <system:String x:Key="NameLabel">Ονομα:</system:String>
+    <system:String x:Key="AuthorLabel">Δημιουργός:</system:String>
+    <system:String x:Key="ReleasedLabel">Κυκλοφόρησε:</system:String>
+    <system:String x:Key="CategoryLabel">Κατηγορία:</system:String>
+    <system:String x:Key="VersionLabel">Εκδοση:</system:String>
 
-    <system:String x:Key="ClickHere">Click Here</system:String>
-    <system:String x:Key="None">None</system:String>
+    <system:String x:Key="ClickHere">Κάνε κλικ εδώ</system:String>
+    <system:String x:Key="None">Κανένα</system:String>
 
-    <system:String x:Key="AutoUpdateInstall">Auto Update/Install</system:String>
-    <system:String x:Key="Ignore">Ignore</system:String>
-    <system:String x:Key="Notify">Notify</system:String>
+    <system:String x:Key="AutoUpdateInstall">Αυτόματη Ανανέωση/Εγκατάσταση</system:String>
+    <system:String x:Key="Ignore">Αγνόησε</system:String>
+    <system:String x:Key="Notify">Ειδοποίησε</system:String>
 
-    <system:String x:Key="DescriptionLabel">Description:</system:String>
-    <system:String x:Key="LinkLabel">Link:</system:String>
-    <system:String x:Key="ReadmeLabel">Readme:</system:String>
-    <system:String x:Key="ReleaseNotesLabel">Release Notes:</system:String>
+    <system:String x:Key="DescriptionLabel">Περιγραφή:</system:String>
+    <system:String x:Key="LinkLabel">Σύνδεσμος:</system:String>
+    <system:String x:Key="ReadmeLabel">Διάβασέ με:</system:String>
+    <system:String x:Key="ReleaseNotesLabel">Σημειώσεις Κυκλοφορίας:</system:String>
 
-    <system:String x:Key="NoPreviewImage">No Preview Image</system:String>
+    <system:String x:Key="NoPreviewImage">Καμιά εικόνα προεπισκόπισης</system:String>
 
-    
+
     <!-- Browse Catalog Tab -->
-    <system:String x:Key="Name">Name</system:String>
-    <system:String x:Key="Author">Author</system:String>
-    <system:String x:Key="Released">Released</system:String>
-    <system:String x:Key="Category">Category</system:String>
-    <system:String x:Key="Size">Size</system:String>
-    <system:String x:Key="Inst">Inst.</system:String>
+    <system:String x:Key="Name">Ονομα</system:String>
+    <system:String x:Key="Author">Δημιουργός</system:String>
+    <system:String x:Key="Released">Κυκλκοφόρησε</system:String>
+    <system:String x:Key="Category">Κατηγορία</system:String>
+    <system:String x:Key="Size">Μέγεθος</system:String>
+    <system:String x:Key="Inst">Εγκ.</system:String>
 
 
-    <system:String x:Key="RefreshCatalogTooltip">Force Update All Subscriptions and Refresh Catalog</system:String>
-    <system:String x:Key="DownloadModTooltip">Download Selected Mod</system:String>
-    <system:String x:Key="ResetColumnsTooltip">Reset Columns</system:String>
+    <system:String x:Key="RefreshCatalogTooltip">Εξαναγκασμένη Ενημέρωση όλων των Συνδρομών και Ανανέωση του καταλόγου</system:String>
+    <system:String x:Key="DownloadModTooltip">Κατέβασε την Επιλεγμένη Τροποποίηση</system:String>
+    <system:String x:Key="ResetColumnsTooltip">Επαναφορά Στηλών</system:String>
 
-    <system:String x:Key="Item">Item</system:String>
-    <system:String x:Key="Progress">Progress</system:String>
-    <system:String x:Key="Speed">Speed</system:String>
-    <system:String x:Key="TimeLeft">Time Left</system:String>
+    <system:String x:Key="Item">Αντικείμενο</system:String>
+    <system:String x:Key="Progress">Πρόοδος</system:String>
+    <system:String x:Key="Speed">Ταχύτητα</system:String>
+    <system:String x:Key="TimeLeft">Εναπομείνων Χρόνος</system:String>
 
-    <system:String x:Key="CancelDownloadTooltip">Cancel Selected Download</system:String>
+    <system:String x:Key="CancelDownloadTooltip">Ακύρωση του επιλεγμένου αρχείου για κατέβασμα</system:String>
 
-    
+
     <!--My Mods Tab-->
-    <system:String x:Key="Active">Active</system:String>
+    <system:String x:Key="Active">Ενεργό</system:String>
 
-    <system:String x:Key="ImportModTooltip">Import Mod</system:String>
-    <system:String x:Key="MoveUpTooltip">Move Up/Right-Click to Move to Top</system:String>
-    <system:String x:Key="MoveDownTooltip">Move Down/Right-Click to Move to Bottom</system:String>
-    <system:String x:Key="AutoSortTooltip">Auto Sort Mods Based On Category Load Order</system:String>
-    <system:String x:Key="ConfigureModTooltip">Configure Mod</system:String>
-    <system:String x:Key="ActivateAllTooltip">Activate All Mods</system:String>
-    <system:String x:Key="DeactivateAllTooltip">Deactivate All Mods</system:String>
-    <system:String x:Key="RefreshListTooltip">Refresh List</system:String>
-    <system:String x:Key="UninstallModTooltip">Uninstall Mod</system:String>
-    
-    
+    <system:String x:Key="ImportModTooltip">Εισαγωγή Τροποίησης</system:String>
+    <system:String x:Key="MoveUpTooltip">Κύλιση επάνω/Δεξί κλικ για κύλιση στην κορυφή</system:String>
+    <system:String x:Key="MoveDownTooltip">Κύλιση κάτω/Δεξί κλικ για κύλιση στο τέλος</system:String>
+    <system:String x:Key="AutoSortTooltip">Αυτόματη Ταξινόμηση βασισμένη σε Κατηγορία Σειράς Φόρτωσης</system:String>
+    <system:String x:Key="ConfigureModTooltip">Διαμόρφωση Τροποποίησης</system:String>
+    <system:String x:Key="ActivateAllTooltip">Ενεργοποίησε Ολες τις Τροποποιήσεις</system:String>
+    <system:String x:Key="DeactivateAllTooltip">Απενεργοποίησε Ολες τις Τροποποιήσεις</system:String>
+    <system:String x:Key="RefreshListTooltip">Ανανέωση Λίστας</system:String>
+    <system:String x:Key="UninstallModTooltip">Απεγκατάσταση Τροποίησης</system:String>
+
+
     <!--Generic MessageBox Buttons-->
-    <system:String x:Key="OK">OK</system:String>
-    <system:String x:Key="Cancel">Cancel</system:String>
-    <system:String x:Key="Close">Close</system:String>
-    <system:String x:Key="Yes">Yes</system:String>
-    <system:String x:Key="No">No</system:String>
-    <system:String x:Key="Off">Off</system:String>
-    <system:String x:Key="On">On</system:String>
-    <system:String x:Key="ResetDefaults">Reset Defaults</system:String>
-    <system:String x:Key="Save">Save</system:String>
-    <system:String x:Key="Load">Load</system:String>
-    <system:String x:Key="Go">Go</system:String>
+    <system:String x:Key="OK">Εντάξει</system:String>
+    <system:String x:Key="Cancel">Ακύρωση</system:String>
+    <system:String x:Key="Close">Κλείσιμο</system:String>
+    <system:String x:Key="Yes">Ναι</system:String>
+    <system:String x:Key="No">Οχι</system:String>
+    <system:String x:Key="Off">Κλειστό</system:String>
+    <system:String x:Key="On">Ανοιχτό</system:String>
+    <system:String x:Key="ResetDefaults">Επαναφορά Προκαθορισμένων</system:String>
+    <system:String x:Key="Save">Αποθήκευση</system:String>
+    <system:String x:Key="Load">Επαναφορά</system:String>
+    <system:String x:Key="Go">Πάμε</system:String>
 
 
     <!--Window Titles-->
-    <system:String x:Key="GameLauncherWindowTitle">Launching Game</system:String>
-    <system:String x:Key="CatalogCreationWindowTitle">Catalog and Mod Creation Tool</system:String>
-    <system:String x:Key="GameDriverWindowTitle">Configure Game Driver Settings</system:String>
-    <system:String x:Key="UnexpectedErrorWindowTitle">7th Heaven - Unexpected Error!</system:String>
-    <system:String x:Key="AllowModToRun">Allow Mod To Run?</system:String>
-    <system:String x:Key="Warning">Warning</system:String>
-    <system:String x:Key="Requirements">Requirements</system:String>
-    <system:String x:Key="ExternalDownload">External Download?</system:String>
-    <system:String x:Key="MissingPath">Missing Path</system:String>
-    <system:String x:Key="ExtractComplete">Extract Complete</system:String>
-    <system:String x:Key="InsertDisc">Insert Disc</system:String>
-    <system:String x:Key="MissingRequiredInput">Missing Required Input</system:String>
-    <system:String x:Key="IROToolsWindowTitle">IRO Tools</system:String>
-    <system:String x:Key="ChunkToolWindowTitle">Chunk Tool</system:String>
-    <system:String x:Key="ManageProfiles">Manage Profiles</system:String>
-    <system:String x:Key="SetLanguageWindowTitle">Set Language</system:String>
+    <system:String x:Key="GameLauncherWindowTitle">Εκκίνηση Παιχνιδιού</system:String>
+    <system:String x:Key="CatalogCreationWindowTitle">Εργαλείο σχεδιασμού Καταλόγου και Τροποίησης</system:String>
+    <system:String x:Key="GameDriverWindowTitle">Διαμόρφωση Ρυθμίσεων Προγράμματος Οδήγησης Παιχνιδιού</system:String>
+    <system:String x:Key="UnexpectedErrorWindowTitle">7th Heaven - Αναπάντεχο Σφάλμα!</system:String>
+    <system:String x:Key="AllowModToRun">Επιτρέπεται να τρέξει η Τροποίηση?</system:String>
+    <system:String x:Key="Warning">Προειδοποίηση</system:String>
+    <system:String x:Key="Requirements">Απαιτήσεις</system:String>
+    <system:String x:Key="ExternalDownload">Εξωτερικό Κατέβασμα?</system:String>
+    <system:String x:Key="MissingPath">Ελλειπής Διαδρομή</system:String>
+    <system:String x:Key="ExtractComplete">Ολοκληρώθηκε η Αποσυμπίεση</system:String>
+    <system:String x:Key="InsertDisc">Εισάγετε δίσκο</system:String>
+    <system:String x:Key="MissingRequiredInput">Λείπουν Απαιτούμενα Στοιχεία Εισαγωγής </system:String>
+    <system:String x:Key="IROToolsWindowTitle">Εργαλεία IRO</system:String>
+    <system:String x:Key="ChunkToolWindowTitle">Εργαλείο Τμημάτων Μεγέθους</system:String>
+    <system:String x:Key="ManageProfiles">Διαχειριστής Προφίλ</system:String>
+    <system:String x:Key="SetLanguageWindowTitle">Ορισμός ΓΛώσσας</system:String>
 
 
 
 
 
     <!--Allow Mod To Run Window-->
-    <system:String x:Key="NoDontActivateThisMod">No, don't activate this mod</system:String>
-    <system:String x:Key="YesActivateThisMod">Yes, activate this mod</system:String>
-    <system:String x:Key="DontAskAgainForAnyMods">Don't ask me again for ANY mods</system:String>
-    
+    <system:String x:Key="NoDontActivateThisMod">Οχι, μην ενεργοποιείς αυτή την Τροποποίηση</system:String>
+    <system:String x:Key="YesActivateThisMod">Ναι, ενεργοποίησε την Τροποποίηση</system:String>
+    <system:String x:Key="DontAskAgainForAnyMods">Μην με ξαναρωτήσεις για κάποια Τροποποίηση</system:String>
+
     <!--Game Launcher Settings Window-->
-    <system:String x:Key="OptionsHeader" xml:space="preserve"> Options </system:String>
-    <system:String x:Key="AutoMountDisc">Auto-Mount Game Disc</system:String>
-    <system:String x:Key="AutoMountDiscTooltip">Auto-mount game disc ISO when starting game. Windows 8 and up only. If on Windows 7 or older, you will need to insert disc or mount ISO manually.</system:String>
+    <system:String x:Key="OptionsHeader" xml:space="preserve"> Επιλογές </system:String>
+    <system:String x:Key="AutoMountDisc">Αυτόματη Εισαγωγή Δίσκου</system:String>
+    <system:String x:Key="AutoMountDiscTooltip">Αυτόματη Εισαγωγή Δίσκου ISO όταν αρχίζει το παιχνίδι. Μόνο για Windows 8 και άνω. Αν έχετε Windows 7 ή παλαιότερα, θα χρειαστεί να εισάγετε δισκάκι ή να φορτώσετε το ISO χειροκίνητα.</system:String>
 
-    <system:String x:Key="AutoDismountDisc">Auto-Dismount Game Disc</system:String>
-    <system:String x:Key="AutoDismountDiscTooltip">Auto-dismount game disc ISO when game closes. Windows 8 and up only. If on Windows 7 or older, you will need to eject disc or dismount ISO manually.</system:String>
+    <system:String x:Key="AutoDismountDisc">Αυτόματη Εξαγωγή Δίσκου</system:String>
+    <system:String x:Key="AutoDismountDiscTooltip">Αυτόματη Εξαγωγή του ISO του παιχνιδιού όταν κλείνει το παιχνίδι. Μόνο για Windows 8 και άνω. Αν έχετε Windows 7 ή παλαιότερα, θα χρειαστεί να εξάγετε το δισκάκι ή να αφαιρέσετε το ISO χειροκίνητα.</system:String>
 
-    <system:String x:Key="AutoUpdatePath">Auto-Update Disc Path</system:String>
-    <system:String x:Key="AutoUpdatePathTooltip">Detects if disc has changed drive letters and auto-updates game to point to new location.</system:String>
+    <system:String x:Key="AutoUpdatePath">Αυτόματη Ενημέρωση Διαδρομής Δίσκου</system:String>
+    <system:String x:Key="AutoUpdatePathTooltip">Ανιχνεύει αν ο Δίσκος έχει αλλάξει Γράμμα και Ενημερώνει Αυτόματα το Παιχνίδι να στραφεί προς Διαφορετική Τοποθεσία.</system:String>
 
-    <system:String x:Key="ShowGameLauncher">Show Game Launcher</system:String>
-    <system:String x:Key="ShowGameLauncherTooltip">Shows the Game Launcher window when starting FF7 for detailed output of the launch process.</system:String>
+    <system:String x:Key="ShowGameLauncher">Εμφάνισε την Εκκίνηση Παιχνιδιού</system:String>
+    <system:String x:Key="ShowGameLauncherTooltip">Εμφανίζει το παράθυρο Εκκίνησης Παιχνιδιού καθώς ξεκινάς το FF7 προς λεπτομερούς εμφάνισης της Διαδικασίας Εκκίνησης.</system:String>
 
-    <system:String x:Key="ControlsLabel">Controls:</system:String>
-    <system:String x:Key="ControlsTooltip">Sets your in-game keyboard and gamepad controls. Click save icon to save your current in game controls as a custom configuration.</system:String>
+    <system:String x:Key="ControlsLabel">Χειρισμός:</system:String>
+    <system:String x:Key="ControlsTooltip">Καθορίζει τα πλήκτρα στο πληκτρολόγιο εντός παιχνιδιού και στο χειριστήριο. Κάνε κλικ στο εικονίδιο αποθήκευσης για να αποθηκεύσεις αυτές τις ρυθμίσεις ως προσαρμοσμένη ρύθμιση.</system:String>
 
-    <system:String x:Key="SaveControlsTooltip">Save your current in-game control configuration.</system:String>
-    <system:String x:Key="DeleteControlsTooltip">Delete the selected custom control configuration.</system:String>
-    
-    <system:String x:Key="CompatibilityHeader" xml:space="preserve"> Compatibility </system:String>
-    <system:String x:Key="HighDpiScalingFix">High-DPI Scaling Fix</system:String>
-    <system:String x:Key="HighDpiScalingFixTooltip">May fix game screen being cut off and/or not being centered. Use with high-DPI displays. Alternatively, change your Windows Display Settings to 100% scaling.</system:String>
+    <system:String x:Key="SaveControlsTooltip">Αποθήκευσε τις ρυθμίσεις που έκανες για χειρισμό εντός παιχνιδιού.</system:String>
+    <system:String x:Key="DeleteControlsTooltip">Διέγραψε τις επιλεγμένες προσαρμοσμένες ρυθμίσεις χειρισμού που έκανες.</system:String>
 
-    <system:String x:Key="Code5Fix">Code 5 Fix</system:String>
-    <system:String x:Key="Code5FixTooltip">May fix problems with 'Code 5' error when clicking 'Play'. Multi-monitor setups may see open programs pushed to the secondary monitor when activated.</system:String>
+    <system:String x:Key="CompatibilityHeader" xml:space="preserve"> Συμβατότητα </system:String>
+    <system:String x:Key="HighDpiScalingFix">Διόρθωση Κλιμάκωσης σε Υψηλές Αναλύσεις </system:String>
+    <system:String x:Key="HighDpiScalingFixTooltip">Μπορεί να διορθώσει τις διακοπές στην οθόνη του παιχνιδιού ή/και την απουσία κεντραρίσματος. Κάντε χρήση σε Οθόνες Υψηλής Ανάλυσης-DPI. Εναλλακτικά, αλλάξτε τις ρυθμίσεις της Οθόνης των Windows σε 100% κλιμάκωση.</system:String>
 
-    <system:String x:Key="ReunionDriverFix">Reunion Driver Fix</system:String>
-    <system:String x:Key="ReunionDriverFixTooltip">Temporarily renames ddraw.dll to Reunion.dll.bak on game launch, then immediately back again. Does not affect playability of Reunion outside of 7H.</system:String>
+    <system:String x:Key="Code5Fix">Διόρθωση λάθους 'Code 5'</system:String>
+    <system:String x:Key="Code5FixTooltip">Μπορεί να διορθώσει το πρόβλημα λάθους 'Code 5'  όταν κάνεις κλικ στην 'Εναρξη'. Πολυοθονικές εγκαταστάσεις μπορεί να δείχνουν ανοιχτά προγράμματα να ωθούνται στη δευτερεύουσα οθόνη όταν ενεργοποιείται.</system:String>
 
-
-    <system:String x:Key="ImportMoviesHeader" xml:space="preserve"> Import Movies From Disc </system:String>
-    <system:String x:Key="Import">Import</system:String>
-    <system:String x:Key="ImportTooltip">Import missing movies from disc.</system:String>
+    <system:String x:Key="ReunionDriverFix">Διόρθωση για τους οδηγούς λειτουργίας του REUNION</system:String>
+    <system:String x:Key="ReunionDriverFixTooltip">Μετονομάζει προσωρινά το αρχείο ddraw.dll σε Reunion.dll.bak κατά την εκκίνηση του παιχνιδιού και άμεση επαναφορά ονομασίας. Δεν επηρρεάζει τη λειτουργικότητα του REUNION έξω από την εφαρμογή 7H.</system:String>
 
 
-    <system:String x:Key="AudioDeviceHeader" xml:space="preserve"> Audio Output Device </system:String>
-    <system:String x:Key="SoundDeviceLabel">Sound Device:</system:String>
-    <system:String x:Key="SoundDeviceTooltip">Select an output audio device for FF7.</system:String>
-
-    <system:String x:Key="TestSoundTooltip">Test the selected sound device and music/sfx volume. Test sound provided by Enrico Deiana.</system:String>
-    <system:String x:Key="TestLeftSoundTooltip">Test the selected sound device and music/sfx volume for the Left channel. Test sound provided by Enrico Deiana.</system:String>
-    <system:String x:Key="TestRightSoundTooltip">Test the selected sound device and music/sfx volume for the Right channel. Test sound provided by Enrico Deiana.</system:String>
-
-    <system:String x:Key="MidiDeviceLabel">MIDI Device:</system:String>
-    <system:String x:Key="MidiDeviceTooltip">Select an output midi device for FF7.</system:String>
-
-    <system:String x:Key="SFXVolumeLabel">SFX Volume:</system:String>
-    <system:String x:Key="SFXVolumeTooltip">Set the in-game SFX volume.</system:String>
-
-    <system:String x:Key="MusicVolumeLabel">Music Volume:</system:String>
-    <system:String x:Key="MusicVolumeTooltip">Set the in-game music volume.</system:String>
-
-    <system:String x:Key="LogVolumeControl">Logarithmic Volume Control</system:String>
-    <system:String x:Key="LogVolumeControlTooltip">Uncheck this option if you feel that the volume does not change smoothly.</system:String>
-
-    <system:String x:Key="ReverseSpeakers">Reverse Speakers</system:String>
-    <system:String x:Key="ReverseSpeakersTooltip">Swaps left and right channels when checked.</system:String>
+    <system:String x:Key="ImportMoviesHeader" xml:space="preserve"> Εισαγωγή αρχείων βίντεο από τον δίσκο </system:String>
+    <system:String x:Key="Import">Εισαγωγή</system:String>
+    <system:String x:Key="ImportTooltip">Εισαγωγή των βίντεο που λείπουν από τον δίσκο.</system:String>
 
 
-    <system:String x:Key="GraphicsDriverHeader" xml:space="preserve"> Graphics Driver Options </system:String>
+    <system:String x:Key="AudioDeviceHeader" xml:space="preserve"> Συσκευή Εξόδου Ηχου </system:String>
+    <system:String x:Key="SoundDeviceLabel">Συσκευή Ηχου:</system:String>
+    <system:String x:Key="SoundDeviceTooltip">Επέλεξε μια Συσκευή Εξόδου Ηχου για το FF7.</system:String>
+
+    <system:String x:Key="TestSoundTooltip">Δοκίμασε την επιλεγμένη συσκευή ήχου και την ένταση της μουσικής/εφέ. Δοκιμή ήχου παρεχόμενη από τον Enrico Deiana.</system:String>
+    <system:String x:Key="TestLeftSoundTooltip">Δοκίμασε την επιλεγμένη συσκευή ήχου και την ένταση της μουσικής/εφέ για το Αριστερό κανάλι. Δοκιμή ήχου παρεχόμενη από τον Enrico Deiana.</system:String>
+    <system:String x:Key="TestRightSoundTooltip">Δοκίμασε την επιλεγμένη συσκευή ήχου και την ένταση της μουσικής/εφέ για το Δεξί κανάλι. Δοκιμή ήχου παρεχόμενη από τον Enrico Deiana.</system:String>
+
+    <system:String x:Key="MidiDeviceLabel">Συσκευή MIDI:</system:String>
+    <system:String x:Key="MidiDeviceTooltip">Επέλεξε μια συσκευή εξόδου ήχου MIDI για το FF7.</system:String>
+
+    <system:String x:Key="SFXVolumeLabel">Ενταση ηχητικών εφέ:</system:String>
+    <system:String x:Key="SFXVolumeTooltip">Ορισε την ένταση των ηχητικών εφέ εντός παιχνιδιού.</system:String>
+
+    <system:String x:Key="MusicVolumeLabel">Ενταση της μουσικής:</system:String>
+    <system:String x:Key="MusicVolumeTooltip">Ορισε την ένταση της μουσικής εντός παιχνιδιού.</system:String>
+
+    <system:String x:Key="LogVolumeControl">Λογαριθμικός έλεγχος έντασης</system:String>
+    <system:String x:Key="LogVolumeControlTooltip">Απενεργοποίησε την επιλογή αν νιώθεις πως η ένταση δεν αλλάζει ομαλά.</system:String>
+
+    <system:String x:Key="ReverseSpeakers">Αντιστροφή Ηχείων</system:String>
+    <system:String x:Key="ReverseSpeakersTooltip">Αλλάζει το δεξί με το αριστερό ηχείο όταν είναι επιλεγμένο.</system:String>
+
+
+    <system:String x:Key="GraphicsDriverHeader" xml:space="preserve"> Επιλογές προγράμματος οδήγησης κάρτας γραφικών </system:String>
     <system:String x:Key="RendererLabel">Renderer:</system:String>
-    <system:String x:Key="RendererTooltip">Select the graphics driver to use for rendering FF7. Mods will only work when set to 'Custom 7H Game Driver'</system:String>
+    <system:String x:Key="RendererTooltip">Επιλέξτε το πρόγραμμα οδήγησης της κάρτας γραφικών για να κάνει rendering το FF7. Οι τροποποιήσεις θα λειτουργήσουν μόνο αν ορίσετε 'Προσαρμοσμένο πρόγραμμα οδήγησης παιχνιδιού 7H '</system:String>
 
-    <system:String x:Key="QuarterScreen">Quarter Screen</system:String>
-    <system:String x:Key="QuarterScreenTooltip">Launch the game windowed (quarter screen). Only applies when set to 'Software Renderer' or 'Direct3D Hardware Acceleration'.</system:String>
+    <system:String x:Key="QuarterScreen">1 τέταρτο της οθόνης</system:String>
+    <system:String x:Key="QuarterScreenTooltip">Εκκινήστε το παιχνίδι σε παράθυρο (1 τέταρτο της οθόνης). Εφαρμόζεται μόνο όταν ορίσατε 'Renderer λογισμικού' ή 'Επιταχυντής υλικού Direct3D'.</system:String>
 
-    <system:String x:Key="FullScreen">Full Screen</system:String>
-    <system:String x:Key="FullScreenTooltip">Launch the game in full screen. Only applies when set to 'Software Renderer' or 'Direct3D Hardware Acceleration'.</system:String>
+    <system:String x:Key="FullScreen">Πλήρης Οθόνη</system:String>
+    <system:String x:Key="FullScreenTooltip">Εκκινήστε το παιχνίδι σε πλήρη οθόνη. Εφαρμόζεται μόνο όταν ορίσατε 'Renderer λογισμικού' ή 'Επιταχυντής υλικού Direct3D'.</system:String>
 
-    <system:String x:Key="HardwareGraphicsTooltip">Sets the option to use for Hardware Acceleration. Only applies when set to 'Direct3D Hardware Acceleration'.</system:String>
+    <system:String x:Key="HardwareGraphicsTooltip">Ορίζει την επιλογή για χρήση ως 'Επιταχυντής Υλικού'. Εφαρμόζεται μόνο όταν ορίσατε 'Επιταχυντής υλικού Direct3D'.</system:String>
 
 
-    <system:String x:Key="ProgramsToRunHeader" xml:space="preserve"> Programs to Run Prior to FF7: </system:String>
-    <system:String x:Key="ProgramNameHint">Enter full path to program to run</system:String>
-    <system:String x:Key="ProgramArgsHint">Enter program arguments</system:String>
+    <system:String x:Key="ProgramsToRunHeader" xml:space="preserve"> Προγράμματα που θα τρέξουν πριν το FF7: </system:String>
+    <system:String x:Key="ProgramNameHint">Εισάγετε την πλήρη διαδρομή του προγράμματος που θα τρέξει</system:String>
+    <system:String x:Key="ProgramArgsHint">Εισάγετε τις παραμέτρους του προγράμματος</system:String>
 
-    <system:String x:Key="AddProgramTooltip">Add a program to run prior to FF7 starting.</system:String>
-    <system:String x:Key="RemoveProgramTooltip">Remove selected program.</system:String>
-    <system:String x:Key="EditProgramTooltip">Edit selected program and arguments.</system:String>
-    <system:String x:Key="MoveProgramUpTooltip">Move selected program up in the list. Right-click to move to top.</system:String>
-    <system:String x:Key="MoveProgramDownTooltip">Move selected program down in the list. Right-click to move to bottom.</system:String>
-    <system:String x:Key="BrowseProgramTooltip">Browse for program to run</system:String>
+    <system:String x:Key="AddProgramTooltip">Πρόσθεσε ένα πρόγραμμα για να τρέξει πριν την έναρξη του FF7.</system:String>
+    <system:String x:Key="RemoveProgramTooltip">Αφαίρεσε το επιλεγμένο πρόγραμμα.</system:String>
+    <system:String x:Key="EditProgramTooltip">Επεξεργάσου το επιλεγμένο πρόγραμμα και τις παραμέτρους του.</system:String>
+    <system:String x:Key="MoveProgramUpTooltip">Μετακίνησε το επιλεγμένο πρόγραμμα πιο πάνω στη λίστα. Δεξί κλικ για να το μετακινήσεις στην κορυφή.</system:String>
+    <system:String x:Key="MoveProgramDownTooltip">Μετακίνησε το επιλεγμένο πρόγραμμα πιο κάτω στη λίστα. Δεξί κλικ για να το μετακινήσεις στο τέλος.</system:String>
+    <system:String x:Key="BrowseProgramTooltip">Αναζητήστε πρόγραμμα για να τρέξει</system:String>
 
-    <system:String x:Key="ResetLauncherDefaultsTooltip">Reset game launcher settings to the default values.</system:String>
-    
+    <system:String x:Key="ResetLauncherDefaultsTooltip">Επαναφέρετε τι ρυθμίσεις της έναρξης του παιχνιδιού στις προκαθορισμένες τιμές.</system:String>
+
     <!--Catalog Creation Window-->
-    <system:String x:Key="CreateMod">Create Mod</system:String>
-    <system:String x:Key="CreateCatalog">Create Catalog</system:String>
-    <system:String x:Key="MegaLinkGenerator">Mega Link Generator</system:String>
+    <system:String x:Key="CreateMod">Δημιούργησε τροποποίηση</system:String>
+    <system:String x:Key="CreateCatalog">Δημιούργησε κατάλογο</system:String>
+    <system:String x:Key="MegaLinkGenerator">Παραγωγός Μέγα Συνδέσμου</system:String>
 
-    
+
     <!--Chunk Tool Window-->
-    <system:String x:Key="SelectFlevelLabel">Select FLEVEL:</system:String>
-    <system:String x:Key="OutputFolderLabel">Output Folder:</system:String>
+    <system:String x:Key="SelectFlevelLabel">Επίλεξε αρχείο Flevel:</system:String>
+    <system:String x:Key="OutputFolderLabel">Φάκελος Εξαγωγής:</system:String>
 
-    <system:String x:Key="SectionHeader" xml:space="preserve"> Section # </system:String>
-    <system:String x:Key="Section1">Section 1 Field Script Dialog</system:String>
-    <system:String x:Key="Section2">Section 2 Camera Matrix</system:String>
-    <system:String x:Key="Section3">Section 3 Model Loader</system:String>
-    <system:String x:Key="Section4">Section 4 Palette</system:String>
-    <system:String x:Key="Section5">Section 5 Walkmesh</system:String>
-    <system:String x:Key="Section6">Section 6 TileMap (Unused)</system:String>
-    <system:String x:Key="Section7">Section 7 Encounter</system:String>
-    <system:String x:Key="Section8">Section 8 Triggers</system:String>
-    <system:String x:Key="Section9">Section 9 Background</system:String>
+    <system:String x:Key="SectionHeader" xml:space="preserve"> Ενότητα # </system:String>
+    <system:String x:Key="Section1">Ενότητα 1 Παράθυρο Διαλόγου Πεδίου</system:String>
+    <system:String x:Key="Section2">Ενότητα 2 Μάτριξ Κάμερας</system:String>
+    <system:String x:Key="Section3">Ενότητα 3 Φορτωτής Μοντέλου</system:String>
+    <system:String x:Key="Section4">Ενότητα 4 Παλλέτα</system:String>
+    <system:String x:Key="Section5">Ενότητα 5 Πλέγμα βάδισης</system:String>
+    <system:String x:Key="Section6">Ενότητα 6 Χάρτης πλακιδίων (Αμεταχείριστος)</system:String>
+    <system:String x:Key="Section7">Ενότητα 7 Συνάντηση</system:String>
+    <system:String x:Key="Section8">Ενότητα 8 Ενεργοποιητές</system:String>
+    <system:String x:Key="Section9">Ενότητα 9 Φόντο</system:String>
 
-    <system:String x:Key="Extract">Extract</system:String>
+    <system:String x:Key="Extract">Εξάγετε</system:String>
 
 
     <!--Configure Mod Window-->
-    <system:String x:Key="ConfigureHeader" xml:space="preserve"> Configure </system:String>
-    <system:String x:Key="Preview">Preview</system:String>
-    <system:String x:Key="Stop">Stop</system:String>
-    <system:String x:Key="ResetToModDefaults">Reset to Mod Defaults</system:String>
-    
+    <system:String x:Key="ConfigureHeader" xml:space="preserve"> Ρυθμίστε </system:String>
+    <system:String x:Key="Preview">Προεπισκόπηση</system:String>
+    <system:String x:Key="Stop">Στοπ</system:String>
+    <system:String x:Key="ResetToModDefaults">Επαναφορά στις προεπιλεγμένες τροποποιήσεις</system:String>
+
     <!--MainWindow.xaml.cs Strings-->
-    <system:String x:Key="AreYouSureYouWantToPlayDebugWarning" xml:space="preserve">Are you sure you want to play FF7 in this mode? Playing FF7 this way can cause extreme slowness and use a lot of disk space.
+    <system:String x:Key="AreYouSureYouWantToPlayDebugWarning" xml:space="preserve">Είστε σίγοροι πως θέλετε να παίξετε το FF7 με αυτόν τον τρόπο? Παίζοντας το FF7 έτσι μπορεί να προκαλέσει εξαιρετική βραδύτητα και να χρησιμοποιήσει πολύ χώρο στον δίσκο.
 
-You should only use this option while troubleshooting a single active mod so that you can troubleshoot and provide bug reports to the mod author and/or to the 7H developers.</system:String>
+Καλύτερα να χρησιμοιήσετε αυτή την επιλογή μόνο κατά την επίλυση προβλημάτων μιας μεμονωμένης ενεργής τροποποίησης έτσι ώστε να μπορείτε να επιλύνετε προβλήματα και να παρέχετε αναφορές σφαλμάτων στον δημιουργό της τροποποίησης ή/και στους δημιουργούς του 7Η.</system:String>
 
-    <system:String x:Key="AreYouSureYouWantToExitPendingDownloads">Are you sure you want to exit? You have downloads pending.</system:String>
+    <system:String x:Key="AreYouSureYouWantToExitPendingDownloads">Είσαι σίγουρος πως θέλεις να βγεις; Εχεις λήψεις που εκκρεμούν.</system:String>
     <system:String x:Key="ConfirmExit">Confirm Exit</system:String>
 
     <!--MainWindowViewModel Strings-->
-    <system:String x:Key="StartedClickHereToViewAppLog">started - Click here to view the app log.</system:String>
+    <system:String x:Key="StartedClickHereToViewAppLog">ξεκίνησε - Κάντε κλικ εδώ για να δεις το αρχείο καταγραφής της εφαρμογής.</system:String>
     <system:String x:Key="HintLabel">Hint:</system:String>
-    <system:String x:Key="CheckingForUpdates">Checking for app updates ...</system:String>
-    <system:String x:Key="SelectAll">Select All</system:String>
-    <system:String x:Key="Unknown">Unknown</system:String>
+    <system:String x:Key="CheckingForUpdates">Ελεγχος για ενημερώσεις εφαρμογών ...</system:String>
+    <system:String x:Key="SelectAll">Επιλογή όλων</system:String>
+    <system:String x:Key="Unknown">Αγνωστο</system:String>
 
-    <system:String x:Key="UpdateAvailable">Update Available</system:String>
-    <system:String x:Key="UpdateDownloading">Update Downloading</system:String>
+    <system:String x:Key="UpdateAvailable">Διαθέσιμη Ενημέρωση</system:String>
+    <system:String x:Key="UpdateDownloading">Η ενημέρωση λαμβάνεται</system:String>
 
-    <system:String x:Key="NoUpdates">No Updates</system:String>
-    <system:String x:Key="UpdatesIgnored">Updates Ignored</system:String>
-    <system:String x:Key="AutoUpdate">Auto Update</system:String>
+    <system:String x:Key="NoUpdates">Καμία Ενημέρωση</system:String>
+    <system:String x:Key="UpdatesIgnored">Οι Ενημερώσεις αγνοήθηκαν</system:String>
+    <system:String x:Key="AutoUpdate">ΑΥτόματη Ενημέρωση</system:String>
 
-    <system:String x:Key="FollowingErrorsFoundInConfiguration">The following errors were found in your configuration:</system:String>
-    <system:String x:Key="ErrorsFoundInGeneralSettingsViewAppLog">Errors found in general settings. View app.log for details on error(s).</system:String>
+    <system:String x:Key="FollowingErrorsFoundInConfiguration">Τα ακόλουθα σφάλματα εντοπίστηκαν στη ρύθμισή σας:</system:String>
+    <system:String x:Key="ErrorsFoundInGeneralSettingsViewAppLog">Σφάλματα εντοπίστηκαν στις γενικές ρυθμίσεις. Δες το app.log για λεπτομέρειες σχετικά με σφάλμα(τα).</system:String>
 
-    <system:String x:Key="AppUpdateIsAvailableMessage" xml:space="preserve">An update is available for {0}
-Click 'Yes' to open the download page in a browser.
+    <system:String x:Key="AppUpdateIsAvailableMessage" xml:space="preserve">Μια ενημέρωση είναι διαθέσιμη για {0}
+Κάντε κλικ στο 'Ναι' για να ανοίξετε τη σελίδα των λήψεων σε μια μηχανή αναζήτησης.
         
-{1} Release Notes: {2}
+{1} Σημειώσεις έκδοσης: {2}
     </system:String>
-    <system:String x:Key="NewVersionAvailable">New Version Available!</system:String>
+    <system:String x:Key="NewVersionAvailable">Νέα έκδοση διαθέσιμη!</system:String>
 
-    <system:String x:Key="ThisModContainsDataThatCouldHarm" xml:space="preserve">This mod '{0}' contains data that could potentially harm your computer. You should only activate mods you trust.
+    <system:String x:Key="ThisModContainsDataThatCouldHarm" xml:space="preserve">Αυτή τη τροποποίηση '{0}' περιέχει δεδομένα που ενδεχομένως να βλάψουν τον υπολογιστή σας. Καλύτερα να ενεργοποιείς μόνο τροποποιήσεις που εμπιστεύεσαι.
         
-Do you still want to activate this mod?</system:String>
+Θέλεις ακόμη να ενεργοποιήσεις αυτή την τροποποίηση</system:String>
 
-    <system:String x:Key="CannotOpenHelp">Cannot open help - Resources/Help/index.html file not found</system:String>
+    <system:String x:Key="CannotOpenHelp">Αδυναμία ανοίγματος αρχείου βοήθειας - Το αρχείο Resources/Help/index.html δεν βρέθηκε</system:String>
 
-    <system:String x:Key="SubscriptionIsAlreadyAdded">The subscription {0} is already added.</system:String>
-    <system:String x:Key="AddedToSubscriptions">Added {0} to subscriptions.</system:String>
-    <system:String x:Key="IrosLinkMayBeFormatedIncorrectly">The iros:// link {0} may be formatted incorrectly. Could not add to subscriptions.</system:String>
+    <system:String x:Key="SubscriptionIsAlreadyAdded">Η εγγραφή {0} ήδη προστέθηκε.</system:String>
+    <system:String x:Key="AddedToSubscriptions">Προστέθηκε {0} στις συνδρομές.</system:String>
+    <system:String x:Key="IrosLinkMayBeFormatedIncorrectly">Ο σύνδεσμος iros:// {0} ενδέχεται να έχει μορφοποιηθεί εσφαλμένα. Αδυναμία προσθήκης στις συνδρομές.</system:String>
 
-    <system:String x:Key="FailedToSetBackgroundImageFromTheme">Failed to set background image from theme.</system:String>
+    <system:String x:Key="FailedToSetBackgroundImageFromTheme">Αποτυχία ορισμού εικόνας φόντου από το θέμα.</system:String>
 
 
 
 
     <!--MyModsViewModel Strings-->
-    
-    <system:String x:Key="ModRequiresModsIsMissingWarning" xml:space="preserve">This mod requires the following mods to also be active, but they could not be found:
+
+    <system:String x:Key="ModRequiresModsIsMissingWarning" xml:space="preserve">Αυτή η τροποίηση απαιτεί επίσης να είναι ενεργοποιημένες και οι ακόλουθες τροποποιήσεις, αλλά δεν ήταν δυνατόν να εντοπιστούν:
 {0}
-It may not work correctly unless you install them.</system:String>
+Πιθανόν να μη λειτουργήσει σωστά εκτός αν τις εγκαταστήσετε.</system:String>
 
     <system:String x:Key="UnsupportedModVersionsWarning" xml:space="preserve">This mod requires the following mods, but you do not have a supported version:
 {0}
@@ -377,7 +378,7 @@ It may not work properly unless you find and install the requirements.</system:S
     <system:String x:Key="ErrorDownloading">Error downloading</system:String>
     <system:String x:Key="WasCanceled">was canceled</system:String>
     <system:String x:Key="Error">Error</system:String>
-    
+
     <system:String x:Key="ExternalUrlDownloadMessage1" xml:space="preserve">This mod is only available by downloading it from an external web site.
 
 Would you like to open your web browser to download it now?</system:String>
@@ -414,8 +415,8 @@ Would you like to open your web browser to download it now?</system:String>
     <!--DownloadItemViewModel Strings-->
     <system:String x:Key="DownloadingPreviewImage">Downloading preview image</system:String>
 
-    
-    
+
+
     <!--GameLaunchSettingsViewModel Strings-->
     <system:String x:Key="InsertAndClickImport">Insert {0} and click 'Import'.</system:String>
     <system:String x:Key="GameLauncherSettingsUpdated">Game Launcher settings updated!</system:String>
@@ -426,7 +427,7 @@ Would you like to open your web browser to download it now?</system:String>
     <system:String x:Key="AlreadyExistsAt">already exists at</system:String>
 
     <system:String x:Key="ChoosingAnyOtherOptionBesidesCustom7HGameDriver">Choosing any other option besides 'Custom 7H Game Driver' will cause mods installed with 7H not to work anymore!</system:String>
-    
+
     <system:String x:Key="ReunionWarningMessage" xml:space="preserve">Reunion R06 and newer, even when disabled in Options.ini, forces a custom game driver to load when you run FF7. This conflicts with 7th Heaven's game driver, breaks your graphics settings, and you will experience problems.
 
 If you wish to play Reunion, do so using a compatible modded version built for 7th Heaven.
@@ -443,7 +444,7 @@ Do you want to proceed?</system:String>
 
     <system:String x:Key="LookingFor">Looking for</system:String>
     <system:String x:Key="InsertToContinue">Insert {0} to continue.</system:String>
-    
+
     <system:String x:Key="PleaseInsertToContinueCopying" xml:space="preserve">Please insert {0} to continue copying missing movie files.
 
 Click 'Cancel' to stop the process.</system:String>
@@ -469,8 +470,8 @@ Click 'Cancel' to stop the process.</system:String>
 
     <system:String x:Key="SuccessfullyDeletedCustomControls">Successfully deleted custom controls</system:String>
     <system:String x:Key="FailedToDeleteCustomControls">Failed to delete custom controls</system:String>
-    
-    
+
+
     <!--GeneralSettingsViewModel Strings-->
     <system:String x:Key="EnterNameForCatalog">Enter name for catalog</system:String>
     <system:String x:Key="GeneralSettingsHaveBeenUpdated">General settings have been updated!</system:String>
@@ -492,8 +493,8 @@ Click 'Cancel' to stop the process.</system:String>
     <system:String x:Key="ResolvingCatalogName">Resolving catalog name ...</system:String>
     <system:String x:Key="UrlMustBeInIrosFormat">URL must be in iros:// format</system:String>
     <system:String x:Key="ResolvingCatalogNameFor">Resolving catalog name for</system:String>
-    
-    
+
+
     <!--ImportModViewModel Strings-->
     <system:String x:Key="SelectAnIroFileToImport">Select an .iro file to import into the library folder.</system:String>
     <system:String x:Key="SelectAFolderThatContainsModFiles">Select a folder that contains mod files. The mod file(s) will be copied into the library folder.</system:String>
@@ -523,8 +524,8 @@ Click 'Cancel' to stop the process.</system:String>
     <system:String x:Key="FailedToGenerateLinks">Failed to generate links</system:String>
     <system:String x:Key="EnterMegaFolderIdToGenerateLinks">Enter a Mega Folder ID to generate links.</system:String>
     <system:String x:Key="NoLinksFoundInFolder">No links found in folder</system:String>
-    
-    
+
+
     <!--CreateModUserControl Strings-->
     <system:String x:Key="Generate">Generate</system:String>
     <system:String x:Key="Info">Info</system:String>
@@ -534,8 +535,8 @@ Click 'Cancel' to stop the process.</system:String>
     <system:String x:Key="CouldNotLoadModXml">Could not load mod xml</system:String>
     <system:String x:Key="CouldNotSaveModXml">Could not save mod xml</system:String>
     <system:String x:Key="SuccessfullySavedTo">Successfully saved to</system:String>
-    
-    
+
+
     <!--OpenProfileWindow Strings-->
     <system:String x:Key="Load Profile">Load Profile</system:String>
     <system:String x:Key="SaveCurrentProfileAs">Save Current Profile As ...</system:String>
@@ -584,15 +585,15 @@ Click 'Cancel' to stop the process.</system:String>
     <system:String x:Key="AnErrorOccuredWhilePacking">An error occured while packing</system:String>
     <system:String x:Key="PackingComplete">Packing complete!</system:String>
 
-    
+
     <!--PatchIroViewModel Strings-->
     <system:String x:Key="PathToOriginalIroIsRequired">Path to original iro is required</system:String>
     <system:String x:Key="PathToNewIroFileIsRequired">Path to new iro file is required</system:String>
     <system:String x:Key="PathToIropFileIsRequired">Path to irop file to save is required</system:String>
     <system:String x:Key="AnErrorOccuredWhilePatching">An error occured while patching</system:String>
     <system:String x:Key="PatchingComplete">Patching complete!</system:String>
-    
-    
+
+
     <!--ThemeSettingsWindow Strings-->
     <system:String x:Key="ChangeColorThemeWindowTitle">Change Color Theme</system:String>
     <system:String x:Key="ExportTheme">Export Theme ...</system:String>
@@ -605,14 +606,14 @@ Click 'Cancel' to stop the process.</system:String>
     <system:String x:Key="ThemeLoadedClickSavveToSaveThis">Theme loaded! Click 'Save' to save this theme as the default ...</system:String>
     <system:String x:Key="SelectBackgroundImageFile">Select Background Image File</system:String>
 
-    
+
     <!--UnpackIroViewModel Strings-->
     <system:String x:Key="PathToSourceIroFileIsRequired">Path to source iro file is required</system:String>
     <system:String x:Key="InvalidUnpackIroOptions">invalid unpack iro options</system:String>
     <system:String x:Key="AnErrorOccuredWhileUnpacking">An error occured while unpacking</system:String>
     <system:String x:Key="UnpackingComplete">Unpacking complete!</system:String>
 
-    
+
     <!--CreateCatalogUserControl Strings-->
     <system:String x:Key="RemoveMod">Remove Mod</system:String>
     <system:String x:Key="Add">Add</system:String>
@@ -621,7 +622,7 @@ Click 'Cancel' to stop the process.</system:String>
     <system:String x:Key="CouldNotLoadModXmlFromIroFile">Could not load mod xml from .iro file</system:String>
     <system:String x:Key="CouldNotLoadCatalogXml">Could not load catalog xml</system:String>
 
-    
+
     <!--ConfigureGLWindow.xaml.cs Strings-->
     <system:String x:Key="FailedToReadRequiredSpecXmlFile">Failed to read the required spec xml file to display settings. The window must close.</system:String>
     <system:String x:Key="ClearTextureCache">Clear Texture Cache</system:String>
@@ -633,23 +634,23 @@ Click 'Cancel' to stop the process.</system:String>
     <system:String x:Key="CouldNotWriteTo7HGameDriverCfg">Could not write to 7H_GameDriver.cfg file. Check that it is not set to read only, and that FF7 is installed in a folder you have full write access to.</system:String>
     <system:String x:Key="UnknownErrorWhileSaving">Unknown error while saving. error has been logged.</system:String>
     <system:String x:Key="GameDriverSettingsResetToDefaults">Game Driver settings reset to defaults. Click 'Save' to save changes.</system:String>
-    
-    
+
+
     <!--GameLaunchSettingsWindow.xaml.cs Strings-->
     <system:String x:Key="SelectProgramToRemove">Selet a program to remove.</system:String>
     <system:String x:Key="SelectProgramToEdit">Select a program to edit.</system:String>
     <system:String x:Key="SelectProgramToMove">Select a program to move.</system:String>
     <system:String x:Key="SelectProgramToRunSuchAs">Select a program to run such as an .exe or script</system:String>
-    
-    
+
+
     <!--GameLaunchWindow.xaml.cs Strings-->
     <system:String x:Key="LaunchingFinalFantasyVII">Launching Final Fantasy VII</system:String>
     <system:String x:Key="UnknownErrorWhenLaunchingGame">Unknown error when launching the game</system:String>
     <system:String x:Key="GameLaunchProcessCanceled">game launch process canceled</system:String>
     <system:String x:Key="FailedToLaunchFf7ViewLogForDetails">Failed to launch FF7. View the above log for details.</system:String>
     <system:String x:Key="SuccessfullyLaunchedFf7">Successfully launched FF7!</system:String>
-    
-    
+
+
     <!--GeneralSettingsWindow Strings-->
     <system:String x:Key="ActivateNewlyInstalledModsAutomatically">Activate Newly Installed Mods Automatically</system:String>
     <system:String x:Key="ImportModsFromLibraryAutomatically">Import Mods From Library Automatically</system:String>
@@ -687,8 +688,8 @@ Click 'Cancel' to stop the process.</system:String>
 
     <system:String x:Key="SelectFolderToRemove">Select a folder to remove.</system:String>
     <system:String x:Key="SelectFolderToMove">Select a folder to move.</system:String>
-    
-    
+
+
     <!--ImportModWindow Strings-->
     <system:String x:Key="FromIROFile">From IRO File</system:String>
     <system:String x:Key="FromFolder">From Folder</system:String>
@@ -910,15 +911,15 @@ Do you want to apply the setting and try again?</system:String>
     <system:String x:Key="WaitingForProgramToInitializeAndShow">waiting for program to initialize and show ...</system:String>
     <system:String x:Key="TimeoutReachedWaitingForProgramToShow">timeout (of {0} seconds) reached waiting for program to show. Continuing...</system:String>
     <system:String x:Key="ProgramAlreadyRunning">program already running</system:String>
-    
-    
-    
-    
+
+
+
+
     <!--GameConverter Class Strings-->
     <system:String x:Key="NotFoundScanningDiscsForFiles">not found. Scanning disc(s) for files ...</system:String>
     <system:String x:Key="FoundFileOnAtCopyingFile">found file on {0} at {1}. Copying file ...</system:String>
     <system:String x:Key="FailedToCopyErrorHasBeenLogged">failed to copy. Error has been logged</system:String>
-    <system:String x:Key="FailedToFindOnAnyDisc">failed to find {0} on any disc ...</system:String>
+    <system:String x:Key="FailedToFindOnAnyDisc">failed to find {file} on any disc ...</system:String>
     <system:String x:Key="FileNotFound">file not found...</system:String>
     <system:String x:Key="CannotCopySourceFileBecauseItIsMissingAt">cannot copy source file because it is missing at</system:String>
     <system:String x:Key="CopyingFileFrom">copying file from</system:String>
@@ -938,8 +939,8 @@ Do you want to apply the setting and try again?</system:String>
     <system:String x:Key="MissingShadersComplexMultiShaderFolderCreatingDirectory">missing shaders/ComplexMultiShader_Nvidia folder. Creating directory ...</system:String>
     <system:String x:Key="MissingShadersFolderCreatingDirectory">missing shaders folder. Copying from Resources/Game Driver/ ...</system:String>
     <system:String x:Key="MissingShadersFilesCopyingFrom">missing shader file: {0}. Copying from {1} ...</system:String>
-    
-    
+
+
     <!--UpdateChecker Class Strings-->
     <system:String x:Key="CheckingForUpdatesAt">Checking for updates at</system:String>
     <system:String x:Key="FailedToCheckForUpdatesAt">Failed to check for updates at</system:String>
@@ -1027,7 +1028,7 @@ Do you want to apply the setting and try again?</system:String>
 
     <system:String x:Key="GeneralSettingsTitle">General Settings</system:String>
 
-    <system:String x:Key="Greek">Greek</system:String>
+    <system:String x:Key="Greek">Ελληνικά</system:String>
 
 
 </ResourceDictionary>

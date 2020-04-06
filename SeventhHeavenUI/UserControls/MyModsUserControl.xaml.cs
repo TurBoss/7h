@@ -65,7 +65,7 @@ namespace SeventhHeaven.UserControls
         {
             if (lstMods.SelectedItem == null)
             {
-                Sys.Message(new WMessage("Select a mod first.", true));
+                Sys.Message(new WMessage(ResourceHelper.Get(StringKey.SelectAModFirst), true));
                 return false;
             }
 
@@ -127,7 +127,7 @@ namespace SeventhHeaven.UserControls
 
             InstalledModViewModel selected = (lstMods.SelectedItem as InstalledModViewModel);
 
-            MessageDialogWindow messageDialog = new MessageDialogWindow("Uninstall Warning", $"Are you sure you want to delete {selected.Name}?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            MessageDialogWindow messageDialog = new MessageDialogWindow(ResourceHelper.Get(StringKey.UninstallWarning), $"{ResourceHelper.Get(StringKey.AreYouSureYouWantToDelete)} {selected.Name}?", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             messageDialog.ShowDialog();
 
             if (messageDialog.ViewModel.Result == MessageBoxResult.Yes)
@@ -189,7 +189,7 @@ namespace SeventhHeaven.UserControls
                 return;
             }
 
-            if (!IsActiveModSelected("Mod is not active. Only activated mods can be configured."))
+            if (!IsActiveModSelected(ResourceHelper.Get(StringKey.ModNotActiveOnlyActivatedModsCanBeConfigured)))
             {
                 return;
             }
@@ -222,7 +222,7 @@ namespace SeventhHeaven.UserControls
                 }
                 else
                 {
-                    Sys.Message(new WMessage("Mod is not active. Only activated mods can be configured.", true));
+                    Sys.Message(new WMessage(ResourceHelper.Get(StringKey.ModNotActiveOnlyActivatedModsCanBeConfigured), true));
                 }
             }
         }

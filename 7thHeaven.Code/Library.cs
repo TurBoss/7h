@@ -3,6 +3,7 @@
   The original developer is Iros <irosff@outlook.com>
 */
 
+using _7thHeaven.Code;
 using _7thWrapperLib;
 using System;
 using System.Collections.Generic;
@@ -200,7 +201,7 @@ namespace Iros._7th.Workshop
             catch (VariableAliasNotFoundException aex)
             {
                 // this exception occurrs when the variable alias is not found in .var file which causes ModInfo not to be captured completely. warn user and return null
-                Sys.Message(new WMessage($"WARNING: failed to get mod info due to a missing variable which can cause problems: {aex.Message}", true) { LoggedException = aex });
+                Sys.Message(new WMessage($"[{StringKey.FailedToGetModInfoDueToMissingVariable}]: {aex.Message}", true) { TextTranslationKey = StringKey.FailedToGetModInfoDueToMissingVariable, LoggedException = aex });
                 return null;
             }
             catch (Exception ex)

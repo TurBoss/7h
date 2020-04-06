@@ -910,7 +910,7 @@ Do you want to apply the setting and try again?</system:String>
     <system:String x:Key="StartingProgram">starting program</system:String>
     <system:String x:Key="Started">started ...</system:String>
     <system:String x:Key="WaitingForProgramToInitializeAndShow">waiting for program to initialize and show ...</system:String>
-    <system:String x:Key="TimeoutReachedWaitingForProgramToShow">timeout (of {program.WaitTimeOutInSeconds} seconds) reached waiting for program to show. Continuing...</system:String>
+    <system:String x:Key="TimeoutReachedWaitingForProgramToShow">timeout (of {0} seconds) reached waiting for program to show. Continuing...</system:String>
     <system:String x:Key="ProgramAlreadyRunning">program already running</system:String>
 
 
@@ -945,6 +945,91 @@ Do you want to apply the setting and try again?</system:String>
     <!--UpdateChecker Class Strings-->
     <system:String x:Key="CheckingForUpdatesAt">Checking for updates at</system:String>
     <system:String x:Key="FailedToCheckForUpdatesAt">Failed to check for updates at</system:String>
+
+    <!--DEV NOTE TO REMOVE: STRINGS BELOW ADDED 4/5/20-->
+    <!--DEV NOTE TO REMOVE: STRINGS BELOW ADDED 4/5/20-->
+    <!--DEV NOTE TO REMOVE: STRINGS BELOW ADDED 4/5/20-->
+
+    <!--ConfigureGLWindow.xaml.cs Strings-->
+    <system:String x:Key="Graphics">Graphics</system:String>
+    <system:String x:Key="Rendering">Rendering</system:String>
+    <system:String x:Key="Advanced">Advanced</system:String>
+
+    <!--FileUtils.cs Strings-->
+    <system:String x:Key="FailedToCopyDirectory">failed to copy directory</system:String>
+    <system:String x:Key="FailedToMoveDirectory">failed to move directory</system:String>
+    <system:String x:Key="FailedToDeleteFiles">failed to delete files</system:String>
+
+    <system:String x:Key="FailedToGetPreviewImage">failed to get preview image</system:String>
+
+    <system:String x:Key="ErrorOccurredDownloadingInstalling">Error occurred downloading/installing</system:String>
+
+    <system:String x:Key="Installed">Installed</system:String>
+    <system:String x:Key="Updated">Updated</system:String>
+    <system:String x:Key="ErrorUpdating">Error updating</system:String>
+
+    <system:String x:Key="FailedToGetModInfoDueToMissingVariable">WARNING: failed to get mod info due to a missing variable which can cause problems</system:String>
+
+    <system:String x:Key="TheFollowingModsWereNotFoundInstalledAndHaveBeenRemoved">The following mod(s) were not found installed and have been removed from the profile</system:String>
+    <system:String x:Key="ErrorLoadingSettingsPleaseConfigure7H">Error loading settings - please configure 7H using the Settings>General Settings... menu</system:String>
+    <system:String x:Key="ErrorLoadingLibraryFile">Error loading library file</system:String>
+    <system:String x:Key="FailedToImportMod">Failed to import mod</system:String>
+    <system:String x:Key="AutoImportedMod">Auto imported mod</system:String>
+    <system:String x:Key="CouldNotImportIroFileIsCorrupt">Could not import .iro mod because file is corrupt</system:String>
+    <system:String x:Key="ModCouldNotBeFoundHasItBeenDeleted">mod could not be found. has it been deleted? Removed from the list.</system:String>
+
+    <system:String x:Key="CouldNotLoadProfile">Could not load profile</system:String>
+
+    <system:String x:Key="FailedToPackIntoIro">Failed to pack into .iro</system:String>
+    <system:String x:Key="PackingIntoIro">Packing {0} into .iro ...</system:String>
+    <system:String x:Key="UnpackingIroIntoSubfolder">Unpacking {0}.iro into subfolder '{0}' ...</system:String>
+    <system:String x:Key="FailedToUnpackIro">Failed to unpack .iro</system:String>
+
+    <system:String x:Key="SelectModToDownloadFirst">Select a mod to download first.</system:String>
+    <system:String x:Key="NoDownloadSelected">No Download selected.</system:String>
+    <system:String x:Key="SelectAModFirst">Select a mod first.</system:String>
+
+    <system:String x:Key="FailedToSaveCatalogXml">Failed to save catalog xml</system:String>
+
+    <system:String x:Key="ModNotActiveOnlyActivatedModsCanBeConfigured">Mod is not active. Only activated mods can be configured.</system:String>
+
+    <system:String x:Key="UninstallWarning">Uninstall Warning</system:String>
+    <system:String x:Key="AreYouSureYouWantToDelete">Are you sure you want to delete</system:String>
+
+
+    <!--ThemeSettingsWindow Strings-->
+    <system:String x:Key="ColorTheme">Color Theme:</system:String>
+    <system:String x:Key="AppBackground">App Background:</system:String>
+    <system:String x:Key="SecondaryBackground">Secondary Background:</system:String>
+    <system:String x:Key="ControlsDisabledBackground">Controls Disabled Background:</system:String>
+    <system:String x:Key="ControlsDisabledForeground">Controls Disabled Foreground:</system:String>
+    <system:String x:Key="BackgroundImage">Background Image:</system:String>
+    <system:String x:Key="ControlsBackground">Controls Background:</system:String>
+    <system:String x:Key="ControlsForeground">Controls Foreground:</system:String>
+    <system:String x:Key="ControlsMouseOver">Controls Mouse Over:</system:String>
+    <system:String x:Key="ControlsPressed">Controls Pressed:</system:String>
+    <system:String x:Key="ImportTheme">Import Theme</system:String>
+
+
+
+    <!--PackIroUserControl Strings-->
+    <system:String x:Key="SourceFolder">Source Folder:</system:String>
+    <system:String x:Key="SaveAsIro">Save as IRO:</system:String>
+    <system:String x:Key="SaveAsIrop">Save as IROP:</system:String>
+    <system:String x:Key="Compress">Compress:</system:String>
+    <system:String x:Key="FilesToDelete">Files To Delete:</system:String>
+    <system:String x:Key="NewIro">New IRO:</system:String>
+    <system:String x:Key="OriginalIro">Original IRO:</system:String>
+    <system:String x:Key="SourceIro">Source IRO:</system:String>
+
+    <!--CreateModUserControl Strings-->
+    <system:String x:Key="OuputsCurrentModXmlToBelow">Ouputs current mod.xml to below text area.</system:String>
+    <system:String x:Key="SaveModXmlToFile">Save mod.xml to file</system:String>
+    <system:String x:Key="LoadModXmlFileToEdit">Load a mod.xml file to edit</system:String>
+
+    <system:String x:Key="GeneralSettingsTitle">General Settings</system:String>
+
+    <system:String x:Key="Greek">Greek</system:String>
 
 
 </ResourceDictionary>

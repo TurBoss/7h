@@ -1,4 +1,5 @@
-﻿using Iros._7th;
+﻿using _7thHeaven.Code;
+using Iros._7th;
 using Iros._7th.Workshop;
 using Iros.Mega;
 using Microsoft.Win32;
@@ -1068,9 +1069,16 @@ namespace SeventhHeavenUI.ViewModels
         private void Sys_MessageReceived(object sender, MessageEventArgs e)
         {
             string receivedMessage = e.Message.Text;
-            if (!String.IsNullOrEmpty(e.Message.Link))
+
+            // translate message if needed
+            if (string.IsNullOrEmpty(receivedMessage) && e.Message.TextTranslationKey.HasValue)
             {
-                receivedMessage += $" - {e.Message.Link}";
+                receivedMessage = ResourceHelper.Get(e.Message.TextTranslationKey.Value);
+            }
+            else if (e.Message.TextTranslationKey.HasValue)
+            {
+                // replace key in existing string with translated text
+                receivedMessage = receivedMessage.Replace($"[{e.Message.TextTranslationKey}]", ResourceHelper.Get(e.Message.TextTranslationKey.Value));
             }
 
             // log message to app log or status bar

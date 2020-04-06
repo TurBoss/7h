@@ -463,7 +463,7 @@ namespace SeventhHeavenUI.ViewModels
             }
             catch (Exception e)
             {
-                Sys.Message(new WMessage($"Could not save catalog xml: {e.Message}", true)
+                Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.FailedToSaveCatalogXml)}: {e.Message}", true)
                 {
                     LoggedException = e
                 });

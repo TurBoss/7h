@@ -90,7 +90,7 @@ namespace SeventhHeavenUI
                         Sys.Settings.CurrentProfile = parm.Substring(9);
                         Sys.ActiveProfile = profile;
 
-                        Sys.Message(new WMessage($"Loaded profile {Sys.Settings.CurrentProfile}"));
+                        Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.LoadedProfile)} {Sys.Settings.CurrentProfile}"));
                         Sys.ActiveProfile.RemoveDeletedItems(doWarn: true);
 
                         App.Current.Dispatcher.Invoke(() =>
@@ -101,7 +101,7 @@ namespace SeventhHeavenUI
                     }
                     catch (Exception e)
                     {
-                        Sys.Message(new WMessage($"Could not load profile {parm.Substring(9)}", WMessageLogLevel.Error, e));
+                        Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.CouldNotLoadProfile)} {parm.Substring(9)}", WMessageLogLevel.Error, e));
                     }
                 }
                 else if (parm.Equals("/LAUNCH", StringComparison.InvariantCultureIgnoreCase))
@@ -159,11 +159,11 @@ namespace SeventhHeavenUI
                     }
                     catch (Exception ex)
                     {
-                        Sys.Message(new WMessage("Mod " + irofilenoext + " failed to import: " + ex.ToString(), true) { LoggedException = ex });
+                        Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.FailedToImportMod)} {irofilenoext}: {ex.Message}", true) { LoggedException = ex });
                         continue;
                     }
 
-                    Sys.Message(new WMessage($"Auto imported mod {irofilenoext}", true));
+                    Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.AutoImportedMod)} {irofilenoext}", true));
                 }
                 else if (parm.StartsWith("/PACKIRO:", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -181,7 +181,7 @@ namespace SeventhHeavenUI
                             PathToOutputFile = Path.Combine(parentDir, $"{folderName}.iro"),
                         };
 
-                        Sys.Message(new WMessage($"Packing {folderName} into .iro ...", true));
+                        Sys.Message(new WMessage(string.Format(ResourceHelper.Get(StringKey.PackingIntoIro), folderName), true));
 
                         Task packTask = packViewModel.PackIro();
                         packTask.ContinueWith((result) =>
@@ -196,7 +196,7 @@ namespace SeventhHeavenUI
                     }
                     catch (Exception e)
                     {
-                        Sys.Message(new WMessage($"Failed to pack into .iro", WMessageLogLevel.Error, e) { IsImportant = true });
+                        Sys.Message(new WMessage(ResourceHelper.Get(StringKey.FailedToPackIntoIro), WMessageLogLevel.Error, e) { IsImportant = true });
                     }
                 }
                 else if (parm.StartsWith("/UNPACKIRO:", StringComparison.InvariantCultureIgnoreCase))
@@ -215,7 +215,7 @@ namespace SeventhHeavenUI
                             PathToOutputFolder = Path.Combine(pathToDir, fileName),
                         };
 
-                        Sys.Message(new WMessage($"Unpacking {fileName}.iro into subfolder '{fileName}' ...", true));
+                        Sys.Message(new WMessage(string.Format(ResourceHelper.Get(StringKey.UnpackingIroIntoSubfolder), fileName), true));
 
                         Task unpackTask = unpackViewModel.UnpackIro();
                         unpackTask.ContinueWith((result) =>
@@ -230,7 +230,7 @@ namespace SeventhHeavenUI
                     }
                     catch (Exception e)
                     {
-                        Sys.Message(new WMessage($"Failed to unpack .iro", WMessageLogLevel.Error, e) { IsImportant = true });
+                        Sys.Message(new WMessage(ResourceHelper.Get(StringKey.FailedToUnpackIro), WMessageLogLevel.Error, e) { IsImportant = true });
                     }
                 }
             }
@@ -359,6 +359,9 @@ namespace SeventhHeavenUI
                     break;
                 case "de":
                     dict.Source = new Uri("Resources\\Languages\\StringResources.de.xaml", UriKind.Relative);
+                    break;
+                case "gr":
+                    dict.Source = new Uri("Resources\\Languages\\StringResources.gr.xaml", UriKind.Relative);
                     break;
                 case "ja":
                     dict.Source = new Uri("Resources\\Languages\\StringResources.ja.xaml", UriKind.Relative);

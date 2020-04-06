@@ -1,4 +1,5 @@
-﻿using SeventhHeaven.Classes;
+﻿using _7thHeaven.Code;
+using SeventhHeaven.Classes;
 using SeventhHeaven.ViewModels;
 using SeventhHeavenUI.ViewModels;
 using System.Windows;

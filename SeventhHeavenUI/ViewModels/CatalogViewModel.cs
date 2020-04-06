@@ -895,6 +895,12 @@ namespace SeventhHeavenUI.ViewModels
         {
             int downloadCount = 0;
 
+            // translate item name if needed
+            if (newDownload.ItemNameTranslationKey.HasValue)
+            {
+                newDownload.ItemName = newDownload.ItemName.Replace($"[{newDownload.ItemNameTranslationKey}]", ResourceHelper.Get(newDownload.ItemNameTranslationKey.Value));
+            }
+
             // ensure you can cancel downloads that are pending download in queue
             if (newDownload.PerformCancel == null)
             {
@@ -906,6 +912,8 @@ namespace SeventhHeavenUI.ViewModels
             }
 
             // update message shown to user to reflect mod failing to download or only alowing external downloads for it
+            newDownload.ExternalUrlDownloadMessage = ResourceHelper.Get(StringKey.ExternalUrlDownloadMessage2);
+
             if (newDownload.Category == DownloadCategory.Mod && newDownload.Links.Count == 1)
             {
                 // check that the only link available is external url and set message accordingly

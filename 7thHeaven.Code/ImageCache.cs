@@ -91,7 +91,8 @@ namespace Iros._7th.Workshop {
             {
                 Links = new List<string> { LocationUtil.FormatHttpUrl(url) },
                 SaveFilePath = pathToTempDownload,
-                ItemName = "Downloading preview image",
+                ItemName = $"[{StringKey.DownloadingPreviewImage}]",
+                ItemNameTranslationKey = StringKey.DownloadingPreviewImage,
                 Category = DownloadCategory.Image
             };
 
@@ -129,13 +130,13 @@ namespace Iros._7th.Workshop {
                     }
                     catch (Exception ex)
                     {
-                        Sys.Message(new WMessage("failed to get preview image", WMessageLogLevel.Error, ex));
+                        Sys.Message(new WMessage(StringKey.FailedToGetPreviewImage, WMessageLogLevel.Error, ex));
                     }
 
                 }
                 else
                 {
-                    Sys.Message(new WMessage("ImageCache Download error: " + ae.Error.ToString(), WMessageLogLevel.LogOnly, ae.Error));
+                    Sys.Message(new WMessage(StringKey.FailedToGetPreviewImage, WMessageLogLevel.LogOnly, ae.Error));
                 }
 
             });

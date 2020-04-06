@@ -28,6 +28,7 @@ namespace _7thHeaven.Code
         public Action OnCancel { get; set; }
         public Action OnError { get; set; }
         public string ItemName { get; set; }
+        public StringKey? ItemNameTranslationKey { get; set; }
         public double PercentComplete { get; set; }
         public string DownloadSpeed { get; set; }
         public string RemainingTime { get; set; }
@@ -58,7 +59,8 @@ namespace _7thHeaven.Code
             HasStarted = false;
             RemainingTime = "Unknown";
             DownloadSpeed = "Pending...";
-            ExternalUrlDownloadMessage = "The mod failed to automatically download. An external link to download this mod is available.\n\nWould you like to open your web browser to download it now?";
+            ExternalUrlDownloadMessage = "";
+            ItemNameTranslationKey = null;
         }
     }
 }

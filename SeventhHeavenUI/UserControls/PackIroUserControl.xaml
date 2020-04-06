@@ -57,7 +57,7 @@
             <RowDefinition  Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Source Folder:"
+        <TextBlock Text="{DynamicResource SourceFolder}"
                    HorizontalAlignment="Right"
                    Margin="10,10,5,0"/>
 
@@ -78,7 +78,7 @@
                 Style="{StaticResource FolderImageButton}"/>
 
 
-        <TextBlock Text="Save as IRO:"
+        <TextBlock Text="{DynamicResource SaveAsIro}"
                    HorizontalAlignment="Right"
                    Grid.Row="1"
                    Margin="10,10,5,0"/>
@@ -102,8 +102,8 @@
                 Style="{StaticResource FileEllipsisImageButton}"/>
 
 
-        
-        <TextBlock Text="Compress:"
+
+        <TextBlock Text="{DynamicResource Compress}"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Top"
                    Grid.Row="2"

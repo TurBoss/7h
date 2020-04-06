@@ -64,7 +64,7 @@
         <WrapPanel Grid.Column="1"
                    Grid.ColumnSpan="2"
                    HorizontalAlignment="Left">
-            <TextBlock Text="Color Theme:"
+            <TextBlock Text="{DynamicResource ColorTheme}"
                        Margin="0,15,0,0"/>
 
             <ComboBox x:Name="cboThemes"
@@ -82,7 +82,7 @@
                     Grid.Column="1"
                     Content="{DynamicResource Import}"
                     Click="btnLoad_Click"
-                    ToolTip="Import Theme"
+                    ToolTip="{DynamicResource ImportTheme}"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Bottom"
                     Margin="5,0,0,0"
@@ -103,7 +103,7 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="App Background:"
+                <TextBlock Text="{DynamicResource AppBackground}"
                            Margin="0,0,0,2"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Top"/>
@@ -130,7 +130,7 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Secondary Background:"
+                <TextBlock Text="{DynamicResource SecondaryBackground}"
                            Margin="0,0,0,2"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Top"/>
@@ -156,7 +156,7 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Controls Disabled Background:"
+                <TextBlock Text="{DynamicResource ControlsDisabledBackground}"
                            Margin="0,0,0,2"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Top"/>
@@ -182,7 +182,7 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Controls Disabled Foreground:"
+                <TextBlock Text="{DynamicResource ControlsDisabledForeground}"
                            Margin="0,0,0,2"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Top"/>
@@ -208,7 +208,7 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Background Image:"
+                <TextBlock Text="{DynamicResource BackgroundImage}"
                            Margin="0,0,0,2"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Top"/>
@@ -246,7 +246,7 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Controls Background:"
+                <TextBlock Text="{DynamicResource ControlsBackground}"
                            Margin="0,0,0,2"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Top"/>
@@ -273,7 +273,7 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Controls Foreground:"
+                <TextBlock Text="{DynamicResource ControlsForeground}"
                            Margin="0,0,0,2"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Top"/>
@@ -299,7 +299,7 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Controls Mouse Over:"
+                <TextBlock Text="{DynamicResource ControlsMouseOver}"
                            Margin="0,0,0,2"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Top"/>
@@ -326,7 +326,7 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Controls Pressed:"
+                <TextBlock Text="{DynamicResource ControlsPressed}"
                            Margin="0,0,0,2"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Top"/>

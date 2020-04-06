@@ -58,7 +58,7 @@
             <RowDefinition  Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Original IRO:"
+        <TextBlock Text="{DynamicResource OriginalIro}"
                    HorizontalAlignment="Right"
                    Margin="10,10,5,0"/>
 
@@ -79,7 +79,7 @@
                 Style="{StaticResource FileEllipsisImageButton}"/>
 
 
-        <TextBlock Text="New IRO:"
+        <TextBlock Text="{DynamicResource NewIro}"
                    HorizontalAlignment="Right"
                    Grid.Row="1"
                    Margin="10,10,5,0"/>
@@ -105,7 +105,7 @@
 
 
 
-        <TextBlock Text="Save as IROP:"
+        <TextBlock Text="{DynamicResource SaveAsIrop}"
                    HorizontalAlignment="Right"
                    Grid.Row="2"
                    Margin="10,10,5,0"/>
@@ -130,7 +130,7 @@
 
 
 
-        <TextBlock Text="Compress:"
+        <TextBlock Text="{DynamicResource Compress}"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Top"
                    Grid.Row="3"

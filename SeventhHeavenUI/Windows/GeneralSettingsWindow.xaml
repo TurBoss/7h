@@ -8,7 +8,7 @@
         Loaded="Window_Loaded"
         Unloaded="Window_Unloaded"
         Style="{StaticResource MainWindowStyle}"
-        Title="General Settings" 
+        Title="{DynamicResource GeneralSettingsTitle}" 
         ResizeMode="NoResize"
         Deactivated="Window_Deactivated"
         LocationChanged="Window_LocationChanged"
