@@ -1,4 +1,5 @@
-﻿using SeventhHeaven.Classes;
+﻿using _7thHeaven.Code;
+using SeventhHeaven.Classes;
 using SeventhHeaven.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace SeventhHeaven.UserControls
 
         private void btnBrowseOutput_Click(object sender, RoutedEventArgs e)
         {
-            string saveFile = FileDialogHelper.OpenSaveDialog("IRO files|*.iro", "Save As .iro");
+            string saveFile = FileDialogHelper.OpenSaveDialog("*.iro|*.iro", ResourceHelper.Get(StringKey.SaveAsIroTitle));
 
             if (!string.IsNullOrEmpty(saveFile))
             {
@@ -52,7 +53,7 @@ namespace SeventhHeaven.UserControls
 
         private void btnBrowseSource_Click(object sender, RoutedEventArgs e)
         {
-            string sourceFolder = FileDialogHelper.BrowseForFolder("Select the folder that contains all the mod files you want to pack into the IRO archive.");
+            string sourceFolder = FileDialogHelper.BrowseForFolder(ResourceHelper.Get(StringKey.SelectTheFolderThatContainsAllTheModFiles));
 
             if (!string.IsNullOrEmpty(sourceFolder))
             {

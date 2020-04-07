@@ -2,7 +2,6 @@
 using Iros._7th;
 using Iros._7th.Workshop;
 using Iros.Mega;
-using Microsoft.Win32;
 using SeventhHeaven.Classes;
 using SeventhHeaven.Classes.Themes;
 using SeventhHeaven.ViewModels;
@@ -12,7 +11,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
@@ -31,56 +29,60 @@ namespace SeventhHeavenUI.ViewModels
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        internal string _showAllText;
-        internal string _unknownText;
+        internal string ShowAllText
+        {
+            get => ResourceHelper.Get(StringKey.SelectAll);
+        }
+        internal string UnknownText
+        {
+            get => ResourceHelper.Get(StringKey.Unknown);
+        }
 
         public List<string> AppHints = new List<string>()
         {
-            "You can drag and drop a mod to reorder your list.",
-            "You can middle-click a mod to activate or deactivate it.",
-            "You can double-click a mod to open the mod configuration window.",
-            "You can double-click a mod in Browse Catalog to start downloading it.",
-            "You can click the Auto Sort button to quickly put your mod list in the recommended order.",
-            "Mods can now automatically update themselves, or notify you of new versions.",
-            "Mod Authors: You can base64 encode images into your Readme.html.",
-            "Mod Authors: You can use OrderConstraints in mod.xml to specify load order.",
-            "Mod Authors: 7th Heaven now supports a Treeview style for your mod config options.",
-            "Mod Authors: 7th Heaven now supports iros://ExternalURL in catalogs to open downloads in a web browser.",
-            "Mod Authors: Enable General Settings/Context Menu in Explorer to enable right-click mod options from Windows.",
-            "Mod Authors: You can .7z/RAR/zip an IRO for a catalog download and 7H extracts it automatically.",
-            "Mod Authors: You can programmatically change other mod's settings for compatibility with yours.",
-            "You can double-click a mod file in Windows to open/import it into 7th Heaven.",
-            "You can double-click a profile in the manage profiles window to load the selected profile.",
-            "Profile details is now under Settings>Profiles then click the eyeball icon.",
-            "7th Heaven remembers your prior Config Mod settings even if you deactivate and reactivate.",
-            "Reset a mod's settings by clicking 'Reset to Mod Defaults' in the Config Mod window.",
-            "Accidentally delete your catalog subscriptions? Click 'Reset Defaults' in General Settings.",
-            "Right-click the My Mods tab to open your Mod Library Folder in Windows.",
-            "Right-click the Browse Catalog tab to open your Catalog settings.",
-            "Right-click the arrows in the sidebar to send a mod to the top or bottom.",
-            "Mangled your column views? Click the 'Reset Columns' button in the sidebar.",
-            "Fix old mod 'Unknown' categories by clicking the arrow in the Category column under My Mods.",
-            "You can find answers to many questions or problems on the forum at https://forums.qhimm.com.",
-            "You can find answers to many questions or problems from the Help menu.",
-            "Change your game's graphics settings by going to Settings>Game Driver...",
-            "Change each mod's update settings from the drop down arrow in the Mod Info Panel.",
-            "7th Heaven will auto mount/dismount the virtual game disc if you're on Windows 8 or newer.",
-            "7th Heaven no longer requires the old Game Converter. Everything is now automatic!",
-            "You no longer need to use FF7Config.exe. Its features are built into Settings>Game Launcher.",
-            "Did you know 7th Heaven 1.0 was released in 2013? 2.0 was released 7 years later in 2020.",
-            "Your current active profile shows in the title bar in between brackets.",
-            "If the game window is cut off/not centered, try the High-DPI fix in Settings.",
-            "You can sort your Browse Catalog columns by clicking the column headers.",
-            "You can rearrange your columns by dragging and dropping the column headers.",
-            "You can filter your views by clicking the drop down arrow next to the search box.",
-            "Quickly switch keyboard/gamepad control options in 'Game Launcher Settings'.",
-            "Want to use custom controls? Select 'Custom' in 'Game Launcher Settings'.",
-            "Updated your in-game controls? Click the 'Refresh' button in 'Game Launcher Settings'.",
-            "Did you know? 7th Heaven supports command line parameters (switches).",
-            "Have the 1998 discs? Import your movies automatically from 'Game Launcher Settings'.",
-            "Customize your 7th Heaven colors by going to Settings>Change Color Theme.",
-            "You can export and share your custom Color Theme with others.",
-            "You can pause and resume some downloads."
+            ResourceHelper.Get(StringKey.AppHint1),
+            ResourceHelper.Get(StringKey.AppHint2),
+            ResourceHelper.Get(StringKey.AppHint3),
+            ResourceHelper.Get(StringKey.AppHint4),
+            ResourceHelper.Get(StringKey.AppHint5),
+            ResourceHelper.Get(StringKey.AppHint6),
+            ResourceHelper.Get(StringKey.AppHint7),
+            ResourceHelper.Get(StringKey.AppHint8),
+            ResourceHelper.Get(StringKey.AppHint9),
+            ResourceHelper.Get(StringKey.AppHint10),
+            ResourceHelper.Get(StringKey.AppHint11),
+            ResourceHelper.Get(StringKey.AppHint12),
+            ResourceHelper.Get(StringKey.AppHint13),
+            ResourceHelper.Get(StringKey.AppHint14),
+            ResourceHelper.Get(StringKey.AppHint15),
+            ResourceHelper.Get(StringKey.AppHint16),
+            ResourceHelper.Get(StringKey.AppHint17),
+            ResourceHelper.Get(StringKey.AppHint18),
+            ResourceHelper.Get(StringKey.AppHint19),
+            ResourceHelper.Get(StringKey.AppHint20),
+            ResourceHelper.Get(StringKey.AppHint21),
+            ResourceHelper.Get(StringKey.AppHint22),
+            ResourceHelper.Get(StringKey.AppHint23),
+            ResourceHelper.Get(StringKey.AppHint24),
+            ResourceHelper.Get(StringKey.AppHint25),
+            ResourceHelper.Get(StringKey.AppHint26),
+            ResourceHelper.Get(StringKey.AppHint27),
+            ResourceHelper.Get(StringKey.AppHint28),
+            ResourceHelper.Get(StringKey.AppHint29),
+            ResourceHelper.Get(StringKey.AppHint30),
+            ResourceHelper.Get(StringKey.AppHint31),
+            ResourceHelper.Get(StringKey.AppHint32),
+            ResourceHelper.Get(StringKey.AppHint33),
+            ResourceHelper.Get(StringKey.AppHint34),
+            ResourceHelper.Get(StringKey.AppHint35),
+            ResourceHelper.Get(StringKey.AppHint36),
+            ResourceHelper.Get(StringKey.AppHint37),
+            ResourceHelper.Get(StringKey.AppHint38),
+            ResourceHelper.Get(StringKey.AppHint39),
+            ResourceHelper.Get(StringKey.AppHint40),
+            ResourceHelper.Get(StringKey.AppHint41),
+            ResourceHelper.Get(StringKey.AppHint42),
+            ResourceHelper.Get(StringKey.AppHint43)
         };
 
         private string _catFile;
@@ -121,7 +123,7 @@ namespace SeventhHeavenUI.ViewModels
         {
             get
             {
-                return $"{App.GetAppName()} v{App.GetAppVersion().ToString()} - Mod Manager for Final Fantasy 7 [{CurrentProfile}]";
+                return $"{App.GetAppName()} v{App.GetAppVersion().ToString()} - {ResourceHelper.Get(StringKey.ModManagerForFinalFantasy7)} [{CurrentProfile}]";
             }
         }
 
@@ -460,7 +462,6 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
-
         public Uri PreviewModImageSource
         {
             get
@@ -497,7 +498,7 @@ namespace SeventhHeavenUI.ViewModels
         {
             get
             {
-                return AvailableFilters.Where(c => c.FilterType == FilterItemType.Category && c.IsChecked && c.Name != _showAllText).ToList();
+                return AvailableFilters.Where(c => c.FilterType == FilterItemType.Category && c.IsChecked && c.Name != ShowAllText).ToList();
             }
         }
 
@@ -505,7 +506,7 @@ namespace SeventhHeavenUI.ViewModels
         {
             get
             {
-                return AvailableFilters.Where(c => c.FilterType == FilterItemType.Tag && c.IsChecked && c.Name != _showAllText).ToList();
+                return AvailableFilters.Where(c => c.FilterType == FilterItemType.Tag && c.IsChecked && c.Name != ShowAllText).ToList();
             }
         }
 
@@ -617,14 +618,6 @@ namespace SeventhHeavenUI.ViewModels
             CatalogMods.SelectedModChanged += CatalogViewModel_SelectedModChanged;
 
             LoadingGifVisibility = Visibility.Hidden;
-
-            InitStringsForLanguage();
-        }
-
-        private void InitStringsForLanguage()
-        {
-            _showAllText = ResourceHelper.Get(StringKey.SelectAll);
-            _unknownText = ResourceHelper.Get(StringKey.Unknown);
         }
 
 
@@ -1342,7 +1335,7 @@ namespace SeventhHeavenUI.ViewModels
         /// </summary>
         private void ToggleIsCheckedForAll(bool isChecked, List<FilterItemViewModel> filterItems)
         {
-            foreach (var item in filterItems.Where(c => c.Name != _showAllText && c.FilterType != FilterItemType.Separator).ToList())
+            foreach (var item in filterItems.Where(c => c.Name != ShowAllText && c.FilterType != FilterItemType.Separator).ToList())
             {
                 item.IsChecked = isChecked;
             }
@@ -1353,8 +1346,8 @@ namespace SeventhHeavenUI.ViewModels
         /// </summary>
         private void CheckOrUncheckShowAllFilter(List<FilterItemViewModel> filterItems)
         {
-            FilterItemViewModel item = filterItems.FirstOrDefault(cat => cat.Name == _showAllText);
-            item.SetIsChecked(filterItems.Where(cat => cat.Name != _showAllText && cat.FilterType != FilterItemType.Separator).All(cat => cat.IsChecked));
+            FilterItemViewModel item = filterItems.FirstOrDefault(cat => cat.Name == ShowAllText);
+            item.SetIsChecked(filterItems.Where(cat => cat.Name != ShowAllText && cat.FilterType != FilterItemType.Separator).All(cat => cat.IsChecked));
         }
 
         internal List<string> GetTagsForSelectedTab()
@@ -1400,9 +1393,9 @@ namespace SeventhHeavenUI.ViewModels
                 categories = Sys.Catalog.Mods.Select(c =>
                                                 {
                                                     if (string.IsNullOrEmpty(c.Category))
-                                                        return _unknownText;
+                                                        return UnknownText;
 
-                                                    return c.Category;
+                                                    return ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[c.Category]);
                                                 })
                                              .ToList();
             }
@@ -1411,7 +1404,7 @@ namespace SeventhHeavenUI.ViewModels
                 categories = MyMods.ModList.Select(c =>
                                                 {
                                                     if (string.IsNullOrEmpty(c.Category))
-                                                        return _unknownText;
+                                                        return UnknownText;
 
                                                     return c.Category;
                                                 })
@@ -1486,7 +1479,7 @@ namespace SeventhHeavenUI.ViewModels
 
             // setup 'Show All' filter item as first in the list
             bool allChecked = newList.Where(c => c.FilterType != FilterItemType.Separator).All(c => c.IsChecked);
-            FilterItemViewModel showAllItem = new FilterItemViewModel(_showAllText, FilterItemType.ShowAll)
+            FilterItemViewModel showAllItem = new FilterItemViewModel(ShowAllText, FilterItemType.ShowAll)
             {
                 IsChecked = allChecked,
                 OnChecked = new Action<bool>(isChecked => ToggleIsCheckedForAll(isChecked, AvailableFilters))
@@ -1648,6 +1641,21 @@ namespace SeventhHeavenUI.ViewModels
 
         }
 
+        internal void RefreshTranslations()
+        {
+            foreach (var item in MyMods.ModList)
+            {
+                item.RaiseNotifyPropertyChangedForCategory();
+            }
+
+            foreach (var item in CatalogMods.CatalogModList)
+            {
+                item.RaiseNotifyPropertyChangedForCategory();
+            }
+
+            PreviewModCategory = ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[_previewMod.Category]);
+        }
+
         #region Show Window Methods
 
         /// <summary>
@@ -1726,7 +1734,11 @@ namespace SeventhHeavenUI.ViewModels
                 case "fr":                                                
                     uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.fr.xml");
                     break;
-                    
+
+                case "gr":
+                    uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.gr.xml");
+                    break;
+
                 case "ja":                                                
                     uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.ja.xml");
                     break;

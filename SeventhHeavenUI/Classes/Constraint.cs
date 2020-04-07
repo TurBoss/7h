@@ -1,4 +1,5 @@
-﻿using Iros._7th.Workshop;
+﻿using _7thHeaven.Code;
+using Iros._7th.Workshop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,18 +45,18 @@ namespace SeventhHeaven.Classes
 
             if (Require.Any() && (Require.Min() != Require.Max()))
             {
-                message = String.Format("Mod {0}, setting {1} - no compatible option can be found. The following mods all restrict how it can be configured:\n\n{2}", inst.CachedDetails.Name, Option.Name, modsList);
+                message = String.Format(ResourceHelper.Get(StringKey.ModSettingNoCompatibleOptionFoundTheFollowingModsRestrictIt), inst.CachedDetails.Name, Option.Name, modsList);
                 return false;
             }
 
             if (Require.Any() && Forbid.Contains(Require[0]))
             {
-                message = String.Format("Mod {0}, setting {1} - no compatible option can be found. The following mods all restrict how it can be configured:\n\n{2}", inst.CachedDetails.Name, Option.Name, modsList);
+                message = String.Format(ResourceHelper.Get(StringKey.ModSettingNoCompatibleOptionFoundTheFollowingModsRestrictIt), inst.CachedDetails.Name, Option.Name, modsList);
                 return false;
             }
             if (Option.Values.All(o => Forbid.Contains(o.Value)))
             {
-                message = String.Format("Mod {0}, setting {1} - no compatible option can be found. The following mods all restrict how it can be configured:\n\n{2}", inst.CachedDetails.Name, Option.Name, modsList);
+                message = String.Format(ResourceHelper.Get(StringKey.ModSettingNoCompatibleOptionFoundTheFollowingModsRestrictIt), inst.CachedDetails.Name, Option.Name, modsList);
                 return false;
             }
             if (Require.Any() && (setting.Value != Require[0]))
@@ -63,17 +64,17 @@ namespace SeventhHeaven.Classes
                 var opt = Option.Values.Find(v => v.Value == Require[0]);
                 if (opt == null)
                 {
-                    message = String.Format("Mod {0}, setting {1} - no compatible option can be found. The following mods all restrict how it can be configured:\n\n{2}", inst.CachedDetails.Name, Option.Name, modsList);
+                    message = String.Format(ResourceHelper.Get(StringKey.ModSettingNoCompatibleOptionFoundTheFollowingModsRestrictIt), inst.CachedDetails.Name, Option.Name, modsList);
                     return false;
                 }
                 setting.Value = Require[0];
-                message = String.Format("Mod {0} - changed setting {1} to {2}", inst.CachedDetails.Name, Option.Name, opt.Name);
+                message = String.Format(ResourceHelper.Get(StringKey.ModChangedSettingTo), inst.CachedDetails.Name, Option.Name, opt.Name);
             }
             else if (Forbid.Contains(setting.Value))
             {
                 setting.Value = Option.Values.First(v => !Forbid.Contains(v.Value)).Value;
                 var opt = Option.Values.Find(v => v.Value == setting.Value);
-                message = String.Format("Mod {0} - changed setting {1} to {2}", inst.CachedDetails.Name, Option.Name, opt.Name);
+                message = String.Format(ResourceHelper.Get(StringKey.ModChangedSettingTo), inst.CachedDetails.Name, Option.Name, opt.Name);
             }
             return true;
         }

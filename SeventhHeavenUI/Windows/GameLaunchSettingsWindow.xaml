@@ -12,7 +12,7 @@
         Deactivated="Window_Deactivated"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
-        Title="Game Launcher Settings" 
+        Title="{DynamicResource GameLauncherSettings}" 
         Width="820"
         Height="575">
     <Window.Resources>

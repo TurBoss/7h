@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         mc:Ignorable="d"
-        Title="Import Mod"
+        Title="{DynamicResource ImportModTooltip}"
         ResizeMode="NoResize"
         Style="{StaticResource MainWindowStyle}"
         Height="240" Width="400">

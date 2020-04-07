@@ -23,7 +23,7 @@ namespace SeventhHeaven.UserControls
 
         private void btnBrowseImage_Click(object sender, RoutedEventArgs e)
         {
-            string pathToFile = FileDialogHelper.BrowseForFile("*.png,*.jpg,*.jpeg|*.png;*.jpg;*.jpeg", "Select image to use");
+            string pathToFile = FileDialogHelper.BrowseForFile("*.png,*.jpg,*.jpeg|*.png;*.jpg;*.jpeg", ResourceHelper.Get(StringKey.SelectImageToUse));
 
 
             if (!string.IsNullOrEmpty(pathToFile))
@@ -40,7 +40,7 @@ namespace SeventhHeaven.UserControls
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            string pathToFile = FileDialogHelper.OpenSaveDialog("mod .xml|*.xml", "Save mod xml");
+            string pathToFile = FileDialogHelper.OpenSaveDialog("mod .xml|*.xml", ResourceHelper.Get(StringKey.SaveModXml));
 
             if (!string.IsNullOrEmpty(pathToFile))
             {
@@ -50,7 +50,7 @@ namespace SeventhHeaven.UserControls
 
         private void btnLoad_Click(object sender, RoutedEventArgs e)
         {
-            string pathToFile = FileDialogHelper.BrowseForFile("mod .xml|*.xml", "Select mod.xml to Load");
+            string pathToFile = FileDialogHelper.BrowseForFile("mod .xml|*.xml", ResourceHelper.Get(StringKey.SelectModXmlToLoad));
         
             if (!string.IsNullOrEmpty(pathToFile))
             {

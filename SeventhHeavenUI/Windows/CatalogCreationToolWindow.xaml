@@ -10,26 +10,12 @@
         Title="{DynamicResource CatalogCreationWindowTitle}"
         Style="{StaticResource MainWindowStyle}"
         Height="600" Width="1000">
-    <Window.Resources>
-        <Style x:Key="createLabelStyle" TargetType="TextBlock" BasedOn="{StaticResource PrimaryTextBlockStyle}">
-            <Setter Property="HorizontalAlignment" Value="Right"/>
-            <Setter Property="VerticalAlignment" Value="Top"/>
-            <Setter Property="Margin" Value="10,0,5,0"/>
-        </Style>
-
-        <Style x:Key="createTextboxStyle" TargetType="TextBox" BasedOn="{StaticResource PrimaryTextBoxStyle}">
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="VerticalAlignment" Value="Top"/>
-            <Setter Property="Margin" Value="0,0,5,10"/>
-        </Style>
-    </Window.Resources>
-    
     <Grid>
         <TabControl>
             <TabItem Header="{DynamicResource CreateMod}">
                 <ctrl:CreateModUserControl Margin="0,5,0,0"/>
             </TabItem>
-            
+
             <TabItem Header="{DynamicResource CreateCatalog}">
                 <ctrl:CreateCatalogUserControl Margin="0,5,0,0"/>
             </TabItem>

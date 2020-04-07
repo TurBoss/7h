@@ -536,7 +536,7 @@ Haz clic en 'Cancelar' para detener el proceso.</system:String>
 
 
     <!--OpenProfileWindow Strings-->
-    <system:String x:Key="Load Profile">Cargar Perfil</system:String>
+    <system:String x:Key="LoadProfile">Cargar Perfil</system:String>
     <system:String x:Key="SaveCurrentProfileAs">Guardar el Perfil actual como ...</system:String>
     <system:String x:Key="CopySelectedProfileToNewProfile">Copiar Perfil seleccionado a un nuevo Perfil</system:String>
     <system:String x:Key="DeleteSelectedProfile">Eliminar el Perfil seleccionado</system:String>
@@ -1029,6 +1029,130 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="GeneralSettingsTitle">General Settings</system:String>
 
     <system:String x:Key="Greek">Greek</system:String>
+
+    <!--DEV NOTE TO REMOVE: STRINGS BELOW ADDED 4/6/20-->
+    <!--DEV NOTE TO REMOVE: STRINGS BELOW ADDED 4/6/20-->
+    <system:String x:Key="ModSettingNoCompatibleOptionFoundTheFollowingModsRestrictIt">Mod {0}, setting {1} - no compatible option can be found. The following mods all restrict how it can be configured:\n\n{2}</system:String>
+    <system:String x:Key="ModChangedSettingTo">Mod {0} - changed setting {1} to {2}</system:String>
+
+    <system:String x:Key="OutputsCurrentCatalogXmlToBelow">Outputs current catalog.xml to below text area.</system:String>
+    <system:String x:Key="SaveCatalogXmlToFile">Save catalog.xml to file</system:String>
+    <system:String x:Key="LoadCatalogXmlFileToEdit">Load a catalog.xml file to edit</system:String>
+    <system:String x:Key="AddModToCatalog">Add mod to catalog</system:String>
+    <system:String x:Key="ImportModFromModXmlOrIro">Import mod from mod.xml or .iro</system:String>
+    <system:String x:Key="CatalogName">Catalog Name:</system:String>
+    <system:String x:Key="SaveCatalogXml">Save Catalog .xml</system:String>
+    <system:String x:Key="SelectCatalogXmlToLoad">Select catalog.xml to Load</system:String>
+    <system:String x:Key="SelectModXmlOrIroFileToLoad">Select mod.xml or .iro file to Load</system:String>
+    <system:String x:Key="SelectImageToUse">Select image to use</system:String>
+    <system:String x:Key="SaveModXml">Save mod .xml</system:String>
+    <system:String x:Key="SelectModXmlToLoad">Select mod.xml to Load</system:String>
+
+    <system:String x:Key="SaveAsIroTitle">Save As .iro</system:String>
+    <system:String x:Key="SaveAsIropTitle">Save As .irop</system:String>
+
+    <system:String x:Key="SelectTheFolderThatContainsAllTheModFiles">Select the folder that contains all the mod files you want to pack into the IRO archive.</system:String>
+    <system:String x:Key="SelectFolderToOutputUnpackedFiles">Select a folder to output unpacked files.</system:String>
+
+    <system:String x:Key="SelectFLevelLgpFile">Select FLevel.lgp File</system:String>
+
+    <system:String x:Key="GameLauncherSettings">Game Launcher Settings</system:String>
+
+    <system:String x:Key="ClickToSelectFf7ExeFile">Click to select your FF7.exe file</system:String>
+    <system:String x:Key="ClickToSelectWhereYourMovieFolderIs">Click to select where your movie folder is</system:String>
+    <system:String x:Key="ClickToSelectWhereTexturesAreStored">Click to select where Textures are stored</system:String>
+    <system:String x:Key="ClickToSelectWhereYourModLibraryIs">Click to select where your Mod Library is</system:String>
+
+    <system:String x:Key="FF7ExeLabel">FF7 Exe:</system:String>
+    <system:String x:Key="MoviesLabel">Movies:</system:String>
+    <system:String x:Key="TexturesLabel">Textures:</system:String>
+    <system:String x:Key="LibraryLabel">Library:</system:String>
+
+    <system:String x:Key="AddSubscriptionURL">Add Subscription URL</system:String>
+    <system:String x:Key="RemoveSubscriptionURL">Remove Subscription URL</system:String>
+    <system:String x:Key="EditSubscriptionURL">Edit Subscription URL/Name</system:String>
+    <system:String x:Key="MoveSubscriptionUp">Move Subscription Up. Right-click to move to top.</system:String>
+    <system:String x:Key="MoveSubscriptionDown">Move Subscription Down. Right-click to move to bottom</system:String>
+
+    <system:String x:Key="AddFolder">Add Folder</system:String>
+    <system:String x:Key="RemoveFolder">Remove Folder</system:String>
+    <system:String x:Key="MoveFolderUp">Move Folder Up. Right-click to move to top.</system:String>
+    <system:String x:Key="MoveFolderDown">Move Folder Down. Right-click to move to bottom.</system:String>
+    <system:String x:Key="EnterUrlInIrosFormat">Enter url in iros:// format</system:String>
+
+    <system:String x:Key="SelectCustomThemeXmlFile">Select Custom Theme .xml File</system:String>
+    <system:String x:Key="SaveCustomThemeXmlFile">Save Custom Theme .xml File</system:String>
+
+    <!--App Hints Strings-->
+    <system:String x:Key="AppHint1">You can drag and drop a mod to reorder your list.</system:String>
+    <system:String x:Key="AppHint2">You can middle-click a mod to activate or deactivate it.</system:String>
+    <system:String x:Key="AppHint3">You can double-click a mod to open the mod configuration window.</system:String>
+    <system:String x:Key="AppHint4">You can double-click a mod in Browse Catalog to start downloading it.</system:String>
+    <system:String x:Key="AppHint5">You can click the Auto Sort button to quickly put your mod list in the recommended order.</system:String>
+    <system:String x:Key="AppHint6">Mods can now automatically update themselves, or notify you of new versions.</system:String>
+    <system:String x:Key="AppHint7">Mod Authors: You can base64 encode images into your Readme.html.</system:String>
+    <system:String x:Key="AppHint8">Mod Authors: You can use OrderConstraints in mod.xml to specify load order.</system:String>
+    <system:String x:Key="AppHint9">Mod Authors: 7th Heaven now supports a Treeview style for your mod config options.</system:String>
+    <system:String x:Key="AppHint10">Mod Authors: 7th Heaven now supports iros://ExternalURL in catalogs to open downloads in a web browser.</system:String>
+    <system:String x:Key="AppHint11">Mod Authors: Enable General Settings/Context Menu in Explorer to enable right-click mod options from Windows.</system:String>
+    <system:String x:Key="AppHint12">Mod Authors: You can .7z/RAR/zip an IRO for a catalog download and 7H extracts it automatically.</system:String>
+    <system:String x:Key="AppHint13">Mod Authors: You can programmatically change other mod's settings for compatibility with yours.</system:String>
+    <system:String x:Key="AppHint14">You can double-click a mod file in Windows to open/import it into 7th Heaven.</system:String>
+    <system:String x:Key="AppHint15">You can double-click a profile in the manage profiles window to load the selected profile.</system:String>
+    <system:String x:Key="AppHint16">Profile details is now under Settings>Profiles then click the eyeball icon.</system:String>
+    <system:String x:Key="AppHint17">7th Heaven remembers your prior Config Mod settings even if you deactivate and reactivate.</system:String>
+    <system:String x:Key="AppHint18">Reset a mod's settings by clicking 'Reset to Mod Defaults' in the Config Mod window.</system:String>
+    <system:String x:Key="AppHint19">Accidentally delete your catalog subscriptions? Click 'Reset Defaults' in General Settings.</system:String>
+    <system:String x:Key="AppHint20">Right-click the My Mods tab to open your Mod Library Folder in Windows.</system:String>
+    <system:String x:Key="AppHint21">Right-click the Browse Catalog tab to open your Catalog settings.</system:String>
+    <system:String x:Key="AppHint22">Right-click the arrows in the sidebar to send a mod to the top or bottom.</system:String>
+    <system:String x:Key="AppHint23">Mangled your column views? Click the 'Reset Columns' button in the sidebar.</system:String>
+    <system:String x:Key="AppHint24">Fix old mod 'Unknown' categories by clicking the arrow in the Category column under My Mods.</system:String>
+    <system:String x:Key="AppHint25">You can find answers to many questions or problems on the forum at https://forums.qhimm.com.</system:String>
+    <system:String x:Key="AppHint26">You can find answers to many questions or problems from the Help menu.</system:String>
+    <system:String x:Key="AppHint27">Change your game's graphics settings by going to Settings>Game Driver...</system:String>
+    <system:String x:Key="AppHint28">Change each mod's update settings from the drop down arrow in the Mod Info Panel.</system:String>
+    <system:String x:Key="AppHint29">7th Heaven will auto mount/dismount the virtual game disc if you're on Windows 8 or newer.</system:String>
+    <system:String x:Key="AppHint30">7th Heaven no longer requires the old Game Converter. Everything is now automatic!</system:String>
+    <system:String x:Key="AppHint31">You no longer need to use FF7Config.exe. Its features are built into Settings>Game Launcher.</system:String>
+    <system:String x:Key="AppHint32">Did you know 7th Heaven 1.0 was released in 2013? 2.0 was released 7 years later in 2020.</system:String>
+    <system:String x:Key="AppHint33">Your current active profile shows in the title bar in between brackets.</system:String>
+    <system:String x:Key="AppHint34">If the game window is cut off/not centered, try the High-DPI fix in Settings.</system:String>
+    <system:String x:Key="AppHint35">You can sort your Browse Catalog columns by clicking the column headers.</system:String>
+    <system:String x:Key="AppHint36">You can rearrange your columns by dragging and dropping the column headers.</system:String>
+    <system:String x:Key="AppHint37">You can filter your views by clicking the drop down arrow next to the search box.</system:String>
+    <system:String x:Key="AppHint38">Quickly switch keyboard/gamepad control options in 'Game Launcher Settings'.</system:String>
+    <system:String x:Key="AppHint39">Did you know? 7th Heaven supports command line parameters (switches).</system:String>
+    <system:String x:Key="AppHint40">Have the 1998 discs? Import your movies automatically from 'Game Launcher Settings'.</system:String>
+    <system:String x:Key="AppHint41">Customize your 7th Heaven colors by going to Settings>Change Color Theme.</system:String>
+    <system:String x:Key="AppHint42">You can export and share your custom Color Theme with others.</system:String>
+    <system:String x:Key="AppHint43">You can pause and resume some downloads.</system:String>
+
+    <system:String x:Key="ModManagerForFinalFantasy7">Mod Manager for Final Fantasy 7</system:String>
+
+
+    <system:String x:Key="ReleaseDateLabel">Release Date:</system:String>
+    <system:String x:Key="ImageLinkLabel">Image Link:</system:String>
+    <system:String x:Key="InfoLinkLabel">Info Link:</system:String>
+    <system:String x:Key="DownloadLinksHeader" xml:space="preserve"> Download Links </system:String>
+    <system:String x:Key="AddLink">Add Link</system:String>
+
+    <system:String x:Key="MegaFolderID">Mega Folder ID:</system:String>
+
+    <system:String x:Key="Miscellaneous">misceláneo</system:String>
+    <system:String x:Key="Animations">Animaciones</system:String>
+    <system:String x:Key="BattleModels">Battle Models</system:String>
+    <system:String x:Key="BattleTextures">Battle Textures</system:String>
+    <system:String x:Key="FieldModels">Field Models</system:String>
+    <system:String x:Key="FieldTextures">Field Textures</system:String>
+    <system:String x:Key="Gameplay">Como se Juega</system:String>
+    <system:String x:Key="Media">Media</system:String>
+    <system:String x:Key="Minigames">Minigames</system:String>
+    <system:String x:Key="SpellTextures">Texturas de hechizo</system:String>
+    <system:String x:Key="UserInterface">Interfaz de usuario</system:String>
+    <system:String x:Key="WorldModels">World Models</system:String>
+    <system:String x:Key="WorldTextures">World Textures</system:String>
+
 
 
 </ResourceDictionary>

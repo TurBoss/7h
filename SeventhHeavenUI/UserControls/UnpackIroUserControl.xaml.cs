@@ -1,4 +1,5 @@
-﻿using SeventhHeaven.Classes;
+﻿using _7thHeaven.Code;
+using SeventhHeaven.Classes;
 using SeventhHeaven.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace SeventhHeaven.UserControls
 
         private void btnBrowseIro_Click(object sender, RoutedEventArgs e)
         {
-            string iroFile = FileDialogHelper.BrowseForFile("IRO files|*.iro", "Select .iro to Unpack");
+            string iroFile = FileDialogHelper.BrowseForFile("*.iro|*.iro", ResourceHelper.Get(StringKey.SelectIroFile));
 
             if (!string.IsNullOrEmpty(iroFile))
             {
@@ -52,7 +53,7 @@ namespace SeventhHeaven.UserControls
 
         private void btnBrowseOutput_Click(object sender, RoutedEventArgs e)
         {
-            string outputFolder = FileDialogHelper.BrowseForFolder("Select a folder to output unpacked files.");
+            string outputFolder = FileDialogHelper.BrowseForFolder(ResourceHelper.Get(StringKey.SelectFolderToOutputUnpackedFiles));
 
             if (!string.IsNullOrEmpty(outputFolder))
             {

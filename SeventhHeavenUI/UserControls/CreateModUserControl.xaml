@@ -145,7 +145,7 @@
         <Button x:Name="btnGenerate"
                 Click="btnGenerate_Click"
                 Content="{DynamicResource Generate}"
-                ToolTip="{DynamicResource OuputsCurrentModXmlToBelow}"
+                ToolTip="{DynamicResource OutputsCurrentModXmlToBelow}"
                 Grid.Column="3"
                 HorizontalAlignment="Right"
                 Width="80"

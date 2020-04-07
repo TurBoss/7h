@@ -1,4 +1,5 @@
-﻿using SeventhHeaven.Classes;
+﻿using _7thHeaven.Code;
+using SeventhHeaven.Classes;
 using SeventhHeaven.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace SeventhHeaven.Windows
 
         private void btnBrowseFlevel_Click(object sender, RoutedEventArgs e)
         {
-            string pathToFile = FileDialogHelper.BrowseForFile("FLevel.lgp|FLevel.lgp", "Select FLevel.lgp file");
+            string pathToFile = FileDialogHelper.BrowseForFile("FLevel.lgp|FLevel.lgp", ResourceHelper.Get(StringKey.SelectFLevelLgpFile));
 
             if (!string.IsNullOrEmpty(pathToFile))
             {

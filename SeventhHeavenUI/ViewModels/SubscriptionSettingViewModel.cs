@@ -1,14 +1,4 @@
-﻿using Iros._7th;
-using Iros._7th.Workshop;
-using Iros.Mega;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SeventhHeavenUI.ViewModels
+﻿namespace SeventhHeavenUI.ViewModels
 {
 
     public class SubscriptionSettingViewModel : ViewModelBase

@@ -2,6 +2,7 @@
 using Iros._7th;
 using Iros._7th.Workshop;
 using Iros.Mega;
+using SeventhHeaven.Classes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -78,16 +79,20 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
+        /// <summary>
+        /// Returns the mod category, translated. 
+        /// Setting Category will translate and store the category in english.
+        /// </summary>
         public string Category
         {
             get
             {
-                return _category;
+                return ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[_category]);
             }
             set
             {
-                _category = value;
-                ActiveModInfo.Category = Category;
+                _category = ResourceHelper.ModCategoryTranslations[value];
+                ActiveModInfo.Category = _category;
                 NotifyPropertyChanged();
                 CategoryChanged?.Invoke(this);
             }
@@ -98,7 +103,7 @@ namespace SeventhHeavenUI.ViewModels
             get
             {
                 if (_categoryList == null)
-                    _categoryList = ModLoadOrder.Orders.Keys.OrderBy(s => s).ToList();
+                    _categoryList = ModLoadOrder.Orders.Keys.Select(s => ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[s])).OrderBy(s => s).ToList();
 
                 return _categoryList;
             }
@@ -235,8 +240,9 @@ namespace SeventhHeavenUI.ViewModels
 
             if (string.IsNullOrWhiteSpace(_category))
             {
-                Category = ModCategory.Unknown.ToString();
+                Category = ResourceHelper.Get(StringKey.Unknown);
             }
+
 
             BorderThickness = new Thickness(0);
         }
@@ -249,6 +255,11 @@ namespace SeventhHeavenUI.ViewModels
         public void RaiseIsActivePropertyChanged()
         {
             NotifyPropertyChanged(nameof(IsActive));
+        }
+
+        internal void RaiseNotifyPropertyChangedForCategory()
+        {
+            NotifyPropertyChanged(nameof(Category));
         }
     }
 }

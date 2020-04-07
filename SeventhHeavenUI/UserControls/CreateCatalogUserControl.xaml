@@ -83,7 +83,7 @@
             <Button x:Name="btnGenerate"
                     Click="btnGenerate_Click"
                     Content="{DynamicResource Generate}"
-                    ToolTip="Ouputs current catalog.xml to below text area."
+                    ToolTip="{DynamicResource OutputsCurrentCatalogXmlToBelow}"
                     HorizontalAlignment="Left"
                     Width="80"
                     Margin="5,0,165,5"/>
@@ -92,14 +92,14 @@
                     Click="btnSave_Click"
                     Content="{DynamicResource Save}"
                     Width="80"
-                    ToolTip="Save catalog.xml to file"
+                    ToolTip="{DynamicResource SaveCatalogXmlToFile}"
                     HorizontalAlignment="Left"
                     Margin="85,0,0,5"/>
 
             <Button x:Name="btnLoad"
                     Click="btnLoad_Click"
                     Content="{DynamicResource Load}"
-                    ToolTip="Load a catalog.xml file to edit"
+                    ToolTip="{DynamicResource LoadCatalogXmlFileToEdit}"
                     HorizontalAlignment="Left"
                     Width="80"
                     Margin="165,0,5,5"/>
@@ -108,7 +108,7 @@
                     Grid.Column="1"
                     Click="btnAdd_Click"
                     Content="{DynamicResource Add}"
-                    ToolTip="Add mod to catalog"
+                    ToolTip="{DynamicResource AddModToCatalog}"
                     HorizontalAlignment="Right"
                     Width="80"
                     Margin="0,0,15,5"/>
@@ -117,7 +117,7 @@
                     Grid.Column="1"
                     Click="btnImport_Click"
                     Content="{DynamicResource Import}"
-                    ToolTip="Import mod from mod.xml or .iro"
+                    ToolTip="{DynamicResource ImportModFromModXmlOrIro}"
                     HorizontalAlignment="Right"
                     Width="80"
                     Margin="0,0,95,5"/>
@@ -301,7 +301,7 @@
                              Height="100"
                              Grid.Column="1" Grid.Row="7"/>
 
-                    <TextBlock Text="Release Date:"
+                    <TextBlock Text="{DynamicResource ReleaseDateLabel}"
                                Style="{StaticResource createLabelStyle}"
                                Grid.Column="0"
                                Grid.Row="8"/>
@@ -309,14 +309,14 @@
                         Style="{StaticResource createTextboxStyle}"
                         Grid.Column="1" Grid.Row="8"/>
 
-                    <TextBlock Text="Image Link:"
+                    <TextBlock Text="{DynamicResource ImageLinkLabel}"
                         Style="{StaticResource createLabelStyle}"
                         Grid.Row="9"/>
                     <TextBox Text="{Binding PreviewImageInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Style="{StaticResource createTextboxStyle}"
                         Grid.Column="1" Grid.Row="9"/>
 
-                    <TextBlock Text="Info Link:"
+                    <TextBlock Text="{DynamicResource InfoLinkLabel}"
                         Style="{StaticResource createLabelStyle}"
                         Grid.Row="10"/>
                     <TextBox Text="{Binding InfoLinkInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -328,7 +328,7 @@
                                Opacity="0.75"
                                VerticalAlignment="Top"
                                Margin="10,20,10,10"/>
-                    <GroupBox Header=" Download Links " Grid.Row="11" Grid.ColumnSpan="2" Margin="5,0,5,0" BorderThickness="0">
+                    <GroupBox Header="{DynamicResource DownloadLinksHeader}" Grid.Row="11" Grid.ColumnSpan="2" Margin="5,0,5,0" BorderThickness="0">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>
@@ -348,7 +348,7 @@
                                     Grid.Row="1"
                                     Style="{StaticResource HyperlinkButton}"
                                     HorizontalAlignment="Center"
-                                    Content="Add Link"/>
+                                    Content="{DynamicResource AddLink}"/>
                         </Grid>
                     </GroupBox>
                 </Grid>

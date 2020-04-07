@@ -60,7 +60,7 @@ namespace SeventhHeaven.Windows
                 initialDir = Path.GetDirectoryName(ViewModel.FF7ExePathInput);
             }
 
-            string exePath = FileDialogHelper.BrowseForFile("exe file (*.exe)|*.exe", ResourceHelper.Get(StringKey.SelectFf7Exe), initialDir);
+            string exePath = FileDialogHelper.BrowseForFile("*.exe|*.exe", ResourceHelper.Get(StringKey.SelectFf7Exe), initialDir);
 
             if (!string.IsNullOrEmpty(exePath))
             {

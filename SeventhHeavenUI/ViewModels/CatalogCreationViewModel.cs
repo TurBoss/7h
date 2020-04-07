@@ -109,7 +109,9 @@ namespace SeventhHeavenUI.ViewModels
             {
                 if (_categoryList == null)
                 {
-                    _categoryList = ModLoadOrder.Orders.Keys.OrderBy(s => s).ToList();
+                    _categoryList = ModLoadOrder.Orders.Keys.Select(s => ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[s]))
+                                                            .OrderBy(s => s)
+                                                            .ToList();
                 }
 
                 return _categoryList;
@@ -282,8 +284,8 @@ namespace SeventhHeavenUI.ViewModels
                     _selectedMod.Mod.Author = AuthorInput;
                     _selectedMod.Author = AuthorInput;
 
-                    _selectedMod.Mod.Category = CategoryInput;
-                    _selectedMod.Category = CategoryInput;
+                    _selectedMod.Mod.Category = ResourceHelper.ModCategoryTranslations[CategoryInput];
+                    _selectedMod.Category = ResourceHelper.ModCategoryTranslations[CategoryInput];
 
                     _selectedMod.Mod.Tags = TagsInput.Split(new string[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
@@ -323,7 +325,7 @@ namespace SeventhHeavenUI.ViewModels
                     NameInput = _modToEdit.Name;
                     AuthorInput = _modToEdit.Author;
                     IDInput = _modToEdit.ID.ToString();
-                    CategoryInput = _modToEdit.Category;
+                    CategoryInput = ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[_modToEdit.Category]);
                     TagsInput = string.Join("\n", _modToEdit.Tags);
                     DescriptionInput = _modToEdit.Description;
                     InfoLinkInput = _modToEdit.Link;
@@ -381,7 +383,7 @@ namespace SeventhHeavenUI.ViewModels
 
                 IDInput = mod.ID.ToString();
                 NameInput = mod.Name;
-                CategoryInput = mod.Category;
+                CategoryInput = ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[mod.Category]);
                 AuthorInput = mod.Author;
                 DescriptionInput = mod.Description;
                 VersionInput = mod.Version.ToString();
@@ -393,7 +395,7 @@ namespace SeventhHeavenUI.ViewModels
 
                 if (string.IsNullOrWhiteSpace(CategoryInput))
                 {
-                    CategoryInput = "Unknown";
+                    CategoryInput = ResourceHelper.Get(StringKey.Unknown);
                 }
                 MetaVersionInput = "1.00";
 
@@ -425,7 +427,7 @@ namespace SeventhHeavenUI.ViewModels
 
                 IDInput = parsedMod.ID.ToString();
                 NameInput = parsedMod.Name;
-                CategoryInput = parsedMod.Category;
+                CategoryInput = ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[parsedMod.Category]);
                 AuthorInput = parsedMod.Author;
                 DescriptionInput = parsedMod.Description;
                 VersionInput = parsedMod.LatestVersion.Version.ToString();
@@ -438,7 +440,7 @@ namespace SeventhHeavenUI.ViewModels
 
                 if (string.IsNullOrWhiteSpace(CategoryInput))
                 {
-                    CategoryInput = "Unknown";
+                    CategoryInput = ResourceHelper.Get(StringKey.Unknown);
                 }
 
                 DownloadLinkList.Clear();
@@ -496,7 +498,7 @@ namespace SeventhHeavenUI.ViewModels
             NameInput = "";
             AuthorInput = "";
             DescriptionInput = "";
-            CategoryInput = "Unknown";
+            CategoryInput = ResourceHelper.Get(StringKey.Unknown);
             TagsInput = "";
             VersionInput = "1.00";
             MetaVersionInput = "1.00";
@@ -559,7 +561,7 @@ namespace SeventhHeavenUI.ViewModels
                 ID = parsedID,
                 Name = NameInput,
                 Author = AuthorInput,
-                Category = CategoryInput,
+                Category = ResourceHelper.ModCategoryTranslations[CategoryInput],
                 Tags = TagsInput.Split(new string[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries).ToList(),
                 Description = DescriptionInput,
                 Link = InfoLinkInput,

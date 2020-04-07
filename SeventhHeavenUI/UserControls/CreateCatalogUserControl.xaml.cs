@@ -1,4 +1,5 @@
-﻿using SeventhHeaven.Classes;
+﻿using _7thHeaven.Code;
+using SeventhHeaven.Classes;
 using SeventhHeavenUI.ViewModels;
 using System.IO;
 using System.Windows;
@@ -28,7 +29,7 @@ namespace SeventhHeaven.UserControls
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            string pathToFile = FileDialogHelper.OpenSaveDialog("catalog .xml|*.xml", "Save Catalog xml");
+            string pathToFile = FileDialogHelper.OpenSaveDialog("catalog .xml|*.xml", ResourceHelper.Get(StringKey.SaveCatalogXml));
 
             if (!string.IsNullOrEmpty(pathToFile))
             {
@@ -38,7 +39,7 @@ namespace SeventhHeaven.UserControls
 
         private void btnLoad_Click(object sender, RoutedEventArgs e)
         {
-            string pathToFile = FileDialogHelper.BrowseForFile("catalog .xml|*.xml", "Select catalog.xml to Load");
+            string pathToFile = FileDialogHelper.BrowseForFile("catalog .xml|*.xml", ResourceHelper.Get(StringKey.SelectCatalogXmlToLoad));
 
             if (!string.IsNullOrEmpty(pathToFile))
             {
@@ -58,7 +59,7 @@ namespace SeventhHeaven.UserControls
 
         private void btnImport_Click(object sender, RoutedEventArgs e)
         {
-            string pathToFile = FileDialogHelper.BrowseForFile("mod .xml|*.xml|iro file (*.iro)|*.iro", "Select mod.xml or .iro file to Load");
+            string pathToFile = FileDialogHelper.BrowseForFile("mod .xml|*.xml|iro file (*.iro)|*.iro", ResourceHelper.Get(StringKey.SelectModXmlOrIroFileToLoad));
 
             if (!string.IsNullOrEmpty(pathToFile))
             {

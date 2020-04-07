@@ -107,7 +107,7 @@ namespace SeventhHeavenUI.ViewModels
         {
             get
             {
-                return _category;
+                return ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[_category]);
             }
             set
             {
@@ -206,11 +206,15 @@ namespace SeventhHeavenUI.ViewModels
 
             if (string.IsNullOrWhiteSpace(Category))
             {
-                Category = ResourceHelper.Get(StringKey.Unknown);
+                Category = ModCategory.Unknown.ToString();
             }
 
             NotifyPropertyChanged(nameof(IsInstalled));
         }
 
+        internal void RaiseNotifyPropertyChangedForCategory()
+        {
+            NotifyPropertyChanged(nameof(Category));
+        }
     }
 }

@@ -24,7 +24,7 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <ContentControl Template="{StaticResource iconWarning}"/>
+        <ContentControl Template="{StaticResource iconWarning}" IsTabStop="False"/>
 
         <ScrollViewer VerticalScrollBarVisibility="Auto" 
                       VerticalAlignment="Center" 
@@ -69,7 +69,7 @@
                 VerticalAlignment="Bottom"
                 Margin="0,0,0,10"
                 Width="80"
-                Content="OK"/>
+                Content="{DynamicResource OK}"/>
 
     </Grid>
 </Window>

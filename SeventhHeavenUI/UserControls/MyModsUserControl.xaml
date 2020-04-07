@@ -11,7 +11,7 @@
 
         <DataTemplate x:Key="dropdownItemTemplate">
             <Grid x:Name="gd" DataContext="{Binding RelativeSource={RelativeSource AncestorType=ComboBox, Mode=FindAncestor}, Path=DataContext}" Background="Transparent">
-                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.Category, FallbackValue='Value Name'}" Margin="0,0,15,0" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.Category, FallbackValue='Value Name'}" Margin="0,0,15,0" TextTrimming="CharacterEllipsis"/>
             </Grid>
         </DataTemplate>
 

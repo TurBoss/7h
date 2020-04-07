@@ -1,4 +1,5 @@
-﻿using SeventhHeaven.Classes;
+﻿using _7thHeaven.Code;
+using SeventhHeaven.Classes;
 using SeventhHeaven.Classes.Themes;
 using SeventhHeaven.ViewModels;
 using System;
@@ -82,7 +83,7 @@ namespace SeventhHeaven.Windows
 
         private void btnLoad_Click(object sender, RoutedEventArgs e)
         {
-            string themeFile = FileDialogHelper.BrowseForFile("theme file (.xml)|*.xml", "Select Custom Theme .xml File");
+            string themeFile = FileDialogHelper.BrowseForFile("theme xml(*.xml)|*.xml", ResourceHelper.Get(StringKey.SelectCustomThemeXmlFile));
 
             if (!string.IsNullOrWhiteSpace(themeFile))
             {
@@ -98,7 +99,7 @@ namespace SeventhHeaven.Windows
 
         private void menuExport_Click(object sender, RoutedEventArgs e)
         {
-            string saveFile = FileDialogHelper.OpenSaveDialog("theme file (.xml)|*.xml", "Save Custom Theme .xml File");
+            string saveFile = FileDialogHelper.OpenSaveDialog("theme xml (*.xml)|*.xml", ResourceHelper.Get(StringKey.SaveCustomThemeXmlFile));
 
             if (!string.IsNullOrWhiteSpace(saveFile))
             {

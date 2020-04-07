@@ -26,6 +26,9 @@ namespace _7thHeaven.Code
 
     public static class ModLoadOrder
     {
+        /// <summary>
+        /// Maps the category to the respective load order (also accessible from <see cref="ModCategory"/> enum)
+        /// </summary>
         public static Dictionary<string, int> Orders = new Dictionary<string, int>(StringComparer.InvariantCultureIgnoreCase)
         {
             { "Miscellaneous", 0},
@@ -44,6 +47,30 @@ namespace _7thHeaven.Code
             { "Unknown", 13}
         };
 
+        /// <summary>
+        /// Maps the english category to the respective <see cref="StringKey"/> that is used to translate the category.
+        /// </summary>
+        public static Dictionary<string, StringKey> ModCategoryTranslationKeys = new Dictionary<string, StringKey>(StringComparer.InvariantCultureIgnoreCase)
+        {
+            { "Miscellaneous", StringKey.Miscellaneous},
+            { "Animations", StringKey.Animations},
+            { "Battle Models", StringKey.BattleModels},
+            { "Battle Textures", StringKey.BattleTextures},
+            { "Field Models", StringKey.FieldModels},
+            { "Field Textures", StringKey.FieldTextures},
+            { "Gameplay", StringKey.Gameplay},
+            { "Media", StringKey.Media},
+            { "Minigames", StringKey.Minigames},
+            { "Spell Textures", StringKey.SpellTextures},
+            { "User Interface", StringKey.UserInterface},
+            { "World Models", StringKey.WorldModels},
+            { "World Textures", StringKey.WorldTextures},
+            { "Unknown", StringKey.Unknown}
+        };
+
+        /// <summary>
+        /// Returns <paramref name="category"/> as an int
+        /// </summary>
         public static int Get(ModCategory category)
         {
             return (int)category;
@@ -52,7 +79,6 @@ namespace _7thHeaven.Code
         /// <summary>
         /// Returns the load order based on the <paramref name="category"/>
         /// </summary>
-        /// <param name="category"></param>
         /// <returns> 
         /// returns an int >= 0 if valid; 
         /// -1 if not valid category; 

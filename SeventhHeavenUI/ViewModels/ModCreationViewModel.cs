@@ -99,12 +99,9 @@ namespace SeventhHeavenUI.ViewModels
             {
                 if (_categoryList == null)
                 {
-                    _categoryList = ModLoadOrder.Orders.Keys.ToList();
-
-                    // add translated text for 'Unknown' category
-                    _categoryList.Remove(ModCategory.Unknown.ToString());
-                    _categoryList.Add(ResourceHelper.Get(StringKey.Unknown));
-                    _categoryList = _categoryList.OrderBy(s => s).ToList();
+                    _categoryList = ModLoadOrder.Orders.Keys.Select(s => ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[s]))
+                                                            .OrderBy(s => s)
+                                                            .ToList();
                 }
 
                 return _categoryList;
@@ -242,11 +239,7 @@ namespace SeventhHeavenUI.ViewModels
             decimal.TryParse(VersionInput, System.Globalization.NumberStyles.AllowDecimalPoint, new System.Globalization.CultureInfo(""), out decimal parsedVersion);
             Guid.TryParse(IDInput, out Guid parsedId);
 
-            string translatedCategory = CategoryInput;
-            if (translatedCategory == ResourceHelper.Get(StringKey.Unknown))
-            {
-                translatedCategory = ModCategory.Unknown.ToString(); // generated mod will have 'Unknown' as category instead of the translated version of the text
-            }
+            string translatedCategory = ResourceHelper.ModCategoryTranslations[CategoryInput];
 
             if (LoadedMod == null)
             {
@@ -351,7 +344,8 @@ namespace SeventhHeavenUI.ViewModels
 
         public void GenerateModOutput()
         {
-            ModOutput = Util.Serialize(GenerateModFromInput()).Replace("<?xml version=\"1.0\" encoding=\"utf-16\"?>", "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+            var modInfo = GenerateModFromInput();
+            ModOutput = Util.Serialize(modInfo).Replace("<?xml version=\"1.0\" encoding=\"utf-16\"?>", "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
         }
 
         internal void LoadModXml(string pathToFile)
@@ -362,7 +356,7 @@ namespace SeventhHeavenUI.ViewModels
 
                 IDInput = LoadedMod.ID.ToString();
                 NameInput = LoadedMod.Name;
-                CategoryInput = LoadedMod.Category;
+                CategoryInput = ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[LoadedMod.Category]);
                 AuthorInput = LoadedMod.Author;
                 DescriptionInput = LoadedMod.Description;
                 VersionInput = LoadedMod.Version.ToString();

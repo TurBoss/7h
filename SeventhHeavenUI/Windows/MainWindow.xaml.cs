@@ -366,7 +366,12 @@ namespace SeventhHeavenUI
         private void menuItemSetLanguage_Click(object sender, RoutedEventArgs e)
         {
             SetLanguageWindow languageWindow = new SetLanguageWindow();
-            languageWindow.ShowDialog();
+            bool? isChanged = languageWindow.ShowDialog();
+
+            if (isChanged.GetValueOrDefault(false) == true)
+            {
+                ViewModel.RefreshTranslations();
+            }
         }
     }
 }

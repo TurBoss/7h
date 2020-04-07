@@ -882,7 +882,7 @@ namespace SeventhHeavenUI.ViewModels
         /// </summary>
         public void AutoSortBasedOnCategory()
         {
-            List<InstalledModViewModel> sortedList = ModList.OrderBy(s => ModLoadOrder.Get(s.Category))
+            List<InstalledModViewModel> sortedList = ModList.OrderBy(s => ModLoadOrder.Get(ResourceHelper.ModCategoryTranslations[s.Category]))
                                                             .ThenBy(m => m.Name)
                                                             .ToList();
 

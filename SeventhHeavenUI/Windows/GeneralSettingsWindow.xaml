@@ -61,7 +61,7 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
                 
-                <TextBlock Text="FF7 Exe:" Margin="0,0,5,0" HorizontalAlignment="Right"/>
+                <TextBlock Text="{DynamicResource FF7ExeLabel}" Margin="0,0,5,0" HorizontalAlignment="Right" Height="28" VerticalAlignment="Top"/>
                 <TextBox x:Name="txtFf7Exe" Text="{Binding FF7ExePathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" Grid.Column="1" Margin="0,0,0,6"/>
                 <Button x:Name="btnFf7Exe"
                         Style="{StaticResource FileEllipsisImageButton}"
@@ -69,9 +69,9 @@
                         Grid.Column="2" 
                         Margin="0,0,0,0"
                         VerticalAlignment="Top"
-                        ToolTip="Click to select your FF7.exe file"/>
+                        ToolTip="{DynamicResource ClickToSelectFf7ExeFile}"/>
 
-                <TextBlock Text="Movies:" Margin="0,6,5,0" HorizontalAlignment="Right" Grid.Row="1"/>
+                <TextBlock Text="{DynamicResource MoviesLabel}" Margin="0,6,5,0" HorizontalAlignment="Right" Grid.Row="1"/>
                 <TextBox x:Name="txtMovies" Text="{Binding MoviesPathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="1" Margin="0,6,0,6"/>
                 <Button x:Name="btnMovies"
                         Style="{StaticResource FolderImageButton}"
@@ -79,10 +79,10 @@
                         Grid.Row="1" Grid.Column="2" 
                         Margin="0,6,0,3"
                         VerticalAlignment="Top"
-                        ToolTip="Click to select where your movie folder is"/>
+                        ToolTip="{DynamicResource ClickToSelectWhereYourMovieFolderIs}"/>
 
 
-                <TextBlock Text="Textures:" Margin="0,6,5,0" HorizontalAlignment="Right" Grid.Row="2"/>
+                <TextBlock Text="{DynamicResource TexturesLabel}" Margin="0,6,5,0" HorizontalAlignment="Right" Grid.Row="2"/>
                 <TextBox x:Name="txtTextures" Text="{Binding TexturesPathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1" Margin="0,6,0,6" />
                 <Button x:Name="btnTextures"
                         Click="btnTextures_Click" 
@@ -90,10 +90,10 @@
                         Grid.Row="2" Grid.Column="2" 
                         Margin="0,6,0,0"
                         VerticalAlignment="Top"
-                        ToolTip="Click to select where Textures are stored"/>
+                        ToolTip="{DynamicResource ClickToSelectWhereTexturesAreStored}"/>
 
 
-                <TextBlock Text="Library:" Margin="0,6,5,0" HorizontalAlignment="Right" Grid.Row="3"/>
+                <TextBlock Text="{DynamicResource LibraryLabel}" Margin="0,6,5,0" HorizontalAlignment="Right" Grid.Row="3"/>
                 <TextBox x:Name="txtLibrary" Text="{Binding LibraryPathInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Grid.Column="1" Margin="0,6,0,0"/>
                 <Button x:Name="btnLibrary"
                         Click="btnLibrary_Click"
@@ -101,7 +101,7 @@
                         Grid.Row="3" Grid.Column="2" 
                         Margin="0,6,0,0"
                         VerticalAlignment="Top"
-                        ToolTip="Click to select where your Mod Library is"/>
+                        ToolTip="{DynamicResource ClickToSelectWhereYourModLibraryIs}"/>
             </Grid>
         </GroupBox>
 
@@ -141,7 +141,7 @@
                 <StackPanel Margin="3,3,0,3">
                     <Button x:Name="btnAddUrl"
                             Click="btnAddUrl_Click"
-                            ToolTip="Add Subscription URL"
+                            ToolTip="{DynamicResource AddSubscriptionURL}"
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"
                             Height="28"
@@ -151,7 +151,7 @@
 
                     <Button x:Name="btnRemoveUrl"
                             Click="btnRemoveUrl_Click"
-                            ToolTip="Remove Subscription URL"
+                            ToolTip="{DynamicResource RemoveSubscriptionURL}"
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"
                             Height="28"
@@ -160,7 +160,7 @@
                             Content="{StaticResource iconMinus}"/>
 
                     <Button x:Name="btnEditUrl"
-                            ToolTip="Edit Subscription URL/Name"
+                            ToolTip="{DynamicResource EditSubscriptionURL}"
                             Click="btnEditUrl_Click"
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"
@@ -169,7 +169,7 @@
                             Content="{StaticResource iconEdit}"/>
 
                     <Button x:Name="btnMoveUrlUp"
-                            ToolTip="Move Subscription Up. Right-click to move to top.)"
+                            ToolTip="{DynamicResource MoveSubscriptionUp}"
                             Click="btnMoveUrlUp_Click"
                             MouseRightButtonUp="btnMoveUrlUp_MouseRightButtonUp"
                             Style="{StaticResource ImageButton}"
@@ -179,7 +179,7 @@
                             Content="{StaticResource iconUpChevron}"/>
 
                     <Button x:Name="btnMoveUrlDown"
-                            ToolTip="Move Subscription Down. Right-click to move to bottom"
+                            ToolTip="{DynamicResource MoveSubscriptionDown}"
                             Click="btnMoveUrlDown_Click"
                             MouseRightButtonUp="btnMoveUrlDown_MouseRightButtonUp"
                             Style="{StaticResource ImageButton}"
@@ -222,7 +222,7 @@
                 <StackPanel Margin="3,3,0,3">
                     <Button x:Name="btnAddFolder"
                             Click="btnAddFolder_Click"
-                            ToolTip="Add Folder"
+                            ToolTip="{DynamicResource AddFolder}"
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"
                             Height="24"
@@ -232,7 +232,7 @@
 
                     <Button x:Name="btnRemoveFolder"
                             Click="btnRemoveFolder_Click"
-                            ToolTip="Remove Folder"
+                            ToolTip="{DynamicResource RemoveFolder}"
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"
                             Height="24"
@@ -241,7 +241,7 @@
                             Content="{StaticResource iconMinus}"/>
 
                     <Button x:Name="btnMoveFolderUp"
-                            ToolTip="Move Folder Up. Right-click to move to top."
+                            ToolTip="{DynamicResource MoveFolderUp}"
                             Click="btnMoveFolderUp_Click"
                             MouseRightButtonUp="btnMoveFolderUp_MouseRightButtonUp"
                             Style="{StaticResource ImageButton}"
@@ -251,7 +251,7 @@
                             Content="{StaticResource iconUpChevron}"/>
 
                     <Button x:Name="btnMoveFolderDown"
-                            ToolTip="Move Folder Down. Right-click to move to bottom."
+                            ToolTip="{DynamicResource MoveFolderDown}"
                             Click="btnMoveFolderDown_Click"
                             MouseRightButtonUp="btnMoveFolderDown_MouseRightButtonUp"
                             Style="{StaticResource ImageButton}"
@@ -312,7 +312,7 @@
                StaysOpen="True"
                Placement="Right"
                PlacementTarget="{Binding ElementName=btnAddUrl}">
-            <Grid Width="400" Height="166" 
+            <Grid Width="405" Height="170" 
                   Background="{DynamicResource PrimaryControlBackground}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
@@ -327,7 +327,7 @@
                          VerticalContentAlignment="Center"
                          Margin="25,15,25,10"/>
 
-                <TextBlock Text="Enter url in iros:// format"
+                <TextBlock Text="{DynamicResource EnterUrlInIrosFormat}"
                            Foreground="{DynamicResource PrimaryControlDisabledForeground}"
                            IsHitTestVisible="False"
                            FontSize="14"
@@ -379,7 +379,7 @@
                         HorizontalAlignment="Center"
                         Width="80"
                         Margin="0,0,90,10"
-                        Content="Save"/>
+                        Content="{DynamicResource Save}"/>
 
                 <Button x:Name="btnCancelSubscription"
                         Click="btnCancelSubscription_Click"
@@ -388,7 +388,7 @@
                         HorizontalAlignment="Center"
                         Width="80"
                         Margin="90,0,0,10"
-                        Content="Cancel"/>
+                        Content="{DynamicResource Cancel}"/>
 
             </Grid>
         </Popup>

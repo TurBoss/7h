@@ -25,16 +25,6 @@ namespace SeventhHeavenUI.ViewModels
         {
             get
             {
-                // replace text with translated text
-                if (Download?.ItemName == "Downloading preview image")
-                {
-                    Download.ItemName = ResourceHelper.Get(StringKey.DownloadingPreviewImage);
-                }
-                else if (Download?.ItemName.StartsWith("Downloading ") == true)
-                {
-                    Download.ItemName = Download.ItemName.Replace("Downloading", ResourceHelper.Get(StringKey.Downloading));
-                }
-
                 return Download?.ItemName;
             }
             set
@@ -117,6 +107,17 @@ namespace SeventhHeavenUI.ViewModels
 
         public DownloadItemViewModel(DownloadItem download)
         {
+            // translate hard coded english words from DownloadItem constructor
+            if (download.RemainingTime == "Unknown")
+            {
+                download.RemainingTime = ResourceHelper.Get(StringKey.Unknown);
+            }
+
+            if (download.DownloadSpeed == "Pending...")
+            {
+                download.DownloadSpeed = ResourceHelper.Get(StringKey.Pending);
+            }
+
             this.Download = download;
             IsCancelling = false;
         }
