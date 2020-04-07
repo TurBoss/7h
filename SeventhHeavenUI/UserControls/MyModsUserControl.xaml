@@ -95,7 +95,6 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <CheckBox Style="{StaticResource ToggleSwitchCheckbox}"
-                                          MaxWidth="65"
                                           MinWidth="45"
                                           IsChecked="{Binding IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                           IsTabStop="False"/>

@@ -254,5 +254,17 @@ namespace SeventhHeaven.Windows
         {
             ViewModel.DeleteSelectedCustomControl();
         }
+
+        private void windowSettings_Loaded(object sender, RoutedEventArgs e)
+        {
+            // resize window to fit grid contents (can happen when set to another language other than english)
+            double padding = 75; // add to account for padding/margin between two group boxes
+            double newWidth = grpOptions.ActualWidth + grpAudio.ActualWidth + padding;
+
+            if (newWidth > this.Width)
+            {
+                this.Width = newWidth;
+            }
+        }
     }
 }

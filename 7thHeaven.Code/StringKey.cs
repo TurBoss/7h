@@ -525,6 +525,7 @@
         UserInterface,
         WorldModels,
         WorldTextures,
-        Cancelling
+        Cancelling,
+        Volume
     }
 }

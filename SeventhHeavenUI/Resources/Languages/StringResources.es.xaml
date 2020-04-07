@@ -1155,5 +1155,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
 
     <system:String x:Key="Cancelling">Cancelling</system:String>
 
+    <system:String x:Key="Volume">Volumen</system:String>
+
 
 </ResourceDictionary>

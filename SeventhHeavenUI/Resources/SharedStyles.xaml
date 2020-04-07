@@ -982,30 +982,28 @@
 
     <!-- Checkbox stylized to look like Windows 10 toggle switch; reference: https://github.com/TacticApps/C-WPf-Toggle-Switch-UI-Control/blob/master/ToggleSwitch/ToggleSwitch/ToggleButton.xaml--> 
     <Style x:Key="ToggleSwitchCheckbox" TargetType="{x:Type CheckBox}">
-        <Setter Property="Height" Value="28"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
-        <Setter Property="FontSize" Value="28"/>
         <Setter Property="FocusVisualStyle" Value="{DynamicResource MainFocusVisualStyle}"/>
 
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="CheckBox">
-                    <Viewbox Margin="0,2,2,1" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" IsHitTestVisible="True">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="55"/>
+                                <ColumnDefinition Width="auto" MinWidth="40"/>
                             </Grid.ColumnDefinitions>
 
                             <TextBlock x:Name="contentText"
                                        HorizontalAlignment="Left"
-                                       Style="{StaticResource PrimaryTextBlockStyle}"
                                        Foreground="{TemplateBinding Foreground}"
                                        Text="{TemplateBinding Content}"
                                        FontSize="{TemplateBinding FontSize}"
-                                       Margin="0,0,15,10"
+                                       Margin="0,0,10,0"
                                        VerticalAlignment="Center"/>
+                        
+                            <Viewbox Margin="0,2,2,1" Grid.Column="1" Height="28" Width="34" IsHitTestVisible="True">
 
                             <Grid x:Name="grid" Grid.Column="1" HorizontalAlignment="Left" Height="60" Margin="0" VerticalAlignment="Top" Width="100">
                                 <Rectangle x:Name="Back" 
@@ -1024,19 +1022,18 @@
 
                                 <Rectangle x:Name="Overlay" Fill="{DynamicResource PrimaryControlBackground}" Opacity="0" HorizontalAlignment="Left" Height="52" VerticalAlignment="Top" Width="98" Margin="1,1,0,0" RadiusY="29" RadiusX="29"/>
                             </Grid>
+                    
+                            </Viewbox>
+
 
                             <TextBlock x:Name="toggleText"
                                        Grid.Column="2"
-                                       Style="{StaticResource PrimaryTextBlockStyle}"
                                        Text="{DynamicResource Off}"
-                                       FontSize="28"
-                                       Margin="10,0,0,10"
+                                       FontSize="{TemplateBinding FontSize}"
+                                       Margin="5,0,0,0"
                                        Foreground="{TemplateBinding Foreground}"
                                        VerticalAlignment="Center"/>
                         </Grid>
-                    </Viewbox>
-
-
 
 
                     <ControlTemplate.Triggers>

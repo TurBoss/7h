@@ -472,7 +472,7 @@ namespace SeventhHeaven.ViewModels
         {
             get
             {
-                return $"Volume: {SfxVolumeValue}";
+                return $"{ResourceHelper.Get(StringKey.Volume)}: {SfxVolumeValue}";
             }
         }
 
@@ -480,7 +480,7 @@ namespace SeventhHeaven.ViewModels
         {
             get
             {
-                return $"Volume: {MusicVolumeValue}";
+                return $"{ResourceHelper.Get(StringKey.Volume)}: {MusicVolumeValue}";
             }
         }
 

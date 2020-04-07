@@ -1171,6 +1171,11 @@ namespace SeventhHeavenUI.ViewModels
             // update UI viewmodel to reflect installation status
             DownloadItemViewModel itemViewModel = DownloadList.FirstOrDefault(i => i.Download.UniqueId == item.UniqueId);
 
+            if (itemViewModel == null || itemViewModel.IsCancelling)
+            {
+                return; // don't process download and finish install if download item is marked as cancelling or doesn't exist in list anymore
+            }
+
             if (item.Category == DownloadCategory.Mod && itemViewModel != null)
             {
                 itemViewModel.ItemName = item.ItemName.Replace(ResourceHelper.Get(StringKey.Downloading), ResourceHelper.Get(StringKey.Installing));

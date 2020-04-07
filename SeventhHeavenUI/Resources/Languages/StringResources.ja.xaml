@@ -1154,6 +1154,7 @@ Do you want to apply the setting and try again?</system:String>
 
     <system:String x:Key="Cancelling">Cancelling</system:String>
 
+    <system:String x:Key="Volume">Volume</system:String>
 
 
 </ResourceDictionary>

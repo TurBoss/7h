@@ -144,6 +144,15 @@ namespace SeventhHeaven.Windows
         {
             ScrollTextboxesToEnd();
             RecalculateColumnWidths();
+
+            // resize window to fit grid contents (can happen when set to another language other than english)
+            double padding = 100; // add to account for padding/margin between two group boxes
+            double newWidth = grpOptions.ActualWidth + grpFolders.ActualWidth + padding; 
+
+            if (newWidth > this.Width)
+            {
+                this.Width = newWidth;
+            }
         }
 
         private void ScrollTextboxesToEnd()

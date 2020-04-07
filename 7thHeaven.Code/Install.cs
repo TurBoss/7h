@@ -528,7 +528,7 @@ namespace Iros._7th.Workshop
                                 if (!iro.CheckValid())
                                     throw new Exception("IRO archive appears to be invalid: corrupted download?");
 
-                            SetPCComplete(50);
+                            SetPCComplete?.Invoke(50);
 
                             System.IO.File.Copy(source, _dest, overwrite: true);
                             System.IO.File.Delete(source);
@@ -539,7 +539,7 @@ namespace Iros._7th.Workshop
                             var iroEnt = archive.Entries.FirstOrDefault(e => System.IO.Path.GetExtension(e.Key).Equals(".iro", StringComparison.InvariantCultureIgnoreCase));
                             if (iroEnt != null)
                             {
-                                SetPCComplete(50);
+                                SetPCComplete?.Invoke(50);
                                 iroEnt.WriteToFile(_dest);
                             }
                             else
@@ -567,7 +567,7 @@ namespace Iros._7th.Workshop
                                             }
                                             count++;
                                             float prog = (float) count / (float)entries.Length;
-                                            SetPCComplete((int) (50 * prog) + 50); // start at 50% go up to 100%
+                                            SetPCComplete?.Invoke((int) (50 * prog) + 50); // start at 50% go up to 100%
                                         }
                                     }
                                 }
@@ -582,7 +582,7 @@ namespace Iros._7th.Workshop
                     Error(e);
                     return;
                 }
-                SetPCComplete(100);
+                SetPCComplete?.Invoke(100);
                 Complete();
             }
 
