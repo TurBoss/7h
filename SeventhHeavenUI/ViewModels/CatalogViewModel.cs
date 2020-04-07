@@ -526,10 +526,16 @@ namespace SeventhHeavenUI.ViewModels
 
         internal void PauseOrResumeDownload(DownloadItemViewModel downloadItem)
         {
+            if (downloadItem.IsCancelling)
+            {
+                return; // the download has already been marked as being canceled so just return (the cancel is async so it takes a second for it to be removed from download list)
+            }
+
             if (downloadItem?.Download?.FileDownloadTask == null)
             {
                 return;
             }
+
 
             if (downloadItem.Download.FileDownloadTask?.IsPaused == true)
             {
@@ -572,6 +578,13 @@ namespace SeventhHeavenUI.ViewModels
             if (SelectedDownload.Download.Category != DownloadCategory.Mod || SelectedDownload.Download.FileDownloadTask == null)
             {
                 PauseDownloadToolTip = ResourceHelper.Get(StringKey.PauseResumeSelectedDownload);
+                PauseDownloadIsEnabled = false;
+                return;
+            }
+
+            if (SelectedDownload.IsCancelling)
+            {
+                PauseDownloadToolTip = ResourceHelper.Get(StringKey.PauseSelectedDownload);
                 PauseDownloadIsEnabled = false;
                 return;
             }
@@ -625,13 +638,16 @@ namespace SeventhHeavenUI.ViewModels
             }
 
             downloadItemViewModel.IsCancelling = true;
+            downloadItemViewModel.ItemName = downloadItemViewModel.ItemName.Replace(ResourceHelper.Get(StringKey.Downloading), ResourceHelper.Get(StringKey.Cancelling));
+            downloadItemViewModel.ItemName = downloadItemViewModel.ItemName.Replace(ResourceHelper.Get(StringKey.Installing), ResourceHelper.Get(StringKey.Cancelling));
 
             if (downloadItemViewModel?.Download?.PerformCancel != null)
             {
                 downloadItemViewModel.Download.PerformCancel?.Invoke(); // PerformCancel will happen during download and internally calls OnCancel
             }
 
-            Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.Canceled)} {downloadItemViewModel?.ItemName}"));
+            UpdatePauseDownloadButtonUI();
+            Sys.Message(new WMessage(downloadItemViewModel?.ItemName));
         }
 
         internal void DownloadMod(CatalogModItemViewModel catalogModItemViewModel)

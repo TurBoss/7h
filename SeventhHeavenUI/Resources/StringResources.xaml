@@ -988,7 +988,7 @@ Do you want to apply the setting and try again?</system:String>
     <system:String x:Key="FailedToUnpackIro">Failed to unpack .iro</system:String>
 
     <system:String x:Key="SelectModToDownloadFirst">Select a mod to download first.</system:String>
-    <system:String x:Key="NoDownloadSelected">No Download selected.</system:String>
+    <system:String x:Key="NoDownloadSelected">No download selected.</system:String>
     <system:String x:Key="SelectAModFirst">Select a mod first.</system:String>
 
     <system:String x:Key="FailedToSaveCatalogXml">Failed to save catalog xml</system:String>
@@ -1157,6 +1157,7 @@ Do you want to apply the setting and try again?</system:String>
     <system:String x:Key="WorldTextures">World Textures</system:String>
 
 
+    <system:String x:Key="Cancelling">Cancelling</system:String>
 
 
 

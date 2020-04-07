@@ -430,5 +430,10 @@ namespace SeventhHeaven.UserControls
 
             ViewModel.CancelDownload((lstDownloads.SelectedItem as DownloadItemViewModel));
         }
+        private void lstCatalogMods_GotFocus(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SelectedDownload = null;
+        }
+
     }
 }

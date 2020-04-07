@@ -26,6 +26,16 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="DownloadListViewItem" TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource ControlListViewItemStyle}">
+            <Setter Property="Tag" Value="TransparentBg"/>
+
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsSelected}" Value="False">
+                    <Setter Property="Tag" Value=""/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="SmallImageButton"  TargetType="{x:Type Button}" BasedOn="{StaticResource ImageButton}">
             <Setter Property="Height" Value="40"/>
             <Setter Property="Width" Value="44"/>
@@ -49,7 +59,8 @@
                Opacity="0.25" 
                IsHitTestVisible="False"/>
 
-        <ListView x:Name="lstCatalogMods" 
+        <ListView x:Name="lstCatalogMods"
+                  GotFocus="lstCatalogMods_GotFocus"
                   Background="Transparent"
                   ItemsSource="{Binding CatalogModList}"
                   ItemContainerStyle="{StaticResource ModListViewItem}"
@@ -132,7 +143,7 @@
                   Margin="0,5,0,0"
                   ItemsSource="{Binding DownloadList, UpdateSourceTrigger=PropertyChanged}"
                   SelectedItem="{Binding SelectedDownload, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  ItemContainerStyle="{StaticResource ControlListViewItemStyle}"
+                  ItemContainerStyle="{StaticResource DownloadListViewItem}"
                   MinHeight="100"
                   MaxHeight="150">
             <ListView.View>
@@ -141,7 +152,7 @@
                     <GridViewColumn x:Name="colProgress" Header="{DynamicResource Progress}" Width="Auto">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <ProgressBar Value="{Binding PercentComplete, FallbackValue='50'}" Width="{Binding ElementName=colProgress, Path=ActualWidth}" Height="10"/>
+                                <ProgressBar Value="{Binding PercentComplete, FallbackValue='50'}" Width="{Binding ElementName=colProgress, Path=ActualWidth}" Height="10" Opacity="1"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
