@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="{DynamicResource ChunkToolWindowTitle}" 
         Style="{StaticResource MainWindowStyle}"
+        Loaded="Window_Loaded"
         ResizeMode="NoResize"
         Height="320" Width="450">
     <Grid>
@@ -68,14 +69,17 @@
                  Margin="5,38,0,0"/>
 
 
-        <GroupBox Header="{DynamicResource SectionHeader}"
+        <GroupBox x:Name="grpSections"
+                  Header="{DynamicResource SectionHeader}"
                   Margin="10,0,10,10"
+                  MinWidth="420"
                   Grid.ColumnSpan="3"
                   Grid.Row="1">
-            <Grid Margin="5" TextElement.FontSize="13">
+            <Grid x:Name="gridSections" Margin="5" TextElement.FontSize="13">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
                 <StackPanel VerticalAlignment="Top">
@@ -115,7 +119,7 @@
                               Margin="0,0,0,5"/>
                 </StackPanel>
 
-                <StackPanel Grid.Column="1" VerticalAlignment="Top">
+                <StackPanel Grid.Column="2" VerticalAlignment="Top">
                     <CheckBox Content="{DynamicResource Section6}"
                               IsChecked="{Binding SectionSixIsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding IsNotExtracting}"

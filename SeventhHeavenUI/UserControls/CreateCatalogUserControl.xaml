@@ -80,47 +80,46 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="btnGenerate"
-                    Click="btnGenerate_Click"
-                    Content="{DynamicResource Generate}"
-                    ToolTip="{DynamicResource OutputsCurrentCatalogXmlToBelow}"
-                    HorizontalAlignment="Left"
-                    Width="80"
-                    Margin="5,0,165,5"/>
+            <WrapPanel HorizontalAlignment="Left"
+                       Margin="5,0,0,5">
+                
+                <Button x:Name="btnGenerate"
+                        Click="btnGenerate_Click"
+                        Content="{DynamicResource Generate}"
+                        ToolTip="{DynamicResource OutputsCurrentCatalogXmlToBelow}"
+                        MinWidth="80"/>
 
-            <Button x:Name="btnSave"
-                    Click="btnSave_Click"
-                    Content="{DynamicResource Save}"
-                    Width="80"
-                    ToolTip="{DynamicResource SaveCatalogXmlToFile}"
-                    HorizontalAlignment="Left"
-                    Margin="85,0,0,5"/>
+                <Button x:Name="btnSave"
+                        Click="btnSave_Click"
+                        Content="{DynamicResource Save}"
+                        MinWidth="80"
+                        ToolTip="{DynamicResource SaveCatalogXmlToFile}"/>
 
-            <Button x:Name="btnLoad"
-                    Click="btnLoad_Click"
-                    Content="{DynamicResource Load}"
-                    ToolTip="{DynamicResource LoadCatalogXmlFileToEdit}"
-                    HorizontalAlignment="Left"
-                    Width="80"
-                    Margin="165,0,5,5"/>
+                <Button x:Name="btnLoad"
+                        Click="btnLoad_Click"
+                        Content="{DynamicResource Load}"
+                        ToolTip="{DynamicResource LoadCatalogXmlFileToEdit}"
+                        MinWidth="80"/>
+            </WrapPanel>
 
-            <Button x:Name="btnAdd"
-                    Grid.Column="1"
-                    Click="btnAdd_Click"
-                    Content="{DynamicResource Add}"
-                    ToolTip="{DynamicResource AddModToCatalog}"
-                    HorizontalAlignment="Right"
-                    Width="80"
-                    Margin="0,0,15,5"/>
+            <WrapPanel Grid.Column="1"
+                       HorizontalAlignment="Right"
+                       Margin="0,0,15,5">
+                
+                <Button x:Name="btnAdd"
+                        Grid.Column="1"
+                        Click="btnAdd_Click"
+                        Content="{DynamicResource Add}"
+                        ToolTip="{DynamicResource AddModToCatalog}"
+                        MinWidth="80"/>
 
-            <Button x:Name="btnImport"
-                    Grid.Column="1"
-                    Click="btnImport_Click"
-                    Content="{DynamicResource Import}"
-                    ToolTip="{DynamicResource ImportModFromModXmlOrIro}"
-                    HorizontalAlignment="Right"
-                    Width="80"
-                    Margin="0,0,95,5"/>
+                <Button x:Name="btnImport"
+                        Grid.Column="1"
+                        Click="btnImport_Click"
+                        Content="{DynamicResource Import}"
+                        ToolTip="{DynamicResource ImportModFromModXmlOrIro}"
+                        MinWidth="80"/>
+            </WrapPanel>
 
             <ListView Grid.Row="1" x:Name="lstMods"
                       ItemContainerStyle="{StaticResource MainListViewItemStyle}"

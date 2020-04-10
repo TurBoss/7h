@@ -227,7 +227,7 @@
                                     Style="{StaticResource HyperlinkButton}"
                                     FontSize="12"
                                     Margin="0,0,0,0"
-                                    Width="120"
+                                    MinWidth="120"
                                     Background="Transparent"/>
                             <ToggleButton x:Name="btnUpdateModType"
                                           Click="btnUpdateModType_Click"
@@ -259,7 +259,7 @@
                         <WrapPanel Margin="3,0,3,0" Grid.Row="5">
                             <TextBlock Text="{DynamicResource LinkLabel}" Style="{StaticResource ModInfoLabelStyle}" Margin="0,1,0,3"/>
                             <Button x:Name="btnOpenModLink" 
-                                    Width="80"
+                                    MinWidth="80"
                                     FontSize="12"
                                     Background="Transparent"
                                     Margin="2,0,5,0"
@@ -274,7 +274,7 @@
                                     Click="btnOpenModReadme_Click"
                                     FontSize="12"
                                     Background="Transparent"
-                                    Width="80"
+                                    MinWidth="80"
                                     Margin="2,0,10,0"
                                     Visibility="{Binding ReadmeVisibility, FallbackValue='Visible'}"
                                     IsEnabled="{Binding PreviewModHasReadMe, FallbackValue='False'}"

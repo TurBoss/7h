@@ -1022,7 +1022,7 @@ Do you want to apply the setting and try again?</system:String>
     <system:String x:Key="SourceIro">Source IRO:</system:String>
 
     <!--CreateModUserControl Strings-->
-    <system:String x:Key="OuputsCurrentModXmlToBelow">Ouputs current mod.xml to below text area.</system:String>
+    <system:String x:Key="OutputsCurrentModXmlToBelow">Outputs current mod.xml to below text area.</system:String>
     <system:String x:Key="SaveModXmlToFile">Save mod.xml to file</system:String>
     <system:String x:Key="LoadModXmlFileToEdit">Load a mod.xml file to edit</system:String>
 
