@@ -373,5 +373,10 @@ namespace SeventhHeavenUI
                 ViewModel.RefreshTranslations();
             }
         }
+
+        private void menuItemControls_Click(object sender, RoutedEventArgs e)
+        {
+            new ControlMappingWindow().ShowDialog();
+        }
     }
 }

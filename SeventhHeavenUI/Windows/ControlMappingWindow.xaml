@@ -1,0 +1,183 @@
+﻿<Window x:Class="SeventhHeaven.Windows.ControlMappingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SeventhHeaven.Windows"
+        mc:Ignorable="d"
+        Title="Control Mapping"
+        WindowStartupLocation="CenterScreen"
+        Style="{DynamicResource MainWindowStyle}"
+        PreviewKeyDown="Window_PreviewKeyDown"
+        Height="525" Width="700">
+    <Window.Resources>
+        <Style x:Key="controlNameLabel" TargetType="TextBlock" BasedOn="{StaticResource PrimaryTextBlockStyle}">
+            <Setter Property="Margin" Value="0,0,5,0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="28"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Keyboard"
+                   Style="{StaticResource controlNameLabel}"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,0"
+                   Grid.Row="0"
+                   Grid.Column="1"/>
+
+        <TextBlock Text="Controller"
+                   Style="{StaticResource controlNameLabel}"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,0"
+                   Grid.Row="0"
+                   Grid.Column="2"/>
+
+        <TextBlock Text="[OK]"
+                   Style="{StaticResource controlNameLabel}"
+                   Grid.Row="1"/>
+        
+        <Button x:Name="btnOkKeyboard"
+                Content="{Binding OkKeyboardText, FallbackValue='Enter'}"
+                IsEnabled="{Binding IsNotCapturing}"
+                Click="btnOkKeyboard_Click"
+                Grid.Row="1"
+                Grid.Column="1"/>
+
+        <Button x:Name="btnOkController"
+                Content="{Binding OkControllerText, FallbackValue='Button #1'}"
+                IsEnabled="{Binding IsNotCapturing}"
+                Click="btnOkController_Click"
+                Margin="0,0,5,0"
+                Grid.Row="1"
+                Grid.Column="2"/>
+
+        <TextBlock Text="[CANCEL]"
+                   Style="{StaticResource controlNameLabel}"
+                   Grid.Row="2"/>
+
+        <Button x:Name="btnCancelKeyboard"
+                Content="{Binding CancelKeyboardText, FallbackValue='Enter'}"
+                IsEnabled="{Binding IsNotCapturing}"
+                Click="btnCancelKeyboard_Click"
+                Grid.Row="2"
+                Grid.Column="1"/>
+
+        <TextBlock Text="[MENU]"
+                   Style="{StaticResource controlNameLabel}"
+                   Grid.Row="3"/>
+
+        <Button x:Name="btnMenuKeyboard"
+                Content="{Binding MenuKeyboardText, FallbackValue='Enter'}"
+                IsEnabled="{Binding IsNotCapturing}"
+                Click="btnMenuKeyboard_Click"
+                Grid.Row="3"
+                Grid.Column="1"/>
+
+        <TextBlock Text="[SWITCH]"
+                   Style="{StaticResource controlNameLabel}"
+                   Grid.Row="4"/>
+
+        <Button x:Name="btnSwitchKeyboard"
+                Content="{Binding SwitchKeyboardText, FallbackValue='Enter'}"
+                IsEnabled="{Binding IsNotCapturing}"
+                Click="btnSwitchKeyboard_Click"
+                Grid.Row="4"
+                Grid.Column="1"/>
+
+        <TextBlock Text="[PAGEUP]"
+                   Style="{StaticResource controlNameLabel}"
+                   Grid.Row="5"/>
+
+        <Button x:Name="btnPageUpKeyboard"
+                Content="{Binding PageUpKeyboardText, FallbackValue='Enter'}"
+                IsEnabled="{Binding IsNotCapturing}"
+                Click="btnPageUpKeyboard_Click"
+                Grid.Row="5"
+                Grid.Column="1"/>
+
+        <TextBlock Text="[PAGEDOWN]"
+                   Style="{StaticResource controlNameLabel}"
+                   Grid.Row="6"/>
+
+        <Button x:Name="btnPageDownKeyboard"
+                Content="{Binding PageDownKeyboardText, FallbackValue='Enter'}"
+                IsEnabled="{Binding IsNotCapturing}"
+                Click="btnPageDownKeyboard_Click"
+                Grid.Row="6"
+                Grid.Column="1"/>
+
+
+        <TextBlock Text="[CAMERA]"
+                   Style="{StaticResource controlNameLabel}"
+                   Grid.Row="7"/>
+
+        <TextBlock Text="[TARGET]"
+                   Style="{StaticResource controlNameLabel}"
+                   Grid.Row="8"/>
+
+        <TextBlock Text="[ASSIST]"
+                   Style="{StaticResource controlNameLabel}"
+                   Grid.Row="9"/>
+
+        <TextBlock Text="[START]"
+                   Style="{StaticResource controlNameLabel}"
+                   Grid.Row="10"/>
+
+        <TextBlock Text="[UP]"
+                   Style="{StaticResource controlNameLabel}"
+                   Grid.Row="11"/>
+
+        <TextBlock Text="[DOWN]"
+                   Style="{StaticResource controlNameLabel}"
+                   Grid.Row="12"/>
+
+        <TextBlock Text="[LEFT]"
+                   Style="{StaticResource controlNameLabel}"
+                   Grid.Row="13"/>
+
+        <TextBlock Text="[RIGHT]"
+                   Style="{StaticResource controlNameLabel}"
+                   Grid.Row="14"/>
+
+
+        <WrapPanel Grid.Row="15"
+                   Grid.Column="1"
+                   Grid.ColumnSpan="2"
+                   HorizontalAlignment="Right"
+                   Margin="0,5,5,5">
+            <Button x:Name="btnSave"
+                    MinWidth="80"
+                    Content="{DynamicResource Save}"/>
+            <Button x:Name="btnCancel"
+                    MinWidth="80"
+                    Content="{DynamicResource Cancel}"/>
+
+        </WrapPanel>
+    </Grid>
+</Window>

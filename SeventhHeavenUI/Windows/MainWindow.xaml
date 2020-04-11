@@ -139,6 +139,7 @@
                             <MenuItem x:Name="menuItemGeneralSettings" Header="{DynamicResource GeneralSettings}" Click="menuItemGeneralSettings_Click"/>
                             <MenuItem x:Name="menuItemAaliSettings" Header="{DynamicResource GameDriver}" Click="menuItemAaliSettings_Click"/>
                             <MenuItem x:Name="menuItemLaunchSettings" Header="{DynamicResource GameLauncher}" Click="menuItemLaunchSettings_Click"/>
+                            <MenuItem x:Name="menuItemControls" Header="Controls..." Click="menuItemControls_Click"/>
 
                             <MenuItem Style="{StaticResource ContextMenuSeperator}"/>
                             <MenuItem x:Name="menuItemOpenProfile" Header="{DynamicResource Profiles}" Click="menuItemOpenProfile_Click"/>
