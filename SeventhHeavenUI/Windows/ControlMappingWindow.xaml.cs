@@ -32,16 +32,6 @@ namespace SeventhHeaven.Windows
             this.DataContext = ViewModel;
         }
 
-        private void btnOkKeyboard_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.StartCapturingInput(GameControl.Ok);
-        }
-
-        private void btnOkController_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.StartCapturingInput(GameControl.Ok);
-        }
-
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             bool didCapture = false;
@@ -80,6 +70,26 @@ namespace SeventhHeaven.Windows
             }
         }
 
+        private void btnDeleteControls_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.DeleteSelectedCustomControl();
+        }
+
+        private void btnSaveControls_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SaveNewCustomControl();
+        }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btnSaveChanges_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SaveChangesToFile();
+        }
+
         private static bool IsNumpadEnterKey(KeyEventArgs e)
         {
             // reference: https://stackoverflow.com/questions/8059177/distinguish-between-normal-enter-and-the-number-pad-enter-keypress
@@ -100,90 +110,157 @@ namespace SeventhHeaven.Windows
             return false;
         }
 
+        #region Button Events for keyboard bindings
+
+
+        private void btnOkKeyboard_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.StartCapturingKeyboardInput(GameControl.Ok);
+        }
+
 
         private void btnCancelKeyboard_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.StartCapturingInput(GameControl.Cancel);
+            ViewModel.StartCapturingKeyboardInput(GameControl.Cancel);
         }
 
         private void btnMenuKeyboard_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.StartCapturingInput(GameControl.Menu);
+            ViewModel.StartCapturingKeyboardInput(GameControl.Menu);
         }
 
         private void btnSwitchKeyboard_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.StartCapturingInput(GameControl.Switch);
+            ViewModel.StartCapturingKeyboardInput(GameControl.Switch);
         }
 
         private void btnPageUpKeyboard_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.StartCapturingInput(GameControl.Pageup);
+            ViewModel.StartCapturingKeyboardInput(GameControl.Pageup);
         }
 
         private void btnPageDownKeyboard_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.StartCapturingInput(GameControl.Pagedown);
+            ViewModel.StartCapturingKeyboardInput(GameControl.Pagedown);
         }
 
         private void btnCameraKeyboard_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.StartCapturingInput(GameControl.Camera);
+            ViewModel.StartCapturingKeyboardInput(GameControl.Camera);
         }
 
         private void btnTargetKeyboard_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.StartCapturingInput(GameControl.Target);
+            ViewModel.StartCapturingKeyboardInput(GameControl.Target);
         }
 
         private void btnAssistKeyboard_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.StartCapturingInput(GameControl.Assist);
+            ViewModel.StartCapturingKeyboardInput(GameControl.Assist);
         }
 
         private void btnStartKeyboard_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.StartCapturingInput(GameControl.Start);
+            ViewModel.StartCapturingKeyboardInput(GameControl.Start);
         }
 
         private void btnUpKeyboard_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.StartCapturingInput(GameControl.Up);
+            ViewModel.StartCapturingKeyboardInput(GameControl.Up);
         }
 
         private void btnDownKeyboard_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.StartCapturingInput(GameControl.Down);
+            ViewModel.StartCapturingKeyboardInput(GameControl.Down);
         }
 
         private void btnLeftKeyboard_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.StartCapturingInput(GameControl.Left);
+            ViewModel.StartCapturingKeyboardInput(GameControl.Left);
         }
 
         private void btnRightKeyboard_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.StartCapturingInput(GameControl.Right);
+            ViewModel.StartCapturingKeyboardInput(GameControl.Right);
         }
 
-        private void btnDeleteControls_Click(object sender, RoutedEventArgs e)
+        #endregion
+
+
+        #region Button Events for controller bindings
+
+
+        private void btnOkController_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.DeleteSelectedCustomControl();
+            ViewModel.StartCapturingControllerInput(GameControl.Ok);
         }
 
-        private void btnSaveControls_Click(object sender, RoutedEventArgs e)
+        private void btnCancelController_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.SaveNewCustomControl();
+            ViewModel.StartCapturingControllerInput(GameControl.Cancel);
         }
 
-        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        private void btnMenuController_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            ViewModel.StartCapturingControllerInput(GameControl.Menu);
         }
 
-        private void btnSaveChanges_Click(object sender, RoutedEventArgs e)
+        private void btnSwitchController_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.SaveChangesToFile();
+            ViewModel.StartCapturingControllerInput(GameControl.Switch);
         }
+
+        private void btnPageUpController_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.StartCapturingControllerInput(GameControl.Pageup);
+        }
+
+        private void btnPageDownController_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.StartCapturingControllerInput(GameControl.Pagedown);
+        }
+
+        private void btnCameraController_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.StartCapturingControllerInput(GameControl.Camera);
+        }
+
+        private void btnTargetController_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.StartCapturingControllerInput(GameControl.Target);
+        }
+
+        private void btnAssistController_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.StartCapturingControllerInput(GameControl.Assist);
+        }
+
+        private void btnStartController_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.StartCapturingControllerInput(GameControl.Start);
+        }
+
+        private void btnUpController_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.StartCapturingControllerInput(GameControl.Up);
+        }
+
+        private void btnDownController_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.StartCapturingControllerInput(GameControl.Down);
+        }
+
+        private void btnLeftController_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.StartCapturingControllerInput(GameControl.Left);
+        }
+
+        private void btnRightController_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.StartCapturingControllerInput(GameControl.Right);
+        }
+
+        #endregion
+
     }
 }

@@ -158,6 +158,11 @@ namespace SeventhHeaven.Classes
             return ControlInputs.Where(c => c.KeyboardKey.HasValue && c.KeyboardKey.Value == keyboardInput).FirstOrDefault();
         }
 
+        public static ControlInputSetting GetControlInputFromButton(GamePadButton button)
+        {
+            return ControlInputs.Where(c => c.GamepadInput.HasValue && c.GamepadInput.Value == button).FirstOrDefault();
+        }
+
         public static ControlInputSetting GetControlInputFromConfigValue(int configValue)
         {
             return ControlInputs.Where(c => c.ConfigValue == configValue).FirstOrDefault();

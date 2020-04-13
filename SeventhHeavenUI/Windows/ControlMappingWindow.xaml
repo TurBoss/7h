@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         mc:Ignorable="d"
-        Title="Control Mapping"
+        Title="Set In-Game Controls"
         WindowStartupLocation="CenterScreen"
         Style="{DynamicResource MainWindowStyle}"
         PreviewKeyDown="Window_PreviewKeyDown"
@@ -83,6 +83,7 @@
         <Button x:Name="btnOkController"
                 Content="{Binding OkControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
+                Click="btnOkController_Click"
                 Margin="0,0,5,0"
                 Grid.Row="1"
                 Grid.Column="2"/>
@@ -102,6 +103,7 @@
         <Button x:Name="btnCancelController"
                 Content="{Binding CancelControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
+                Click="btnCancelController_Click"
                 Margin="0,0,5,0"
                 Grid.Row="2"
                 Grid.Column="2"/>
@@ -121,9 +123,11 @@
         <Button x:Name="btnMenuController"
                 Content="{Binding MenuControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
+                Click="btnMenuController_Click"
                 Margin="0,0,5,0"
                 Grid.Row="3"
                 Grid.Column="2"/>
+        
         
 
         <TextBlock Text="[SWITCH]"
@@ -140,6 +144,7 @@
         <Button x:Name="btnSwitchController"
                 Content="{Binding SwitchControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
+                Click="btnSwitchController_Click"
                 Margin="0,0,5,0"
                 Grid.Row="4"
                 Grid.Column="2"/>
@@ -160,6 +165,7 @@
         <Button x:Name="btnPageUpController"
                 Content="{Binding PageUpControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
+                Click="btnPageUpController_Click"
                 Margin="0,0,5,0"
                 Grid.Row="5"
                 Grid.Column="2"/>
@@ -179,6 +185,7 @@
         <Button x:Name="btnPageDownController"
                 Content="{Binding PageDownControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
+                Click="btnPageDownController_Click"
                 Margin="0,0,5,0"
                 Grid.Row="6"
                 Grid.Column="2"/>
@@ -197,6 +204,7 @@
         <Button x:Name="btnCameraController"
                 Content="{Binding CameraControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
+                Click="btnCameraController_Click"
                 Margin="0,0,5,0"
                 Grid.Row="7"
                 Grid.Column="2"/>
@@ -214,6 +222,7 @@
         <Button x:Name="btnTargetController"
                 Content="{Binding TargetControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
+                Click="btnTargetController_Click"
                 Margin="0,0,5,0"
                 Grid.Row="8"
                 Grid.Column="2"/>
@@ -232,6 +241,7 @@
         <Button x:Name="btnAssistController"
                 Content="{Binding AssistControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
+                Click="btnAssistController_Click"
                 Margin="0,0,5,0"
                 Grid.Row="9"
                 Grid.Column="2"/>
@@ -250,6 +260,7 @@
         <Button x:Name="btnStartController"
                 Content="{Binding StartControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
+                Click="btnStartController_Click"
                 Margin="0,0,5,0"
                 Grid.Row="10"
                 Grid.Column="2"/>
@@ -268,6 +279,7 @@
         <Button x:Name="btnUpController"
                 Content="{Binding UpControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
+                Click="btnUpController_Click"
                 Margin="0,0,5,0"
                 Grid.Row="11"
                 Grid.Column="2"/>
@@ -287,6 +299,7 @@
         <Button x:Name="btnDownController"
                 Content="{Binding DownControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
+                Click="btnDownController_Click"
                 Margin="0,0,5,0"
                 Grid.Row="12"
                 Grid.Column="2"/>
@@ -303,6 +316,7 @@
         <Button x:Name="btnLeftController"
                 Content="{Binding LeftControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
+                Click="btnLeftController_Click"
                 Margin="0,0,5,0"
                 Grid.Row="13"
                 Grid.Column="2"/>
@@ -319,6 +333,7 @@
         <Button x:Name="btnRightController"
                 Content="{Binding RightControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
+                Click="btnRightController_Click"
                 Margin="0,0,5,0"
                 Grid.Row="14"
                 Grid.Column="2"/>

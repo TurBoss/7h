@@ -8,14 +8,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using XInputDotNetPure;
 
 namespace SeventhHeaven.ViewModels
 {
+
     public class ControlMappingViewModel : ViewModelBase
     {
+        private enum CaptureState
+        {
+            NotCapturing,
+            CaptureKeyboard,
+            CaptureController
+        }
+
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         private List<string> _defaultControlNames = new List<string>()
@@ -35,6 +45,7 @@ namespace SeventhHeaven.ViewModels
         private string _okControllerText;
         private bool _isCapturing;
         private GameControl _controlToCapture;
+        private CaptureState _captureState;
         private string _okKeyboardText;
         private string _cancelKeyboardText;
         private string _menuKeyboardText;
@@ -518,6 +529,8 @@ namespace SeventhHeaven.ViewModels
 
         public ControlMappingViewModel()
         {
+            _captureState = CaptureState.NotCapturing;
+
             InitInGameConfigOptions();
 
             SelectedGameConfigOption = InGameConfigurationMap.Where(s => s.Value == Sys.Settings.GameLaunchSettings.InGameConfigOption)
@@ -578,16 +591,34 @@ namespace SeventhHeaven.ViewModels
 
         internal bool SetControlIfCapturing(System.Windows.Input.Key key)
         {
-            if (!IsCapturing)
+            if (!IsCapturing || _captureState != CaptureState.CaptureKeyboard)
             {
                 return false;
             }
 
-            LoadedConfiguration.Set(_controlToCapture, key);
+            LoadedConfiguration.SetKeyboardInput(_controlToCapture, key);
 
             UpdateButtonText();
 
             IsCapturing = false;
+            HasUnsavedChanges = true;
+            _captureState = CaptureState.NotCapturing;
+            return true;
+        }
+
+        internal bool SetControlIfCapturing(GamePadButton pressedButton)
+        {
+            if (!IsCapturing || _captureState != CaptureState.CaptureController)
+            {
+                return false;
+            }
+
+            LoadedConfiguration.SetControllerInput(_controlToCapture, pressedButton);
+
+            UpdateButtonText();
+
+            IsCapturing = false;
+            _captureState = CaptureState.NotCapturing;
             HasUnsavedChanges = true;
             return true;
         }
@@ -600,12 +631,13 @@ namespace SeventhHeaven.ViewModels
             }
 
             ControlInputSetting numpadEnterSetting = ControlMapper.ControlInputs.Where(c => c.DisplayText == "NUMPADENTER").FirstOrDefault();
-            LoadedConfiguration.Set(_controlToCapture, numpadEnterSetting);
+            LoadedConfiguration.SetKeyboardInput(_controlToCapture, numpadEnterSetting);
 
             UpdateButtonText();
 
             IsCapturing = false;
             HasUnsavedChanges = true;
+            _captureState = CaptureState.NotCapturing;
             return true;
         }
 
@@ -755,12 +787,146 @@ namespace SeventhHeaven.ViewModels
 
         }
 
-        internal void StartCapturingInput(GameControl controlToCapture)
+        internal void StartCapturingKeyboardInput(GameControl controlToCapture)
         {
             IsCapturing = true;
             _controlToCapture = controlToCapture;
+            _captureState = CaptureState.CaptureKeyboard;
         }
 
+        internal void StartCapturingControllerInput(GameControl controlToCapture)
+        {
+            IsCapturing = true;
+            _controlToCapture = controlToCapture;
+            _captureState = CaptureState.CaptureController;
+            PollForGamePadInput();
+        }
+
+        private Task PollForGamePadInput()
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                while (IsCapturing && _captureState == CaptureState.CaptureController)
+                {
+                    GamePadState state = GamePad.GetState(PlayerIndex.One);
+
+                    if (!state.IsConnected)
+                    {
+                        Thread.Sleep(100);
+                        continue;
+                    }
+
+                    GamePadButton? pressedButton = GetPressedButton(state);
+
+                    if (pressedButton.HasValue)
+                    {
+                        SetControlIfCapturing(pressedButton.Value);
+                        break;
+                    }
+                }
+
+            });
+        }
+
+        private GamePadButton? GetPressedButton(GamePadState state)
+        {
+            if (state.Buttons.A == ButtonState.Pressed)
+            {
+                return GamePadButton.Button1;
+            }
+            else if (state.Buttons.B == ButtonState.Pressed)
+            {
+                return GamePadButton.Button2;
+            }
+            else if (state.Buttons.X == ButtonState.Pressed)
+            {
+                return GamePadButton.Button3;
+            }
+            else if (state.Buttons.Y == ButtonState.Pressed)
+            {
+                return GamePadButton.Button4;
+            }
+            else if (state.Buttons.LeftShoulder == ButtonState.Pressed)
+            {
+                return GamePadButton.Button5;
+            }
+            else if (state.Buttons.RightShoulder == ButtonState.Pressed)
+            {
+                return GamePadButton.Button6;
+            }
+            else if (state.Buttons.LeftStick == ButtonState.Pressed)
+            {
+                return GamePadButton.Button9;
+            }
+            else if (state.Buttons.RightStick == ButtonState.Pressed)
+            {
+                return GamePadButton.Button10;
+            }
+            else if (state.Buttons.Start == ButtonState.Pressed)
+            {
+                return GamePadButton.Button7;
+            }
+            else if (state.Buttons.Back == ButtonState.Pressed)
+            {
+                return GamePadButton.Button8;
+            }
+            
+            // check dpad
+            if (state.DPad.Up == ButtonState.Pressed)
+            {
+                return GamePadButton.Up;
+            }
+            else if (state.DPad.Down == ButtonState.Pressed)
+            {
+                return GamePadButton.Down;
+            }
+            else if (state.DPad.Left == ButtonState.Pressed)
+            {
+                return GamePadButton.Left;
+            }
+            else if (state.DPad.Right == ButtonState.Pressed)
+            {
+                return GamePadButton.Right;
+            }
+
+            // check joysticks for input
+            if (state.ThumbSticks.Left.X > 0)
+            {
+                return GamePadButton.Right;
+            }
+            else if (state.ThumbSticks.Left.X < 0)
+            {
+                return GamePadButton.Left;
+            }
+            else if (state.ThumbSticks.Left.Y > 0)
+            {
+                return GamePadButton.Up;
+            }
+            else if (state.ThumbSticks.Left.Y < 0)
+            {
+                return GamePadButton.Down;
+            }
+
+            if (state.ThumbSticks.Right.X > 0)
+            {
+                return GamePadButton.Right;
+            }
+            else if (state.ThumbSticks.Right.X < 0)
+            {
+                return GamePadButton.Left;
+            }
+            else if (state.ThumbSticks.Right.Y > 0)
+            {
+                return GamePadButton.Up;
+            }
+            else if (state.ThumbSticks.Right.Y < 0)
+            {
+                return GamePadButton.Down;
+            }
+
+
+            return null;
+        }
 
         internal void SaveNewCustomControl()
         {
