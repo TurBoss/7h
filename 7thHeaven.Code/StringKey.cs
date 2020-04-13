@@ -605,5 +605,6 @@
         Button8,
         Button9,
         Button10,
+        BrazilianPortuguese,
     }
 }

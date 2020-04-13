@@ -1719,33 +1719,40 @@ namespace SeventhHeavenUI.ViewModels
         {
             string driverCfg = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "7H_GameDriver.cfg");
             string appLanguage = App.GetAppLanguage();
-            string uiXmlPath;
+            string uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "7H_GameDriver_UI.xml"); // default to using english version
 
-            switch (appLanguage)
+            if (appLanguage == "pt-BR")
             {
-                case "de":
-                    uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.de.xml");
-                    break;
-                    
-                case "es":                                                
-                    uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.es.xml");
-                    break;
-                    
-                case "fr":                                                
-                    uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.fr.xml");
-                    break;
+                uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.br.xml");
+            }
+            else
+            {
+                switch (appLanguage)
+                {
+                    case "de":
+                        uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.de.xml");
+                        break;
 
-                case "gr":
-                    uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.gr.xml");
-                    break;
+                    case "es":
+                        uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.es.xml");
+                        break;
 
-                case "ja":                                                
-                    uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.ja.xml");
-                    break;
+                    case "fr":
+                        uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.fr.xml");
+                        break;
 
-                default:
-                    uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "7H_GameDriver_UI.xml"); // default to using english version
-                    break;
+                    case "gr":
+                        uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.gr.xml");
+                        break;
+
+                    case "ja":
+                        uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.ja.xml");
+                        break;
+
+                    default:
+                        uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "7H_GameDriver_UI.xml"); // default to using english version
+                        break;
+                }
             }
 
 

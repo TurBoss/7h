@@ -269,6 +269,9 @@
     <Compile Include="Windows\UnhandledErrorWindow.xaml.cs">
       <DependentUpon>UnhandledErrorWindow.xaml</DependentUpon>
     </Compile>
+    <Content Include="Resources\Languages\7H_GameDriver_UI.br.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Languages\7H_GameDriver_UI.es.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -320,6 +323,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Languages\StringResources.br.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Page Include="Resources\StringResources.xaml">
       <SubType>Designer</SubType>

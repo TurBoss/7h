@@ -66,6 +66,7 @@ namespace SeventhHeavenUI.ViewModels
             LanguagesMap.Add($"{ResourceHelper.Get(StringKey.French)} (Français)", "fr");
             LanguagesMap.Add($"{ResourceHelper.Get(StringKey.Greek)} (Ελληνικά)", "gr");
             LanguagesMap.Add($"{ResourceHelper.Get(StringKey.Japanese)} (\u65e5\u672c\u8a9e)", "ja");
+            LanguagesMap.Add($"{ResourceHelper.Get(StringKey.BrazilianPortuguese)} (Portugues do Brasil)", "pt-BR");
 
 
             string defaultLang = ConfigurationManager.AppSettings["DefaultAppLanguage"];
@@ -76,7 +77,6 @@ namespace SeventhHeavenUI.ViewModels
             }
             else if (defaultLang.Length >= 2)
             {
-                defaultLang = defaultLang.Substring(0, 2);
                 SelectedLanguage = LanguagesMap.Where(kv => kv.Value == defaultLang).Select(k => k.Key).FirstOrDefault();
             }
         }

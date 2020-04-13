@@ -1158,5 +1158,7 @@ Do you want to apply the setting and try again?</system:String>
 
     <system:String x:Key="Volume">Volume</system:String>
 
+    <system:String x:Key="BrazilianPortuguese">Brazilian Portuguese</system:String>
+
 
 </ResourceDictionary>

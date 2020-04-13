@@ -346,30 +346,38 @@ namespace SeventhHeavenUI
                 return; // could not determine culture from thread so default language resource (English) will be used
             }
 
-            switch (cultureCode.Substring(0, 2))
+            if (cultureCode == "pt-BR")
             {
-                case "en":
-                    dict.Source = new Uri("Resources\\StringResources.xaml", UriKind.Relative);
-                    break;
-                case "fr":
-                    dict.Source = new Uri("Resources\\Languages\\StringResources.fr.xaml", UriKind.Relative);
-                    break;
-                case "es":
-                    dict.Source = new Uri("Resources\\Languages\\StringResources.es.xaml", UriKind.Relative);
-                    break;
-                case "de":
-                    dict.Source = new Uri("Resources\\Languages\\StringResources.de.xaml", UriKind.Relative);
-                    break;
-                case "gr":
-                    dict.Source = new Uri("Resources\\Languages\\StringResources.gr.xaml", UriKind.Relative);
-                    break;
-                case "ja":
-                    dict.Source = new Uri("Resources\\Languages\\StringResources.ja.xaml", UriKind.Relative);
-                    break;
-                default:
-                    dict.Source = new Uri("Resources\\StringResources.xaml", UriKind.Relative);
-                    break;
+                dict.Source = new Uri("Resources\\Languages\\StringResources.br.xaml", UriKind.Relative);
             }
+            else
+            {
+                switch (cultureCode.Substring(0, 2))
+                {
+                    case "en":
+                        dict.Source = new Uri("Resources\\StringResources.xaml", UriKind.Relative);
+                        break;
+                    case "fr":
+                        dict.Source = new Uri("Resources\\Languages\\StringResources.fr.xaml", UriKind.Relative);
+                        break;
+                    case "es":
+                        dict.Source = new Uri("Resources\\Languages\\StringResources.es.xaml", UriKind.Relative);
+                        break;
+                    case "de":
+                        dict.Source = new Uri("Resources\\Languages\\StringResources.de.xaml", UriKind.Relative);
+                        break;
+                    case "gr":
+                        dict.Source = new Uri("Resources\\Languages\\StringResources.gr.xaml", UriKind.Relative);
+                        break;
+                    case "ja":
+                        dict.Source = new Uri("Resources\\Languages\\StringResources.ja.xaml", UriKind.Relative);
+                        break;
+                    default:
+                        dict.Source = new Uri("Resources\\StringResources.xaml", UriKind.Relative);
+                        break;
+                }
+            }
+
 
             this.Resources.MergedDictionaries.RemoveAt(1); // remove the default string resources dictionary (second in merged dictionary in App.xaml)
             this.Resources.MergedDictionaries.Add(dict);
