@@ -147,6 +147,7 @@
     <Compile Include="Classes\BoolWithMessage.cs" />
     <Compile Include="Classes\ButtonWithImage.cs" />
     <Compile Include="Classes\Constraint.cs" />
+    <Compile Include="Classes\ControlConfiguration.cs" />
     <Compile Include="Classes\ControlMapper.cs" />
     <Compile Include="Classes\DateTimeComparer.cs" />
     <Compile Include="Classes\FileDialogHelper.cs" />
@@ -192,7 +193,7 @@
       <DependentUpon>PackIroUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\AllowModToRunViewModel.cs" />
-    <Compile Include="ViewModels\ControllerMappingViewModel.cs" />
+    <Compile Include="ViewModels\ControlMappingViewModel.cs" />
     <Compile Include="ViewModels\MegaLinkGenViewModel.cs" />
     <Compile Include="ViewModels\ModCreationViewModel.cs" />
     <Compile Include="ViewModels\CatalogCreationViewModel.cs" />

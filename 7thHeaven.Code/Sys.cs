@@ -241,7 +241,6 @@ namespace Iros._7th.Workshop
         public static void Save()
         {
             string lfile = Path.Combine(SysFolder, "library.xml");
-            string sfile = Path.Combine(SysFolder, "settings.xml");
             string pathToVersions = Path.Combine(SysFolder, "version.xml");
 
             Directory.CreateDirectory(Path.GetDirectoryName(lfile));
@@ -249,13 +248,23 @@ namespace Iros._7th.Workshop
             using (var fs = new FileStream(lfile, FileMode.Create))
                 Util.Serialize(Library, fs);
 
-            using (var fs = new FileStream(sfile, FileMode.Create))
-                Util.Serialize(Settings, fs);
+            SaveSettings();
 
             using (var fs = new FileStream(pathToVersions, FileMode.Create))
                 Util.Serialize(LastCheckedVersion, fs);
 
             ImageCache.Save();
+        }
+
+        /// <summary>
+        /// Saves settings.xml to disk
+        /// </summary>
+        public static void SaveSettings()
+        {
+            string sfile = Path.Combine(SysFolder, "settings.xml");
+
+            using (var fs = new FileStream(sfile, FileMode.Create))
+                Util.Serialize(Settings, fs);
         }
 
         /// <summary>

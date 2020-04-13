@@ -15,7 +15,7 @@
         ResizeMode="NoResize"
         Title="{DynamicResource GameLauncherSettings}" 
         Width="820"
-        Height="575">
+        Height="550">
     <Window.Resources>
 
         <DataTemplate x:Key="programItem">
@@ -25,16 +25,6 @@
         <Style x:Key="programItemStyle" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MainListBoxItemStyle}">
             <Setter Property="ContentTemplate" Value="{StaticResource programItem}"/>
         </Style>
-
-        <DataTemplate x:Key="keyboardItemTemplate">
-            <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
-                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedGameConfigOption, FallbackValue='No Numpad+Swap AB-XO Gamepad'}" 
-                           Margin="0,0,15,0" 
-                           TextTrimming="CharacterEllipsis"
-                           TextWrapping="NoWrap"/>
-            </Grid>
-        </DataTemplate>
-
 
         <DataTemplate x:Key="soundItemTemplate">
             <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
@@ -82,10 +72,11 @@
 
             <GroupBox x:Name="grpOptions"
                       MinWidth="235"
+                      Height="{Binding ElementName=grpAudio, Path=ActualHeight}"
                       Header="{DynamicResource OptionsHeader}" Grid.Row="0" Margin="10,10,0,0" 
                       HorizontalAlignment="Left"
                       VerticalAlignment="Top">
-                <StackPanel Margin="3" HorizontalAlignment="Center">
+                <StackPanel Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <CheckBox Height="25" Content="{DynamicResource AutoMountDisc}" 
                               IsChecked="{Binding AutoMountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               IsEnabled="{Binding IsAutoMountSupported}"
@@ -104,59 +95,6 @@
                               IsChecked="{Binding IsShowLauncherChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               MouseEnter="Control_MouseEnter"
                               ToolTip="{DynamicResource ShowGameLauncherTooltip}"/>
-
-                    <Grid Margin="0,3,0,0" HorizontalAlignment="Right">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{DynamicResource ControlsLabel}"
-                                   FontSize="13"
-                                   ToolTip="{DynamicResource ControlsTooltip}"
-                                   ToolTipService.IsEnabled="false"
-                                   HorizontalAlignment="Right"
-                                   VerticalAlignment="Top"
-                                   Margin="0,4,1,0"/>
-                        <ComboBox Name="cboKeyboards"
-                                  FontSize="13"
-                                  Grid.Column="1"
-                                  MinWidth="240"
-                                  MaxWidth="240"
-                                  ToolTip="{DynamicResource ControlsTooltip}"
-                                  ToolTipService.IsEnabled="false"
-                                  MouseEnter="Control_MouseEnter"
-                                  Style="{StaticResource MainComboBoxStyle}"
-                                  ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
-                                  ItemTemplate="{StaticResource keyboardItemTemplate}"
-                                  SelectedItem="{Binding SelectedGameConfigOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  ItemsSource="{Binding InGameConfigOptions}"/>
-
-                        <Button x:Name="btnSaveControls" 
-                                Click="btnSaveControls_Click"
-                                ToolTip="{DynamicResource SaveControlsTooltip}"
-                                ToolTipService.IsEnabled="false"
-                                MouseEnter="Control_MouseEnter"
-                                Style="{StaticResource ImageButton}"
-                                Content="{StaticResource iconSave}"
-                                Grid.Column="2"
-                                Width="28"
-                                Height="28"/>
-
-                        <Button x:Name="btnDeleteControls"
-                                Click="btnDeleteControls_Click"
-                                ToolTip="{DynamicResource DeleteControlsTooltip}"
-                                ToolTipService.ShowOnDisabled="True"
-                                ToolTipService.IsEnabled="false"
-                                MouseEnter="Control_MouseEnter"
-                                IsEnabled="{Binding IsCustomConfigOptionSelected}"
-                                Style="{StaticResource ImageButton}"
-                                Content="{StaticResource iconDelete}"
-                                Grid.Column="3"
-                                Width="28"
-                                Height="28"/>
-                    </Grid>
                 </StackPanel>
             </GroupBox>
 
@@ -235,7 +173,6 @@
         <GroupBox x:Name="grpAudio"
                   Grid.Row="0"
                   Grid.Column="1"
-                  Height="{Binding ElementName=grpOptions, Path=ActualHeight}"
                   Header="{DynamicResource AudioDeviceHeader}" Margin="10,10,10,0" 
                   MinWidth="415"
                   HorizontalAlignment="Stretch"
@@ -423,10 +360,10 @@
                     </Grid>
                 </Grid>
 
-                <Grid Margin="3,10,3,0" Grid.Row="1">
+                <Grid Margin="3,0,3,0" Grid.Row="1">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <CheckBox Content="{DynamicResource LogVolumeControl}" 
                               FontSize="12"
@@ -549,8 +486,8 @@
                             MouseEnter="Control_MouseEnter"
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"
-                            Height="24"
-                            Width="24"
+                            Height="22"
+                            Width="22"
                             Margin="0,0,0,0"
                             Content="{StaticResource iconAdd}"/>
 
@@ -561,8 +498,8 @@
                             ToolTip="{DynamicResource RemoveProgramTooltip}"
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"
-                            Height="24"
-                            Width="24"
+                            Height="22"
+                            Width="22"
                             Margin="0,0,0,0"
                             Content="{StaticResource iconMinus}"/>
 
@@ -573,8 +510,8 @@
                             Click="btnEditProgram_Click"
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"
-                            Height="24"
-                            Width="24"
+                            Height="22"
+                            Width="22"
                             Content="{StaticResource iconEdit}"/>
 
                     <Button x:Name="btnMoveProgramUp"
@@ -585,8 +522,8 @@
                             MouseRightButtonUp="btnMoveProgramUp_MouseRightButtonUp"
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"
-                            Height="24"
-                            Width="24"
+                            Height="22"
+                            Width="22"
                             Content="{StaticResource iconUpChevron}"/>
 
                     <Button x:Name="btnMoveProgramDown"
@@ -597,8 +534,8 @@
                             MouseRightButtonUp="btnMoveProgramDown_MouseRightButtonUp"
                             Style="{StaticResource ImageButton}"
                             VerticalAlignment="Top"
-                            Height="24"
-                            Width="24"
+                            Height="22"
+                            Width="22"
                             Content="{StaticResource iconDownChevron}"/>
 
                 </StackPanel>

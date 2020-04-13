@@ -1,6 +1,7 @@
 ﻿using _7thHeaven.Code;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -73,6 +74,7 @@ namespace SeventhHeaven.Classes
             new ControlInputSetting("BACKQUOTE", 41, Key.OemTilde, StringKey.Backquote),
             new ControlInputSetting("LEFTSHIFT", 42, Key.LeftShift, StringKey.LeftShift),
             new ControlInputSetting("BACKSLASH", 43, Key.OemBackslash, StringKey.Backslash),
+            new ControlInputSetting("BACKSLASH", 43, Key.Oem5, StringKey.Backslash), // Note: Oem5 is backslash on my en-us keyboard but I suspect this will be different for other keyboard layouts/manufacturers
             new ControlInputSetting("Z", 44, Key.Z),
             new ControlInputSetting("X", 45, Key.X),
             new ControlInputSetting("C", 46, Key.C),
@@ -113,8 +115,8 @@ namespace SeventhHeaven.Classes
             new ControlInputSetting("NUMPAD3", 81, Key.NumPad3, StringKey.Numpad3),
             new ControlInputSetting("NUMPAD0", 82, Key.NumPad0, StringKey.Numpad0),
             new ControlInputSetting("NUMPADDECIMAL", 83, Key.Decimal, StringKey.NumpadDecimal),
-            new ControlInputSetting("F11", 87, Key.F10),
-            new ControlInputSetting("F12", 88, Key.F10),
+            new ControlInputSetting("F11", 87, Key.F11),
+            new ControlInputSetting("F12", 88, Key.F12),
             new ControlInputSetting("NUMPADENTER", 156, Key.Enter, StringKey.NumpadEnter),
             new ControlInputSetting("RIGHTCTRL", 157, Key.RightCtrl, StringKey.RightCtrl),
             new ControlInputSetting("NUMPADDIVIDE", 181, Key.Divide, StringKey.NumpadDivide),
@@ -134,9 +136,21 @@ namespace SeventhHeaven.Classes
             new ControlInputSetting("LEFTWINKEY", 219, Key.LWin, StringKey.LeftWinKey),
             new ControlInputSetting("RIGHTWINKEY", 220, Key.RWin, StringKey.RightWinKey),
             new ControlInputSetting("APPS (CONTEXT MENU)", 221, Key.Apps, StringKey.Apps),
-            new ControlInputSetting("MOUSE_B1", 223, MouseButton.Left, StringKey.MouseB1),
-            new ControlInputSetting("MOUSE_B2", 224, MouseButton.Middle, StringKey.MouseB2),
-            new ControlInputSetting("MOUSE_B3", 225, MouseButton.Right, StringKey.MouseB3),
+
+            new ControlInputSetting("UP", 227, GamePadButton.Up, StringKey.Up),
+            new ControlInputSetting("DOWN", 228, GamePadButton.Down, StringKey.Down),
+            new ControlInputSetting("LEFT", 229, GamePadButton.Left, StringKey.Left),
+            new ControlInputSetting("RIGHT", 230, GamePadButton.Right, StringKey.Right),
+            new ControlInputSetting("Button1", 235, GamePadButton.Button1, StringKey.Button1),
+            new ControlInputSetting("Button2", 236, GamePadButton.Button2, StringKey.Button2),
+            new ControlInputSetting("Button3", 237, GamePadButton.Button3, StringKey.Button3),
+            new ControlInputSetting("Button4", 238, GamePadButton.Button4, StringKey.Button4),
+            new ControlInputSetting("Button5", 239, GamePadButton.Button5, StringKey.Button5),
+            new ControlInputSetting("Button6", 240, GamePadButton.Button6, StringKey.Button6),
+            new ControlInputSetting("Button7", 241, GamePadButton.Button7, StringKey.Button7),
+            new ControlInputSetting("Button8", 242, GamePadButton.Button8, StringKey.Button8),
+            new ControlInputSetting("Button9", 243, GamePadButton.Button9, StringKey.Button9),
+            new ControlInputSetting("Button10", 244, GamePadButton.Button10, StringKey.Button10),
         };
 
         public static ControlInputSetting GetControlInputFromKey(Key keyboardInput)
@@ -155,60 +169,160 @@ namespace SeventhHeaven.Classes
             { GameControl.Target, 0x05 },
             { GameControl.Pageup, 0x09 },
             { GameControl.Pagedown, 0x0D },
-            { GameControl.Menu, 11 },
-            { GameControl.Ok, 15 },
-            { GameControl.Cancel, 19 },
+            { GameControl.Menu, 0x11 },
+            { GameControl.Ok, 0x15 },
+            { GameControl.Cancel, 0x19 },
             { GameControl.Switch, 0x1D },
-            { GameControl.Assist, 21 },
+            { GameControl.Assist, 0x21 },
             { GameControl.Start, 0x2D },
-            { GameControl.Up, 31 },
-            { GameControl.Right, 35 },
-            { GameControl.Down, 39 },
+            { GameControl.Up, 0x31 },
+            { GameControl.Right, 0x35 },
+            { GameControl.Down, 0x39 },
             { GameControl.Left, 0x3D }
         };
 
         public static Dictionary<GameControl, int> ControlGamepadOffsets = new Dictionary<GameControl, int>()
         {
-            { GameControl.Camera, 65 },
-            { GameControl.Target, 69 },
+            { GameControl.Camera, 0x65 },
+            { GameControl.Target, 0x69 },
             { GameControl.Pageup, 0x6D },
-            { GameControl.Pagedown, 71 },
-            { GameControl.Menu, 75 },
-            { GameControl.Ok, 79 },
+            { GameControl.Pagedown, 0x71 },
+            { GameControl.Menu, 0x75 },
+            { GameControl.Ok, 0x79 },
             { GameControl.Cancel, 0x7D },
-            { GameControl.Switch, 81 },
-            { GameControl.Assist, 85 },
-            { GameControl.Start, 91 },
-            { GameControl.Up, 95 },
-            { GameControl.Right, 99 },
+            { GameControl.Switch, 0x81 },
+            { GameControl.Assist, 0x85 },
+            { GameControl.Start, 0x91 },
+            { GameControl.Up, 0x95 },
+            { GameControl.Right, 0x99 },
             { GameControl.Down, 0x9D },
             { GameControl.Left, 0xA1 }
         };
 
+        public static ControlConfiguration LoadConfigurationFromFile(string pathToFile)
+        {
+            ControlConfiguration loaded = new ControlConfiguration();
+
+            byte[] fileBytes = File.ReadAllBytes(pathToFile);
+
+            loaded.KeyboardInputs.Add(GameControl.Camera, GetControlInputFromConfigValue(fileBytes[ControlKeyboardOffsets[GameControl.Camera]]));
+            loaded.KeyboardInputs.Add(GameControl.Target, GetControlInputFromConfigValue(fileBytes[ControlKeyboardOffsets[GameControl.Target]]));
+            loaded.KeyboardInputs.Add(GameControl.Pageup, GetControlInputFromConfigValue(fileBytes[ControlKeyboardOffsets[GameControl.Pageup]]));
+            loaded.KeyboardInputs.Add(GameControl.Pagedown, GetControlInputFromConfigValue(fileBytes[ControlKeyboardOffsets[GameControl.Pagedown]]));
+            loaded.KeyboardInputs.Add(GameControl.Menu, GetControlInputFromConfigValue(fileBytes[ControlKeyboardOffsets[GameControl.Menu]]));
+            loaded.KeyboardInputs.Add(GameControl.Ok, GetControlInputFromConfigValue(fileBytes[ControlKeyboardOffsets[GameControl.Ok]]));
+            loaded.KeyboardInputs.Add(GameControl.Cancel, GetControlInputFromConfigValue(fileBytes[ControlKeyboardOffsets[GameControl.Cancel]]));
+            loaded.KeyboardInputs.Add(GameControl.Switch, GetControlInputFromConfigValue(fileBytes[ControlKeyboardOffsets[GameControl.Switch]]));
+            loaded.KeyboardInputs.Add(GameControl.Assist, GetControlInputFromConfigValue(fileBytes[ControlKeyboardOffsets[GameControl.Assist]]));
+            loaded.KeyboardInputs.Add(GameControl.Start, GetControlInputFromConfigValue(fileBytes[ControlKeyboardOffsets[GameControl.Start]]));
+            loaded.KeyboardInputs.Add(GameControl.Up, GetControlInputFromConfigValue(fileBytes[ControlKeyboardOffsets[GameControl.Up]]));
+            loaded.KeyboardInputs.Add(GameControl.Right, GetControlInputFromConfigValue(fileBytes[ControlKeyboardOffsets[GameControl.Right]]));
+            loaded.KeyboardInputs.Add(GameControl.Down, GetControlInputFromConfigValue(fileBytes[ControlKeyboardOffsets[GameControl.Down]]));
+            loaded.KeyboardInputs.Add(GameControl.Left, GetControlInputFromConfigValue(fileBytes[ControlKeyboardOffsets[GameControl.Left]]));
+
+            loaded.GamepadInputs.Add(GameControl.Camera, GetControlInputFromConfigValue(fileBytes[ControlGamepadOffsets[GameControl.Camera]]));
+            loaded.GamepadInputs.Add(GameControl.Target, GetControlInputFromConfigValue(fileBytes[ControlGamepadOffsets[GameControl.Target]]));
+            loaded.GamepadInputs.Add(GameControl.Pageup, GetControlInputFromConfigValue(fileBytes[ControlGamepadOffsets[GameControl.Pageup]]));
+            loaded.GamepadInputs.Add(GameControl.Pagedown, GetControlInputFromConfigValue(fileBytes[ControlGamepadOffsets[GameControl.Pagedown]]));
+            loaded.GamepadInputs.Add(GameControl.Menu, GetControlInputFromConfigValue(fileBytes[ControlGamepadOffsets[GameControl.Menu]]));
+            loaded.GamepadInputs.Add(GameControl.Ok, GetControlInputFromConfigValue(fileBytes[ControlGamepadOffsets[GameControl.Ok]]));
+            loaded.GamepadInputs.Add(GameControl.Cancel, GetControlInputFromConfigValue(fileBytes[ControlGamepadOffsets[GameControl.Cancel]]));
+            loaded.GamepadInputs.Add(GameControl.Switch, GetControlInputFromConfigValue(fileBytes[ControlGamepadOffsets[GameControl.Switch]]));
+            loaded.GamepadInputs.Add(GameControl.Assist, GetControlInputFromConfigValue(fileBytes[ControlGamepadOffsets[GameControl.Assist]]));
+            loaded.GamepadInputs.Add(GameControl.Start, GetControlInputFromConfigValue(fileBytes[ControlGamepadOffsets[GameControl.Start]]));
+            loaded.GamepadInputs.Add(GameControl.Up, GetControlInputFromConfigValue(fileBytes[ControlGamepadOffsets[GameControl.Up]]));
+            loaded.GamepadInputs.Add(GameControl.Right, GetControlInputFromConfigValue(fileBytes[ControlGamepadOffsets[GameControl.Right]]));
+            loaded.GamepadInputs.Add(GameControl.Down, GetControlInputFromConfigValue(fileBytes[ControlGamepadOffsets[GameControl.Down]]));
+            loaded.GamepadInputs.Add(GameControl.Left, GetControlInputFromConfigValue(fileBytes[ControlGamepadOffsets[GameControl.Left]]));
+
+            return loaded;
+        }
+
+        public static bool SaveConfigurationToFile(string pathToFile, ControlConfiguration configToSave)
+        {
+            // ensure file exists
+            if (!File.Exists(pathToFile))
+            {
+                return false;
+            }
+
+            byte[] fileBytes = File.ReadAllBytes(pathToFile);
+
+            fileBytes[ControlKeyboardOffsets[GameControl.Camera]] = Convert.ToByte(configToSave.KeyboardInputs[GameControl.Camera].ConfigValue);
+            fileBytes[ControlKeyboardOffsets[GameControl.Target]] = Convert.ToByte(configToSave.KeyboardInputs[GameControl.Target].ConfigValue);
+            fileBytes[ControlKeyboardOffsets[GameControl.Pageup]] = Convert.ToByte(configToSave.KeyboardInputs[GameControl.Pageup].ConfigValue);
+            fileBytes[ControlKeyboardOffsets[GameControl.Pagedown]] = Convert.ToByte(configToSave.KeyboardInputs[GameControl.Pagedown].ConfigValue);
+            fileBytes[ControlKeyboardOffsets[GameControl.Menu]] = Convert.ToByte(configToSave.KeyboardInputs[GameControl.Menu].ConfigValue);
+            fileBytes[ControlKeyboardOffsets[GameControl.Ok]] = Convert.ToByte(configToSave.KeyboardInputs[GameControl.Ok].ConfigValue);
+            fileBytes[ControlKeyboardOffsets[GameControl.Cancel]] = Convert.ToByte(configToSave.KeyboardInputs[GameControl.Cancel].ConfigValue);
+            fileBytes[ControlKeyboardOffsets[GameControl.Switch]] = Convert.ToByte(configToSave.KeyboardInputs[GameControl.Switch].ConfigValue);
+            fileBytes[ControlKeyboardOffsets[GameControl.Assist]] = Convert.ToByte(configToSave.KeyboardInputs[GameControl.Assist].ConfigValue);
+            fileBytes[ControlKeyboardOffsets[GameControl.Start]] = Convert.ToByte(configToSave.KeyboardInputs[GameControl.Start].ConfigValue);
+            fileBytes[ControlKeyboardOffsets[GameControl.Up]] = Convert.ToByte(configToSave.KeyboardInputs[GameControl.Up].ConfigValue);
+            fileBytes[ControlKeyboardOffsets[GameControl.Right]] = Convert.ToByte(configToSave.KeyboardInputs[GameControl.Right].ConfigValue);
+            fileBytes[ControlKeyboardOffsets[GameControl.Down]] = Convert.ToByte(configToSave.KeyboardInputs[GameControl.Down].ConfigValue);
+            fileBytes[ControlKeyboardOffsets[GameControl.Left]] = Convert.ToByte(configToSave.KeyboardInputs[GameControl.Left].ConfigValue);
+
+            fileBytes[ControlGamepadOffsets[GameControl.Camera]] = Convert.ToByte(configToSave.GamepadInputs[GameControl.Camera].ConfigValue);
+            fileBytes[ControlGamepadOffsets[GameControl.Target]] = Convert.ToByte(configToSave.GamepadInputs[GameControl.Target].ConfigValue);
+            fileBytes[ControlGamepadOffsets[GameControl.Pageup]] = Convert.ToByte(configToSave.GamepadInputs[GameControl.Pageup].ConfigValue);
+            fileBytes[ControlGamepadOffsets[GameControl.Pagedown]] = Convert.ToByte(configToSave.GamepadInputs[GameControl.Pagedown].ConfigValue);
+            fileBytes[ControlGamepadOffsets[GameControl.Menu]] = Convert.ToByte(configToSave.GamepadInputs[GameControl.Menu].ConfigValue);
+            fileBytes[ControlGamepadOffsets[GameControl.Ok]] = Convert.ToByte(configToSave.GamepadInputs[GameControl.Ok].ConfigValue);
+            fileBytes[ControlGamepadOffsets[GameControl.Cancel]] = Convert.ToByte(configToSave.GamepadInputs[GameControl.Cancel].ConfigValue);
+            fileBytes[ControlGamepadOffsets[GameControl.Switch]] = Convert.ToByte(configToSave.GamepadInputs[GameControl.Switch].ConfigValue);
+            fileBytes[ControlGamepadOffsets[GameControl.Assist]] = Convert.ToByte(configToSave.GamepadInputs[GameControl.Assist].ConfigValue);
+            fileBytes[ControlGamepadOffsets[GameControl.Start]] = Convert.ToByte(configToSave.GamepadInputs[GameControl.Start].ConfigValue);
+            fileBytes[ControlGamepadOffsets[GameControl.Up]] = Convert.ToByte(configToSave.GamepadInputs[GameControl.Up].ConfigValue);
+            fileBytes[ControlGamepadOffsets[GameControl.Right]] = Convert.ToByte(configToSave.GamepadInputs[GameControl.Right].ConfigValue);
+            fileBytes[ControlGamepadOffsets[GameControl.Down]] = Convert.ToByte(configToSave.GamepadInputs[GameControl.Down].ConfigValue);
+            fileBytes[ControlGamepadOffsets[GameControl.Left]] = Convert.ToByte(configToSave.GamepadInputs[GameControl.Left].ConfigValue);
+
+            File.WriteAllBytes(pathToFile, fileBytes);
+
+            return true;
+        }
+
+        public static bool CopyConfigurationFileAndSaveAsNew(string pathToExistingFile, string newConfigName, ControlConfiguration configToSave)
+        {
+            // ensure file to copy exists
+            if (!File.Exists(pathToExistingFile))
+            {
+                return false;
+            }
+
+            FileInfo existingFile = new FileInfo(pathToExistingFile);
+            string newFilePath = Path.Combine(existingFile.DirectoryName, newConfigName);
+
+            // ensure file with same name doesn't already exist
+            if (File.Exists(newFilePath))
+            {
+                return false;
+            }
+
+            File.Copy(pathToExistingFile, newFilePath);
+
+            return SaveConfigurationToFile(newFilePath, configToSave);
+        }
+
     }
 
-    public class ControlConfiguration
+    public enum GamePadButton
     {
-        public Dictionary<GameControl, ControlInputSetting> KeyboardInputs;
-        public Dictionary<GameControl, ControlInputSetting> GamepadInputs;
-
-        public ControlConfiguration()
-        {
-            KeyboardInputs = new Dictionary<GameControl, ControlInputSetting>();
-            GamepadInputs = new Dictionary<GameControl, ControlInputSetting>();
-        }
-
-        internal void Set(GameControl control, Key key)
-        {
-            if (KeyboardInputs.ContainsKey(control))
-            {
-                KeyboardInputs[control] = ControlMapper.GetControlInputFromKey(key);
-            }
-            else
-            {
-                KeyboardInputs.Add(control, ControlMapper.GetControlInputFromKey(key));
-            }
-        }
+        Up,
+        Down,
+        Left,
+        Right,
+        Button1,
+        Button2,
+        Button3,
+        Button4,
+        Button5,
+        Button6,
+        Button7,
+        Button8,
+        Button9,
+        Button10
     }
 
     public class ControlInputSetting
@@ -216,7 +330,7 @@ namespace SeventhHeaven.Classes
         public int ConfigValue { get; set; }
         public Key? KeyboardKey { get; set; }
 
-        public MouseButton? MouseButtonKey { get; set; }
+        public GamePadButton? GamepadInput { get; set; }
 
         public string DisplayText { get; set; }
         public StringKey? TranslationKey { get; set; }
@@ -227,16 +341,21 @@ namespace SeventhHeaven.Classes
             ConfigValue = val;
             KeyboardKey = keyboardInput;
             TranslationKey = translationKey;
-            MouseButtonKey = null;
+            GamepadInput = null;
         }
 
-        public ControlInputSetting(string displayText, int val, MouseButton mouseInput, StringKey? translationKey = null)
+        public ControlInputSetting(string displayText, int val, GamePadButton padInput, StringKey? translationKey = null)
         {
             DisplayText = displayText;
             ConfigValue = val;
             KeyboardKey = null;
             TranslationKey = translationKey;
-            MouseButtonKey = mouseInput;
+            GamepadInput = padInput;
         }
+
     }
+
 }
+
+
+

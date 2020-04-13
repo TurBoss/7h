@@ -35,20 +35,6 @@ namespace SeventhHeaven.ViewModels
         #region Data Members
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private List<string> _defaultControlNames = new List<string>() 
-        {
-            "1998 KB+Std Gamepad",
-            "1998 KB+Swap AB-XO Gamepad",
-            "1998 Original",
-            "No Numpad+Std Gamepad",
-            "No Numpad+Swap AB-XO Gamepad",
-            "Steam KB+Std GamePad",
-            "Steam KB+Swap AB-XO GamePad",
-            "Steam Original",
-            "WASD unab0mb's Choice Std",
-            "WASD unab0mb's Choice Swap"
-        };
-
         private string _statusMessage;
         private bool _autoMountChecked;
         private bool _autoUnmountChecked;
@@ -77,7 +63,6 @@ namespace SeventhHeaven.ViewModels
         private bool _isQuarterScreenChecked;
         private bool _isFullScreenChecked;
         private bool _isShowLauncherChecked;
-        private string _selectedGameConfigOption;
         private string _importStatusMessage;
         private bool _importButtonIsEnabled;
         private Visibility _importProgressVisibility;
@@ -541,38 +526,6 @@ namespace SeventhHeaven.ViewModels
 
         private bool HasLoaded { get; set; }
 
-        public List<string> InGameConfigOptions
-        {
-            get
-            {
-                return InGameConfigurationMap.Keys.ToList();
-            }
-        }
-
-        public Dictionary<string, string> InGameConfigurationMap { get; set; }
-
-        public string SelectedGameConfigOption
-        {
-            get
-            {
-                return _selectedGameConfigOption;
-            }
-            set
-            {
-                _selectedGameConfigOption = value;
-                NotifyPropertyChanged();
-                NotifyPropertyChanged(nameof(IsCustomConfigOptionSelected));
-            }
-        }
-
-        public bool IsCustomConfigOptionSelected
-        {
-            get
-            {
-                return !_defaultControlNames.Any(s => s.Equals(SelectedGameConfigOption, StringComparison.InvariantCultureIgnoreCase));
-            }
-        }
-
         public string ImportStatusMessage
         {
             get
@@ -652,7 +605,6 @@ namespace SeventhHeaven.ViewModels
             LastVolumeSliderChanged = VolumeSlider.Music;
 
             InitImportMovieOption();
-            InitInGameConfigOptions();
             InitSoundDevices();
             InitRenderers();
             InitMidiDevices();
@@ -707,15 +659,6 @@ namespace SeventhHeaven.ViewModels
             HighDpiFixChecked = launchSettings.HighDpiFix;
 
             IsShowLauncherChecked = launchSettings.ShowLauncherWindow;
-            SelectedGameConfigOption = InGameConfigurationMap.Where(s => s.Value == launchSettings.InGameConfigOption)
-                                                             .Select(c => c.Key)
-                                                             .FirstOrDefault();
-
-            if (string.IsNullOrWhiteSpace(SelectedGameConfigOption))
-            {
-                // default to first option if their previous option is missing
-                SelectedGameConfigOption = InGameConfigOptions[0];
-            }
 
 
             // disable options to auto-mount if user OS does not support it
@@ -789,8 +732,6 @@ namespace SeventhHeaven.ViewModels
                 Sys.Settings.GameLaunchSettings.AutoUpdateDiscPath = AutoUpdatePathChecked;
                 Sys.Settings.GameLaunchSettings.ShowLauncherWindow = IsShowLauncherChecked;
 
-                Sys.Settings.GameLaunchSettings.InGameConfigOption = InGameConfigurationMap[SelectedGameConfigOption];
-
                 Sys.Settings.GameLaunchSettings.Code5Fix = Code5FixChecked;
                 Sys.Settings.GameLaunchSettings.HighDpiFix = HighDpiFixChecked;
 
@@ -830,67 +771,6 @@ namespace SeventhHeaven.ViewModels
                 Logger.Error(e);
                 return false;
             }
-        }
-
-        /// <summary>
-        /// Copies ff7input.cfg from FF7 game folder to ./Resources/Controls/ folder with the given <paramref name="customFileName"/>
-        /// </summary>
-        /// <param name="forceCopy"> copies ff7input.cfg if it already exists; overwriting the current custom.cfg </param>
-        public bool CopyInputCfgToCustomCfg(bool forceCopy, string customFileName)
-        {
-            string pathToCustomCfg = Path.Combine(Sys.PathToControlsFolder, customFileName);
-            string pathToInputCfg = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "ff7input.cfg");
-
-            Directory.CreateDirectory(Sys.PathToControlsFolder);
-
-            if (!File.Exists(pathToCustomCfg) || forceCopy)
-            {
-                if (File.Exists(pathToInputCfg))
-                {
-                    try
-                    {
-                        File.Copy(pathToInputCfg, pathToCustomCfg, true);
-                        return true;
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error(ex);
-                        StatusMessage = $"{ResourceHelper.Get(StringKey.ErrorCopyingFf7InputCfg)} {ex.Message}";
-                    }
-                }
-                else
-                {
-                    StatusMessage = $"{ResourceHelper.Get(StringKey.NoFf7InputCfgFoundAt)} {pathToInputCfg}";
-                    Logger.Warn(StatusMessage);
-                }
-            }
-            else
-            {
-                StatusMessage = $"{customFileName} {ResourceHelper.Get(StringKey.AlreadyExistsAt)} {Sys.PathToControlsFolder}";
-                Logger.Warn(StatusMessage);
-            }
-
-            return false;
-        }
-
-        private void InitInGameConfigOptions()
-        {
-            Dictionary<string, string> configOptions = new Dictionary<string, string>();
-
-            if (!Directory.Exists(Sys.PathToControlsFolder))
-            {
-                Logger.Warn($"Controls folder missing. creating {Sys.PathToControlsFolder}");
-                Directory.CreateDirectory(Sys.PathToControlsFolder);
-            }
-
-            foreach (string filePath in Directory.GetFiles(Sys.PathToControlsFolder, "*.cfg").OrderBy(s => s))
-            {
-                FileInfo info = new FileInfo(filePath);
-                configOptions.Add(Path.GetFileNameWithoutExtension(filePath), info.Name);
-            }
-
-            InGameConfigurationMap = configOptions;
-            NotifyPropertyChanged(nameof(InGameConfigOptions));
         }
 
         private void InitSoundDevices()
@@ -1343,104 +1223,5 @@ namespace SeventhHeaven.ViewModels
             LoadSettings(LaunchSettings.DefaultSettings());
         }
 
-        internal void SaveNewCustomControl()
-        {
-            bool isValid = true;
-            string title = ResourceHelper.Get(StringKey.SaveControlConfiguration);
-            string prompt = ResourceHelper.Get(StringKey.ImportCurrentControlsFromGameAndSaveAs);
-            string controlName;
-            string pathToFile;
-
-            do
-            {
-                isValid = true;
-                InputTextWindow inputBox = new InputTextWindow(title, prompt);
-                inputBox.ViewModel.MaxCharLength = 24;
-
-                bool? dialogResult = inputBox.ShowDialog();
-                if (!dialogResult.GetValueOrDefault(false))
-                {
-                    return;
-                }
-
-                controlName = inputBox.ViewModel.TextInput;
-
-                if (string.IsNullOrEmpty(controlName))
-                {
-                    isValid = false;
-                    MessageDialogWindow.Show(ResourceHelper.Get(StringKey.ControlNameIsEmpty), ResourceHelper.Get(StringKey.SaveError), MessageBoxButton.OK, MessageBoxImage.Error);
-                    continue;
-                }
-
-                if (Path.GetInvalidFileNameChars().Any(c => controlName.Contains(c)))
-                {
-                    isValid = false;
-                    MessageDialogWindow.Show(ResourceHelper.Get(StringKey.ControlNameContainsInvalidChars), ResourceHelper.Get(StringKey.SaveError), MessageBoxButton.OK, MessageBoxImage.Error);
-                    continue;
-                }
-
-                // construct path and check if already exists if name is valid
-                if (isValid)
-                {
-                    if (controlName.EndsWith(".cfg"))
-                    {
-                        controlName = controlName.Substring(0, controlName.Length - 4);
-                    }
-
-                    pathToFile = Path.Combine(Sys.PathToControlsFolder, $"{controlName}.cfg");
-
-                    if (File.Exists(pathToFile))
-                    {
-                        isValid = false;
-                        MessageDialogWindow.Show(ResourceHelper.Get(StringKey.ControlsWithThatNameAlreadyExist), ResourceHelper.Get(StringKey.SaveError), MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
-
-            } while (!isValid);
-
-            try
-            {
-                CopyInputCfgToCustomCfg(true, $"{controlName}.cfg");
-                InitInGameConfigOptions();
-                SelectedGameConfigOption = controlName;
-                StatusMessage = ResourceHelper.Get(StringKey.SuccessfullyCreatedCustomControls);
-
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-                StatusMessage = $"{ResourceHelper.Get(StringKey.FailedToCreateCustomControls)}: {e.Message}";
-            }
-        }
-
-        internal void DeleteSelectedCustomControl()
-        {
-            if (!IsCustomConfigOptionSelected)
-            {
-                return;
-            }
-
-            string fileName = $"{SelectedGameConfigOption}.cfg";
-            string pathToFile = Path.Combine(Sys.PathToControlsFolder, fileName);
-
-            if (!File.Exists(pathToFile))
-            {
-                Logger.Warn($"Can not delete custom contols: no file found at {pathToFile}");
-                return;
-            }
-
-            try
-            {
-                File.Delete(pathToFile);
-                InitInGameConfigOptions();
-                SelectedGameConfigOption = InGameConfigurationMap.Keys.ToArray()[0];
-                StatusMessage = $"{ResourceHelper.Get(StringKey.SuccessfullyDeletedCustomControls)} {fileName}.";
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-                StatusMessage = $"{ResourceHelper.Get(StringKey.FailedToDeleteCustomControls)}: {e.Message}";
-            }
-        }
     }
 }

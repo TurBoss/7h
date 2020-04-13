@@ -245,16 +245,6 @@ namespace SeventhHeaven.Windows
             ViewModel.ResetToDefaults();
         }
 
-        private void btnSaveControls_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.SaveNewCustomControl();
-        }
-
-        private void btnDeleteControls_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.DeleteSelectedCustomControl();
-        }
-
         private void windowSettings_Loaded(object sender, RoutedEventArgs e)
         {
             // resize window to fit grid contents (can happen when set to another language other than english)
