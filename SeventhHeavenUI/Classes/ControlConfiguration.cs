@@ -18,7 +18,7 @@ namespace SeventhHeaven.Classes
 
         internal void SetKeyboardInput(GameControl control, Key key)
         {
-            RemoveExistingBinding(key); // check if this key is binded to another control and remove it there first
+            RemoveExistingKeyboardBinding(key); // check if this key is binded to another control and remove it there first
 
             if (KeyboardInputs.ContainsKey(control))
             {
@@ -32,7 +32,7 @@ namespace SeventhHeaven.Classes
 
         internal void SetControllerInput(GameControl control, GamePadButton button)
         {
-            RemoveExistingBinding(button); // check if this button is binded to another control and remove it there first
+            RemoveExistingGamepadBinding(button); // check if this button is binded to another control and remove it there first
 
             if (GamepadInputs.ContainsKey(control))
             {
@@ -46,7 +46,7 @@ namespace SeventhHeaven.Classes
 
         internal void SetKeyboardInput(GameControl control, ControlInputSetting newSetting)
         {
-            RemoveExistingBinding(newSetting.ConfigValue); // check if this key is binded to another control and remove it there first
+            RemoveExistingKeyboardBinding(newSetting.ConfigValue); // check if this key is binded to another control and remove it there first
 
 
             if (KeyboardInputs.ContainsKey(control))
@@ -59,7 +59,11 @@ namespace SeventhHeaven.Classes
             }
         }
 
-        private void RemoveExistingBinding(Key key)
+        /// <summary>
+        /// Looks for the game control that <paramref name="key"/> is binded to and removes it by setting it to null;
+        /// </summary>
+        /// <param name="key"></param>
+        private void RemoveExistingKeyboardBinding(Key key)
         {
             // 'numpadenter' and 'return' have same key code so exclude 'numpadenter' from this where clause since it is handled differently (see other RemoveExistingBinding method)
             var existingBinding = KeyboardInputs.Where(kv => kv.Value != null && kv.Value.DisplayText != "NUMPADENTER" && kv.Value.KeyboardKey.HasValue && kv.Value.KeyboardKey.Value == key).FirstOrDefault();
@@ -70,7 +74,10 @@ namespace SeventhHeaven.Classes
             }
         }
 
-        private void RemoveExistingBinding(GamePadButton button)
+        /// <summary>
+        /// Looks for the game control that <paramref name="button"/> is binded to and removes it by setting it to null;
+        /// </summary>
+        private void RemoveExistingGamepadBinding(GamePadButton button)
         {
             var existingBinding = GamepadInputs.Where(kv => kv.Value != null && kv.Value.GamepadInput.HasValue && kv.Value.GamepadInput.Value == button).FirstOrDefault();
 
@@ -80,7 +87,10 @@ namespace SeventhHeaven.Classes
             }
         }
 
-        private void RemoveExistingBinding(int configVal)
+        /// <summary>
+        /// Looks for the game control that is binded to the given <paramref name="configVal"/> and removes it by setting it to null;
+        /// </summary>
+        private void RemoveExistingKeyboardBinding(int configVal)
         {
             if (KeyboardInputs.Any(kv => kv.Value != null && kv.Value.ConfigValue == configVal))
             {

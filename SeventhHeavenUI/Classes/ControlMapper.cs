@@ -10,6 +10,9 @@ using static SeventhHeaven.Classes.KeyboardInputSender;
 
 namespace SeventhHeaven.Classes
 {
+    /// <summary>
+    /// enum of all available controls in game that can be binded to
+    /// </summary>
     public enum GameControl
     {
         Ok,
@@ -30,6 +33,9 @@ namespace SeventhHeaven.Classes
 
     public class ControlMapper
     {
+        /// <summary>
+        /// Defines all possible inputs that can be used for binding to game controls
+        /// </summary>
         public static List<ControlInputSetting> ControlInputs = new List<ControlInputSetting>()
         {
             new ControlInputSetting("ESC", 1, Key.Escape, StringKey.Esc) { KeyScanCode = ScanCodeShort.ESCAPE },
@@ -138,6 +144,11 @@ namespace SeventhHeaven.Classes
             new ControlInputSetting("RIGHTWINKEY", 220, Key.RWin, StringKey.RightWinKey) { KeyScanCode = ScanCodeShort.RWIN },
             new ControlInputSetting("APPS (CONTEXT MENU)", 221, Key.Apps, StringKey.Apps) { KeyScanCode = ScanCodeShort.APPS },
 
+            new ControlInputSetting("DPAD UP", 222, GamePadButton.DPadUp, StringKey.DPadUp),
+            new ControlInputSetting("DPAD DOWN", 223, GamePadButton.DPadDown, StringKey.DPadDown),
+            new ControlInputSetting("DPAD LEFT", 224, GamePadButton.DPadLeft, StringKey.DPadLeft),
+            new ControlInputSetting("DPAD RIGHT", 225, GamePadButton.DPadRight, StringKey.DPadRight),
+
             new ControlInputSetting("UP", 227, GamePadButton.Up, StringKey.Up),
             new ControlInputSetting("DOWN", 228, GamePadButton.Down, StringKey.Down),
             new ControlInputSetting("LEFT", 229, GamePadButton.Left, StringKey.Left),
@@ -152,6 +163,10 @@ namespace SeventhHeaven.Classes
             new ControlInputSetting("Button8", 242, GamePadButton.Button8, StringKey.Button8),
             new ControlInputSetting("Button9", 243, GamePadButton.Button9, StringKey.Button9),
             new ControlInputSetting("Button10", 244, GamePadButton.Button10, StringKey.Button10),
+
+            new ControlInputSetting("Left Trigger", 245, GamePadButton.LeftTrigger, StringKey.LeftTrigger),
+            new ControlInputSetting("Right Trigger", 246, GamePadButton.RightTrigger, StringKey.RightTrigger),
+
         };
 
         public static ControlInputSetting GetControlInputFromKey(Key keyboardInput)
@@ -313,6 +328,9 @@ namespace SeventhHeaven.Classes
 
     }
 
+    /// <summary>
+    /// Enum of all possible gamepad buttons available
+    /// </summary>
     public enum GamePadButton
     {
         Up,
@@ -328,7 +346,13 @@ namespace SeventhHeaven.Classes
         Button7,
         Button8,
         Button9,
-        Button10
+        Button10,
+        LeftTrigger,
+        RightTrigger,
+        DPadUp,
+        DPadDown,
+        DPadLeft,
+        DPadRight,
     }
 
     public class ControlInputSetting
@@ -336,7 +360,7 @@ namespace SeventhHeaven.Classes
         public int ConfigValue { get; set; }
         public Key? KeyboardKey { get; set; }
 
-        public ScanCodeShort KeyScanCode {get;set;}
+        public ScanCodeShort KeyScanCode { get; set; }
         public bool KeyIsExtended { get; set; }
 
         public GamePadButton? GamepadInput { get; set; }

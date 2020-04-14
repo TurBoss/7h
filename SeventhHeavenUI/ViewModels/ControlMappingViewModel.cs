@@ -2,11 +2,13 @@
 using Iros._7th.Workshop;
 using SeventhHeaven.Classes;
 using SeventhHeaven.Windows;
+using SeventhHeavenUI;
 using SeventhHeavenUI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -549,7 +551,7 @@ namespace SeventhHeaven.ViewModels
         private void LoadSelectedConfiguration()
         {
             LoadedConfiguration = ControlMapper.LoadConfigurationFromFile(Path.Combine(Sys.PathToControlsFolder, InGameConfigurationMap[SelectedGameConfigOption]));
-            UpdateButtonText();
+            UpdateAllButtonText();
             HasUnsavedChanges = false;
         }
 
@@ -598,7 +600,7 @@ namespace SeventhHeaven.ViewModels
 
             LoadedConfiguration.SetKeyboardInput(_controlToCapture, key);
 
-            UpdateButtonText();
+            UpdateAllButtonText();
 
             IsCapturing = false;
             HasUnsavedChanges = true;
@@ -615,7 +617,7 @@ namespace SeventhHeaven.ViewModels
 
             LoadedConfiguration.SetControllerInput(_controlToCapture, pressedButton);
 
-            UpdateButtonText();
+            UpdateAllButtonText();
 
             IsCapturing = false;
             _captureState = CaptureState.NotCapturing;
@@ -633,7 +635,7 @@ namespace SeventhHeaven.ViewModels
             ControlInputSetting numpadEnterSetting = ControlMapper.ControlInputs.Where(c => c.DisplayText == "NUMPADENTER").FirstOrDefault();
             LoadedConfiguration.SetKeyboardInput(_controlToCapture, numpadEnterSetting);
 
-            UpdateButtonText();
+            UpdateAllButtonText();
 
             IsCapturing = false;
             HasUnsavedChanges = true;
@@ -641,148 +643,65 @@ namespace SeventhHeaven.ViewModels
             return true;
         }
 
-        private void UpdateButtonText()
+
+        private void UpdateAllButtonText()
         {
-            if (LoadedConfiguration.KeyboardInputs.ContainsKey(GameControl.Ok))
+            foreach (GameControl item in Enum.GetValues(typeof(GameControl)).Cast<GameControl>())
             {
-                OkKeyboardText = LoadedConfiguration.KeyboardInputs[GameControl.Ok]?.DisplayText;
+                UpdateButtonText(item);
+            }
+        }
+
+        private void UpdateButtonText(GameControl controlToUpdate)
+        {
+            Dictionary<GameControl, string> propertiesToUpdate = new Dictionary<GameControl, string>()
+            {
+                { GameControl.Ok, nameof(OkKeyboardText) },
+                { GameControl.Cancel, nameof(CancelKeyboardText) },
+                { GameControl.Menu, nameof(MenuKeyboardText) },
+                { GameControl.Switch, nameof(SwitchKeyboardText) },
+                { GameControl.Pageup, nameof(PageUpKeyboardText) },
+                { GameControl.Pagedown, nameof(PageDownKeyboardText) },
+                { GameControl.Camera, nameof(CameraKeyboardText) },
+                { GameControl.Target, nameof(TargetKeyboardText) },
+                { GameControl.Assist, nameof(AssistKeyboardText) },
+                { GameControl.Start, nameof(StartKeyboardText) },
+                { GameControl.Up, nameof(UpKeyboardText) },
+                { GameControl.Down, nameof(DownKeyboardText) },
+                { GameControl.Left, nameof(LeftKeyboardText) },
+                { GameControl.Right, nameof(RightKeyboardText) },
+            };
+
+            Dictionary<GameControl, string> gamepadpropertiesToUpdate = new Dictionary<GameControl, string>()
+            {
+                { GameControl.Ok, nameof(OkControllerText) },
+                { GameControl.Cancel, nameof(CancelControllerText) },
+                { GameControl.Menu, nameof(MenuControllerText) },
+                { GameControl.Switch, nameof(SwitchControllerText) },
+                { GameControl.Pageup, nameof(PageUpControllerText) },
+                { GameControl.Pagedown, nameof(PageDownControllerText) },
+                { GameControl.Camera, nameof(CameraControllerText) },
+                { GameControl.Target, nameof(TargetControllerText) },
+                { GameControl.Assist, nameof(AssistControllerText) },
+                { GameControl.Start, nameof(StartControllerText) },
+                { GameControl.Up, nameof(UpControllerText) },
+                { GameControl.Down, nameof(DownControllerText) },
+                { GameControl.Left, nameof(LeftControllerText) },
+                { GameControl.Right, nameof(RightControllerText) },
+            };
+
+            // use reflection to set the correct property based on the control that was updated
+
+            PropertyInfo prop = this.GetType().GetProperty(propertiesToUpdate[controlToUpdate], BindingFlags.Public | BindingFlags.Instance);
+            if (prop?.CanWrite == true && LoadedConfiguration.KeyboardInputs.ContainsKey(controlToUpdate))
+            {
+                prop.SetValue(this, LoadedConfiguration.KeyboardInputs[controlToUpdate]?.DisplayText, null);
             }
 
-            if (LoadedConfiguration.KeyboardInputs.ContainsKey(GameControl.Cancel))
+            prop = this.GetType().GetProperty(gamepadpropertiesToUpdate[controlToUpdate], BindingFlags.Public | BindingFlags.Instance);
+            if (prop?.CanWrite == true && LoadedConfiguration.GamepadInputs.ContainsKey(controlToUpdate))
             {
-                CancelKeyboardText = LoadedConfiguration.KeyboardInputs[GameControl.Cancel]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.KeyboardInputs.ContainsKey(GameControl.Menu))
-            {
-                MenuKeyboardText = LoadedConfiguration.KeyboardInputs[GameControl.Menu]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.KeyboardInputs.ContainsKey(GameControl.Switch))
-            {
-                SwitchKeyboardText = LoadedConfiguration.KeyboardInputs[GameControl.Switch]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.KeyboardInputs.ContainsKey(GameControl.Pageup))
-            {
-                PageUpKeyboardText = LoadedConfiguration.KeyboardInputs[GameControl.Pageup]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.KeyboardInputs.ContainsKey(GameControl.Pagedown))
-            {
-                PageDownKeyboardText = LoadedConfiguration.KeyboardInputs[GameControl.Pagedown]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.KeyboardInputs.ContainsKey(GameControl.Camera))
-            {
-                CameraKeyboardText = LoadedConfiguration.KeyboardInputs[GameControl.Camera]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.KeyboardInputs.ContainsKey(GameControl.Target))
-            {
-                TargetKeyboardText = LoadedConfiguration.KeyboardInputs[GameControl.Target]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.KeyboardInputs.ContainsKey(GameControl.Assist))
-            {
-                AssistKeyboardText = LoadedConfiguration.KeyboardInputs[GameControl.Assist]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.KeyboardInputs.ContainsKey(GameControl.Start))
-            {
-                StartKeyboardText = LoadedConfiguration.KeyboardInputs[GameControl.Start]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.KeyboardInputs.ContainsKey(GameControl.Up))
-            {
-                UpKeyboardText = LoadedConfiguration.KeyboardInputs[GameControl.Up]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.KeyboardInputs.ContainsKey(GameControl.Down))
-            {
-                DownKeyboardText = LoadedConfiguration.KeyboardInputs[GameControl.Down]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.KeyboardInputs.ContainsKey(GameControl.Left))
-            {
-                LeftKeyboardText = LoadedConfiguration.KeyboardInputs[GameControl.Left]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.KeyboardInputs.ContainsKey(GameControl.Right))
-            {
-                RightKeyboardText = LoadedConfiguration.KeyboardInputs[GameControl.Right]?.DisplayText;
-            }
-
-
-
-            if (LoadedConfiguration.GamepadInputs.ContainsKey(GameControl.Ok))
-            {
-                OkControllerText = LoadedConfiguration.GamepadInputs[GameControl.Ok]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.GamepadInputs.ContainsKey(GameControl.Cancel))
-            {
-                CancelControllerText = LoadedConfiguration.GamepadInputs[GameControl.Cancel]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.GamepadInputs.ContainsKey(GameControl.Menu))
-            {
-                MenuControllerText = LoadedConfiguration.GamepadInputs[GameControl.Menu]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.GamepadInputs.ContainsKey(GameControl.Switch))
-            {
-                SwitchControllerText = LoadedConfiguration.GamepadInputs[GameControl.Switch]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.GamepadInputs.ContainsKey(GameControl.Pageup))
-            {
-                PageUpControllerText = LoadedConfiguration.GamepadInputs[GameControl.Pageup]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.GamepadInputs.ContainsKey(GameControl.Pagedown))
-            {
-                PageDownControllerText = LoadedConfiguration.GamepadInputs[GameControl.Pagedown]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.GamepadInputs.ContainsKey(GameControl.Camera))
-            {
-                CameraControllerText = LoadedConfiguration.GamepadInputs[GameControl.Camera]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.GamepadInputs.ContainsKey(GameControl.Target))
-            {
-                TargetControllerText = LoadedConfiguration.GamepadInputs[GameControl.Target]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.GamepadInputs.ContainsKey(GameControl.Assist))
-            {
-                AssistControllerText = LoadedConfiguration.GamepadInputs[GameControl.Assist]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.GamepadInputs.ContainsKey(GameControl.Start))
-            {
-                StartControllerText = LoadedConfiguration.GamepadInputs[GameControl.Start]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.GamepadInputs.ContainsKey(GameControl.Up))
-            {
-                UpControllerText = LoadedConfiguration.GamepadInputs[GameControl.Up]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.GamepadInputs.ContainsKey(GameControl.Down))
-            {
-                DownControllerText = LoadedConfiguration.GamepadInputs[GameControl.Down]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.GamepadInputs.ContainsKey(GameControl.Left))
-            {
-                LeftControllerText = LoadedConfiguration.GamepadInputs[GameControl.Left]?.DisplayText;
-            }
-
-            if (LoadedConfiguration.GamepadInputs.ContainsKey(GameControl.Right))
-            {
-                RightControllerText = LoadedConfiguration.GamepadInputs[GameControl.Right]?.DisplayText;
+                prop.SetValue(this, LoadedConfiguration.GamepadInputs[controlToUpdate]?.DisplayText, null);
             }
 
         }
@@ -820,7 +739,11 @@ namespace SeventhHeaven.ViewModels
 
                     if (pressedButton.HasValue)
                     {
-                        SetControlIfCapturing(pressedButton.Value);
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            SetControlIfCapturing(pressedButton.Value);
+                        });
+
                         break;
                     }
                 }
@@ -874,22 +797,22 @@ namespace SeventhHeaven.ViewModels
             // check dpad
             if (state.DPad.Up == ButtonState.Pressed)
             {
-                return GamePadButton.Up;
+                return GamePadButton.DPadUp;
             }
             else if (state.DPad.Down == ButtonState.Pressed)
             {
-                return GamePadButton.Down;
+                return GamePadButton.DPadDown;
             }
             else if (state.DPad.Left == ButtonState.Pressed)
             {
-                return GamePadButton.Left;
+                return GamePadButton.DPadLeft;
             }
             else if (state.DPad.Right == ButtonState.Pressed)
             {
-                return GamePadButton.Right;
+                return GamePadButton.DPadRight;
             }
 
-            // check joysticks for input
+            // check joystick for input
             if (state.ThumbSticks.Left.X > 0)
             {
                 return GamePadButton.Right;
@@ -907,23 +830,15 @@ namespace SeventhHeaven.ViewModels
                 return GamePadButton.Down;
             }
 
-            if (state.ThumbSticks.Right.X > 0)
+            // check triggers
+            if (state.Triggers.Left > 0)
             {
-                return GamePadButton.Right;
+                return GamePadButton.LeftTrigger;
             }
-            else if (state.ThumbSticks.Right.X < 0)
+            else if (state.Triggers.Right > 0)
             {
-                return GamePadButton.Left;
+                return GamePadButton.RightTrigger;
             }
-            else if (state.ThumbSticks.Right.Y > 0)
-            {
-                return GamePadButton.Up;
-            }
-            else if (state.ThumbSticks.Right.Y < 0)
-            {
-                return GamePadButton.Down;
-            }
-
 
             return null;
         }
@@ -932,7 +847,7 @@ namespace SeventhHeaven.ViewModels
         {
             bool isValid = true;
             string title = ResourceHelper.Get(StringKey.SaveControlConfiguration);
-            string prompt = "Save current controls as new configurtion:";
+            string prompt = "You must save the current controls as a new configuration. Enter name for configuration:";
             string controlName;
             string pathToFile;
 

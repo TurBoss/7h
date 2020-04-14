@@ -75,11 +75,6 @@ namespace SeventhHeaven.Windows
             ViewModel.DeleteSelectedCustomControl();
         }
 
-        private void btnSaveControls_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.SaveNewCustomControl();
-        }
-
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
@@ -87,7 +82,14 @@ namespace SeventhHeaven.Windows
 
         private void btnSaveChanges_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.SaveChangesToFile();
+            if (!ViewModel.IsCustomConfigOptionSelected)
+            {
+                ViewModel.SaveNewCustomControl();
+            }
+            else
+            {
+                ViewModel.SaveChangesToFile();
+            }
         }
 
         private static bool IsNumpadEnterKey(KeyEventArgs e)

@@ -606,5 +606,11 @@
         Button9,
         Button10,
         BrazilianPortuguese,
+        LeftTrigger,
+        RightTrigger,
+        DPadUp,
+        DPadDown,
+        DPadLeft,
+        DPadRight,
     }
 }

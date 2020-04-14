@@ -371,15 +371,6 @@
                           SelectedItem="{Binding SelectedGameConfigOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           ItemsSource="{Binding InGameConfigOptions}"/>
 
-                <Button x:Name="btnSaveControls" 
-                        Click="btnSaveControls_Click"
-                        ToolTip="Save above controls to new configuration."
-                        Style="{StaticResource ImageButton}"
-                        Content="{StaticResource iconSave}"
-                        Grid.Column="2"
-                        Width="28"
-                        Height="28"/>
-
                 <Button x:Name="btnDeleteControls"
                         Click="btnDeleteControls_Click"
                         ToolTip="{DynamicResource DeleteControlsTooltip}"
@@ -393,11 +384,11 @@
             </Grid>
 
             <Button x:Name="btnSaveChanges"
-                    ToolTip="Save changes to selected configuration."
+                    ToolTip="Save changes to controls."
                     MinWidth="80"
                     Click="btnSaveChanges_Click"
-                    IsEnabled="{Binding ApplyButtonIsEnabled}"
-                    Content="Apply"/>
+                    IsEnabled="{Binding HasUnsavedChanges}"
+                    Content="{DynamicResource Save}"/>
             <Button x:Name="btnCancel"
                     MinWidth="80"
                     Click="btnCancel_Click"
