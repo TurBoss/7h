@@ -144,10 +144,10 @@ namespace SeventhHeaven.Classes
             new ControlInputSetting("RIGHTWINKEY", 220, Key.RWin, StringKey.RightWinKey) { KeyScanCode = ScanCodeShort.RWIN },
             new ControlInputSetting("APPS (CONTEXT MENU)", 221, Key.Apps, StringKey.Apps) { KeyScanCode = ScanCodeShort.APPS },
 
-            new ControlInputSetting("DPAD UP", 222, GamePadButton.DPadUp, StringKey.DPadUp),
-            new ControlInputSetting("DPAD DOWN", 223, GamePadButton.DPadDown, StringKey.DPadDown),
-            new ControlInputSetting("DPAD LEFT", 224, GamePadButton.DPadLeft, StringKey.DPadLeft),
-            new ControlInputSetting("DPAD RIGHT", 225, GamePadButton.DPadRight, StringKey.DPadRight),
+            new ControlInputSetting("DPAD UP", 158, GamePadButton.DPadUp, StringKey.DPadUp),
+            new ControlInputSetting("DPAD DOWN", 159, GamePadButton.DPadDown, StringKey.DPadDown),
+            new ControlInputSetting("DPAD LEFT", 160, GamePadButton.DPadLeft, StringKey.DPadLeft),
+            new ControlInputSetting("DPAD RIGHT", 161, GamePadButton.DPadRight, StringKey.DPadRight),
 
             new ControlInputSetting("UP", 227, GamePadButton.Up, StringKey.Up),
             new ControlInputSetting("DOWN", 228, GamePadButton.Down, StringKey.Down),
@@ -164,8 +164,8 @@ namespace SeventhHeaven.Classes
             new ControlInputSetting("Button9", 243, GamePadButton.Button9, StringKey.Button9),
             new ControlInputSetting("Button10", 244, GamePadButton.Button10, StringKey.Button10),
 
-            new ControlInputSetting("Left Trigger", 245, GamePadButton.LeftTrigger, StringKey.LeftTrigger),
-            new ControlInputSetting("Right Trigger", 246, GamePadButton.RightTrigger, StringKey.RightTrigger),
+            new ControlInputSetting("Left Trigger", 231, GamePadButton.LeftTrigger, StringKey.LeftTrigger),
+            new ControlInputSetting("Right Trigger", 232, GamePadButton.RightTrigger, StringKey.RightTrigger),
 
         };
 
