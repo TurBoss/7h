@@ -165,6 +165,7 @@
     <Compile Include="Classes\FileDialogHelper.cs" />
     <Compile Include="Classes\GameConverter.cs" />
     <Compile Include="Classes\GameLauncher.cs" />
+    <Compile Include="Classes\KeyboardInputSender.cs" />
     <Compile Include="Classes\OpenFolderDialog.cs" />
     <Compile Include="Classes\ReloadListOption.cs" />
     <Compile Include="Classes\ResourceHelper.cs" />

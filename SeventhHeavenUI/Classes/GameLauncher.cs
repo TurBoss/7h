@@ -3,7 +3,6 @@ using _7thWrapperLib;
 using Iros._7th;
 using Iros._7th.Workshop;
 using Microsoft.Win32;
-using SeventhHeaven.ViewModels;
 using SeventhHeaven.Windows;
 using SeventhHeavenUI;
 using System;
@@ -13,10 +12,11 @@ using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
+using XInputDotNetPure;
+using static SeventhHeaven.Classes.KeyboardInputSender;
 
 namespace SeventhHeaven.Classes
 {
@@ -71,6 +71,7 @@ namespace SeventhHeaven.Classes
         public string DriveLetter { get; set; }
 
         public bool DidMountVirtualDisc { get; set; }
+        public bool PollingInput { get; private set; }
 
         /// <summary>
         /// Used to ensure only one thread/task is trying to mount/unmount the disc
@@ -727,6 +728,8 @@ namespace SeventhHeaven.Classes
                 Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.SettingUpFf7ExeToStopPluginsAndModPrograms));
                 ff7Proc.Exited += (o, e) =>
                 {
+                    Instance.PollingInput = false;
+
                     for (int i = 0; i < Instance._plugins.Count; i++)
                     {
                         try
@@ -789,6 +792,7 @@ namespace SeventhHeaven.Classes
                 if (ff7Proc.MainWindowHandle != IntPtr.Zero)
                 {
                     SetForegroundWindow(ff7Proc.MainWindowHandle);
+                    Instance.PollForGamepadInput();
                 }
 
                 return true;
@@ -1002,6 +1006,8 @@ namespace SeventhHeaven.Classes
                 {
                     try
                     {
+                        Instance.PollingInput = false;
+
                         if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && Instance.DidMountVirtualDisc && IsVirtualIsoMounted(Instance.DriveLetter))
                         {
                             Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.AutoUnmountingGameDisc));
@@ -1019,6 +1025,8 @@ namespace SeventhHeaven.Classes
                         Logger.Error(ex);
                     }
                 };
+
+                Instance.PollForGamepadInput();
 
                 return true;
             }
@@ -1913,6 +1921,89 @@ namespace SeventhHeaven.Classes
         internal void RaiseLaunchCompleted(bool didLaunch)
         {
             LaunchCompleted?.Invoke(didLaunch);
+        }
+
+        /// <summary>
+        /// Polls for game pad input and maps the non-supported buttons to the keyboard binding.
+        /// Non-supported buttons include D-pad, Left-stick click, Right-stick click
+        /// </summary>
+        private Task PollForGamepadInput()
+        {
+            PollingInput = true;
+
+            bool wasUpPressed = false;
+            bool wasDownPressed = false;
+            bool wasLeftPressed = false;
+            bool wasRightPressed = false;
+
+
+            return Task.Factory.StartNew(() =>
+            {
+                ControlConfiguration loadedConfig = ControlMapper.LoadConfigurationFromFile(Path.Combine(Sys.PathToControlsFolder, Sys.Settings.GameLaunchSettings.InGameConfigOption));
+
+                ScanCodeShort upKey = loadedConfig.KeyboardInputs[GameControl.Up].KeyScanCode;
+                bool upIsExtended = loadedConfig.KeyboardInputs[GameControl.Up].KeyIsExtended;
+
+                ScanCodeShort downKey = loadedConfig.KeyboardInputs[GameControl.Down].KeyScanCode;
+                bool downIsExtended = loadedConfig.KeyboardInputs[GameControl.Down].KeyIsExtended;
+
+                ScanCodeShort leftKey = loadedConfig.KeyboardInputs[GameControl.Left].KeyScanCode;
+                bool leftIsExtended = loadedConfig.KeyboardInputs[GameControl.Left].KeyIsExtended;
+
+                ScanCodeShort rightKey = loadedConfig.KeyboardInputs[GameControl.Right].KeyScanCode;
+                bool rightIsExtended = loadedConfig.KeyboardInputs[GameControl.Right].KeyIsExtended;
+
+
+                while (PollingInput)
+                {
+                    GamePadState state = GamePad.GetState(PlayerIndex.One);
+
+                    if (state.DPad.Up == ButtonState.Pressed && !wasUpPressed)
+                    {
+                        wasUpPressed = true;
+                        SendKey(upKey, upIsExtended);
+                    }
+                    else if (state.DPad.Up == ButtonState.Released && wasUpPressed)
+                    {
+                        ReleaseKey(upKey, upIsExtended);
+                        wasUpPressed = false;
+                    }
+
+                    if (state.DPad.Down == ButtonState.Pressed && !wasDownPressed)
+                    {
+                        wasDownPressed = true;
+                        SendKey(downKey, downIsExtended);
+                    }
+                    else if (state.DPad.Down == ButtonState.Released && wasDownPressed)
+                    {
+                        ReleaseKey(downKey, downIsExtended);
+                        wasDownPressed = false;
+                    }
+
+                    if (state.DPad.Left == ButtonState.Pressed && !wasLeftPressed)
+                    {
+                        wasLeftPressed = true;
+                        SendKey(leftKey, leftIsExtended);
+                    }
+                    else if (state.DPad.Left == ButtonState.Released && wasLeftPressed)
+                    {
+                        ReleaseKey(leftKey, leftIsExtended);
+                        wasLeftPressed = false;
+                    }
+
+                    if (state.DPad.Right == ButtonState.Pressed && !wasRightPressed)
+                    {
+                        wasRightPressed = true;
+                        SendKey(rightKey, rightIsExtended);
+                    }
+                    else if (state.DPad.Right == ButtonState.Released && wasRightPressed)
+                    {
+                        ReleaseKey(rightKey, rightIsExtended);
+                        wasRightPressed = false;
+                    }
+                }
+            });
+
         }
 
     }
