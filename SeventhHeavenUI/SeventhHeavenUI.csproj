@@ -91,6 +91,9 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DS4WindowsCore">
+      <HintPath>.\DS4WindowsCore.dll</HintPath>
+    </Reference>
     <Reference Include="EasyHook, Version=2.8.0.0, Culture=neutral, PublicKeyToken=4b580fca19d0b0c5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\EasyHook.dll</HintPath>
@@ -162,6 +165,7 @@
     <Compile Include="Classes\ControlConfiguration.cs" />
     <Compile Include="Classes\ControlMapper.cs" />
     <Compile Include="Classes\DateTimeComparer.cs" />
+    <Compile Include="Classes\DS4ControllerService.cs" />
     <Compile Include="Classes\FileDialogHelper.cs" />
     <Compile Include="Classes\GameConverter.cs" />
     <Compile Include="Classes\GameLauncher.cs" />

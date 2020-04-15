@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Management.Automation;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
@@ -45,6 +46,8 @@ namespace SeventhHeaven.Classes
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         private static GameLauncher _instance;
+
+        private DS4ControllerService ds4Service;
 
         public static GameLauncher Instance
         {
@@ -489,7 +492,7 @@ namespace SeventhHeaven.Classes
             //
             // Setup log file if debugging
             //
-            if (debug)
+            if (debug && runtimeProfile != null)
             {
                 runtimeProfile.Options |= RuntimeOptions.DetailedLog;
                 runtimeProfile.LogFile = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "log.txt");
@@ -510,6 +513,20 @@ namespace SeventhHeaven.Classes
                 EnableOrDisableReunionMod(doEnable: false);
                 didDisableReunion = true;
             }
+
+            //
+            // Initialize the DS4Win service to recognize playstation 4 controller as xbox 360 controller (XInput support)
+            //
+            Instance.RaiseProgressChanged($"Starting DS4 Controller Service ...");
+
+            if (Instance.ds4Service != null)
+            {
+                Instance.RaiseProgressChanged($"\tservice not null. trying to stop service before initializing new service ...", NLog.LogLevel.Warn);
+                Instance.ds4Service.StopService();
+                Instance.ds4Service = null;
+            }
+            Instance.ds4Service = new DS4ControllerService(); // starts the service that treats ds4 controlers as xbox360/xinput device
+
 
             // start FF7 proc as normal and return true when running the game as vanilla
             if (runAsVanilla)
@@ -1943,9 +1960,9 @@ namespace SeventhHeaven.Classes
             {
                 ControlConfiguration loadedConfig = ControlMapper.LoadConfigurationFromFile(Path.Combine(Sys.PathToControlsFolder, Sys.Settings.GameLaunchSettings.InGameConfigOption));
 
-                bool hasDpadBinded = loadedConfig.GamepadInputs.Values.Any(i => i?.GamepadInput.Value == GamePadButton.DPadUp || 
-                                                                                i?.GamepadInput.Value == GamePadButton.DPadDown || 
-                                                                                i?.GamepadInput.Value == GamePadButton.DPadLeft || 
+                bool hasDpadBinded = loadedConfig.GamepadInputs.Values.Any(i => i?.GamepadInput.Value == GamePadButton.DPadUp ||
+                                                                                i?.GamepadInput.Value == GamePadButton.DPadDown ||
+                                                                                i?.GamepadInput.Value == GamePadButton.DPadLeft ||
                                                                                 i?.GamepadInput.Value == GamePadButton.DPadRight);
 
 
@@ -2027,10 +2044,26 @@ namespace SeventhHeaven.Classes
                 }
 
 
+                PlayerIndex? connectedController = GetConnectedController();
 
                 while (PollingInput)
                 {
-                    GamePadState state = GamePad.GetState(PlayerIndex.One);
+                    if (connectedController == null)
+                    {
+                        // null means no connected controller found so just sleep for a little and check back later
+                        Thread.Sleep(1000);
+                        ds4Service?.RootHub?.HotPlug();
+                        connectedController = GetConnectedController();
+                        continue;
+                    }
+
+                    GamePadState state = GamePad.GetState(connectedController.Value);
+
+                    if (!state.IsConnected)
+                    {
+                        connectedController = null;
+                        continue;
+                    }
 
                     if (upKey != null && state.DPad.Up == ButtonState.Pressed && !wasUpPressed)
                     {
@@ -2098,9 +2131,33 @@ namespace SeventhHeaven.Classes
                         wasRightTriggerPressed = false;
                     }
                 }
+
+                ds4Service?.StopService(); // stop the ds4 controller service after polling for input
+                ds4Service = null;
             });
 
         }
 
+        private static PlayerIndex? GetConnectedController()
+        {
+            if (GamePad.GetState(PlayerIndex.One).IsConnected)
+            {
+                return PlayerIndex.One;
+            }
+            else if (GamePad.GetState(PlayerIndex.Two).IsConnected)
+            {
+                return PlayerIndex.Two;
+            }
+            else if (GamePad.GetState(PlayerIndex.Three).IsConnected)
+            {
+                return PlayerIndex.Three;
+            }
+            else if (GamePad.GetState(PlayerIndex.Four).IsConnected)
+            {
+                return PlayerIndex.Four;
+            }
+
+            return null;
+        }
     }
 }

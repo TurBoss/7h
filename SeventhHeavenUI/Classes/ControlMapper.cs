@@ -144,6 +144,7 @@ namespace SeventhHeaven.Classes
             new ControlInputSetting("RIGHTWINKEY", 220, Key.RWin, StringKey.RightWinKey) { KeyScanCode = ScanCodeShort.RWIN },
             new ControlInputSetting("APPS (CONTEXT MENU)", 221, Key.Apps, StringKey.Apps) { KeyScanCode = ScanCodeShort.APPS },
 
+            // dpad is not actually supported natively in ff7. 7H intercepts the dpad input and presses the corresponding keyboard control
             new ControlInputSetting("DPAD UP", 158, GamePadButton.DPadUp, StringKey.DPadUp),
             new ControlInputSetting("DPAD DOWN", 159, GamePadButton.DPadDown, StringKey.DPadDown),
             new ControlInputSetting("DPAD LEFT", 160, GamePadButton.DPadLeft, StringKey.DPadLeft),
@@ -153,19 +154,20 @@ namespace SeventhHeaven.Classes
             new ControlInputSetting("DOWN", 228, GamePadButton.Down, StringKey.Down),
             new ControlInputSetting("LEFT", 229, GamePadButton.Left, StringKey.Left),
             new ControlInputSetting("RIGHT", 230, GamePadButton.Right, StringKey.Right),
-            new ControlInputSetting("Button1", 235, GamePadButton.Button1, StringKey.Button1),
-            new ControlInputSetting("Button2", 236, GamePadButton.Button2, StringKey.Button2),
-            new ControlInputSetting("Button3", 237, GamePadButton.Button3, StringKey.Button3),
-            new ControlInputSetting("Button4", 238, GamePadButton.Button4, StringKey.Button4),
-            new ControlInputSetting("Button5", 239, GamePadButton.Button5, StringKey.Button5),
-            new ControlInputSetting("Button6", 240, GamePadButton.Button6, StringKey.Button6),
-            new ControlInputSetting("Button7", 241, GamePadButton.Button7, StringKey.Button7),
-            new ControlInputSetting("Button8", 242, GamePadButton.Button8, StringKey.Button8),
-            new ControlInputSetting("Button9", 243, GamePadButton.Button9, StringKey.Button9),
-            new ControlInputSetting("Button10", 244, GamePadButton.Button10, StringKey.Button10),
+            new ControlInputSetting("Button 1", 235, GamePadButton.Button1, StringKey.Button1),
+            new ControlInputSetting("Button 2", 236, GamePadButton.Button2, StringKey.Button2),
+            new ControlInputSetting("Button 3", 237, GamePadButton.Button3, StringKey.Button3),
+            new ControlInputSetting("Button 4", 238, GamePadButton.Button4, StringKey.Button4),
+            new ControlInputSetting("Button 5", 239, GamePadButton.Button5, StringKey.Button5),
+            new ControlInputSetting("Button 6", 240, GamePadButton.Button6, StringKey.Button6),
+            new ControlInputSetting("Button 7", 241, GamePadButton.Button7, StringKey.Button7),
+            new ControlInputSetting("Button 8", 242, GamePadButton.Button8, StringKey.Button8),
+            new ControlInputSetting("Button 9", 243, GamePadButton.Button9, StringKey.Button9),
+            new ControlInputSetting("Button 10", 244, GamePadButton.Button10, StringKey.Button10),
 
-            new ControlInputSetting("Left Trigger", 231, GamePadButton.LeftTrigger, StringKey.LeftTrigger),
-            new ControlInputSetting("Right Trigger", 232, GamePadButton.RightTrigger, StringKey.RightTrigger),
+            // button 11 and button12 are not actually supported natively in ff7. 7H intercepts these and presses the corresponding keyboard control
+            new ControlInputSetting("Button 11", 231, GamePadButton.LeftTrigger, StringKey.LeftTrigger),
+            new ControlInputSetting("Button 12", 232, GamePadButton.RightTrigger, StringKey.RightTrigger),
 
         };
 

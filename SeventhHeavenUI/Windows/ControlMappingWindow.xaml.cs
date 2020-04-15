@@ -22,6 +22,8 @@ namespace SeventhHeaven.Windows
     /// </summary>
     public partial class ControlMappingWindow : Window
     {
+        private DS4ControllerService ds4Controller;
+
         public ControlMappingViewModel ViewModel { get; set; }
 
         public ControlMappingWindow()
@@ -264,5 +266,15 @@ namespace SeventhHeaven.Windows
 
         #endregion
 
+        private void windowControls_Loaded(object sender, RoutedEventArgs e)
+        {
+            ds4Controller = new DS4ControllerService();
+        }
+
+        private void windowControls_Unloaded(object sender, RoutedEventArgs e)
+        {
+            ds4Controller?.StopService();
+            ds4Controller = null;
+        }
     }
 }
