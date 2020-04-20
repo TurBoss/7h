@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
+        ResizeMode="NoResize"
         Loaded="windowControls_Loaded"
         Unloaded="windowControls_Unloaded"
         mc:Ignorable="d"
@@ -13,14 +14,30 @@
         Style="{DynamicResource MainWindowStyle}"
         PreviewKeyDown="Window_PreviewKeyDown"
         PreviewKeyUp="Window_PreviewKeyUp"
-        Height="525" Width="550">
+        Height="550" Width="475">
     <Window.Resources>
         <Style x:Key="controlNameLabel" TargetType="TextBlock" BasedOn="{StaticResource PrimaryTextBlockStyle}">
             <Setter Property="Margin" Value="5,0,5,0"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+
+        <Style x:Key="captureKeyButton" TargetType="Button" BasedOn="{StaticResource MainButtonStyle}">
+            <Setter Property="MinWidth" Value="125"/>
+        </Style>
+
+        <Style x:Key="captureControllerButton" TargetType="Button" BasedOn="{StaticResource MainButtonStyle}">
+            <Setter Property="MinWidth" Value="125"/>
+        </Style>
+
+        <Style x:Key="ps4IconStyle" TargetType="Image">
+            <Setter Property="RenderOptions.BitmapScalingMode" Value="HighQuality"/>
+            <Setter Property="Margin" Value="5,5,8,5"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="IsHitTestVisible" Value="False" />
+            <Setter Property="Grid.Column" Value="3"/>
         </Style>
 
         <DataTemplate x:Key="keyboardItemTemplate">
@@ -34,9 +51,10 @@
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto" MinWidth="32"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="28"/>
@@ -71,66 +89,74 @@
                    Grid.Row="0"
                    Grid.Column="2"/>
 
+        
         <TextBlock Text="[CONFIRM]"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="1"/>
-        
         <Button x:Name="btnOkKeyboard"
+                Style="{StaticResource captureKeyButton}"
                 Content="{Binding OkKeyboardText, FallbackValue='Enter'}"
                 IsEnabled="{Binding IsNotCapturing}"
                 Click="btnOkKeyboard_Click"
                 Grid.Row="1"
                 Grid.Column="1"/>
-
         <Button x:Name="btnOkController"
+                Style="{StaticResource captureControllerButton}"
                 Content="{Binding OkControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
                 Click="btnOkController_Click"
-                Margin="0,0,5,0"
                 Grid.Row="1"
                 Grid.Column="2"/>
+        <Image Grid.Row="1"
+               Source="{Binding OkIcon}"
+               Style="{StaticResource ps4IconStyle}"/>
+
         
 
         <TextBlock Text="[CANCEL]"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="2"/>
-
         <Button x:Name="btnCancelKeyboard"
                 Content="{Binding CancelKeyboardText, FallbackValue='Enter'}"
                 IsEnabled="{Binding IsNotCapturing}"
                 Click="btnCancelKeyboard_Click"
                 Grid.Row="2"
                 Grid.Column="1"/>
-
         <Button x:Name="btnCancelController"
+                Style="{StaticResource captureControllerButton}"
                 Content="{Binding CancelControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
                 Click="btnCancelController_Click"
-                Margin="0,0,5,0"
                 Grid.Row="2"
                 Grid.Column="2"/>
+        <Image Grid.Row="2"
+               Source="{Binding CancelIcon}"
+               Style="{StaticResource ps4IconStyle}"/>
+
         
 
         <TextBlock Text="[MENU]"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="3"/>
-
         <Button x:Name="btnMenuKeyboard"
                 Content="{Binding MenuKeyboardText, FallbackValue='Enter'}"
+                Style="{StaticResource captureKeyButton}"
                 IsEnabled="{Binding IsNotCapturing}"
                 Click="btnMenuKeyboard_Click"
                 Grid.Row="3"
                 Grid.Column="1"/>
-        
         <Button x:Name="btnMenuController"
+                Style="{StaticResource captureControllerButton}"
                 Content="{Binding MenuControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
                 Click="btnMenuController_Click"
-                Margin="0,0,5,0"
                 Grid.Row="3"
                 Grid.Column="2"/>
-        
-        
+        <Image Grid.Row="3"
+               Source="{Binding MenuIcon}"
+               Style="{StaticResource ps4IconStyle}"/>
+
+
 
         <TextBlock Text="[SWITCH]"
                    Style="{StaticResource controlNameLabel}"
@@ -142,56 +168,62 @@
                 Click="btnSwitchKeyboard_Click"
                 Grid.Row="4"
                 Grid.Column="1"/>
-
         <Button x:Name="btnSwitchController"
+                Style="{StaticResource captureControllerButton}"
                 Content="{Binding SwitchControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
                 Click="btnSwitchController_Click"
-                Margin="0,0,5,0"
                 Grid.Row="4"
                 Grid.Column="2"/>
-        
-        
+        <Image Grid.Row="4"
+               Source="{Binding SwitchIcon}"
+               Style="{StaticResource ps4IconStyle}"/>
+
+
 
         <TextBlock Text="[SCROLL UP]"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="5"/>
-
         <Button x:Name="btnPageUpKeyboard"
                 Content="{Binding PageUpKeyboardText, FallbackValue='Enter'}"
                 IsEnabled="{Binding IsNotCapturing}"
                 Click="btnPageUpKeyboard_Click"
                 Grid.Row="5"
                 Grid.Column="1"/>
-
         <Button x:Name="btnPageUpController"
+                Style="{StaticResource captureControllerButton}"
                 Content="{Binding PageUpControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
                 Click="btnPageUpController_Click"
-                Margin="0,0,5,0"
                 Grid.Row="5"
                 Grid.Column="2"/>
+        <Image Grid.Row="5"
+               Source="{Binding PageUpIcon}"
+               Style="{StaticResource ps4IconStyle}"/>
 
+        
 
         <TextBlock Text="[SCROLL DOWN]"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="6"/>
-
         <Button x:Name="btnPageDownKeyboard"
                 Content="{Binding PageDownKeyboardText, FallbackValue='Enter'}"
                 IsEnabled="{Binding IsNotCapturing}"
                 Click="btnPageDownKeyboard_Click"
                 Grid.Row="6"
                 Grid.Column="1"/>
-
         <Button x:Name="btnPageDownController"
+                Style="{StaticResource captureControllerButton}"
                 Content="{Binding PageDownControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
                 Click="btnPageDownController_Click"
-                Margin="0,0,5,0"
                 Grid.Row="6"
                 Grid.Column="2"/>
+        <Image Grid.Row="6"
+               Source="{Binding PageDownIcon}"
+               Style="{StaticResource ps4IconStyle}"/>
 
+        
 
         <TextBlock Text="[CAMERA]"
                    Style="{StaticResource controlNameLabel}"
@@ -202,16 +234,19 @@
                 Click="btnCameraKeyboard_Click"
                 Grid.Row="7"
                 Grid.Column="1"/>
-
         <Button x:Name="btnCameraController"
+                Style="{StaticResource captureControllerButton}"
                 Content="{Binding CameraControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
                 Click="btnCameraController_Click"
-                Margin="0,0,5,0"
                 Grid.Row="7"
                 Grid.Column="2"/>
+        <Image Grid.Row="7"
+               Source="{Binding CameraIcon}"
+               Style="{StaticResource ps4IconStyle}"/>
 
-
+        
+        
         <TextBlock Text="[TARGET]"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="8"/>
@@ -222,14 +257,16 @@
                 Grid.Row="8"
                 Grid.Column="1"/>
         <Button x:Name="btnTargetController"
+                Style="{StaticResource captureControllerButton}"
                 Content="{Binding TargetControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
                 Click="btnTargetController_Click"
-                Margin="0,0,5,0"
                 Grid.Row="8"
                 Grid.Column="2"/>
-        
-        
+        <Image Grid.Row="8"
+               Source="{Binding TargetIcon}"
+               Style="{StaticResource ps4IconStyle}"/>
+
 
         <TextBlock Text="[ASSIST]"
                    Style="{StaticResource controlNameLabel}"
@@ -241,14 +278,17 @@
                 Grid.Row="9"
                 Grid.Column="1"/>
         <Button x:Name="btnAssistController"
+                Style="{StaticResource captureControllerButton}"
                 Content="{Binding AssistControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
                 Click="btnAssistController_Click"
-                Margin="0,0,5,0"
                 Grid.Row="9"
                 Grid.Column="2"/>
-        
-        
+        <Image Grid.Row="9"
+               Source="{Binding AssistIcon}"
+               Style="{StaticResource ps4IconStyle}"/>
+
+
 
         <TextBlock Text="[START]"
                    Style="{StaticResource controlNameLabel}"
@@ -260,14 +300,17 @@
                 Grid.Row="10"
                 Grid.Column="1"/>
         <Button x:Name="btnStartController"
+                Style="{StaticResource captureControllerButton}"
                 Content="{Binding StartControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
                 Click="btnStartController_Click"
-                Margin="0,0,5,0"
                 Grid.Row="10"
                 Grid.Column="2"/>
-        
-        
+        <Image Grid.Row="10"
+               Source="{Binding StartIcon}"
+               Style="{StaticResource ps4IconStyle}"/>
+
+
 
         <TextBlock Text="[UP]"
                    Style="{StaticResource controlNameLabel}"
@@ -279,15 +322,17 @@
                 Grid.Row="11"
                 Grid.Column="1"/>
         <Button x:Name="btnUpController"
+                Style="{StaticResource captureControllerButton}"
                 Content="{Binding UpControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
                 Click="btnUpController_Click"
-                Margin="0,0,5,0"
                 Grid.Row="11"
                 Grid.Column="2"/>
+        <Image Grid.Row="11"
+               Source="{Binding UpIcon}"
+               Style="{StaticResource ps4IconStyle}"/>
 
-        
-        
+
 
         <TextBlock Text="[DOWN]"
                    Style="{StaticResource controlNameLabel}"
@@ -299,13 +344,17 @@
                 Grid.Row="12"
                 Grid.Column="1"/>
         <Button x:Name="btnDownController"
+                Style="{StaticResource captureControllerButton}"
                 Content="{Binding DownControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
                 Click="btnDownController_Click"
-                Margin="0,0,5,0"
                 Grid.Row="12"
                 Grid.Column="2"/>
+        <Image Grid.Row="12"
+               Source="{Binding DownIcon}"
+               Style="{StaticResource ps4IconStyle}"/>
 
+        
         <TextBlock Text="[LEFT]"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="13"/>
@@ -316,12 +365,16 @@
                 Grid.Row="13"
                 Grid.Column="1"/>
         <Button x:Name="btnLeftController"
+                Style="{StaticResource captureControllerButton}"
                 Content="{Binding LeftControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
                 Click="btnLeftController_Click"
-                Margin="0,0,5,0"
                 Grid.Row="13"
                 Grid.Column="2"/>
+        <Image Grid.Row="13"
+               Source="{Binding LeftIcon}"
+               Style="{StaticResource ps4IconStyle}"/>
+
 
         <TextBlock Text="[RIGHT]"
                    Style="{StaticResource controlNameLabel}"
@@ -333,69 +386,77 @@
                 Grid.Row="14"
                 Grid.Column="1"/>
         <Button x:Name="btnRightController"
+                Style="{StaticResource captureControllerButton}"
                 Content="{Binding RightControllerText, FallbackValue='Button #1'}"
                 IsEnabled="{Binding IsNotCapturing}"
                 Click="btnRightController_Click"
-                Margin="0,0,5,0"
                 Grid.Row="14"
                 Grid.Column="2"/>
+        <Image Grid.Row="14"
+               Source="{Binding RightIcon}"
+               Style="{StaticResource ps4IconStyle}"/>
 
 
-        <WrapPanel Grid.Row="15"
-                   Grid.ColumnSpan="3"
-                   HorizontalAlignment="Right"
-                   Margin="0,5,5,5">
-            
-            <Grid Margin="0,0,5,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="Presets:"
-                           FontSize="13"
-                           ToolTip="{DynamicResource ControlsTooltip}"
-                           ToolTipService.IsEnabled="false"
-                           HorizontalAlignment="Right"
-                           VerticalAlignment="Center"
-                           Margin="0,0,1,0"/>
-                <ComboBox Name="cboKeyboards"
-                          VerticalAlignment="Center"
-                          FontSize="13"
-                          Grid.Column="1"
-                          MinWidth="240"
-                          MaxWidth="240"
-                          ToolTip="{DynamicResource ControlsTooltip}"
-                          Style="{StaticResource MainComboBoxStyle}"
-                          ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
-                          ItemTemplate="{StaticResource keyboardItemTemplate}"
-                          SelectedItem="{Binding SelectedGameConfigOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          ItemsSource="{Binding InGameConfigOptions}"/>
 
-                <Button x:Name="btnDeleteControls"
-                        Click="btnDeleteControls_Click"
-                        ToolTip="{DynamicResource DeleteControlsTooltip}"
-                        ToolTipService.ShowOnDisabled="True"
-                        IsEnabled="{Binding IsCustomConfigOptionSelected}"
-                        Style="{StaticResource ImageButton}"
-                        Content="{StaticResource iconDelete}"
-                        Grid.Column="3"
-                        Width="28"
-                        Height="28"/>
-            </Grid>
+        <Grid Grid.Row="15"
+              Grid.ColumnSpan="4"
+              HorizontalAlignment="Right"
+              Margin="0,5,5,5">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+
+            <TextBlock Text="Presets:"
+                        FontSize="13"
+                        ToolTip="{DynamicResource ControlsTooltip}"
+                        ToolTipService.IsEnabled="false"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Margin="0,0,1,0"/>
+            <ComboBox Name="cboKeyboards"
+                      VerticalAlignment="Center"
+                      FontSize="13"
+                      Grid.Column="1"
+                      MaxWidth="240"
+                      MinWidth="190"
+                      ToolTip="{DynamicResource ControlsTooltip}"
+                      Style="{StaticResource MainComboBoxStyle}"
+                      ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
+                      ItemTemplate="{StaticResource keyboardItemTemplate}"
+                      SelectedItem="{Binding SelectedGameConfigOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{Binding InGameConfigOptions}"/>
+
+            <Button x:Name="btnDeleteControls"
+                    Click="btnDeleteControls_Click"
+                    ToolTip="{DynamicResource DeleteControlsTooltip}"
+                    ToolTipService.ShowOnDisabled="True"
+                    IsEnabled="{Binding IsCustomConfigOptionSelected}"
+                    Style="{StaticResource ImageButton}"
+                    Content="{StaticResource iconDelete}"
+                    Grid.Column="3"
+                    Width="28"
+                    Height="28"/>
 
             <Button x:Name="btnSaveChanges"
+                    Grid.Column="4"
                     ToolTip="Save changes to controls."
-                    MinWidth="80"
+                    MinWidth="75"
                     Click="btnSaveChanges_Click"
                     IsEnabled="{Binding HasUnsavedChanges}"
                     Content="{DynamicResource Save}"/>
             <Button x:Name="btnCancel"
-                    MinWidth="80"
+                    Grid.Column="5"
+                    MinWidth="75"
                     Click="btnCancel_Click"
                     Content="{DynamicResource Close}"/>
 
-        </WrapPanel>
+        </Grid>
     </Grid>
 </Window>

@@ -163,6 +163,7 @@
     <Compile Include="Classes\ButtonWithImage.cs" />
     <Compile Include="Classes\Constraint.cs" />
     <Compile Include="Classes\ControlConfiguration.cs" />
+    <Compile Include="Classes\ControllerInterceptor.cs" />
     <Compile Include="Classes\ControlMapper.cs" />
     <Compile Include="Classes\DateTimeComparer.cs" />
     <Compile Include="Classes\DS4ControllerService.cs" />
@@ -286,6 +287,26 @@
     <Compile Include="Windows\UnhandledErrorWindow.xaml.cs">
       <DependentUpon>UnhandledErrorWindow.xaml</DependentUpon>
     </Compile>
+    <Resource Include="Resources\Icons\PS_Xbox_Icons\Triangle_Y.png" />
+    <Resource Include="Resources\Icons\PS_Xbox_Icons\Circle_B.png" />
+    <Resource Include="Resources\Icons\PS_Xbox_Icons\Cross_A.png" />
+    <Resource Include="Resources\Icons\PS_Xbox_Icons\L1_LB.png" />
+    <Resource Include="Resources\Icons\PS_Xbox_Icons\L2_LT.png" />
+    <Resource Include="Resources\Icons\PS_Xbox_Icons\Options_Start.png" />
+    <Resource Include="Resources\Icons\PS_Xbox_Icons\R1_RB.png" />
+    <Resource Include="Resources\Icons\PS_Xbox_Icons\R2_RT.png" />
+    <Resource Include="Resources\Icons\PS_Xbox_Icons\Share_Back.png" />
+    <Resource Include="Resources\Icons\PS_Xbox_Icons\Square_X.png" />
+    <Resource Include="Resources\Icons\PS_Xbox_Icons\XBOne_DPad_Down.png" />
+    <Resource Include="Resources\Icons\PS_Xbox_Icons\XBOne_DPad_Left.png" />
+    <Resource Include="Resources\Icons\PS_Xbox_Icons\XBOne_DPad_Right.png" />
+    <Resource Include="Resources\Icons\PS_Xbox_Icons\XBOne_DPad_Up.png" />
+    <Resource Include="Resources\Icons\PS_Xbox_Icons\XB_LS_Click.png" />
+    <Resource Include="Resources\Icons\PS_Xbox_Icons\XB_LS_Down.png" />
+    <Resource Include="Resources\Icons\PS_Xbox_Icons\XB_LS_Left.png" />
+    <Resource Include="Resources\Icons\PS_Xbox_Icons\XB_LS_Right.png" />
+    <Resource Include="Resources\Icons\PS_Xbox_Icons\XB_LS_Up.png" />
+    <Resource Include="Resources\Icons\PS_Xbox_Icons\XB_RS_Click.png" />
     <Content Include="Resources\Languages\7H_GameDriver_UI.br.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

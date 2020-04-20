@@ -44,10 +44,12 @@ namespace SeventhHeaven.ViewModels
             "WASD unab0mb's Choice Swap"
         };
 
-        private string _okControllerText;
         private bool _isCapturing;
         private GameControl _controlToCapture;
         private CaptureState _captureState;
+        private bool _hasUnsavedChanges;
+        private string _selectedGameConfigOption;
+
         private string _okKeyboardText;
         private string _cancelKeyboardText;
         private string _menuKeyboardText;
@@ -62,8 +64,8 @@ namespace SeventhHeaven.ViewModels
         private string _downKeyboardText;
         private string _leftKeyboardText;
         private string _rightKeyboardText;
-        private string _selectedGameConfigOption;
-        private bool _hasUnsavedChanges;
+
+        private string _okControllerText;
         private string _cancelControllerText;
         private string _menuControllerText;
         private string _switchControllerText;
@@ -78,20 +80,206 @@ namespace SeventhHeaven.ViewModels
         private string _leftControllerText;
         private string _rightControllerText;
 
+        private string _okIcon;
+        private string _cancelIcon;
+        private string _menuIcon;
+        private string _switchIcon;
+        private string _pageUpIcon;
+        private string _pageDownIcon;
+        private string _cameraIcon;
+        private string _targetIcon;
+        private string _assistIcon;
+        private string _startIcon;
+        private string _upIcon;
+        private string _downIcon;
+        private string _leftIcon;
+        private string _rightIcon;
+
         private ControlConfiguration LoadedConfiguration { get; set; }
 
-        public string OkControllerText
+        public string OkIcon
         {
             get
             {
-                return _okControllerText;
+                return _okIcon;
             }
             set
             {
-                _okControllerText = value;
+                _okIcon = value;
                 NotifyPropertyChanged();
             }
         }
+
+        public string CancelIcon
+        {
+            get
+            {
+                return _cancelIcon;
+            }
+            set
+            {
+                _cancelIcon = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string MenuIcon
+        {
+            get
+            {
+                return _menuIcon;
+            }
+            set
+            {
+                _menuIcon = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string SwitchIcon
+        {
+            get
+            {
+                return _switchIcon;
+            }
+            set
+            {
+                _switchIcon = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string PageUpIcon
+        {
+            get
+            {
+                return _pageUpIcon;
+            }
+            set
+            {
+                _pageUpIcon = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string PageDownIcon
+        {
+            get
+            {
+                return _pageDownIcon;
+            }
+            set
+            {
+                _pageDownIcon = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string CameraIcon
+        {
+            get
+            {
+                return _cameraIcon;
+            }
+            set
+            {
+                _cameraIcon = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string TargetIcon
+        {
+            get
+            {
+                return _targetIcon;
+            }
+            set
+            {
+                _targetIcon = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string AssistIcon
+        {
+            get
+            {
+                return _assistIcon;
+            }
+            set
+            {
+                _assistIcon = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string StartIcon
+        {
+            get
+            {
+                return _startIcon;
+            }
+            set
+            {
+                _startIcon = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string UpIcon
+        {
+            get
+            {
+                return _upIcon;
+            }
+            set
+            {
+                _upIcon = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string DownIcon
+        {
+            get
+            {
+                return _downIcon;
+            }
+            set
+            {
+                _downIcon = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string LeftIcon
+        {
+            get
+            {
+                return _leftIcon;
+            }
+            set
+            {
+                _leftIcon = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string RightIcon
+        {
+            get
+            {
+                return _rightIcon;
+            }
+            set
+            {
+                _rightIcon = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+
 
         public string OkKeyboardText
         {
@@ -275,6 +463,20 @@ namespace SeventhHeaven.ViewModels
                 NotifyPropertyChanged();
             }
         }
+
+        public string OkControllerText
+        {
+            get
+            {
+                return _okControllerText;
+            }
+            set
+            {
+                _okControllerText = value;
+                NotifyPropertyChanged();
+            }
+        }
+
 
         public string CancelControllerText
         {
@@ -535,23 +737,30 @@ namespace SeventhHeaven.ViewModels
 
             InitInGameConfigOptions();
 
-            SelectedGameConfigOption = InGameConfigurationMap.Where(s => s.Value == Sys.Settings.GameLaunchSettings.InGameConfigOption)
+            _selectedGameConfigOption = InGameConfigurationMap.Where(s => s.Value == Sys.Settings.GameLaunchSettings.InGameConfigOption)
                                                              .Select(c => c.Key)
                                                              .FirstOrDefault();
 
             if (string.IsNullOrWhiteSpace(SelectedGameConfigOption))
             {
                 // default to first option if their previous option is missing
-                SelectedGameConfigOption = InGameConfigOptions[0];
+                _selectedGameConfigOption = InGameConfigOptions[0];
             }
 
-            LoadSelectedConfiguration();
+            NotifyPropertyChanged(nameof(_selectedGameConfigOption));
+            LoadSelectedConfiguration(updateUi: false); // dont set button text/icons until window is loaded
         }
 
-        private void LoadSelectedConfiguration()
+        private void LoadSelectedConfiguration(bool updateUi = true)
         {
             LoadedConfiguration = ControlMapper.LoadConfigurationFromFile(Path.Combine(Sys.PathToControlsFolder, InGameConfigurationMap[SelectedGameConfigOption]));
-            UpdateAllButtonText();
+
+            if (updateUi)
+            {
+                UpdateAllButtonText();
+                UpdateAllButtonIcons();
+            }
+
             HasUnsavedChanges = false;
         }
 
@@ -618,6 +827,7 @@ namespace SeventhHeaven.ViewModels
             LoadedConfiguration.SetControllerInput(_controlToCapture, pressedButton);
 
             UpdateAllButtonText();
+            UpdateAllButtonIcons();
 
             IsCapturing = false;
             _captureState = CaptureState.NotCapturing;
@@ -643,8 +853,41 @@ namespace SeventhHeaven.ViewModels
             return true;
         }
 
+        internal void UpdateAllButtonIcons()
+        {
+            Dictionary<GameControl, string> propertiesToUpdate = new Dictionary<GameControl, string>()
+            {
+                { GameControl.Ok, nameof(OkIcon) },
+                { GameControl.Cancel, nameof(CancelIcon) },
+                { GameControl.Menu, nameof(MenuIcon) },
+                { GameControl.Switch, nameof(SwitchIcon) },
+                { GameControl.Pageup, nameof(PageUpIcon) },
+                { GameControl.Pagedown, nameof(PageDownIcon) },
+                { GameControl.Camera, nameof(CameraIcon) },
+                { GameControl.Target, nameof(TargetIcon) },
+                { GameControl.Assist, nameof(AssistIcon) },
+                { GameControl.Start, nameof(StartIcon) },
+                { GameControl.Up, nameof(UpIcon) },
+                { GameControl.Down, nameof(DownIcon) },
+                { GameControl.Left, nameof(LeftIcon) },
+                { GameControl.Right, nameof(RightIcon) },
+            };
 
-        private void UpdateAllButtonText()
+            foreach (var item in propertiesToUpdate)
+            {
+                LoadedConfiguration.GamepadInputs.TryGetValue(item.Key, out ControlInputSetting setting);
+                if (setting != null)
+                {
+                    SetButtonIcon(item.Value, LoadedConfiguration.GamepadInputs[item.Key].GamepadInput.Value);
+                }
+                else
+                {
+                    SetButtonIcon(item.Value, null);
+                }
+            }
+        }
+
+        internal void UpdateAllButtonText()
         {
             foreach (GameControl item in Enum.GetValues(typeof(GameControl)).Cast<GameControl>())
             {
@@ -727,14 +970,15 @@ namespace SeventhHeaven.ViewModels
             {
                 while (IsCapturing && _captureState == CaptureState.CaptureController)
                 {
-                    GamePadState state = GamePad.GetState(PlayerIndex.One);
+                    PlayerIndex? connectedIndex = ControllerInterceptor.GetConnectedController();
 
-                    if (!state.IsConnected)
+                    if (connectedIndex == null)
                     {
-                        Thread.Sleep(100);
+                        Thread.Sleep(1000);
                         continue;
                     }
 
+                    GamePadState state = GamePad.GetState(connectedIndex.Value);
                     GamePadButton? pressedButton = GetPressedButton(state);
 
                     if (pressedButton.HasValue)
@@ -787,13 +1031,13 @@ namespace SeventhHeaven.ViewModels
             }
             else if (state.Buttons.Start == ButtonState.Pressed)
             {
-                return GamePadButton.Button7;
+                return GamePadButton.Button8;
             }
             else if (state.Buttons.Back == ButtonState.Pressed)
             {
-                return GamePadButton.Button8;
+                return GamePadButton.Button7;
             }
-            
+
             // check dpad
             if (state.DPad.Up == ButtonState.Pressed)
             {
@@ -903,7 +1147,7 @@ namespace SeventhHeaven.ViewModels
                 string pathToDefaultFile = Path.Combine(Sys.PathToControlsFolder, InGameConfigurationMap[_defaultControlNames[0]]);
 
                 ControlMapper.CopyConfigurationFileAndSaveAsNew(pathToDefaultFile, $"{controlName}.cfg", LoadedConfiguration);
-                
+
                 InitInGameConfigOptions();
                 SelectedGameConfigOption = controlName;
                 //StatusMessage = ResourceHelper.Get(StringKey.SuccessfullyCreatedCustomControls);
@@ -998,6 +1242,43 @@ namespace SeventhHeaven.ViewModels
             {
                 Logger.Error(e);
                 //StatusMessage = $"{ResourceHelper.Get(StringKey.FailedToDeleteCustomControls)}: {e.Message}";
+            }
+        }
+
+        private void SetButtonIcon(string propertyToUpdate, GamePadButton? newButton)
+        {
+            Dictionary<GamePadButton, string> icons = new Dictionary<GamePadButton, string>()
+            {
+                { GamePadButton.Button1, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/Cross_A.png" },
+                { GamePadButton.Button2, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/Circle_B.png" },
+                { GamePadButton.Button3, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/Square_X.png" },
+                { GamePadButton.Button4, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/Triangle_Y.png" },
+                { GamePadButton.Button5, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/L1_LB.png" },
+                { GamePadButton.Button6, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/R1_RB.png" },
+                { GamePadButton.Button7, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/Share_Back.png" },
+                { GamePadButton.Button8, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/Options_Start.png" },
+                { GamePadButton.Button9, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/XB_LS_Click.png" },
+                { GamePadButton.Button10, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/XB_RS_Click.png" },
+                { GamePadButton.LeftTrigger, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/L2_LT.png" },
+                { GamePadButton.RightTrigger, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/R2_RT.png" },
+                { GamePadButton.Up, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/XB_LS_Up.png" },
+                { GamePadButton.Down, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/XB_LS_Down.png" },
+                { GamePadButton.Left, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/XB_LS_Left.png" },
+                { GamePadButton.Right, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/XB_LS_Right.png" },
+                { GamePadButton.DPadUp, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/XBOne_DPad_Up.png" },
+                { GamePadButton.DPadDown, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/XBOne_DPad_Down.png" },
+                { GamePadButton.DPadLeft, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/XBOne_DPad_Left.png" },
+                { GamePadButton.DPadRight, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/XBOne_DPad_Right.png" },
+            };
+
+            PropertyInfo prop = this.GetType().GetProperty(propertyToUpdate, BindingFlags.Public | BindingFlags.Instance);
+            if (newButton != null)
+            {
+                prop.SetValue(this, icons[newButton.Value], null);
+            }
+            else
+            {
+                prop.SetValue(this, null, null);
             }
         }
     }

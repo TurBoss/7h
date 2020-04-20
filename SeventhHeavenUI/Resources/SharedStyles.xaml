@@ -78,7 +78,7 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type Button}">
+    <Style x:Key="MainButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="Background" Value="{DynamicResource PrimaryControlBackground}"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryControlForeground}"/>
         <Setter Property="Padding" Value="10,8,10,8"/>
@@ -115,6 +115,8 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
+    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource MainButtonStyle}"/>
 
     <Style x:Key="MainButtonStyleWithNoTriggers" TargetType="{x:Type Button}">
         <Setter Property="Background" Value="{DynamicResource PrimaryControlBackground}"/>

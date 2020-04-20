@@ -47,8 +47,6 @@ namespace SeventhHeaven.Classes
 
         private static GameLauncher _instance;
 
-        private DS4ControllerService ds4Service;
-
         public static GameLauncher Instance
         {
             get
@@ -64,18 +62,17 @@ namespace SeventhHeaven.Classes
         private Dictionary<string, _7HPlugin> _plugins = new Dictionary<string, _7HPlugin>(StringComparer.InvariantCultureIgnoreCase);
         private Dictionary<_7thWrapperLib.ProgramInfo, Process> _sideLoadProcesses = new Dictionary<_7thWrapperLib.ProgramInfo, Process>();
 
+        private ControllerInterceptor _controllerInterceptor; 
+
         public delegate void OnProgressChanged(string message);
         public event OnProgressChanged ProgressChanged;
 
         public delegate void OnLaunchCompleted(bool wasSuccessful);
         public event OnLaunchCompleted LaunchCompleted;
 
-        public FF7Version InstallVersion { get; set; }
+
         public string DriveLetter { get; set; }
-
         public bool DidMountVirtualDisc { get; set; }
-        public bool PollingInput { get; private set; }
-
         /// <summary>
         /// Used to ensure only one thread/task is trying to mount/unmount the disc
         /// </summary>
@@ -517,15 +514,19 @@ namespace SeventhHeaven.Classes
             //
             // Initialize the DS4Win service to recognize playstation 4 controller as xbox 360 controller (XInput support)
             //
-            Instance.RaiseProgressChanged($"Starting DS4 Controller Service ...");
+            Instance.RaiseProgressChanged($"Starting Controller Services ...");
 
-            if (Instance.ds4Service != null)
+            if (Instance._controllerInterceptor == null)
             {
-                Instance.RaiseProgressChanged($"\tservice not null. trying to stop service before initializing new service ...", NLog.LogLevel.Warn);
-                Instance.ds4Service.StopService();
-                Instance.ds4Service = null;
+                Instance._controllerInterceptor = new ControllerInterceptor();
             }
-            Instance.ds4Service = new DS4ControllerService(); // starts the service that treats ds4 controlers as xbox360/xinput device
+
+            if (DS4ControllerService.Instance.IsRunning)
+            {
+                Instance.RaiseProgressChanged($"\tservice already running ...", NLog.LogLevel.Warn);
+            }
+
+            DS4ControllerService.Instance.StartService(); // starts the service that treats ds4 controlers as xbox360/xinput device
 
 
             // start FF7 proc as normal and return true when running the game as vanilla
@@ -745,7 +746,11 @@ namespace SeventhHeaven.Classes
                 Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.SettingUpFf7ExeToStopPluginsAndModPrograms));
                 ff7Proc.Exited += (o, e) =>
                 {
-                    Instance.PollingInput = false;
+                    if (!IsFF7Running())
+                    {
+                        // stop polling for input once all ff7 procs are closed (could be multiple instances open)
+                        Instance._controllerInterceptor.PollingInput = false;
+                    }
 
                     for (int i = 0; i < Instance._plugins.Count; i++)
                     {
@@ -809,7 +814,7 @@ namespace SeventhHeaven.Classes
                 if (ff7Proc.MainWindowHandle != IntPtr.Zero)
                 {
                     SetForegroundWindow(ff7Proc.MainWindowHandle);
-                    Instance.PollForGamepadInput();
+                    Instance._controllerInterceptor.PollForGamepadInput();
                 }
 
                 return true;
@@ -1023,7 +1028,11 @@ namespace SeventhHeaven.Classes
                 {
                     try
                     {
-                        Instance.PollingInput = false;
+                        if (!IsFF7Running())
+                        {
+                            // stop polling for input once all ff7 procs are closed (could be multiple instances open)
+                            Instance._controllerInterceptor.PollingInput = false;
+                        }
 
                         if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && Instance.DidMountVirtualDisc && IsVirtualIsoMounted(Instance.DriveLetter))
                         {
@@ -1043,7 +1052,7 @@ namespace SeventhHeaven.Classes
                     }
                 };
 
-                Instance.PollForGamepadInput();
+                Instance._controllerInterceptor.PollForGamepadInput();
 
                 return true;
             }
@@ -1940,224 +1949,7 @@ namespace SeventhHeaven.Classes
             LaunchCompleted?.Invoke(didLaunch);
         }
 
-        /// <summary>
-        /// Polls for game pad input and maps the non-supported buttons to the keyboard binding.
-        /// Non-supported buttons include D-pad, Left-stick click, Right-stick click
-        /// </summary>
-        private Task PollForGamepadInput()
-        {
-            PollingInput = true;
-
-            bool wasUpPressed = false;
-            bool wasDownPressed = false;
-            bool wasLeftPressed = false;
-            bool wasRightPressed = false;
-            bool wasLeftTriggerPressed = false;
-            bool wasRightTriggerPressed = false;
 
 
-            return Task.Factory.StartNew(() =>
-            {
-                ControlConfiguration loadedConfig = ControlMapper.LoadConfigurationFromFile(Path.Combine(Sys.PathToControlsFolder, Sys.Settings.GameLaunchSettings.InGameConfigOption));
-
-                bool hasDpadBinded = loadedConfig.GamepadInputs.Values.Any(i => i?.GamepadInput.Value == GamePadButton.DPadUp ||
-                                                                                i?.GamepadInput.Value == GamePadButton.DPadDown ||
-                                                                                i?.GamepadInput.Value == GamePadButton.DPadLeft ||
-                                                                                i?.GamepadInput.Value == GamePadButton.DPadRight);
-
-
-                ScanCodeShort? upKey = null;
-                bool upIsExtended = false;
-                ScanCodeShort? downKey = null;
-                bool downIsExtended = false;
-                ScanCodeShort? leftKey = null;
-                bool leftIsExtended = false;
-                ScanCodeShort? rightKey = null;
-                bool rightIsExtended = false;
-
-                ScanCodeShort? leftTriggerKey = null;
-                bool leftTriggerIsExtended = false;
-                ScanCodeShort? rightTriggerKey = null;
-                bool rightTriggerIsExtended = false;
-
-                GameControl bindedControl;
-
-                if (loadedConfig.GamepadInputs.Any(kv => kv.Value?.GamepadInput.Value == GamePadButton.LeftTrigger))
-                {
-                    bindedControl = loadedConfig.GamepadInputs.Where(kv => kv.Value?.GamepadInput.Value == GamePadButton.LeftTrigger).Select(kv => kv.Key).FirstOrDefault();
-                    leftTriggerKey = loadedConfig.KeyboardInputs[bindedControl].KeyScanCode;
-                    leftTriggerIsExtended = loadedConfig.KeyboardInputs[bindedControl].KeyIsExtended;
-                }
-
-                if (loadedConfig.GamepadInputs.Any(kv => kv.Value?.GamepadInput.Value == GamePadButton.RightTrigger))
-                {
-                    bindedControl = loadedConfig.GamepadInputs.Where(kv => kv.Value?.GamepadInput.Value == GamePadButton.RightTrigger).Select(kv => kv.Key).FirstOrDefault();
-                    rightTriggerKey = loadedConfig.KeyboardInputs[bindedControl].KeyScanCode;
-                    rightTriggerIsExtended = loadedConfig.KeyboardInputs[bindedControl].KeyIsExtended;
-                }
-
-
-                if (hasDpadBinded)
-                {
-                    if (loadedConfig.GamepadInputs.Any(kv => kv.Value?.GamepadInput.Value == GamePadButton.DPadUp))
-                    {
-                        bindedControl = loadedConfig.GamepadInputs.Where(kv => kv.Value?.GamepadInput.Value == GamePadButton.DPadUp).Select(kv => kv.Key).FirstOrDefault();
-                        upKey = loadedConfig.KeyboardInputs[bindedControl].KeyScanCode;
-                        upIsExtended = loadedConfig.KeyboardInputs[bindedControl].KeyIsExtended;
-                    }
-
-                    if (loadedConfig.GamepadInputs.Any(kv => kv.Value?.GamepadInput.Value == GamePadButton.DPadDown))
-                    {
-                        bindedControl = loadedConfig.GamepadInputs.Where(kv => kv.Value?.GamepadInput.Value == GamePadButton.DPadDown).Select(kv => kv.Key).FirstOrDefault();
-                        downKey = loadedConfig.KeyboardInputs[bindedControl].KeyScanCode;
-                        downIsExtended = loadedConfig.KeyboardInputs[bindedControl].KeyIsExtended;
-                    }
-
-                    if (loadedConfig.GamepadInputs.Any(kv => kv.Value?.GamepadInput.Value == GamePadButton.DPadLeft))
-                    {
-                        bindedControl = loadedConfig.GamepadInputs.Where(kv => kv.Value?.GamepadInput.Value == GamePadButton.DPadLeft).Select(kv => kv.Key).FirstOrDefault();
-                        leftKey = loadedConfig.KeyboardInputs[bindedControl].KeyScanCode;
-                        leftIsExtended = loadedConfig.KeyboardInputs[bindedControl].KeyIsExtended;
-                    }
-
-                    if (loadedConfig.GamepadInputs.Any(kv => kv.Value?.GamepadInput.Value == GamePadButton.DPadRight))
-                    {
-                        bindedControl = loadedConfig.GamepadInputs.Where(kv => kv.Value?.GamepadInput.Value == GamePadButton.DPadRight).Select(kv => kv.Key).FirstOrDefault();
-                        rightKey = loadedConfig.KeyboardInputs[bindedControl].KeyScanCode;
-                        rightIsExtended = loadedConfig.KeyboardInputs[bindedControl].KeyIsExtended;
-                    }
-                }
-                else
-                {
-                    // user has not binded their DPAD buttons to any controls so just assume it is going to be used for movement
-                    upKey = loadedConfig.KeyboardInputs[GameControl.Up].KeyScanCode;
-                    upIsExtended = loadedConfig.KeyboardInputs[GameControl.Up].KeyIsExtended;
-
-                    downKey = loadedConfig.KeyboardInputs[GameControl.Down].KeyScanCode;
-                    downIsExtended = loadedConfig.KeyboardInputs[GameControl.Down].KeyIsExtended;
-
-                    leftKey = loadedConfig.KeyboardInputs[GameControl.Left].KeyScanCode;
-                    leftIsExtended = loadedConfig.KeyboardInputs[GameControl.Left].KeyIsExtended;
-
-                    rightKey = loadedConfig.KeyboardInputs[GameControl.Right].KeyScanCode;
-                    rightIsExtended = loadedConfig.KeyboardInputs[GameControl.Right].KeyIsExtended;
-                }
-
-
-                PlayerIndex? connectedController = GetConnectedController();
-
-                while (PollingInput)
-                {
-                    if (connectedController == null)
-                    {
-                        // null means no connected controller found so just sleep for a little and check back later
-                        Thread.Sleep(1000);
-                        ds4Service?.RootHub?.HotPlug();
-                        connectedController = GetConnectedController();
-                        continue;
-                    }
-
-                    GamePadState state = GamePad.GetState(connectedController.Value);
-
-                    if (!state.IsConnected)
-                    {
-                        connectedController = null;
-                        continue;
-                    }
-
-                    if (upKey != null && state.DPad.Up == ButtonState.Pressed && !wasUpPressed)
-                    {
-                        wasUpPressed = true;
-                        SendKey(upKey.Value, upIsExtended);
-                    }
-                    else if (upKey != null && state.DPad.Up == ButtonState.Released && wasUpPressed)
-                    {
-                        ReleaseKey(upKey.Value, upIsExtended);
-                        wasUpPressed = false;
-                    }
-
-                    if (downKey != null && state.DPad.Down == ButtonState.Pressed && !wasDownPressed)
-                    {
-                        wasDownPressed = true;
-                        SendKey(downKey.Value, downIsExtended);
-                    }
-                    else if (downKey != null && state.DPad.Down == ButtonState.Released && wasDownPressed)
-                    {
-                        ReleaseKey(downKey.Value, downIsExtended);
-                        wasDownPressed = false;
-                    }
-
-                    if (leftKey != null && state.DPad.Left == ButtonState.Pressed && !wasLeftPressed)
-                    {
-                        wasLeftPressed = true;
-                        SendKey(leftKey.Value, leftIsExtended);
-                    }
-                    else if (leftKey != null && state.DPad.Left == ButtonState.Released && wasLeftPressed)
-                    {
-                        ReleaseKey(leftKey.Value, leftIsExtended);
-                        wasLeftPressed = false;
-                    }
-
-                    if (rightKey != null && state.DPad.Right == ButtonState.Pressed && !wasRightPressed)
-                    {
-                        wasRightPressed = true;
-                        SendKey(rightKey.Value, rightIsExtended);
-                    }
-                    else if (rightKey != null && state.DPad.Right == ButtonState.Released && wasRightPressed)
-                    {
-                        ReleaseKey(rightKey.Value, rightIsExtended);
-                        wasRightPressed = false;
-                    }
-
-                    if (leftTriggerKey != null && state.Triggers.Left > 0 && !wasLeftTriggerPressed)
-                    {
-                        wasLeftTriggerPressed = true;
-                        SendKey(leftTriggerKey.Value, leftTriggerIsExtended);
-                    }
-                    else if (leftTriggerKey != null && state.Triggers.Left == 0 && wasLeftTriggerPressed)
-                    {
-                        ReleaseKey(leftTriggerKey.Value, leftTriggerIsExtended);
-                        wasLeftTriggerPressed = false;
-                    }
-
-                    if (rightTriggerKey != null && state.Triggers.Right > 0 && !wasRightTriggerPressed)
-                    {
-                        wasRightTriggerPressed = true;
-                        SendKey(rightTriggerKey.Value, rightTriggerIsExtended);
-                    }
-                    else if (leftTriggerKey != null && state.Triggers.Right == 0 && wasRightTriggerPressed)
-                    {
-                        ReleaseKey(rightTriggerKey.Value, rightTriggerIsExtended);
-                        wasRightTriggerPressed = false;
-                    }
-                }
-
-                ds4Service?.StopService(); // stop the ds4 controller service after polling for input
-                ds4Service = null;
-            });
-
-        }
-
-        private static PlayerIndex? GetConnectedController()
-        {
-            if (GamePad.GetState(PlayerIndex.One).IsConnected)
-            {
-                return PlayerIndex.One;
-            }
-            else if (GamePad.GetState(PlayerIndex.Two).IsConnected)
-            {
-                return PlayerIndex.Two;
-            }
-            else if (GamePad.GetState(PlayerIndex.Three).IsConnected)
-            {
-                return PlayerIndex.Three;
-            }
-            else if (GamePad.GetState(PlayerIndex.Four).IsConnected)
-            {
-                return PlayerIndex.Four;
-            }
-
-            return null;
-        }
     }
 }

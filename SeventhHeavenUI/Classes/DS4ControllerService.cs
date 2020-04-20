@@ -10,22 +10,61 @@ namespace SeventhHeaven.Classes
     internal class DS4ControllerService
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private static DS4ControllerService instance;
 
         internal ControlService RootHub { get; set; }
+
+        internal bool IsRunning { get => RootHub != null && RootHub.IsRunning; }
+
+        /// <summary>
+        /// static instance that can be accessed from anywhere in app such as game launcher or controls window
+        /// </summary>
+        internal static DS4ControllerService Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new DS4ControllerService();
+                }
+
+                return instance;
+            }
+        }
+
 
         public DS4ControllerService()
         {
             RootHub = new ControlService();
-            RootHub.Debug += RootHub_LogDebug;
+        }
 
+        public void StartService()
+        {
+            if (IsRunning)
+            {
+                return;
+            }
+
+            if (RootHub == null)
+            {
+                RootHub = new ControlService();
+            }
+
+            RootHub.Debug += RootHub_LogDebug;
             DS4Windows.Global.UseExclusiveMode = true;
             RootHub.Start(showlog: true);
         }
 
         public void StopService()
         {
+            if (!IsRunning)
+            {
+                return;
+            }
+
             RootHub.Stop(showlog: true);
             RootHub.Debug -= RootHub_LogDebug;
+            RootHub = null;
         }
 
 
