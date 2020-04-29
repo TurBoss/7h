@@ -159,7 +159,7 @@ namespace SeventhHeaven.Classes
                     {
                         // null means no connected controller found so just sleep for a little and check back later
                         Thread.Sleep(1000);
-                        DS4ControllerService.Instance.RootHub.HotPlug();
+                        DS4ControllerService.Instance?.RootHub?.HotPlug();
                         connectedController = GetConnectedController();
                         continue;
                     }

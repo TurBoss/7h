@@ -6,6 +6,7 @@ using SeventhHeavenUI;
 using SeventhHeavenUI.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -49,6 +50,9 @@ namespace SeventhHeaven.ViewModels
         private CaptureState _captureState;
         private bool _hasUnsavedChanges;
         private string _selectedGameConfigOption;
+
+        private bool _isPs4SupportChecked;
+        private bool _startedPs4Service;
 
         private string _okKeyboardText;
         private string _cancelKeyboardText;
@@ -731,6 +735,36 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public bool IsPs4SupportChecked
+        {
+            get
+            {
+                return _isPs4SupportChecked;
+            }
+            set
+            {
+                if (value == _isPs4SupportChecked)
+                {
+                    return; // value did not change
+                }
+
+                _isPs4SupportChecked = value;
+
+                if (_isPs4SupportChecked)
+                {
+                    TurnOnPs4Service();
+                }
+                else
+                {
+                    TurnOffPs4Service();
+                }
+
+                SetPs4SupportInLaunchSettings();
+                NotifyPropertyChanged();
+            }
+        }
+
+
         public ControlMappingViewModel()
         {
             _captureState = CaptureState.NotCapturing;
@@ -747,7 +781,8 @@ namespace SeventhHeaven.ViewModels
                 _selectedGameConfigOption = InGameConfigOptions[0];
             }
 
-            NotifyPropertyChanged(nameof(_selectedGameConfigOption));
+            _isPs4SupportChecked = Sys.Settings.GameLaunchSettings.EnablePs4ControllerService;
+
             LoadSelectedConfiguration(updateUi: false); // dont set button text/icons until window is loaded
         }
 
@@ -792,6 +827,22 @@ namespace SeventhHeaven.ViewModels
             try
             {
                 Sys.Settings.GameLaunchSettings.InGameConfigOption = InGameConfigurationMap[SelectedGameConfigOption];
+                Sys.SaveSettings();
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
+        }
+
+        /// <summary>
+        /// Sets the ps4 controller support bool in game launch settings and  saves back to <see cref="Sys.Settings.GameLaunchSettings"/>
+        /// </summary>
+        internal void SetPs4SupportInLaunchSettings()
+        {
+            try
+            {
+                Sys.Settings.GameLaunchSettings.EnablePs4ControllerService = IsPs4SupportChecked;
                 Sys.SaveSettings();
             }
             catch (Exception e)
@@ -1281,5 +1332,39 @@ namespace SeventhHeaven.ViewModels
                 prop.SetValue(this, null, null);
             }
         }
+
+        internal void LaunchControlPanelGameControllersWindow()
+        {
+            Process.Start(new ProcessStartInfo("control.exe")
+            {
+                Arguments = "joy.cpl"
+            });
+        }
+
+        internal void TurnOffPs4Service()
+        {
+            if (_startedPs4Service && DS4ControllerService.Instance.IsRunning && !GameLauncher.IsFF7Running())
+            {
+                DS4ControllerService.Instance.StopService();
+            }
+        }
+
+        internal void TurnOnPs4Service()
+        {
+            if (IsPs4SupportChecked)
+            {
+                // check if the service is already running when opening controls (e.g. when game is already running and user opens controls window) so the service is not stopped when the window closes
+                if (DS4ControllerService.Instance.IsRunning && !_startedPs4Service)
+                {
+                    _startedPs4Service = false;
+                }
+                else
+                {
+                    _startedPs4Service = true;
+                    DS4ControllerService.Instance.StartService();
+                }
+            }
+        }
+
     }
 }

@@ -22,8 +22,6 @@ namespace SeventhHeaven.Windows
     /// </summary>
     public partial class ControlMappingWindow : Window
     {
-        private bool startedByWindow;
-
         public ControlMappingViewModel ViewModel { get; set; }
 
         public ControlMappingWindow()
@@ -268,16 +266,7 @@ namespace SeventhHeaven.Windows
 
         private void windowControls_Loaded(object sender, RoutedEventArgs e)
         {
-            if (DS4ControllerService.Instance.IsRunning)
-            {
-                startedByWindow = true; // check if the service is already running when opening controls (e.g. when game is already running and user opens controls window)
-            }
-            else
-            {
-                startedByWindow = false;
-                DS4ControllerService.Instance.StartService();
-            }
-
+            ViewModel.TurnOnPs4Service();
             ViewModel.UpdateAllButtonText();
             ViewModel.UpdateAllButtonIcons();
         }
@@ -285,10 +274,17 @@ namespace SeventhHeaven.Windows
         private void windowControls_Unloaded(object sender, RoutedEventArgs e)
         {
             // only stop the ds4 service if it was started by the controls window
-            if (!startedByWindow && !GameLauncher.IsFF7Running())
-            {
-                DS4ControllerService.Instance.StopService();
-            }
+            ViewModel.TurnOffPs4Service();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnOpenGameControllersWindow_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.LaunchControlPanelGameControllersWindow();
         }
     }
 }

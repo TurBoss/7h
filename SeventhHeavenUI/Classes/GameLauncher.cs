@@ -512,21 +512,25 @@ namespace SeventhHeaven.Classes
             }
 
             //
-            // Initialize the DS4Win service to recognize playstation 4 controller as xbox 360 controller (XInput support)
+            // Initialize the controller input interceptor and DS4Win service to recognize playstation 4 controller as xbox 360 controller (XInput support)
             //
-            Instance.RaiseProgressChanged($"Starting Controller Services ...");
 
             if (Instance._controllerInterceptor == null)
             {
                 Instance._controllerInterceptor = new ControllerInterceptor();
             }
 
-            if (DS4ControllerService.Instance.IsRunning)
+            if (Sys.Settings.GameLaunchSettings.EnablePs4ControllerService)
             {
-                Instance.RaiseProgressChanged($"\tservice already running ...", NLog.LogLevel.Warn);
-            }
+                Instance.RaiseProgressChanged($"Starting PS4 Controller Service ...");
 
-            DS4ControllerService.Instance.StartService(); // starts the service that treats ds4 controlers as xbox360/xinput device
+                if (DS4ControllerService.Instance.IsRunning)
+                {
+                    Instance.RaiseProgressChanged($"\tservice already running ...", NLog.LogLevel.Warn);
+                }
+
+                DS4ControllerService.Instance.StartService(); // starts the service that treats ds4 controlers as xbox360/xinput device
+            }
 
 
             // start FF7 proc as normal and return true when running the game as vanilla

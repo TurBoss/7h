@@ -31,6 +31,9 @@ namespace _7thHeaven.Code
         public bool HasDisplayedOggMusicWarning { get; set; }
         public bool HasDisplayedMovieWarning { get; set; }
 
+        public bool EnablePs4ControllerService { get; set; }
+
+
 
         /// <summary>
         /// File name of the ff7input.cfg file to copy to ff7 game dir 
@@ -63,7 +66,8 @@ namespace _7thHeaven.Code
                 ShowLauncherWindow = true,
                 InGameConfigOption = "1998 KB+Std Gamepad.cfg",
                 HasDisplayedOggMusicWarning = false,
-                HasDisplayedMovieWarning = false
+                HasDisplayedMovieWarning = false,
+                EnablePs4ControllerService = false
             };
         }
     }
