@@ -613,5 +613,7 @@
         DPadLeft,
         DPadRight,
         Italian,
+        StartingPS4ControllerService,
+        ServiceAlreadyRunning,
     }
 }

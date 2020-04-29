@@ -163,6 +163,7 @@
     <Compile Include="Classes\ButtonWithImage.cs" />
     <Compile Include="Classes\Constraint.cs" />
     <Compile Include="Classes\ControlConfiguration.cs" />
+    <Compile Include="Classes\ControlInputSetting.cs" />
     <Compile Include="Classes\ControllerInterceptor.cs" />
     <Compile Include="Classes\ControlMapper.cs" />
     <Compile Include="Classes\DateTimeComparer.cs" />

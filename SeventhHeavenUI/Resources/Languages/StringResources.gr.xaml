@@ -152,7 +152,6 @@
     <system:String x:Key="ShowGameLauncherTooltip">Εμφανίζει το παράθυρο Εκκίνησης Παιχνιδιού καθώς ξεκινάς το FF7 προς λεπτομερούς εμφάνισης της Διαδικασίας Εκκίνησης.</system:String>
 
     <system:String x:Key="ControlsLabel">Χειρισμός:</system:String>
-    <system:String x:Key="ControlsTooltip">Καθορίζει τα πλήκτρα στο πληκτρολόγιο εντός παιχνιδιού και στο χειριστήριο. Κάνε κλικ στο εικονίδιο αποθήκευσης για να αποθηκεύσεις αυτές τις ρυθμίσεις ως προσαρμοσμένη ρύθμιση.</system:String>
 
     <system:String x:Key="SaveControlsTooltip">Αποθήκευσε τις ρυθμίσεις που έκανες για χειρισμό εντός παιχνιδιού.</system:String>
     <system:String x:Key="DeleteControlsTooltip">Διέγραψε τις επιλεγμένες προσαρμοσμένες ρυθμίσεις χειρισμού που έκανες.</system:String>
@@ -1160,6 +1159,42 @@ Do you want to apply the setting and try again?</system:String>
 
     <system:String x:Key="BrazilianPortuguese">Πορτογαλικά της Βραζιλίας</system:String>
     <system:String x:Key="Italian">ιταλικός</system:String>
+
+    <!--DEV NOTE TO REMOVE: STRINGS BELOW ADDED 4/29/20-->
+
+    <system:String x:Key="SetInGameControls">Set In-Game Controls</system:String>
+    <system:String x:Key="Keyboard">Keyboard</system:String>
+    <system:String x:Key="Controller">Controller</system:String>
+    <system:String x:Key="ConfirmLabel">[CONFIRM]</system:String>
+    <system:String x:Key="CancelLabel">[CANCEL]</system:String>
+    <system:String x:Key="MenuLabel">[MENU]</system:String>
+    <system:String x:Key="SwitchLabel">[SWITCH]</system:String>
+    <system:String x:Key="ScrollUpLabel">[SCROLL UP]</system:String>
+    <system:String x:Key="ScrollDownLabel">[SCROLL DOWN]</system:String>
+
+    <system:String x:Key="CameraLabel">[CAMERA]</system:String>
+    <system:String x:Key="TargetLabel">[TARGET]</system:String>
+    <system:String x:Key="AssistLabel">[ASSIST]</system:String>
+    <system:String x:Key="StartLabel">[START]</system:String>
+
+    <system:String x:Key="UpLabel">[UP]</system:String>
+    <system:String x:Key="DownLabel">[DOWN]</system:String>
+    <system:String x:Key="LeftLabel">[LEFT]</system:String>
+    <system:String x:Key="RightLabel">[RIGHT]</system:String>
+
+    <system:String x:Key="Presets">Presets:</system:String>
+    <system:String x:Key="EnablePS4ControllerSupport">Enable PS4 Controller Support</system:String>
+    <system:String x:Key="PS4ControllerSupportTooltip">Allows to use a PS4 controller with the game (SCP driver must be installed)</system:String>
+    <system:String x:Key="SaveChangesTooltip">Save changes to controls.</system:String>
+
+    <system:String x:Key="OpenGameControllersWindow">Open Game Controllers Window</system:String>
+
+
+    <system:String x:Key="ControlsTooltip">Καθορίζει τα πλήκτρα στο πληκτρολόγιο εντός παιχνιδιού και στο χειριστήριο. Click save icon to save the above control mappings as a custom configuration.</system:String>
+
+
+    <system:String x:Key="StartingPS4ControllerService">Starting PS4 Controller Service ...</system:String>
+    <system:String x:Key="ServiceAlreadyRunning">service already running ...</system:String>
 
 
 </ResourceDictionary>

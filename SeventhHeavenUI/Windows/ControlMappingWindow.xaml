@@ -9,7 +9,7 @@
         Loaded="windowControls_Loaded"
         Unloaded="windowControls_Unloaded"
         mc:Ignorable="d"
-        Title="Set In-Game Controls"
+        Title="{DynamicResource SetInGameControls}"
         WindowStartupLocation="CenterScreen"
         Style="{DynamicResource MainWindowStyle}"
         PreviewKeyDown="Window_PreviewKeyDown"
@@ -80,14 +80,14 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Keyboard"
+        <TextBlock Text="{DynamicResource Keyboard}"
                    Style="{StaticResource controlNameLabel}"
                    HorizontalAlignment="Center"
                    Margin="0,0,0,0"
                    Grid.Row="0"
                    Grid.Column="1"/>
 
-        <TextBlock Text="Controller"
+        <TextBlock Text="{DynamicResource Controller}"
                    Style="{StaticResource controlNameLabel}"
                    HorizontalAlignment="Center"
                    Margin="0,0,0,0"
@@ -96,7 +96,7 @@
                    Grid.ColumnSpan="2"/>
 
         
-        <TextBlock Text="[CONFIRM]"
+        <TextBlock Text="{DynamicResource ConfirmLabel}"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="1"/>
         <Button x:Name="btnOkKeyboard"
@@ -119,7 +119,7 @@
 
         
 
-        <TextBlock Text="[CANCEL]"
+        <TextBlock Text="{DynamicResource CancelLabel}"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="2"/>
         <Button x:Name="btnCancelKeyboard"
@@ -142,7 +142,7 @@
 
         
 
-        <TextBlock Text="[MENU]"
+        <TextBlock Text="{DynamicResource MenuLabel}"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="3"/>
         <Button x:Name="btnMenuKeyboard"
@@ -165,7 +165,7 @@
 
 
 
-        <TextBlock Text="[SWITCH]"
+        <TextBlock Text="{DynamicResource SwitchLabel}"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="4"/>
 
@@ -189,7 +189,7 @@
 
 
 
-        <TextBlock Text="[SCROLL UP]"
+        <TextBlock Text="{DynamicResource ScrollUpLabel}"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="5"/>
         <Button x:Name="btnPageUpKeyboard"
@@ -212,7 +212,7 @@
 
         
 
-        <TextBlock Text="[SCROLL DOWN]"
+        <TextBlock Text="{DynamicResource ScrollDownLabel}"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="6"/>
         <Button x:Name="btnPageDownKeyboard"
@@ -235,7 +235,7 @@
 
         
 
-        <TextBlock Text="[CAMERA]"
+        <TextBlock Text="{DynamicResource CameraLabel}"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="7"/>
         <Button x:Name="btnCameraKeyboard"
@@ -258,7 +258,7 @@
 
         
         
-        <TextBlock Text="[TARGET]"
+        <TextBlock Text="{DynamicResource TargetLabel}"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="8"/>
         <Button x:Name="btnTargetKeyboard"
@@ -280,7 +280,7 @@
                Style="{StaticResource ps4IconStyle}"/>
 
 
-        <TextBlock Text="[ASSIST]"
+        <TextBlock Text="{DynamicResource AssistLabel}"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="9"/>
         <Button x:Name="btnAssistKeyboard"
@@ -303,7 +303,7 @@
 
 
 
-        <TextBlock Text="[START]"
+        <TextBlock Text="{DynamicResource StartLabel}"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="10"/>
         <Button x:Name="btnStartKeyboard"
@@ -326,7 +326,7 @@
 
 
 
-        <TextBlock Text="[UP]"
+        <TextBlock Text="{DynamicResource UpLabel}"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="11"/>
         <Button x:Name="btnUpKeyboard"
@@ -349,7 +349,7 @@
 
 
 
-        <TextBlock Text="[DOWN]"
+        <TextBlock Text="{DynamicResource DownLabel}"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="12"/>
         <Button x:Name="btnDownKeyboard"
@@ -371,7 +371,7 @@
                Style="{StaticResource ps4IconStyle}"/>
 
         
-        <TextBlock Text="[LEFT]"
+        <TextBlock Text="{DynamicResource LeftLabel}"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="13"/>
         <Button x:Name="btnLeftKeyboard"
@@ -393,7 +393,7 @@
                Style="{StaticResource ps4IconStyle}"/>
 
 
-        <TextBlock Text="[RIGHT]"
+        <TextBlock Text="{DynamicResource RightLabel}"
                    Style="{StaticResource controlNameLabel}"
                    Grid.Row="14"/>
         <Button x:Name="btnRightKeyboard"
@@ -434,7 +434,7 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Presets:"
+            <TextBlock Text="{DynamicResource Presets}"
                        FontSize="13"
                        ToolTip="{DynamicResource ControlsTooltip}"
                        ToolTipService.IsEnabled="false"
@@ -473,7 +473,7 @@
                     Grid.RowSpan="3"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"
-                    ToolTip="Save changes to controls."
+                    ToolTip="{DynamicResource SaveChangesTooltip}"
                     MinWidth="75"
                     Click="btnSaveChanges_Click"
                     IsEnabled="{Binding HasUnsavedChanges}"
@@ -490,8 +490,8 @@
             <CheckBox Style="{StaticResource ToggleSwitchCheckbox}"
                       IsChecked="{Binding IsPs4SupportChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       FontSize="13"
-                      Content="Enable PS4 Controller Support"
-                      ToolTip="Allows to use a PS4 controller with the game (SCP driver must be installed)"
+                      Content="{DynamicResource EnablePS4ControllerSupport}"
+                      ToolTip="{DynamicResource PS4ControllerSupportTooltip}"
                       HorizontalAlignment="Left"
                       Grid.Row="1"
                       Grid.ColumnSpan="6"/>
@@ -499,7 +499,7 @@
             <Button x:Name="btnOpenGameControllersWindow"
                     Style="{StaticResource HyperlinkButton}"
                     Click="btnOpenGameControllersWindow_Click"
-                    Content="Open Game Controllers Window"
+                    Content="{DynamicResource OpenGameControllersWindow}"
                     Grid.ColumnSpan="4"
                     HorizontalAlignment="Left"
                     FontSize="11"

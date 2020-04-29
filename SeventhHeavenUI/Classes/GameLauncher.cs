@@ -522,11 +522,11 @@ namespace SeventhHeaven.Classes
 
             if (Sys.Settings.GameLaunchSettings.EnablePs4ControllerService)
             {
-                Instance.RaiseProgressChanged($"Starting PS4 Controller Service ...");
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.StartingPS4ControllerService));
 
                 if (DS4ControllerService.Instance.IsRunning)
                 {
-                    Instance.RaiseProgressChanged($"\tservice already running ...", NLog.LogLevel.Warn);
+                    Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.ServiceAlreadyRunning)}", NLog.LogLevel.Warn);
                 }
 
                 DS4ControllerService.Instance.StartService(); // starts the service that treats ds4 controlers as xbox360/xinput device
