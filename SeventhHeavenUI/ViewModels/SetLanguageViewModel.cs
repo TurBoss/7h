@@ -65,6 +65,7 @@ namespace SeventhHeavenUI.ViewModels
             LanguagesMap.Add($"{ResourceHelper.Get(StringKey.Spanish)} (Español)", "es");
             LanguagesMap.Add($"{ResourceHelper.Get(StringKey.French)} (Français)", "fr");
             LanguagesMap.Add($"{ResourceHelper.Get(StringKey.Greek)} (Ελληνικά)", "gr");
+            LanguagesMap.Add($"{ResourceHelper.Get(StringKey.Italian)} (Italiano)", "it");
             LanguagesMap.Add($"{ResourceHelper.Get(StringKey.Japanese)} (\u65e5\u672c\u8a9e)", "ja");
             LanguagesMap.Add($"{ResourceHelper.Get(StringKey.BrazilianPortuguese)} (Portugues do Brasil)", "pt-BR");
 

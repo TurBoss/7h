@@ -672,7 +672,7 @@ Click 'Cancel' to stop the process.</system:String>
 
     <system:String x:Key="ErrorIncorrectExe">Error - Incorrect Exe</system:String>
     <system:String x:Key="ThisExeIsUsedForSteamReleaseFailedToCopyExe">This exe is used for the Steam release of FF7, which 7th Heaven does not support. The 1.02 patch ff7.exe failed to copy and could not be auto selected for you.</system:String>
-    <system:String x:Key="ThisExeIsUsedForSteamReleaseCopiedSelectedForYou">This exe is used for the Steam release of FF7, which 7th Heaven does not support. The 1.02 patch ff7.exe was {copyOrSelectMessage} for you to ensure 7th Heaven works.</system:String>
+    <system:String x:Key="ThisExeIsUsedForSteamReleaseCopiedSelectedForYou">This exe is used for the Steam release of FF7, which 7th Heaven does not support. The 1.02 patch ff7.exe was {0} for you to ensure 7th Heaven works.</system:String>
     <system:String x:Key="Selected">selected</system:String>
     <system:String x:Key="CopiedAndSelected">copied and selected</system:String>
     <system:String x:Key="ThisExeIsUsedForConfiguringFf7Settings">This exe is used for configuring FF7 settings and is not the correct game exe. Please select a different FF7 EXE file.</system:String>
@@ -919,7 +919,7 @@ Do you want to apply the setting and try again?</system:String>
     <system:String x:Key="NotFoundScanningDiscsForFiles">not found. Scanning disc(s) for files ...</system:String>
     <system:String x:Key="FoundFileOnAtCopyingFile">found file on {0} at {1}. Copying file ...</system:String>
     <system:String x:Key="FailedToCopyErrorHasBeenLogged">failed to copy. Error has been logged</system:String>
-    <system:String x:Key="FailedToFindOnAnyDisc">failed to find {file} on any disc ...</system:String>
+    <system:String x:Key="FailedToFindOnAnyDisc">failed to find {0} on any disc ...</system:String>
     <system:String x:Key="FileNotFound">file not found...</system:String>
     <system:String x:Key="CannotCopySourceFileBecauseItIsMissingAt">cannot copy source file because it is missing at</system:String>
     <system:String x:Key="CopyingFileFrom">copying file from</system:String>
@@ -1158,7 +1158,8 @@ Do you want to apply the setting and try again?</system:String>
 
     <system:String x:Key="Volume">Volume</system:String>
 
-    <system:String x:Key="BrazilianPortuguese">Brazilian Portuguese</system:String>
+    <system:String x:Key="BrazilianPortuguese">Πορτογαλικά της Βραζιλίας</system:String>
+    <system:String x:Key="Italian">ιταλικός</system:String>
 
 
 </ResourceDictionary>

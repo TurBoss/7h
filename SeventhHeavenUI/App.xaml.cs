@@ -372,6 +372,9 @@ namespace SeventhHeavenUI
                     case "ja":
                         dict.Source = new Uri("Resources\\Languages\\StringResources.ja.xaml", UriKind.Relative);
                         break;
+                    case "it":
+                        dict.Source = new Uri("Resources\\Languages\\StringResources.it.xaml", UriKind.Relative);
+                        break;
                     default:
                         dict.Source = new Uri("Resources\\StringResources.xaml", UriKind.Relative);
                         break;

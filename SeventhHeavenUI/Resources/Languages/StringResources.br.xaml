@@ -672,7 +672,7 @@ Clique em 'Cancelar' para parar o processo.</system:String>
 
     <system:String x:Key="ErrorIncorrectExe">Erro - Exe Incorreto</system:String>
     <system:String x:Key="ThisExeIsUsedForSteamReleaseFailedToCopyExe">Este exe é utilizado na edição Steam de FF7, que é incompatível com 7th Heaven. O ff7.exe do patch 1.02 não pôde ser copiado e não pôde ser auto-selecionado pra você.</system:String>
-    <system:String x:Key="ThisExeIsUsedForSteamReleaseCopiedSelectedForYou">Este exe é utilizado na edição Steam de FF7, que é incompatível com 7th Heaven. O ff7.exe do patch 1.02 foi {copyOrSelectMessage} pra você para assegurar o funcionamento de 7th Heaven.</system:String>
+    <system:String x:Key="ThisExeIsUsedForSteamReleaseCopiedSelectedForYou">Este exe é utilizado na edição Steam de FF7, que é incompatível com 7th Heaven. O ff7.exe do patch 1.02 foi {0} pra você para assegurar o funcionamento de 7th Heaven.</system:String>
     <system:String x:Key="Selected">selecionado</system:String>
     <system:String x:Key="CopiedAndSelected">copiado e selecionado</system:String>
     <system:String x:Key="ThisExeIsUsedForConfiguringFf7Settings">Este exe é utilizado nas configurações de FF7 e não é o exe do jogo correto. Por favor selecione um arquivo EXE de FF7 diferente.</system:String>
@@ -1159,6 +1159,7 @@ Você quer aplicar essa configuração e tentar de novo?</system:String>
     <system:String x:Key="Volume">Volume</system:String>
 
     <system:String x:Key="BrazilianPortuguese">Portugues do Brasil</system:String>
+    <system:String x:Key="Italian">Italiano</system:String>
 
 
 

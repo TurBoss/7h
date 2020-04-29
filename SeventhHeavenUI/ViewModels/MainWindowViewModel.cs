@@ -1749,6 +1749,10 @@ namespace SeventhHeavenUI.ViewModels
                         uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.ja.xml");
                         break;
 
+                    case "it":
+                        uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.it.xml");
+                        break;
+
                     default:
                         uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "7H_GameDriver_UI.xml"); // default to using english version
                         break;

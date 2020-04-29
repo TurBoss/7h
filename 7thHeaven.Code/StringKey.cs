@@ -612,5 +612,6 @@
         DPadDown,
         DPadLeft,
         DPadRight,
+        Italian,
     }
 }

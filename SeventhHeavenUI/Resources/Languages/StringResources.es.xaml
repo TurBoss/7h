@@ -7,8 +7,8 @@
     <system:String x:Key="Play">Jugar</system:String>
     <system:String x:Key="PlayWithMods">Jugar con Mods (Predeterminado)</system:String>
     <system:String x:Key="PlayWithNoMods">Jugar sin Mods</system:String>
-    <system:String x:Key="PlayWithDebugLog">Jugar con Registro de Depuración</system:String>
-    <system:String x:Key="PlayWithVariableDump">Jugar con Volcado Varíable</system:String>
+    <system:String x:Key="PlayWithDebugLog">Jugar con Debug Log</system:String>
+    <system:String x:Key="PlayWithVariableDump">Jugar con Variable Dump</system:String>
 
     <system:String x:Key="Settings">Opciones</system:String>
     <system:String x:Key="ChangeColorTheme">Cambiar Color del Tema...</system:String>
@@ -123,7 +123,7 @@
     <system:String x:Key="InsertDisc">Insertar Disco</system:String>
     <system:String x:Key="MissingRequiredInput">Falta de Entrada Requerida</system:String>
     <system:String x:Key="IROToolsWindowTitle">Herramientas IRO</system:String>
-    <system:String x:Key="ChunkToolWindowTitle">Herramientas de Sección</system:String>
+    <system:String x:Key="ChunkToolWindowTitle">Herramientas Chunk</system:String>
     <system:String x:Key="ManageProfiles">Administrar Perfiles</system:String>
     <system:String x:Key="SetLanguageWindowTitle">Escoger Idioma</system:String>
 
@@ -160,8 +160,8 @@
     <system:String x:Key="HighDpiScalingFix">Arreglo de escalados con Alto-DPI</system:String>
     <system:String x:Key="HighDpiScalingFixTooltip">Puede arreglar la pantalla del juego si está cortada o descentrada. Activalo en pantallas con alto-DPI. Además, cambia tu Configuracíon de Pantalla de Windows a 100% de escala.</system:String>
 
-    <system:String x:Key="Code5Fix">Arreglo del Código 5</system:String>
-    <system:String x:Key="Code5FixTooltip">Puede arreglar problemas con el error de "Código 5" al hacer clic en "Jugar". Las configuraciones con monitores múltiples pueden ver programas abiertos siendo desplazados al monitor secundario cuando se inicien.</system:String>
+    <system:String x:Key="Code5Fix">Arreglo del Code 5</system:String>
+    <system:String x:Key="Code5FixTooltip">Puede solucionar problemas con el error de "Code 5" al hacer clic en "Jugar". Las configuraciones con monitores múltiples pueden ver programas abiertos siendo desplazados al monitor secundario cuando se inicien.</system:String>
 
     <system:String x:Key="ReunionDriverFix">Arreglo del 'Controlador de Reunion'</system:String>
     <system:String x:Key="ReunionDriverFixTooltip">Renombra temporalmente ddraw.dll a Reunion.dll.bak al iniciar el juego, acto seguido lo revierte de nuevo inmediatamente. No afecta a la jugabilidad de 'Reunion' fuera de 7H.</system:String>
@@ -190,7 +190,7 @@
     <system:String x:Key="MusicVolumeTooltip">Establece el volumen de la música en el juego.</system:String>
 
     <system:String x:Key="LogVolumeControl">Control de volumen logarítmico</system:String>
-    <system:String x:Key="LogVolumeControlTooltip">Desmarca esta opción si crees que el volumen no cambia suavemente.</system:String>
+    <system:String x:Key="LogVolumeControlTooltip">Desmarca esta opción si crees que el volumen no cambia con suavidad.</system:String>
 
     <system:String x:Key="ReverseSpeakers">Altavoces Inversos</system:String>
     <system:String x:Key="ReverseSpeakersTooltip">Intercambia los canales izquierdos y derechos cuando está marcado.</system:String>
@@ -608,7 +608,7 @@ Haz clic en 'Cancelar' para detener el proceso.</system:String>
     <!--UnpackIroViewModel Strings-->
     <system:String x:Key="PathToSourceIroFileIsRequired">Se necesita la ubicación para la ruta de origen del archivo iro</system:String>
     <system:String x:Key="InvalidUnpackIroOptions">Opciones de descompresión iro invalidas</system:String>
-    <system:String x:Key="AnErrorOccuredWhileUnpacking">Ha ocurrido un mientras durante la descompresión</system:String>
+    <system:String x:Key="AnErrorOccuredWhileUnpacking">Ha ocurrido un error durante la descompresión</system:String>
     <system:String x:Key="UnpackingComplete">¡Descompresión completada!</system:String>
 
 
@@ -618,7 +618,7 @@ Haz clic en 'Cancelar' para detener el proceso.</system:String>
 
     <!--CatalogCreationViewModel Strings-->
     <system:String x:Key="CouldNotLoadModXmlFromIroFile">No se ha podido cargar mod xml desde el archivo .iro</system:String>
-    <system:String x:Key="CouldNotLoadCatalogXml">No se ha podido cargar catalogo xml</system:String>
+    <system:String x:Key="CouldNotLoadCatalogXml">No se ha podido cargar catalog xml</system:String>
 
 
     <!--ConfigureGLWindow.xaml.cs Strings-->
@@ -670,7 +670,7 @@ Haz clic en 'Cancelar' para detener el proceso.</system:String>
 
     <system:String x:Key="ErrorIncorrectExe">Error - Exe Incorrecto</system:String>
     <system:String x:Key="ThisExeIsUsedForSteamReleaseFailedToCopyExe">Este exe es utilizado para la versión de Steam de FF7, con la cual 7th Heaven no es compatible. El parche 1.02 ff7.exe falló al copiar y no pudo ser seleccionado automáticamente.</system:String>
-    <system:String x:Key="ThisExeIsUsedForSteamReleaseCopiedSelectedForYou">Este exe es utilizado para la versión de Steam de FF7, con la cual 7th Heaven no es compatible. El parche 1.02 ff7.exe ha sido {copyOrSelectMessage} para tí y asegurar que 7th Heaven funciona.</system:String>
+    <system:String x:Key="ThisExeIsUsedForSteamReleaseCopiedSelectedForYou">Este exe es utilizado para la versión de Steam de FF7, con la cual 7th Heaven no es compatible. El parche 1.02 ff7.exe ha sido {0} para tí y asegurar que 7th Heaven funciona.</system:String>
     <system:String x:Key="Selected">seleccionado</system:String>
     <system:String x:Key="CopiedAndSelected">copiado y seleccionado</system:String>
     <system:String x:Key="ThisExeIsUsedForConfiguringFf7Settings">Este exe es utilizado para configurar FF7 y no es el exe correcto del juego. Por favor, utiliza un FF7.exe distinto.</system:String>
@@ -717,7 +717,7 @@ Haz clic en 'Cancelar' para detener el proceso.</system:String>
 
     <!--GameLauncher Strings-->
     <system:String x:Key="CheckingFf7IsNotRunning">Revisando que FF7 no se está ejecutando ...</system:String>
-    <system:String x:Key="Ff7IsAlreadyRunning">¡Ya se está ejecutnado FF7!</system:String>
+    <system:String x:Key="Ff7IsAlreadyRunning">¡Ya se está ejecutando FF7!</system:String>
     <system:String x:Key="Ff7IsAlreadyRunningDoYouWantToForceClose" xml:space="preserve">FF7 ya se está ejecutando. ¿Quieres cerrarlo forzosamente?
 
 Haz clic en 'Sí' para cerrar todas las instancias actuales de FF7. Haz clic en 'No' para empezar otra instancia.</system:String>
@@ -729,21 +729,21 @@ Haz clic en 'Sí' para cerrar todas las instancias actuales de FF7. Haz clic en 
     <system:String x:Key="FileNotFoundAborting">archivo no encontrado. Abortando ...</system:String>
     <system:String x:Key="Ff7ExeNotFoundYouMayNeedToConfigure">No se ha encontrado FF7.exe. Puede que tengas que configurar 7H usando el menú de Opciones>Opciones Generales.</system:String>
     <system:String x:Key="VerifyingInstalledGameIsCompatible">Comprobando que el juego instalado es compatible ...</system:String>
-    <system:String x:Key="ErrorCodeYarr">Error código: ¡YARR! Imposible continuar. Por favor, informa de este error en los foros de Qhimm.</system:String>
-    <system:String x:Key="VerifyingGameIsNotInstalledInProtectedFolder">Comprobando que el juego no esté instalado en una carpeta del Sistema/Protejida ...</system:String>
+    <system:String x:Key="ErrorCodeYarr">Error código: ¡YARR! Imposible proceder. Por favor, informa de este error en los foros de Qhimm.</system:String>
+    <system:String x:Key="VerifyingGameIsNotInstalledInProtectedFolder">Comprobando que el juego no esté instalado en una carpeta del Sistema/Protegida ...</system:String>
 
     <system:String x:Key="Ff7IsCurrentlyInstalledInASystemFolder" xml:space="preserve">FF7 está actualmente instalado en una carpeta del Sistema la cual puede causar que los Mods no funcionen. Es recomendado que lo instales en C:\Games\Final Fantasy VII.
 
 ¿Quieres copiar automáticamente tu instalación en C:\Games\Final Fantasy VII para continuar?</system:String>
 
-    <system:String x:Key="CanNotContinueDueToFf7nstalledInProtectedFolder">no se ha podido continuar debido a que FF7 está instalado en una carpeta del Sistema/Protejida. Abortando...</system:String>
+    <system:String x:Key="CanNotContinueDueToFf7nstalledInProtectedFolder">no se ha podido continuar debido a que FF7 está instalado en una carpeta del Sistema/Protegida. Abortando...</system:String>
     <system:String x:Key="CannotContinue">¡No Se Ha Podido Continuar!</system:String>
 
     <system:String x:Key="CopyingGameFilesTo">copiando los archivos del juego en</system:String>
     <system:String x:Key="FailedToCopyFf7To">error al copiar FF7 en</system:String>
 
     <system:String x:Key="VerifyingGameIsMaxInstall">Comprobando que el juego está instalado completamente ...</system:String>
-    <system:String x:Key="YourFf7InstallationFolderIsMissingCriticalFiles" xml:space="preserve">Tu carpeta de instalación de FF7 le faltan archivos críticos. Cuando instalaste FF7, puede que accidentalmente seleccionases la instalación 'Estándar', Pero la instalación 'Completa' es necesaria.
+    <system:String x:Key="YourFf7InstallationFolderIsMissingCriticalFiles" xml:space="preserve">Tu carpeta de instalación de FF7 carecen de archivos críticos. Cuando instalaste FF7, puede que accidentalmente seleccionases la instalación 'Estándar', Pero la instalación 'Completa' es necesaria.
 
 7th Heaven puede arreglar esto automáticamente por tí. Simplemente introduce uno de tus discos de juego y vuelve a intentarlo.</system:String>
 
@@ -780,7 +780,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="VerifyingGameDriverShadersFoldersExist">Comprobando que la carpeta shaders del controlador de juego existe ...</system:String>
 
     <system:String x:Key="VerifyingFf7Exe">Comprobando ff7 exe ...</system:String>
-    <system:String x:Key="Ff7ExeDetectedToBeDifferent">Se ha encontrado que el ff7.exe es distinto. creando una copia de reserva y copiando el .exe correcto ...</system:String>
+    <system:String x:Key="Ff7ExeDetectedToBeDifferent">Se ha encontrado que ff7.exe es distinto. creando una copia de reserva y copiando el .exe correcto ...</system:String>
     <system:String x:Key="FailedToCopyFf7Exe">Error al intentar copiar ff7.exe. Abortando ...</system:String>
     <system:String x:Key="FailedToCreateBackupOfFf7Exe">Error al crear una copia de reserva de ff7.exe. Abortando ...</system:String>
 
@@ -817,7 +817,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="CreatingRuntimeProfile">Creando Perfil de Ejecución ...</system:String>
     <system:String x:Key="FailedToCreateRuntimeProfileForActiveMods">Error al crear un Perfil de Ejecución para los Mods activos ...</system:String>
 
-    <system:String x:Key="VariableDumpSetToTrueStartingTurboLog">Volcado Varíable configurado en verdadero. Comenzando TurboLog ...</system:String>
+    <system:String x:Key="VariableDumpSetToTrueStartingTurboLog">Variable Dump configurado en verdadero. Comenzando TurboLog ...</system:String>
     <system:String x:Key="CopyingEasyHookToFf7PathIfNotFoundOrOlder">Copiando EasyHook.dll a la ubicación de FF7 (si no se ha encontrado o se ha detectado una versión antigua) ...</system:String>
 
     <system:String x:Key="CopyingFf7InputCfgToFf7Path">Copiando ff7input.cfg a la ubicación de FF7 ...</system:String>
@@ -838,7 +838,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="FailedToInjectAfterMaxAmountOfTries">Error al inyectar tras el número máximo de intentos</system:String>
 
     <system:String x:Key="ErrorFailedToStartGame">Error - Fallo Al Empezar El Juego</system:String>
-    <system:String x:Key="FailedToInjectWithEasyHookMessage" xml:space="preserve">Error al injectar con EasyHook tras intentarlo varias veces. Normalmente se arregla activando el 'Arreglo del Código 5' en las Opciones del Lanzador de Juego.
+    <system:String x:Key="FailedToInjectWithEasyHookMessage" xml:space="preserve">Error al injectar con EasyHook tras intentarlo varias veces. Normalmente se arregla activando el 'Arreglo del Code 5' en las Opciones del Lanzador de Juego.
 ¿Quieres aplicar esta opción y intentarlo de nuevo?</system:String>
 
     <system:String x:Key="SettingCompatibilityFixAndTryingAgain">Habilitando el arreglo de compatibilidad e intentando e nuevo ...</system:String>
@@ -918,7 +918,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="NotFoundScanningDiscsForFiles">no encontrados. Escaneando disco(s) en busqueda de los archivos ...</system:String>
     <system:String x:Key="FoundFileOnAtCopyingFile">encontrado archivo en {0} en {1}. Copiando archivo  ...</system:String>
     <system:String x:Key="FailedToCopyErrorHasBeenLogged">error al intentar copiar. El error ha sido registrado</system:String>
-    <system:String x:Key="FailedToFindOnAnyDisc">error al encontrar el archivo {file} en cualquier disco ...</system:String>
+    <system:String x:Key="FailedToFindOnAnyDisc">error al encontrar el archivo {0} en cualquier disco ...</system:String>
     <system:String x:Key="FileNotFound">archivo no encontrado ...</system:String>
     <system:String x:Key="CannotCopySourceFileBecauseItIsMissingAt">no se pudo copiar el archivo original por que falta en</system:String>
     <system:String x:Key="CopyingFileFrom">copiando archivo desde</system:String>
@@ -1004,7 +1004,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="ControlsDisabledForeground">Controles Desact. Primario:</system:String>
     <system:String x:Key="BackgroundImage">Imagen de Fondo:</system:String>
     <system:String x:Key="ControlsBackground">1.er Fondo de los Controles:</system:String>
-    <system:String x:Key="ControlsForeground">2.1 Fondo de los Controles:</system:String>
+    <system:String x:Key="ControlsForeground">2.do Fondo de los Controles:</system:String>
     <system:String x:Key="ControlsMouseOver">Ratón sobre los Controles:</system:String>
     <system:String x:Key="ControlsPressed">Controles Presionados:</system:String>
     <system:String x:Key="ImportTheme">Importar Tema</system:String>
@@ -1058,7 +1058,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
 
     <system:String x:Key="GameLauncherSettings">Opciones del Lanzador de Juego</system:String>
 
-    <system:String x:Key="ClickToSelectFf7ExeFile">Haz clic para seleccionar tú archivo de FF7.exe</system:String>
+    <system:String x:Key="ClickToSelectFf7ExeFile">Haz clic para seleccionar tu archivo de FF7.exe</system:String>
     <system:String x:Key="ClickToSelectWhereYourMovieFolderIs">Haz clic para seleccionar dónde está tu carpeta movie</system:String>
     <system:String x:Key="ClickToSelectWhereTexturesAreStored">Haz click para seleccionar la carpeta donde guardas las Texturas</system:String>
     <system:String x:Key="ClickToSelectWhereYourModLibraryIs">Haz clic para seleccionar dónde está tu Librería de Mods.</system:String>
@@ -1071,13 +1071,13 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="AddSubscriptionURL">Añadir una URL de Suscripción</system:String>
     <system:String x:Key="RemoveSubscriptionURL">Eliminar URL de Suscripción</system:String>
     <system:String x:Key="EditSubscriptionURL">Editar la URL/Nombre una Suscripción</system:String>
-    <system:String x:Key="MoveSubscriptionUp">Mover Suscripción hacia arriba. Haz clic derecho para moverla a la parte superior</system:String>
-    <system:String x:Key="MoveSubscriptionDown">Mover Suscripción hacia abajo. Haz clic derecho para moverla hacia el fondo</system:String>
+    <system:String x:Key="MoveSubscriptionUp">Desplazar Suscripción hacia arriba. Haz clic derecho para moverla a la parte superior</system:String>
+    <system:String x:Key="MoveSubscriptionDown">Desplazar Suscripción hacia abajo. Haz clic derecho para moverla hacia el fondo</system:String>
 
     <system:String x:Key="AddFolder">Añadir Carpeta</system:String>
     <system:String x:Key="RemoveFolder">Eliminar Carpeta</system:String>
-    <system:String x:Key="MoveFolderUp">Mover Carpeta hacia arriba. Haz clic derecho para moverla hacia la parte superior.</system:String>
-    <system:String x:Key="MoveFolderDown">Mover Carpeta hacia abajo. Haz clic derecho para moverla el fondo.</system:String>
+    <system:String x:Key="MoveFolderUp">Desplazar Carpeta hacia arriba. Haz clic derecho para moverla hacia la parte superior.</system:String>
+    <system:String x:Key="MoveFolderDown">Desplazar Carpeta hacia abajo. Haz clic derecho para moverla el fondo.</system:String>
     <system:String x:Key="EnterUrlInIrosFormat">Introducir url en formato iros://</system:String>
 
     <system:String x:Key="SelectCustomThemeXmlFile">Selecciona un archivo Custom Theme .xml personalizado.</system:String>
@@ -1158,6 +1158,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="Volume">Volumen</system:String>
 
     <system:String x:Key="BrazilianPortuguese">Portugués Brasileño</system:String>
+    <system:String x:Key="Italian">Italiano</system:String>
 
 
 </ResourceDictionary>
