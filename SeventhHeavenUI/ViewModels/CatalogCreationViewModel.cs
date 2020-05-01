@@ -2,15 +2,12 @@
 using _7thWrapperLib;
 using Iros._7th;
 using Iros._7th.Workshop;
-using Iros.Mega;
 using SeventhHeaven.Classes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeventhHeavenUI.ViewModels
 {

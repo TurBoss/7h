@@ -1,11 +1,10 @@
 ﻿using _7thHeaven.Code;
-using Iros.Mega;
+using CG.Web.MegaApiClient;
 using SeventhHeaven.Classes;
 using SeventhHeavenUI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SeventhHeaven.ViewModels
@@ -106,28 +105,26 @@ namespace SeventhHeaven.ViewModels
                 return;
             }
 
-            MegaIros mega = new MegaIros(megaFolderId, String.Empty);
+            MegaApiClient client = new MegaApiClient();
 
-            // wait up to 15 seconds to get nodes from mega
-            for (int i = 0; i < 15; i++)
-            {
-                System.Threading.Thread.Sleep(1000);
+            client.LoginAnonymous();
 
-                // break out of loop if got nodes
-                if (mega.GetNodes().Any()) break;
-            }
+            IEnumerable<INode> nodes = client.GetNodesFromLink(new Uri($"https://mega.nz/{megaFolderId}"));
 
-            if (!mega.GetNodes().Any())
+            if (nodes?.Any() == false)
             {
                 LinkOutput = $"{ResourceHelper.Get(StringKey.NoLinksFoundInFolder)}: {megaFolderId}";
+                client.Logout();
                 return;
             }
 
             LinkOutput = "";
-            foreach (MegaIros.IrosNode n in mega.GetNodes())
+            foreach (INode node in nodes.Where(x => x.Type == NodeType.File))
             {
-                LinkOutput += String.Format("iros://MegaSharedFolder/{0},{1},{2}\r\n", megaFolderId, Iros.Mega.Base64.btoa(n.Handle), n.Name);
+                LinkOutput += String.Format("iros://MegaSharedFolder/{0},{1},{2}\r\n", megaFolderId, node.Id, node.Name);
             }
+
+            client.Logout();
         }
     }
 }

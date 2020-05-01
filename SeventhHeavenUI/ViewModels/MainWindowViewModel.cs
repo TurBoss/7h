@@ -1,7 +1,6 @@
 ﻿using _7thHeaven.Code;
 using Iros._7th;
 using Iros._7th.Workshop;
-using Iros.Mega;
 using SeventhHeaven.Classes;
 using SeventhHeaven.Classes.Themes;
 using SeventhHeaven.ViewModels;
@@ -632,11 +631,6 @@ namespace SeventhHeavenUI.ViewModels
 
             // Set the Downloads Interface so Sys can use Download methods defined in the CatalogViewModel
             Sys.Downloads = CatalogMods;
-
-            // wire up MegaIros downloader to log using NLog 
-            MegaIros.Logger = Logger.Info;
-            MegaIros.ErrorLogger = Logger.Error;
-            MegaIros.TraceLogger = Logger.Trace;
 
             GeneralSettingsViewModel.AutoDetectSystemPaths(Sys.Settings);
 

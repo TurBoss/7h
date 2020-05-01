@@ -535,9 +535,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Content Include="cryptopp.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Resources\audio_test_file.ogg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1023,10 +1020,6 @@
       <Project>{f80db232-4102-4249-8b31-2ddd5c7fa404}</Project>
       <Name>7thWrapperLib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\IrosMega\IrosMega.csproj">
-      <Project>{37f83ee9-4d31-4cd5-9190-1bb31886ba5c}</Project>
-      <Name>IrosMega</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SharpCompress\src\SharpCompress\SharpCompress.csproj">
       <Project>{8c6b794e-f8b2-45b2-a8d2-7ac73e967d80}</Project>
       <Name>SharpCompress</Name>
@@ -1057,9 +1050,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="EasyLoad64.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="mega.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Resource Include="Resources\circleLoader.gif">

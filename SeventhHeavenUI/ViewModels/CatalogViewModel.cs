@@ -1,7 +1,7 @@
 ﻿using _7thHeaven.Code;
+using CG.Web.MegaApiClient;
 using Iros._7th;
 using Iros._7th.Workshop;
-using Iros.Mega;
 using SeventhHeaven.Classes;
 using SeventhHeaven.ViewModels;
 using SeventhHeaven.Windows;
@@ -12,7 +12,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
@@ -46,8 +46,6 @@ namespace SeventhHeavenUI.ViewModels
         {
             get => _previousReloadOptions?.Categories?.Count > 0 || _previousReloadOptions?.Tags?.Count > 0;
         }
-
-        private Dictionary<string, MegaIros> _megaFolders = new Dictionary<string, MegaIros>(StringComparer.InvariantCultureIgnoreCase);
 
         private object _listLock = new object();
         private object _downloadLock = new object();
@@ -728,6 +726,8 @@ namespace SeventhHeavenUI.ViewModels
             Download(new List<string>() { link }, downloadInfo);
         }
 
+        private CancellationTokenSource _megaDownloadCancelTokenSource;
+
         public void Download(IEnumerable<string> links, DownloadItem downloadInfo)
         {
             downloadInfo.HasStarted = true;
@@ -833,45 +833,111 @@ namespace SeventhHeavenUI.ViewModels
 
                     case LocationType.MegaSharedFolder:
                         string[] parts = location.Split(',');
+                        bool wasCanceled = false;
 
-                        MegaIros mega;
-
-                        if (!_megaFolders.TryGetValue(parts[0], out mega) || mega.Dead)
-                        {
-                            _megaFolders[parts[0]] = mega = new MegaIros(parts[0], String.Empty);
-                        }
-                        MegaIros.Transfer tfr = null;
-
-                        tfr = mega.Download(parts[1], parts[2], downloadInfo.SaveFilePath, () =>
-                        {
-                            switch (tfr.State)
-                            {
-                                case MegaIros.TransferState.Complete:
-                                    ProcessDownloadComplete(downloadInfo, new AsyncCompletedEventArgs(null, false, downloadInfo));
-                                    break;
-
-                                case MegaIros.TransferState.Failed:
-                                    Sys.Message(new WMessage() { Text = $"{ResourceHelper.Get(StringKey.ErrorDownloading)} {downloadInfo.ItemName}"  });
-                                    downloadInfo.OnError?.Invoke();
-                                    break;
-
-                                case MegaIros.TransferState.Canceled:
-                                    RemoveFromDownloadList(downloadInfo);
-                                    Sys.Message(new WMessage() { Text = $"{downloadInfo.ItemName} {ResourceHelper.Get(StringKey.WasCanceled)}" });
-                                    break;
-
-                                default:
-                                    UpdateDownloadProgress(downloadInfo, (int)(100 * tfr.Complete / tfr.Size), tfr.Complete, tfr.Size);
-                                    break;
-                            }
-                        });
-
-                        mega.ConfirmStartTransfer();
                         downloadInfo.PerformCancel = () =>
                         {
-                            mega.CancelDownload(tfr);
+                            wasCanceled = true;
+
+                            try
+                            {
+                                _megaDownloadCancelTokenSource?.Cancel();
+                            }
+                            catch (Exception dex)
+                            {
+                                Logger.Error(dex);
+                            }
+                            finally
+                            {
+                                _megaDownloadCancelTokenSource?.Dispose();
+                                _megaDownloadCancelTokenSource = null;
+                            }
                             downloadInfo.OnCancel?.Invoke();
+                            RemoveFromDownloadList(downloadInfo);
                         };
+
+                        var client = new MegaApiClient();
+                        client.LoginAnonymousAsync().ContinueWith((loginResult) =>
+                        {
+                            if (wasCanceled)
+                            {
+                                return; // don't continue after async login since user already canceled download
+                            }
+
+                            if (loginResult.IsFaulted)
+                            {
+                                Sys.Message(new WMessage($"Failed to login to mega - {loginResult.Exception.GetBaseException().Message}", WMessageLogLevel.Error, loginResult.Exception));
+                                downloadInfo.OnError?.Invoke();
+                                return;
+                            }
+
+
+                            // get nodes from mega folder
+                            Uri folderLink = new Uri($"https://mega.nz/{parts[0]}");
+                            IEnumerable<INode> nodes = client.GetNodesFromLink(folderLink);
+                            
+                            // first look for node by Id
+                            INode fileNode = nodes.Where(x => x.Type == NodeType.File && x.Id == parts[1]).FirstOrDefault();
+
+                            // if not found check by name (exact match on file name)
+                            if (fileNode == null)
+                            {
+                                fileNode = nodes.Where(x => x.Type == NodeType.File && x.Name == parts[2]).FirstOrDefault();
+                            }
+
+                            if (wasCanceled)
+                            {
+                                return; // don't continue after async login since user already canceled download
+                            }
+
+                            if (fileNode != null)
+                            {
+                                if (File.Exists(downloadInfo.SaveFilePath))
+                                {
+                                    File.Delete(downloadInfo.SaveFilePath); //delete old temp file if it exists
+                                }
+
+                                IProgress<double> progressHandler = new Progress<double>(x =>
+                                {
+                                    double estimatedBytesReceived = (double)fileNode.Size * (x / 100);
+                                    UpdateDownloadProgress(downloadInfo, (int)x, (long)estimatedBytesReceived, fileNode.Size);
+                                });
+
+
+
+                                _megaDownloadCancelTokenSource = new CancellationTokenSource();
+                                Task downloadTask = client.DownloadFileAsync(fileNode, downloadInfo.SaveFilePath, progressHandler, _megaDownloadCancelTokenSource.Token);
+
+                                downloadTask.ContinueWith((downloadResult) =>
+                                {
+                                    _megaDownloadCancelTokenSource?.Dispose();
+                                    _megaDownloadCancelTokenSource = null;
+                                    client.LogoutAsync();
+
+                                    if (downloadResult.IsCanceled)
+                                    {
+                                        return;
+                                    }
+
+                                    if (downloadResult.IsFaulted)
+                                    {
+                                        Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.ErrorDownloading)} {downloadInfo.ItemName}", WMessageLogLevel.StatusOnly, downloadResult.Exception));
+                                        downloadInfo.OnError?.Invoke();
+                                        return;
+                                    }
+
+
+                                    ProcessDownloadComplete(downloadInfo, new AsyncCompletedEventArgs(null, false, downloadInfo));
+                                });
+
+                            }
+                            else
+                            {
+                                Sys.Message(new WMessage($"Failed to find mega node for {downloadInfo.ItemName}"));
+                                downloadInfo.OnError?.Invoke();
+                                client.LogoutAsync();
+                            }
+                        });
                         break;
                 }
             }
