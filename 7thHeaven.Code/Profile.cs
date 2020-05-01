@@ -66,13 +66,20 @@ namespace Iros._7th.Workshop {
                         detailFormat = item.GetFormatString(info);
                     }
 
-                    foreach (ProfileSetting config in item.Settings) 
+                    foreach (ProfileSetting config in item.Settings.ToList()) 
                     {
                         if (info != null)
                         {
                             // extract configuration variable name and name of the selected value from Mod Info
                             ConfigOption configOption = info.Options.FirstOrDefault(o => o.ID == config.ID);
                             string optionValue = "";
+
+                            if (configOption == null)
+                            {
+                                // the option ID may have changed from last time so skip it (that means the active profile item is out of date but opening the configure mod window would refresh it)
+                                item.Settings.Remove(config);
+                                continue;
+                            }
 
                             if (configOption.Type == OptionType.Bool)
                             {
