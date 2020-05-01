@@ -64,7 +64,7 @@ namespace _7thHeaven.Code
                 FullScreenMode = false,
                 HasReceivedCode5Error = false,
                 ShowLauncherWindow = true,
-                InGameConfigOption = "[Default] Playstation+Steam_KB.cfg",
+                InGameConfigOption = "[Default] Playstation+Steam KB.cfg",
                 HasDisplayedOggMusicWarning = false,
                 HasDisplayedMovieWarning = false,
                 EnablePs4ControllerService = false

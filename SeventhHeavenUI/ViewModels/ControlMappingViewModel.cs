@@ -36,7 +36,7 @@ namespace SeventhHeaven.ViewModels
             "1998 KB+Std Gamepad",
             "1998 KB+Swap AB-XO Gamepad",
             "1998 Original",
-            "[Default] Playstation+Steam_KB.cfg",
+            "[Default] Playstation+Steam KB.cfg",
             "[Swap AB-XO] Playstation+Steam KB.cfg",
             "No Numpad+Std Gamepad",
             "No Numpad+Swap AB-XO Gamepad",

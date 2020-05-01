@@ -67,11 +67,24 @@ namespace SeventhHeavenUI
             {
                 if (parm.StartsWith("iros://", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    App.Current.Dispatcher.Invoke(() =>
+                    // check if its a catalog url or a mod download url
+                    if (parm.StartsWith("iros://mod/"))
                     {
-                        MainWindow window = App.Current.MainWindow as MainWindow;
-                        window.ViewModel.AddIrosUrlToSubscriptions(parm);
-                    });
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            MainWindow window = App.Current.MainWindow as MainWindow;
+                            window.ViewModel.CatalogMods.DownloadMod();
+                        });
+                    }
+                    else
+                    {
+                        App.Current.Dispatcher.Invoke(() =>
+                        {
+                            MainWindow window = App.Current.MainWindow as MainWindow;
+                            window.ViewModel.AddIrosUrlToSubscriptions(parm);
+                        });
+                    }
+
                 }
                 else if (parm.Equals("/MINI", StringComparison.InvariantCultureIgnoreCase))
                 {

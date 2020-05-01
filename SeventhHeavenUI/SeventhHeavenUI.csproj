@@ -928,7 +928,7 @@
     </Content>
     <None Include="LICENSE" />
     <None Include="README.md" />
-    <Content Include="Resources\Controls\[Default] Playstation+Steam_KB.cfg">
+    <Content Include="Resources\Controls\[Default] Playstation+Steam KB.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Controls\[Swap AB-XO] Playstation+Steam KB.cfg">
