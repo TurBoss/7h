@@ -852,6 +852,7 @@ namespace SeventhHeavenUI.ViewModels
                                 _megaDownloadCancelTokenSource?.Dispose();
                                 _megaDownloadCancelTokenSource = null;
                             }
+
                             downloadInfo.OnCancel?.Invoke();
                             RemoveFromDownloadList(downloadInfo);
                         };
