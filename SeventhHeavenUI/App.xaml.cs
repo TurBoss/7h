@@ -70,11 +70,11 @@ namespace SeventhHeavenUI
                     // check if its a catalog url or a mod download url
                     if (parm.StartsWith("iros://mod/"))
                     {
-                        App.Current.Dispatcher.Invoke(() =>
-                        {
-                            MainWindow window = App.Current.MainWindow as MainWindow;
-                            window.ViewModel.CatalogMods.DownloadMod();
-                        });
+                        //App.Current.Dispatcher.Invoke(() =>
+                        //{
+                        //    MainWindow window = App.Current.MainWindow as MainWindow;
+                        //    window.ViewModel.CatalogMods.DownloadMod();
+                        //});
                     }
                     else
                     {
