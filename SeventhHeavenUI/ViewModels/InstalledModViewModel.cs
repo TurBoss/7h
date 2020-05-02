@@ -81,7 +81,7 @@ namespace SeventhHeavenUI.ViewModels
         {
             get
             {
-                return ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[_category]);
+                return ResourceHelper.Get(ModLoadOrder.GetCategoryKey(_category));
             }
             set
             {
@@ -97,7 +97,7 @@ namespace SeventhHeavenUI.ViewModels
             get
             {
                 if (_categoryList == null)
-                    _categoryList = ModLoadOrder.Orders.Keys.Select(s => ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[s])).OrderBy(s => s).ToList();
+                    _categoryList = ModLoadOrder.Orders.Keys.Select(s => ResourceHelper.Get(ModLoadOrder.GetCategoryKey(s))).OrderBy(s => s).ToList();
 
                 return _categoryList;
             }

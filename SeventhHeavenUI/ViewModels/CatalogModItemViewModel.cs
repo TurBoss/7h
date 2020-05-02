@@ -100,7 +100,7 @@ namespace SeventhHeavenUI.ViewModels
         {
             get
             {
-                return ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[_category]);
+                return ResourceHelper.Get(ModLoadOrder.GetCategoryKey(_category));
             }
             set
             {

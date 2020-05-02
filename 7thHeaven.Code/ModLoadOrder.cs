@@ -68,6 +68,22 @@ namespace _7thHeaven.Code
             { "Unknown", StringKey.Unknown}
         };
 
+
+        /// <summary>
+        /// Returns the <see cref="StringKey"/> used for translating category. Null/empty string returns 'Unknown'
+        /// </summary>
+        /// <param name="englishCategory"></param>
+        /// <returns></returns>
+        public static StringKey GetCategoryKey(string englishCategory)
+        {
+            if (string.IsNullOrEmpty(englishCategory) || !ModCategoryTranslationKeys.ContainsKey(englishCategory))
+            {
+                return StringKey.Unknown;
+            }
+
+            return ModCategoryTranslationKeys[englishCategory];
+        }
+
         /// <summary>
         /// Returns <paramref name="category"/> as an int
         /// </summary>

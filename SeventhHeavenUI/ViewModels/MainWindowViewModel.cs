@@ -1389,7 +1389,7 @@ namespace SeventhHeavenUI.ViewModels
                                                     if (string.IsNullOrEmpty(c.Category))
                                                         return UnknownText;
 
-                                                    return ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[c.Category]);
+                                                    return ResourceHelper.Get(ModLoadOrder.GetCategoryKey(c.Category));
                                                 })
                                              .ToList();
             }
@@ -1647,7 +1647,9 @@ namespace SeventhHeavenUI.ViewModels
                 item.RaiseNotifyPropertyChangedForCategory();
             }
 
-            PreviewModCategory = ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[_previewMod.Category]);
+            PreviewModCategory = ResourceHelper.Get(ModLoadOrder.GetCategoryKey(_previewMod.Category));
+
+            ReloadAvailableFilters();
         }
 
         #region Show Window Methods

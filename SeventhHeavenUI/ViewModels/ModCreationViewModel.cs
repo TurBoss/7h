@@ -99,7 +99,7 @@ namespace SeventhHeavenUI.ViewModels
             {
                 if (_categoryList == null)
                 {
-                    _categoryList = ModLoadOrder.Orders.Keys.Select(s => ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[s]))
+                    _categoryList = ModLoadOrder.Orders.Keys.Select(s => ResourceHelper.Get(ModLoadOrder.GetCategoryKey(s)))
                                                             .OrderBy(s => s)
                                                             .ToList();
                 }
@@ -356,7 +356,7 @@ namespace SeventhHeavenUI.ViewModels
 
                 IDInput = LoadedMod.ID.ToString();
                 NameInput = LoadedMod.Name;
-                CategoryInput = ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[LoadedMod.Category]);
+                CategoryInput = ResourceHelper.Get(ModLoadOrder.GetCategoryKey(LoadedMod.Category));
                 AuthorInput = LoadedMod.Author;
                 DescriptionInput = LoadedMod.Description;
                 VersionInput = LoadedMod.Version.ToString();

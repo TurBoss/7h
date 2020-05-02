@@ -106,7 +106,7 @@ namespace SeventhHeavenUI.ViewModels
             {
                 if (_categoryList == null)
                 {
-                    _categoryList = ModLoadOrder.Orders.Keys.Select(s => ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[s]))
+                    _categoryList = ModLoadOrder.Orders.Keys.Select(s => ResourceHelper.Get(ModLoadOrder.GetCategoryKey(s)))
                                                             .OrderBy(s => s)
                                                             .ToList();
                 }
@@ -322,7 +322,7 @@ namespace SeventhHeavenUI.ViewModels
                     NameInput = _modToEdit.Name;
                     AuthorInput = _modToEdit.Author;
                     IDInput = _modToEdit.ID.ToString();
-                    CategoryInput = ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[_modToEdit.Category]);
+                    CategoryInput = ResourceHelper.Get(ModLoadOrder.GetCategoryKey(_modToEdit.Category));
                     TagsInput = string.Join("\n", _modToEdit.Tags);
                     DescriptionInput = _modToEdit.Description;
                     InfoLinkInput = _modToEdit.Link;
@@ -380,7 +380,7 @@ namespace SeventhHeavenUI.ViewModels
 
                 IDInput = mod.ID.ToString();
                 NameInput = mod.Name;
-                CategoryInput = ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[mod.Category]);
+                CategoryInput = ResourceHelper.Get(ModLoadOrder.GetCategoryKey(mod.Category));
                 AuthorInput = mod.Author;
                 DescriptionInput = mod.Description;
                 VersionInput = mod.Version.ToString();
@@ -424,7 +424,7 @@ namespace SeventhHeavenUI.ViewModels
 
                 IDInput = parsedMod.ID.ToString();
                 NameInput = parsedMod.Name;
-                CategoryInput = ResourceHelper.Get(ModLoadOrder.ModCategoryTranslationKeys[parsedMod.Category]);
+                CategoryInput = ResourceHelper.Get(ModLoadOrder.GetCategoryKey(parsedMod.Category));
                 AuthorInput = parsedMod.Author;
                 DescriptionInput = parsedMod.Description;
                 VersionInput = parsedMod.LatestVersion.Version.ToString();
