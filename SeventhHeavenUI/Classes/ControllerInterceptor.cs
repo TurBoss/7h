@@ -153,6 +153,12 @@ namespace SeventhHeaven.Classes
 
                 PlayerIndex? connectedController = GetConnectedController();
 
+                if (connectedController.HasValue)
+                {
+                    // controller is connected so send a littl "buzz" for user feedback
+                    GamePad.SetVibration(connectedController.Value, 0.25f, 0.25f);
+                }
+
                 while (PollingInput)
                 {
                     if (connectedController == null)
