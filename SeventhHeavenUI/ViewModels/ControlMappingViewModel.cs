@@ -54,7 +54,6 @@ namespace SeventhHeaven.ViewModels
         private string _selectedGameConfigOption;
 
         private bool _isPs4SupportChecked;
-        private bool _startedPs4Service;
 
         private string _okKeyboardText;
         private string _cancelKeyboardText;
@@ -1345,26 +1344,14 @@ namespace SeventhHeaven.ViewModels
 
         internal void TurnOffPs4Service()
         {
-            if (_startedPs4Service && DS4ControllerService.Instance.IsRunning && !GameLauncher.IsFF7Running())
-            {
-                DS4ControllerService.Instance.StopService();
-            }
+            DS4ControllerService.Instance.StopService();
         }
 
         internal void TurnOnPs4Service()
         {
             if (IsPs4SupportChecked)
             {
-                // check if the service is already running when opening controls (e.g. when game is already running and user opens controls window) so the service is not stopped when the window closes
-                if (DS4ControllerService.Instance.IsRunning && !_startedPs4Service)
-                {
-                    _startedPs4Service = false;
-                }
-                else
-                {
-                    _startedPs4Service = true;
-                    DS4ControllerService.Instance.StartService();
-                }
+                DS4ControllerService.Instance.StartService();
             }
         }
 

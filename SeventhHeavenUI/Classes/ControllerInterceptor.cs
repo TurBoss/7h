@@ -245,7 +245,6 @@ namespace SeventhHeaven.Classes
                     }
                 }
 
-                DS4ControllerService.Instance.StopService(); // stop the ds4 controller service after polling for input
             });
 
         }

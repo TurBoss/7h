@@ -266,15 +266,8 @@ namespace SeventhHeaven.Windows
 
         private void windowControls_Loaded(object sender, RoutedEventArgs e)
         {
-            ViewModel.TurnOnPs4Service();
             ViewModel.UpdateAllButtonText();
             ViewModel.UpdateAllButtonIcons();
-        }
-
-        private void windowControls_Unloaded(object sender, RoutedEventArgs e)
-        {
-            // only stop the ds4 service if it was started by the controls window
-            ViewModel.TurnOffPs4Service();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

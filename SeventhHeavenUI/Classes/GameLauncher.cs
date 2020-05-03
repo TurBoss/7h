@@ -520,18 +520,6 @@ namespace SeventhHeaven.Classes
                 Instance._controllerInterceptor = new ControllerInterceptor();
             }
 
-            if (Sys.Settings.GameLaunchSettings.EnablePs4ControllerService)
-            {
-                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.StartingPS4ControllerService));
-
-                if (DS4ControllerService.Instance.IsRunning)
-                {
-                    Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.ServiceAlreadyRunning)}", NLog.LogLevel.Warn);
-                }
-
-                DS4ControllerService.Instance.StartService(); // starts the service that treats ds4 controlers as xbox360/xinput device
-            }
-
 
             // start FF7 proc as normal and return true when running the game as vanilla
             if (runAsVanilla)

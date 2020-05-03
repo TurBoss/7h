@@ -707,6 +707,14 @@ namespace SeventhHeavenUI.ViewModels
 
             MyMods.ScanForModUpdates();
 
+
+            // enable ds4 support on init - starts the service that treats ds4 controlers as xbox360/xinput device
+            if (Sys.Settings.GameLaunchSettings.EnablePs4ControllerService)
+            {
+                Logger.Info(ResourceHelper.Get(StringKey.StartingPS4ControllerService));
+                DS4ControllerService.Instance.StartService();
+            }
+
             UpdateChecker.Instance.UpdateCheckCompleted += AppUpdater_UpdateCheckCompleted;
             if (Sys.Settings.HasOption(GeneralOptions.CheckForUpdates))
             {
@@ -868,6 +876,11 @@ namespace SeventhHeavenUI.ViewModels
             CatalogMods.RefreshListRequested -= CatalogList_RefreshRequested;
             CatalogMods.CatalogModList.Clear();
             CatalogMods = null;
+
+            if (Sys.Settings.GameLaunchSettings.EnablePs4ControllerService)
+            {
+                DS4ControllerService.Instance.StopService();
+            }
         }
 
         private void UpdateModPreviewInfo(InstalledModViewModel selected, bool forceUpdate = false)

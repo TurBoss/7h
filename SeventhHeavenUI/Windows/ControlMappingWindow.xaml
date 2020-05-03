@@ -7,7 +7,6 @@
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         ResizeMode="NoResize"
         Loaded="windowControls_Loaded"
-        Unloaded="windowControls_Unloaded"
         mc:Ignorable="d"
         Title="{DynamicResource SetInGameControls}"
         WindowStartupLocation="CenterScreen"
