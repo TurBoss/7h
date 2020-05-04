@@ -415,6 +415,16 @@ namespace SeventhHeaven.ViewModels
                     ff7 = (string)Registry.GetValue(registry_path, "AppPath", null);
                     foundVersion = !string.IsNullOrWhiteSpace(ff7) ? FF7Version.Original98 : FF7Version.Unknown;
 
+                    if (!Directory.Exists(ff7))
+                    {
+                        Logger.Warn($"Deleting invalid 'AppPath' registry key since path does not exist: {ff7}");
+                        RegistryHelper.DeleteValueFromKey(registry_path, "AppPath"); // delete old paths set 
+                        RegistryHelper.DeleteValueFromKey(registry_path, "DataPath"); // delete old paths set 
+                        RegistryHelper.DeleteValueFromKey(registry_path, "MoviePath"); // delete old paths set 
+                        foundVersion = FF7Version.Unknown; // set back to Unknown to check other registry keys
+                    }
+
+
                     if (foundVersion == FF7Version.Unknown)
                     {
                         // next check Steam registry keys and then Re-Release registry keys for installation path
@@ -432,6 +442,13 @@ namespace SeventhHeaven.ViewModels
                     string versionStr = foundVersion == FF7Version.Original98 ? $"{foundVersion.ToString()} (or Game Converted)" : foundVersion.ToString();
 
                     Logger.Info($"FF7Version Detected: {versionStr} with installation path: {ff7}");
+
+                    if (!Directory.Exists(ff7))
+                    {
+                        Logger.Warn("Found installation path does not exist. Ignoring...");
+                        return;
+                    }
+
                 }
                 catch
                 {

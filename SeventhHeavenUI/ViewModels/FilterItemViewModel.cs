@@ -115,7 +115,7 @@ namespace SeventhHeavenUI.ViewModels
                 modCategory = ResourceHelper.Get(StringKey.Unknown);
 
             return categories.Count() == 0 ||
-                   categories.Any(c => c.Name.Equals(modCategory, StringComparison.InvariantCultureIgnoreCase));
+                   categories.Any(c => ResourceHelper.ModCategoryTranslations[c.Name].Equals(modCategory, StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }

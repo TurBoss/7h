@@ -30,7 +30,17 @@
             <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
                 <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedSoundDevice, FallbackValue='Auto-switch (Windows default)'}" Margin="0,0,15,0" 
                            TextWrapping="NoWrap"
-                           TextTrimming="CharacterEllipsis"/>
+                           TextTrimming="CharacterEllipsis">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock" BasedOn="{StaticResource PrimaryTextBlockStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=gd, Path=DataContext.IsSoundDevicesLoaded}" Value="False">
+                                    <Setter Property="Foreground" Value="{DynamicResource PrimaryControlDisabledForeground}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </Grid>
         </DataTemplate>
 
@@ -205,6 +215,7 @@
                                Margin="2,0,0,10"/>
 
                     <Grid Grid.Row="0"
+                          IsEnabled="{Binding IsSoundDevicesLoaded}"
                           Grid.Column="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -469,7 +480,6 @@
                   Grid.Row="2" 
                   Grid.Column="1" 
                   MinWidth="415"
-                  Height="{Binding ElementName=grpShell, Path=ActualHeight}"
                   Header="{DynamicResource ProgramsToRunHeader}" 
                   Margin="10,5,10,0">
             <Grid>

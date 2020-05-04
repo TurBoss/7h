@@ -259,7 +259,7 @@ namespace SeventhHeavenUI
             }
         }
 
-        private static void ShutdownApp()
+        internal static void ShutdownApp()
         {
             App.Current.Dispatcher.Invoke(() =>
             {
@@ -392,9 +392,9 @@ namespace SeventhHeavenUI
                     case "gr":
                         dict.Source = new Uri("Resources\\Languages\\StringResources.gr.xaml", UriKind.Relative);
                         break;
-                    case "ja":
-                        dict.Source = new Uri("Resources\\Languages\\StringResources.ja.xaml", UriKind.Relative);
-                        break;
+                    //case "ja":
+                    //    dict.Source = new Uri("Resources\\Languages\\StringResources.ja.xaml", UriKind.Relative);
+                    //    break;
                     case "it":
                         dict.Source = new Uri("Resources\\Languages\\StringResources.it.xaml", UriKind.Relative);
                         break;

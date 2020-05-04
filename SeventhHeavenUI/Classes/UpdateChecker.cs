@@ -20,9 +20,9 @@ namespace SeventhHeaven.Classes
         /// Link to version xml that provides information about available updates.
         /// </summary>
         /// <remarks>
-        /// Strife98 (moderator on Qhimm Forums and Discord) is account owner of the update check URL https://pastebin.com/raw/TriEpAcK and reach out to him for version update xml changes.
+        /// This xml is updated from the github repo (TODO: update with final url)
         /// </remarks>
-        public const string linkToVersionXml = "https://pastebin.com/raw/TriEpAcK";
+        public const string linkToVersionXml = "https://raw.githubusercontent.com/rodriada000/7h/develop/SeventhHeavenUI/Resources/LatestAvailableUpdate.xml";
         private static UpdateChecker _instance;
 
         public delegate void OnUpdateChecked(bool wasSuccessful);

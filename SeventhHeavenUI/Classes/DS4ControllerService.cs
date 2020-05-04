@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management;
 using System.Text;
 using System.Threading.Tasks;
 using DS4Windows;
@@ -78,6 +79,32 @@ namespace SeventhHeaven.Classes
             {
                 Logger.Info(e.Data);
             }
+        }
+
+        public static bool IsScpDriverInstalled()
+        {
+            try
+            {
+                // code reference from DS4Windows repo (DS4Form.cs)
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPSignedDriver");
+
+                foreach (ManagementObject obj in searcher.Get())
+                {
+                    try
+                    {
+                        if (obj.GetPropertyValue("DeviceName").ToString() == "Scp Virtual Bus Driver")
+                        {
+                            return true;
+                        }
+                    }
+                    catch (Exception) { }
+                }
+
+            }
+            catch (Exception) { }
+
+
+            return false;
         }
     }
 }

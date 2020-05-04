@@ -9,6 +9,7 @@ using SeventhHeavenUI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -68,6 +69,7 @@ namespace SeventhHeaven.ViewModels
         private Visibility _importProgressVisibility;
         private double _importProgressValue;
         private VolumeSlider _lastVolumeSliderChanged;
+        private bool _isSoundDevicesLoaded;
 
         #endregion
 
@@ -100,6 +102,19 @@ namespace SeventhHeaven.ViewModels
             get
             {
                 return _audioTest == null;
+            }
+        }
+
+        public bool IsSoundDevicesLoaded
+        {
+            get
+            {
+                return _isSoundDevicesLoaded;
+            }
+            set
+            {
+                _isSoundDevicesLoaded = value;
+                NotifyPropertyChanged();
             }
         }
 
@@ -600,12 +615,22 @@ namespace SeventhHeaven.ViewModels
             NewProgramPathText = "";
             NewProgramArgsText = "";
             IsProgramPopupOpen = false;
+            IsSoundDevicesLoaded = false;
             _audioTest = null;
             HasLoaded = false;
             LastVolumeSliderChanged = VolumeSlider.Music;
 
+
+            // initialize sound devices on background task because it can take up to 1 second to loop over audio devices and get their names
+            SelectedSoundDevice = "Loading Devices ...";
+            Task.Factory.StartNew(() =>
+            {
+                InitSoundDevices();
+                SetSelectedSoundDeviceFromSettings(Sys.Settings.GameLaunchSettings);
+                IsSoundDevicesLoaded = true;
+            });
+
             InitImportMovieOption();
-            InitSoundDevices();
             InitRenderers();
             InitMidiDevices();
             LoadSettings(Sys.Settings.GameLaunchSettings);
@@ -687,18 +712,7 @@ namespace SeventhHeaven.ViewModels
                 IsReunionInstalled = false;
             }
 
-
-            SelectedSoundDevice = SoundDeviceGuids.Where(s => s.Value == launchSettings.SelectedSoundDevice)
-                                                  .Select(s => s.Key)
-                                                  .FirstOrDefault();
-
-            // switch back to 'Auto' if device not found
-            if (SelectedSoundDevice == null)
-            {
-                SelectedSoundDevice = SoundDeviceGuids.Where(s => s.Value == Guid.Empty)
-                                                      .Select(s => s.Key)
-                                                      .FirstOrDefault();
-            }
+            SetSelectedSoundDeviceFromSettings(launchSettings);
 
             SelectedMidiDevice = MidiDeviceMap.Where(s => s.Value == launchSettings.SelectedMidiDevice)
                                               .Select(s => s.Key)
@@ -719,6 +733,26 @@ namespace SeventhHeaven.ViewModels
             IsFullScreenChecked = launchSettings.FullScreenMode;
 
             HasLoaded = true;
+        }
+
+        private void SetSelectedSoundDeviceFromSettings(LaunchSettings launchSettings)
+        {
+            if (SoundDeviceGuids == null || SoundDeviceGuids.Count == 0)
+            {
+                return;
+            }
+
+            SelectedSoundDevice = SoundDeviceGuids.Where(s => s.Value == launchSettings.SelectedSoundDevice)
+                                                  .Select(s => s.Key)
+                                                  .FirstOrDefault();
+
+            // switch back to 'Auto' if device not found
+            if (SelectedSoundDevice == null)
+            {
+                SelectedSoundDevice = SoundDeviceGuids.Where(s => s.Value == Guid.Empty)
+                                                      .Select(s => s.Key)
+                                                      .FirstOrDefault();
+            }
         }
 
         internal bool SaveSettings()

@@ -738,6 +738,7 @@ namespace SeventhHeavenUI.ViewModels
                 {
                     ProcessStartInfo startInfo = new ProcessStartInfo(Sys.LastCheckedVersion.ReleaseDownloadLink);
                     Process.Start(startInfo);
+                    App.ShutdownApp();
                 }
             }
         }
@@ -1354,6 +1355,12 @@ namespace SeventhHeavenUI.ViewModels
         private void CheckOrUncheckShowAllFilter(List<FilterItemViewModel> filterItems)
         {
             FilterItemViewModel item = filterItems.FirstOrDefault(cat => cat.Name == ShowAllText);
+
+            if (item == null)
+            {
+                return;
+            }
+
             item.SetIsChecked(filterItems.Where(cat => cat.Name != ShowAllText && cat.FilterType != FilterItemType.Separator).All(cat => cat.IsChecked));
         }
 
@@ -1442,7 +1449,7 @@ namespace SeventhHeavenUI.ViewModels
                 MyMods.ReloadModList(MyMods.GetSelectedMod()?.InstallInfo?.ModID, SearchText, CheckedCategories, CheckedTags);
             }
 
-            ReloadAvailableFilters();
+            ReloadAvailableFilters(true);
         }
 
         /// <summary>
@@ -1648,8 +1655,13 @@ namespace SeventhHeavenUI.ViewModels
 
         }
 
+        /// <summary>
+        /// Raises NotifyPropertyChanged event for text that is not dynamically binded to UI
+        /// </summary>
         internal void RefreshTranslations()
         {
+            NotifyPropertyChanged(nameof(UpdateModButtonText));
+
             foreach (var item in MyMods.ModList)
             {
                 item.RaiseNotifyPropertyChangedForCategory();
@@ -1754,9 +1766,9 @@ namespace SeventhHeavenUI.ViewModels
                         uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.gr.xml");
                         break;
 
-                    case "ja":
-                        uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.ja.xml");
-                        break;
+                    //case "ja":
+                    //    uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.ja.xml");
+                    //    break;
 
                     case "it":
                         uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "Languages", "7H_GameDriver_UI.it.xml");
@@ -1770,8 +1782,10 @@ namespace SeventhHeavenUI.ViewModels
 
 
             ConfigureGLWindow gLWindow = new ConfigureGLWindow();
-            gLWindow.Init(uiXmlPath, driverCfg);
-            gLWindow.ShowDialog();
+            if (gLWindow.Init(uiXmlPath, driverCfg))
+            {
+                gLWindow.ShowDialog();
+            }
         }
 
         internal void ShowGameLaunchSettingsWindow()

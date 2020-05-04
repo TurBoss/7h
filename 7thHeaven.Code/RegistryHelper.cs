@@ -118,10 +118,10 @@ namespace _7thHeaven.Code
         /// Returns the current user or local machine RegistryKey based on what the key path starts with.
         /// (Opens the key with the correct RegistryView based on the OS Bitness)
         /// </summary>
-        private static RegistryKey GetBaseKey(string fullRegPath)
+        private static RegistryKey GetBaseKey(string fullRegPath, bool force32View = false)
         {
             RegistryView view = RegistryView.Registry32;
-            if (Environment.Is64BitOperatingSystem)
+            if (Environment.Is64BitOperatingSystem && !force32View)
             {
                 view = RegistryView.Registry64;
             }
@@ -303,7 +303,19 @@ namespace _7thHeaven.Code
             try
             {
                 string fullRegPath = RemoveBaseKeyFromPath(keyPath);
-                RegistryKey regKey = rootKey.OpenSubKey(fullRegPath, false);
+                RegistryKey regKey = rootKey.OpenSubKey(fullRegPath, true);
+
+                if (regKey == null)
+                {
+                    // check if subkey can be opened in 32-bit view
+                    rootKey = GetBaseKey(keyPath, force32View: true);
+                    regKey = rootKey?.OpenSubKey(fullRegPath, true);
+
+                    if (regKey == null)
+                    {
+                        return false;
+                    }
+                }
 
                 regKey.DeleteValue(valueName);
 

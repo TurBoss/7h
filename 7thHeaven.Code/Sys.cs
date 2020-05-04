@@ -174,6 +174,21 @@ namespace Iros._7th.Workshop
             }
         }
 
+        public static string PathToVBusDriver
+        {
+            get
+            {
+                return Path.Combine(_7HFolder, "Resources", "VBusDriver");
+            }
+        }
+        public static string PathToScpDriverExe
+        {
+            get
+            {
+                return Path.Combine(PathToVBusDriver, "ScpDriver.exe");
+            }
+        }
+
 
         public static Catalog Catalog { get; set; }
         public static Library Library { get; set; }

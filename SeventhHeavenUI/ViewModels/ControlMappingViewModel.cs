@@ -54,6 +54,7 @@ namespace SeventhHeaven.ViewModels
         private string _selectedGameConfigOption;
 
         private bool _isPs4SupportChecked;
+        private bool _isInstallingDriver;
 
         private string _okKeyboardText;
         private string _cancelKeyboardText;
@@ -765,6 +766,27 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public bool IsInstallingDriver
+        {
+            get
+            {
+                return _isInstallingDriver;
+            }
+            set
+            {
+                _isInstallingDriver = value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(IsNotInstallingDriver));
+            }
+        }
+
+        public bool IsNotInstallingDriver
+        {
+            get
+            {
+                return !_isInstallingDriver;
+            }
+        }
 
         public ControlMappingViewModel()
         {
@@ -1323,14 +1345,40 @@ namespace SeventhHeaven.ViewModels
                 { GamePadButton.DPadRight, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/XBOne_DPad_Right.png" },
             };
 
-            PropertyInfo prop = this.GetType().GetProperty(propertyToUpdate, BindingFlags.Public | BindingFlags.Instance);
-            if (newButton != null)
+            Dictionary<GamePadButton, string> directionalIcons = new Dictionary<GamePadButton, string>()
             {
-                prop.SetValue(this, icons[newButton.Value], null);
+                { GamePadButton.Up, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/LS_DPad_Up.png" },
+                { GamePadButton.Down, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/LS_DPad_Down.png" },
+                { GamePadButton.Left, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/LS_DPad_Left.png" },
+                { GamePadButton.Right, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/LS_DPad_Right.png" },
+            };
+
+
+            PropertyInfo prop = this.GetType().GetProperty(propertyToUpdate, BindingFlags.Public | BindingFlags.Instance);
+            if (newButton == null)
+            {
+                prop.SetValue(this, null, null);
+                return;
+            }
+
+
+            GamePadButton button = newButton.Value;
+
+            if (button == GamePadButton.Up || button == GamePadButton.Down || button == GamePadButton.Left || button == GamePadButton.Right)
+            {
+                // check if dpad is binded to other controls; if not then display the image of the dpad/leftstick together
+                if (LoadedConfiguration.IsButtonBinded(GamePadButton.DPadUp) || LoadedConfiguration.IsButtonBinded(GamePadButton.DPadDown) || LoadedConfiguration.IsButtonBinded(GamePadButton.DPadLeft) || LoadedConfiguration.IsButtonBinded(GamePadButton.DPadRight))
+                {
+                    prop.SetValue(this, icons[button], null);
+                }
+                else
+                {
+                    prop.SetValue(this, directionalIcons[button], null);
+                }
             }
             else
             {
-                prop.SetValue(this, null, null);
+                prop.SetValue(this, icons[button], null);
             }
         }
 
@@ -1351,9 +1399,77 @@ namespace SeventhHeaven.ViewModels
         {
             if (IsPs4SupportChecked)
             {
+                if (!DS4ControllerService.IsScpDriverInstalled())
+                {
+                    // user must install the driver first before using ds4. prompt user driver will silently install then turn on
+                    var messageResult = MessageDialogWindow.Show("The SCP Virtual Bus Driver is not installed. It is required to enable PS4 controller support.\n\nDo you want to install the driver?", "Missing Required Driver", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                    if (messageResult.Result == MessageBoxResult.No)
+                    {
+                        IsPs4SupportChecked = false; // uncheck this since user does not have driver installed so it can't be supported
+                        return;
+                    }
+
+                    InstallDriverAsync().ContinueWith((result) => 
+                    {
+                        if (IsPs4SupportChecked && DS4ControllerService.IsScpDriverInstalled())
+                        {
+                            DS4ControllerService.Instance.StartService();
+                        }
+                    });
+                    return;
+                }
+
+                // just turn on service if driver installed
                 DS4ControllerService.Instance.StartService();
             }
         }
 
+        /// <summary>
+        /// Run ScpDriver.exe on background task to install driver. Shows message and turns off ps4 controller support if fails.
+        /// </summary>
+        /// <returns></returns>
+        private Task InstallDriverAsync()
+        {
+            IsInstallingDriver = true;
+            return Task.Factory.StartNew(() =>
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo(Sys.PathToScpDriverExe, "si")
+                {
+                    Verb = "runas",
+                    WorkingDirectory = Sys.PathToVBusDriver // ensure the working directory is where the .exe is located
+                };
+                Process.Start(startInfo);
+
+                // wait for the .exe driver install to finish
+                while (Process.GetProcessesByName("ScpDriver").Length > 0)
+                {
+                    Thread.Sleep(100);
+                }
+
+                // check for installation by looking at log file
+                bool installSuccess = false;
+
+                if (File.Exists(Path.Combine(Sys.PathToVBusDriver, "ScpDriver.log")))
+                {
+                    string logContents = File.ReadAllText(Path.Combine(Sys.PathToVBusDriver, "ScpDriver.log"));
+                    installSuccess = logContents.Contains("Install Succeeded");
+                }
+
+                // show message to user if issues with install or detecting
+                if (installSuccess && !DS4ControllerService.IsScpDriverInstalled())
+                {
+                    MessageDialogWindow.Show("The SCP driver finished installing but could not be detected yet. Wait 5-10 seconds and try again (you may need to reboot for Windows to notice the driver.)", "Driver Installed", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    IsPs4SupportChecked = false; // uncheck so user can toggle back on in a few seconds
+                }
+                else if (!installSuccess)
+                {
+                    MessageDialogWindow.Show("The SCP driver failed to install.", "Install Failed", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    IsPs4SupportChecked = false; // uncheck so user can toggle back on in a few seconds to try again
+                }
+
+                IsInstallingDriver = false;
+            });
+        }
     }
 }

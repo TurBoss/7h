@@ -41,7 +41,7 @@ namespace SeventhHeaven.Windows
         }
 
 
-        public void Init(string cfgSpec, string cfgFile)
+        public bool Init(string cfgSpec, string cfgFile)
         {
             _file = cfgFile;
 
@@ -53,8 +53,7 @@ namespace SeventhHeaven.Windows
             {
                 Logger.Error(e);
                 MessageDialogWindow.Show(ResourceHelper.Get(StringKey.FailedToReadRequiredSpecXmlFile), ResourceHelper.Get(StringKey.Error), MessageBoxButton.OK, MessageBoxImage.Error);
-                this.Close();
-                return;
+                return false;
             }
 
             if (!File.Exists(_file))
@@ -126,6 +125,8 @@ namespace SeventhHeaven.Windows
                 tab.Content = scrollViewer;
                 tabCtrlMain.Items.Add(tab);
             }
+
+            return true;
         }
 
         private void BtnClearTextureCache_Click(object sender, RoutedEventArgs e)

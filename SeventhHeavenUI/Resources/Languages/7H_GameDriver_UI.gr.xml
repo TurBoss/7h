@@ -2,7 +2,7 @@
 <ConfigSpec xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <!-- GRAPHICS TAB -->
   <Setting xsi:type="DropDown">
-    <Group>Graphics</Group>
+    <Group>Γραφικά</Group>
     <Name>Window Mode</Name>
     <Description>Display game in boxed window, or borderless fullscreen.</Description>
     <Option>
@@ -17,7 +17,7 @@
   </Setting>
   
   <Setting xsi:type="DropDown">
-    <Group>Graphics</Group>
+    <Group>Γραφικά</Group>
     <Name>Aspect Ratio</Name>
     <Description>Preserve aspect ratio adds black borders as needed to preserve a 4:3 aspect ratio.</Description>
     <DefaultValue>preserve_aspect=on</DefaultValue>
@@ -32,7 +32,7 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Graphics</Group>
+    <Group>Γραφικά</Group>
     <Name>Resolution</Name>
     <Description>Set the window size (or fullscreen resolution) of FF7. Auto uses game resolution in windowed mode or current desktop resolution in fullscreen mode.</Description>
     <DefaultValue>window_size_x = 1280,window_size_y = 720</DefaultValue>
@@ -103,7 +103,7 @@
   </Setting>
 
   <Setting xsi:type="Checkbox">
-    <Group>Graphics</Group>
+    <Group>Γραφικά</Group>
     <Name>Vertical Sync</Name>
     <Description>Sync the frame rate of the game with the monitor refresh rate. May negatively impact performance or break 60 fps mods. Turn on if you experience screen tearing.</Description>
     <DefaultValue>enable_vsync = off</DefaultValue>
@@ -559,7 +559,7 @@
   </Setting>-->
 
   <!--<Setting xsi:type="Checkbox">
-    <Group>Graphics</Group>
+    <Group>Γραφικά</Group>
     <Name>Magic Defense Fix</Name>
     <DefaultValue>mdef_fix=yes</DefaultValue>
     <Description>Fix calculation of armor's magic defense.</Description>
@@ -568,7 +568,7 @@
   </Setting>-->
 
   <!--<Setting xsi:type="Checkbox">
-    <Group>Graphics</Group>
+    <Group>Γραφικά</Group>
     <Name>Fancy Transparency</Name>
     <Description>Enable alpha blending for textures without an existing blending effect.</Description>
     <DefaultValue>fancy_transparency=yes</DefaultValue>

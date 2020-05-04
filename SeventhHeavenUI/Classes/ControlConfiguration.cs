@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using XInputDotNetPure;
 
 namespace SeventhHeaven.Classes
 {
@@ -28,6 +29,16 @@ namespace SeventhHeaven.Classes
             {
                 KeyboardInputs.Add(control, ControlMapper.GetControlInputFromKey(key));
             }
+        }
+
+        internal bool IsButtonBinded(GamePadButton button)
+        {
+            if (GamepadInputs == null || GamepadInputs?.Count == 0)
+            {
+                return false;
+            }
+
+            return GamepadInputs.Values.Any(c => c != null && c.GamepadInput.HasValue && c.GamepadInput.Value == button);
         }
 
         internal void SetControllerInput(GameControl control, GamePadButton button)

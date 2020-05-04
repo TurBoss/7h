@@ -487,6 +487,7 @@
                     Content="{DynamicResource Close}"/>
 
             <CheckBox Style="{StaticResource ToggleSwitchCheckbox}"
+                      IsEnabled="{Binding IsNotInstallingDriver}"
                       IsChecked="{Binding IsPs4SupportChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       FontSize="13"
                       Content="{DynamicResource EnablePS4ControllerSupport}"

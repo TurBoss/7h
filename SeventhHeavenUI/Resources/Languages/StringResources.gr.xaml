@@ -949,7 +949,7 @@ Do you want to apply the setting and try again?</system:String>
     <!--DEV NOTE TO REMOVE: STRINGS BELOW ADDED 4/5/20-->
 
     <!--ConfigureGLWindow.xaml.cs Strings-->
-    <system:String x:Key="Graphics">Graphics</system:String>
+    <system:String x:Key="Graphics">Γραφικά</system:String>
     <system:String x:Key="Rendering">Rendering</system:String>
     <system:String x:Key="Advanced">Advanced</system:String>
 
