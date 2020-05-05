@@ -15,7 +15,7 @@
         ResizeMode="NoResize"
         Title="{DynamicResource GameLauncherSettings}" 
         Width="820"
-        Height="550">
+        Height="600">
     <Window.Resources>
 
         <DataTemplate x:Key="programItem">
@@ -68,340 +68,328 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="1.25*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0"
-                    Grid.RowSpan="4">
+        <GroupBox x:Name="grpOptions"
+                  MinWidth="235"
+                  Header="{DynamicResource OptionsHeader}" Grid.Row="0" Margin="10,10,0,0" 
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Top">
+            <StackPanel Margin="3" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <CheckBox Height="25" Content="{DynamicResource AutoMountDisc}" 
+                            IsChecked="{Binding AutoMountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            IsEnabled="{Binding IsAutoMountSupported}"
+                            MouseEnter="Control_MouseEnter"
+                            ToolTip="{DynamicResource AutoMountDiscTooltip}"/>
+                <CheckBox Height="25" Content="{DynamicResource AutoDismountDisc}" 
+                            IsChecked="{Binding AutoUnmountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            MouseEnter="Control_MouseEnter"
+                            IsEnabled="{Binding IsAutoMountSupported}"
+                            ToolTip="{DynamicResource AutoDismountDiscTooltip}"/>
+                <CheckBox Height="25" Content="{DynamicResource AutoUpdatePath}" 
+                            IsChecked="{Binding AutoUpdatePathChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            MouseEnter="Control_MouseEnter"
+                            ToolTip="{DynamicResource AutoUpdatePathTooltip}"/>
+                <CheckBox Height="25" Content="{DynamicResource ShowGameLauncher}" 
+                            IsChecked="{Binding IsShowLauncherChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            MouseEnter="Control_MouseEnter"
+                            ToolTip="{DynamicResource ShowGameLauncherTooltip}"/>
+            </StackPanel>
+        </GroupBox>
 
-            <GroupBox x:Name="grpOptions"
-                      MinWidth="235"
-                      Height="{Binding ElementName=grpAudio, Path=ActualHeight}"
-                      Header="{DynamicResource OptionsHeader}" Grid.Row="0" Margin="10,10,0,0" 
-                      HorizontalAlignment="Left"
-                      VerticalAlignment="Top">
-                <StackPanel Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <CheckBox Height="25" Content="{DynamicResource AutoMountDisc}" 
-                              IsChecked="{Binding AutoMountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              IsEnabled="{Binding IsAutoMountSupported}"
-                              MouseEnter="Control_MouseEnter"
-                              ToolTip="{DynamicResource AutoMountDiscTooltip}"/>
-                    <CheckBox Height="25" Content="{DynamicResource AutoDismountDisc}" 
-                              IsChecked="{Binding AutoUnmountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              MouseEnter="Control_MouseEnter"
-                              IsEnabled="{Binding IsAutoMountSupported}"
-                              ToolTip="{DynamicResource AutoDismountDiscTooltip}"/>
-                    <CheckBox Height="25" Content="{DynamicResource AutoUpdatePath}" 
-                              IsChecked="{Binding AutoUpdatePathChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              MouseEnter="Control_MouseEnter"
-                              ToolTip="{DynamicResource AutoUpdatePathTooltip}"/>
-                    <CheckBox Height="25" Content="{DynamicResource ShowGameLauncher}" 
-                              IsChecked="{Binding IsShowLauncherChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              MouseEnter="Control_MouseEnter"
-                              ToolTip="{DynamicResource ShowGameLauncherTooltip}"/>
-                </StackPanel>
-            </GroupBox>
+        <GroupBox x:Name="grpCompat"
+                  Grid.Row="1"
+                  Width="{Binding ElementName=grpOptions, Path=ActualWidth}"
+                  Header="{DynamicResource CompatibilityHeader}" 
+                  Margin="10,0,0,0" 
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top">
+            <StackPanel Margin="3" HorizontalAlignment="Right">
+                <CheckBox Height="25" Content="{DynamicResource HighDpiScalingFix}" 
+                            IsChecked="{Binding HighDpiFixChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            MouseEnter="Control_MouseEnter"
+                            ToolTip="{DynamicResource HighDpiScalingFixTooltip}"/>
+                <CheckBox Height="25" Content="{DynamicResource Code5Fix}" 
+                            IsEnabled="{Binding HasCode5Error}"
+                            IsChecked="{Binding Code5FixChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            MouseEnter="Control_MouseEnter"
+                            ToolTip="{DynamicResource Code5FixTooltip}"/>
+                <CheckBox Height="25" Content="{DynamicResource ReunionDriverFix}" 
+                            IsChecked="{Binding DisableReunionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            IsEnabled="{Binding IsReunionInstalled}"
+                            MouseEnter="Control_MouseEnter"
+                            ToolTip="{DynamicResource ReunionDriverFixTooltip}"/>
+            </StackPanel>
+        </GroupBox>
 
-            <GroupBox x:Name="grpCompat"
-                      Width="{Binding ElementName=grpOptions, Path=ActualWidth}"
-                      Header="{DynamicResource CompatibilityHeader}" Margin="10,5,0,0" 
-                      HorizontalAlignment="Left"
-                      VerticalAlignment="Top">
-                <StackPanel Margin="3" HorizontalAlignment="Right">
-                    <CheckBox Height="25" Content="{DynamicResource HighDpiScalingFix}" 
-                              IsChecked="{Binding HighDpiFixChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              MouseEnter="Control_MouseEnter"
-                              ToolTip="{DynamicResource HighDpiScalingFixTooltip}"/>
-                    <CheckBox Height="25" Content="{DynamicResource Code5Fix}" 
-                              IsEnabled="{Binding HasCode5Error}"
-                              IsChecked="{Binding Code5FixChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              MouseEnter="Control_MouseEnter"
-                              ToolTip="{DynamicResource Code5FixTooltip}"/>
-                    <CheckBox Height="25" Content="{DynamicResource ReunionDriverFix}" 
-                              IsChecked="{Binding DisableReunionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              IsEnabled="{Binding IsReunionInstalled}"
-                              MouseEnter="Control_MouseEnter"
-                              ToolTip="{DynamicResource ReunionDriverFixTooltip}"/>
-                </StackPanel>
-            </GroupBox>
+        <GroupBox x:Name="grpImport"
+                  Grid.Row="2"
+                  Width="{Binding ElementName=grpOptions, Path=ActualWidth}"
+                  Header="{DynamicResource ImportMoviesHeader}" Margin="10,5,0,0" 
+                  ToolTip="{DynamicResource ImportTooltip}"
+                  MouseEnter="Control_MouseEnter"
+                  ToolTipService.IsEnabled="False"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top">
+            <Grid Margin="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-            <GroupBox x:Name="grpImport"
-                      Width="{Binding ElementName=grpOptions, Path=ActualWidth}"
-                      Height="{Binding ElementName=grpPrograms, Path=ActualHeight}"
-                      Header="{DynamicResource ImportMoviesHeader}" Margin="10,5,0,0" 
-                      ToolTip="{DynamicResource ImportTooltip}"
-                      MouseEnter="Control_MouseEnter"
-                      ToolTipService.IsEnabled="False"
-                      HorizontalAlignment="Left"
-                      VerticalAlignment="Top">
-                <Grid Margin="3">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0"
+                           VerticalAlignment="Top"
+                           Margin="0,5,0,0"
+                           TextWrapping="Wrap"
+                           TextAlignment="Center"
+                           FontSize="13"
+                           MinHeight="40"
+                           MaxHeight="60"
+                           TextTrimming="CharacterEllipsis"
+                           Text="{Binding ImportStatusMessage, FallbackValue='Copying some movie to this path and this will wrap to test wrapping  '}"/>
 
-                    <TextBlock Grid.Row="0"
-                               VerticalAlignment="Top"
-                               Margin="0,5,0,0"
-                               TextWrapping="Wrap"
-                               TextAlignment="Center"
-                               FontSize="13"
-                               MinHeight="40"
-                               MaxHeight="60"
-                               TextTrimming="CharacterEllipsis"
-                               Text="{Binding ImportStatusMessage, FallbackValue='Copying some movie to this path and this will wrap to test wrapping  '}"/>
+                <cls:ButtonWithImage x:Name="btnImportMovies"
+                                     IsEnabled="{Binding ImportButtonIsEnabled}"
+                                     Click="btnImportMovies_Click"
+                                     Grid.Row="1"
+                                     FontSize="15"
+                                     TemplateSource="{StaticResource iconCD}"
+                                     ImageHeight="40"
+                                     ImageWidth="40"
+                                     HorizontalAlignment="Center"
+                                     Margin="0,3,0,0"
+                                     Content="{DynamicResource Import}"/>
 
-                    <cls:ButtonWithImage x:Name="btnImportMovies"
-                                         IsEnabled="{Binding ImportButtonIsEnabled}"
-                                         Click="btnImportMovies_Click"
-                                         Grid.Row="1"
-                                         FontSize="15"
-                                         TemplateSource="{StaticResource iconCD}"
-                                         ImageHeight="40"
-                                         ImageWidth="40"
-                                         HorizontalAlignment="Center"
-                                         Margin="0,3,0,0"
-                                         Content="{DynamicResource Import}"/>
-
-                    <ProgressBar Value="{Binding ImportProgressValue}"
-                                 Visibility="{Binding ImportProgressVisibility}"
-                                 Grid.Row="2"
-                                 HorizontalAlignment="Stretch"
-                                 Height="20"/>
-                </Grid>
-            </GroupBox>
-        </StackPanel>
+                <ProgressBar Value="{Binding ImportProgressValue}"
+                             Visibility="{Binding ImportProgressVisibility}"
+                             Grid.Row="2"
+                             HorizontalAlignment="Stretch"
+                             Height="20"/>
+            </Grid>
+        </GroupBox>
 
 
         <GroupBox x:Name="grpAudio"
                   Grid.Row="0"
+                  Grid.RowSpan="2"
                   Grid.Column="1"
                   Header="{DynamicResource AudioDeviceHeader}" Margin="10,10,10,0" 
-                  MinWidth="415"
+                  MinWidth="350"
                   HorizontalAlignment="Stretch"
-                  VerticalAlignment="Stretch">
-            <Grid>
+                  VerticalAlignment="Top">
+            <Grid Margin="3">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Grid Margin="3,3,3,0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="{DynamicResource SoundDeviceLabel}"
-                               ToolTipService.IsEnabled="False"
-                               ToolTip="{DynamicResource SoundDeviceTooltip}"
-                               MouseEnter="Control_MouseEnter"
-                               Grid.Row="0"
-                               HorizontalAlignment="Right"
-                               VerticalAlignment="Center"
-                               Margin="2,0,0,10"/>
+                <TextBlock Text="{DynamicResource SoundDeviceLabel}"
+                           ToolTipService.IsEnabled="False"
+                           ToolTip="{DynamicResource SoundDeviceTooltip}"
+                           MouseEnter="Control_MouseEnter"
+                           Grid.Row="0"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Margin="2,0,0,10"/>
 
-                    <Grid Grid.Row="0"
-                          IsEnabled="{Binding IsSoundDevicesLoaded}"
-                          Grid.Column="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-                        <ComboBox x:Name="cboSoundDevices"
-                                  ToolTip="{DynamicResource SoundDeviceTooltip}"
-                                  ToolTipService.IsEnabled="False"
-                                  MouseEnter="Control_MouseEnter"
-                                  Style="{StaticResource MainComboBoxStyle}"
-                                  ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
-                                  ItemTemplate="{StaticResource soundItemTemplate}"
-                                  SelectedItem="{Binding SelectedSoundDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  ItemsSource="{Binding SoundDevices}"
-                                  HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Center"
-                                  Margin="4,1,0,10"/>
-
-                        <Button x:Name="btnTestAudio"
-                                Grid.Column="1"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Bottom"
-                                Margin="3,0,0,10"
-                                Width="{Binding ElementName=cboSoundDevices, Path=ActualHeight}"
-                                Height="{Binding ElementName=cboSoundDevices, Path=ActualHeight}"
-                                Style="{StaticResource ImageButton}"
-                                Content="{StaticResource iconSound}"
-                                IsEnabled="{Binding IsAudioNotPlaying}"
-                                Click="btnTestAudio_Click"
-                                ToolTipService.IsEnabled="false"
-                                ToolTip="{DynamicResource TestSoundTooltip}"
-                                MouseEnter="Control_MouseEnter"/>
-                        <ToggleButton x:Name="btnAudioOptions"
-                                      Style="{StaticResource DownArrowToggleButton}"
-                                      Grid.Column="2"
-                                      VerticalAlignment="Bottom"
-                                      Height="{Binding ElementName=btnTestAudio, Path=ActualHeight}"
-                                      Margin="0,0,3,10"
-                                      Click="btnAudioOptions_Click"
-                                      ContextMenuService.Placement="Bottom">
-                            <ToggleButton.ContextMenu>
-                                <ContextMenu x:Name="menuAudioTest" Closed="menuAudioTest_Closed">
-                                    <MenuItem x:Name="menuItemTestLeft" 
-                                              Style="{StaticResource MenuItemImage}"
-                                              Header="{StaticResource iconSoundLeft}"
-                                              Height="34"
-                                              Width="34"
-                                              Click="menuItemTestLeft_Click" 
-                                              ToolTip="{DynamicResource TestLeftSoundTooltip}"
-                                              ToolTipService.IsEnabled="false"
-                                              MouseEnter="Control_MouseEnter"
-                                              IsEnabled="{Binding IsAudioNotPlaying}"/>
-                                    <MenuItem x:Name="menuItemTestRight" 
-                                              Style="{StaticResource MenuItemImage}"
-                                              Header="{StaticResource iconSoundRight}"
-                                              Height="34"
-                                              Width="34"
-                                              Click="menuItemTestRight_Click" 
-                                              ToolTip="{DynamicResource TestRightSoundTooltip}"
-                                              ToolTipService.IsEnabled="false"
-                                              MouseEnter="Control_MouseEnter"
-                                              IsEnabled="{Binding IsAudioNotPlaying}"/>
-                                </ContextMenu>
-                            </ToggleButton.ContextMenu>
-                        </ToggleButton>
-                    </Grid>
-
-                    <TextBlock Text="{DynamicResource MidiDeviceLabel}"
-                               Grid.Row="1"
-                               ToolTip="{DynamicResource MidiDeviceTooltip}"
-                               ToolTipService.IsEnabled="False"
-                               MouseEnter="Control_MouseEnter"
-                               HorizontalAlignment="Right"
-                               VerticalAlignment="Bottom"
-                               Margin="0,0,0,16"/>
-                    <ComboBox x:Name="cboMidiDevices"
-                              Grid.Row="1"
-                              Grid.Column="1"
-                              Style="{StaticResource MainComboBoxStyle}"
-                              ItemTemplate="{StaticResource midiItemTemplate}"
-                              ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
-                              SelectedItem="{Binding SelectedMidiDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              ItemsSource="{Binding MidiDevices}"
-                              HorizontalAlignment="Stretch"
-                              VerticalAlignment="Center"
-                              Margin="4,1,0,10"
-                              ToolTip="{DynamicResource MidiDeviceTooltip}"
-                              ToolTipService.IsEnabled="False"
-                              MouseEnter="Control_MouseEnter"/>
-
-
-                    <Grid Grid.Row="2"
-                          Grid.ColumnSpan="3"
-                          HorizontalAlignment="Stretch">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Text="{DynamicResource SFXVolumeLabel}"
-                                   HorizontalAlignment="Right"
-                                   VerticalAlignment="Center"
-                                   ToolTip="{DynamicResource SFXVolumeTooltip}"
-                                   ToolTipService.IsEnabled="False"
-                                   MouseEnter="Control_MouseEnter"
-                                   Margin="14,0,3,10"/>
-
-                        <Slider x:Name="sliderSfxVolume"
-                                Grid.Column="1"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                Value="{Binding SfxVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
-                                ToolTipService.InitialShowDelay="100"
-                                ValueChanged="sliderSfxVolume_ValueChanged"
-                                PreviewMouseLeftButtonUp="sliderSfxVolume_MouseLeftButtonUp"
-                                Minimum="0"
-                                Maximum="100"
-                                MinWidth="85"
-                                Margin="0,0,0,5">
-                            <Slider.ToolTip>
-                                <ToolTip Content="{Binding SfxVolumeDisplayText}"/>
-                            </Slider.ToolTip>
-                        </Slider>
-
-                        <TextBlock Text="{DynamicResource MusicVolumeLabel}"
-                                   Grid.Column="2"
-                                   HorizontalAlignment="Right"
-                                   VerticalAlignment="Center"
-                                   ToolTip="{DynamicResource MusicVolumeTooltip}"
-                                   ToolTipService.IsEnabled="False"
-                                   MouseEnter="Control_MouseEnter"
-                                   TextTrimming="CharacterEllipsis"
-                                   Margin="5,0,3,10"/>
-
-                        <Slider x:Name="sliderVolume"
-                                Grid.Column="3"
-                                Value="{Binding MusicVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
-                                ToolTipService.InitialShowDelay="100"
-                                ValueChanged="sliderVolume_ValueChanged"
-                                PreviewMouseLeftButtonUp="sliderVolume_PreviewMouseLeftButtonUp"
-                                Minimum="0"
-                                Maximum="100"
-                                MinWidth="85"
-                                VerticalAlignment="Center"
-                                Margin="1,0,4,5">
-                            <Slider.ToolTip>
-                                <ToolTip Content="{Binding MusicVolumeDisplayText}"/>
-                            </Slider.ToolTip>
-                        </Slider>
-                    </Grid>
-                </Grid>
-
-                <Grid Margin="3,0,3,0" Grid.Row="1">
+                <Grid Grid.Row="0"
+                      Grid.Column="1"
+                      Margin="0,0,2,5"
+                      IsEnabled="{Binding IsSoundDevicesLoaded}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
-                    <CheckBox Content="{DynamicResource LogVolumeControl}" 
-                              FontSize="12"
-                              Margin="0,0,-10,0"
-                              HorizontalAlignment="Left"
-                              IsChecked="{Binding IsLogVolumeChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              MouseEnter="Control_MouseEnter"
-                              ToolTip="{DynamicResource LogVolumeControlTooltip}"/>
-                    <CheckBox Content="{DynamicResource ReverseSpeakers}" 
-                              FontSize="12"
-                              HorizontalAlignment="Right"
-                              Grid.Column="1"
-                              Margin="0,0,0,0"
-                              IsChecked="{Binding IsReverseSpeakersChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              MouseEnter="Control_MouseEnter"
-                              ToolTip="{DynamicResource ReverseSpeakersTooltip}"/>
+                    <ComboBox x:Name="cboSoundDevices"
+                                ToolTip="{DynamicResource SoundDeviceTooltip}"
+                                ToolTipService.IsEnabled="False"
+                                MouseEnter="Control_MouseEnter"
+                                Style="{StaticResource MainComboBoxStyle}"
+                                ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
+                                ItemTemplate="{StaticResource soundItemTemplate}"
+                                SelectedItem="{Binding SelectedSoundDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                ItemsSource="{Binding SoundDevices}"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Top"
+                                Margin="4,1,0,0"/>
+
+                    <Button x:Name="btnTestAudio"
+                            Grid.Column="1"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Bottom"
+                            Margin="3,0,0,0"
+                            Width="{Binding ElementName=cboSoundDevices, Path=ActualHeight}"
+                            Height="{Binding ElementName=cboSoundDevices, Path=ActualHeight}"
+                            Style="{StaticResource ImageButton}"
+                            Content="{StaticResource iconSound}"
+                            IsEnabled="{Binding IsAudioNotPlaying}"
+                            Click="btnTestAudio_Click"
+                            ToolTipService.IsEnabled="false"
+                            ToolTip="{DynamicResource TestSoundTooltip}"
+                            MouseEnter="Control_MouseEnter"/>
+                    <ToggleButton x:Name="btnAudioOptions"
+                                    Style="{StaticResource DownArrowToggleButton}"
+                                    Grid.Column="2"
+                                    VerticalAlignment="Bottom"
+                                    Height="{Binding ElementName=btnTestAudio, Path=ActualHeight}"
+                                    Margin="0,0,0,0"
+                                    Click="btnAudioOptions_Click"
+                                    ContextMenuService.Placement="Bottom">
+                        <ToggleButton.ContextMenu>
+                            <ContextMenu x:Name="menuAudioTest" Closed="menuAudioTest_Closed">
+                                <MenuItem x:Name="menuItemTestLeft" 
+                                            Style="{StaticResource MenuItemImage}"
+                                            Header="{StaticResource iconSoundLeft}"
+                                            Height="34"
+                                            Width="34"
+                                            Click="menuItemTestLeft_Click" 
+                                            ToolTip="{DynamicResource TestLeftSoundTooltip}"
+                                            ToolTipService.IsEnabled="false"
+                                            MouseEnter="Control_MouseEnter"
+                                            IsEnabled="{Binding IsAudioNotPlaying}"/>
+                                <MenuItem x:Name="menuItemTestRight" 
+                                            Style="{StaticResource MenuItemImage}"
+                                            Header="{StaticResource iconSoundRight}"
+                                            Height="34"
+                                            Width="34"
+                                            Click="menuItemTestRight_Click" 
+                                            ToolTip="{DynamicResource TestRightSoundTooltip}"
+                                            ToolTipService.IsEnabled="false"
+                                            MouseEnter="Control_MouseEnter"
+                                            IsEnabled="{Binding IsAudioNotPlaying}"/>
+                            </ContextMenu>
+                        </ToggleButton.ContextMenu>
+                    </ToggleButton>
                 </Grid>
+
+                <TextBlock Text="{DynamicResource MidiDeviceLabel}"
+                           Grid.Row="1"
+                           ToolTip="{DynamicResource MidiDeviceTooltip}"
+                           ToolTipService.IsEnabled="False"
+                           MouseEnter="Control_MouseEnter"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Bottom"
+                           Margin="0,0,0,10"/>
+                <ComboBox x:Name="cboMidiDevices"
+                          Grid.Row="1"
+                          Grid.Column="1"
+                          Style="{StaticResource MainComboBoxStyle}"
+                          ItemTemplate="{StaticResource midiItemTemplate}"
+                          ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
+                          SelectedItem="{Binding SelectedMidiDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          ItemsSource="{Binding MidiDevices}"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Center"
+                          Margin="4,1,2,5"
+                          ToolTip="{DynamicResource MidiDeviceTooltip}"
+                          ToolTipService.IsEnabled="False"
+                          MouseEnter="Control_MouseEnter"/>
+
+
+                <TextBlock Text="{DynamicResource SFXVolumeLabel}"
+                           Grid.Row="2"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           ToolTip="{DynamicResource SFXVolumeTooltip}"
+                           ToolTipService.IsEnabled="False"
+                           MouseEnter="Control_MouseEnter"
+                           Margin="14,0,0,10"/>
+
+                <Slider x:Name="sliderSfxVolume"
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Value="{Binding SfxVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
+                        ToolTipService.InitialShowDelay="100"
+                        ValueChanged="sliderSfxVolume_ValueChanged"
+                        PreviewMouseLeftButtonUp="sliderSfxVolume_MouseLeftButtonUp"
+                        Minimum="0"
+                        Maximum="100"
+                        MinWidth="125"
+                        Margin="4,0,0,5">
+                    <Slider.ToolTip>
+                        <ToolTip Content="{Binding SfxVolumeDisplayText}"/>
+                    </Slider.ToolTip>
+                </Slider>
+
+                <TextBlock Text="{DynamicResource MusicVolumeLabel}"
+                           Grid.Row="3"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           ToolTip="{DynamicResource MusicVolumeTooltip}"
+                           ToolTipService.IsEnabled="False"
+                           MouseEnter="Control_MouseEnter"
+                           TextTrimming="CharacterEllipsis"
+                           Margin="5,0,0,10"/>
+
+                <Slider x:Name="sliderVolume"
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        HorizontalAlignment="Left"
+                        Value="{Binding MusicVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
+                        ToolTipService.InitialShowDelay="100"
+                        ValueChanged="sliderVolume_ValueChanged"
+                        PreviewMouseLeftButtonUp="sliderVolume_PreviewMouseLeftButtonUp"
+                        Minimum="0"
+                        Maximum="100"
+                        MinWidth="125"
+                        VerticalAlignment="Center"
+                        Margin="4,0,4,5">
+                    <Slider.ToolTip>
+                        <ToolTip Content="{Binding MusicVolumeDisplayText}"/>
+                    </Slider.ToolTip>
+                </Slider>
+
+                <CheckBox x:Name="chkLogVolume"
+                          Content="{DynamicResource LogVolumeControl}" 
+                          Grid.Row="4"
+                          Grid.ColumnSpan="2"
+                          FontSize="13"
+                          Margin="3,0,0,0"
+                          HorizontalAlignment="Left"
+                          IsChecked="{Binding IsLogVolumeChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          MouseEnter="Control_MouseEnter"
+                          ToolTip="{DynamicResource LogVolumeControlTooltip}"/>
+                <CheckBox Content="{DynamicResource ReverseSpeakers}" 
+                          Grid.Row="5"
+                          FontSize="13"
+                          HorizontalAlignment="Left"
+                          Width="{Binding ElementName=chkLogVolume, Path=ActualWidth}"
+                          Margin="3,0,0,0"
+                          Grid.ColumnSpan="2"
+                          IsChecked="{Binding IsReverseSpeakersChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          MouseEnter="Control_MouseEnter"
+                          ToolTip="{DynamicResource ReverseSpeakersTooltip}"/>
+
             </Grid>
         </GroupBox>
 
         <GroupBox x:Name="grpVideo"
-                  Grid.Row="1"
+                  Grid.Row="2"
                   Grid.Column="1"
                   Header="{DynamicResource GraphicsDriverHeader}" 
                   Height="{Binding ElementName=grpCompat, Path=ActualHeight}"
-                  Margin="10,5,10,0"
-                  MinWidth="415"
+                  Margin="10,-45,10,0"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Top">
             <StackPanel>
@@ -433,10 +421,10 @@
                               ItemsSource="{Binding AvailableRenderers}"
                               HorizontalAlignment="Stretch"
                               VerticalAlignment="Center"
-                              Margin="0,1,2,5"/>
+                              Margin="0,1,2,0"/>
                 </Grid>
 
-                <WrapPanel HorizontalAlignment="Stretch" Margin="4,30,3,0">
+                <WrapPanel HorizontalAlignment="Stretch" Margin="3,5,3,0">
 
                     <RadioButton Content="{DynamicResource QuarterScreen}" VerticalAlignment="Center" Margin="0,0,0,0"
                                  GroupName="ScreenMode"
@@ -446,7 +434,8 @@
                                  FontSize="13"
                                  Visibility="{Binding ScreenModesVisibility}"
                                  IsChecked="{Binding IsQuarterScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <RadioButton Content="{DynamicResource FullScreen}" VerticalAlignment="Center" Margin="8,0,0,0"
+                    <RadioButton Content="{DynamicResource FullScreen}" VerticalAlignment="Center" 
+                                 Margin="8,0,0,0"
                                  GroupName="ScreenMode"
                                  FontSize="13"
                                  ToolTip="{DynamicResource FullScreenTooltip}"
@@ -454,8 +443,11 @@
                                  MouseEnter="Control_MouseEnter"
                                  Visibility="{Binding ScreenModesVisibility}"
                                  IsChecked="{Binding IsFullScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </WrapPanel>
 
-                    <RadioButton Content="RIVA 128" VerticalAlignment="Center" Margin="28,0,0,0"
+                <WrapPanel HorizontalAlignment="Stretch" Margin="3,10,3,0">
+
+                    <RadioButton Content="RIVA 128" VerticalAlignment="Center" Margin="0,0,0,0"
                                  FontSize="13"
                                  GroupName="GraphicsOption"
                                  ToolTip="{DynamicResource HardwareGraphicsTooltip}"
@@ -477,18 +469,17 @@
         </GroupBox>
 
         <GroupBox x:Name="grpPrograms"
-                  Grid.Row="2" 
+                  Grid.Row="3" 
                   Grid.Column="1" 
-                  MinWidth="415"
                   Header="{DynamicResource ProgramsToRunHeader}" 
-                  Margin="10,5,10,0">
+                  Margin="10,-60,10,0">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Margin="3,3,0,3">
+                <StackPanel Margin="3,0,0,0">
                     <Button x:Name="btnAddProgram"
                             Click="btnAddProgram_Click"
                             ToolTip="{DynamicResource AddProgramTooltip}"
@@ -561,7 +552,7 @@
             </Grid>
         </GroupBox>
 
-        <TextBlock Grid.Row="3"
+        <TextBlock Grid.Row="4"
                    Grid.ColumnSpan="2"
                    VerticalAlignment="Center"
                    TextWrapping="Wrap"
@@ -569,34 +560,32 @@
                    TextTrimming="CharacterEllipsis"
                    Text="{Binding StatusMessage, FallbackValue='This is a mouse over description or message to user.'}"/>
 
-        <Button x:Name="btnDefaults" 
-                Content="{DynamicResource ResetDefaults}" 
-                ToolTip="{DynamicResource ResetLauncherDefaultsTooltip}"
-                ToolTipService.IsEnabled="False"
-                MouseEnter="Control_MouseEnter"
-                Click="btnDefaults_Click"
-                Grid.Row="3" Grid.Column="1"
-                Margin="0,5,170,10"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"/>
+        <WrapPanel Grid.Row="4"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="2"
+                   HorizontalAlignment="Right"
+                   Margin="0,5,10,10">
+            <Button x:Name="btnDefaults" 
+                    Content="{DynamicResource ResetDefaults}" 
+                    ToolTip="{DynamicResource ResetLauncherDefaultsTooltip}"
+                    ToolTipService.IsEnabled="False"
+                    MouseEnter="Control_MouseEnter"
+                    Click="btnDefaults_Click"
+                    VerticalAlignment="Bottom"/>
 
-        <Button x:Name="btnOk" 
-                Content="{DynamicResource Save}" 
-                Width="80"
-                Click="btnOk_Click"
-                Grid.Row="3" Grid.Column="1"
-                Margin="0,5,90,10"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"/>
+            <Button x:Name="btnOk" 
+                    Content="{DynamicResource Save}" 
+                    MinWidth="80"
+                    Click="btnOk_Click"
+                    VerticalAlignment="Bottom"/>
 
-        <Button x:Name="btnCancel" 
-                Content="{DynamicResource Cancel}"
-                Width="80"
-                Click="btnCancel_Click"
-                Grid.Row="3" Grid.Column="1"
-                Margin="0,5,10,10"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom"/>
+            <Button x:Name="btnCancel" 
+                    Content="{DynamicResource Cancel}"
+                    MinWidth="80"
+                    Click="btnCancel_Click"
+                    VerticalAlignment="Bottom"/>
+            
+        </WrapPanel>
 
 
         <Popup x:Name="popupProgram"
@@ -604,8 +593,10 @@
                StaysOpen="True"
                Placement="Right"
                HorizontalOffset="3"
+               VerticalOffset="3"
                PlacementTarget="{Binding ElementName=btnAddProgram}">
-            <Grid Width="{Binding ElementName=lstPrograms, Path=ActualWidth}" Height="{Binding ElementName=lstPrograms, Path=ActualHeight}" 
+            <Grid Width="{Binding ElementName=lstPrograms, Path=ActualWidth}" 
+                  Height="{Binding ElementName=lstPrograms, Path=ActualHeight}" 
                   Background="{DynamicResource PrimaryControlBackground}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
@@ -678,21 +669,25 @@
                     </TextBlock.Style>
                 </TextBlock>
 
-                <Button x:Name="btnSaveProgram"
-                        Click="btnSaveProgram_Click"
-                        Grid.Row="2"
-                        HorizontalAlignment="Center"
-                        Width="80"
-                        Margin="0,3,60,3"
-                        Content="{DynamicResource Save}"/>
+                <WrapPanel Grid.Row="2"
+                           Grid.ColumnSpan="2"
+                           HorizontalAlignment="Center"
+                           Margin="0,3,0,3">
+                    <Button x:Name="btnSaveProgram"
+                            Click="btnSaveProgram_Click"
+                            Grid.Row="2"
+                            HorizontalAlignment="Center"
+                            MinWidth="80"
+                            Content="{DynamicResource Save}"/>
 
-                <Button x:Name="btnCancelProgramAction"
-                        Click="btnCancelProgramAction_Click"
-                        Grid.Row="2"
-                        HorizontalAlignment="Center"
-                        Width="80"
-                        Margin="100,3,0,3"
-                        Content="{DynamicResource Cancel}"/>
+                    <Button x:Name="btnCancelProgramAction"
+                            Click="btnCancelProgramAction_Click"
+                            Grid.Row="2"
+                            HorizontalAlignment="Center"
+                            MinWidth="80"
+                            Content="{DynamicResource Cancel}"/>
+                    
+                </WrapPanel>
 
             </Grid>
         </Popup>

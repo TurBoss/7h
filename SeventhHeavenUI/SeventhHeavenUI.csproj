@@ -369,8 +369,12 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Licenses\icons_license.txt" />
-    <Content Include="Resources\Licenses\naudio_LICENSE" />
+    <Content Include="Resources\Licenses\icons_license.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Licenses\naudio_LICENSE">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\ulgp_v1.3.2\ulgp.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -941,8 +945,6 @@
     <Content Include="Resources\Controls\WASD unab0mb%27s Choice Swap.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="LICENSE" />
-    <None Include="README.md" />
     <Content Include="Resources\Controls\[Default] Playstation+Steam KB.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

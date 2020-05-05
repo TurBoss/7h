@@ -155,8 +155,10 @@ namespace SeventhHeaven.Classes
 
                 if (connectedController.HasValue)
                 {
-                    // controller is connected so send a littl "buzz" for user feedback
-                    GamePad.SetVibration(connectedController.Value, 0.25f, 0.25f);
+                    // controller is connected so send a little "buzz" for user feedback
+                    GamePad.SetVibration(connectedController.Value, 0.75f, 0.75f);
+                    Thread.Sleep(750);
+                    GamePad.SetVibration(connectedController.Value, 0f, 0f);
                 }
 
                 while (PollingInput)
