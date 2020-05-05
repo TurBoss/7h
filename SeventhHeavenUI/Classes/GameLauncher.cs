@@ -787,13 +787,15 @@ namespace SeventhHeaven.Classes
 
 
                 int secondsToWait = 120;
-                Instance.RaiseProgressChanged(string.Format(ResourceHelper.Get(StringKey.WaitingForFf7ExeToRespond), secondsToWait));
+                Instance.RaiseProgressChanged(string.Format("Waiting for FF7 window to be visible ({0} seconds max) ...", secondsToWait));
                 DateTime start = DateTime.Now;
-                while (ff7Proc.Responding == false)
+                while (ff7Proc.MainWindowHandle == IntPtr.Zero)
                 {
                     TimeSpan elapsed = DateTime.Now.Subtract(start);
                     if (elapsed.TotalSeconds > secondsToWait)
                         break;
+
+                    ff7Proc.Refresh();
                 }
 
                 if (didDisableReunion)
@@ -802,11 +804,34 @@ namespace SeventhHeaven.Classes
                     EnableOrDisableReunionMod(doEnable: true);
                 }
 
+                Instance.RaiseProgressChanged("Beginning to poll for gamepad input ...");
+                Instance._controllerInterceptor.PollForGamepadInput().ContinueWith((result) =>
+                {
+                    if (result.IsFaulted)
+                    {
+                        Logger.Error(result.Exception);
+                    }
+                });
+
                 // ensure ff7 window is active at end of launching
                 if (ff7Proc.MainWindowHandle != IntPtr.Zero)
                 {
+                    // setting the ff7 proc as the foreground window makes it the active window and thus can start processing mods (this will usually cause a 'Not Responding...' window when loading a lot of mods)
                     SetForegroundWindow(ff7Proc.MainWindowHandle);
-                    Instance._controllerInterceptor.PollForGamepadInput();
+                    Instance.RaiseProgressChanged(string.Format(ResourceHelper.Get(StringKey.WaitingForFf7ExeToRespond), secondsToWait));
+                    
+                    // after setting as active window, wait to ensure the window loads all mods and becomes responsive
+                    start = DateTime.Now;
+                    while (ff7Proc.Responding == false)
+                    {
+                        TimeSpan elapsed = DateTime.Now.Subtract(start);
+                        if (elapsed.TotalSeconds > secondsToWait)
+                            break;
+
+                        ff7Proc.Refresh();
+                    }
+
+                    SetForegroundWindow(ff7Proc.MainWindowHandle); // activate window again so it 
                 }
 
                 return true;
