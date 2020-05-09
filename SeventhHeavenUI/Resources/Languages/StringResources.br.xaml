@@ -1194,6 +1194,6 @@ Você quer aplicar essa configuração e tentar de novo?</system:String>
     <system:String x:Key="StartingPS4ControllerService">Starting PS4 Controller Service ...</system:String>
     <system:String x:Key="ServiceAlreadyRunning">service already running ...</system:String>
 
-
+    <system:String x:Key="RetryInstallTooltip">Retry Installing Mod</system:String>
 
 </ResourceDictionary>

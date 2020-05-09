@@ -107,6 +107,7 @@ namespace SeventhHeavenUI.ViewModels
                 _selectedDownload = value;
                 NotifyPropertyChanged();
                 UpdatePauseDownloadButtonUI();
+                NotifyPropertyChanged(nameof(RetryInstallIsEnabled));
             }
         }
 
@@ -162,6 +163,19 @@ namespace SeventhHeavenUI.ViewModels
                     _themeImage = value;
                     NotifyPropertyChanged();
                 }
+            }
+        }
+
+        public bool RetryInstallIsEnabled
+        {
+            get
+            {
+                if (SelectedDownload == null)
+                {
+                    return false;
+                }
+
+                return Sys.Library.HasPendingInstall(SelectedDownload?.Download);
             }
         }
 
@@ -339,7 +353,6 @@ namespace SeventhHeavenUI.ViewModels
         {
             ClearRememberedSearchTextAndCategories();
             ForceCheckCatalogUpdateAsync();
-            Sys.Library.AttemptInstalls();
         }
 
         /// <summary>
@@ -1249,6 +1262,14 @@ namespace SeventhHeavenUI.ViewModels
                 }
                 else
                 {
+                    DownloadItemViewModel failedItem = DownloadList.FirstOrDefault(i => i.Download.UniqueId == item.UniqueId);
+
+                    if (failedItem != null)
+                    {
+                        failedItem.DownloadSpeed = ResourceHelper.Get(StringKey.Pending);
+                    }
+
+                    NotifyPropertyChanged(nameof(RetryInstallIsEnabled)); // update UI to enable 'retry install' button if download is selected (the first download in the list is usually always selected)
                     StartNextDownloadInQueue(); // don't remove from list but let the next download happen
                 }
             };

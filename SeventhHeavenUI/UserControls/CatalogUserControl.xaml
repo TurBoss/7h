@@ -190,10 +190,20 @@
 
             <Button x:Name="btnCancel"
                     TabIndex="14"
+                    ToolTipService.ShowOnDisabled="True"
                     ToolTip="{DynamicResource CancelDownloadTooltip}"
                     Style="{StaticResource SmallImageButton}"
                     Content="{StaticResource iconCloudStop}"
                     Click="btnCancel_Click"/>
+
+            <Button x:Name="btnRetryInstall"
+                    TabIndex="15"
+                    ToolTipService.ShowOnDisabled="True"
+                    IsEnabled="{Binding RetryInstallIsEnabled}"
+                    ToolTip="{DynamicResource RetryInstallTooltip}"
+                    Style="{StaticResource SmallImageButton}"
+                    Content="{StaticResource iconReset}"
+                    Click="btnRetryInstall_Click"/>
 
         </StackPanel>
     </Grid>

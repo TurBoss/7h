@@ -435,5 +435,9 @@ namespace SeventhHeaven.UserControls
             ViewModel.SelectedDownload = null;
         }
 
+        private void btnRetryInstall_Click(object sender, RoutedEventArgs e)
+        {
+            Sys.Library.AttemptInstalls();
+        }
     }
 }

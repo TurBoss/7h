@@ -113,7 +113,7 @@
   
   <!--RENDERING TAB-->
   <Setting xsi:type="Checkbox">
-    <Group>Rendering</Group>
+    <Group>Απόδοση</Group>
     <Name>Transparent Dialogs</Name>
     <Description>Make all dialog boxes transparent, same effect as the transparent dialog boxes YAMP patch.</Description>
     <DefaultValue>transparent_dialogs = on</DefaultValue>
@@ -122,7 +122,7 @@
   </Setting>
 
   <Setting xsi:type="Checkbox">
-    <Group>Rendering</Group>
+    <Group>Απόδοση</Group>
     <Name>Show FPS Overlay</Name>
     <Description>Displays the Frames Per Second transparent overlay in the top right corner of the screen.</Description>
     <DefaultValue>show_fps = off</DefaultValue>
@@ -131,7 +131,7 @@
   </Setting>
 
   <Setting xsi:type="Checkbox">
-    <Group>Rendering</Group>
+    <Group>Απόδοση</Group>
     <Name>Show FPS Title Bar</Name>
     <Description>Displays the Frames Per Second in the title bar. Only visible in windowed mode.</Description>
     <DefaultValue>show_fps_titlebar = off</DefaultValue>
@@ -140,7 +140,7 @@
   </Setting>
  
   <Setting xsi:type="Checkbox">
-    <Group>Rendering</Group>
+    <Group>Απόδοση</Group>
     <Name>Linear Filtering</Name>
     <Description>May improve low resolution texture quality. Not recommended when using high resolution mods. If you see cyan or purple artifacts on fields, turn this off.</Description>
     <DefaultValue>linear_filter = off</DefaultValue>
@@ -149,7 +149,7 @@
   </Setting>
   
   <Setting xsi:type="Checkbox">
-    <Group>Rendering</Group>
+    <Group>Απόδοση</Group>
     <Name>Post-Processing</Name>
     <Description>Used to apply shader effects to the whole screen. Shaders may cause instability.</Description>
     <DefaultValue>enable_postprocessing = no</DefaultValue>
@@ -158,7 +158,7 @@
   </Setting>
   
   <Setting xsi:type="DropDown">
-    <Group>Rendering</Group>
+    <Group>Απόδοση</Group>
     <Name>Shader Options</Name>
     <Description>Choose a shader to apply effects. Only effective if Post-Processing is enabled.</Description>
     <DefaultValue>post_source = shaders/bloom2.post</DefaultValue>
@@ -171,8 +171,8 @@
       <Settings>post_source = shaders/Bloom2Dark.post</Settings>
     </Option>
     <Option>
-      <Text>AMD - SmartBloomAdvanced</Text>
-      <Settings>post_source = shaders/SmartBloomAdvanced.post</Settings>
+      <Text>AMD - SmartBloomΓια προσωρημένους</Text>
+      <Settings>post_source = shaders/SmartBloomΓια προσωρημένους.post</Settings>
     </Option>
     <Option>
       <Text>AMD - SmartBloomHDR</Text>
@@ -185,7 +185,7 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Rendering</Group>
+    <Group>Απόδοση</Group>
     <Name>Texture Memory</Name>
     <Description>Size of the texture cache to hold in RAM, in MB. Use high values if you experience texture corruption or crashing due to out of memory errors.</Description>
     <DefaultValue>texture_cache_size = 2048</DefaultValue>
@@ -213,7 +213,7 @@
   
   <!-- ADVANCED TAB -->
   <Setting xsi:type="DropDown">
-    <Group>Advanced</Group>
+    <Group>Για προσωρημένους</Group>
     <Name>Music Option</Name>
     <Description>Use VGMStream to play OGG Vorbis high-quality music. Required for music mods. Otherwise, standard MIDI is used.</Description>
     <DefaultValue>use_external_music = yes</DefaultValue>
@@ -228,7 +228,7 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Advanced</Group>
+    <Group>Για προσωρημένους</Group>
     <Name>Movie Option</Name>
     <Description>Use FFMPEG for in-game movies (FMVs) playback. Or, use original renderer, which may not support as many movie codecs.</Description>
     <DefaultValue>use_external_movie = yes</DefaultValue>
@@ -243,7 +243,7 @@
   </Setting>
 
   <Setting xsi:type="Checkbox">
-    <Group>Advanced</Group>
+    <Group>Για προσωρημένους</Group>
     <Name>Use Mipmaps</Name>
     <Description>Use mipmaps (anisotropic filtering) for high-res textures. This can improve performance and image quality, but uses more Texture Memory.</Description>
     <DefaultValue>use_mipmaps = yes</DefaultValue>
@@ -252,7 +252,7 @@
   </Setting>
 
   <Setting xsi:type="Checkbox">
-    <Group>Advanced</Group>
+    <Group>Για προσωρημένους</Group>
     <Name>Pixel Buffer</Name>
     <Description>Use pixel buffer objects to speed up texture loading. Do NOT use if you have an AMD/ATI card. It will cause crashing!</Description>
     <DefaultValue>use_pbo = no</DefaultValue>
@@ -261,7 +261,7 @@
   </Setting>
 
   <Setting xsi:type="Checkbox">
-    <Group>Advanced</Group>
+    <Group>Για προσωρημένους</Group>
     <Name>Show Stats Overlay</Name>
     <Description>Display some real-time debug information in overlay on screen.</Description>
     <DefaultValue>show_stats = off</DefaultValue>
@@ -270,7 +270,7 @@
   </Setting>
 
   <Setting xsi:type="Checkbox">
-    <Group>Advanced</Group>
+    <Group>Για προσωρημένους</Group>
     <Name>Show Stats Title Bar</Name>
     <Description>Display some real-time debug information in the title bar. Only visible in windowed mode.</Description>
     <DefaultValue>show_stats_titlebar = off</DefaultValue>
@@ -279,7 +279,7 @@
   </Setting>
 
   <Setting xsi:type="Checkbox">
-    <Group>Advanced</Group>
+    <Group>Για προσωρημένους</Group>
     <Name>Texture Cache</Name>
     <Description>Use lossy disk cache for low-VRAM GPUs. Clear after any change or mod that affects textures.</Description>
     <DefaultValue>compress_textures = no</DefaultValue>
@@ -541,7 +541,7 @@
   <!--DEFAULT SETTINGS NOT INCLUDED IN UI-->
 
   <!--<Setting xsi:type="Checkbox">
-    <Group>Rendering</Group>
+    <Group>Απόδοση</Group>
     <Name>Use QPC Timer</Name>
     <Description>High resolution framelimiter timer source. Has nothing to do with in-game bomb countdown!</Description>
     <DefaultValue>use_new_timer=yes</DefaultValue>
@@ -550,7 +550,7 @@
   </Setting>-->
 
   <!--<Setting xsi:type="Checkbox">
-    <Group>Rendering</Group>
+    <Group>Απόδοση</Group>
     <Name>Direct Mode</Name>
     <Description>Read files from the direct folder instead of the LGP archives. Required to be on for most mods!</Description>
     <DefaultValue>direct_mode=on</DefaultValue>
