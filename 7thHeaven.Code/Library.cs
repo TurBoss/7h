@@ -21,12 +21,55 @@ namespace Iros._7th.Workshop
         public List<InstalledItem> Items { get; set; }
 
         private object _pendingLock = new object();
+
+
         public List<string> PendingDelete { get; set; }
+
+        [System.Xml.Serialization.XmlIgnore]
+        public List<DownloadItem> PendingInstall { get; set; }
 
         public void QueuePendingDelete(IEnumerable<string> files)
         {
+            if (PendingDelete == null)
+            {
+                PendingDelete = new List<string>();
+            }
+
             lock (_pendingLock)
                 PendingDelete.AddRange(files);
+        }
+
+        public void QueuePendingInstall(DownloadItem downloadedItem)
+        {
+            if (PendingInstall == null)
+            {
+                PendingInstall = new List<DownloadItem>();
+            }
+
+            lock (_pendingLock)
+                PendingInstall.Add(downloadedItem);
+        }
+
+        public bool HasPendingInstall(DownloadItem pendingDownload)
+        {
+            return PendingInstall?.Any(d => d.UniqueId == pendingDownload.UniqueId) == true;
+        }
+
+
+        public void RemovePendingInstall(DownloadItem downloadedItem)
+        {
+            if (PendingInstall == null || PendingInstall.Count == 0)
+            {
+                return;
+            }
+
+            if (!HasPendingInstall(downloadedItem))
+            {
+                return;
+            }
+
+            lock (_pendingLock)
+                PendingInstall.RemoveAll(i => i.UniqueId == downloadedItem.UniqueId);
         }
 
         public InstalledItem GetItem(Guid modID)
@@ -58,6 +101,18 @@ namespace Iros._7th.Workshop
             _lookup.Remove(ii.ModID);
             Sys.SetStatus(ii.ModID, ModStatus.NotInstalled);
             Sys.Save();
+        }
+
+        public void DeleteAndRemoveInstall(InstalledItem ii)
+        {
+            DeleteAndRemoveInstall(ii, ii.Versions.Select(v => v.InstalledLocation));
+        }
+
+        public void DeleteAndRemoveInstall(InstalledItem ii, IEnumerable<string> versionFilesToDelete)
+        {
+            QueuePendingDelete(versionFilesToDelete);
+            RemoveInstall(ii);
+            AttemptDeletions();
         }
 
         public void AttemptDeletions()
@@ -95,6 +150,22 @@ namespace Iros._7th.Workshop
                 }
 
                 if (oldCount != PendingDelete.Count) Sys.Save();
+            }
+        }
+
+        public void AttemptInstalls()
+        {
+            if (PendingInstall == null || PendingInstall.Count == 0)
+            {
+                return;
+            }
+
+            lock (_pendingLock)
+            {
+                for (int i = PendingInstall.Count - 1; i >= 0; i--)
+                {
+                    PendingInstall[i].IProc.Schedule();
+                }
             }
         }
 
@@ -277,6 +348,7 @@ namespace Iros._7th.Workshop
         Downloading,
         Installed,
         Updating,
-        InfoChanged
+        InfoChanged,
+        PendingInstall
     }
 }

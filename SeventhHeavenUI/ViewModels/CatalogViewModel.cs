@@ -339,6 +339,7 @@ namespace SeventhHeavenUI.ViewModels
         {
             ClearRememberedSearchTextAndCategories();
             ForceCheckCatalogUpdateAsync();
+            Sys.Library.AttemptInstalls();
         }
 
         /// <summary>
@@ -811,9 +812,16 @@ namespace SeventhHeavenUI.ViewModels
                         fileDownload.DownloadProgressChanged += WebRequest_DownloadProgressChanged;
                         fileDownload.DownloadFileCompleted += WebRequest_DownloadFileCompleted;
 
-                        downloadInfo.FileDownloadTask = fileDownload;
-                        fileDownload.Start();
+                        if (downloadInfo.Category == DownloadCategory.Mod)
+                        {
+                            // try resuming partial downloads for mods
+                            fileDownload.SetBytesWrittenFromExistingFile();
+                        }
 
+                        downloadInfo.FileDownloadTask = fileDownload;
+                        
+
+                        fileDownload.Start();
                         break;
 
                     case LocationType.GDrive:
@@ -895,7 +903,7 @@ namespace SeventhHeavenUI.ViewModels
                             {
                                 if (File.Exists(downloadInfo.SaveFilePath))
                                 {
-                                    File.Delete(downloadInfo.SaveFilePath); //delete old temp file if it exists
+                                    File.Delete(downloadInfo.SaveFilePath); //delete old temp file if it exists (throws exception otherwise)
                                 }
 
                                 IProgress<double> progressHandler = new Progress<double>(x =>
@@ -1114,7 +1122,6 @@ namespace SeventhHeavenUI.ViewModels
         private void RemoveFromDownloadList(DownloadItem item)
         {
             int downloadCount = 0;
-            bool isDownloadingMod = false;
 
 
             App.Current.Dispatcher.Invoke(() =>
@@ -1128,34 +1135,42 @@ namespace SeventhHeavenUI.ViewModels
                     }
 
                     downloadCount = DownloadList.Count;
-                    isDownloadingMod = DownloadList.Any(d => d.Download.Category == DownloadCategory.Mod && d.Download.HasStarted && !d.Download.IsFileDownloadPaused);
                 }
             });
 
             if (downloadCount > 0)
             {
-                // start next download in queue
-                DownloadItemViewModel nextDownload = null;
+                StartNextDownloadInQueue();
+            }
+        }
 
-                lock (_downloadLock)
-                {
-                    if (!isDownloadingMod)
-                    {
-                        // no mod is currently downloading so get the next download in queue
-                        nextDownload = DownloadList.FirstOrDefault(d => !d.Download.HasStarted);
-                    }
-                    else
-                    {
-                        // a mod is downloading so get next catalog/image to download
-                        nextDownload = DownloadList.FirstOrDefault(d => d.Download.Category != DownloadCategory.Mod && !d.Download.HasStarted);
-                    }
-                }
+        private void StartNextDownloadInQueue()
+        {
+            // start next download in queue
+            DownloadItemViewModel nextDownload = null;
+            bool isDownloadingMod = false;
 
-                if (nextDownload != null)
+
+            lock (_downloadLock)
+            {
+                isDownloadingMod = DownloadList.Any(d => d.Download.Category == DownloadCategory.Mod && d.Download.HasStarted && !d.Download.IsFileDownloadPaused && d.Download.FileDownloadTask?.Done == false);
+                
+                if (!isDownloadingMod)
                 {
-                    nextDownload.DownloadSpeed = ResourceHelper.Get(StringKey.Starting);
-                    Download(nextDownload.Download.Links, nextDownload.Download);
+                    // no mod is currently downloading so get the next download in queue
+                    nextDownload = DownloadList.FirstOrDefault(d => !d.Download.HasStarted);
                 }
+                else
+                {
+                    // a mod is downloading so get next catalog/image to download
+                    nextDownload = DownloadList.FirstOrDefault(d => d.Download.Category != DownloadCategory.Mod && !d.Download.HasStarted);
+                }
+            }
+
+            if (nextDownload != null)
+            {
+                nextDownload.DownloadSpeed = ResourceHelper.Get(StringKey.Starting);
+                Download(nextDownload.Download.Links, nextDownload.Download);
             }
         }
 
@@ -1226,7 +1241,16 @@ namespace SeventhHeavenUI.ViewModels
             item.IProc.Error = ex =>
             {
                 existingErrorAction(ex);
-                RemoveFromDownloadList(item);
+
+                // only remove download from list if not pending to install
+                if (!Sys.Library.HasPendingInstall(item))
+                {
+                    RemoveFromDownloadList(item);
+                }
+                else
+                {
+                    StartNextDownloadInQueue(); // don't remove from list but let the next download happen
+                }
             };
 
             item.IProc.Complete = () =>
@@ -1253,7 +1277,7 @@ namespace SeventhHeavenUI.ViewModels
             if (itemViewModel != null)
             {
                 itemViewModel.PercentComplete = 0;
-                item.IProc.SetPCComplete = i =>
+                item.IProc.SetPercentComplete = i =>
                 {
                     itemViewModel.PercentComplete = i;
                 };

@@ -121,6 +121,11 @@ namespace Iros._7th.Workshop {
             return Items.FirstOrDefault(m => m.ModID == modID);
         }
 
+        public bool HasItem(Guid modID)
+        {
+            return Items?.Any(m => m.ModID == modID) == true;
+        }
+
         public void RemoveDeletedItems(bool doWarn = false)
         {
             List<string> removedMods = new List<string>();

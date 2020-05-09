@@ -35,44 +35,42 @@ namespace _7thHeaven.Code
                 else
                 {
                     // mod is being updated so uninstall current version
-                    Install.Uninstall(existingItem);
-                    Sys.ActiveProfile.RemoveDeletedItems();
+                    Sys.Library.DeleteAndRemoveInstall(existingItem, existingItem.Versions
+                                                                                 .Where(v => Path.Combine(Sys.Settings.LibraryLocation, v.InstalledLocation) != source) // ensure we are not deleting the mod file we are trying to import (in the case that the new file is already copied to mods library location)
+                                                                                 .Select(v => v.InstalledLocation));
                 }
             }
 
 
-            string copyLocation;
-            if (noCopy)
-                copyLocation = Path.GetFileName(source);
-            else
-                copyLocation = String.Format("{0}_{1}", m.ID, name);
+            string destFileName = Path.GetFileName(source);
 
-            if (!iroMode)
+            if (!noCopy)
             {
-                if (!noCopy)
+                // copy .iro or mod files to library location
+                destFileName = String.Format("{0}_{1}", m.ID, name);
+
+                if (iroMode)
+                {
+                    RaiseProgressChanged("Copying .iro file to library", 75);
+                    destFileName += ".iro";
+                    File.Copy(source, Path.Combine(Sys.Settings.LibraryLocation, destFileName), true);
+                }
+                else
                 {
                     int i = 1;
                     string[] allFiles = Directory.GetFiles(source, "*", SearchOption.AllDirectories);
                     foreach (string file in allFiles)
                     {
                         string part = file.Substring(source.Length).Trim('\\', '/');
-                        string dest = Path.Combine(Sys.Settings.LibraryLocation, copyLocation, part);
-                        Directory.CreateDirectory(Path.GetDirectoryName(dest));
-                        File.Copy(file, dest, true);
+                        string absoluteDestinationPath = Path.Combine(Sys.Settings.LibraryLocation, destFileName, part);
+
+                        Directory.CreateDirectory(Path.GetDirectoryName(absoluteDestinationPath));
+                        File.Copy(file, absoluteDestinationPath, true);
 
                         double newProgress = 50.0 + (((double)i / allFiles.Length) * 40); // start at 50 and eventually increment to 90 (i.e. 50 + 40 = 90)
                         RaiseProgressChanged($"Copying files from folder {i} / {allFiles.Length}", newProgress);
                         i++;
                     }
-                }
-            }
-            else
-            {
-                if (!noCopy)
-                {
-                    RaiseProgressChanged("Copying .iro file to library", 75);
-                    copyLocation += ".iro";
-                    File.Copy(source, Path.Combine(Sys.Settings.LibraryLocation, copyLocation), true);
                 }
             }
 
@@ -84,10 +82,14 @@ namespace _7thHeaven.Code
                 CachePreview = String.Empty,
                 ModID = m.ID,
                 UpdateType = Sys.Library.DefaultUpdate,
-                Versions = new List<InstalledVersion>() { new InstalledVersion() { VersionDetails = m.LatestVersion, InstalledLocation = copyLocation } },
+                Versions = new List<InstalledVersion>() { new InstalledVersion() { VersionDetails = m.LatestVersion, InstalledLocation = destFileName } },
             });
 
-            Sys.ActiveProfile.AddItem(new ProfileItem() { ModID = m.ID, Name = m.Name, Settings = new List<ProfileSetting>(), IsModActive = false });
+            if (!Sys.ActiveProfile.HasItem(m.ID))
+            {
+                Sys.ActiveProfile.AddItem(new ProfileItem() { ModID = m.ID, Name = m.Name, Settings = new List<ProfileSetting>(), IsModActive = false });
+            }
+
             RaiseProgressChanged("Import complete", 100);
         }
 

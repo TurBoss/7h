@@ -216,8 +216,23 @@ namespace _7thHeaven.Code
             }
             else if (IsCanceled)
             {
-                File.Delete(_destination); // delete the partially downloaded file since canceled
                 DownloadFileCompleted?.Invoke(this, new AsyncCompletedEventArgs(null, cancelled: true, _userState));
+            }
+        }
+
+        /// <summary>
+        /// Reads length of <see cref="_destination"/> file if it exists and sets <see cref="BytesWritten"/> so partial downloaded file can be resumed
+        /// </summary>
+        public void SetBytesWrittenFromExistingFile()
+        {
+            if (File.Exists(_destination))
+            {
+                BytesWritten = new FileInfo(_destination).Length;
+                _isStarted = true; // set to true so downloaded file will be appended
+            }
+            else
+            {
+                BytesWritten = 0;
             }
         }
 
@@ -247,8 +262,7 @@ namespace _7thHeaven.Code
         {
             if (IsPaused)
             {
-                // if the download is paused when cancelling download then invoke the event here and delete partially downloaded file
-                File.Delete(_destination); 
+                // if the download is paused when cancelling download then invoke the event here since async Start() task is not running to invoke the event
                 DownloadFileCompleted?.Invoke(this, new AsyncCompletedEventArgs(null, cancelled: true, _userState));
             }
 

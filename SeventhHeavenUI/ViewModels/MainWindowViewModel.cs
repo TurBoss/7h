@@ -809,6 +809,11 @@ namespace SeventhHeavenUI.ViewModels
 
         private void Sys_StatusChanged(object sender, ModStatusEventArgs e)
         {
+            if (e.Status == ModStatus.PendingInstall)
+            {
+                return;
+            }
+
             CatalogMods.UpdateModDetails(e.ModID);
 
             if (e.Status == ModStatus.Installed)

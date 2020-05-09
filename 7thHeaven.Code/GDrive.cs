@@ -10,6 +10,7 @@ using System.Text;
 using System.Net;
 using System.ComponentModel;
 using _7thHeaven.Code;
+using System.IO;
 
 namespace Iros._7th.Workshop
 {
@@ -27,6 +28,17 @@ namespace Iros._7th.Workshop
         private WebClientEx _webClient;
         //0 = Not sure, trying initial download
         //1 = First download completed, HTML detecting, retrying
+
+        private string PathToHtmlFile
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_file))
+                    return "";
+
+                return Path.Combine(Path.GetDirectoryName(_file), Path.GetFileNameWithoutExtension(_file) + ".html");
+            }
+        }
 
         public void CancelAsync()
         {
@@ -121,17 +133,17 @@ namespace Iros._7th.Workshop
 
             System.Diagnostics.Debug.WriteLine("GDrive: requesting " + gUrl);
             wc.Headers.Add(HttpRequestHeader.AcceptEncoding, "");
-            wc.DownloadFileAsync(new Uri(gUrl), destination, userState);
+            wc.DownloadFileAsync(new Uri(gUrl), PathToHtmlFile, userState);
         }
 
         void wc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             if (e.Error != null || e.Cancelled)
             {
-                if (_mode == 0 && System.IO.File.Exists(_file))
+                if (_mode == 0 && File.Exists(PathToHtmlFile))
                 {
                     // delete temp file that was downloaded when trying to get gdrive direct download url
-                    System.IO.File.Delete(_file);
+                    File.Delete(PathToHtmlFile);
                 }
 
                 DownloadFileCompleted(this, e);
@@ -140,9 +152,9 @@ namespace Iros._7th.Workshop
             {
                 if (_mode == 0)
                 {
-                    if (new System.IO.FileInfo(_file).Length < 100 * 1024)
+                    if (new FileInfo(PathToHtmlFile).Length < 100 * 1024)
                     {
-                        string text = System.IO.File.ReadAllText(_file);
+                        string text = File.ReadAllText(PathToHtmlFile);
                         int html = text.IndexOf("<html", StringComparison.InvariantCultureIgnoreCase);
                         if (html >= 0 && html < 100)
                         {
@@ -178,9 +190,15 @@ namespace Iros._7th.Workshop
                                         fileDownload.DownloadProgressChanged += FileDownload_DownloadProgressChanged;
                                         fileDownload.DownloadFileCompleted += wc_DownloadFileCompleted;
 
-                                        System.IO.File.Delete(_file); // delete temp html file just downloaded
+                                        System.IO.File.Delete(PathToHtmlFile); // delete temp html file just downloaded
 
                                         downloadInfo.FileDownloadTask = fileDownload;
+
+                                        if (downloadInfo.Category == DownloadCategory.Mod)
+                                        {
+                                            fileDownload.SetBytesWrittenFromExistingFile();
+                                        }
+
                                         fileDownload.Start();
                                         _mode = 1;
 
@@ -199,7 +217,7 @@ namespace Iros._7th.Workshop
                             }
 
                             //If we get here, it went wrong
-                            System.IO.File.Delete(_file);
+                            System.IO.File.Delete(PathToHtmlFile);
                             DownloadFileCompleted?.Invoke(this, new AsyncCompletedEventArgs(new Exception(err), false, _state));
                         }
                         else
