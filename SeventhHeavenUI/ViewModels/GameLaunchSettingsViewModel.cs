@@ -567,7 +567,7 @@ namespace SeventhHeaven.ViewModels
                 return new List<string>()
                 {
                     "Mount Disc With PowerShell",
-                    "Mount As Virtual Hard Disc"
+                    "Mount Disc With WinCDEmu"
                 };
             }
         }
@@ -680,18 +680,18 @@ namespace SeventhHeaven.ViewModels
             IsShowLauncherChecked = launchSettings.ShowLauncherWindow;
 
 
-            IsAutoMountSupported = GameLauncher.OSHasBuiltInMountSupport();
+            IsAutoMountSupported = GameDiscMounter.OSHasBuiltInMountSupport();
             AutoMountChecked = launchSettings.AutoMountGameDisc;
             AutoUnmountChecked = launchSettings.AutoUnmountGameDisc;
 
-            // disable options to select mount method if user OS does not support  (i.e. does not support PowerShell Mount-DiskImage)
+            // options to select mount method is disabled if user OS does not support and forced to use wincdemu  (i.e. does not support PowerShell Mount-DiskImage)
             if (IsAutoMountSupported)
             {
                 SelectedMountOption = MountOptions[(int)launchSettings.MountingOption];
             }
             else
             {
-                SelectedMountOption = MountOptions[(int)MountDiscOption.MountAsVirtualDisk];
+                SelectedMountOption = MountOptions[(int)MountDiscOption.MountWithWinCDEmu];
             }
 
             SetSelectedSoundDeviceFromSettings(launchSettings);

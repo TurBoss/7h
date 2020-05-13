@@ -6,7 +6,7 @@ namespace _7thHeaven.Code
     {
         Unknown = -1,
         MountWithPowerShell = 0,
-        MountAsVirtualDisk = 1
+        MountWithWinCDEmu = 1
     }
 
     [Serializable]

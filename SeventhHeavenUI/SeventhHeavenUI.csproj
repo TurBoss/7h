@@ -91,18 +91,6 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DiscUtils.Core, Version=0.15.0.0, Culture=neutral, PublicKeyToken=5fa5b410cc9c6289, processorArchitecture=MSIL">
-      <HintPath>..\packages\Quamotion.DiscUtils.Core.0.15.4\lib\net45\DiscUtils.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="DiscUtils.Ntfs, Version=0.15.0.0, Culture=neutral, PublicKeyToken=5fa5b410cc9c6289, processorArchitecture=MSIL">
-      <HintPath>..\packages\Quamotion.DiscUtils.Ntfs.0.15.4\lib\net45\DiscUtils.Ntfs.dll</HintPath>
-    </Reference>
-    <Reference Include="DiscUtils.Streams, Version=0.15.0.0, Culture=neutral, PublicKeyToken=5fa5b410cc9c6289, processorArchitecture=MSIL">
-      <HintPath>..\packages\Quamotion.DiscUtils.Streams.0.15.4\lib\net45\DiscUtils.Streams.dll</HintPath>
-    </Reference>
-    <Reference Include="DiscUtils.Vhd, Version=0.15.0.0, Culture=neutral, PublicKeyToken=5fa5b410cc9c6289, processorArchitecture=MSIL">
-      <HintPath>..\packages\Quamotion.DiscUtils.Vhd.0.15.4\lib\net45\DiscUtils.Vhd.dll</HintPath>
-    </Reference>
     <Reference Include="DS4WindowsCore">
       <HintPath>.\DS4WindowsCore.dll</HintPath>
     </Reference>
@@ -129,9 +117,6 @@
       <HintPath>..\packages\NVorbis.0.8.6\lib\net35\NVorbis.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Buffers.4.5.1\lib\netstandard1.1\System.Buffers.dll</HintPath>
-    </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -140,19 +125,10 @@
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.PowerShell.5.ReferenceAssemblies.1.1.0\lib\net4\System.Management.Automation.dll</HintPath>
     </Reference>
-    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Memory.4.5.4\lib\netstandard1.1\System.Memory.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.7.1\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-    </Reference>
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -163,27 +139,6 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="Vanara.Core, Version=3.2.7.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\Vanara.Core.3.2.7\lib\net45\Vanara.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Vanara.PInvoke.Cryptography, Version=3.2.7.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\Vanara.PInvoke.Cryptography.3.2.7\lib\net45\Vanara.PInvoke.Cryptography.dll</HintPath>
-    </Reference>
-    <Reference Include="Vanara.PInvoke.Kernel32, Version=3.2.7.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\Vanara.PInvoke.Kernel32.3.2.7\lib\net45\Vanara.PInvoke.Kernel32.dll</HintPath>
-    </Reference>
-    <Reference Include="Vanara.PInvoke.Security, Version=3.2.7.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\Vanara.PInvoke.Security.3.2.7\lib\net45\Vanara.PInvoke.Security.dll</HintPath>
-    </Reference>
-    <Reference Include="Vanara.PInvoke.Shared, Version=3.2.7.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\Vanara.PInvoke.Shared.3.2.7\lib\net45\Vanara.PInvoke.Shared.dll</HintPath>
-    </Reference>
-    <Reference Include="Vanara.PInvoke.VirtDisk, Version=3.2.7.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\Vanara.PInvoke.VirtDisk.3.2.7\lib\net45\Vanara.PInvoke.VirtDisk.dll</HintPath>
-    </Reference>
-    <Reference Include="Vanara.VirtualDisk, Version=3.2.7.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\Vanara.VirtualDisk.3.2.7\lib\net45\Vanara.VirtualDisk.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -227,7 +182,7 @@
     <Compile Include="Classes\Themes\ITheme.cs" />
     <Compile Include="Classes\Themes\ThemeSettings.cs" />
     <Compile Include="Classes\UpdateChecker.cs" />
-    <Compile Include="Classes\VirtualDiskMounter.cs" />
+    <Compile Include="Classes\GameDiscMounter.cs" />
     <Compile Include="Classes\WCF\ServiceHost.cs" />
     <Compile Include="UserControls\CatalogUserControl.xaml.cs">
       <DependentUpon>CatalogUserControl.xaml</DependentUpon>
@@ -438,6 +393,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\VBusDriver\System\ScpVBus.inf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\WinCDEmu\LICENSE.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\WinCDEmu\PortableWinCDEmu.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="XInputInterface.dll">

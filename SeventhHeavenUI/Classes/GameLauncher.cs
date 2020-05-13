@@ -10,14 +10,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Management.Automation;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
-using XInputDotNetPure;
-using static SeventhHeaven.Classes.KeyboardInputSender;
 
 namespace SeventhHeaven.Classes
 {
@@ -63,7 +59,7 @@ namespace SeventhHeaven.Classes
         private Dictionary<_7thWrapperLib.ProgramInfo, Process> _sideLoadProcesses = new Dictionary<_7thWrapperLib.ProgramInfo, Process>();
 
         private ControllerInterceptor _controllerInterceptor;
-        private VirtualDiskMounter _vhdMounter;
+        private GameDiscMounter DiscMounter;
 
         public delegate void OnProgressChanged(string message);
         public event OnProgressChanged ProgressChanged;
@@ -74,10 +70,6 @@ namespace SeventhHeaven.Classes
 
         public string DriveLetter { get; set; }
         public bool DidMountVirtualDisc { get; set; }
-        /// <summary>
-        /// Used to ensure only one thread/task is trying to mount/unmount the disc
-        /// </summary>
-        private static object _mountLock = new object();
 
         #endregion
 
@@ -389,7 +381,10 @@ namespace SeventhHeaven.Classes
                 }
 
                 Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.AutoMountingVirtualGameDisc));
-                bool didMount = MountVirtualGameDisc();
+
+
+                Instance.DiscMounter = new GameDiscMounter(Sys.Settings.GameLaunchSettings.MountingOption); 
+                bool didMount = Instance.DiscMounter.MountVirtualGameDisc();
 
                 if (!didMount)
                 {
@@ -731,7 +726,8 @@ namespace SeventhHeaven.Classes
                         if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && Instance.DidMountVirtualDisc)
                         {
                             Instance.RaiseProgressChanged("Auto unmounting game disc ...");
-                            UnmountVirtualGameDisc();
+                            Instance.DiscMounter.UnmountVirtualGameDisc();
+                            Instance.DiscMounter = null;
                         }
 
                         // ensure Reunion is re-enabled when ff7 process exits in case it failed above for any reason
@@ -1013,10 +1009,11 @@ namespace SeventhHeaven.Classes
                             Instance._controllerInterceptor.PollingInput = false;
                         }
 
-                        if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && Instance.DidMountVirtualDisc && IsVirtualIsoMounted(Instance.DriveLetter))
+                        if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && Instance.DidMountVirtualDisc)
                         {
                             Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.AutoUnmountingGameDisc));
-                            UnmountVirtualGameDisc();
+                            Instance.DiscMounter.UnmountVirtualGameDisc();
+                            Instance.DiscMounter = null;
                         }
 
                         // ensure Reunion is re-enabled when ff7 process exits in case it failed above for any reason
@@ -1235,24 +1232,6 @@ namespace SeventhHeaven.Classes
             }
 
             return constraints;
-        }
-
-        internal static bool OSHasBuiltInMountSupport()
-        {
-            Version osVersion = Environment.OSVersion.Version;
-            if (osVersion.Major < 6)
-            {
-                return false;
-            }
-            else if (osVersion.Major == 6)
-            {
-                if (osVersion.Minor < 2)
-                {
-                    return false; // on an OS below Win 8
-                }
-            }
-
-            return true;
         }
 
         public static bool IsReunionModInstalled()
@@ -1602,131 +1581,6 @@ namespace SeventhHeaven.Classes
             }
         }
 
-        /// <summary>
-        /// Mounts FF7DISC1.ISO in 'Resources' folder to virtual drive (if Win 8+)
-        /// </summary>
-        /// <returns></returns>
-        public static bool MountVirtualGameDisc()
-        {
-            bool usePowerShell = Sys.Settings.GameLaunchSettings.MountingOption == MountDiscOption.MountWithPowerShell;
-
-            if (!OSHasBuiltInMountSupport())
-            {
-                Instance.RaiseProgressChanged($"\t OS does not support PowerShell Mount-DiskImage... forcing option to mount as virtual disk ...");
-                usePowerShell = false;
-            }
-
-            try
-            {
-                string isoPath = Path.Combine(Sys._7HFolder, "Resources", "FF7DISC1.ISO");
-
-                if (!File.Exists(isoPath))
-                {
-                    return false;
-                }
-
-                if (usePowerShell)
-                {
-                    lock (_mountLock)
-                    {
-                        using (PowerShell ps = PowerShell.Create())
-                        {
-                            ps.AddCommand("Mount-DiskImage");
-                            ps.AddParameter("ImagePath", isoPath);
-
-                            Logger.Info($"\tattempting to mount iso at {isoPath}");
-                            System.Collections.ObjectModel.Collection<PSObject> result = ps.Invoke();
-                        }
-                    }
-                }
-                else
-                {
-                    string vhdPath = Path.Combine(Sys._7HFolder, "Resources", "FF7DISC1.vhd");
-                    Logger.Info($"\tattempting to create/open/mount vhd at {vhdPath}");
-
-                    lock (_mountLock)
-                    {
-                        Instance._vhdMounter = new VirtualDiskMounter();
-                        Instance._vhdMounter.MountVirtualDisk(vhdPath);
-                    }
-                }
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Unmounts FF7DISC1
-        /// </summary>
-        /// <remarks>
-        /// This assumes the iso image at Path.Combine(Sys._7HFolder, "Resources", "FF7DISC1.ISO") is the mounted iso.
-        /// ... this code does not handle unmounting other iso files.
-        /// </remarks>
-        /// <returns></returns>
-        public static bool UnmountVirtualGameDisc()
-        {
-            bool usePowerShell = Sys.Settings.GameLaunchSettings.MountingOption == MountDiscOption.MountWithPowerShell;
-
-            if (!OSHasBuiltInMountSupport())
-            {
-                usePowerShell = false;
-            }
-
-            try
-            {
-                if (usePowerShell)
-                {
-                    string isoPath = Path.Combine(Sys._7HFolder, "Resources", "FF7DISC1.ISO");
-
-                    if (!File.Exists(isoPath) || !IsVirtualIsoMounted(Instance.DriveLetter))
-                    {
-                        return false;
-                    }
-
-                    lock (_mountLock)
-                    {
-                        using (PowerShell ps = PowerShell.Create())
-                        {
-                            System.Collections.ObjectModel.Collection<PSObject> result = ps.AddCommand("Dismount-DiskImage").AddParameter("ImagePath", isoPath).Invoke();
-                        }
-                    }
-                }
-                else
-                {
-                    Instance._vhdMounter?.UnmountVirtualDisk();
-                    Instance._vhdMounter = null;
-                }
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e);
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// returns true if mounted FF7DISC is a virtual iso (by checking for game files on the drive)
-        /// </summary>
-        /// <param name="driveLetter"></param>
-        public static bool IsVirtualIsoMounted(string driveLetter)
-        {
-            DriveInfo driveInfo = DriveInfo.GetDrives().FirstOrDefault(d => d.IsReady && d.Name == driveLetter);
-
-            if (driveInfo == null)
-            {
-                return false;
-            }
-
-            // the .iso we mount has the following attributes so check for these
-            return driveInfo.DriveFormat == "UDF" && driveInfo.DriveType == DriveType.CDRom && driveInfo.TotalFreeSpace == 0;
-        }
 
         public static bool CopyKeyboardInputCfg()
         {

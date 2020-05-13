@@ -181,6 +181,14 @@ namespace Iros._7th.Workshop
                 return Path.Combine(_7HFolder, "Resources", "VBusDriver");
             }
         }
+
+        public static string PathToWinCDEmuExe
+        {
+            get
+            {
+                return Path.Combine(_7HFolder, "Resources", "WinCDEmu", "PortableWinCDEmu.exe");
+            }
+        }
         public static string PathToScpDriverExe
         {
             get
