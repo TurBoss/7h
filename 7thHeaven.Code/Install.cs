@@ -577,7 +577,7 @@ namespace Iros._7th.Workshop
 
                 try
                 {
-                    ModImporter.ImportMod(_dest, modName, isIro, noCopy: true); // noCopy set to true because ProcessDownload already copied the downloaded mod to the 'mods' library folder
+                    Mod = ModImporter.ImportMod(_dest, modName, isIro, noCopy: true); // noCopy set to true because ProcessDownload() already copied the downloaded mod to the 'mods' library folder
                 }
                 catch (Exception ex)
                 {

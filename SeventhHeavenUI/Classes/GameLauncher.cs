@@ -62,7 +62,8 @@ namespace SeventhHeaven.Classes
         private Dictionary<string, _7HPlugin> _plugins = new Dictionary<string, _7HPlugin>(StringComparer.InvariantCultureIgnoreCase);
         private Dictionary<_7thWrapperLib.ProgramInfo, Process> _sideLoadProcesses = new Dictionary<_7thWrapperLib.ProgramInfo, Process>();
 
-        private ControllerInterceptor _controllerInterceptor; 
+        private ControllerInterceptor _controllerInterceptor;
+        private VirtualDiskMounter _vhdMounter;
 
         public delegate void OnProgressChanged(string message);
         public event OnProgressChanged ProgressChanged;
@@ -382,37 +383,31 @@ namespace SeventhHeaven.Classes
             {
                 Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.FailedToFindGameDisc), NLog.LogLevel.Warn);
 
-                if (!OSHasAutoMountSupport())
+                if (!Sys.Settings.GameLaunchSettings.AutoMountGameDisc)
                 {
-                    Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.OsDoesNotSupportAutoMounting), NLog.LogLevel.Error);
+                    return false; // game disc not found and user is not trying to auto mount the disc so exit as failure
+                }
+
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.AutoMountingVirtualGameDisc));
+                bool didMount = MountVirtualGameDisc();
+
+                if (!didMount)
+                {
+                    Instance.RaiseProgressChanged($"{ResourceHelper.Get(StringKey.FailedToAutoMountVirtualDiscAt)} {Path.Combine(Sys._7HFolder, "Resources")} ...", NLog.LogLevel.Error);
                     return false;
                 }
-                else
+
+                Instance.DidMountVirtualDisc = true;
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.LookingForGameDiscAfterMounting));
+                Instance.DriveLetter = GetDriveLetter();
+
+                if (string.IsNullOrEmpty(Instance.DriveLetter))
                 {
-                    if (Sys.Settings.GameLaunchSettings.AutoMountGameDisc)
-                    {
-                        Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.AutoMountingVirtualGameDisc));
-                        bool didMount = MountIso();
-
-                        if (!didMount)
-                        {
-                            Instance.RaiseProgressChanged($"{ResourceHelper.Get(StringKey.FailedToAutoMountVirtualDiscAt)} {Path.Combine(Sys._7HFolder, "Resources", "FF7DISC1.ISO")} ...", NLog.LogLevel.Error);
-                            return false;
-                        }
-
-                        Instance.DidMountVirtualDisc = true;
-                        Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.LookingForGameDiscAfterMounting));
-                        Instance.DriveLetter = GetDriveLetter();
-
-                        if (string.IsNullOrEmpty(Instance.DriveLetter))
-                        {
-                            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.FailedToFindGameDiscAfterAutoMounting), NLog.LogLevel.Error);
-                            return false;
-                        }
-
-                        Instance.RaiseProgressChanged($"{ResourceHelper.Get(StringKey.FoundGameDiscAt)} {Instance.DriveLetter} ...");
-                    }
+                    Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.FailedToFindGameDiscAfterAutoMounting), NLog.LogLevel.Error);
+                    return false;
                 }
+
+                Instance.RaiseProgressChanged($"{ResourceHelper.Get(StringKey.FoundGameDiscAt)} {Instance.DriveLetter} ...");
             }
 
             //
@@ -648,40 +643,7 @@ namespace SeventhHeaven.Classes
                 if (!didInject)
                 {
                     Instance.RaiseProgressChanged($"{ResourceHelper.Get(StringKey.FailedToInjectAfterMaxAmountOfTries)} ({totalAttempts}) ...", NLog.LogLevel.Warn);
-                    Sys.Settings.GameLaunchSettings.HasReceivedCode5Error = true; // update launch settings to notify that user has received a code 5 error in the code
-
-                    // give user option to set compat flag and try again
-                    var viewModel = MessageDialogWindow.Show(ResourceHelper.Get(StringKey.FailedToInjectWithEasyHookMessage),
-                                                             ResourceHelper.Get(StringKey.ErrorFailedToStartGame),
-                                                             MessageBoxButton.YesNo,
-                                                             MessageBoxImage.Warning);
-
-                    if (viewModel.Result == MessageBoxResult.Yes)
-                    {
-                        Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.SettingCompatibilityFixAndTryingAgain));
-                        Sys.Settings.GameLaunchSettings.Code5Fix = true;
-
-                        Instance.SetCompatibilityFlagsInRegistry();
-
-                        try
-                        {
-                            EasyHook.RemoteHooking.CreateAndInject(Sys.Settings.FF7Exe, String.Empty, 0, lib, null, out pid, parms);
-                        }
-                        catch (ApplicationException aex)
-                        {
-                            if (aex.Message.IndexOf("Unknown error in injected assembler code", StringComparison.InvariantCultureIgnoreCase) >= 0)
-                            {
-                                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.StillFailedToInjectWithEasyHookAborting), NLog.LogLevel.Error);
-                                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.FailedToInjectWithEasyHookAfterSettingFlags), ResourceHelper.Get(StringKey.ErrorFailedToStartGame), MessageBoxButton.OK, MessageBoxImage.Error);
-                                return false;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.UserChoseNotToSetCompatibilityFix)}");
-                        return false;
-                    }
+                    return false;
                 }
 
 
@@ -766,10 +728,10 @@ namespace SeventhHeaven.Classes
                         Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.StoppingOtherProgramsForMods));
                         Instance.StopAllSideProcessesForMods();
 
-                        if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && Instance.DidMountVirtualDisc && IsVirtualIsoMounted(Instance.DriveLetter))
+                        if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && Instance.DidMountVirtualDisc)
                         {
                             Instance.RaiseProgressChanged("Auto unmounting game disc ...");
-                            UnmountIso();
+                            UnmountVirtualGameDisc();
                         }
 
                         // ensure Reunion is re-enabled when ff7 process exits in case it failed above for any reason
@@ -819,7 +781,7 @@ namespace SeventhHeaven.Classes
                     // setting the ff7 proc as the foreground window makes it the active window and thus can start processing mods (this will usually cause a 'Not Responding...' window when loading a lot of mods)
                     SetForegroundWindow(ff7Proc.MainWindowHandle);
                     Instance.RaiseProgressChanged(string.Format(ResourceHelper.Get(StringKey.WaitingForFf7ExeToRespond), secondsToWait));
-                    
+
                     // after setting as active window, wait to ensure the window loads all mods and becomes responsive
                     start = DateTime.Now;
                     while (ff7Proc.Responding == false)
@@ -1054,7 +1016,7 @@ namespace SeventhHeaven.Classes
                         if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && Instance.DidMountVirtualDisc && IsVirtualIsoMounted(Instance.DriveLetter))
                         {
                             Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.AutoUnmountingGameDisc));
-                            UnmountIso();
+                            UnmountVirtualGameDisc();
                         }
 
                         // ensure Reunion is re-enabled when ff7 process exits in case it failed above for any reason
@@ -1275,7 +1237,7 @@ namespace SeventhHeaven.Classes
             return constraints;
         }
 
-        internal static bool OSHasAutoMountSupport()
+        internal static bool OSHasBuiltInMountSupport()
         {
             Version osVersion = Environment.OSVersion.Version;
             if (osVersion.Major < 6)
@@ -1604,7 +1566,7 @@ namespace SeventhHeaven.Classes
         }
 
         /// <summary>
-        /// Set/Delete compatibility flags in registry for ~ 640x480 HIGHDPIAWARE
+        /// Set/Delete compatibility flags in registry for ~ HIGHDPIAWARE
         /// </summary>
         public void SetCompatibilityFlagsInRegistry()
         {
@@ -1614,7 +1576,7 @@ namespace SeventhHeaven.Classes
             string keyPath = @"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers";
 
             // delete compatibility flags if set in launch settings
-            if (!Sys.Settings.GameLaunchSettings.Code5Fix && !Sys.Settings.GameLaunchSettings.HighDpiFix)
+            if (!Sys.Settings.GameLaunchSettings.HighDpiFix)
             {
                 Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.Code5FixHighDpiFixSetToFalseDeletingFlags)}");
                 ff7CompatKey = Registry.CurrentUser.OpenSubKey(keyPath, true);
@@ -1629,42 +1591,29 @@ namespace SeventhHeaven.Classes
             }
 
 
-            string compatString = "~ ";
-            // Add 640x480 compatibility flag if set in settings
-            if (Sys.Settings.GameLaunchSettings.Code5Fix)
-            {
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.Code5FixSetToTrueApplyingCompatibilityFlag)}");
-                compatString += "640x480 ";
-            }
-
             if (Sys.Settings.GameLaunchSettings.HighDpiFix)
             {
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.HighDpiFixSetToTrueApplyingCompatibilityFlag)}");
-                compatString += "HIGHDPIAWARE";
-            }
+                string compatString = "~ HIGHDPIAWARE";
 
-            Instance.RaiseProgressChanged($"\t HKEY_CURRENT_USER\\{keyPath}::{Sys.Settings.FF7Exe} = {compatString}");
-            ff7CompatKey = Registry.CurrentUser.OpenSubKey(keyPath, true);
-            ff7CompatKey?.SetValue(Sys.Settings.FF7Exe, compatString);
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.HighDpiFixSetToTrueApplyingCompatibilityFlag)}");
+                Instance.RaiseProgressChanged($"\t HKEY_CURRENT_USER\\{keyPath}::{Sys.Settings.FF7Exe} = {compatString}");
+                ff7CompatKey = Registry.CurrentUser.OpenSubKey(keyPath, true);
+                ff7CompatKey?.SetValue(Sys.Settings.FF7Exe, compatString);
+            }
         }
 
         /// <summary>
         /// Mounts FF7DISC1.ISO in 'Resources' folder to virtual drive (if Win 8+)
         /// </summary>
         /// <returns></returns>
-        public static bool MountIso()
+        public static bool MountVirtualGameDisc()
         {
-            Version osVersion = Environment.OSVersion.Version;
-            if (osVersion.Major < 6)
+            bool usePowerShell = Sys.Settings.GameLaunchSettings.MountingOption == MountDiscOption.MountWithPowerShell;
+
+            if (!OSHasBuiltInMountSupport())
             {
-                return false;
-            }
-            else if (osVersion.Major == 6)
-            {
-                if (osVersion.Minor < 2)
-                {
-                    return false; // on an OS below Win 8
-                }
+                Instance.RaiseProgressChanged($"\t OS does not support PowerShell Mount-DiskImage... forcing option to mount as virtual disk ...");
+                usePowerShell = false;
             }
 
             try
@@ -1676,15 +1625,29 @@ namespace SeventhHeaven.Classes
                     return false;
                 }
 
-                lock (_mountLock)
+                if (usePowerShell)
                 {
-                    using (PowerShell ps = PowerShell.Create())
+                    lock (_mountLock)
                     {
-                        ps.AddCommand("Mount-DiskImage");
-                        ps.AddParameter("ImagePath", isoPath);
+                        using (PowerShell ps = PowerShell.Create())
+                        {
+                            ps.AddCommand("Mount-DiskImage");
+                            ps.AddParameter("ImagePath", isoPath);
 
-                        Logger.Info($"\tattempting to mount iso at {isoPath}");
-                        System.Collections.ObjectModel.Collection<PSObject> result = ps.Invoke();
+                            Logger.Info($"\tattempting to mount iso at {isoPath}");
+                            System.Collections.ObjectModel.Collection<PSObject> result = ps.Invoke();
+                        }
+                    }
+                }
+                else
+                {
+                    string vhdPath = Path.Combine(Sys._7HFolder, "Resources", "FF7DISC1.vhd");
+                    Logger.Info($"\tattempting to create/open/mount vhd at {vhdPath}");
+
+                    lock (_mountLock)
+                    {
+                        Instance._vhdMounter = new VirtualDiskMounter();
+                        Instance._vhdMounter.MountVirtualDisk(vhdPath);
                     }
                 }
 
@@ -1705,28 +1668,38 @@ namespace SeventhHeaven.Classes
         /// ... this code does not handle unmounting other iso files.
         /// </remarks>
         /// <returns></returns>
-        public static bool UnmountIso()
+        public static bool UnmountVirtualGameDisc()
         {
-            if (!OSHasAutoMountSupport())
+            bool usePowerShell = Sys.Settings.GameLaunchSettings.MountingOption == MountDiscOption.MountWithPowerShell;
+
+            if (!OSHasBuiltInMountSupport())
             {
-                return false;
+                usePowerShell = false;
             }
 
             try
             {
-                string isoPath = Path.Combine(Sys._7HFolder, "Resources", "FF7DISC1.ISO");
-
-                if (!File.Exists(isoPath))
+                if (usePowerShell)
                 {
-                    return false;
-                }
+                    string isoPath = Path.Combine(Sys._7HFolder, "Resources", "FF7DISC1.ISO");
 
-                lock (_mountLock)
-                {
-                    using (PowerShell ps = PowerShell.Create())
+                    if (!File.Exists(isoPath) || !IsVirtualIsoMounted(Instance.DriveLetter))
                     {
-                        System.Collections.ObjectModel.Collection<PSObject> result = ps.AddCommand("Dismount-DiskImage").AddParameter("ImagePath", isoPath).Invoke();
+                        return false;
                     }
+
+                    lock (_mountLock)
+                    {
+                        using (PowerShell ps = PowerShell.Create())
+                        {
+                            System.Collections.ObjectModel.Collection<PSObject> result = ps.AddCommand("Dismount-DiskImage").AddParameter("ImagePath", isoPath).Invoke();
+                        }
+                    }
+                }
+                else
+                {
+                    Instance._vhdMounter?.UnmountVirtualDisk();
+                    Instance._vhdMounter = null;
                 }
 
                 return true;

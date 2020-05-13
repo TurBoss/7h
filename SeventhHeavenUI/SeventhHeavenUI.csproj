@@ -91,6 +91,18 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DiscUtils.Core, Version=0.15.0.0, Culture=neutral, PublicKeyToken=5fa5b410cc9c6289, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quamotion.DiscUtils.Core.0.15.4\lib\net45\DiscUtils.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Ntfs, Version=0.15.0.0, Culture=neutral, PublicKeyToken=5fa5b410cc9c6289, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quamotion.DiscUtils.Ntfs.0.15.4\lib\net45\DiscUtils.Ntfs.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Streams, Version=0.15.0.0, Culture=neutral, PublicKeyToken=5fa5b410cc9c6289, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quamotion.DiscUtils.Streams.0.15.4\lib\net45\DiscUtils.Streams.dll</HintPath>
+    </Reference>
+    <Reference Include="DiscUtils.Vhd, Version=0.15.0.0, Culture=neutral, PublicKeyToken=5fa5b410cc9c6289, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quamotion.DiscUtils.Vhd.0.15.4\lib\net45\DiscUtils.Vhd.dll</HintPath>
+    </Reference>
     <Reference Include="DS4WindowsCore">
       <HintPath>.\DS4WindowsCore.dll</HintPath>
     </Reference>
@@ -138,6 +150,9 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -148,6 +163,27 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="Vanara.Core, Version=3.2.7.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\Vanara.Core.3.2.7\lib\net45\Vanara.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Vanara.PInvoke.Cryptography, Version=3.2.7.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\Vanara.PInvoke.Cryptography.3.2.7\lib\net45\Vanara.PInvoke.Cryptography.dll</HintPath>
+    </Reference>
+    <Reference Include="Vanara.PInvoke.Kernel32, Version=3.2.7.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\Vanara.PInvoke.Kernel32.3.2.7\lib\net45\Vanara.PInvoke.Kernel32.dll</HintPath>
+    </Reference>
+    <Reference Include="Vanara.PInvoke.Security, Version=3.2.7.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\Vanara.PInvoke.Security.3.2.7\lib\net45\Vanara.PInvoke.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Vanara.PInvoke.Shared, Version=3.2.7.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\Vanara.PInvoke.Shared.3.2.7\lib\net45\Vanara.PInvoke.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="Vanara.PInvoke.VirtDisk, Version=3.2.7.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\Vanara.PInvoke.VirtDisk.3.2.7\lib\net45\Vanara.PInvoke.VirtDisk.dll</HintPath>
+    </Reference>
+    <Reference Include="Vanara.VirtualDisk, Version=3.2.7.0, Culture=neutral, PublicKeyToken=c37e4080322237fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\Vanara.VirtualDisk.3.2.7\lib\net45\Vanara.VirtualDisk.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -191,6 +227,7 @@
     <Compile Include="Classes\Themes\ITheme.cs" />
     <Compile Include="Classes\Themes\ThemeSettings.cs" />
     <Compile Include="Classes\UpdateChecker.cs" />
+    <Compile Include="Classes\VirtualDiskMounter.cs" />
     <Compile Include="Classes\WCF\ServiceHost.cs" />
     <Compile Include="UserControls\CatalogUserControl.xaml.cs">
       <DependentUpon>CatalogUserControl.xaml</DependentUpon>
@@ -283,6 +320,9 @@
     </Compile>
     <Compile Include="Windows\IroCreateWindow.xaml.cs">
       <DependentUpon>IroCreateWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MovieImportWindow.xaml.cs">
+      <DependentUpon>MovieImportWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\OpenProfileWindow.xaml.cs">
       <DependentUpon>OpenProfileWindow.xaml</DependentUpon>
@@ -523,6 +563,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\MyModsUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MovieImportWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

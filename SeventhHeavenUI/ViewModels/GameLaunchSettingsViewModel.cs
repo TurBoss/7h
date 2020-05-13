@@ -40,10 +40,7 @@ namespace SeventhHeaven.ViewModels
         private bool _autoMountChecked;
         private bool _autoUnmountChecked;
         private bool _autoUpdatePathChecked;
-        private bool _code5FixChecked;
         private bool _highDpiFixChecked;
-        private bool _disableReunionChecked;
-        private bool _isReunionInstalled;
         private bool _isAutoMountSupported;
         private bool _isReverseSpeakersChecked;
         private bool _isLogVolumeChecked;
@@ -70,6 +67,7 @@ namespace SeventhHeaven.ViewModels
         private double _importProgressValue;
         private VolumeSlider _lastVolumeSliderChanged;
         private bool _isSoundDevicesLoaded;
+        private string _selectedMountOption;
 
         #endregion
 
@@ -183,27 +181,6 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-        public bool HasCode5Error
-        {
-            get
-            {
-                return Sys.Settings.GameLaunchSettings.HasReceivedCode5Error;
-            }
-        }
-
-        public bool Code5FixChecked
-        {
-            get
-            {
-                return _code5FixChecked;
-            }
-            set
-            {
-                _code5FixChecked = value;
-                NotifyPropertyChanged();
-            }
-        }
-
         public bool HighDpiFixChecked
         {
             get
@@ -213,33 +190,6 @@ namespace SeventhHeaven.ViewModels
             set
             {
                 _highDpiFixChecked = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public bool DisableReunionChecked
-        {
-            get
-            {
-                return _disableReunionChecked;
-            }
-            set
-            {
-                _disableReunionChecked = value;
-                NotifyPropertyChanged();
-                ShowWarningMessageAbouReunion();
-            }
-        }
-
-        public bool IsReunionInstalled
-        {
-            get
-            {
-                return _isReunionInstalled;
-            }
-            set
-            {
-                _isReunionInstalled = value;
                 NotifyPropertyChanged();
             }
         }
@@ -606,6 +556,51 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        /// <summary>
+        /// List of ways to mount disc (matches the order of enum <see cref="MountDiscOption"/>)
+        /// </summary>
+        public List<string> MountOptions
+        {
+            get
+            {
+                // this list matches the order of the mountoption enum
+                return new List<string>()
+                {
+                    "Mount Disc With PowerShell",
+                    "Mount As Virtual Hard Disc"
+                };
+            }
+        }
+
+        public string SelectedMountOption
+        {
+            get
+            {
+                return _selectedMountOption;
+            }
+            set
+            {
+                if (_selectedMountOption != value)
+                {
+                    _selectedMountOption = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public MountDiscOption SelectedMountOptionAsEnum
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(SelectedMountOption))
+                {
+                    return MountDiscOption.Unknown;
+                }
+
+                return (MountDiscOption) MountOptions.IndexOf(SelectedMountOption);
+            }
+        }
+
         #endregion
 
 
@@ -680,36 +675,23 @@ namespace SeventhHeaven.ViewModels
             ProgramList = new ObservableCollection<ProgramToRunViewModel>(Sys.Settings.ProgramsToLaunchPrior.Select(s => new ProgramToRunViewModel(s.PathToProgram, s.ProgramArgs)));
 
             AutoUpdatePathChecked = launchSettings.AutoUpdateDiscPath;
-            Code5FixChecked = launchSettings.Code5Fix;
             HighDpiFixChecked = launchSettings.HighDpiFix;
 
             IsShowLauncherChecked = launchSettings.ShowLauncherWindow;
 
 
-            // disable options to auto-mount if user OS does not support it
-            IsAutoMountSupported = GameLauncher.OSHasAutoMountSupport();
+            IsAutoMountSupported = GameLauncher.OSHasBuiltInMountSupport();
+            AutoMountChecked = launchSettings.AutoMountGameDisc;
+            AutoUnmountChecked = launchSettings.AutoUnmountGameDisc;
 
+            // disable options to select mount method if user OS does not support  (i.e. does not support PowerShell Mount-DiskImage)
             if (IsAutoMountSupported)
             {
-                AutoMountChecked = launchSettings.AutoMountGameDisc;
-                AutoUnmountChecked = launchSettings.AutoUnmountGameDisc;
+                SelectedMountOption = MountOptions[(int)launchSettings.MountingOption];
             }
             else
             {
-                AutoMountChecked = false;
-                AutoUnmountChecked = false;
-            }
-
-            // Have option look unchecked and disabled when user does not have The Reunion installed
-            IsReunionInstalled = GameLauncher.IsReunionModInstalled();
-            if (IsReunionInstalled)
-            {
-                DisableReunionChecked = launchSettings.DisableReunionOnLaunch;
-            }
-            else
-            {
-                DisableReunionChecked = false;
-                IsReunionInstalled = false;
+                SelectedMountOption = MountOptions[(int)MountDiscOption.MountAsVirtualDisk];
             }
 
             SetSelectedSoundDeviceFromSettings(launchSettings);
@@ -764,22 +746,11 @@ namespace SeventhHeaven.ViewModels
                 Sys.Settings.GameLaunchSettings.AutoMountGameDisc = AutoMountChecked;
                 Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc = AutoUnmountChecked;
                 Sys.Settings.GameLaunchSettings.AutoUpdateDiscPath = AutoUpdatePathChecked;
+                Sys.Settings.GameLaunchSettings.MountingOption = SelectedMountOptionAsEnum;
                 Sys.Settings.GameLaunchSettings.ShowLauncherWindow = IsShowLauncherChecked;
 
-                Sys.Settings.GameLaunchSettings.Code5Fix = Code5FixChecked;
                 Sys.Settings.GameLaunchSettings.HighDpiFix = HighDpiFixChecked;
-
-
-                IsReunionInstalled = GameLauncher.IsReunionModInstalled();
-                if (IsReunionInstalled)
-                {
-                    Sys.Settings.GameLaunchSettings.DisableReunionOnLaunch = DisableReunionChecked;
-                }
-                else
-                {
-                    Sys.Settings.GameLaunchSettings.DisableReunionOnLaunch = true; // always have this set to true when Reunion is not installed in case user later installs it
-                }
-
+                Sys.Settings.GameLaunchSettings.DisableReunionOnLaunch = true; // always have this set to true
 
                 Sys.Settings.GameLaunchSettings.SelectedSoundDevice = SoundDeviceGuids[SelectedSoundDevice];
                 Sys.Settings.GameLaunchSettings.SelectedMidiDevice = MidiDeviceMap[SelectedMidiDevice];
@@ -996,27 +967,6 @@ namespace SeventhHeaven.ViewModels
             if (!SelectedRenderer.Equals("Custom 7H Game Driver", StringComparison.InvariantCultureIgnoreCase))
             {
                 MessageDialogWindow.Show(ResourceHelper.Get(StringKey.ChoosingAnyOtherOptionBesidesCustom7HGameDriver), ResourceHelper.Get(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-        }
-
-        private void ShowWarningMessageAbouReunion()
-        {
-            if (!HasLoaded)
-            {
-                // prevent warning from showing when loading settings
-                return;
-            }
-
-            if (GameLauncher.IsReunionModInstalled() && !DisableReunionChecked)
-            {
-                string warningMsg = ResourceHelper.Get(StringKey.ReunionWarningMessage);
-                var result = MessageDialogWindow.Show(warningMsg, ResourceHelper.Get(StringKey.YouShouldLeaveThisSettingOn), MessageBoxButton.YesNo, MessageBoxImage.Warning);
-
-                if (result.Result == MessageBoxResult.No)
-                {
-                    // re-enable option as user selected 'No' in warning message so reverting option
-                    DisableReunionChecked = true;
-                }
             }
         }
 

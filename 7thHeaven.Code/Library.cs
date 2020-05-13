@@ -46,6 +46,11 @@ namespace Iros._7th.Workshop
                 PendingInstall = new List<DownloadItem>();
             }
 
+            if (HasPendingInstall(downloadedItem))
+            {
+                return;
+            }
+
             lock (_pendingLock)
                 PendingInstall.Add(downloadedItem);
         }

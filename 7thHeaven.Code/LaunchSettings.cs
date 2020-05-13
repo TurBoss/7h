@@ -2,14 +2,21 @@
 
 namespace _7thHeaven.Code
 {
+    public enum MountDiscOption
+    {
+        Unknown = -1,
+        MountWithPowerShell = 0,
+        MountAsVirtualDisk = 1
+    }
+
     [Serializable]
     public class LaunchSettings
     {
         public bool AutoMountGameDisc { get; set; }
         public bool AutoUnmountGameDisc { get; set; }
         public bool AutoUpdateDiscPath { get; set; }
+        public MountDiscOption MountingOption { get; set; }
 
-        public bool Code5Fix { get; set; }
         public bool HighDpiFix { get; set; }
         public bool DisableReunionOnLaunch { get; set; }
 
@@ -25,7 +32,6 @@ namespace _7thHeaven.Code
         public bool UseTntGraphicsOption { get; set; }
         public bool QuarterScreenMode { get; set; }
         public bool FullScreenMode { get; set; }
-        public bool HasReceivedCode5Error { get; set; }
         public bool ShowLauncherWindow { get; set; }
 
         public bool HasDisplayedOggMusicWarning { get; set; }
@@ -48,7 +54,6 @@ namespace _7thHeaven.Code
                 AutoMountGameDisc = true,
                 AutoUnmountGameDisc = true,
                 AutoUpdateDiscPath = true,
-                Code5Fix = false,
                 HighDpiFix = false,
                 DisableReunionOnLaunch = true,
                 SelectedSoundDevice = Guid.Empty,
@@ -62,12 +67,12 @@ namespace _7thHeaven.Code
                 UseTntGraphicsOption = false,
                 QuarterScreenMode = false,
                 FullScreenMode = false,
-                HasReceivedCode5Error = false,
                 ShowLauncherWindow = true,
                 InGameConfigOption = "[Default] Playstation+Steam KB.cfg",
                 HasDisplayedOggMusicWarning = false,
                 HasDisplayedMovieWarning = false,
-                EnablePs4ControllerService = false
+                EnablePs4ControllerService = false,
+                MountingOption = MountDiscOption.MountWithPowerShell
             };
         }
     }

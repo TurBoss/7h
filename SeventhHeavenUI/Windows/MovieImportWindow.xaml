@@ -1,0 +1,49 @@
+﻿<Window x:Class="SeventhHeaven.Windows.MovieImportWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SeventhHeaven.Windows"
+        xmlns:cls="clr-namespace:SeventhHeaven.Classes"
+        mc:Ignorable="d"
+        Title="Import Movies From Disc"
+        ResizeMode="NoResize"
+        Style="{StaticResource MainWindowStyle}"
+        Height="250" Width="500">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   VerticalAlignment="Top"
+                   Margin="0,5,0,0"
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"
+                   FontSize="13"
+                   MinHeight="40"
+                   MaxHeight="60"
+                   TextTrimming="CharacterEllipsis"
+                   Text="{Binding ImportStatusMessage, FallbackValue='Copying some movie to this path and this will wrap to test wrapping  '}"/>
+
+        <cls:ButtonWithImage x:Name="btnImportMovies"
+                             IsEnabled="{Binding ImportButtonIsEnabled}"
+                             Click="btnImportMovies_Click"
+                             Grid.Row="1"
+                             FontSize="15"
+                             TemplateSource="{StaticResource iconCD}"
+                             ImageHeight="40"
+                             ImageWidth="40"
+                             HorizontalAlignment="Center"
+                             Margin="0,3,0,0"
+                             Content="{DynamicResource Import}"/>
+
+        <ProgressBar Value="{Binding ImportProgressValue}"
+                     Visibility="{Binding ImportProgressVisibility}"
+                     Grid.Row="2"
+                     HorizontalAlignment="Stretch"
+                     Height="20"/>
+    </Grid>
+</Window>

@@ -679,6 +679,12 @@ namespace SeventhHeavenUI.ViewModels
                 return;
             }
 
+            if (status == ModStatus.PendingInstall)
+            {
+                Sys.Library.AttemptInstalls();
+                return;
+            }
+
             if (status == ModStatus.Installed)
             {
                 InstalledItem installedItem = Sys.Library.GetItem(modToDownload.ID);
@@ -749,7 +755,6 @@ namespace SeventhHeavenUI.ViewModels
             Action onError = () =>
             {
                 RemoveFromDownloadList(downloadInfo);
-                downloadInfo.IProc.Error?.Invoke(new Exception($"{ResourceHelper.Get(StringKey.Failed)} {downloadInfo.ItemName}"));
             };
 
             if (links?.Count() > 1)

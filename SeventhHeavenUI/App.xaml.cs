@@ -76,6 +76,7 @@ namespace SeventhHeavenUI
                             Mod newMod = new Mod()
                             {
                                 Name = parm,
+                                ID = Guid.NewGuid(),
                                 LatestVersion = new ModVersion()
                                 {
                                     Links = new System.Collections.Generic.List<string>() { parm.Replace("iros://mod/", "iros://") },
@@ -84,6 +85,9 @@ namespace SeventhHeavenUI
                             };
 
                             Install.DownloadAndInstall(newMod);
+
+                            MainWindow window = App.Current.MainWindow as MainWindow;
+                            window.ViewModel.SelectedTabIndex = 1;
                         });
                     }
                     else

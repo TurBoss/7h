@@ -13,7 +13,7 @@ namespace _7thHeaven.Code
         public delegate void OnImportProgressChanged(string message, double percentComplete);
         public event OnImportProgressChanged ImportProgressChanged;
 
-        public void Import(string source, string name, bool iroMode, bool noCopy)
+        public Mod Import(string source, string name, bool iroMode, bool noCopy)
         {
             Mod m = ParseModXmlFromSource(source); // this will increment the progress changed value up to 50%
 
@@ -34,7 +34,7 @@ namespace _7thHeaven.Code
                 }
                 else
                 {
-                    // mod is being updated so uninstall current version
+                    // mod is being updated so uninstall current versions
                     Sys.Library.DeleteAndRemoveInstall(existingItem, existingItem.Versions
                                                                                  .Where(v => Path.Combine(Sys.Settings.LibraryLocation, v.InstalledLocation) != source) // ensure we are not deleting the mod file we are trying to import (in the case that the new file is already copied to mods library location)
                                                                                  .Select(v => v.InstalledLocation));
@@ -91,6 +91,7 @@ namespace _7thHeaven.Code
             }
 
             RaiseProgressChanged("Import complete", 100);
+            return m;
         }
 
         /// <summary>
@@ -324,9 +325,9 @@ namespace _7thHeaven.Code
             return parsedMod;
         }
 
-        public static void ImportMod(string source, string name, bool iroMode, bool noCopy)
+        public static Mod ImportMod(string source, string name, bool iroMode, bool noCopy)
         {
-            new ModImporter().Import(source, name, iroMode, noCopy);
+            return new ModImporter().Import(source, name, iroMode, noCopy);
         }
 
         /// <summary>
