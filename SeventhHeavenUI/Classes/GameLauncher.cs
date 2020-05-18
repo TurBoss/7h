@@ -394,7 +394,23 @@ namespace SeventhHeaven.Classes
 
                 Instance.DidMountVirtualDisc = true;
                 Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.LookingForGameDiscAfterMounting));
-                Instance.DriveLetter = GetDriveLetter();
+
+                // when mounting with WinCDEmu it can take a few seconds (anywhere from 1 to 3 seconds from my experience) so add a fallback here to try mounting multiple times instead of once
+                int maxMountAttempts = 5;
+                int currentAttempt = 0;
+
+                do
+                {
+                    Instance.DriveLetter = GetDriveLetter();
+                    currentAttempt++;
+
+                    if (string.IsNullOrEmpty(Instance.DriveLetter))
+                    {
+                        System.Threading.Thread.Sleep(1000); // sleep for a second before looking for the drive letter again
+                    }
+
+                } while (string.IsNullOrEmpty(Instance.DriveLetter) && currentAttempt < maxMountAttempts);
+
 
                 if (string.IsNullOrEmpty(Instance.DriveLetter))
                 {
@@ -502,12 +518,25 @@ namespace SeventhHeaven.Classes
             }
 
             //
-            // Initialize the controller input interceptor and DS4Win service to recognize playstation 4 controller as xbox 360 controller (XInput support)
+            // Initialize the controller input interceptor
             //
 
-            if (Instance._controllerInterceptor == null)
+            if (Sys.Settings.GameLaunchSettings.EnableGamepadPolling)
             {
-                Instance._controllerInterceptor = new ControllerInterceptor();
+                Instance.RaiseProgressChanged("Beginning to poll for gamepad input ...");
+
+                if (Instance._controllerInterceptor == null)
+                {
+                    Instance._controllerInterceptor = new ControllerInterceptor();
+                }
+
+                Instance._controllerInterceptor.PollForGamepadInput().ContinueWith((result) =>
+                {
+                    if (result.IsFaulted)
+                    {
+                        Logger.Error(result.Exception);
+                    }
+                });
             }
 
 
@@ -695,7 +724,7 @@ namespace SeventhHeaven.Classes
                 Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.SettingUpFf7ExeToStopPluginsAndModPrograms));
                 ff7Proc.Exited += (o, e) =>
                 {
-                    if (!IsFF7Running())
+                    if (!IsFF7Running() && Instance._controllerInterceptor != null)
                     {
                         // stop polling for input once all ff7 procs are closed (could be multiple instances open)
                         Instance._controllerInterceptor.PollingInput = false;
@@ -762,15 +791,6 @@ namespace SeventhHeaven.Classes
                     EnableOrDisableReunionMod(doEnable: true);
                 }
 
-                Instance.RaiseProgressChanged("Beginning to poll for gamepad input ...");
-                Instance._controllerInterceptor.PollForGamepadInput().ContinueWith((result) =>
-                {
-                    if (result.IsFaulted)
-                    {
-                        Logger.Error(result.Exception);
-                    }
-                });
-
                 // ensure ff7 window is active at end of launching
                 if (ff7Proc.MainWindowHandle != IntPtr.Zero)
                 {
@@ -789,7 +809,9 @@ namespace SeventhHeaven.Classes
                         ff7Proc.Refresh();
                     }
 
-                    SetForegroundWindow(ff7Proc.MainWindowHandle); // activate window again so it 
+                    ControllerInterceptor.SendVibrationToConnectedController();
+
+                    SetForegroundWindow(ff7Proc.MainWindowHandle); // activate window again
                 }
 
                 return true;
@@ -1003,7 +1025,7 @@ namespace SeventhHeaven.Classes
                 {
                     try
                     {
-                        if (!IsFF7Running())
+                        if (!IsFF7Running() && Instance._controllerInterceptor != null)
                         {
                             // stop polling for input once all ff7 procs are closed (could be multiple instances open)
                             Instance._controllerInterceptor.PollingInput = false;
@@ -1028,7 +1050,7 @@ namespace SeventhHeaven.Classes
                     }
                 };
 
-                Instance._controllerInterceptor.PollForGamepadInput();
+                ControllerInterceptor.SendVibrationToConnectedController();
 
                 return true;
             }
@@ -1472,9 +1494,6 @@ namespace SeventhHeaven.Classes
             SetValueIfChanged(midiKeyPath, "MIDI_data", Sys.Settings.GameLaunchSettings.SelectedMidiDevice);
             SetValueIfChanged(midiVirtualKeyPath, "MIDI_data", Sys.Settings.GameLaunchSettings.SelectedMidiDevice);
 
-            SetValueIfChanged(midiKeyPath, "MusicVolume", Sys.Settings.GameLaunchSettings.MusicVolume, RegistryValueKind.DWord);
-            SetValueIfChanged(midiVirtualKeyPath, "MusicVolume", Sys.Settings.GameLaunchSettings.MusicVolume, RegistryValueKind.DWord);
-
             if (Sys.Settings.GameLaunchSettings.LogarithmicVolumeControl)
             {
                 SetValueIfChanged(midiKeyPath, "Options", 0x00000001, RegistryValueKind.DWord);
@@ -1495,9 +1514,6 @@ namespace SeventhHeaven.Classes
             SetValueIfChanged(soundKeyPath, "Sound_GUID", soundGuidBytes, RegistryValueKind.Binary);
             SetValueIfChanged(soundVirtualKeyPath, "Sound_GUID", soundGuidBytes, RegistryValueKind.Binary);
 
-            SetValueIfChanged(soundKeyPath, "SFXVolume", Sys.Settings.GameLaunchSettings.SfxVolume, RegistryValueKind.DWord);
-            SetValueIfChanged(soundVirtualKeyPath, "SFXVolume", Sys.Settings.GameLaunchSettings.SfxVolume, RegistryValueKind.DWord);
-
             if (Sys.Settings.GameLaunchSettings.ReverseSpeakers)
             {
                 SetValueIfChanged(soundKeyPath, "Options", 0x00000001, RegistryValueKind.DWord);
@@ -1514,33 +1530,18 @@ namespace SeventhHeaven.Classes
         /// Update Registry with new value if it has changed from the current value in the Registry.
         /// Logs the changed value.
         /// </summary>
-        /// <param name="regKeyPath"></param>
-        /// <param name="regValueName"></param>
-        /// <param name="newValue"></param>
-        /// <param name="valueKind"></param>
         private void SetValueIfChanged(string regKeyPath, string regValueName, object newValue, RegistryValueKind valueKind = RegistryValueKind.String)
         {
-            object currentValue = RegistryHelper.GetValue(regKeyPath, regValueName, null);
-            string valueFormatted = newValue?.ToString(); // used to display the object value correctly in the log e.g. for a byte[] convert it to readable string
-            bool isValuesEqual;
-
-            if (newValue is byte[])
+            if (RegistryHelper.SetValueIfChanged(regKeyPath, regValueName, newValue, valueKind))
             {
-                string currentConverted = currentValue == null ? "" : BitConverter.ToString(currentValue as byte[]);
-                string newConverted = newValue == null ? "" : BitConverter.ToString(newValue as byte[]);
+                string valueFormatted = newValue?.ToString(); // used to display the object value correctly in the log i.e. for a byte[] convert it to readable string
 
-                isValuesEqual = currentConverted != null && currentConverted.Equals(newConverted);
-                valueFormatted = newConverted;
-            }
-            else
-            {
-                isValuesEqual = currentValue != null && currentValue.Equals(newValue);
-            }
+                if (newValue is byte[])
+                {
+                    valueFormatted = newValue == null ? "" : BitConverter.ToString(newValue as byte[]);
+                }
 
-            if (!isValuesEqual)
-            {
                 Instance.RaiseProgressChanged($"\t {regKeyPath}::{regValueName} = {valueFormatted}");
-                RegistryHelper.SetValue(regKeyPath, regValueName, newValue, valueKind);
             }
         }
 

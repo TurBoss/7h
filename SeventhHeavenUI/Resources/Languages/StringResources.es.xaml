@@ -1196,6 +1196,22 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="ServiceAlreadyRunning">service already running ...</system:String>
 
     <system:String x:Key="RetryInstallTooltip">Retry Installing Mod</system:String>
+
+    <system:String x:Key="MovieImporter">Movie Importer...</system:String>
+    <system:String x:Key="AllMovieFilesAlreadyImported" xml:space="preserve">Use this tool in the future to import movie files from the original game discs.
     
+All movies already imported!</system:String>
+
+    <system:String x:Key="ImportMoviesFromDisc">Import Movies From Disc</system:String>
+
+    <system:String x:Key="EnableTriggerDpadSupport">Enable DPad and Trigger Support</system:String>
+    <system:String x:Key="TriggerDpadSupportTooltip">Enables DPad and trigger support in-game. (Disable if using a third party mapping tool)</system:String>
+
+    <system:String x:Key="MountDiscWithPowershell">Mount Disc With PowerShell</system:String>
+    <system:String x:Key="MountDiscWithWinCDEmu">Mount Disc With WinCDEmu</system:String>
+
+    <system:String x:Key="LoadingDevices">Loading Devices ...</system:String>
+
+    <system:String x:Key="MountOptionToolTip">Select how to mount the virtual FF7DISC1 game disc. Windows 7 can only use the 'Mount Disc With WinCDEmu' option.</system:String>
 
 </ResourceDictionary>

@@ -615,5 +615,9 @@
         Italian,
         StartingPS4ControllerService,
         ServiceAlreadyRunning,
+        AllMovieFilesAlreadyImported,
+        MountDiscWithPowershell,
+        MountDiscWithWinCDEmu,
+        LoadingDevices,
     }
 }

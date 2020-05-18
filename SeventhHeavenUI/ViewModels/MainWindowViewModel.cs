@@ -1665,6 +1665,7 @@ namespace SeventhHeavenUI.ViewModels
         /// </summary>
         internal void RefreshTranslations()
         {
+            NotifyPropertyChanged(nameof(WindowTitle));
             NotifyPropertyChanged(nameof(UpdateModButtonText));
 
             foreach (var item in MyMods.ModList)
@@ -1677,7 +1678,7 @@ namespace SeventhHeavenUI.ViewModels
                 item.RaiseNotifyPropertyChangedForCategory();
             }
 
-            PreviewModCategory = ResourceHelper.Get(ModLoadOrder.GetCategoryKey(_previewMod.Category));
+            PreviewModCategory = ResourceHelper.Get(ModLoadOrder.GetCategoryKey(_previewMod?.Category));
 
             ReloadAvailableFilters();
         }

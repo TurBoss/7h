@@ -176,8 +176,6 @@ namespace _7thHeaven.Code
                 InstallWinCDEmuDriver();
                 RunWinCDEmuWithArguments(isoPath);
 
-                Thread.Sleep(1000); // sleep for a second after mounting since it takes a second for Windows to recognize the iso as a drive letter
-
                 return true;
             }
             catch (Exception e)

@@ -221,6 +221,7 @@
     <Compile Include="ViewModels\ProgramToRunViewModel.cs" />
     <Compile Include="Classes\SilenceWaveProvider.cs" />
     <Compile Include="ViewModels\DownloadLinkViewModel.cs" />
+    <Compile Include="ViewModels\MovieImportViewModel.cs" />
     <Compile Include="ViewModels\SetLanguageViewModel.cs" />
     <Compile Include="ViewModels\SubscriptionSettingViewModel.cs" />
     <Compile Include="ViewModels\GLSettingViewModel.cs" />

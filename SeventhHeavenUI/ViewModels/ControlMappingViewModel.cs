@@ -53,6 +53,7 @@ namespace SeventhHeaven.ViewModels
         private bool _hasUnsavedChanges;
         private string _selectedGameConfigOption;
 
+        private bool _isTriggerDpadSupportChecked;
         private bool _isPs4SupportChecked;
         private bool _isInstallingDriver;
 
@@ -788,6 +789,28 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public bool IsTriggerDpadSupportChecked
+        {
+            get
+            {
+                return _isTriggerDpadSupportChecked;
+            }
+            set
+            {
+                if (value != _isTriggerDpadSupportChecked)
+                {
+                    _isTriggerDpadSupportChecked = value;
+                    SetGamepadPollingInLaunchSettings();
+
+                    NotifyPropertyChanged();
+                    SetButtonIcon(nameof(UpIcon), LoadedConfiguration.GamepadInputs[GameControl.Up].GamepadInput.Value);
+                    SetButtonIcon(nameof(DownIcon), LoadedConfiguration.GamepadInputs[GameControl.Down].GamepadInput.Value);
+                    SetButtonIcon(nameof(LeftIcon), LoadedConfiguration.GamepadInputs[GameControl.Left].GamepadInput.Value);
+                    SetButtonIcon(nameof(RightIcon), LoadedConfiguration.GamepadInputs[GameControl.Right].GamepadInput.Value);
+                }
+            }
+        }
+
         public ControlMappingViewModel()
         {
             _captureState = CaptureState.NotCapturing;
@@ -803,22 +826,19 @@ namespace SeventhHeaven.ViewModels
                 // default to first option if their previous option is missing
                 _selectedGameConfigOption = InGameConfigOptions[0];
             }
-
+            
+            // setting private variables here so code in property setters are not executed (e.g update sys.settings and ui)
             _isPs4SupportChecked = Sys.Settings.GameLaunchSettings.EnablePs4ControllerService;
+            _isTriggerDpadSupportChecked = Sys.Settings.GameLaunchSettings.EnableGamepadPolling;
 
-            LoadSelectedConfiguration(updateUi: false); // dont set button text/icons until window is loaded
+            LoadSelectedConfiguration();
         }
 
-        private void LoadSelectedConfiguration(bool updateUi = true)
+        private void LoadSelectedConfiguration()
         {
             LoadedConfiguration = ControlMapper.LoadConfigurationFromFile(Path.Combine(Sys.PathToControlsFolder, InGameConfigurationMap[SelectedGameConfigOption]));
-
-            if (updateUi)
-            {
-                UpdateAllButtonText();
-                UpdateAllButtonIcons();
-            }
-
+            UpdateAllButtonText();
+            UpdateAllButtonIcons();
             HasUnsavedChanges = false;
         }
 
@@ -866,6 +886,22 @@ namespace SeventhHeaven.ViewModels
             try
             {
                 Sys.Settings.GameLaunchSettings.EnablePs4ControllerService = IsPs4SupportChecked;
+                Sys.SaveSettings();
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
+        }
+
+        /// <summary>
+        /// Sets the gamepad polling bool in game launch settings and  saves back to <see cref="Sys.Settings.GameLaunchSettings"/>
+        /// </summary>
+        internal void SetGamepadPollingInLaunchSettings()
+        {
+            try
+            {
+                Sys.Settings.GameLaunchSettings.EnableGamepadPolling = IsTriggerDpadSupportChecked;
                 Sys.SaveSettings();
             }
             catch (Exception e)
@@ -1057,6 +1093,12 @@ namespace SeventhHeaven.ViewModels
 
                     if (pressedButton.HasValue)
                     {
+                        // if the user disabled trigger/dpad overrides then don't capture those buttons
+                        if (!IsTriggerDpadSupportChecked && IsTriggerOrDpadButton(pressedButton.Value))
+                        {
+                            continue;
+                        }
+
                         App.Current.Dispatcher.Invoke(() =>
                         {
                             SetControlIfCapturing(pressedButton.Value);
@@ -1067,6 +1109,16 @@ namespace SeventhHeaven.ViewModels
                 }
 
             });
+        }
+
+        private bool IsTriggerOrDpadButton(GamePadButton button)
+        {
+            return button == GamePadButton.LeftTrigger ||
+                   button == GamePadButton.LeftTrigger ||
+                   button == GamePadButton.DPadUp ||
+                   button == GamePadButton.DPadDown ||
+                   button == GamePadButton.DPadLeft ||
+                   button == GamePadButton.DPadRight;
         }
 
         private GamePadButton? GetPressedButton(GamePadState state)
@@ -1364,7 +1416,7 @@ namespace SeventhHeaven.ViewModels
 
             GamePadButton button = newButton.Value;
 
-            if (button == GamePadButton.Up || button == GamePadButton.Down || button == GamePadButton.Left || button == GamePadButton.Right)
+            if (IsTriggerDpadSupportChecked && (button == GamePadButton.Up || button == GamePadButton.Down || button == GamePadButton.Left || button == GamePadButton.Right))
             {
                 // check if dpad is binded to other controls; if not then display the image of the dpad/leftstick together
                 if (LoadedConfiguration.IsButtonBinded(GamePadButton.DPadUp) || LoadedConfiguration.IsButtonBinded(GamePadButton.DPadDown) || LoadedConfiguration.IsButtonBinded(GamePadButton.DPadLeft) || LoadedConfiguration.IsButtonBinded(GamePadButton.DPadRight))

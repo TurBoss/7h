@@ -378,5 +378,10 @@ namespace SeventhHeavenUI
         {
             new ControlMappingWindow().ShowDialog();
         }
+
+        private void menuItemMovieImport_Click(object sender, RoutedEventArgs e)
+        {
+            new MovieImportWindow().ShowDialog();
+        }
     }
 }

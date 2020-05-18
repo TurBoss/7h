@@ -1,6 +1,7 @@
 ﻿using _7thHeaven.Code;
 using SeventhHeaven.Classes;
 using SeventhHeaven.ViewModels;
+using SeventhHeavenUI;
 using SeventhHeavenUI.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
@@ -175,11 +176,6 @@ namespace SeventhHeaven.Windows
             ViewModel.ChangeProgramOrder((lstPrograms.SelectedItem as ProgramToRunViewModel), -1);
         }
 
-        private void btnImportMovies_Click(object sender, RoutedEventArgs e)
-        {
-            ViewModel.ImportMissingMovies();
-        }
-
         private void sliderSfxVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             ShowOrHideToolTip(sliderSfxVolume.ToolTip as ToolTip, true);
@@ -247,14 +243,19 @@ namespace SeventhHeaven.Windows
 
         private void windowSettings_Loaded(object sender, RoutedEventArgs e)
         {
-            // resize window to fit grid contents (can happen when set to another language other than english)
-            double padding = 75; // add to account for padding/margin between two group boxes
+            ResizeWindowToFitContent();
+        }
+
+        /// <summary>
+        /// Resize window to fit grid contents (can happen when set to another language other than english)
+        /// </summary>
+        private void ResizeWindowToFitContent()
+        {
+            double padding = 50; // add to account for padding/margin between two group boxes
             double newWidth = grpOptions.ActualWidth + grpAudio.ActualWidth + padding;
 
-            if (newWidth > this.Width)
-            {
-                this.Width = newWidth;
-            }
+            this.Width = newWidth;
+            txtHint.MaxWidth = this.Width - padding;
         }
     }
 }

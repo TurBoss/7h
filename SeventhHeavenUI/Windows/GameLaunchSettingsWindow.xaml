@@ -62,7 +62,7 @@
 
         <DataTemplate x:Key="rendererItemTemplate">
             <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
-                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedRenderer, FallbackValue='Custom 7H Game Driver'}" Margin="0,0,15,0" TextWrapping="Wrap"/>
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedRenderer, FallbackValue='Custom 7H Game Driver'}" Margin="0,0,15,0" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
             </Grid>
         </DataTemplate>
 
@@ -75,8 +75,8 @@
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1.25*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -92,9 +92,17 @@
                   Margin="0,10,10,0" 
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch">
-            <StackPanel Margin="3" HorizontalAlignment="Right" VerticalAlignment="Top">
+            <Grid Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
                 <ComboBox x:Name="cboMountOptions"
-                          ToolTip="Select how to mount the virtual FF7DISC1"
+                          ToolTip="{DynamicResource MountOptionToolTip}"
                           ToolTipService.IsEnabled="False"
                           MouseEnter="Control_MouseEnter"
                           Style="{StaticResource MainComboBoxStyle}"
@@ -105,30 +113,35 @@
                           ItemsSource="{Binding MountOptions}"
                           HorizontalAlignment="Stretch"
                           VerticalAlignment="Top"
-                          Margin="4,1,0,0"/>
+                          Margin="4,1,0,5"/>
                 <CheckBox Height="25" Content="{DynamicResource AutoMountDisc}" 
+                          Grid.Row="1"
                           IsChecked="{Binding AutoMountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           IsEnabled="{Binding IsAutoMountSupported}"
                           MouseEnter="Control_MouseEnter"
                           ToolTip="{DynamicResource AutoMountDiscTooltip}"/>
                 <CheckBox Height="25" Content="{DynamicResource AutoDismountDisc}" 
+                          Grid.Row="2"
                           IsChecked="{Binding AutoUnmountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           MouseEnter="Control_MouseEnter"
                           IsEnabled="{Binding IsAutoMountSupported}"
                           ToolTip="{DynamicResource AutoDismountDiscTooltip}"/>
                 <CheckBox Height="25" Content="{DynamicResource AutoUpdatePath}" 
+                          Grid.Row="3"
                           IsChecked="{Binding AutoUpdatePathChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           MouseEnter="Control_MouseEnter"
                           ToolTip="{DynamicResource AutoUpdatePathTooltip}"/>
                 <CheckBox Height="25" Content="{DynamicResource ShowGameLauncher}" 
+                          Grid.Row="4"
                           IsChecked="{Binding IsShowLauncherChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           MouseEnter="Control_MouseEnter"
                           ToolTip="{DynamicResource ShowGameLauncherTooltip}"/>
                 <CheckBox Height="25" Content="{DynamicResource HighDpiScalingFix}" 
+                          Grid.Row="5"
                           IsChecked="{Binding HighDpiFixChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           MouseEnter="Control_MouseEnter"
                           ToolTip="{DynamicResource HighDpiScalingFixTooltip}"/>
-            </StackPanel>
+            </Grid>
         </GroupBox>
 
 
@@ -149,7 +162,7 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Text="{DynamicResource SoundDeviceLabel}"
@@ -175,6 +188,7 @@
                               ToolTipService.IsEnabled="False"
                               MouseEnter="Control_MouseEnter"
                               Style="{StaticResource MainComboBoxStyle}"
+                              Width="250"
                               ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
                               ItemTemplate="{StaticResource soundItemTemplate}"
                               SelectedItem="{Binding SelectedSoundDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -324,13 +338,13 @@
                           IsChecked="{Binding IsLogVolumeChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           MouseEnter="Control_MouseEnter"
                           ToolTip="{DynamicResource LogVolumeControlTooltip}"/>
-                <CheckBox Content="{DynamicResource ReverseSpeakers}" 
+                <CheckBox Content="{DynamicResource ReverseSpeakers}"
                           Grid.Row="5"
                           FontSize="13"
                           HorizontalAlignment="Left"
-                          Width="{Binding ElementName=chkLogVolume, Path=ActualWidth}"
                           Margin="3,0,0,0"
                           Grid.ColumnSpan="2"
+                          Width="{Binding ElementName=chkLogVolume, Path=ActualWidth}"
                           IsChecked="{Binding IsReverseSpeakersChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           MouseEnter="Control_MouseEnter"
                           ToolTip="{DynamicResource ReverseSpeakersTooltip}"/>
@@ -345,87 +359,98 @@
                   Margin="10,0,10,0"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch">
-            <StackPanel Margin="3">
 
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+            <Grid Margin="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
 
-                    <TextBlock Text="{DynamicResource RendererLabel}"
-                               Grid.Row="1"
-                               ToolTip="{DynamicResource RendererTooltip}"
-                               ToolTipService.IsEnabled="False"
-                               MouseEnter="Control_MouseEnter"
-                               HorizontalAlignment="Right"
-                               VerticalAlignment="Center"
-                               Margin="0,0,5,5"/>
-                    <ComboBox x:Name="cboRenderers"
-                              Grid.Row="1"
-                              Grid.Column="1"
-                              ToolTip="{DynamicResource RendererTooltip}"
-                              ToolTipService.IsEnabled="False"
-                              MouseEnter="Control_MouseEnter"
-                              Style="{StaticResource MainComboBoxStyle}"
-                              ItemTemplate="{StaticResource rendererItemTemplate}"
-                              ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
-                              SelectedItem="{Binding SelectedRenderer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              ItemsSource="{Binding AvailableRenderers}"
-                              HorizontalAlignment="Stretch"
-                              VerticalAlignment="Center"
-                              Margin="0,1,2,0"/>
-                </Grid>
+                <TextBlock Text="{DynamicResource RendererLabel}"
+                           Grid.Row="0"
+                           ToolTip="{DynamicResource RendererTooltip}"
+                           ToolTipService.IsEnabled="False"
+                           MouseEnter="Control_MouseEnter"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Margin="0,0,5,5"/>
+                <ComboBox x:Name="cboRenderers"
+                          Grid.Row="0"
+                          Grid.Column="1"
+                          ToolTip="{DynamicResource RendererTooltip}"
+                          ToolTipService.IsEnabled="False"
+                          MouseEnter="Control_MouseEnter"
+                          Style="{StaticResource MainComboBoxStyle}"
+                          ItemTemplate="{StaticResource rendererItemTemplate}"
+                          ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
+                          SelectedItem="{Binding SelectedRenderer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          ItemsSource="{Binding AvailableRenderers}"
+                          HorizontalAlignment="Left"
+                          Width="250"
+                          VerticalAlignment="Center"
+                          Margin="0,1,2,0"/>
 
-                <WrapPanel HorizontalAlignment="Stretch" Margin="3,20,3,0">
+                <RadioButton Content="{DynamicResource QuarterScreen}" VerticalAlignment="Center" 
+                             Margin="0,0,0,10"
+                             Grid.Row="2"
+                             GroupName="ScreenMode"
+                             ToolTip="{DynamicResource QuarterScreenTooltip}"
+                             ToolTipService.IsEnabled="False"
+                             MouseEnter="Control_MouseEnter"
+                             FontSize="13"
+                             Visibility="{Binding ScreenModesVisibility}"
+                             IsChecked="{Binding IsQuarterScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <RadioButton Content="{DynamicResource FullScreen}" VerticalAlignment="Center" 
+                             Grid.Row="2"
+                             Grid.Column="1"
+                             Margin="10,0,0,10"
+                             GroupName="ScreenMode"
+                             FontSize="13"
+                             ToolTip="{DynamicResource FullScreenTooltip}"
+                             ToolTipService.IsEnabled="False"
+                             MouseEnter="Control_MouseEnter"
+                             Visibility="{Binding ScreenModesVisibility}"
+                             IsChecked="{Binding IsFullScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <RadioButton Content="{DynamicResource QuarterScreen}" VerticalAlignment="Center" Margin="0,0,0,0"
-                                 GroupName="ScreenMode"
-                                 ToolTip="{DynamicResource QuarterScreenTooltip}"
-                                 ToolTipService.IsEnabled="False"
-                                 MouseEnter="Control_MouseEnter"
-                                 FontSize="13"
-                                 Visibility="{Binding ScreenModesVisibility}"
-                                 IsChecked="{Binding IsQuarterScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <RadioButton Content="{DynamicResource FullScreen}" VerticalAlignment="Center" 
-                                 Margin="8,0,0,0"
-                                 GroupName="ScreenMode"
-                                 FontSize="13"
-                                 ToolTip="{DynamicResource FullScreenTooltip}"
-                                 ToolTipService.IsEnabled="False"
-                                 MouseEnter="Control_MouseEnter"
-                                 Visibility="{Binding ScreenModesVisibility}"
-                                 IsChecked="{Binding IsFullScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </WrapPanel>
+                <RadioButton Content="RIVA 128" VerticalAlignment="Center" 
+                             Margin="0,0,0,5"
+                             Grid.Row="3"
+                             Grid.Column="0"
+                             FontSize="13"
+                             GroupName="GraphicsOption"
+                             ToolTip="{DynamicResource HardwareGraphicsTooltip}"
+                             ToolTipService.IsEnabled="False"
+                             MouseEnter="Control_MouseEnter"
+                             Visibility="{Binding RivaOptionsVisibility}"
+                             IsChecked="{Binding IsRivaOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <RadioButton Content="TNT" VerticalAlignment="Center" 
+                             Margin="10,0,0,5"
+                             Grid.Row="3"
+                             Grid.Column="1"
+                             FontSize="13"
+                             GroupName="GraphicsOption"
+                             ToolTip="{DynamicResource HardwareGraphicsTooltip}"
+                             ToolTipService.IsEnabled="False"
+                             MouseEnter="Control_MouseEnter"
+                             Visibility="{Binding RivaOptionsVisibility}"
+                             IsChecked="{Binding IsTntOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <WrapPanel HorizontalAlignment="Stretch" Margin="3,10,3,0">
-
-                    <RadioButton Content="RIVA 128" VerticalAlignment="Center" Margin="0,0,0,0"
-                                 FontSize="13"
-                                 GroupName="GraphicsOption"
-                                 ToolTip="{DynamicResource HardwareGraphicsTooltip}"
-                                 ToolTipService.IsEnabled="False"
-                                 MouseEnter="Control_MouseEnter"
-                                 Visibility="{Binding RivaOptionsVisibility}"
-                                 IsChecked="{Binding IsRivaOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <RadioButton Content="TNT" VerticalAlignment="Center" Margin="8,0,0,0"
-                                 FontSize="13"
-                                 GroupName="GraphicsOption"
-                                 ToolTip="{DynamicResource HardwareGraphicsTooltip}"
-                                 ToolTipService.IsEnabled="False"
-                                 MouseEnter="Control_MouseEnter"
-                                 Visibility="{Binding RivaOptionsVisibility}"
-                                 IsChecked="{Binding IsTntOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </WrapPanel>
-
-            </StackPanel>
+            </Grid>
         </GroupBox>
 
         <GroupBox x:Name="grpPrograms"
                   Grid.Row="1" 
                   Grid.Column="1" 
-                  Header="{DynamicResource ProgramsToRunHeader}" 
-                  VerticalAlignment="Top"
+                  Header="{DynamicResource ProgramsToRunHeader}"
+                  MinWidth="350"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Bottom"
                   Margin="0,0,10,0">
             <Grid Margin="3">
                 <Grid.RowDefinitions>
@@ -505,6 +530,7 @@
                 <ListBox x:Name="lstPrograms" 
                          Grid.Column="1"
                          Grid.RowSpan="5"
+                         HorizontalAlignment="Stretch"
                          ItemsSource="{Binding ProgramList}" 
                          VirtualizingPanel.IsVirtualizing="false"
                          ItemContainerStyle="{StaticResource programItemStyle}"/>
@@ -512,9 +538,12 @@
             </Grid>
         </GroupBox>
 
-        <TextBlock Grid.Row="2"
+        <TextBlock x:Name="txtHint" 
+                   Grid.Row="2"
                    Grid.ColumnSpan="2"
                    VerticalAlignment="Center"
+                   HorizontalAlignment="Left"
+                   MaxWidth="750"
                    TextWrapping="Wrap"
                    Margin="10,0,10,0"
                    TextTrimming="CharacterEllipsis"

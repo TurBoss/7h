@@ -264,17 +264,6 @@ namespace SeventhHeaven.Windows
 
         #endregion
 
-        private void windowControls_Loaded(object sender, RoutedEventArgs e)
-        {
-            ViewModel.UpdateAllButtonText();
-            ViewModel.UpdateAllButtonIcons();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void btnOpenGameControllersWindow_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.LaunchControlPanelGameControllersWindow();

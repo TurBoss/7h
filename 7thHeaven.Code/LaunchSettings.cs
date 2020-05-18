@@ -24,8 +24,6 @@ namespace _7thHeaven.Code
         public bool LogarithmicVolumeControl { get; set; }
         public Guid SelectedSoundDevice { get; set; }
         public string SelectedMidiDevice { get; set; }
-        public int MusicVolume { get; set; }
-        public int SfxVolume { get; set; }
 
         public int SelectedRenderer { get; set; }
         public bool UseRiva128GraphicsOption { get; set; }
@@ -38,6 +36,11 @@ namespace _7thHeaven.Code
         public bool HasDisplayedMovieWarning { get; set; }
 
         public bool EnablePs4ControllerService { get; set; }
+
+        /// <summary>
+        /// True means that the launcher will poll for input from a gamepad to intercept trigger/dpad presses
+        /// </summary>
+        public bool EnableGamepadPolling { get; set; }
 
 
 
@@ -61,8 +64,6 @@ namespace _7thHeaven.Code
                 LogarithmicVolumeControl = true,
                 SelectedMidiDevice = "GENERAL_MIDI",
                 SelectedRenderer = 3,
-                MusicVolume = 100,
-                SfxVolume = 100,
                 UseRiva128GraphicsOption = false,
                 UseTntGraphicsOption = false,
                 QuarterScreenMode = false,
@@ -72,7 +73,8 @@ namespace _7thHeaven.Code
                 HasDisplayedOggMusicWarning = false,
                 HasDisplayedMovieWarning = false,
                 EnablePs4ControllerService = false,
-                MountingOption = MountDiscOption.MountWithPowerShell
+                MountingOption = MountDiscOption.MountWithPowerShell,
+                EnableGamepadPolling = true
             };
         }
     }

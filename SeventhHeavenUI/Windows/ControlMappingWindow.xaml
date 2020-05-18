@@ -6,7 +6,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         ResizeMode="NoResize"
-        Loaded="windowControls_Loaded"
         mc:Ignorable="d"
         Title="{DynamicResource SetInGameControls}"
         WindowStartupLocation="CenterScreen"
@@ -423,6 +422,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
@@ -469,7 +469,7 @@
 
             <Button x:Name="btnSaveChanges"
                     Grid.Column="4"
-                    Grid.RowSpan="3"
+                    Grid.RowSpan="4"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"
                     ToolTip="{DynamicResource SaveChangesTooltip}"
@@ -479,12 +479,22 @@
                     Content="{DynamicResource Save}"/>
             <Button x:Name="btnCancel"
                     Grid.Column="5"
-                    Grid.RowSpan="3"
+                    Grid.RowSpan="4"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"
                     MinWidth="75"
                     Click="btnCancel_Click"
                     Content="{DynamicResource Close}"/>
+
+            <CheckBox x:Name="chkDpadSupport"
+                      Style="{StaticResource ToggleSwitchCheckbox}"
+                      IsChecked="{Binding IsTriggerDpadSupportChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      FontSize="13"
+                      Content="{DynamicResource EnableTriggerDpadSupport}"
+                      ToolTip="{DynamicResource TriggerDpadSupportTooltip}"
+                      HorizontalAlignment="Left"
+                      Grid.Row="1"
+                      Grid.ColumnSpan="6"/>
 
             <CheckBox Style="{StaticResource ToggleSwitchCheckbox}"
                       IsEnabled="{Binding IsNotInstallingDriver}"
@@ -492,8 +502,9 @@
                       FontSize="13"
                       Content="{DynamicResource EnablePS4ControllerSupport}"
                       ToolTip="{DynamicResource PS4ControllerSupportTooltip}"
+                      Width="{Binding ElementName=chkDpadSupport, Path=ActualWidth}"
                       HorizontalAlignment="Left"
-                      Grid.Row="1"
+                      Grid.Row="2"
                       Grid.ColumnSpan="6"/>
 
             <Button x:Name="btnOpenGameControllersWindow"
@@ -503,7 +514,7 @@
                     Grid.ColumnSpan="4"
                     HorizontalAlignment="Left"
                     FontSize="11"
-                    Grid.Row="2"/>
+                    Grid.Row="3"/>
 
         </Grid>
     </Grid>

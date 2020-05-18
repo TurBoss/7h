@@ -150,16 +150,7 @@ namespace SeventhHeaven.Classes
                     rightIsExtended = loadedConfig.KeyboardInputs[GameControl.Right].KeyIsExtended;
                 }
 
-
                 PlayerIndex? connectedController = GetConnectedController();
-
-                if (connectedController.HasValue)
-                {
-                    // controller is connected so send a little "buzz" for user feedback
-                    GamePad.SetVibration(connectedController.Value, 0.75f, 0.75f);
-                    Thread.Sleep(750);
-                    GamePad.SetVibration(connectedController.Value, 0f, 0f);
-                }
 
                 while (PollingInput)
                 {
@@ -251,5 +242,16 @@ namespace SeventhHeaven.Classes
 
         }
 
+        internal static void SendVibrationToConnectedController(int lengthInMilliseconds = 750)
+        {
+            PlayerIndex? connectedController = GetConnectedController();
+
+            if (connectedController.HasValue)
+            {
+                GamePad.SetVibration(connectedController.Value, 0.75f, 0.75f);
+                Thread.Sleep(lengthInMilliseconds);
+                GamePad.SetVibration(connectedController.Value, 0f, 0f);
+            }
+        }
     }
 }

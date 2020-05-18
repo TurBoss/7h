@@ -6,14 +6,15 @@
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         xmlns:cls="clr-namespace:SeventhHeaven.Classes"
         mc:Ignorable="d"
-        Title="Import Movies From Disc"
+        Title="{DynamicResource ImportMoviesFromDisc}"
+        WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Style="{StaticResource MainWindowStyle}"
         Height="250" Width="500">
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -26,17 +27,18 @@
                    MinHeight="40"
                    MaxHeight="60"
                    TextTrimming="CharacterEllipsis"
-                   Text="{Binding ImportStatusMessage, FallbackValue='Copying some movie to this path and this will wrap to test wrapping  '}"/>
+                   Text="{Binding ImportStatusMessage, FallbackValue='Copying some movie to this path and this will wrap to test wrapping wrap wrap wrap '}"/>
 
         <cls:ButtonWithImage x:Name="btnImportMovies"
                              IsEnabled="{Binding ImportButtonIsEnabled}"
                              Click="btnImportMovies_Click"
                              Grid.Row="1"
-                             FontSize="15"
+                             FontSize="20"
                              TemplateSource="{StaticResource iconCD}"
-                             ImageHeight="40"
-                             ImageWidth="40"
+                             ImageHeight="48"
+                             ImageWidth="48"
                              HorizontalAlignment="Center"
+                             VerticalAlignment="Center"
                              Margin="0,3,0,0"
                              Content="{DynamicResource Import}"/>
 

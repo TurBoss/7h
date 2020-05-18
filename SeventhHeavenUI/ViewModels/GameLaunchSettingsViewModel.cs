@@ -1,5 +1,6 @@
 ﻿using _7thHeaven.Code;
 using Iros._7th.Workshop;
+using Microsoft.Win32;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using SeventhHeaven.Classes;
@@ -61,10 +62,6 @@ namespace SeventhHeaven.ViewModels
         private bool _isQuarterScreenChecked;
         private bool _isFullScreenChecked;
         private bool _isShowLauncherChecked;
-        private string _importStatusMessage;
-        private bool _importButtonIsEnabled;
-        private Visibility _importProgressVisibility;
-        private double _importProgressValue;
         private VolumeSlider _lastVolumeSliderChanged;
         private bool _isSoundDevicesLoaded;
         private string _selectedMountOption;
@@ -491,58 +488,6 @@ namespace SeventhHeaven.ViewModels
 
         private bool HasLoaded { get; set; }
 
-        public string ImportStatusMessage
-        {
-            get
-            {
-                return _importStatusMessage;
-            }
-            set
-            {
-                _importStatusMessage = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public bool ImportButtonIsEnabled
-        {
-            get
-            {
-                return _importButtonIsEnabled;
-            }
-            set
-            {
-                _importButtonIsEnabled = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public Visibility ImportProgressVisibility
-        {
-            get
-            {
-                return _importProgressVisibility;
-            }
-            set
-            {
-                _importProgressVisibility = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public double ImportProgressValue
-        {
-            get
-            {
-                return _importProgressValue;
-            }
-            set
-            {
-                _importProgressValue = value;
-                NotifyPropertyChanged();
-            }
-        }
-
         public VolumeSlider LastVolumeSliderChanged
         {
             get
@@ -566,8 +511,8 @@ namespace SeventhHeaven.ViewModels
                 // this list matches the order of the mountoption enum
                 return new List<string>()
                 {
-                    "Mount Disc With PowerShell",
-                    "Mount Disc With WinCDEmu"
+                    ResourceHelper.Get(StringKey.MountDiscWithPowershell),
+                    ResourceHelper.Get(StringKey.MountDiscWithWinCDEmu)
                 };
             }
         }
@@ -617,48 +562,22 @@ namespace SeventhHeaven.ViewModels
 
 
             // initialize sound devices on background task because it can take up to 1 second to loop over audio devices and get their names
-            SelectedSoundDevice = "Loading Devices ...";
-            Task.Factory.StartNew(() =>
-            {
-                InitSoundDevices();
-                SetSelectedSoundDeviceFromSettings(Sys.Settings.GameLaunchSettings);
-                IsSoundDevicesLoaded = true;
-            });
+            SelectedSoundDevice = ResourceHelper.Get(StringKey.LoadingDevices);
+            InitSoundDevicesAsync();
 
-            InitImportMovieOption();
             InitRenderers();
             InitMidiDevices();
             LoadSettings(Sys.Settings.GameLaunchSettings);
         }
 
-        private void InitImportMovieOption()
+        internal Task InitSoundDevicesAsync()
         {
-            ImportProgressVisibility = Visibility.Hidden;
-            ImportProgressValue = 0;
-            ImportStatusMessage = "";
-            ImportButtonIsEnabled = !GameConverter.AllMovieFilesExist(Sys.Settings.MovieFolder);
-
-            Dictionary<string, string[]> missingMovies = GameConverter.GetMissingMovieFiles(Sys.Settings.MovieFolder);
-
-            if (missingMovies.Count > 0)
+            return Task.Factory.StartNew(() =>
             {
-                List<string> discsToInsert = GetDiscsToInsertForMissingMovies(missingMovies);
-
-                ImportStatusMessage = string.Format(ResourceHelper.Get(StringKey.InsertAndClickImport), discsToInsert[0]);
-            }
-        }
-
-        private List<string> GetDiscsToInsertForMissingMovies(Dictionary<string, string[]> missingMovies)
-        {
-            List<string> discsToInsert = new List<string>();
-            missingMovies.Values.GroupBy(s => s)
-                                .Select(g => g.Key)
-                                .ToList()
-                                .ForEach(s => discsToInsert.AddRange(s)); // add all string[] to one List<string> 
-
-            discsToInsert = discsToInsert.Distinct().OrderBy(s => s).ToList();
-
-            return discsToInsert;
+                InitSoundDevices();
+                SetSelectedSoundDeviceFromSettings(Sys.Settings.GameLaunchSettings);
+                IsSoundDevicesLoaded = true;
+            });
         }
 
         private void LoadSettings(LaunchSettings launchSettings)
@@ -700,8 +619,9 @@ namespace SeventhHeaven.ViewModels
                                               .Select(s => s.Key)
                                               .FirstOrDefault();
 
-            MusicVolumeValue = launchSettings.MusicVolume;
-            SfxVolumeValue = launchSettings.SfxVolume;
+
+            GetVolumesFromRegistry();
+
             IsReverseSpeakersChecked = launchSettings.ReverseSpeakers;
             IsLogVolumeChecked = launchSettings.LogarithmicVolumeControl;
 
@@ -715,6 +635,34 @@ namespace SeventhHeaven.ViewModels
             IsFullScreenChecked = launchSettings.FullScreenMode;
 
             HasLoaded = true;
+        }
+
+        private void GetVolumesFromRegistry()
+        {
+            string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII";
+            string midiKeyPath = $"{ff7KeyPath}\\1.00\\MIDI";
+            string soundKeyPath = $"{ff7KeyPath}\\1.00\\Sound";
+
+            SfxVolumeValue = (int) RegistryHelper.GetValue(soundKeyPath, "SFXVolume", 100);
+            MusicVolumeValue = (int)RegistryHelper.GetValue(midiKeyPath, "MusicVolume", 100);
+        }
+
+        private void SetVolumesInRegistry()
+        {
+            string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII";
+            string midiKeyPath = $"{ff7KeyPath}\\1.00\\MIDI";
+            string soundKeyPath = $"{ff7KeyPath}\\1.00\\Sound";
+
+            string virtualStorePath = $"{RegistryHelper.GetKeyPath(FF7RegKey.VirtualStoreKeyPath)}\\Final Fantasy VII";
+            string midiVirtualKeyPath = $"{virtualStorePath}\\1.00\\MIDI";
+            string soundVirtualKeyPath = $"{virtualStorePath}\\1.00\\Sound";
+
+
+            RegistryHelper.SetValueIfChanged(soundKeyPath, "SFXVolume", SfxVolumeValue, RegistryValueKind.DWord);
+            RegistryHelper.SetValueIfChanged(soundVirtualKeyPath, "SFXVolume", SfxVolumeValue, RegistryValueKind.DWord);
+
+            RegistryHelper.SetValueIfChanged(midiKeyPath, "MusicVolume", MusicVolumeValue, RegistryValueKind.DWord);
+            RegistryHelper.SetValueIfChanged(midiVirtualKeyPath, "MusicVolume", MusicVolumeValue, RegistryValueKind.DWord);
         }
 
         private void SetSelectedSoundDeviceFromSettings(LaunchSettings launchSettings)
@@ -754,10 +702,9 @@ namespace SeventhHeaven.ViewModels
 
                 Sys.Settings.GameLaunchSettings.SelectedSoundDevice = SoundDeviceGuids[SelectedSoundDevice];
                 Sys.Settings.GameLaunchSettings.SelectedMidiDevice = MidiDeviceMap[SelectedMidiDevice];
-                Sys.Settings.GameLaunchSettings.MusicVolume = MusicVolumeValue;
-                Sys.Settings.GameLaunchSettings.SfxVolume = SfxVolumeValue;
                 Sys.Settings.GameLaunchSettings.ReverseSpeakers = IsReverseSpeakersChecked;
                 Sys.Settings.GameLaunchSettings.LogarithmicVolumeControl = IsLogVolumeChecked;
+                SetVolumesInRegistry();
 
                 Sys.Settings.GameLaunchSettings.SelectedRenderer = RendererMap[SelectedRenderer];
                 Sys.Settings.GameLaunchSettings.UseRiva128GraphicsOption = IsRivaOptionChecked;
@@ -1043,149 +990,6 @@ namespace SeventhHeaven.ViewModels
             }
 
             return updatedPrograms;
-        }
-
-        internal void ImportMissingMovies()
-        {
-            string warningMessage = string.Format(ResourceHelper.Get(StringKey.ImportMissingMoviesWarningMessage), Sys.Settings.MovieFolder); 
-            MessageDialogViewModel result = MessageDialogWindow.Show(warningMessage, ResourceHelper.Get(StringKey.Warning), MessageBoxButton.YesNo, MessageBoxImage.Warning);
-
-            if (result.Result == MessageBoxResult.No)
-            {
-                return;
-            }
-
-            ImportButtonIsEnabled = false;
-            ImportProgressVisibility = Visibility.Visible;
-
-            bool cancelProcess = false;
-            int totalFiles = 0;
-            int filesCopied = 0;
-
-            Task importTask = Task.Factory.StartNew(() =>
-            {
-                Dictionary<string, string[]> missingMovies = GameConverter.GetMissingMovieFiles(Sys.Settings.MovieFolder);
-                List<string> discsToInsert = GetDiscsToInsertForMissingMovies(missingMovies);
-
-                totalFiles = missingMovies.Count;
-
-                foreach (string disc in discsToInsert)
-                {
-                    List<string> driveLetters;
-
-                    do
-                    {
-                        SetImportStatus($"{ResourceHelper.Get(StringKey.LookingFor)} {disc} ...");
-                        driveLetters = GameLauncher.GetDriveLetters(disc);
-
-                        if (driveLetters.Count == 0)
-                        {
-                            SetImportStatus(string.Format(ResourceHelper.Get(StringKey.InsertToContinue), disc));
-
-                            App.Current.Dispatcher.Invoke(() =>
-                            {
-                                string discNotFoundMessage = string.Format(ResourceHelper.Get(StringKey.PleaseInsertToContinueCopying), disc);
-                                MessageDialogViewModel insertDiscResult = MessageDialogWindow.Show(discNotFoundMessage, ResourceHelper.Get(StringKey.InsertDisc), MessageBoxButton.OKCancel, MessageBoxImage.Warning);
-
-                                cancelProcess = (insertDiscResult.Result == MessageBoxResult.Cancel);
-                            });
-                        }
-
-                        if (cancelProcess)
-                        {
-                            return;
-                        }
-
-                    } while (driveLetters.Count == 0);
-
-                    SetImportStatus($"{string.Format(ResourceHelper.Get(StringKey.FoundDiscAt), disc)} {string.Join("  ", driveLetters)} ...");
-
-                    // loop over missing files on the found disc and copy to data/movies destination
-                    foreach (string movieFile in missingMovies.Where(kv => kv.Value.Any(s => s.Equals(disc, StringComparison.InvariantCultureIgnoreCase)))
-                                                              .Select(kv => kv.Key))
-                    {
-
-                        foreach (string drive in driveLetters)
-                        {
-                            string fullTargetPath = Path.Combine(Sys.Settings.MovieFolder, movieFile);
-                            string sourceFilePath = Path.Combine(drive, "ff7", "movies", movieFile);
-
-                            if (File.Exists(sourceFilePath))
-                            {
-                                if (File.Exists(fullTargetPath))
-                                {
-                                    SetImportStatus($"{ResourceHelper.Get(StringKey.Overwriting)} {movieFile} ...");
-                                }
-                                else
-                                {
-                                    SetImportStatus($"{ResourceHelper.Get(StringKey.Copying)} {movieFile} ...");
-                                }
-
-                                File.Copy(sourceFilePath, fullTargetPath, true);
-                                filesCopied++;
-                                UpdateImportProgress(filesCopied, totalFiles);
-                                break;
-                            }
-                            else
-                            {
-                                SetImportStatus(string.Format(ResourceHelper.Get(StringKey.FailedToFindAt), movieFile, sourceFilePath));
-                            }
-                        }
-                    }
-                }
-            });
-
-            importTask.ContinueWith((taskResult) =>
-            {
-                if (taskResult.IsFaulted)
-                {
-                    Logger.Error(taskResult.Exception);
-                    SetImportStatus($"{ResourceHelper.Get(StringKey.AnErrorOccurredCopyingMovies)}: {taskResult.Exception.GetBaseException().Message}");
-                }
-                else if (cancelProcess)
-                {
-                    InitImportMovieOption();
-                }
-                else
-                {
-                    if (filesCopied == totalFiles)
-                    {
-                        SetImportStatus(ResourceHelper.Get(StringKey.SuccessfullyCopiedMovies));
-                    }
-                    else
-                    {
-                        SetImportStatus(ResourceHelper.Get(StringKey.FinishedCopyingMoviesSomeFailed));
-                    }
-
-                    ImportButtonIsEnabled = !GameConverter.AllMovieFilesExist(Sys.Settings.MovieFolder);
-                    ImportProgressValue = 0;
-                    ImportProgressVisibility = Visibility.Hidden;
-                }
-            });
-
-        }
-
-        private void SetImportStatus(string message)
-        {
-            ImportStatusMessage = message;
-            Logger.Info(ImportStatusMessage);
-            App.ForceUpdateUI();
-        }
-
-        private void UpdateImportProgress(int copiedCount, int totalCount)
-        {
-            App.Current.Dispatcher.Invoke(() =>
-            {
-                if (totalCount == 0)
-                {
-                    ImportProgressValue = 0;
-                }
-                else
-                {
-                    ImportProgressValue = ((double)copiedCount / (double)totalCount) * 100;
-                }
-                App.ForceUpdateUI();
-            });
         }
 
         internal void ChangeProgramOrder(ProgramToRunViewModel program, int delta)

@@ -326,5 +326,35 @@ namespace _7thHeaven.Code
                 return false;
             }
         }
+
+        /// <summary>
+        /// Update Registry with new value if it has changed from the current value in the Registry.
+        /// Returns true if changed.
+        /// </summary>
+        public static bool SetValueIfChanged(string regKeyPath, string regValueName, object newValue, RegistryValueKind valueKind = RegistryValueKind.String)
+        {
+            object currentValue = GetValue(regKeyPath, regValueName, null);
+            bool isValuesEqual;
+
+            if (newValue is byte[])
+            {
+                string currentConverted = currentValue == null ? "" : BitConverter.ToString(currentValue as byte[]);
+                string newConverted = newValue == null ? "" : BitConverter.ToString(newValue as byte[]);
+
+                isValuesEqual = currentConverted != null && currentConverted.Equals(newConverted);
+            }
+            else
+            {
+                isValuesEqual = currentValue != null && currentValue.Equals(newValue);
+            }
+
+            if (!isValuesEqual)
+            {
+                SetValue(regKeyPath, regValueName, newValue, valueKind);
+                return true;
+            }
+
+            return false;
+        }
     }
 }
