@@ -54,14 +54,14 @@ namespace SeventhHeavenUI.ViewModels
         public SetLanguageViewModel()
         {
             LanguagesMap = new Dictionary<string, string>();
-            LanguagesMap.Add($"{ResourceHelper.Get(StringKey.German)} (Deutsche)", "de");
+            LanguagesMap.Add($"{ResourceHelper.Get(StringKey.BrazilianPortuguese)} (Português Brasileiro)", "pt-BR");
             LanguagesMap.Add($"{ResourceHelper.Get(StringKey.English)} (English)", "en");
-            LanguagesMap.Add($"{ResourceHelper.Get(StringKey.Spanish)} (Español)", "es");
             LanguagesMap.Add($"{ResourceHelper.Get(StringKey.French)} (Français)", "fr");
+            LanguagesMap.Add($"{ResourceHelper.Get(StringKey.German)} (Deutsche)", "de");
             LanguagesMap.Add($"{ResourceHelper.Get(StringKey.Greek)} (Ελληνικά)", "gr");
             LanguagesMap.Add($"{ResourceHelper.Get(StringKey.Italian)} (Italiano)", "it");
+            LanguagesMap.Add($"{ResourceHelper.Get(StringKey.Spanish)} (Español)", "es");
             //LanguagesMap.Add($"{ResourceHelper.Get(StringKey.Japanese)} (\u65e5\u672c\u8a9e)", "ja");
-            LanguagesMap.Add($"{ResourceHelper.Get(StringKey.BrazilianPortuguese)} (Portugues do Brasil)", "pt-BR");
 
 
             string defaultLang = ConfigurationManager.AppSettings["DefaultAppLanguage"];

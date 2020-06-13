@@ -21,7 +21,7 @@ namespace Iros._7th.Workshop
         public event DownloadProgressChangedEventHandler DownloadProgressChanged;
         public event AsyncCompletedEventHandler DownloadFileCompleted;
 
-        private string _file, _url;
+        private string _filePath, _url;
         private int _mode = 0;
         private object _state;
         private CookieContainer _cookies;
@@ -29,16 +29,6 @@ namespace Iros._7th.Workshop
         //0 = Not sure, trying initial download
         //1 = First download completed, HTML detecting, retrying
 
-        private string PathToHtmlFile
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_file))
-                    return "";
-
-                return Path.Combine(Path.GetDirectoryName(_file), Path.GetFileNameWithoutExtension(_file) + ".html");
-            }
-        }
 
         public void CancelAsync()
         {
@@ -126,24 +116,24 @@ namespace Iros._7th.Workshop
             wc.DownloadProgressChanged += wc_DownloadProgressChanged;
             wc.DownloadFileCompleted += wc_DownloadFileCompleted;
 
-            _file = destination;
+            _filePath = destination;
             _url = gUrl;
             _state = userState;
             _webClient = wc;
 
             System.Diagnostics.Debug.WriteLine("GDrive: requesting " + gUrl);
             wc.Headers.Add(HttpRequestHeader.AcceptEncoding, "");
-            wc.DownloadFileAsync(new Uri(gUrl), PathToHtmlFile, userState);
+            wc.DownloadFileAsync(new Uri(gUrl), _filePath, userState);
         }
 
         void wc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             if (e.Error != null || e.Cancelled)
             {
-                if (_mode == 0 && File.Exists(PathToHtmlFile))
+                if (_mode == 0 && File.Exists(_filePath))
                 {
                     // delete temp file that was downloaded when trying to get gdrive direct download url
-                    File.Delete(PathToHtmlFile);
+                    File.Delete(_filePath);
                 }
 
                 DownloadFileCompleted(this, e);
@@ -152,9 +142,9 @@ namespace Iros._7th.Workshop
             {
                 if (_mode == 0)
                 {
-                    if (new FileInfo(PathToHtmlFile).Length < 100 * 1024)
+                    if (new FileInfo(_filePath).Length < 100 * 1024)
                     {
-                        string text = File.ReadAllText(PathToHtmlFile);
+                        string text = File.ReadAllText(_filePath);
                         int html = text.IndexOf("<html", StringComparison.InvariantCultureIgnoreCase);
                         if (html >= 0 && html < 100)
                         {
@@ -175,7 +165,7 @@ namespace Iros._7th.Workshop
 
                                         DownloadItem downloadInfo = _state as DownloadItem;
 
-                                        FileDownloadTask fileDownload = new FileDownloadTask(url, _file, downloadInfo, _cookies)
+                                        FileDownloadTask fileDownload = new FileDownloadTask(url, _filePath, downloadInfo, _cookies)
                                         {
                                             Headers = new WebHeaderCollection()
                                         };
@@ -190,7 +180,7 @@ namespace Iros._7th.Workshop
                                         fileDownload.DownloadProgressChanged += FileDownload_DownloadProgressChanged;
                                         fileDownload.DownloadFileCompleted += wc_DownloadFileCompleted;
 
-                                        System.IO.File.Delete(PathToHtmlFile); // delete temp html file just downloaded
+                                        File.Delete(_filePath); // delete temp html file just downloaded
 
                                         downloadInfo.FileDownloadTask = fileDownload;
 
@@ -217,16 +207,19 @@ namespace Iros._7th.Workshop
                             }
 
                             //If we get here, it went wrong
-                            System.IO.File.Delete(PathToHtmlFile);
+                            File.Delete(_filePath);
                             DownloadFileCompleted?.Invoke(this, new AsyncCompletedEventArgs(new Exception(err), false, _state));
                         }
                         else
                         {
+                            // the file downloaded without being redirected by google (to confirm the download)
+                            CleanUpWebClient();
                             DownloadFileCompleted?.Invoke(this, e);
                         }
                     }
                     else
                     {
+                        CleanUpWebClient();
                         DownloadFileCompleted?.Invoke(this, e);
                     }
                 }

@@ -689,7 +689,10 @@ namespace SeventhHeavenUI.ViewModels
             {
                 InstalledItem installedItem = Sys.Library.GetItem(modToDownload.ID);
 
-                if (installedItem != null && !installedItem.IsUpdateAvailable)
+                bool hasPatches = modToDownload.GetPatchesFromTo(installedItem.LatestInstalled.VersionDetails.Version, modToDownload.LatestVersion.Version).Any();
+
+                // no update is available and no patches available so warn user that latest version is already installed
+                if (installedItem != null && !installedItem.IsUpdateAvailable &&  !hasPatches)
                 {
                     MessageDialogWindow.Show($"{modToDownload.Name} {ResourceHelper.Get(StringKey.IsAlreadyDownloadedAndInstalled)}", ResourceHelper.Get(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;

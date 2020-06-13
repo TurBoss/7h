@@ -1524,6 +1524,19 @@ namespace SeventhHeaven.Classes
                 SetValueIfChanged(soundKeyPath, "Options", 0x00000000, RegistryValueKind.DWord);
                 SetValueIfChanged(soundVirtualKeyPath, "Options", 0x00000000, RegistryValueKind.DWord);
             }
+
+            // Add registry key values for Sound/Music volume if missing from registry (can happen on fresh install)
+            if (RegistryHelper.GetValue(soundKeyPath, "SFXVolume", null) == null || RegistryHelper.GetValue(soundVirtualKeyPath, "SFXVolume", null) == null)
+            {
+                SetValueIfChanged(soundKeyPath, "SFXVolume", 100, RegistryValueKind.DWord);
+                SetValueIfChanged(soundVirtualKeyPath, "SFXVolume", 100, RegistryValueKind.DWord);
+            }
+
+            if (RegistryHelper.GetValue(midiKeyPath, "MusicVolume", null) == null || RegistryHelper.GetValue(midiVirtualKeyPath, "MusicVolume", null) == null)
+            {
+                SetValueIfChanged(midiKeyPath, "MusicVolume", 100, RegistryValueKind.DWord);
+                SetValueIfChanged(midiVirtualKeyPath, "MusicVolume", 100, RegistryValueKind.DWord);
+            }
         }
 
         /// <summary>

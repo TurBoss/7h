@@ -1212,5 +1212,6 @@ All movies already imported!</system:String>
 
     <system:String x:Key="MountOptionToolTip">Select how to mount the virtual FF7DISC1 game disc. Windows 7 can only use the 'Mount Disc With WinCDEmu' option.</system:String>
 
+    <system:String x:Key="ControlsMenuItemText">Comandi...</system:String>
 
 </ResourceDictionary>

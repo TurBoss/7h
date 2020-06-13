@@ -75,7 +75,7 @@ namespace Iros._7th.Workshop
 
                     download.IProc = new PatchModProcedure()
                     {
-                        File = pfile,
+                        Filename = pfile,
                         Install = install,
                         Mod = m,
                         Error = onError
@@ -100,33 +100,13 @@ namespace Iros._7th.Workshop
             {
                 // mod is not installed and the latest version has patches available
                 // so first download and install mod then download all patches for mod
-                PatchController pc = new PatchController(m.LatestVersion.PatchLinks.Count);
 
-                DownloadItem download = new DownloadItem()
-                {
-                    Links = m.LatestVersion.Links,
-                    SaveFilePath = Path.Combine(temppath, file),
-                    ItemName = $"[{StringKey.Downloading}] {m.Name}",
-                    ItemNameTranslationKey = StringKey.Downloading,
-                    Category = DownloadCategory.Mod,
-                    OnCancel = onCancel
-                };
-
-                download.IProc = new DownloadThenPatchProcedure()
-                {
-                    File = file,
-                    Mod = m,
-                    Controller = pc,
-                    Error = onError
-                };
-
-                Sys.Downloads.AddToDownloadQueue(download);
+                DownloadAndInstallMod(m, temppath, file);
 
                 int pCount = 0;
                 foreach (string p in m.LatestVersion.PatchLinks)
                 {
-                    string pfile = String.Format("{0}_{1}_{2}_patch{3}.iro", m.ID, SafeStr(m.Name), m.LatestVersion.Version, pCount);
-                    pc.PatchFiles.Add(pfile);
+                    string pfile = String.Format("{0}_{1}_{2}_patch{3}.irop", m.ID, SafeStr(m.Name), m.LatestVersion.Version, pCount);
 
                     DownloadItem patchDownload = new DownloadItem()
                     {
@@ -135,22 +115,14 @@ namespace Iros._7th.Workshop
                         ItemName = $"[{StringKey.Downloading}] {m.Name} patch {pCount}",
                         ItemNameTranslationKey = StringKey.Downloading,
                         Category = DownloadCategory.Mod,
-                        OnCancel = () =>
-                        {
-                            pc.PatchFailed();
-                            Sys.RevertStatus(m.ID);
-                        }
+                        OnCancel = onCancel
                     };
 
-                    patchDownload.IProc = new DownloadPatchProcedure()
+                    patchDownload.IProc = new PatchModProcedure()
                     {
-                        File = pfile,
-                        Controller = pc,
-                        Error = ex =>
-                        {
-                            pc.PatchFailed();
-                            Sys.RevertStatus(m.ID);
-                        }
+                        Filename = pfile,
+                        Error = onError,
+                        Mod = m
                     };
 
                     Sys.Downloads.AddToDownloadQueue(patchDownload);
@@ -248,184 +220,43 @@ namespace Iros._7th.Workshop
             }
         }
 
-        private class PatchController
-        {
-            private System.Threading.AutoResetEvent _event;
-            private int _pending;
-
-            public List<string> PatchFiles { get; private set; }
-            public PatchController(int numPatches)
-            {
-                _event = new System.Threading.AutoResetEvent(false);
-                _pending = numPatches;
-                PatchFiles = new List<string>();
-            }
-
-            public void PatchReady()
-            {
-                int remaining = System.Threading.Interlocked.Decrement(ref _pending);
-                _event.Set();
-            }
-            public void PatchFailed()
-            {
-                _pending = -1;
-                _event.Set();
-            }
-
-            public bool WaitForPatches()
-            {
-                while (_pending > 0)
-                {
-                    _event.WaitOne();
-                }
-                return _pending == 0;
-            }
-        }
-
-        private class DownloadThenPatchProcedure : InstallProcedure
-        {
-            private string _dest;
-            public string File { get; set; }
-            public Mod Mod { get; set; }
-            public PatchController Controller { get; set; }
-
-            private void ProcessDownload(object state)
-            {
-                try
-                {
-                    string source = System.IO.Path.Combine(Sys.Settings.LibraryLocation, "temp", File);
-                    _dest = System.IO.Path.Combine(Sys.Settings.LibraryLocation, File);
-                    byte[] sig = new byte[4];
-                    using (var iro = new _7thWrapperLib.IrosArc(source, true))
-                    {
-                        if (!iro.CheckValid())
-                            throw new Exception("IRO archive appears to be invalid: corrupted download?");
-                        if (!Controller.WaitForPatches())
-                            throw new Exception("Failed to acquire patches");
-
-                        int numPatch = Controller.PatchFiles.Count;
-                        int pDone = 0;
-                        foreach (string pfile in Controller.PatchFiles)
-                        {
-                            string patchfile = System.IO.Path.Combine(Sys.Settings.LibraryLocation, "temp", pfile);
-                            using (var patch = new _7thWrapperLib.IrosArc(patchfile))
-                            {
-                                iro.ApplyPatch(patch, (d, _) => SetPercentComplete((int)((100 / numPatch) * pDone + 100 * d / numPatch)));
-                            }
-                            pDone++;
-                        }
-                    }
-                    System.IO.File.Move(source, _dest);
-                }
-                catch (Exception e)
-                {
-                    Error(e);
-                    return;
-                }
-                SetPercentComplete(100);
-                Complete();
-            }
-
-            public override void DownloadComplete(System.ComponentModel.AsyncCompletedEventArgs e)
-            {
-                if (e.Error != null)
-                {
-                    Sys.Message(new WMessage($"[{StringKey.ErrorDownloading}] {Mod.Name}", WMessageLogLevel.Error, e.Error) { TextTranslationKey = StringKey.ErrorDownloading });
-                    Sys.RevertStatus(Mod.ID);
-                }
-                else
-                {
-                    //ProcessDownload(file);
-                    var inst = Sys.Library.GetItem(Mod.ID);
-                    if (inst == null)
-                    {
-                        Mod = new ModImporter().ParseModXmlFromSource(_dest, Mod);
-
-                        Sys.Library.AddInstall(new InstalledItem()
-                        {
-                            ModID = Mod.ID,
-                            CachedDetails = Mod,
-                            UpdateType = Sys.Library.DefaultUpdate,
-                            Versions = new List<InstalledVersion>() { new InstalledVersion() { InstalledLocation = System.IO.Path.GetFileName(_dest), VersionDetails = Mod.LatestVersion } }
-                        });
-                        Sys.Message(new WMessage($"[{StringKey.Installed}] {Mod.Name}") { TextTranslationKey = StringKey.Installed });
-                        Sys.SetStatus(Mod.ID, ModStatus.Installed);
-                    }
-                    else
-                    {
-                        inst.CachedDetails = new ModImporter().ParseModXmlFromSource(_dest, Mod);
-                        if (!Sys.Settings.HasOption(GeneralOptions.KeepOldVersions))
-                        {
-                            foreach (string ivfile in inst.Versions.Select(v => v.InstalledLocation))
-                            {
-                                string ifile = System.IO.Path.Combine(Sys.Settings.LibraryLocation, ivfile);
-                                if (System.IO.File.Exists(ifile))
-                                    System.IO.File.Delete(ifile);
-                                else if (System.IO.Directory.Exists(ifile))
-                                    System.IO.Directory.Delete(ifile, true);
-                            }
-                            inst.Versions.Clear();
-                        }
-                        inst.Versions.Add(new InstalledVersion() { InstalledLocation = System.IO.Path.GetFileName(_dest), VersionDetails = Mod.LatestVersion });
-                        Sys.Message(new WMessage($"[{StringKey.Updated}] {Mod.Name}") { TextTranslationKey = StringKey.Updated });
-                        Sys.SetStatus(Mod.ID, ModStatus.Installed);
-                    }
-                    Sys.Save();
-                }
-            }
-
-            public override void Schedule()
-            {
-                System.Threading.ThreadPool.QueueUserWorkItem(ProcessDownload);
-            }
-        }
-
-        private class DownloadPatchProcedure : InstallProcedure
-        {
-            public string File { get; set; }
-            public PatchController Controller { get; set; }
-
-            private void ProcessDownload(object state)
-            {
-                Controller.PatchReady();
-                SetPercentComplete(100);
-                Complete();
-            }
-            public override void Schedule()
-            {
-                System.Threading.ThreadPool.QueueUserWorkItem(ProcessDownload);
-            }
-            public override void DownloadComplete(System.ComponentModel.AsyncCompletedEventArgs e)
-            {
-            }
-        }
-
         private class PatchModProcedure : InstallProcedure
         {
-            public string File { get; set; }
+            public string Filename { get; set; }
             public Mod Mod { get; set; }
             public InstalledItem Install { get; set; }
 
             private void ProcessDownload(object state)
             {
-                string patchfile = System.IO.Path.Combine(Sys.Settings.LibraryLocation, "temp", File);
+                string patchfile = Path.Combine(Sys.Settings.LibraryLocation, "temp", Filename);
                 try
                 {
-                    string source = System.IO.Path.Combine(Sys.Settings.LibraryLocation, Install.LatestInstalled.InstalledLocation);
+                    if (Install == null)
+                    {
+                        Install = Sys.Library.GetItem(Mod.ID);
+                    }
+
+                    string source = Path.Combine(Sys.Settings.LibraryLocation, Install.LatestInstalled.InstalledLocation);
                     using (var iro = new _7thWrapperLib.IrosArc(source, true))
                     {
                         using (var patch = new _7thWrapperLib.IrosArc(patchfile))
                         {
-                            iro.ApplyPatch(patch, (d, _) => SetPercentComplete((int)(100 * d)));
+                            iro.ApplyPatch(patch, (d, msg) =>
+                            {
+                                Sys.Message(new WMessage(msg, WMessageLogLevel.LogOnly));
+                                SetPercentComplete((int)(100 * d));
+                            });
                         }
                     }
+
+                    File.Delete(patchfile);
                 }
                 catch (Exception e)
                 {
                     Error(e);
                     return;
                 }
-                Sys.Library.QueuePendingDelete(new[] { patchfile });
+
                 SetPercentComplete(100);
                 Complete();
             }
@@ -443,11 +274,10 @@ namespace Iros._7th.Workshop
                 }
                 else
                 {
-                    Install.CachedDetails = Mod;
-                    Install.LatestInstalled.VersionDetails = Mod.LatestVersion;
                     Sys.Message(new WMessage($"[{StringKey.Updated}] {Mod.Name}") { TextTranslationKey = StringKey.Updated });
                     Sys.SetStatus(Mod.ID, ModStatus.Installed);
                 }
+
                 Sys.Save();
             }
         }

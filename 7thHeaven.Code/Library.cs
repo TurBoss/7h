@@ -230,9 +230,13 @@ namespace Iros._7th.Workshop
             get
             {
                 Mod cat = Sys.GetModFromCatalog(this.ModID);
-                bool? isAvailable = (cat != null && cat.LatestVersion?.Version > Versions?.Max(v => v.VersionDetails.Version));
 
-                return isAvailable.GetValueOrDefault(false);
+                if (cat == null)
+                {
+                    return false;
+                }
+
+                return cat.LatestVersion?.Version > Versions?.Max(v => v.VersionDetails.Version);
             }
         }
 
