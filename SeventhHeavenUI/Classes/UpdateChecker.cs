@@ -20,9 +20,9 @@ namespace SeventhHeaven.Classes
         /// Link to version xml that provides information about available updates.
         /// </summary>
         /// <remarks>
-        /// This xml is updated from a pastebin link that is maintained by unab0mb
+        /// This xml is updated from the github repo 
         /// </remarks>
-        public const string linkToVersionXml = "https://pastebin.com/raw/4dpJapEH";
+        public const string linkToVersionXml = "https://raw.githubusercontent.com/rodriada000/7h/develop/SeventhHeavenUI/Resources/LatestAvailableUpdate.xml";
         private static UpdateChecker _instance;
 
         public delegate void OnUpdateChecked(bool wasSuccessful);

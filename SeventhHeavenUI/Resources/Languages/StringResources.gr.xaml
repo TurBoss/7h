@@ -1200,9 +1200,7 @@
     <system:String x:Key="RetryInstallTooltip">Retry Installing Mod</system:String>
 
     <system:String x:Key="MovieImporter">Movie Importer...</system:String>
-    <system:String x:Key="AllMovieFilesAlreadyImported" xml:space="preserve">Use this tool in the future to import movie files from the original game discs.
-    
-All movies already imported!</system:String>
+    <system:String x:Key="AllMovieFilesAlreadyImported" xml:space="preserve">All movies already imported!</system:String>
 
     <system:String x:Key="ImportMoviesFromDisc">Import Movies From Disc</system:String>
 

@@ -254,6 +254,10 @@ namespace SeventhHeaven.Windows
             double padding = 50; // add to account for padding/margin between two group boxes
             double newWidth = grpOptions.ActualWidth + grpAudio.ActualWidth + padding;
 
+            // re-position window based on difference between old and new width
+            double deltaX = newWidth - this.Width;
+            this.Left -= deltaX / 2;
+
             this.Width = newWidth;
             txtHint.MaxWidth = this.Width - padding;
         }

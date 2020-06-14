@@ -1211,9 +1211,7 @@ Aktivieren und erneut versuchen?</system:String>
 
 
     <system:String x:Key="MovieImporter">Movies Importierer...</system:String>
-    <system:String x:Key="AllMovieFilesAlreadyImported" xml:space="preserve">Bitte dieses Tool in Zukunft benutzen um Movies von den Spiele CDs zu importieren.
-    
-Es wurden bereits alle Movies importiert!</system:String>
+    <system:String x:Key="AllMovieFilesAlreadyImported" xml:space="preserve">Es wurden bereits alle Movies importiert!</system:String>
 
     <system:String x:Key="ImportMoviesFromDisc">Movies von CD importieren</system:String>
 

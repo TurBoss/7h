@@ -152,6 +152,8 @@ namespace Iros._7th.Workshop {
 
             defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/http$pastebin.com/raw.php?i=QBGsgGK6", Name = "Mods of the Round" });
             defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/http$pastebin.com/raw.php?i=EpQBv5PL", Name = "Qhimm Catalog" });
+            defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/http$pastebin.com/raw.php?i=vXc4PpBS", Name = "Sega Catalog" });
+
 
             defaultSettings.ExtraFolders.Add("direct");
             defaultSettings.ExtraFolders.Add("music");

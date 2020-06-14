@@ -10,7 +10,7 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Style="{StaticResource MainWindowStyle}"
-        Height="250" Width="500">
+        Height="200" Width="500">
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -23,7 +23,7 @@
                    Margin="0,5,0,0"
                    TextWrapping="Wrap"
                    TextAlignment="Center"
-                   FontSize="13"
+                   FontSize="16"
                    MinHeight="40"
                    MaxHeight="60"
                    TextTrimming="CharacterEllipsis"
@@ -43,7 +43,7 @@
                              Content="{DynamicResource Import}"/>
 
         <ProgressBar Value="{Binding ImportProgressValue}"
-                     Visibility="{Binding ImportProgressVisibility}"
+                     Visibility="Visible"
                      Grid.Row="2"
                      HorizontalAlignment="Stretch"
                      Height="20"/>

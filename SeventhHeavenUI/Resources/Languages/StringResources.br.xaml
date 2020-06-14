@@ -1197,9 +1197,7 @@ Você quer aplicar essa configuração e tentar de novo?</system:String>
     <system:String x:Key="RetryInstallTooltip">Tentar Instalar Mod Novamente</system:String>
 
     <system:String x:Key="MovieImporter">Importador de Filmes...</system:String>
-    <system:String x:Key="AllMovieFilesAlreadyImported" xml:space="preserve">Use esta ferramenta no futuro para importar arquivos de filmes dos discos de jogo originais.
-    
-Todos os filmes já importados!</system:String>
+    <system:String x:Key="AllMovieFilesAlreadyImported" xml:space="preserve">Todos os filmes já importados!</system:String>
 
     <system:String x:Key="ImportMoviesFromDisc">Importar Filmes do Disco</system:String>
 
