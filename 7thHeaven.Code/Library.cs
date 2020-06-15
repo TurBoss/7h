@@ -96,7 +96,7 @@ namespace Iros._7th.Workshop
             _lookup[ii.ModID] = ii;
             PendingDelete.RemoveAll(s => s.Equals(ii.LatestInstalled.InstalledLocation, StringComparison.InvariantCultureIgnoreCase));
             Sys.SetStatus(ii.ModID, ModStatus.Installed);
-            Sys.Save();
+            Sys.SaveLibrary();
         }
 
         public void RemoveInstall(InstalledItem ii)
@@ -105,7 +105,7 @@ namespace Iros._7th.Workshop
             if (exist != null) Items.Remove(exist);
             _lookup.Remove(ii.ModID);
             Sys.SetStatus(ii.ModID, ModStatus.NotInstalled);
-            Sys.Save();
+            Sys.SaveLibrary();
         }
 
         public void DeleteAndRemoveInstall(InstalledItem ii)
@@ -154,7 +154,10 @@ namespace Iros._7th.Workshop
                     PendingDelete.RemoveAt(i);
                 }
 
-                if (oldCount != PendingDelete.Count) Sys.Save();
+                if (oldCount != PendingDelete.Count)
+                {
+                    Sys.SaveLibrary();
+                }
             }
         }
 

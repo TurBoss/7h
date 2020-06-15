@@ -68,7 +68,7 @@ namespace Iros._7th.Workshop
                         Links = patches.Select(p => p.Link).ToList(),
                         SaveFilePath = Path.Combine(temppath, pfile),
                         Category = DownloadCategory.Mod,
-                        ItemName = $"[{StringKey.Downloading}] {m.Name}",
+                        ItemName = $"[{StringKey.Downloading}] {m.Name} patch {install.LatestInstalled.VersionDetails.Version} -> {m.LatestVersion.Version}",
                         ItemNameTranslationKey = StringKey.Downloading,
                         OnCancel = onCancel
                     };
@@ -93,10 +93,9 @@ namespace Iros._7th.Workshop
             }
 
 
-
             Sys.SetStatus(m.ID, ModStatus.Downloading);
 
-            if (m.LatestVersion.PatchLinks.Any())
+            if (m.Patches.Any())
             {
                 // mod is not installed and the latest version has patches available
                 // so first download and install mod then download all patches for mod
@@ -104,15 +103,15 @@ namespace Iros._7th.Workshop
                 DownloadAndInstallMod(m, temppath, file);
 
                 int pCount = 0;
-                foreach (string p in m.LatestVersion.PatchLinks)
+                foreach (IGrouping<decimal, ModPatch> linksPerVersion in m.Patches.GroupBy(mp => mp.VerTo))
                 {
                     string pfile = String.Format("{0}_{1}_{2}_patch{3}.irop", m.ID, SafeStr(m.Name), m.LatestVersion.Version, pCount);
 
                     DownloadItem patchDownload = new DownloadItem()
                     {
-                        Links = new List<string>() { p },
+                        Links = linksPerVersion.Select(mp => mp.Link).ToList(),
                         SaveFilePath = Path.Combine(temppath, pfile),
-                        ItemName = $"[{StringKey.Downloading}] {m.Name} patch {pCount}",
+                        ItemName = $"[{StringKey.Downloading}] {m.Name} patch {linksPerVersion.Key}",
                         ItemNameTranslationKey = StringKey.Downloading,
                         Category = DownloadCategory.Mod,
                         OnCancel = onCancel
@@ -234,6 +233,13 @@ namespace Iros._7th.Workshop
                     if (Install == null)
                     {
                         Install = Sys.Library.GetItem(Mod.ID);
+
+                        if (Install == null)
+                        {
+                            // don't go any further since mod is not installed
+                            Error(new Exception($"{Mod.Name} not installed"));
+                            return;
+                        }
                     }
 
                     string source = Path.Combine(Sys.Settings.LibraryLocation, Install.LatestInstalled.InstalledLocation);
@@ -274,11 +280,20 @@ namespace Iros._7th.Workshop
                 }
                 else
                 {
+                    // update the cached mod details by re-reading the mod.xml
+                    string sourceFileName = Install.LatestInstalled.InstalledLocation;
+                    string sourcePath = Path.Combine(Sys.Settings.LibraryLocation, sourceFileName);
+                    Mod updatedMod = new ModImporter().ParseModXmlFromSource(sourcePath, Mod);
+
+                    Install.CachedDetails = updatedMod;
+                    Install.Versions.Clear();
+                    Install.Versions.Add(new InstalledVersion() { VersionDetails = updatedMod.LatestVersion, InstalledLocation = sourceFileName });
+
                     Sys.Message(new WMessage($"[{StringKey.Updated}] {Mod.Name}") { TextTranslationKey = StringKey.Updated });
                     Sys.SetStatus(Mod.ID, ModStatus.Installed);
                 }
 
-                Sys.Save();
+                Sys.SaveLibrary();
             }
         }
 
@@ -425,7 +440,7 @@ namespace Iros._7th.Workshop
                 }
 
                 Sys.SetStatus(Mod.ID, ModStatus.Installed);
-                Sys.Save();
+                Sys.SaveLibrary();
             }
 
             public override void Schedule()

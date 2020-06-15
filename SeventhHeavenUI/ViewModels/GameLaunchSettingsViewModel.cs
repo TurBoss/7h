@@ -712,7 +712,7 @@ namespace SeventhHeaven.ViewModels
                 Sys.Settings.GameLaunchSettings.QuarterScreenMode = IsQuarterScreenChecked;
                 Sys.Settings.GameLaunchSettings.FullScreenMode = IsFullScreenChecked;
 
-                Sys.Save();
+                Sys.SaveSettings();
 
                 Sys.Message(new WMessage(ResourceHelper.Get(StringKey.GameLauncherSettingsUpdated)));
                 return true;

@@ -1022,7 +1022,7 @@ namespace SeventhHeavenUI.ViewModels
             {
                 Sys.ActiveProfile = new Profile();
                 Sys.Settings.CurrentProfile = "Default";
-                Sys.Save();
+                Sys.SaveSettings();
 
                 CurrentProfile = Sys.Settings.CurrentProfile;
             }
@@ -1198,7 +1198,7 @@ namespace SeventhHeavenUI.ViewModels
                     {
                         // set settings to turn off warning
                         Sys.Settings.RemoveOption(GeneralOptions.WarnAboutModCode);
-                        Sys.Save();
+                        Sys.SaveSettings();
                     }
 
                     if (warningWindow.ViewModel.YesRadioButtonIsChecked)
