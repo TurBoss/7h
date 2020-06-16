@@ -281,12 +281,6 @@ namespace Iros._7th.Workshop
                     _infoCache.Add(pathToModFileOrFolder, info);
                 }
             }
-            catch (VariableAliasNotFoundException aex)
-            {
-                // this exception occurrs when the variable alias is not found in .var file which causes ModInfo not to be captured completely. warn user and return null
-                Sys.Message(new WMessage($"[{StringKey.FailedToGetModInfoDueToMissingVariable}]: {aex.Message}", true) { TextTranslationKey = StringKey.FailedToGetModInfoDueToMissingVariable, LoggedException = aex });
-                return null;
-            }
             catch (Exception ex)
             {
                 Sys.Message(new WMessage($"WARNING: failed to get mod info due to unknown exception (commonly caused by incorrect xml): {ex.Message}", WMessageLogLevel.LogOnly, ex));

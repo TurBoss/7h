@@ -396,7 +396,7 @@ namespace SeventhHeaven.Classes
                 Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.LookingForGameDiscAfterMounting));
 
                 // when mounting with WinCDEmu it can take a few seconds (anywhere from 1 to 3 seconds from my experience) so add a fallback here to try mounting multiple times instead of once
-                int maxMountAttempts = 5;
+                int maxMountAttempts = 15;
                 int currentAttempt = 0;
 
                 do
@@ -881,11 +881,6 @@ namespace SeventhHeaven.Classes
                 runtimeMods = Sys.ActiveProfile.ActiveItems.Select(i => i.GetRuntime(Sys._context))
                                                            .Where(i => i != null)
                                                            .ToList();
-            }
-            catch (VariableAliasNotFoundException aex)
-            {
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.FailedToGetListOfRuntimeMods)}: {aex.Message}", NLog.LogLevel.Error);
-                return null;
             }
             catch (Exception)
             {

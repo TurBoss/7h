@@ -174,7 +174,7 @@ namespace _7thHeaven.Code
                 }
 
                 InstallWinCDEmuDriver();
-                RunWinCDEmuWithArguments(isoPath);
+                RunWinCDEmuWithArguments($"\"{isoPath}\"");
 
                 return true;
             }
@@ -232,7 +232,7 @@ namespace _7thHeaven.Code
                 WorkingDirectory = Path.GetDirectoryName(Sys.PathToWinCDEmuExe),
                 UseShellExecute = false,
                 CreateNoWindow = true,
-                WindowStyle = ProcessWindowStyle.Hidden
+                WindowStyle = ProcessWindowStyle.Normal
             };
 
             using (Process winCd = Process.Start(startInfo))

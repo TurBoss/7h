@@ -1211,10 +1211,6 @@ namespace _7thWrapperLib
                 // replace friendly name of variable with alias if found e.g. "Byte:0xDC08EB"
                 _var = varAlias;
             }
-            else
-            {
-                throw new VariableAliasNotFoundException($"The variable {_var} was not found in the 7thHeaven.var file");
-            }
 
             _values = source.Attributes["Values"].InnerText;
             _eval = RuntimeVar.MakeRuntimeVar(_var, _values);
