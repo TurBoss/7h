@@ -102,8 +102,8 @@
     <system:String x:Key="Close">Fermez</system:String>
     <system:String x:Key="Yes">Oui</system:String>
     <system:String x:Key="No">Non</system:String>
-    <system:String x:Key="Off">Arrêt</system:String>
-    <system:String x:Key="On">Marche</system:String>
+    <system:String x:Key="Off">Non</system:String>
+    <system:String x:Key="On">Oui</system:String>
     <system:String x:Key="ResetDefaults">Réinitialisation des Paramètres par Défaut</system:String>
     <system:String x:Key="Save">Sauvegardez</system:String>
     <system:String x:Key="Load">Chargement</system:String>

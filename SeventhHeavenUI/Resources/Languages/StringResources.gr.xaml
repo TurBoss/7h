@@ -102,8 +102,8 @@
     <system:String x:Key="Close">Κλείσιμο</system:String>
     <system:String x:Key="Yes">Ναι</system:String>
     <system:String x:Key="No">Οχι</system:String>
-    <system:String x:Key="Off">Κλειστό</system:String>
-    <system:String x:Key="On">Ανοιχτό</system:String>
+    <system:String x:Key="Off">Οχι</system:String>
+    <system:String x:Key="On">Ναι</system:String>
     <system:String x:Key="ResetDefaults">Επαναφορά Προκαθορισμένων</system:String>
     <system:String x:Key="Save">Αποθήκευση</system:String>
     <system:String x:Key="Load">Επαναφορά</system:String>

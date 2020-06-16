@@ -102,8 +102,8 @@
     <system:String x:Key="Close">Fechar</system:String>
     <system:String x:Key="Yes">Sim</system:String>
     <system:String x:Key="No">Não</system:String>
-    <system:String x:Key="Off">Desligado</system:String>
-    <system:String x:Key="On">Ligado</system:String>
+    <system:String x:Key="Off">Não</system:String>
+    <system:String x:Key="On">Sim</system:String>
     <system:String x:Key="ResetDefaults">Restaurar Padrões</system:String>
     <system:String x:Key="Save">Salvar</system:String>
     <system:String x:Key="Load">Carregar</system:String>
