@@ -178,19 +178,6 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-        public bool HighDpiFixChecked
-        {
-            get
-            {
-                return _highDpiFixChecked;
-            }
-            set
-            {
-                _highDpiFixChecked = value;
-                NotifyPropertyChanged();
-            }
-        }
-
         public bool IsReverseSpeakersChecked
         {
             get
@@ -213,80 +200,6 @@ namespace SeventhHeaven.ViewModels
             set
             {
                 _isLogVolumeChecked = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public bool IsRivaOptionChecked
-        {
-            get
-            {
-                return _isRivaOptionChecked;
-            }
-            set
-            {
-                _isRivaOptionChecked = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public Visibility RivaOptionsVisibility
-        {
-            get
-            {
-                if (SelectedRenderer == "Direct3D Hardware Acceleration")
-                    return Visibility.Visible;
-
-                return Visibility.Hidden;
-            }
-        }
-
-        public bool IsTntOptionChecked
-        {
-            get
-            {
-                return _isTntOptionChecked;
-            }
-            set
-            {
-                _isTntOptionChecked = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public Visibility ScreenModesVisibility
-        {
-            get
-            {
-                if (SelectedRenderer != "Custom 7H Game Driver")
-                    return Visibility.Visible;
-
-                return Visibility.Hidden;
-            }
-        }
-
-        public bool IsQuarterScreenChecked
-        {
-            get
-            {
-                return _isQuarterScreenChecked;
-            }
-            set
-            {
-                _isQuarterScreenChecked = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public bool IsFullScreenChecked
-        {
-            get
-            {
-                return _isFullScreenChecked;
-            }
-            set
-            {
-                _isFullScreenChecked = value;
                 NotifyPropertyChanged();
             }
         }
@@ -336,44 +249,6 @@ namespace SeventhHeaven.ViewModels
         }
 
         public Dictionary<string, string> MidiDeviceMap { get; set; }
-
-        public string SelectedRenderer
-        {
-            get
-            {
-                return _selectedRenderer;
-            }
-            set
-            {
-                _selectedRenderer = value;
-                NotifyPropertyChanged();
-                NotifyPropertyChanged(nameof(RivaOptionsVisibility));
-                NotifyPropertyChanged(nameof(ScreenModesVisibility));
-
-                // ensure atleast one radio button is checked when changing renderer
-                if (!IsTntOptionChecked && !IsRivaOptionChecked)
-                {
-                    IsTntOptionChecked = true;
-                }
-
-                if (!IsQuarterScreenChecked && !IsFullScreenChecked)
-                {
-                    IsFullScreenChecked = true;
-                }
-
-                ShowWarningMessageAboutRenderer();
-            }
-        }
-
-        public List<string> AvailableRenderers
-        {
-            get
-            {
-                return RendererMap?.Keys.ToList();
-            }
-        }
-
-        public Dictionary<string, int> RendererMap { get; set; }
 
         public int MusicVolumeValue
         {
@@ -561,11 +436,10 @@ namespace SeventhHeaven.ViewModels
             LastVolumeSliderChanged = VolumeSlider.Music;
 
 
-            // initialize sound devices on background task because it can take up to 1 second to loop over audio devices and get their names
+            // initialize sound devices on background task because it can take up to 1-3 seconds to loop over audio devices and get their names
             SelectedSoundDevice = ResourceHelper.Get(StringKey.LoadingDevices);
             InitSoundDevicesAsync();
 
-            InitRenderers();
             InitMidiDevices();
             LoadSettings(Sys.Settings.GameLaunchSettings);
         }
@@ -594,7 +468,6 @@ namespace SeventhHeaven.ViewModels
             ProgramList = new ObservableCollection<ProgramToRunViewModel>(Sys.Settings.ProgramsToLaunchPrior.Select(s => new ProgramToRunViewModel(s.PathToProgram, s.ProgramArgs)));
 
             AutoUpdatePathChecked = launchSettings.AutoUpdateDiscPath;
-            HighDpiFixChecked = launchSettings.HighDpiFix;
 
             IsShowLauncherChecked = launchSettings.ShowLauncherWindow;
 
@@ -624,15 +497,6 @@ namespace SeventhHeaven.ViewModels
 
             IsReverseSpeakersChecked = launchSettings.ReverseSpeakers;
             IsLogVolumeChecked = launchSettings.LogarithmicVolumeControl;
-
-            SelectedRenderer = RendererMap.Where(s => s.Value == launchSettings.SelectedRenderer)
-                                          .Select(s => s.Key)
-                                          .FirstOrDefault();
-
-            IsRivaOptionChecked = launchSettings.UseRiva128GraphicsOption;
-            IsTntOptionChecked = launchSettings.UseTntGraphicsOption;
-            IsQuarterScreenChecked = launchSettings.QuarterScreenMode;
-            IsFullScreenChecked = launchSettings.FullScreenMode;
 
             HasLoaded = true;
         }
@@ -697,7 +561,6 @@ namespace SeventhHeaven.ViewModels
                 Sys.Settings.GameLaunchSettings.MountingOption = SelectedMountOptionAsEnum;
                 Sys.Settings.GameLaunchSettings.ShowLauncherWindow = IsShowLauncherChecked;
 
-                Sys.Settings.GameLaunchSettings.HighDpiFix = HighDpiFixChecked;
                 Sys.Settings.GameLaunchSettings.DisableReunionOnLaunch = true; // always have this set to true
 
                 Sys.Settings.GameLaunchSettings.SelectedSoundDevice = SoundDeviceGuids[SelectedSoundDevice];
@@ -705,12 +568,6 @@ namespace SeventhHeaven.ViewModels
                 Sys.Settings.GameLaunchSettings.ReverseSpeakers = IsReverseSpeakersChecked;
                 Sys.Settings.GameLaunchSettings.LogarithmicVolumeControl = IsLogVolumeChecked;
                 SetVolumesInRegistry();
-
-                Sys.Settings.GameLaunchSettings.SelectedRenderer = RendererMap[SelectedRenderer];
-                Sys.Settings.GameLaunchSettings.UseRiva128GraphicsOption = IsRivaOptionChecked;
-                Sys.Settings.GameLaunchSettings.UseTntGraphicsOption = IsTntOptionChecked;
-                Sys.Settings.GameLaunchSettings.QuarterScreenMode = IsQuarterScreenChecked;
-                Sys.Settings.GameLaunchSettings.FullScreenMode = IsFullScreenChecked;
 
                 Sys.SaveSettings();
 
@@ -772,16 +629,6 @@ namespace SeventhHeaven.ViewModels
                 { "General MIDI", "GENERAL_MIDI" },
                 { "Soundfont MIDI (Creative AWE32/AWE64)", "SOUNDFONT_MIDI" },
                 { "Yamaha XG MIDI", "YAMAHA_XG" }
-            };
-        }
-
-        private void InitRenderers()
-        {
-            RendererMap = new Dictionary<string, int>()
-            {
-                { "Software Renderer", 0 },
-                { "Direct3D Hardware Acceleration", 1 },
-                { "Custom 7H Game Driver", 3 }
             };
         }
 
@@ -897,23 +744,6 @@ namespace SeventhHeaven.ViewModels
 
                 NotifyPropertyChanged(nameof(IsAudioPlaying));
                 NotifyPropertyChanged(nameof(IsAudioNotPlaying));
-            }
-        }
-
-        /// <summary>
-        /// Shows warning message dialog to user if <see cref="SelectedRenderer"/> is not set to "Custom 7H Game Driver"
-        /// </summary>
-        private void ShowWarningMessageAboutRenderer()
-        {
-            if (!HasLoaded)
-            {
-                // prevent warning from showing when loading settings
-                return;
-            }
-
-            if (!SelectedRenderer.Equals("Custom 7H Game Driver", StringComparison.InvariantCultureIgnoreCase))
-            {
-                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.ChoosingAnyOtherOptionBesidesCustom7HGameDriver), ResourceHelper.Get(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 

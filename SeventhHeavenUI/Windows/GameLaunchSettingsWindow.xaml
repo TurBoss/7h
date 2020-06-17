@@ -14,8 +14,8 @@
         Loaded="windowSettings_Loaded"
         ResizeMode="NoResize"
         Title="{DynamicResource GameLauncherSettings}" 
-        Width="820"
-        Height="510">
+        Width="470"
+        Height="710">
     <Window.Resources>
 
         <DataTemplate x:Key="programItem">
@@ -74,84 +74,22 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <GroupBox x:Name="grpOptions"
-                  Grid.Column="1"
-                  Grid.Row="0"
-                  Header="{DynamicResource OptionsHeader}" 
-                  Margin="0,10,10,0" 
-                  HorizontalAlignment="Stretch"
-                  VerticalAlignment="Stretch">
-            <Grid Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <ComboBox x:Name="cboMountOptions"
-                          ToolTip="{DynamicResource MountOptionToolTip}"
-                          ToolTipService.IsEnabled="False"
-                          MouseEnter="Control_MouseEnter"
-                          Style="{StaticResource MainComboBoxStyle}"
-                          IsEnabled="{Binding IsAutoMountSupported}"
-                          ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
-                          ItemTemplate="{StaticResource mountItemTemplate}"
-                          SelectedItem="{Binding SelectedMountOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          ItemsSource="{Binding MountOptions}"
-                          HorizontalAlignment="Stretch"
-                          VerticalAlignment="Top"
-                          Margin="4,1,0,5"/>
-                <CheckBox Height="25" Content="{DynamicResource AutoMountDisc}" 
-                          Grid.Row="1"
-                          IsChecked="{Binding AutoMountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          IsEnabled="{Binding IsAutoMountSupported}"
-                          MouseEnter="Control_MouseEnter"
-                          ToolTip="{DynamicResource AutoMountDiscTooltip}"/>
-                <CheckBox Height="25" Content="{DynamicResource AutoDismountDisc}" 
-                          Grid.Row="2"
-                          IsChecked="{Binding AutoUnmountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          MouseEnter="Control_MouseEnter"
-                          IsEnabled="{Binding IsAutoMountSupported}"
-                          ToolTip="{DynamicResource AutoDismountDiscTooltip}"/>
-                <CheckBox Height="25" Content="{DynamicResource AutoUpdatePath}" 
-                          Grid.Row="3"
-                          IsChecked="{Binding AutoUpdatePathChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          MouseEnter="Control_MouseEnter"
-                          ToolTip="{DynamicResource AutoUpdatePathTooltip}"/>
-                <CheckBox Height="25" Content="{DynamicResource ShowGameLauncher}" 
-                          Grid.Row="4"
-                          IsChecked="{Binding IsShowLauncherChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          MouseEnter="Control_MouseEnter"
-                          ToolTip="{DynamicResource ShowGameLauncherTooltip}"/>
-                <CheckBox Height="25" Content="{DynamicResource HighDpiScalingFix}" 
-                          Grid.Row="5"
-                          IsChecked="{Binding HighDpiFixChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          MouseEnter="Control_MouseEnter"
-                          ToolTip="{DynamicResource HighDpiScalingFixTooltip}"/>
-            </Grid>
-        </GroupBox>
-
-
         <GroupBox x:Name="grpAudio"
                   Grid.Row="0"
                   Grid.Column="0"
-                  Header="{DynamicResource AudioDeviceHeader}" Margin="10,10,10,0" 
+                  Header="{DynamicResource AudioDeviceHeader}" 
+                  Margin="10,5,10,0" 
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Top">
-            <Grid Margin="3">
+            <Grid Margin="3" x:Name="gridAudio">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -352,107 +290,74 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox x:Name="grpVideo"
-                  Grid.Row="1"
+        
+        <GroupBox x:Name="grpOptions"
                   Grid.Column="0"
-                  Header="{DynamicResource GraphicsDriverHeader}" 
-                  Margin="10,0,10,0"
+                  Grid.Row="1"
+                  Header="{DynamicResource OptionsHeader}" 
+                  Margin="10,0,10,0" 
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch">
-
-            <Grid Margin="3">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
+            <Grid x:Name="gridOptions"
+                  Margin="3" 
+                  HorizontalAlignment="Stretch" 
+                  VerticalAlignment="Top">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-
-                <TextBlock Text="{DynamicResource RendererLabel}"
-                           Grid.Row="0"
-                           ToolTip="{DynamicResource RendererTooltip}"
-                           ToolTipService.IsEnabled="False"
-                           MouseEnter="Control_MouseEnter"
-                           HorizontalAlignment="Right"
-                           VerticalAlignment="Center"
-                           Margin="0,0,5,5"/>
-                <ComboBox x:Name="cboRenderers"
-                          Grid.Row="0"
-                          Grid.Column="1"
-                          ToolTip="{DynamicResource RendererTooltip}"
+                <ComboBox x:Name="cboMountOptions"
+                          ToolTip="{DynamicResource MountOptionToolTip}"
                           ToolTipService.IsEnabled="False"
                           MouseEnter="Control_MouseEnter"
                           Style="{StaticResource MainComboBoxStyle}"
-                          ItemTemplate="{StaticResource rendererItemTemplate}"
+                          IsEnabled="{Binding IsAutoMountSupported}"
                           ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
-                          SelectedItem="{Binding SelectedRenderer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          ItemsSource="{Binding AvailableRenderers}"
-                          HorizontalAlignment="Left"
-                          Width="250"
-                          VerticalAlignment="Center"
-                          Margin="0,1,2,0"/>
-
-                <RadioButton Content="{DynamicResource QuarterScreen}" VerticalAlignment="Center" 
-                             Margin="0,0,0,10"
-                             Grid.Row="2"
-                             GroupName="ScreenMode"
-                             ToolTip="{DynamicResource QuarterScreenTooltip}"
-                             ToolTipService.IsEnabled="False"
-                             MouseEnter="Control_MouseEnter"
-                             FontSize="13"
-                             Visibility="{Binding ScreenModesVisibility}"
-                             IsChecked="{Binding IsQuarterScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <RadioButton Content="{DynamicResource FullScreen}" VerticalAlignment="Center" 
-                             Grid.Row="2"
-                             Grid.Column="1"
-                             Margin="10,0,0,10"
-                             GroupName="ScreenMode"
-                             FontSize="13"
-                             ToolTip="{DynamicResource FullScreenTooltip}"
-                             ToolTipService.IsEnabled="False"
-                             MouseEnter="Control_MouseEnter"
-                             Visibility="{Binding ScreenModesVisibility}"
-                             IsChecked="{Binding IsFullScreenChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
-                <RadioButton Content="RIVA 128" VerticalAlignment="Center" 
-                             Margin="0,0,0,5"
-                             Grid.Row="3"
-                             Grid.Column="0"
-                             FontSize="13"
-                             GroupName="GraphicsOption"
-                             ToolTip="{DynamicResource HardwareGraphicsTooltip}"
-                             ToolTipService.IsEnabled="False"
-                             MouseEnter="Control_MouseEnter"
-                             Visibility="{Binding RivaOptionsVisibility}"
-                             IsChecked="{Binding IsRivaOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <RadioButton Content="TNT" VerticalAlignment="Center" 
-                             Margin="10,0,0,5"
-                             Grid.Row="3"
-                             Grid.Column="1"
-                             FontSize="13"
-                             GroupName="GraphicsOption"
-                             ToolTip="{DynamicResource HardwareGraphicsTooltip}"
-                             ToolTipService.IsEnabled="False"
-                             MouseEnter="Control_MouseEnter"
-                             Visibility="{Binding RivaOptionsVisibility}"
-                             IsChecked="{Binding IsTntOptionChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
+                          ItemTemplate="{StaticResource mountItemTemplate}"
+                          SelectedItem="{Binding SelectedMountOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          ItemsSource="{Binding MountOptions}"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Top"
+                          Margin="4,1,0,5"/>
+                <CheckBox Height="25" Content="{DynamicResource AutoMountDisc}" 
+                          Grid.Row="1"
+                          IsChecked="{Binding AutoMountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          IsEnabled="{Binding IsAutoMountSupported}"
+                          MouseEnter="Control_MouseEnter"
+                          ToolTip="{DynamicResource AutoMountDiscTooltip}"/>
+                <CheckBox Height="25" Content="{DynamicResource AutoDismountDisc}" 
+                          Grid.Row="2"
+                          IsChecked="{Binding AutoUnmountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          MouseEnter="Control_MouseEnter"
+                          IsEnabled="{Binding IsAutoMountSupported}"
+                          ToolTip="{DynamicResource AutoDismountDiscTooltip}"/>
+                <CheckBox Height="25" Content="{DynamicResource AutoUpdatePath}" 
+                          Grid.Row="3"
+                          IsChecked="{Binding AutoUpdatePathChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          MouseEnter="Control_MouseEnter"
+                          ToolTip="{DynamicResource AutoUpdatePathTooltip}"/>
+                <CheckBox Height="25" Content="{DynamicResource ShowGameLauncher}" 
+                          Grid.Row="4"
+                          IsChecked="{Binding IsShowLauncherChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          MouseEnter="Control_MouseEnter"
+                          ToolTip="{DynamicResource ShowGameLauncherTooltip}"/>
             </Grid>
         </GroupBox>
 
+
         <GroupBox x:Name="grpPrograms"
-                  Grid.Row="1" 
-                  Grid.Column="1" 
+                  Grid.Row="2" 
+                  Grid.Column="0" 
                   Header="{DynamicResource ProgramsToRunHeader}"
                   MinWidth="350"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Bottom"
-                  Margin="0,0,10,0">
-            <Grid Margin="3">
+                  Margin="10,0,10,0" >
+            <Grid Margin="3,3,3,5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -472,8 +377,8 @@
                         MouseEnter="Control_MouseEnter"
                         Style="{StaticResource ImageButton}"
                         VerticalAlignment="Top"
-                        Height="22"
-                        Width="22"
+                        Height="24"
+                        Width="24"
                         Content="{StaticResource iconAdd}"/>
 
                 <Button x:Name="btnRemoveProgram"
@@ -484,8 +389,8 @@
                         ToolTip="{DynamicResource RemoveProgramTooltip}"
                         Style="{StaticResource ImageButton}"
                         VerticalAlignment="Top"
-                        Height="22"
-                        Width="22"
+                        Height="24"
+                        Width="24"
                         Content="{StaticResource iconMinus}"/>
 
                 <Button x:Name="btnEditProgram"
@@ -496,8 +401,8 @@
                         Click="btnEditProgram_Click"
                         Style="{StaticResource ImageButton}"
                         VerticalAlignment="Top"
-                        Height="22"
-                        Width="22"
+                        Height="24"
+                        Width="24"
                         Content="{StaticResource iconEdit}"/>
 
                 <Button x:Name="btnMoveProgramUp"
@@ -509,8 +414,8 @@
                         MouseRightButtonUp="btnMoveProgramUp_MouseRightButtonUp"
                         Style="{StaticResource ImageButton}"
                         VerticalAlignment="Top"
-                        Height="22"
-                        Width="22"
+                        Height="24"
+                        Width="24"
                         Content="{StaticResource iconUpChevron}"/>
 
                 <Button x:Name="btnMoveProgramDown"
@@ -522,12 +427,12 @@
                         MouseRightButtonUp="btnMoveProgramDown_MouseRightButtonUp"
                         Style="{StaticResource ImageButton}"
                         VerticalAlignment="Top"
-                        Height="22"
-                        Width="22"
+                        Height="24"
+                        Width="24"
                         Content="{StaticResource iconDownChevron}"/>
 
 
-                <ListBox x:Name="lstPrograms" 
+                <ListBox x:Name="lstPrograms"
                          Grid.Column="1"
                          Grid.RowSpan="5"
                          HorizontalAlignment="Stretch"
@@ -539,17 +444,15 @@
         </GroupBox>
 
         <TextBlock x:Name="txtHint" 
-                   Grid.Row="2"
-                   Grid.ColumnSpan="2"
-                   VerticalAlignment="Center"
+                   Grid.Row="3"
+                   VerticalAlignment="Top"
                    HorizontalAlignment="Left"
-                   MaxWidth="750"
                    TextWrapping="Wrap"
-                   Margin="10,0,10,0"
+                   Margin="10,5,0,0"
                    TextTrimming="CharacterEllipsis"
-                   Text="{Binding StatusMessage, FallbackValue='This is a mouse over description or message to user.'}"/>
+                   Text="{Binding StatusMessage, FallbackValue='This is a mouse over description or message to user. This is a mouse over description'}"/>
 
-        <WrapPanel Grid.Row="3"
+        <WrapPanel Grid.Row="4"
                    Grid.Column="0"
                    Grid.ColumnSpan="2"
                    HorizontalAlignment="Right"

@@ -3,6 +3,7 @@ using SeventhHeaven.Classes;
 using SeventhHeaven.ViewModels;
 using SeventhHeavenUI;
 using SeventhHeavenUI.ViewModels;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -251,15 +252,18 @@ namespace SeventhHeaven.Windows
         /// </summary>
         private void ResizeWindowToFitContent()
         {
-            double padding = 50; // add to account for padding/margin between two group boxes
-            double newWidth = grpOptions.ActualWidth + grpAudio.ActualWidth + padding;
+            double padding = 60; // add to account for padding/margin on group boxes
+            double newWidth = Math.Max(gridOptions.ActualWidth, gridAudio.ActualWidth) + padding;
 
             // re-position window based on difference between old and new width
             double deltaX = newWidth - this.Width;
-            this.Left -= deltaX / 2;
 
-            this.Width = newWidth;
-            txtHint.MaxWidth = this.Width - padding;
+            if (newWidth > this.Width)
+            {
+                this.Left -= deltaX / 2;
+                this.Width = newWidth;
+            }
+
         }
     }
 }
