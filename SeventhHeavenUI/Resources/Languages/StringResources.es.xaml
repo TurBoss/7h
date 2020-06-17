@@ -237,7 +237,7 @@
     <system:String x:Key="Section3">Sección 3 Model Loader</system:String>
     <system:String x:Key="Section4">Sección 4 Palette</system:String>
     <system:String x:Key="Section5">Sección 5 Walkmesh</system:String>
-    <system:String x:Key="Section6">Sección 6 TileMap (Unused)</system:String>
+    <system:String x:Key="Section6">Sección 6 TileMap (Sín usar)</system:String>
     <system:String x:Key="Section7">Sección 7 Encounter</system:String>
     <system:String x:Key="Section8">Sección 8 Triggers</system:String>
     <system:String x:Key="Section9">Sección 9 Background</system:String>
@@ -454,7 +454,7 @@ Haz clic en 'Cancelar' para detener el proceso.</system:String>
     <system:String x:Key="SuccessfullyCopiedMovies">Se han copiado las cinemáticas con exito.</system:String>
     <system:String x:Key="FinishedCopyingMoviesSomeFailed">Copiado de cinemáticas finalizado. Algunas cinemáticas no se han podido copiar. Revisa el registro de aplicación para más detalles.</system:String>
 
-    <system:String x:Key="SaveControlConfiguration">Guardar la Configuracion de Controles</system:String>
+    <system:String x:Key="SaveControlConfiguration">Guardar la Configuración de los Controles</system:String>
     <system:String x:Key="ImportCurrentControlsFromGameAndSaveAs">Importa los controles actuales del juego y guardarlos como...</system:String>
     <system:String x:Key="SaveError">Fallo al guardar</system:String>
     <system:String x:Key="ControlNameIsEmpty">El espacio para el nombre de los controles está vació.</system:String>
@@ -827,7 +827,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="DisablingReunionMod">Deshabilitando el Mod Reunion (renombrando ddraw.dll -> Reunion.dll.bak) ...</system:String>
     <system:String x:Key="ReenablingReunionMod">Reactivando el Mod Reunion (renombrando ddraw.dll -> Reunion.dll.bak) ...</system:String>
 
-    <system:String x:Key="LaunchingAdditionalProgramsToRunIfAny">Ejecutando programas adicionales (si hay) ...</system:String>
+    <system:String x:Key="LaunchingAdditionalProgramsToRunIfAny">Ejecutando programas adicionales (si los hay) ...</system:String>
     <system:String x:Key="WritingTemporaryRuntimeProfileFileTo">Escribiendo perfil de ejecución temporal hacia</system:String>
 
     <system:String x:Key="AttemptingToInjectWithEasyHook">Probando a injectar con EasyHook: intento # {0} (de {1}) ...</system:String>
@@ -908,7 +908,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="Started">iniciado ...</system:String>
     <system:String x:Key="WaitingForProgramToInitializeAndShow">esperando al programa a iniciarse y mostrarse ...</system:String>
     <system:String x:Key="TimeoutReachedWaitingForProgramToShow">alcanzado el tiempo limite (de {0} segundos) para mostrarse. Continuando ...</system:String>
-    <system:String x:Key="ProgramAlreadyRunning">el programa ya está iniciado</system:String>
+    <system:String x:Key="ProgramAlreadyRunning">el programa ya se está ejecutando</system:String>
 
 
 
@@ -941,7 +941,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
 
     <!--UpdateChecker Class Strings-->
     <system:String x:Key="CheckingForUpdatesAt">Comprobando actualizaciones en</system:String>
-    <system:String x:Key="FailedToCheckForUpdatesAt">Fallo al comprobar actualizaciones en</system:String>
+    <system:String x:Key="FailedToCheckForUpdatesAt">Error al comprobar actualizaciones en</system:String>
 
 
     <!--DEV NOTE TO REMOVE: STRINGS BELOW ADDED 4/5/20-->
@@ -956,9 +956,9 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <!--FileUtils.cs Strings-->
     <system:String x:Key="FailedToCopyDirectory">Error al copiar directorio</system:String>
     <system:String x:Key="FailedToMoveDirectory">Error al mover directorio</system:String>
-    <system:String x:Key="FailedToDeleteFiles">Fallo al eliminar los archivos</system:String>
+    <system:String x:Key="FailedToDeleteFiles">Error al eliminar los archivos</system:String>
 
-    <system:String x:Key="FailedToGetPreviewImage">Fallo al obtener imagen previa</system:String>
+    <system:String x:Key="FailedToGetPreviewImage">Error al obtener imagen previa</system:String>
 
     <system:String x:Key="ErrorOccurredDownloadingInstalling">Ha ocurrido un error mientras se descargaba/instalaba</system:String>
 
@@ -966,7 +966,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="Updated">Actualizado</system:String>
     <system:String x:Key="ErrorUpdating">Error al actualizar</system:String>
 
-    <system:String x:Key="FailedToGetModInfoDueToMissingVariable">AVISO: fallo al intentar conseguir mod info debido a la falta de una variable que puede causar problemas.</system:String>
+    <system:String x:Key="FailedToGetModInfoDueToMissingVariable">AVISO: error al intentar conseguir mod info debido a la falta de una variable que puede causar problemas.</system:String>
 
     <system:String x:Key="TheFollowingModsWereNotFoundInstalledAndHaveBeenRemoved">Los siguientes Mods no se han encontrado instalados y han sido eliminados del perfil</system:String>
     <system:String x:Key="ErrorLoadingSettingsPleaseConfigure7H">Error al cargar las opciones - por favor, configura 7H usando el menú de Opciones>Opciones Generales ...</system:String>
@@ -974,7 +974,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="FailedToImportMod">Fallo al importar el Mod</system:String>
     <system:String x:Key="AutoImportedMod">Mod importado automáticamente</system:String>
     <system:String x:Key="CouldNotImportIroFileIsCorrupt">No se ha podido importar el archivo .iro mod por que está </system:String>
-    <system:String x:Key="ModCouldNotBeFoundHasItBeenDeleted">No se ha podido encontrar el Mod. ¿Ha sido eliminado? Borrado de la lista.</system:String>
+    <system:String x:Key="ModCouldNotBeFoundHasItBeenDeleted">No se ha podido encontrar el Mod. ¿Ha sido eliminado?. Borrado de la lista.</system:String>
 
     <system:String x:Key="CouldNotLoadProfile">No se ha podido cargar el perfil</system:String>
 
@@ -1058,9 +1058,9 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="GameLauncherSettings">Opciones del Lanzador de Juego</system:String>
 
     <system:String x:Key="ClickToSelectFf7ExeFile">Haz clic para seleccionar tu archivo de FF7.exe</system:String>
-    <system:String x:Key="ClickToSelectWhereYourMovieFolderIs">Haz clic para seleccionar dónde está tu carpeta movie</system:String>
-    <system:String x:Key="ClickToSelectWhereTexturesAreStored">Haz click para seleccionar la carpeta donde guardas las Texturas</system:String>
-    <system:String x:Key="ClickToSelectWhereYourModLibraryIs">Haz clic para seleccionar dónde está tu Librería de Mods.</system:String>
+    <system:String x:Key="ClickToSelectWhereYourMovieFolderIs">Haz clic para seleccionar la localización de tu carpeta movie</system:String>
+    <system:String x:Key="ClickToSelectWhereTexturesAreStored">Haz clic para seleccionar la carpeta donde guardas las Texturas</system:String>
+    <system:String x:Key="ClickToSelectWhereYourModLibraryIs">Haz clic para seleccionar la localización de tu Librería de Mods.</system:String>
 
     <system:String x:Key="FF7ExeLabel">FF7 Exe:</system:String>
     <system:String x:Key="MoviesLabel">Cinemáticas:</system:String>
@@ -1076,7 +1076,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="AddFolder">Añadir Carpeta</system:String>
     <system:String x:Key="RemoveFolder">Eliminar Carpeta</system:String>
     <system:String x:Key="MoveFolderUp">Desplazar Carpeta hacia arriba. Haz clic derecho para moverla hacia la parte superior.</system:String>
-    <system:String x:Key="MoveFolderDown">Desplazar Carpeta hacia abajo. Haz clic derecho para moverla el fondo.</system:String>
+    <system:String x:Key="MoveFolderDown">Desplazar Carpeta hacia abajo. Haz clic derecho para moverla hacia al fondo.</system:String>
     <system:String x:Key="EnterUrlInIrosFormat">Introducir url en formato iros://</system:String>
 
     <system:String x:Key="SelectCustomThemeXmlFile">Selecciona un archivo Custom Theme .xml personalizado.</system:String>
@@ -1086,19 +1086,19 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="AppHint1">Puedes arrastrar y soltar un mod para organizar tu lista.</system:String>
     <system:String x:Key="AppHint2">Puedes hacer clic con la rueda del ratón para activar o desactivar un Mod.</system:String>
     <system:String x:Key="AppHint3">Puedes hacer doble clic en un Mod para abrir la ventana de configuración del mismo.</system:String>
-    <system:String x:Key="AppHint4">Puedes hacer doble en un Mod en Examinar Catalogo para comenzar a descargarlo.</system:String>
-    <system:String x:Key="AppHint5">Puedes hacer click en en el botón de Auto Ordenar para ordenar automáticamente los Mods de tu lista en el orden recomendado.</system:String>
-    <system:String x:Key="AppHint6">Los Mods ahora pueden actualizarse ellos solos automáticamente, o avisarte de nuevas versiones.</system:String>
+    <system:String x:Key="AppHint4">Puedes hacer doble clic en un Mod en la ventana de Examinar Catalogo para comenzar a descargarlo.</system:String>
+    <system:String x:Key="AppHint5">Puedes hacer clic en el botón de Auto Ordenar para ordenar automáticamente los Mods de tu lista en el orden recomendado.</system:String>
+    <system:String x:Key="AppHint6">Los Mods pueden ahora actualizarse ellos solos automáticamente, o avisarte de nuevas versiones.</system:String>
     <system:String x:Key="AppHint7">Autores de Mod: Podéis codificar imágenes base64 en vuestro Readme.html.</system:String>
     <system:String x:Key="AppHint8">Autores de Mods: Podéis usar OrderConstraints en mod.xml para especificar el orden de carga.</system:String>
-    <system:String x:Key="AppHint9">Autores de Mods: 7th Heaven soporta ahora un estilo en Vista de árbol para las opciones de configuración de vuestro Mod.</system:String>
-    <system:String x:Key="AppHint10">Autores de Mods: 7th Heaven soporta ahora iros://ExternalURL en los catalogos para abrir descargar en un navegador.</system:String>
+    <system:String x:Key="AppHint9">Autores de Mods: 7th Heaven soporta ahora un estilo en Vista de Árbol para las opciones de configuración de vuestro Mod.</system:String>
+    <system:String x:Key="AppHint10">Autores de Mods: 7th Heaven soporta ahora iros://ExternalURL en los catalogos para abrir y descargar en un navegador.</system:String>
     <system:String x:Key="AppHint11">Autores de Mods: Habilitad Opciones Generales/Menú de Contexto en el Navegador para habilitar las opciones de configuración desde Windows.</system:String>
-    <system:String x:Key="AppHint12">Autores de Mods: Podéis hacer .7z/RAR/zip un archivo IRO para la descarga en catalogo y 7H lo extraerá automáticamente.</system:String>
+    <system:String x:Key="AppHint12">Autores de Mods: Podéis comprimir a .7z/RAR/zip un archivo IRO para la descarga en el catalogo y 7H lo extraerá automáticamente.</system:String>
     <system:String x:Key="AppHint13">Autores de Mods:: Podéis cambiar programáticamente las opciones de otros Mod para que sean compatibles con los vuestros.</system:String>
     <system:String x:Key="AppHint14">Puedes hacer doble clic en un archivo mod en Windows para abrirlo/importarlo en 7th Heaven.</system:String>
-    <system:String x:Key="AppHint15">Puedes hacer doble click en un perfil en la ventana de administración de perfiles para cargar el perfil seleccionado.</system:String>
-    <system:String x:Key="AppHint16">Los detalles del Perfil ahora se encuentran dentro de Opciones>Perfiles, haciendo click en el icono del ojo.</system:String>
+    <system:String x:Key="AppHint15">Puedes hacer doble clic en un perfil en la ventana de administración de perfiles para cargar el perfil seleccionado.</system:String>
+    <system:String x:Key="AppHint16">Los detalles del Perfil ahora se encuentran dentro de Opciones>Perfiles, haciendo clic en el icono del ojo.</system:String>
     <system:String x:Key="AppHint17">7th Heaven recuerda tus configuraciones previas en la Configuración del Mod incluso si lo desactivas y activas de nuevo.</system:String>
     <system:String x:Key="AppHint18">Reinicia las opciones de un Mod haciendo clic en 'Volver a los valores por defecto del Mod' en la ventana de Configuración del Mod.</system:String>
     <system:String x:Key="AppHint19">¿Has borrado accidentalmente las suscripciones de tu catalogo? Haz clic en 'Reiniciar Ajustes' en Opciones Generales.</system:String>
@@ -1114,7 +1114,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="AppHint29">7th Heaven montará o desmontará automáticamente el disco de juego virtual si estás en Windows 8 o superior.</system:String>
     <system:String x:Key="AppHint30">7th Heaven ya no necesita el antiguo Game Converter. ¡Ahora es todo automático!</system:String>
     <system:String x:Key="AppHint31">Ya no necesitas usar FF7Config.exe. Sus características están integradas ahora en Opciones>Lanzador de Juego.</system:String>
-    <system:String x:Key="AppHint32">¿Sabias qué 7th Heaven 1.0 se lanzó por primera vez en 2013? la versión 2.0 se lanzó 7 años después en 2020.</system:String>
+    <system:String x:Key="AppHint32">¿Sabias qué 7th Heaven 1.0 se lanzó por primera vez en 2013? la versión 2.0 se lanzó 7 años después, en 2020.</system:String>
     <system:String x:Key="AppHint33">Tu perfil activo actual se muestra en la barra del titulo entre corchetes.</system:String>
     <system:String x:Key="AppHint34">Si la ventana del juego está cortada/descentrada, prueba activando el arreglo de Alto-DPI en las Opciones.</system:String>
     <system:String x:Key="AppHint35">Puedes organizar las columnas de Examinar Catalogo haciendo clic en los encabezados de las columnas.</system:String>
@@ -1132,7 +1132,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
 
     <system:String x:Key="ReleaseDateLabel">Fecha de Lanzamiento:</system:String>
     <system:String x:Key="ImageLinkLabel">Enlace de la Imagen:</system:String>
-    <system:String x:Key="InfoLinkLabel">Enlace de Info:</system:String>
+    <system:String x:Key="InfoLinkLabel">Enlace del Info:</system:String>
     <system:String x:Key="DownloadLinksHeader" xml:space="preserve"> Enlaces de Descarga </system:String>
     <system:String x:Key="AddLink">Añadir Enlace</system:String>
 
@@ -1141,10 +1141,10 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="Miscellaneous">Misceláneo</system:String>
     <system:String x:Key="Animations">Animaciones</system:String>
     <system:String x:Key="BattleModels">Modelos de Combate</system:String>
-    <system:String x:Key="BattleTextures">Texturas de Comabte</system:String>
+    <system:String x:Key="BattleTextures">Texturas de Combate</system:String>
     <system:String x:Key="FieldModels">Modelos de Campo</system:String>
     <system:String x:Key="FieldTextures">Texturas de Campo</system:String>
-    <system:String x:Key="Gameplay">Cómo se Juega</system:String>
+    <system:String x:Key="Gameplay">Gameplay</system:String>
     <system:String x:Key="Media">Media</system:String>
     <system:String x:Key="Minigames">Minijuegos</system:String>
     <system:String x:Key="SpellTextures">Texturas de los hechizos</system:String>
@@ -1161,57 +1161,57 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
 
     <!--DEV NOTE TO REMOVE: STRINGS BELOW ADDED 4/29/20-->
 
-    <system:String x:Key="SetInGameControls">Set In-Game Controls</system:String>
-    <system:String x:Key="Keyboard">Keyboard</system:String>
-    <system:String x:Key="Controller">Controller</system:String>
-    <system:String x:Key="ConfirmLabel">[CONFIRM]</system:String>
-    <system:String x:Key="CancelLabel">[CANCEL]</system:String>
-    <system:String x:Key="MenuLabel">[MENU]</system:String>
-    <system:String x:Key="SwitchLabel">[SWITCH]</system:String>
-    <system:String x:Key="ScrollUpLabel">[SCROLL UP]</system:String>
-    <system:String x:Key="ScrollDownLabel">[SCROLL DOWN]</system:String>
+    <system:String x:Key="SetInGameControls">Configurar controles de Juego</system:String>
+    <system:String x:Key="Keyboard">Teclado</system:String>
+    <system:String x:Key="Controller">Mando</system:String>
+    <system:String x:Key="ConfirmLabel">[CONFIRMAR]</system:String>
+    <system:String x:Key="CancelLabel">[CANCELAR]</system:String>
+    <system:String x:Key="MenuLabel">[MENÚ]</system:String>
+    <system:String x:Key="SwitchLabel">[CAMBIAR]</system:String>
+    <system:String x:Key="ScrollUpLabel">[DESPLAZARSE HACIA ARRIBA]</system:String>
+    <system:String x:Key="ScrollDownLabel">[DESPLAZARSE HACIA ABAJO]</system:String>
 
-    <system:String x:Key="CameraLabel">[CAMERA]</system:String>
-    <system:String x:Key="TargetLabel">[TARGET]</system:String>
-    <system:String x:Key="AssistLabel">[ASSIST]</system:String>
+    <system:String x:Key="CameraLabel">[CAMÁRA]</system:String>
+    <system:String x:Key="TargetLabel">[OBJETIVO]</system:String>
+    <system:String x:Key="AssistLabel">[AYUDA]</system:String>
     <system:String x:Key="StartLabel">[START]</system:String>
 
-    <system:String x:Key="UpLabel">[UP]</system:String>
-    <system:String x:Key="DownLabel">[DOWN]</system:String>
-    <system:String x:Key="LeftLabel">[LEFT]</system:String>
-    <system:String x:Key="RightLabel">[RIGHT]</system:String>
+    <system:String x:Key="UpLabel">[ARRIBA]</system:String>
+    <system:String x:Key="DownLabel">[ABAJO]</system:String>
+    <system:String x:Key="LeftLabel">[IZQUIERDA]</system:String>
+    <system:String x:Key="RightLabel">[DERECHA]</system:String>
 
-    <system:String x:Key="Presets">Presets:</system:String>
-    <system:String x:Key="EnablePS4ControllerSupport">Enable PS4 Controller Support</system:String>
-    <system:String x:Key="PS4ControllerSupportTooltip">Allows to use a PS4 controller with the game (SCP driver must be installed)</system:String>
-    <system:String x:Key="SaveChangesTooltip">Save changes to controls.</system:String>
+    <system:String x:Key="Presets">Preajustes:</system:String>
+    <system:String x:Key="EnablePS4ControllerSupport">Habilitar soporte para Mando de PS4</system:String>
+    <system:String x:Key="PS4ControllerSupportTooltip">Permite el uso de un mando PS4 para jugar (Los Drivers SCP tienen que estar instalados previamente)</system:String>
+    <system:String x:Key="SaveChangesTooltip">Guardar cambios en los controles.</system:String>
 
-    <system:String x:Key="OpenGameControllersWindow">Open Game Controllers Window</system:String>
-
-
-    <system:String x:Key="ControlsTooltip">Configura los controles del mando o teclado dentro del juego. Click save icon to save the above control mappings as a custom configuration.</system:String>
+    <system:String x:Key="OpenGameControllersWindow">Abrir la ventana de Dispositivos de Juego</system:String>
 
 
-    <system:String x:Key="StartingPS4ControllerService">Starting PS4 Controller Service ...</system:String>
-    <system:String x:Key="ServiceAlreadyRunning">service already running ...</system:String>
+    <system:String x:Key="ControlsTooltip">Configura los controles del mando o teclado dentro del juego. Haz clic en el icono de guardar para aplicar el mapeado de controles de arriba como una configuración personalizada.</system:String>
 
-    <system:String x:Key="RetryInstallTooltip">Retry Installing Mod</system:String>
 
-    <system:String x:Key="MovieImporter">Movie Importer...</system:String>
-    <system:String x:Key="AllMovieFilesAlreadyImported" xml:space="preserve">All movies already imported!</system:String>
+    <system:String x:Key="StartingPS4ControllerService">Ejecutando el servicio para Mandos de PS4 ...</system:String>
+    <system:String x:Key="ServiceAlreadyRunning">servicio ya en ejecución ...</system:String>
 
-    <system:String x:Key="ImportMoviesFromDisc">Import Movies From Disc</system:String>
+    <system:String x:Key="RetryInstallTooltip">Prueba Reinstalando el Mod</system:String>
 
-    <system:String x:Key="EnableTriggerDpadSupport">Enable DPad and Trigger Support</system:String>
-    <system:String x:Key="TriggerDpadSupportTooltip">Enables DPad and trigger support in-game. (Disable if using a third party mapping tool)</system:String>
+    <system:String x:Key="MovieImporter">Importador de Cinemáticas...</system:String>
+    <system:String x:Key="AllMovieFilesAlreadyImported" xml:space="preserve">¡Ya están importadas todas las cinemáticas!</system:String>
 
-    <system:String x:Key="MountDiscWithPowershell">Mount Disc With PowerShell</system:String>
-    <system:String x:Key="MountDiscWithWinCDEmu">Mount Disc With WinCDEmu</system:String>
+    <system:String x:Key="ImportMoviesFromDisc">Importar Cinemáticas Desde Disco</system:String>
 
-    <system:String x:Key="LoadingDevices">Loading Devices ...</system:String>
+    <system:String x:Key="EnableTriggerDpadSupport">Habilitar Soporte para DPAD y los Gatillos.</system:String>
+    <system:String x:Key="TriggerDpadSupportTooltip">Añade soporte dentro de el juego para el DPAD y los Gatillos. (Desactivar al usar una herramienta de terceros para mapeado del mando)</system:String>
 
-    <system:String x:Key="MountOptionToolTip">Select how to mount the virtual FF7DISC1 game disc. Windows 7 can only use the 'Mount Disc With WinCDEmu' option.</system:String>
+    <system:String x:Key="MountDiscWithPowershell">Montar Disco Con PowerShell</system:String>
+    <system:String x:Key="MountDiscWithWinCDEmu">Montar Disco Con WinCDEmu</system:String>
+
+    <system:String x:Key="LoadingDevices">Cargando Dispositivos ...</system:String>
+
+    <system:String x:Key="MountOptionToolTip">Escoge como quieres montar el disco virtual FF7DISC1. Windows 7 solo puede usar la opción de 'Montar Disco Con WinCDEmu'.</system:String>
 
     <system:String x:Key="ControlsMenuItemText">Controles...</system:String>
-    
+
 </ResourceDictionary>

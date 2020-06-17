@@ -1,4 +1,5 @@
 ﻿using _7thHeaven.Code;
+using Iros._7th.Workshop;
 using SeventhHeaven.Classes;
 
 namespace SeventhHeavenUI.ViewModels
@@ -111,6 +112,29 @@ namespace SeventhHeavenUI.ViewModels
 
             this.Download = download;
             IsCancelling = false;
+
+            SetExternalUrlDownloadMessage();
+        }
+
+        /// <summary>
+        /// Set message shown to user when opening external link to reflect mod failing to download or only alowing external downloads for it
+        /// </summary>
+        private void SetExternalUrlDownloadMessage()
+        {
+            Download.ExternalUrlDownloadMessage = ResourceHelper.Get(StringKey.ExternalUrlDownloadMessage2);
+
+            if (Download.IsModOrPatchDownload && Download.Links.Count == 1)
+            {
+                // check that the only link available is external url and set message accordingly
+                if (LocationUtil.TryParse(Download.Links[0], out LocationType downloadType, out string url))
+                {
+                    if (downloadType == LocationType.ExternalUrl)
+                    {
+                        Download.ExternalUrlDownloadMessage = ResourceHelper.Get(StringKey.ExternalUrlDownloadMessage1);
+                    }
+                }
+            }
+
         }
 
     }

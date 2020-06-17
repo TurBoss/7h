@@ -67,7 +67,7 @@ namespace Iros._7th.Workshop
                     {
                         Links = patches.Select(p => p.Link).ToList(),
                         SaveFilePath = Path.Combine(temppath, pfile),
-                        Category = DownloadCategory.Mod,
+                        Category = DownloadCategory.ModPatch,
                         ItemName = $"[{StringKey.Downloading}] {m.Name} patch {install.LatestInstalled.VersionDetails.Version} -> {m.LatestVersion.Version}",
                         ItemNameTranslationKey = StringKey.Downloading,
                         OnCancel = onCancel
@@ -100,7 +100,7 @@ namespace Iros._7th.Workshop
                 // mod is not installed and the latest version has patches available
                 // so first download and install mod then download all patches for mod
 
-                DownloadAndInstallMod(m, temppath, file);
+                Guid downloadId = DownloadAndInstallMod(m, temppath, file);
 
                 int pCount = 0;
                 foreach (IGrouping<decimal, ModPatch> linksPerVersion in m.Patches.GroupBy(mp => mp.VerTo))
@@ -109,11 +109,12 @@ namespace Iros._7th.Workshop
 
                     DownloadItem patchDownload = new DownloadItem()
                     {
+                        ParentUniqueID = downloadId, // this is set to know these patch downloads are dependent of the main mod download or previous patch.
                         Links = linksPerVersion.Select(mp => mp.Link).ToList(),
                         SaveFilePath = Path.Combine(temppath, pfile),
                         ItemName = $"[{StringKey.Downloading}] {m.Name} patch {linksPerVersion.Key}",
                         ItemNameTranslationKey = StringKey.Downloading,
-                        Category = DownloadCategory.Mod,
+                        Category = DownloadCategory.ModPatch,
                         OnCancel = onCancel
                     };
 
@@ -123,6 +124,8 @@ namespace Iros._7th.Workshop
                         Error = onError,
                         Mod = m
                     };
+
+                    downloadId = patchDownload.UniqueId; // get the id of the patch download so it can be set as the parent for the following patch
 
                     Sys.Downloads.AddToDownloadQueue(patchDownload);
                     pCount++;
@@ -136,7 +139,7 @@ namespace Iros._7th.Workshop
             }
         }
 
-        private static void DownloadAndInstallMod(Mod m, string pathToFolder, string fileName)
+        private static Guid DownloadAndInstallMod(Mod m, string pathToFolder, string fileName)
         {
             DownloadItem installDownload = new DownloadItem()
             {
@@ -169,6 +172,8 @@ namespace Iros._7th.Workshop
             };
 
             Sys.Downloads.AddToDownloadQueue(installDownload);
+
+            return installDownload.UniqueId;
         }
 
         public abstract class InstallProcedure
@@ -219,7 +224,7 @@ namespace Iros._7th.Workshop
             }
         }
 
-        private class PatchModProcedure : InstallProcedure
+        internal class PatchModProcedure : InstallProcedure
         {
             public string Filename { get; set; }
             public Mod Mod { get; set; }
@@ -297,7 +302,7 @@ namespace Iros._7th.Workshop
             }
         }
 
-        private class InstallModProcedure : InstallProcedure
+        internal class InstallModProcedure : InstallProcedure
         {
             public string FileName { get; set; }
             public Mod Mod { get; set; }

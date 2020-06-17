@@ -184,7 +184,7 @@ namespace Iros._7th.Workshop
 
                                         downloadInfo.FileDownloadTask = fileDownload;
 
-                                        if (downloadInfo.Category == DownloadCategory.Mod)
+                                        if (downloadInfo.IsModOrPatchDownload)
                                         {
                                             fileDownload.SetBytesWrittenFromExistingFile();
                                         }

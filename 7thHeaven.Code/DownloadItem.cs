@@ -12,13 +12,21 @@ namespace _7thHeaven.Code
         Mod,
         Catalog,
         Image,
-        AppUpdate
+        AppUpdate,
+        ModPatch
     }
 
     public class DownloadItem
     {
         public Guid UniqueId { get; set; }
+
+        /// <summary>
+        /// Id of the parent download (used for patches). null represents no parent.
+        /// </summary>
+        public Guid? ParentUniqueID { get; set; }
+
         public DownloadCategory Category { get; set; }
+
         public string SaveFilePath { get; set; }
 
         /// <summary>
@@ -59,6 +67,14 @@ namespace _7thHeaven.Code
         public List<string> Links { get; set; }
         public bool HasStarted { get; set; }
 
+        public bool IsModOrPatchDownload
+        {
+            get
+            {
+                return Category == DownloadCategory.Mod || Category == DownloadCategory.ModPatch;
+            }
+        }
+
         /// <summary>
         /// The message to show to the user when downloading a mod that may user ExternalUrl links. If the mod download only has one link to ExternalUrl then the message will be changed to reflect that.
         /// </summary>
@@ -78,6 +94,7 @@ namespace _7thHeaven.Code
         {
             LastCalc = DateTime.Now;
             UniqueId = Guid.NewGuid();
+            ParentUniqueID = null;
             PercentComplete = 0;
             Links = new List<string>();
             HasStarted = false;
@@ -86,5 +103,6 @@ namespace _7thHeaven.Code
             ExternalUrlDownloadMessage = "";
             ItemNameTranslationKey = null;
         }
+
     }
 }

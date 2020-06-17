@@ -586,8 +586,7 @@ namespace SeventhHeavenUI.ViewModels
                 return;
             }
 
-
-            if (SelectedDownload.Download.Category != DownloadCategory.Mod || SelectedDownload.Download.FileDownloadTask == null)
+            if (!SelectedDownload.Download.IsModOrPatchDownload || SelectedDownload.Download.FileDownloadTask == null)
             {
                 PauseDownloadToolTip = ResourceHelper.Get(StringKey.PauseResumeSelectedDownload);
                 PauseDownloadIsEnabled = false;
@@ -608,6 +607,24 @@ namespace SeventhHeavenUI.ViewModels
                 return;
             }
 
+            if (SelectedDownload.Download.Category == DownloadCategory.ModPatch && SelectedDownload.Download.ParentUniqueID != null)
+            {
+                // if the selected download is a ModPatch then check to see if the parent download is still downlading
+                DownloadItemViewModel parentDownload = null;
+                lock (_downloadLock)
+                {
+                    parentDownload = DownloadList.Where(m => m.Download.UniqueId == SelectedDownload.Download.ParentUniqueID).FirstOrDefault();
+                }
+
+                if (parentDownload != null && !parentDownload.Download.IsFileDownloadPaused)
+                {
+                    // parent download is paused in queue so don't allow patch to pause/resume
+                    PauseDownloadToolTip = ResourceHelper.Get(StringKey.PauseResumeSelectedDownload);
+                    PauseDownloadIsEnabled = false;
+                    return;
+                }
+            }
+
 
             if (LocationUtil.TryParse(SelectedDownload.Download.Links[0], out LocationType downloadType, out string url))
             {
@@ -620,13 +637,9 @@ namespace SeventhHeavenUI.ViewModels
             }
 
             // if another mod is already downloading then don't allow to resume other mods
-            if (DownloadList.Any(d => d.Download.UniqueId != SelectedDownload.Download.UniqueId && d.Download.Category == DownloadCategory.Mod && d.Download.HasStarted && !d.Download.IsFileDownloadPaused))
+            lock (_downloadLock)
             {
-                PauseDownloadIsEnabled = false;
-            }
-            else
-            {
-                PauseDownloadIsEnabled = true;
+                PauseDownloadIsEnabled = !DownloadList.Any(d => d.Download.UniqueId != SelectedDownload.Download.UniqueId && d.Download.IsModOrPatchDownload && d.Download.HasStarted && !d.Download.IsFileDownloadPaused);
             }
 
             IsSelectedDownloadPaused = SelectedDownload.Download.FileDownloadTask.IsPaused;
@@ -642,8 +655,23 @@ namespace SeventhHeavenUI.ViewModels
 
         #region Methods Related to Downloads
 
-        internal void CancelDownload(DownloadItemViewModel downloadItemViewModel)
+        internal void CancelDownload(DownloadItemViewModel downloadItemViewModel, bool isCancellingChild = false)
         {
+            bool hasChildren = false;
+            lock (_downloadLock)
+            {
+                hasChildren = DownloadList.Any(d => d.Download.ParentUniqueID == downloadItemViewModel.Download.UniqueId);
+            }
+
+            if (hasChildren)
+            {
+                // cancel any child downloads when the parent download is being cancelled
+                foreach (var item in DownloadList.Where(d => d.Download.ParentUniqueID == downloadItemViewModel.Download.UniqueId).ToList())
+                {
+                    CancelDownload(item, true);
+                }
+            }
+
             if (downloadItemViewModel.IsCancelling)
             {
                 return; // the download has already been marked as being canceled so just return (the cancel is async so it takes a second for it to be removed from download list)
@@ -658,7 +686,11 @@ namespace SeventhHeavenUI.ViewModels
                 downloadItemViewModel.Download.PerformCancel?.Invoke(); // PerformCancel will happen during download and internally calls OnCancel
             }
 
-            UpdatePauseDownloadButtonUI();
+            if (!isCancellingChild)
+            {
+                UpdatePauseDownloadButtonUI();
+            }
+
             Sys.Message(new WMessage(downloadItemViewModel?.ItemName));
         }
 
@@ -692,7 +724,7 @@ namespace SeventhHeavenUI.ViewModels
                 bool hasPatches = modToDownload.GetPatchesFromTo(installedItem.LatestInstalled.VersionDetails.Version, modToDownload.LatestVersion.Version).Any();
 
                 // no update is available and no patches available so warn user that latest version is already installed
-                if (installedItem != null && !installedItem.IsUpdateAvailable &&  !hasPatches)
+                if (installedItem != null && !installedItem.IsUpdateAvailable && !hasPatches)
                 {
                     MessageDialogWindow.Show($"{modToDownload.Name} {ResourceHelper.Get(StringKey.IsAlreadyDownloadedAndInstalled)}", ResourceHelper.Get(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
@@ -833,14 +865,14 @@ namespace SeventhHeavenUI.ViewModels
                         fileDownload.DownloadProgressChanged += WebRequest_DownloadProgressChanged;
                         fileDownload.DownloadFileCompleted += WebRequest_DownloadFileCompleted;
 
-                        if (downloadInfo.Category == DownloadCategory.Mod)
+                        if (downloadInfo.IsModOrPatchDownload)
                         {
                             // try resuming partial downloads for mods
                             fileDownload.SetBytesWrittenFromExistingFile();
                         }
 
                         downloadInfo.FileDownloadTask = fileDownload;
-                        
+
 
                         fileDownload.Start();
                         break;
@@ -905,7 +937,7 @@ namespace SeventhHeavenUI.ViewModels
                             // get nodes from mega folder
                             Uri folderLink = new Uri($"https://mega.nz/{parts[0]}");
                             IEnumerable<INode> nodes = client.GetNodesFromLink(folderLink);
-                            
+
                             // first look for node by Id
                             INode fileNode = nodes.Where(x => x.Type == NodeType.File && x.Id == parts[1]).FirstOrDefault();
 
@@ -1023,21 +1055,6 @@ namespace SeventhHeavenUI.ViewModels
                 };
             }
 
-            // update message shown to user to reflect mod failing to download or only alowing external downloads for it
-            newDownload.ExternalUrlDownloadMessage = ResourceHelper.Get(StringKey.ExternalUrlDownloadMessage2);
-
-            if (newDownload.Category == DownloadCategory.Mod && newDownload.Links.Count == 1)
-            {
-                // check that the only link available is external url and set message accordingly
-                if (LocationUtil.TryParse(newDownload.Links[0], out LocationType downloadType, out string url))
-                {
-                    if (downloadType == LocationType.ExternalUrl)
-                    {
-                        newDownload.ExternalUrlDownloadMessage = ResourceHelper.Get(StringKey.ExternalUrlDownloadMessage1);
-                    }
-                }
-            }
-
             DownloadItemViewModel downloadViewModel = new DownloadItemViewModel(newDownload);
 
             App.Current.Dispatcher.Invoke(() =>
@@ -1063,33 +1080,7 @@ namespace SeventhHeavenUI.ViewModels
             else if (downloadCount > 1)
             {
                 // allow images and catalogs to download while mod is downloading so it does not halt queue of catalog/image refreshes
-                DownloadItem nextDownload = null;
-                bool isAlreadyDownloadingImageOrCat = false;
-                bool isDownloadingMod = false;
-
-                lock (_downloadLock)
-                {
-                    isDownloadingMod = DownloadList.Any(d => d.Download.Category == DownloadCategory.Mod && d.Download.HasStarted && !d.Download.IsFileDownloadPaused);
-
-                    if (!isDownloadingMod)
-                    {
-                        // no mod is currently downloading so get the next download in queue
-                        nextDownload = DownloadList.FirstOrDefault(d => !d.Download.HasStarted)?.Download;
-                    }
-                    else
-                    {
-                        // a mod is downloading so get next catalog/image to download
-                        isAlreadyDownloadingImageOrCat = DownloadList.Any(d => d.Download.Category != DownloadCategory.Mod && d.Download.HasStarted);
-                        nextDownload = DownloadList.FirstOrDefault(d => d.Download.Category != DownloadCategory.Mod && !d.Download.HasStarted)?.Download;
-                    }
-                }
-
-                //start the next catalog/image download if no other catalogs/images are being downloaded
-                if (!isAlreadyDownloadingImageOrCat && nextDownload != null)
-                {
-                    downloadViewModel.DownloadSpeed = ResourceHelper.Get(StringKey.Starting);
-                    Download(nextDownload.Links, nextDownload);
-                }
+                StartNextDownloadInQueue();
             }
         }
 
@@ -1167,28 +1158,51 @@ namespace SeventhHeavenUI.ViewModels
 
         private void StartNextDownloadInQueue()
         {
-            // start next download in queue
             DownloadItemViewModel nextDownload = null;
+            bool isDownloadingImageOrCat = false;
             bool isDownloadingMod = false;
-
 
             lock (_downloadLock)
             {
-                isDownloadingMod = DownloadList.Any(d => d.Download.Category == DownloadCategory.Mod && d.Download.HasStarted && !d.Download.IsFileDownloadPaused && d.Download.FileDownloadTask?.Done == false);
-                
-                if (!isDownloadingMod)
+                isDownloadingMod = DownloadList.Any(d => d.Download.IsModOrPatchDownload && d.Download.HasStarted && !d.Download.IsFileDownloadPaused);
+                isDownloadingImageOrCat = DownloadList.Any(d => !d.Download.IsModOrPatchDownload && d.Download.HasStarted);
+
+                // loop over each download in queue to see which is allowed to be started next
+                foreach (DownloadItemViewModel item in DownloadList)
                 {
-                    // no mod is currently downloading so get the next download in queue
-                    nextDownload = DownloadList.FirstOrDefault(d => !d.Download.HasStarted);
-                }
-                else
-                {
-                    // a mod is downloading so get next catalog/image to download
-                    nextDownload = DownloadList.FirstOrDefault(d => d.Download.Category != DownloadCategory.Mod && !d.Download.HasStarted);
+                    if (item.Download.HasStarted)
+                    {
+                        continue; // skip downloads that already started
+                    }
+
+                    if (item.Download.ParentUniqueID != null)
+                    {
+                        // ... check if this child download is allowed to start downloading if the parent download is finished
+                        var parentDownload = DownloadList.Where(d => d.Download.UniqueId == item.Download.ParentUniqueID).FirstOrDefault();
+                        if (parentDownload != null)
+                        {
+                            // skip download where parent download is still in download queue
+                            continue;
+                        }
+                    }
+
+                    if (!isDownloadingMod)
+                    {
+                        // no mod is currently downloading so get the next download in queue
+                        nextDownload = item;
+                        break;
+                    }
+                    else if (isDownloadingMod && !item.Download.IsModOrPatchDownload)
+                    {
+                        // a mod is downloading so get next catalog/image to download
+                        nextDownload = item;
+                        break;
+                    }
                 }
             }
 
-            if (nextDownload != null)
+            //start the next catalog/image download if no other catalogs/images are being downloaded
+            if (!isDownloadingImageOrCat && nextDownload != null)
             {
                 nextDownload.DownloadSpeed = ResourceHelper.Get(StringKey.Starting);
                 Download(nextDownload.Download.Links, nextDownload.Download);
@@ -1214,7 +1228,31 @@ namespace SeventhHeavenUI.ViewModels
 
                 lock (_downloadLock)
                 {
-                    nextDownload = DownloadList.FirstOrDefault(d => d.Download.Category == DownloadCategory.Mod && !d.Download.HasStarted);
+                    // loop over each download in queue to see which is allowed to be started next
+                    foreach (DownloadItemViewModel item in DownloadList)
+                    {
+                        if (item.Download.HasStarted)
+                        {
+                            continue; // skip downloads that already started
+                        }
+
+                        if (item.Download.Category == DownloadCategory.ModPatch && item.Download.ParentUniqueID != null)
+                        {
+                            // when a mod patch is queued for download it may have a 'parent' download in the queue which is the full mod to be installed
+                            // ... here we check if this mod patch is allowed to start downloading if the parent download is finished
+                            var parentDownload = DownloadList.Where(d => d.Download.UniqueId == item.Download.ParentUniqueID).FirstOrDefault();
+                            if (parentDownload == null)
+                            {
+                                nextDownload = item;
+                                break;
+                            }
+                        }
+                        else if (item.Download.IsModOrPatchDownload)
+                        {
+                            nextDownload = item;
+                            break;
+                        }
+                    }
                 }
 
                 if (nextDownload != null)
@@ -1270,7 +1308,11 @@ namespace SeventhHeavenUI.ViewModels
                 }
                 else
                 {
-                    DownloadItemViewModel failedItem = DownloadList.FirstOrDefault(i => i.Download.UniqueId == item.UniqueId);
+                    DownloadItemViewModel failedItem = null;
+                    lock (_downloadLock)
+                    {
+                        failedItem = DownloadList.FirstOrDefault(i => i.Download.UniqueId == item.UniqueId);
+                    }
 
                     if (failedItem != null)
                     {
@@ -1289,14 +1331,18 @@ namespace SeventhHeavenUI.ViewModels
 
 
             // update UI viewmodel to reflect installation status
-            DownloadItemViewModel itemViewModel = DownloadList.FirstOrDefault(i => i.Download.UniqueId == item.UniqueId);
+            DownloadItemViewModel itemViewModel = null;
+            lock (_downloadLock)
+            {
+                itemViewModel = DownloadList.FirstOrDefault(i => i.Download.UniqueId == item.UniqueId);
+            }
 
             if (itemViewModel == null || itemViewModel.IsCancelling)
             {
                 return; // don't process download and finish install if download item is marked as cancelling or doesn't exist in list anymore
             }
 
-            if (item.Category == DownloadCategory.Mod && itemViewModel != null)
+            if (item.IsModOrPatchDownload && itemViewModel != null)
             {
                 itemViewModel.ItemName = item.ItemName.Replace(ResourceHelper.Get(StringKey.Downloading), ResourceHelper.Get(StringKey.Installing));
                 itemViewModel.DownloadSpeed = "N/A";
@@ -1317,7 +1363,12 @@ namespace SeventhHeavenUI.ViewModels
 
         private void UpdateDownloadProgress(DownloadItem item, int percentDone, long bytesReceived, long totalBytes)
         {
-            DownloadItemViewModel viewModel = DownloadList.FirstOrDefault(d => d.Download.UniqueId == item.UniqueId);
+            DownloadItemViewModel viewModel = null;
+
+            lock (_downloadLock)
+            {
+                viewModel = DownloadList.FirstOrDefault(d => d.Download.UniqueId == item.UniqueId);
+            }
 
             if (viewModel == null)
             {
