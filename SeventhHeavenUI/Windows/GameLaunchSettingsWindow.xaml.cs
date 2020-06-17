@@ -42,14 +42,6 @@ namespace SeventhHeaven.Windows
             this.Close();
         }
 
-        private void Control_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            if ((sender as FrameworkElement) != null)
-            {
-                ViewModel.StatusMessage = (sender as FrameworkElement).ToolTip as string;
-            }
-        }
-
         private void menuItemTestLeft_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.TestAudio(AudioChannel.Left);
@@ -90,7 +82,6 @@ namespace SeventhHeaven.Windows
         {
             if (lstPrograms.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectProgramToRemove);
                 return;
             }
 
@@ -106,7 +97,6 @@ namespace SeventhHeaven.Windows
 
             if (lstPrograms.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectProgramToEdit);
                 return;
             }
 
@@ -154,7 +144,6 @@ namespace SeventhHeaven.Windows
 
             if (lstPrograms.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectProgramToMove);
                 return;
             }
 
@@ -170,7 +159,6 @@ namespace SeventhHeaven.Windows
 
             if (lstPrograms.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectProgramToMove);
                 return;
             }
 
@@ -214,7 +202,6 @@ namespace SeventhHeaven.Windows
 
             if (lstPrograms.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectProgramToMove);
                 return;
             }
 
@@ -230,7 +217,6 @@ namespace SeventhHeaven.Windows
 
             if (lstPrograms.SelectedItem == null)
             {
-                ViewModel.StatusMessage = ResourceHelper.Get(StringKey.SelectProgramToMove);
                 return;
             }
 

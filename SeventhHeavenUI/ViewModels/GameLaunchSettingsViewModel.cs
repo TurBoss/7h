@@ -37,7 +37,6 @@ namespace SeventhHeaven.ViewModels
         #region Data Members
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private string _statusMessage;
         private bool _autoMountChecked;
         private bool _autoUnmountChecked;
         private bool _autoUpdatePathChecked;
@@ -64,19 +63,6 @@ namespace SeventhHeaven.ViewModels
 
 
         #region Properties
-
-        public string StatusMessage
-        {
-            get
-            {
-                return _statusMessage;
-            }
-            set
-            {
-                _statusMessage = value;
-                NotifyPropertyChanged();
-            }
-        }
 
         public bool IsAudioPlaying
         {
@@ -420,7 +406,6 @@ namespace SeventhHeaven.ViewModels
 
         public GameLaunchSettingsViewModel()
         {
-            StatusMessage = "";
             NewProgramPathText = "";
             NewProgramArgsText = "";
             IsProgramPopupOpen = false;
@@ -570,7 +555,7 @@ namespace SeventhHeaven.ViewModels
             }
             catch (Exception e)
             {
-                StatusMessage = $"{ResourceHelper.Get(StringKey.FailedToSaveLaunchSettings)}: {e.Message}";
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.FailedToSaveLaunchSettings), e.Message, ResourceHelper.Get(StringKey.Error), MessageBoxButton.OK, MessageBoxImage.Error);
                 Logger.Error(e);
                 return false;
             }
@@ -760,7 +745,7 @@ namespace SeventhHeaven.ViewModels
         {
             if (!File.Exists(NewProgramPathText))
             {
-                StatusMessage = ResourceHelper.Get(StringKey.ProgramToRunNotFound);
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.ProgramToRunNotFound), ResourceHelper.Get(StringKey.Error), MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 

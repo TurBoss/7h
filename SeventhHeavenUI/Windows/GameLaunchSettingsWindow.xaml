@@ -15,7 +15,7 @@
         ResizeMode="NoResize"
         Title="{DynamicResource GameLauncherSettings}" 
         Width="470"
-        Height="710">
+        Height="620">
     <Window.Resources>
 
         <DataTemplate x:Key="programItem">
@@ -69,8 +69,15 @@
         <Style TargetType="CheckBox" BasedOn="{StaticResource ToggleSwitchCheckbox}">
             <Setter Property="HorizontalAlignment" Value="Right"/>
             <Setter Property="VerticalAlignment" Value="Top"/>
-            <Setter Property="Margin" Value="0,3,0,3"/>
-            <Setter Property="ToolTipService.IsEnabled" Value="False"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+            <Setter Property="FontSize" Value="13" />
+        </Style>
+
+        <Style x:Key="SmallImageButtonStyle" TargetType="Button" BasedOn="{StaticResource ImageButton}">
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+            <Setter Property="Height" Value="24" />
+            <Setter Property="Width" Value="24" />
         </Style>
     </Window.Resources>
     <Grid>
@@ -79,14 +86,12 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
         <GroupBox x:Name="grpAudio"
                   Grid.Row="0"
-                  Grid.Column="0"
                   Header="{DynamicResource AudioDeviceHeader}" 
-                  Margin="10,5,10,0" 
+                  Margin="10,0,10,0" 
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Top">
             <Grid Margin="3" x:Name="gridAudio">
@@ -95,8 +100,8 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
@@ -104,9 +109,6 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Text="{DynamicResource SoundDeviceLabel}"
-                           ToolTipService.IsEnabled="False"
-                           ToolTip="{DynamicResource SoundDeviceTooltip}"
-                           MouseEnter="Control_MouseEnter"
                            Grid.Row="0"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
@@ -122,9 +124,6 @@
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
                     <ComboBox x:Name="cboSoundDevices"
-                              ToolTip="{DynamicResource SoundDeviceTooltip}"
-                              ToolTipService.IsEnabled="False"
-                              MouseEnter="Control_MouseEnter"
                               Style="{StaticResource MainComboBoxStyle}"
                               Width="250"
                               ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
@@ -145,10 +144,7 @@
                             Style="{StaticResource ImageButton}"
                             Content="{StaticResource iconSound}"
                             IsEnabled="{Binding IsAudioNotPlaying}"
-                            Click="btnTestAudio_Click"
-                            ToolTipService.IsEnabled="false"
-                            ToolTip="{DynamicResource TestSoundTooltip}"
-                            MouseEnter="Control_MouseEnter"/>
+                            Click="btnTestAudio_Click"/>
                     <ToggleButton x:Name="btnAudioOptions"
                                     Style="{StaticResource DownArrowToggleButton}"
                                     Grid.Column="2"
@@ -165,9 +161,6 @@
                                             Height="34"
                                             Width="34"
                                             Click="menuItemTestLeft_Click" 
-                                            ToolTip="{DynamicResource TestLeftSoundTooltip}"
-                                            ToolTipService.IsEnabled="false"
-                                            MouseEnter="Control_MouseEnter"
                                             IsEnabled="{Binding IsAudioNotPlaying}"/>
                                 <MenuItem x:Name="menuItemTestRight" 
                                             Style="{StaticResource MenuItemImage}"
@@ -175,9 +168,6 @@
                                             Height="34"
                                             Width="34"
                                             Click="menuItemTestRight_Click" 
-                                            ToolTip="{DynamicResource TestRightSoundTooltip}"
-                                            ToolTipService.IsEnabled="false"
-                                            MouseEnter="Control_MouseEnter"
                                             IsEnabled="{Binding IsAudioNotPlaying}"/>
                             </ContextMenu>
                         </ToggleButton.ContextMenu>
@@ -186,9 +176,6 @@
 
                 <TextBlock Text="{DynamicResource MidiDeviceLabel}"
                            Grid.Row="1"
-                           ToolTip="{DynamicResource MidiDeviceTooltip}"
-                           ToolTipService.IsEnabled="False"
-                           MouseEnter="Control_MouseEnter"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Bottom"
                            Margin="0,0,0,10"/>
@@ -202,20 +189,14 @@
                           ItemsSource="{Binding MidiDevices}"
                           HorizontalAlignment="Left"
                           VerticalAlignment="Center"
-                          Margin="4,1,2,5"
-                          Width="{Binding ElementName=cboSoundDevices, Path=ActualWidth}"
-                          ToolTip="{DynamicResource MidiDeviceTooltip}"
-                          ToolTipService.IsEnabled="False"
-                          MouseEnter="Control_MouseEnter"/>
+                          Margin="4,0,2,3"
+                          Width="{Binding ElementName=cboSoundDevices, Path=ActualWidth}"/>
 
 
                 <TextBlock Text="{DynamicResource SFXVolumeLabel}"
                            Grid.Row="2"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
-                           ToolTip="{DynamicResource SFXVolumeTooltip}"
-                           ToolTipService.IsEnabled="False"
-                           MouseEnter="Control_MouseEnter"
                            Margin="14,0,0,10"/>
 
                 <Slider x:Name="sliderSfxVolume"
@@ -241,9 +222,6 @@
                            Grid.Row="3"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
-                           ToolTip="{DynamicResource MusicVolumeTooltip}"
-                           ToolTipService.IsEnabled="False"
-                           MouseEnter="Control_MouseEnter"
                            TextTrimming="CharacterEllipsis"
                            Margin="5,0,0,10"/>
 
@@ -270,29 +248,19 @@
                           Content="{DynamicResource LogVolumeControl}" 
                           Grid.Row="4"
                           Grid.ColumnSpan="2"
-                          FontSize="13"
-                          Margin="3,0,0,0"
-                          HorizontalAlignment="Left"
-                          IsChecked="{Binding IsLogVolumeChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          MouseEnter="Control_MouseEnter"
-                          ToolTip="{DynamicResource LogVolumeControlTooltip}"/>
+                          HorizontalAlignment="Right"
+                          IsChecked="{Binding IsLogVolumeChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <CheckBox Content="{DynamicResource ReverseSpeakers}"
                           Grid.Row="5"
-                          FontSize="13"
-                          HorizontalAlignment="Left"
-                          Margin="3,0,0,0"
+                          HorizontalAlignment="Right"
                           Grid.ColumnSpan="2"
-                          Width="{Binding ElementName=chkLogVolume, Path=ActualWidth}"
-                          IsChecked="{Binding IsReverseSpeakersChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          MouseEnter="Control_MouseEnter"
-                          ToolTip="{DynamicResource ReverseSpeakersTooltip}"/>
+                          IsChecked="{Binding IsReverseSpeakersChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
             </Grid>
         </GroupBox>
 
         
         <GroupBox x:Name="grpOptions"
-                  Grid.Column="0"
                   Grid.Row="1"
                   Header="{DynamicResource OptionsHeader}" 
                   Margin="10,0,10,0" 
@@ -304,16 +272,12 @@
                   VerticalAlignment="Top">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>
                 <ComboBox x:Name="cboMountOptions"
-                          ToolTip="{DynamicResource MountOptionToolTip}"
-                          ToolTipService.IsEnabled="False"
-                          MouseEnter="Control_MouseEnter"
                           Style="{StaticResource MainComboBoxStyle}"
                           IsEnabled="{Binding IsAutoMountSupported}"
                           ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
@@ -322,36 +286,27 @@
                           ItemsSource="{Binding MountOptions}"
                           HorizontalAlignment="Stretch"
                           VerticalAlignment="Top"
-                          Margin="4,1,0,5"/>
+                          Margin="4,1,0,3"/>
                 <CheckBox Height="25" Content="{DynamicResource AutoMountDisc}" 
                           Grid.Row="1"
                           IsChecked="{Binding AutoMountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          IsEnabled="{Binding IsAutoMountSupported}"
-                          MouseEnter="Control_MouseEnter"
-                          ToolTip="{DynamicResource AutoMountDiscTooltip}"/>
+                          IsEnabled="{Binding IsAutoMountSupported}"/>
                 <CheckBox Height="25" Content="{DynamicResource AutoDismountDisc}" 
                           Grid.Row="2"
                           IsChecked="{Binding AutoUnmountChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          MouseEnter="Control_MouseEnter"
-                          IsEnabled="{Binding IsAutoMountSupported}"
-                          ToolTip="{DynamicResource AutoDismountDiscTooltip}"/>
+                          IsEnabled="{Binding IsAutoMountSupported}"/>
                 <CheckBox Height="25" Content="{DynamicResource AutoUpdatePath}" 
                           Grid.Row="3"
-                          IsChecked="{Binding AutoUpdatePathChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          MouseEnter="Control_MouseEnter"
-                          ToolTip="{DynamicResource AutoUpdatePathTooltip}"/>
+                          IsChecked="{Binding AutoUpdatePathChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <CheckBox Height="25" Content="{DynamicResource ShowGameLauncher}" 
                           Grid.Row="4"
-                          IsChecked="{Binding IsShowLauncherChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          MouseEnter="Control_MouseEnter"
-                          ToolTip="{DynamicResource ShowGameLauncherTooltip}"/>
+                          IsChecked="{Binding IsShowLauncherChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
         </GroupBox>
 
 
         <GroupBox x:Name="grpPrograms"
                   Grid.Row="2" 
-                  Grid.Column="0" 
                   Header="{DynamicResource ProgramsToRunHeader}"
                   MinWidth="350"
                   HorizontalAlignment="Stretch"
@@ -372,63 +327,33 @@
 
                 <Button x:Name="btnAddProgram"
                         Click="btnAddProgram_Click"
-                        ToolTip="{DynamicResource AddProgramTooltip}"
-                        ToolTipService.IsEnabled="False"
-                        MouseEnter="Control_MouseEnter"
-                        Style="{StaticResource ImageButton}"
-                        VerticalAlignment="Top"
-                        Height="24"
-                        Width="24"
+                        Style="{StaticResource SmallImageButtonStyle}"
                         Content="{StaticResource iconAdd}"/>
 
                 <Button x:Name="btnRemoveProgram"
                         Grid.Row="1"
                         Click="btnRemoveProgram_Click"
-                        ToolTipService.IsEnabled="False"
-                        MouseEnter="Control_MouseEnter"
-                        ToolTip="{DynamicResource RemoveProgramTooltip}"
-                        Style="{StaticResource ImageButton}"
-                        VerticalAlignment="Top"
-                        Height="24"
-                        Width="24"
+                        Style="{StaticResource SmallImageButtonStyle}"
                         Content="{StaticResource iconMinus}"/>
 
                 <Button x:Name="btnEditProgram"
                         Grid.Row="2"
-                        ToolTip="{DynamicResource EditProgramTooltip}"
-                        ToolTipService.IsEnabled="False"
-                        MouseEnter="Control_MouseEnter"
                         Click="btnEditProgram_Click"
-                        Style="{StaticResource ImageButton}"
-                        VerticalAlignment="Top"
-                        Height="24"
-                        Width="24"
+                        Style="{StaticResource SmallImageButtonStyle}"
                         Content="{StaticResource iconEdit}"/>
 
                 <Button x:Name="btnMoveProgramUp"
                         Grid.Row="3"
-                        ToolTip="{DynamicResource MoveProgramUpTooltip}"
-                        ToolTipService.IsEnabled="False"
-                        MouseEnter="Control_MouseEnter"
                         Click="btnMoveProgramUp_Click"
                         MouseRightButtonUp="btnMoveProgramUp_MouseRightButtonUp"
-                        Style="{StaticResource ImageButton}"
-                        VerticalAlignment="Top"
-                        Height="24"
-                        Width="24"
+                        Style="{StaticResource SmallImageButtonStyle}"
                         Content="{StaticResource iconUpChevron}"/>
 
                 <Button x:Name="btnMoveProgramDown"
                         Grid.Row="4"
-                        ToolTip="{DynamicResource MoveProgramDownTooltip}"
-                        ToolTipService.IsEnabled="False"
-                        MouseEnter="Control_MouseEnter"
                         Click="btnMoveProgramDown_Click"
                         MouseRightButtonUp="btnMoveProgramDown_MouseRightButtonUp"
-                        Style="{StaticResource ImageButton}"
-                        VerticalAlignment="Top"
-                        Height="24"
-                        Width="24"
+                        Style="{StaticResource SmallImageButtonStyle}"
                         Content="{StaticResource iconDownChevron}"/>
 
 
@@ -443,25 +368,12 @@
             </Grid>
         </GroupBox>
 
-        <TextBlock x:Name="txtHint" 
-                   Grid.Row="3"
-                   VerticalAlignment="Top"
-                   HorizontalAlignment="Left"
-                   TextWrapping="Wrap"
-                   Margin="10,5,0,0"
-                   TextTrimming="CharacterEllipsis"
-                   Text="{Binding StatusMessage, FallbackValue='This is a mouse over description or message to user. This is a mouse over description'}"/>
-
-        <WrapPanel Grid.Row="4"
-                   Grid.Column="0"
-                   Grid.ColumnSpan="2"
+        <WrapPanel Grid.Row="3"
                    HorizontalAlignment="Right"
-                   Margin="0,5,10,10">
+                   VerticalAlignment="Bottom"
+                   Margin="0,0,10,5">
             <Button x:Name="btnDefaults" 
                     Content="{DynamicResource ResetDefaults}" 
-                    ToolTip="{DynamicResource ResetLauncherDefaultsTooltip}"
-                    ToolTipService.IsEnabled="False"
-                    MouseEnter="Control_MouseEnter"
                     Click="btnDefaults_Click"
                     VerticalAlignment="Bottom"/>
 
@@ -527,7 +439,6 @@
                 <Button x:Name="btnBrowseProgram"
                         Click="btnBrowseProgram_Click"
                         Style="{StaticResource FileEllipsisImageButton}"
-                        ToolTip="{DynamicResource BrowseProgramTooltip}"
                         Grid.Column="1"
                         Margin="0,3,25,0"
                         VerticalAlignment="Center"/>
