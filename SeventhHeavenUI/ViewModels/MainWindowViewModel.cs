@@ -1744,7 +1744,7 @@ namespace SeventhHeavenUI.ViewModels
 
         internal void ShowGameDriverConfigWindow()
         {
-            string driverCfg = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "7H_GameDriver.cfg");
+            string driverCfg = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "FFNx.cfg");
             string appLanguage = App.GetAppLanguage();
             string uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "7H_GameDriver_UI.xml"); // default to using english version
 

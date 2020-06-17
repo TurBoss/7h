@@ -659,13 +659,6 @@ namespace _7thWrapperLib {
                         throw;
                     }
                 }
-
-                if (System.IO.Path.GetFileName(lpFileName).Equals("7H_GameDriver.cfg", StringComparison.InvariantCultureIgnoreCase) && !String.IsNullOrWhiteSpace(_profile.OpenGLConfig))
-                {
-                    _streamFiles[handle] = new VStreamFile(System.Text.Encoding.UTF8.GetBytes(_profile.OpenGLConfig));
-                    DebugLogger.WriteLine("Overriding 7H_GameDriver.cfg with replacement data");
-                }
-
                 
                 DebugLogger.DetailedWriteLine($"CreateFileW: {lpFileName} -> {handle}");
             }

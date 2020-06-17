@@ -17,7 +17,6 @@ namespace _7thHeaven.Code
         public bool AutoUpdateDiscPath { get; set; }
         public MountDiscOption MountingOption { get; set; }
 
-        public bool HighDpiFix { get; set; }
         public bool DisableReunionOnLaunch { get; set; }
 
         public bool ReverseSpeakers { get; set; }
@@ -25,11 +24,6 @@ namespace _7thHeaven.Code
         public Guid SelectedSoundDevice { get; set; }
         public string SelectedMidiDevice { get; set; }
 
-        public int SelectedRenderer { get; set; }
-        public bool UseRiva128GraphicsOption { get; set; }
-        public bool UseTntGraphicsOption { get; set; }
-        public bool QuarterScreenMode { get; set; }
-        public bool FullScreenMode { get; set; }
         public bool ShowLauncherWindow { get; set; }
 
         public bool HasDisplayedOggMusicWarning { get; set; }
@@ -57,17 +51,11 @@ namespace _7thHeaven.Code
                 AutoMountGameDisc = true,
                 AutoUnmountGameDisc = true,
                 AutoUpdateDiscPath = true,
-                HighDpiFix = false,
                 DisableReunionOnLaunch = true,
                 SelectedSoundDevice = Guid.Empty,
                 ReverseSpeakers = false,
                 LogarithmicVolumeControl = true,
                 SelectedMidiDevice = "GENERAL_MIDI",
-                SelectedRenderer = 3,
-                UseRiva128GraphicsOption = false,
-                UseTntGraphicsOption = false,
-                QuarterScreenMode = false,
-                FullScreenMode = false,
                 ShowLauncherWindow = true,
                 InGameConfigOption = "[Default] Playstation+Steam KB.cfg",
                 HasDisplayedOggMusicWarning = false,

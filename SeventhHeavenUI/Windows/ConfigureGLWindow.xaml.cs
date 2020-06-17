@@ -59,7 +59,7 @@ namespace SeventhHeaven.Windows
             if (!File.Exists(_file))
             {
                 // copy default .cfg file if missing
-                File.Copy(Path.Combine(Sys.PathToGameDriverFolder, "7H_GameDriver.cfg"), _file, true);
+                File.Copy(Path.Combine(Sys.PathToGameDriverFolder, "FFNx.cfg"), _file, true);
             }
 
             _settings = new Iros._7th.Workshop.ConfigSettings.Settings(File.ReadAllLines(_file));

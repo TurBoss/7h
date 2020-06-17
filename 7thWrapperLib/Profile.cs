@@ -111,7 +111,6 @@ namespace _7thWrapperLib
     public class RuntimeProfile
     {
         public string LogFile { get; set; }
-        public string OpenGLConfig { get; set; }
         public RuntimeOptions Options { get; set; }
         public string ModPath { get; set; }
         public string FF7Path { get; set; }

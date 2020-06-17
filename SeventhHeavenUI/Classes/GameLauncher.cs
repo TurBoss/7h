@@ -444,11 +444,6 @@ namespace SeventhHeaven.Classes
                 vanillaMsg = ResourceHelper.Get(StringKey.NoModsActivatedLaunchingGameAsVanilla);
                 runAsVanilla = true;
             }
-            else if (Sys.Settings.GameLaunchSettings.SelectedRenderer != (int)GraphicsRenderer.CustomDriver)
-            {
-                vanillaMsg = ResourceHelper.Get(StringKey.SelectedRendererIsNotSetToCustomLaunchingGameAsVanilla);
-                runAsVanilla = true;
-            }
 
 
 
@@ -896,7 +891,6 @@ namespace SeventhHeaven.Classes
                     Sys.Settings.MovieFolder,
                 },
                 ModPath = Sys.Settings.LibraryLocation,
-                OpenGLConfig = Sys.ActiveProfile.OpenGLConfig,
                 FF7Path = ff7Folder,
                 gameFiles = Directory.GetFiles(ff7Folder, "*.*", SearchOption.AllDirectories),
                 Mods = runtimeMods
@@ -1427,51 +1421,17 @@ namespace SeventhHeaven.Classes
             string graphicsKeyPath = $"{ff7KeyPath}\\1.00\\Graphics";
             string graphicsVirtualKeyPath = $"{virtualStorePath}\\1.00\\Graphics";
 
-            SetValueIfChanged(graphicsKeyPath, "Driver", Sys.Settings.GameLaunchSettings.SelectedRenderer, RegistryValueKind.DWord);
-            SetValueIfChanged(graphicsVirtualKeyPath, "Driver", Sys.Settings.GameLaunchSettings.SelectedRenderer, RegistryValueKind.DWord);
+            SetValueIfChanged(graphicsKeyPath, "Driver", (int)GraphicsRenderer.CustomDriver, RegistryValueKind.DWord);
+            SetValueIfChanged(graphicsVirtualKeyPath, "Driver", (int)GraphicsRenderer.CustomDriver, RegistryValueKind.DWord);
 
-            if (Sys.Settings.GameLaunchSettings.SelectedRenderer == 3)
-            {
-                SetValueIfChanged(graphicsKeyPath, "DriverPath", "7H_GameDriver.dll");
-                SetValueIfChanged(graphicsVirtualKeyPath, "DriverPath", "7H_GameDriver.dll");
+            SetValueIfChanged(graphicsKeyPath, "DriverPath", "FFNx.dll");
+            SetValueIfChanged(graphicsVirtualKeyPath, "DriverPath", "FFNx.dll");
 
-                SetValueIfChanged(graphicsKeyPath, "Mode", 2, RegistryValueKind.DWord);
-                SetValueIfChanged(graphicsVirtualKeyPath, "Mode", 2, RegistryValueKind.DWord);
+            SetValueIfChanged(graphicsKeyPath, "Mode", 2, RegistryValueKind.DWord);
+            SetValueIfChanged(graphicsVirtualKeyPath, "Mode", 2, RegistryValueKind.DWord);
 
-                SetValueIfChanged(graphicsKeyPath, "Options", 0x12, RegistryValueKind.DWord);
-                SetValueIfChanged(graphicsVirtualKeyPath, "Options", 0x12, RegistryValueKind.DWord);
-            }
-            else
-            {
-                SetValueIfChanged(graphicsKeyPath, "DriverPath", "");
-                SetValueIfChanged(graphicsVirtualKeyPath, "DriverPath", "");
-
-                int mode = Sys.Settings.GameLaunchSettings.FullScreenMode ? 2 : 1;
-
-                SetValueIfChanged(graphicsKeyPath, "Mode", mode, RegistryValueKind.DWord);
-                SetValueIfChanged(graphicsVirtualKeyPath, "Mode", mode, RegistryValueKind.DWord);
-
-                if (mode == 1)
-                {
-                    SetValueIfChanged(graphicsKeyPath, "Options", 0x12, RegistryValueKind.DWord);
-                    SetValueIfChanged(graphicsVirtualKeyPath, "Options", 0x12, RegistryValueKind.DWord);
-                }
-                else if (Sys.Settings.GameLaunchSettings.UseRiva128GraphicsOption)
-                {
-                    SetValueIfChanged(graphicsKeyPath, "Options", 0x0000000a, RegistryValueKind.DWord);
-                    SetValueIfChanged(graphicsVirtualKeyPath, "Options", 0x0000000a, RegistryValueKind.DWord);
-                }
-                else if (Sys.Settings.GameLaunchSettings.UseTntGraphicsOption)
-                {
-                    SetValueIfChanged(graphicsKeyPath, "Options", 0x12, RegistryValueKind.DWord);
-                    SetValueIfChanged(graphicsVirtualKeyPath, "Options", 0x12, RegistryValueKind.DWord);
-                }
-                else
-                {
-                    SetValueIfChanged(graphicsKeyPath, "Options", 0, RegistryValueKind.DWord);
-                    SetValueIfChanged(graphicsVirtualKeyPath, "Options", 0, RegistryValueKind.DWord);
-                }
-            }
+            SetValueIfChanged(graphicsKeyPath, "Options", 0x12, RegistryValueKind.DWord);
+            SetValueIfChanged(graphicsVirtualKeyPath, "Options", 0x12, RegistryValueKind.DWord);
 
             byte[] emptyGuidBytes = Guid.Empty.ToByteArray();
 
@@ -1564,29 +1524,13 @@ namespace SeventhHeaven.Classes
             string keyPath = @"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers";
 
             // delete compatibility flags if set in launch settings
-            if (!Sys.Settings.GameLaunchSettings.HighDpiFix)
+            Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.Code5FixHighDpiFixSetToFalseDeletingFlags)}");
+            ff7CompatKey = Registry.CurrentUser.OpenSubKey(keyPath, true);
+
+            if (ff7CompatKey != null && ff7CompatKey.GetValue(Sys.Settings.FF7Exe) != null)
             {
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.Code5FixHighDpiFixSetToFalseDeletingFlags)}");
-                ff7CompatKey = Registry.CurrentUser.OpenSubKey(keyPath, true);
-
-                if (ff7CompatKey != null && ff7CompatKey.GetValue(Sys.Settings.FF7Exe) != null)
-                {
-                    Instance.RaiseProgressChanged($"\t\t{ResourceHelper.Get(StringKey.CompatibilityFlagsFoundDeleting)}");
-                    ff7CompatKey.DeleteValue(Sys.Settings.FF7Exe);
-                }
-
-                return;
-            }
-
-
-            if (Sys.Settings.GameLaunchSettings.HighDpiFix)
-            {
-                string compatString = "~ HIGHDPIAWARE";
-
-                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.HighDpiFixSetToTrueApplyingCompatibilityFlag)}");
-                Instance.RaiseProgressChanged($"\t HKEY_CURRENT_USER\\{keyPath}::{Sys.Settings.FF7Exe} = {compatString}");
-                ff7CompatKey = Registry.CurrentUser.OpenSubKey(keyPath, true);
-                ff7CompatKey?.SetValue(Sys.Settings.FF7Exe, compatString);
+                Instance.RaiseProgressChanged($"\t\t{ResourceHelper.Get(StringKey.CompatibilityFlagsFoundDeleting)}");
+                ff7CompatKey.DeleteValue(Sys.Settings.FF7Exe);
             }
         }
 

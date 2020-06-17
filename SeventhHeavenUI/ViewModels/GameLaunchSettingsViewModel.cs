@@ -41,15 +41,11 @@ namespace SeventhHeaven.ViewModels
         private bool _autoMountChecked;
         private bool _autoUnmountChecked;
         private bool _autoUpdatePathChecked;
-        private bool _highDpiFixChecked;
         private bool _isAutoMountSupported;
         private bool _isReverseSpeakersChecked;
         private bool _isLogVolumeChecked;
-        private bool _isRivaOptionChecked;
-        private bool _isTntOptionChecked;
         private string _selectedSoundDevice;
         private string _selectedMidiDevice;
-        private string _selectedRenderer;
         private int _volumeValue;
 
         private WaveOut _audioTest;
@@ -59,8 +55,6 @@ namespace SeventhHeaven.ViewModels
         private string _newProgramArgsText;
         private bool _isProgramPopupOpen;
         private int _sfxVolumeValue;
-        private bool _isQuarterScreenChecked;
-        private bool _isFullScreenChecked;
         private bool _isShowLauncherChecked;
         private VolumeSlider _lastVolumeSliderChanged;
         private bool _isSoundDevicesLoaded;
