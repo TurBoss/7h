@@ -1075,18 +1075,24 @@ namespace SeventhHeaven.ViewModels
             return Task.Factory.StartNew(() =>
             {
 
+                if (ConnectedController == null)
+                {
+                    ConnectedController = new GameController();
+                    ConnectedController.CreateDevice();
+                }
+
                 while (IsCapturing && _captureState == CaptureState.CaptureController)
                 {
-                    if (ConnectedController == null || ConnectedController?.IsConnected == false)
+                    if (ConnectedController?.IsConnected == false)
                     {
                         Thread.Sleep(1000);
-                        ConnectedController = new GameController();
-                        ConnectedController.CreateDevice();
+                        ConnectedController?.CreateDevice();
                         continue;
                     }
 
                     if (ConnectedController.ReadState() == null)
                     {
+                        ConnectedController?.ReleaseDevice();
                         continue;
                     }
 
