@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using XInputDotNetPure;
 
 namespace SeventhHeaven.Classes
 {

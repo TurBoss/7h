@@ -619,5 +619,9 @@
         MountDiscWithPowershell,
         MountDiscWithWinCDEmu,
         LoadingDevices,
+        Button11,
+        Button12,
+        Button13,
+        Button14,
     }
 }

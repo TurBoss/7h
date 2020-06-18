@@ -12,6 +12,7 @@
         Style="{DynamicResource MainWindowStyle}"
         PreviewKeyDown="Window_PreviewKeyDown"
         PreviewKeyUp="Window_PreviewKeyUp"
+        Closing="windowControls_Closing"
         Height="550" Width="475">
     <Window.Resources>
         <Style x:Key="controlNameLabel" TargetType="TextBlock" BasedOn="{StaticResource PrimaryTextBlockStyle}">
@@ -45,7 +46,7 @@
 
         <DataTemplate x:Key="keyboardItemTemplate">
             <Grid x:Name="gd" DataContext="{Binding ElementName=windowControls, Path=DataContext}" Background="Transparent">
-                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedGameConfigOption, FallbackValue='No Numpad+Swap AB-XO Gamepad'}" 
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedGameConfigOption, FallbackValue='[Default-Alt] Steam KB+PlayStation (Swap AB-XO)'}" 
                            Margin="0,0,15,0" 
                            TextTrimming="CharacterEllipsis"
                            TextWrapping="NoWrap"/>
@@ -429,8 +430,6 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
             <TextBlock Text="{DynamicResource Presets}"
@@ -442,11 +441,12 @@
                        Margin="0,0,1,0"/>
             <ComboBox Name="cboKeyboards"
                       VerticalAlignment="Center"
+                      HorizontalAlignment="Left"
                       FontSize="13"
                       Grid.Column="1"
                       Grid.ColumnSpan="2"
-                      MaxWidth="300"
-                      MinWidth="190"
+                      MinWidth="330"
+                      MaxWidth="330"
                       Margin="0,0,0,0"
                       ToolTip="{DynamicResource ControlsTooltip}"
                       Style="{StaticResource MainComboBoxStyle}"
@@ -463,12 +463,12 @@
                     IsEnabled="{Binding IsCustomConfigOptionSelected}"
                     Style="{StaticResource ImageButton}"
                     Content="{StaticResource iconDelete}"
-                    Grid.Column="4"
+                    Grid.Column="5"
                     Width="28"
                     Height="28"/>
 
             <Button x:Name="btnSaveChanges"
-                    Grid.Column="4"
+                    Grid.Column="2"
                     Grid.RowSpan="4"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"
@@ -478,7 +478,7 @@
                     IsEnabled="{Binding HasUnsavedChanges}"
                     Content="{DynamicResource Save}"/>
             <Button x:Name="btnCancel"
-                    Grid.Column="5"
+                    Grid.Column="3"
                     Grid.RowSpan="4"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"
@@ -494,7 +494,7 @@
                       ToolTip="{DynamicResource TriggerDpadSupportTooltip}"
                       HorizontalAlignment="Left"
                       Grid.Row="1"
-                      Grid.ColumnSpan="6"/>
+                      Grid.ColumnSpan="4"/>
 
             <CheckBox Style="{StaticResource ToggleSwitchCheckbox}"
                       IsEnabled="{Binding IsNotInstallingDriver}"
@@ -505,7 +505,7 @@
                       Width="{Binding ElementName=chkDpadSupport, Path=ActualWidth}"
                       HorizontalAlignment="Left"
                       Grid.Row="2"
-                      Grid.ColumnSpan="6"/>
+                      Grid.ColumnSpan="4"/>
 
             <Button x:Name="btnOpenGameControllersWindow"
                     Style="{StaticResource HyperlinkButton}"

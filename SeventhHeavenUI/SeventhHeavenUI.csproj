@@ -116,6 +116,9 @@
     <Reference Include="NVorbis, Version=0.8.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NVorbis.0.8.6\lib\net35\NVorbis.dll</HintPath>
     </Reference>
+    <Reference Include="SlimDX, Version=4.0.13.43, Culture=neutral, PublicKeyToken=b1b0c32fd1ffe4f9, processorArchitecture=x86">
+      <HintPath>..\packages\SlimDX.4.0.13.44\lib\NET40\SlimDX.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -149,9 +152,6 @@
     <Reference Include="Xceed.Wpf.Toolkit, Version=3.8.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
       <HintPath>..\packages\Extended.Wpf.Toolkit.3.8.1\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
-    <Reference Include="XInputDotNetPure">
-      <HintPath>.\XInputDotNetPure.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -168,6 +168,7 @@
     <Compile Include="Classes\DateTimeComparer.cs" />
     <Compile Include="Classes\DS4ControllerService.cs" />
     <Compile Include="Classes\FileDialogHelper.cs" />
+    <Compile Include="Classes\GameController.cs" />
     <Compile Include="Classes\GameConverter.cs" />
     <Compile Include="Classes\GameLauncher.cs" />
     <Compile Include="Classes\KeyboardInputSender.cs" />
@@ -491,9 +492,6 @@
     </Content>
     <Content Include="Resources\WinCDEmu\PortableWinCDEmu.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="XInputInterface.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Languages\StringResources.it.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -1002,40 +1000,22 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Content Include="Resources\Controls\1998 KB+Std Gamepad.cfg">
+    <Content Include="Resources\Controls\1998 KB+PlayStation %28Stock%29.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Controls\1998 KB+Swap AB-XO Gamepad.cfg">
+    <Content Include="Resources\Controls\1998 KB+PlayStation %28Swap AB-XO%29.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Controls\1998 Original.cfg">
+    <Content Include="Resources\Controls\unab0mb%27s Choice+PlayStation %28Stock%29.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Controls\No Numpad+Std Gamepad.cfg">
+    <Content Include="Resources\Controls\unab0mb%27s Choice+PlayStation %28Swap AB-XO%29.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Controls\No Numpad+Swap AB-XO Gamepad.cfg">
+    <Content Include="Resources\Controls\[Default-Alt] Steam KB+PlayStation %28Swap AB-XO%29.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\Controls\Steam KB+Std GamePad.cfg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Controls\Steam KB+Swap AB-XO GamePad.cfg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Controls\Steam Original.cfg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Controls\WASD unab0mb%27s Choice Std.cfg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Controls\WASD unab0mb%27s Choice Swap.cfg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Controls\[Default] Playstation+Steam KB.cfg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\Controls\[Swap AB-XO] Playstation+Steam KB.cfg">
+    <Content Include="Resources\Controls\[Default] Steam KB+PlayStation %28Stock%29.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\FF7DISC1.ISO">
@@ -1184,6 +1164,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

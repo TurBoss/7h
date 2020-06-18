@@ -57,7 +57,7 @@ namespace _7thHeaven.Code
                 LogarithmicVolumeControl = true,
                 SelectedMidiDevice = "GENERAL_MIDI",
                 ShowLauncherWindow = true,
-                InGameConfigOption = "[Default] Playstation+Steam KB.cfg",
+                InGameConfigOption = "[Default] Steam KB+PlayStation (Stock).cfg",
                 HasDisplayedOggMusicWarning = false,
                 HasDisplayedMovieWarning = false,
                 EnablePs4ControllerService = false,

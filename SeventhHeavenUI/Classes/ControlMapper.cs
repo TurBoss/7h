@@ -164,10 +164,11 @@ namespace SeventhHeaven.Classes
             new ControlInputSetting("Button 8", 242, GamePadButton.Button8, StringKey.Button8),
             new ControlInputSetting("Button 9", 243, GamePadButton.Button9, StringKey.Button9),
             new ControlInputSetting("Button 10", 244, GamePadButton.Button10, StringKey.Button10),
+            new ControlInputSetting("Button 11", 245, GamePadButton.Button11, StringKey.Button11),
+            new ControlInputSetting("Button 12", 246, GamePadButton.Button12, StringKey.Button12),
+            new ControlInputSetting("Button 13", 247, GamePadButton.Button13, StringKey.Button13),
+            new ControlInputSetting("Button 14", 248, GamePadButton.Button14, StringKey.Button14),
 
-            // button 11 and button12 are not actually supported natively in ff7. 7H intercepts these and presses the corresponding keyboard control
-            new ControlInputSetting("Button 11", 231, GamePadButton.LeftTrigger, StringKey.LeftTrigger),
-            new ControlInputSetting("Button 12", 232, GamePadButton.RightTrigger, StringKey.RightTrigger),
 
         };
 
@@ -335,10 +336,6 @@ namespace SeventhHeaven.Classes
     /// </summary>
     public enum GamePadButton
     {
-        Up,
-        Down,
-        Left,
-        Right,
         Button1,
         Button2,
         Button3,
@@ -349,8 +346,16 @@ namespace SeventhHeaven.Classes
         Button8,
         Button9,
         Button10,
-        LeftTrigger,
+        Button11,
+        Button12,
+        Button13,
+        Button14,
+        LeftTrigger, // XInput devices do not treat trigger as buttons so these enums are used by XInput devices
         RightTrigger,
+        Up,
+        Down,
+        Left,
+        Right,
         DPadUp,
         DPadDown,
         DPadLeft,

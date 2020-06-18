@@ -1,9 +1,10 @@
 ﻿using Iros._7th.Workshop;
+using SlimDX.DirectInput;
+using SlimDX.XInput;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using XInputDotNetPure;
 using static SeventhHeaven.Classes.KeyboardInputSender;
 
 namespace SeventhHeaven.Classes
@@ -16,31 +17,7 @@ namespace SeventhHeaven.Classes
     {
         public bool PollingInput { get; set; }
 
-        /// <summary>
-        /// Returns the <see cref="PlayerIndex"/> of the first controller detected. Returns null if no controllers are connected
-        /// </summary>
-        /// <returns></returns>
-        internal static PlayerIndex? GetConnectedController()
-        {
-            if (GamePad.GetState(PlayerIndex.One).IsConnected)
-            {
-                return PlayerIndex.One;
-            }
-            else if (GamePad.GetState(PlayerIndex.Two).IsConnected)
-            {
-                return PlayerIndex.Two;
-            }
-            else if (GamePad.GetState(PlayerIndex.Three).IsConnected)
-            {
-                return PlayerIndex.Three;
-            }
-            else if (GamePad.GetState(PlayerIndex.Four).IsConnected)
-            {
-                return PlayerIndex.Four;
-            }
-
-            return null;
-        }
+        private GameController ConnectedController { get; set; }
 
         /// <summary>
         /// Polls for game pad input and maps the non-supported buttons to the keyboard binding.
@@ -59,8 +36,6 @@ namespace SeventhHeaven.Classes
             bool wasDownPressed = false;
             bool wasLeftPressed = false;
             bool wasRightPressed = false;
-            bool wasLeftTriggerPressed = false;
-            bool wasRightTriggerPressed = false;
 
 
             return Task.Factory.StartNew(() =>
@@ -82,27 +57,7 @@ namespace SeventhHeaven.Classes
                 ScanCodeShort? rightKey = null;
                 bool rightIsExtended = false;
 
-                ScanCodeShort? leftTriggerKey = null;
-                bool leftTriggerIsExtended = false;
-                ScanCodeShort? rightTriggerKey = null;
-                bool rightTriggerIsExtended = false;
-
                 GameControl bindedControl;
-
-                if (loadedConfig.GamepadInputs.Any(kv => kv.Value?.GamepadInput.Value == GamePadButton.LeftTrigger))
-                {
-                    bindedControl = loadedConfig.GamepadInputs.Where(kv => kv.Value?.GamepadInput.Value == GamePadButton.LeftTrigger).Select(kv => kv.Key).FirstOrDefault();
-                    leftTriggerKey = loadedConfig.KeyboardInputs[bindedControl].KeyScanCode;
-                    leftTriggerIsExtended = loadedConfig.KeyboardInputs[bindedControl].KeyIsExtended;
-                }
-
-                if (loadedConfig.GamepadInputs.Any(kv => kv.Value?.GamepadInput.Value == GamePadButton.RightTrigger))
-                {
-                    bindedControl = loadedConfig.GamepadInputs.Where(kv => kv.Value?.GamepadInput.Value == GamePadButton.RightTrigger).Select(kv => kv.Key).FirstOrDefault();
-                    rightTriggerKey = loadedConfig.KeyboardInputs[bindedControl].KeyScanCode;
-                    rightTriggerIsExtended = loadedConfig.KeyboardInputs[bindedControl].KeyIsExtended;
-                }
-
 
                 if (hasDpadBinded)
                 {
@@ -150,93 +105,75 @@ namespace SeventhHeaven.Classes
                     rightIsExtended = loadedConfig.KeyboardInputs[GameControl.Right].KeyIsExtended;
                 }
 
-                PlayerIndex? connectedController = GetConnectedController();
+                if (ConnectedController == null)
+                {
+                    ConnectedController = new GameController();
+                }
 
                 while (PollingInput)
                 {
-                    if (connectedController == null)
+                    if (ConnectedController.IsConnected == false)
                     {
                         // null means no connected controller found so just sleep for a little and check back later
                         Thread.Sleep(1000);
                         DS4ControllerService.Instance?.RootHub?.HotPlug();
-                        connectedController = GetConnectedController();
+                        ConnectedController.CreateDevice();
                         continue;
                     }
 
-                    GamePadState state = GamePad.GetState(connectedController.Value);
-
-                    if (!state.IsConnected)
+                    if (ConnectedController.ReadState() == null)
                     {
-                        connectedController = null;
                         continue;
                     }
 
-                    if (upKey != null && state.DPad.Up == ButtonState.Pressed && !wasUpPressed)
+
+
+                    if (upKey != null && ConnectedController.IsButtonPressed(GamePadButton.DPadUp) && !wasUpPressed)
                     {
                         wasUpPressed = true;
                         SendKey(upKey.Value, upIsExtended);
                     }
-                    else if (upKey != null && state.DPad.Up == ButtonState.Released && wasUpPressed)
+                    else if (upKey != null && !ConnectedController.IsButtonPressed(GamePadButton.DPadUp) && wasUpPressed)
                     {
                         ReleaseKey(upKey.Value, upIsExtended);
                         wasUpPressed = false;
                     }
 
-                    if (downKey != null && state.DPad.Down == ButtonState.Pressed && !wasDownPressed)
+                    if (downKey != null && ConnectedController.IsButtonPressed(GamePadButton.DPadDown) && !wasDownPressed)
                     {
                         wasDownPressed = true;
                         SendKey(downKey.Value, downIsExtended);
                     }
-                    else if (downKey != null && state.DPad.Down == ButtonState.Released && wasDownPressed)
+                    else if (downKey != null && !ConnectedController.IsButtonPressed(GamePadButton.DPadDown) && wasDownPressed)
                     {
                         ReleaseKey(downKey.Value, downIsExtended);
                         wasDownPressed = false;
                     }
 
-                    if (leftKey != null && state.DPad.Left == ButtonState.Pressed && !wasLeftPressed)
+                    if (leftKey != null && ConnectedController.IsButtonPressed(GamePadButton.DPadLeft) && !wasLeftPressed)
                     {
                         wasLeftPressed = true;
                         SendKey(leftKey.Value, leftIsExtended);
                     }
-                    else if (leftKey != null && state.DPad.Left == ButtonState.Released && wasLeftPressed)
+                    else if (leftKey != null && !ConnectedController.IsButtonPressed(GamePadButton.DPadLeft) && wasLeftPressed)
                     {
                         ReleaseKey(leftKey.Value, leftIsExtended);
                         wasLeftPressed = false;
                     }
 
-                    if (rightKey != null && state.DPad.Right == ButtonState.Pressed && !wasRightPressed)
+                    if (rightKey != null && ConnectedController.IsButtonPressed(GamePadButton.DPadRight) && !wasRightPressed)
                     {
                         wasRightPressed = true;
                         SendKey(rightKey.Value, rightIsExtended);
                     }
-                    else if (rightKey != null && state.DPad.Right == ButtonState.Released && wasRightPressed)
+                    else if (rightKey != null && !ConnectedController.IsButtonPressed(GamePadButton.DPadRight) && wasRightPressed)
                     {
                         ReleaseKey(rightKey.Value, rightIsExtended);
                         wasRightPressed = false;
                     }
-
-                    if (leftTriggerKey != null && state.Triggers.Left > 0 && !wasLeftTriggerPressed)
-                    {
-                        wasLeftTriggerPressed = true;
-                        SendKey(leftTriggerKey.Value, leftTriggerIsExtended);
-                    }
-                    else if (leftTriggerKey != null && state.Triggers.Left == 0 && wasLeftTriggerPressed)
-                    {
-                        ReleaseKey(leftTriggerKey.Value, leftTriggerIsExtended);
-                        wasLeftTriggerPressed = false;
-                    }
-
-                    if (rightTriggerKey != null && state.Triggers.Right > 0 && !wasRightTriggerPressed)
-                    {
-                        wasRightTriggerPressed = true;
-                        SendKey(rightTriggerKey.Value, rightTriggerIsExtended);
-                    }
-                    else if (leftTriggerKey != null && state.Triggers.Right == 0 && wasRightTriggerPressed)
-                    {
-                        ReleaseKey(rightTriggerKey.Value, rightTriggerIsExtended);
-                        wasRightTriggerPressed = false;
-                    }
                 }
+
+                ConnectedController.ReleaseDevice();
 
             });
 
@@ -244,14 +181,15 @@ namespace SeventhHeaven.Classes
 
         internal static void SendVibrationToConnectedController(int lengthInMilliseconds = 750)
         {
-            PlayerIndex? connectedController = GetConnectedController();
+            //PlayerIndex? connectedController = GetConnectedController();
 
-            if (connectedController.HasValue)
-            {
-                GamePad.SetVibration(connectedController.Value, 0.75f, 0.75f);
-                Thread.Sleep(lengthInMilliseconds);
-                GamePad.SetVibration(connectedController.Value, 0f, 0f);
-            }
+            //if (connectedController.HasValue)
+            //{
+            //    GamePad.SetVibration(connectedController.Value, 0.75f, 0.75f);
+            //    Thread.Sleep(lengthInMilliseconds);
+            //    GamePad.SetVibration(connectedController.Value, 0f, 0f);
+            //}
         }
+
     }
 }

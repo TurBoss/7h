@@ -268,5 +268,10 @@ namespace SeventhHeaven.Windows
         {
             ViewModel.LaunchControlPanelGameControllersWindow();
         }
+
+        private void windowControls_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            ViewModel.ConnectedController?.ReleaseDevice();
+        }
     }
 }

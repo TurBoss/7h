@@ -10,13 +10,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using XInputDotNetPure;
-
+using SlimDX;
+using SlimDX.DirectInput;
 namespace SeventhHeaven.ViewModels
 {
 
@@ -33,18 +31,12 @@ namespace SeventhHeaven.ViewModels
 
         private List<string> _defaultControlNames = new List<string>()
         {
-            "1998 KB+Std Gamepad",
-            "1998 KB+Swap AB-XO Gamepad",
-            "1998 Original",
-            "[Default] Playstation+Steam KB",
-            "[Swap AB-XO] Playstation+Steam KB",
-            "No Numpad+Std Gamepad",
-            "No Numpad+Swap AB-XO Gamepad",
-            "Steam KB+Std GamePad",
-            "Steam KB+Swap AB-XO GamePad",
-            "Steam Original",
-            "WASD unab0mb's Choice Std",
-            "WASD unab0mb's Choice Swap"
+            "[Default] Steam KB+PlayStation (Stock)",
+            "[Default-Alt] Steam KB+PlayStation (Swap AB-XO)",
+            "1998 KB+PlayStation (Stock)",
+            "1998 KB+PlayStation (Swap AB-XO)",
+            "unab0mb's Choice+PlayStation (Stock)",
+            "unab0mb's Choice+PlayStation (Swap AB-XO)"
         };
 
         private bool _isCapturing;
@@ -755,10 +747,12 @@ namespace SeventhHeaven.ViewModels
 
                 if (_isPs4SupportChecked)
                 {
+                    ConnectedController?.ReleaseDevice();
                     TurnOnPs4Service();
                 }
                 else
                 {
+                    ConnectedController?.ReleaseDevice();
                     TurnOffPs4Service();
                 }
 
@@ -1074,23 +1068,30 @@ namespace SeventhHeaven.ViewModels
             PollForGamePadInput();
         }
 
+        internal GameController ConnectedController { get; set; }
+
         private Task PollForGamePadInput()
         {
             return Task.Factory.StartNew(() =>
             {
+
                 while (IsCapturing && _captureState == CaptureState.CaptureController)
                 {
-                    PlayerIndex? connectedIndex = ControllerInterceptor.GetConnectedController();
-
-                    if (connectedIndex == null)
+                    if (ConnectedController == null || ConnectedController?.IsConnected == false)
                     {
                         Thread.Sleep(1000);
+                        ConnectedController = new GameController();
+                        ConnectedController.CreateDevice();
                         continue;
                     }
 
-                    GamePadState state = GamePad.GetState(connectedIndex.Value);
-                    GamePadButton? pressedButton = GetPressedButton(state);
+                    if (ConnectedController.ReadState() == null)
+                    {
+                        continue;
+                    }
 
+
+                    GamePadButton? pressedButton = ConnectedController.GetPressedButton();
                     if (pressedButton.HasValue)
                     {
                         // if the user disabled trigger/dpad overrides then don't capture those buttons
@@ -1119,98 +1120,6 @@ namespace SeventhHeaven.ViewModels
                    button == GamePadButton.DPadDown ||
                    button == GamePadButton.DPadLeft ||
                    button == GamePadButton.DPadRight;
-        }
-
-        private GamePadButton? GetPressedButton(GamePadState state)
-        {
-            if (state.Buttons.A == ButtonState.Pressed)
-            {
-                return GamePadButton.Button1;
-            }
-            else if (state.Buttons.B == ButtonState.Pressed)
-            {
-                return GamePadButton.Button2;
-            }
-            else if (state.Buttons.X == ButtonState.Pressed)
-            {
-                return GamePadButton.Button3;
-            }
-            else if (state.Buttons.Y == ButtonState.Pressed)
-            {
-                return GamePadButton.Button4;
-            }
-            else if (state.Buttons.LeftShoulder == ButtonState.Pressed)
-            {
-                return GamePadButton.Button5;
-            }
-            else if (state.Buttons.RightShoulder == ButtonState.Pressed)
-            {
-                return GamePadButton.Button6;
-            }
-            else if (state.Buttons.LeftStick == ButtonState.Pressed)
-            {
-                return GamePadButton.Button9;
-            }
-            else if (state.Buttons.RightStick == ButtonState.Pressed)
-            {
-                return GamePadButton.Button10;
-            }
-            else if (state.Buttons.Start == ButtonState.Pressed)
-            {
-                return GamePadButton.Button8;
-            }
-            else if (state.Buttons.Back == ButtonState.Pressed)
-            {
-                return GamePadButton.Button7;
-            }
-
-            // check dpad
-            if (state.DPad.Up == ButtonState.Pressed)
-            {
-                return GamePadButton.DPadUp;
-            }
-            else if (state.DPad.Down == ButtonState.Pressed)
-            {
-                return GamePadButton.DPadDown;
-            }
-            else if (state.DPad.Left == ButtonState.Pressed)
-            {
-                return GamePadButton.DPadLeft;
-            }
-            else if (state.DPad.Right == ButtonState.Pressed)
-            {
-                return GamePadButton.DPadRight;
-            }
-
-            // check joystick for input
-            if (state.ThumbSticks.Left.X > 0)
-            {
-                return GamePadButton.Right;
-            }
-            else if (state.ThumbSticks.Left.X < 0)
-            {
-                return GamePadButton.Left;
-            }
-            else if (state.ThumbSticks.Left.Y > 0)
-            {
-                return GamePadButton.Up;
-            }
-            else if (state.ThumbSticks.Left.Y < 0)
-            {
-                return GamePadButton.Down;
-            }
-
-            // check triggers
-            if (state.Triggers.Left > 0)
-            {
-                return GamePadButton.LeftTrigger;
-            }
-            else if (state.Triggers.Right > 0)
-            {
-                return GamePadButton.RightTrigger;
-            }
-
-            return null;
         }
 
         internal void SaveNewCustomControl()
@@ -1375,18 +1284,18 @@ namespace SeventhHeaven.ViewModels
         {
             Dictionary<GamePadButton, string> icons = new Dictionary<GamePadButton, string>()
             {
-                { GamePadButton.Button1, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/Cross_A.png" },
-                { GamePadButton.Button2, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/Circle_B.png" },
-                { GamePadButton.Button3, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/Square_X.png" },
+                { GamePadButton.Button1, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/Square_X.png" },
+                { GamePadButton.Button2, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/Cross_A.png" },
+                { GamePadButton.Button3, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/Circle_B.png" },
                 { GamePadButton.Button4, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/Triangle_Y.png" },
                 { GamePadButton.Button5, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/L1_LB.png" },
                 { GamePadButton.Button6, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/R1_RB.png" },
-                { GamePadButton.Button7, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/Share_Back.png" },
-                { GamePadButton.Button8, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/Options_Start.png" },
-                { GamePadButton.Button9, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/XB_LS_Click.png" },
-                { GamePadButton.Button10, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/XB_RS_Click.png" },
-                { GamePadButton.LeftTrigger, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/L2_LT.png" },
-                { GamePadButton.RightTrigger, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/R2_RT.png" },
+                { GamePadButton.Button7, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/L2_LT.png" },
+                { GamePadButton.Button8, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/R2_RT.png" },
+                { GamePadButton.Button9, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/Share_Back.png" },
+                { GamePadButton.Button10, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/Options_Start.png" },
+                { GamePadButton.Button11, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/XB_LS_Click.png" },
+                { GamePadButton.Button12, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/XB_RS_Click.png" },
                 { GamePadButton.Up, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/XB_LS_Up.png" },
                 { GamePadButton.Down, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/XB_LS_Down.png" },
                 { GamePadButton.Left, "/7th Heaven;component/Resources/Icons/PS_Xbox_Icons/XB_LS_Left.png" },

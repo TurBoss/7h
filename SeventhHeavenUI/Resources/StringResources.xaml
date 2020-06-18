@@ -1187,8 +1187,8 @@ Do you want to apply the setting and try again?</system:String>
     <system:String x:Key="RightLabel">[RIGHT]</system:String>
 
     <system:String x:Key="Presets">Presets:</system:String>
-    <system:String x:Key="EnablePS4ControllerSupport">Enable PS4 Controller Support</system:String>
-    <system:String x:Key="PS4ControllerSupportTooltip">Allows to use a PS4 controller with the game (SCP driver must be installed)</system:String>
+    <system:String x:Key="EnablePS4ControllerSupport">Enable PS4 XInput Driver</system:String>
+    <system:String x:Key="PS4ControllerSupportTooltip">Allows to use a PS4 controller with the game as an XInput device and control the mouse with the controller touchpad (SCP driver must be installed)</system:String>
     <system:String x:Key="SaveChangesTooltip">Save changes to controls.</system:String>
 
     <system:String x:Key="OpenGameControllersWindow">Open Game Controllers Window</system:String>
@@ -1207,8 +1207,8 @@ Do you want to apply the setting and try again?</system:String>
 
     <system:String x:Key="ImportMoviesFromDisc">Import Movies From Disc</system:String>
 
-    <system:String x:Key="EnableTriggerDpadSupport">Enable DPad and Trigger Support</system:String>
-    <system:String x:Key="TriggerDpadSupportTooltip">Enables DPad and trigger support in-game. (Disable if using a third party mapping tool)</system:String>
+    <system:String x:Key="EnableTriggerDpadSupport">Emulate DPad via Keyboard</system:String>
+    <system:String x:Key="TriggerDpadSupportTooltip">Emulates DPad and stick presses in-game by sending the corresponding keyboard key. (Disable if using a third party mapping tool)</system:String>
 
     <system:String x:Key="MountDiscWithPowershell">Mount Disc With PowerShell</system:String>
     <system:String x:Key="MountDiscWithWinCDEmu">Mount Disc With WinCDEmu</system:String>
