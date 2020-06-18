@@ -1,4 +1,5 @@
-﻿using SlimDX.DirectInput;
+﻿using SlimDX;
+using SlimDX.DirectInput;
 using SlimDX.XInput;
 using System.Linq;
 
@@ -36,19 +37,23 @@ namespace SeventhHeaven.Classes
 
                     break;
                 }
-                catch (DirectInputException e)
+                catch
                 {
                 }
             }
 
-            foreach (DeviceObjectInstance deviceObject in JoystickInstance.GetObjects())
+            if (JoystickInstance != null)
             {
-                if ((deviceObject.ObjectType & ObjectDeviceType.Axis) != 0)
-                    JoystickInstance.GetObjectPropertiesById((int)deviceObject.ObjectType).SetRange(-1000, 1000);
+                foreach (DeviceObjectInstance deviceObject in JoystickInstance.GetObjects())
+                {
+                    if ((deviceObject.ObjectType & ObjectDeviceType.Axis) != 0)
+                        JoystickInstance.GetObjectPropertiesById((int)deviceObject.ObjectType).SetRange(-1000, 1000);
+                }
+
+                // acquire the device
+                TryAcquire();
             }
 
-            // acquire the device
-            JoystickInstance.Acquire();
         }
 
         internal void ReleaseDevice()
@@ -64,7 +69,7 @@ namespace SeventhHeaven.Classes
 
         public JoystickState ReadState()
         {
-            if (JoystickInstance.Acquire().IsFailure || JoystickInstance.Poll().IsFailure)
+            if (!TryAcquire() || JoystickInstance.Poll().IsFailure)
             {
                 return null;
             }
@@ -78,6 +83,18 @@ namespace SeventhHeaven.Classes
             }
 
             return State;
+        }
+
+        private bool TryAcquire()
+        {
+            try
+            {
+                return JoystickInstance.Acquire().IsSuccess;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public GamePadButton? GetPressedButton()

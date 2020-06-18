@@ -123,6 +123,7 @@ namespace SeventhHeaven.Classes
 
                     if (ConnectedController.ReadState() == null)
                     {
+                        ConnectedController?.ReleaseDevice();
                         continue;
                     }
 
