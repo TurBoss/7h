@@ -783,7 +783,7 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-        public bool IsTriggerDpadSupportChecked
+        public bool IsDpadSupportChecked
         {
             get
             {
@@ -895,7 +895,7 @@ namespace SeventhHeaven.ViewModels
         {
             try
             {
-                Sys.Settings.GameLaunchSettings.EnableGamepadPolling = IsTriggerDpadSupportChecked;
+                Sys.Settings.GameLaunchSettings.EnableGamepadPolling = IsDpadSupportChecked;
                 Sys.SaveSettings();
             }
             catch (Exception e)
@@ -1100,8 +1100,14 @@ namespace SeventhHeaven.ViewModels
                     GamePadButton? pressedButton = ConnectedController.GetPressedButton();
                     if (pressedButton.HasValue)
                     {
+                        if (ConnectedController.IsXInputDevice)
+                        {
+                            // convert game button press to the DInput equivalent
+                            pressedButton = GameController.GetXInputToDInputButton(pressedButton.Value);
+                        }
+
                         // if the user disabled trigger/dpad overrides then don't capture those buttons
-                        if (!IsTriggerDpadSupportChecked && IsTriggerOrDpadButton(pressedButton.Value))
+                        if (!IsDpadSupportChecked && IsDpadButton(pressedButton.Value))
                         {
                             continue;
                         }
@@ -1118,11 +1124,9 @@ namespace SeventhHeaven.ViewModels
             });
         }
 
-        private bool IsTriggerOrDpadButton(GamePadButton button)
+        private bool IsDpadButton(GamePadButton button)
         {
-            return button == GamePadButton.LeftTrigger ||
-                   button == GamePadButton.LeftTrigger ||
-                   button == GamePadButton.DPadUp ||
+            return button == GamePadButton.DPadUp ||
                    button == GamePadButton.DPadDown ||
                    button == GamePadButton.DPadLeft ||
                    button == GamePadButton.DPadRight;
@@ -1331,7 +1335,7 @@ namespace SeventhHeaven.ViewModels
 
             GamePadButton button = newButton.Value;
 
-            if (IsTriggerDpadSupportChecked && (button == GamePadButton.Up || button == GamePadButton.Down || button == GamePadButton.Left || button == GamePadButton.Right))
+            if (IsDpadSupportChecked && (button == GamePadButton.Up || button == GamePadButton.Down || button == GamePadButton.Left || button == GamePadButton.Right))
             {
                 // check if dpad is binded to other controls; if not then display the image of the dpad/leftstick together
                 if (LoadedConfiguration.IsButtonBinded(GamePadButton.DPadUp) || LoadedConfiguration.IsButtonBinded(GamePadButton.DPadDown) || LoadedConfiguration.IsButtonBinded(GamePadButton.DPadLeft) || LoadedConfiguration.IsButtonBinded(GamePadButton.DPadRight))

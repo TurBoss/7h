@@ -266,5 +266,40 @@ namespace SeventhHeaven.Classes
 
             return false;
         }
+
+        public static GamePadButton GetXInputToDInputButton(GamePadButton button)
+        {
+            switch (button)
+            {
+                case GamePadButton.Button1:
+                    return GamePadButton.Button2;
+
+                case GamePadButton.Button2:
+                    return GamePadButton.Button3;
+
+                case GamePadButton.Button3:
+                    return GamePadButton.Button1;
+
+                case GamePadButton.Button7:
+                    return GamePadButton.Button9;
+                case GamePadButton.Button8:
+                    return GamePadButton.Button10;
+
+                case GamePadButton.Button9:
+                    return GamePadButton.Button11;
+                case GamePadButton.Button10:
+                    return GamePadButton.Button12;
+
+                case GamePadButton.LeftTrigger:
+                    return GamePadButton.Button7;
+                case GamePadButton.RightTrigger:
+                    return GamePadButton.Button8;
+
+                default:
+                    break;
+            }
+
+            return button;
+        }
     }
 }
