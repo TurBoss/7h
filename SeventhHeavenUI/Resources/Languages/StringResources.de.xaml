@@ -838,7 +838,7 @@ Wenn du im nachhinein doch einen Musik Mod benutzen willst, musst du diese Einst
     <system:String x:Key="LaunchingAdditionalProgramsToRunIfAny">Starte zusätzliche Programme (fals ausgewählt) ...</system:String>
     <system:String x:Key="WritingTemporaryRuntimeProfileFileTo">Schreibe temporäres runtime Profil in</system:String>
 
-    <system:String x:Key="AttemptingToInjectWithEasyHook">Versuche EasyHook zu injizieren: Versuch # {0} (von {1}) ...</system:String>
+    <system:String x:Key="AttemptingToInjectWithEasyHook">Versuche EasyHook zu injizieren ...</system:String>
     <system:String x:Key="ReceivedErrors">fehler erhalten</system:String>
     <system:String x:Key="ReachedTimeoutWaitingForInjection">Timeout für das injizieren erhalten ...</system:String>
     <system:String x:Key="ReceivedUnknownError">Unbekannter Fehler aufgetreten</system:String>

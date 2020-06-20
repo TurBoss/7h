@@ -830,7 +830,7 @@
     <system:String x:Key="LaunchingAdditionalProgramsToRunIfAny">Εκκίνηση πρόσθετων προγραμμάτων για εκτέλεση (εάν υπάρχουν) ...</system:String>
     <system:String x:Key="WritingTemporaryRuntimeProfileFileTo">Γράφοντας προσωρινό αρχείο Προφίλ Χρόνου εκτέλεσης σε</system:String>
 
-    <system:String x:Key="AttemptingToInjectWithEasyHook">Απόπειρα εμβολής με το EasyHook: δοκιμάστε # {0} (of {1}) ...</system:String>
+    <system:String x:Key="AttemptingToInjectWithEasyHook">Απόπειρα εμβολής με το EasyHook ...</system:String>
     <system:String x:Key="ReceivedErrors">σφάλματα που λήφθηκαν</system:String>
     <system:String x:Key="ReachedTimeoutWaitingForInjection">έφτασε το χρονικό όριο αναμονής για εμβολή ...</system:String>
     <system:String x:Key="ReceivedUnknownError">λήψη άγνωστου σφάλματος</system:String>

@@ -831,7 +831,7 @@ Later, if you wish to use high quality .OGG files, switch the setting back to 'V
     <system:String x:Key="LaunchingAdditionalProgramsToRunIfAny">Launching additional programs to run (if any) ...</system:String>
     <system:String x:Key="WritingTemporaryRuntimeProfileFileTo">Writing temporary runtime profile file to</system:String>
 
-    <system:String x:Key="AttemptingToInjectWithEasyHook">Attempting to inject with EasyHook: try # {0} (of {1}) ...</system:String>
+    <system:String x:Key="AttemptingToInjectWithEasyHook">Attempting to inject with EasyHook ...</system:String>
     <system:String x:Key="ReceivedErrors">received errors</system:String>
     <system:String x:Key="ReachedTimeoutWaitingForInjection">reached timeout waiting for injection ...</system:String>
     <system:String x:Key="ReceivedUnknownError">received unknown error</system:String>

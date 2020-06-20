@@ -1,6 +1,4 @@
-﻿using SlimDX;
-using SlimDX.DirectInput;
-using SlimDX.XInput;
+﻿using SharpDX.DirectInput;
 using System.Linq;
 
 namespace SeventhHeaven.Classes
@@ -27,7 +25,7 @@ namespace SeventhHeaven.Classes
             DirectInput dinput = new DirectInput();
 
             // search for devices
-            foreach (DeviceInstance device in dinput.GetDevices(DeviceClass.GameController, DeviceEnumerationFlags.AttachedOnly))
+            foreach (DeviceInstance device in dinput.GetDevices(DeviceClass.GameControl, DeviceEnumerationFlags.AttachedOnly))
             {
                 // create the device
                 try
@@ -44,11 +42,7 @@ namespace SeventhHeaven.Classes
 
             if (JoystickInstance != null)
             {
-                foreach (DeviceObjectInstance deviceObject in JoystickInstance.GetObjects())
-                {
-                    if ((deviceObject.ObjectType & ObjectDeviceType.Axis) != 0)
-                        JoystickInstance.GetObjectPropertiesById((int)deviceObject.ObjectType).SetRange(-1000, 1000);
-                }
+                JoystickInstance.Properties.Range = new InputRange(-1000, 1000);
 
                 // acquire the device
                 TryAcquire();
@@ -69,18 +63,13 @@ namespace SeventhHeaven.Classes
 
         public JoystickState ReadState()
         {
-            if (!TryAcquire() || JoystickInstance.Poll().IsFailure)
+            if (!TryAcquire())
             {
                 return null;
             }
 
+            JoystickInstance.Poll();
             State = JoystickInstance.GetCurrentState();
-
-            if (SlimDX.Result.Last.IsFailure)
-            {
-                ReleaseDevice();
-                return null;
-            }
 
             return State;
         }
@@ -89,7 +78,8 @@ namespace SeventhHeaven.Classes
         {
             try
             {
-                return JoystickInstance.Acquire().IsSuccess;
+                JoystickInstance.Acquire();
+                return true;
             }
             catch
             {
@@ -104,7 +94,7 @@ namespace SeventhHeaven.Classes
                 return null;
             }
 
-            int pressedButton = State.GetButtons().ToList().FindIndex(b => b) + 1;
+            int pressedButton = State.Buttons.ToList().FindIndex(b => b) + 1;
 
             switch (pressedButton)
             {
@@ -142,9 +132,9 @@ namespace SeventhHeaven.Classes
             //// check dpad
             int pressedDPadButton = -1;
 
-            if (State.GetPointOfViewControllers().Any(i => i != -1))
+            if (State.PointOfViewControllers.Any(i => i != -1))
             {
-                pressedDPadButton = State.GetPointOfViewControllers().First(i => i != -1);
+                pressedDPadButton = State.PointOfViewControllers.First(i => i != -1);
             }
 
             switch (pressedDPadButton)
@@ -203,9 +193,9 @@ namespace SeventhHeaven.Classes
         {
             int pressedDPadButton = -1;
 
-            if (State.GetPointOfViewControllers().Any(i => i != -1))
+            if (State.PointOfViewControllers.Any(i => i != -1))
             {
-                pressedDPadButton = State.GetPointOfViewControllers().First(i => i != -1);
+                pressedDPadButton = State.PointOfViewControllers.First(i => i != -1);
             }
 
             if ((pressedDPadButton == 0 || pressedDPadButton == 4500 || pressedDPadButton == 31500) && button == GamePadButton.DPadUp)
@@ -226,7 +216,7 @@ namespace SeventhHeaven.Classes
             }
 
             // check for button1 - button14
-            if ((int)button < (int)GamePadButton.Button14 && State.GetButtons()[(int)button])
+            if ((int)button < (int)GamePadButton.Button14 && State.Buttons[(int)button])
             {
                 return true;
             }

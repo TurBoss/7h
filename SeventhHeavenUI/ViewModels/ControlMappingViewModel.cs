@@ -13,8 +13,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using SlimDX;
-using SlimDX.DirectInput;
 namespace SeventhHeaven.ViewModels
 {
 
@@ -45,7 +43,7 @@ namespace SeventhHeaven.ViewModels
         private bool _hasUnsavedChanges;
         private string _selectedGameConfigOption;
 
-        private bool _isTriggerDpadSupportChecked;
+        private bool _isDpadSupportChecked;
         private bool _isPs4SupportChecked;
         private bool _isInstallingDriver;
 
@@ -787,13 +785,13 @@ namespace SeventhHeaven.ViewModels
         {
             get
             {
-                return _isTriggerDpadSupportChecked;
+                return _isDpadSupportChecked;
             }
             set
             {
-                if (value != _isTriggerDpadSupportChecked)
+                if (value != _isDpadSupportChecked)
                 {
-                    _isTriggerDpadSupportChecked = value;
+                    _isDpadSupportChecked = value;
                     SetGamepadPollingInLaunchSettings();
 
                     NotifyPropertyChanged();
@@ -823,7 +821,7 @@ namespace SeventhHeaven.ViewModels
             
             // setting private variables here so code in property setters are not executed (e.g update sys.settings and ui)
             _isPs4SupportChecked = Sys.Settings.GameLaunchSettings.EnablePs4ControllerService;
-            _isTriggerDpadSupportChecked = Sys.Settings.GameLaunchSettings.EnableGamepadPolling;
+            _isDpadSupportChecked = Sys.Settings.GameLaunchSettings.EnableGamepadPolling;
 
             LoadSelectedConfiguration();
         }

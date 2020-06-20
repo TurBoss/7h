@@ -488,7 +488,7 @@
 
             <CheckBox x:Name="chkDpadSupport"
                       Style="{StaticResource ToggleSwitchCheckbox}"
-                      IsChecked="{Binding IsTriggerDpadSupportChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      IsChecked="{Binding IsDpadSupportChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       FontSize="13"
                       Content="{DynamicResource EnableTriggerDpadSupport}"
                       ToolTip="{DynamicResource TriggerDpadSupportTooltip}"

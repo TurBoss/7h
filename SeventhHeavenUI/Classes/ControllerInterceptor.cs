@@ -1,6 +1,4 @@
 ﻿using Iros._7th.Workshop;
-using SlimDX.DirectInput;
-using SlimDX.XInput;
 using System.IO;
 using System.Linq;
 using System.Threading;

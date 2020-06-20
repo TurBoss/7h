@@ -830,7 +830,7 @@ Quando vorrai utilizzare i file .OGG in alta qualità riporta l'opzione a 'VGMst
     <system:String x:Key="LaunchingAdditionalProgramsToRunIfAny">Lancio programmi aggiuntivi da eseguire (se presenti) ...</system:String>
     <system:String x:Key="WritingTemporaryRuntimeProfileFileTo">Scrivo profilo runtime provvisorio in</system:String>
 
-    <system:String x:Key="AttemptingToInjectWithEasyHook">Tentativo di iniezione tramite EasyHook: tentativo # {0} (di {1}) ...</system:String>
+    <system:String x:Key="AttemptingToInjectWithEasyHook">Tentativo di iniezione tramite EasyHook ...</system:String>
     <system:String x:Key="ReceivedErrors">errori restituiti</system:String>
     <system:String x:Key="ReachedTimeoutWaitingForInjection">raggiunto il timeout mentre si attendeva l'iniezione ...</system:String>
     <system:String x:Key="ReceivedUnknownError">restituito errore sconosciuto</system:String>

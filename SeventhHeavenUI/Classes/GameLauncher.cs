@@ -580,8 +580,11 @@ namespace SeventhHeaven.Classes
 
                 bool didInject = false;
                 int attemptCount = 0;
-                int totalAttempts = 7;
+                int totalAttempts = 14;
                 pid = -1;
+
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.AttemptingToInjectWithEasyHook));
+
 
                 while (!didInject && attemptCount < totalAttempts)
                 {
@@ -589,7 +592,6 @@ namespace SeventhHeaven.Classes
 
                     try
                     {
-                        Instance.RaiseProgressChanged(string.Format(ResourceHelper.Get(StringKey.AttemptingToInjectWithEasyHook), attemptCount + 1, totalAttempts));
 
                         // attempt to inject on background thread so we can have a timeout if the process does not return in 10 seconds
                         // a successful injection should only take ~3 seconds
@@ -628,7 +630,7 @@ namespace SeventhHeaven.Classes
                         while (!waitTask.GetAwaiter().IsCompleted)
                         {
                             TimeSpan elapsed = DateTime.Now.Subtract(startTime);
-                            if (elapsed.Seconds > 10)
+                            if (elapsed.TotalSeconds > 10)
                             {
                                 Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.ReachedTimeoutWaitingForInjection)}", NLog.LogLevel.Warn);
                                 didInject = false;
@@ -643,19 +645,6 @@ namespace SeventhHeaven.Classes
                     finally
                     {
                         attemptCount++;
-                    }
-
-                    // If the CreateAndInject() process fails to inject it will attempt to kill the process it started...
-                    // ... this could fail and leave the process open which causes problems for the next attempt so make sure the process is killed on failure
-                    if (!didInject)
-                    {
-                        string procName = Path.GetFileNameWithoutExtension(Sys.Settings.FF7Exe);
-                        var openProcs = Process.GetProcessesByName(procName);
-                        foreach (Process proc in openProcs)
-                        {
-                            if (!proc.HasExited)
-                                proc.Kill();
-                        }
                     }
                 }
 

@@ -831,7 +831,7 @@ Mais tarde, se quiser utilizar os arquivos de alta qualidade .OGG, mude a config
     <system:String x:Key="LaunchingAdditionalProgramsToRunIfAny">Executando programas adicionais a rodar (se houver) ...</system:String>
     <system:String x:Key="WritingTemporaryRuntimeProfileFileTo">Salvando arquivo de perfil de execução temporário em</system:String>
 
-    <system:String x:Key="AttemptingToInjectWithEasyHook">Tentando injetar com EasyHook: tente # {0} (de {1}) ...</system:String>
+    <system:String x:Key="AttemptingToInjectWithEasyHook">Tentando injetar com EasyHook ...</system:String>
     <system:String x:Key="ReceivedErrors">recebeu erros</system:String>
     <system:String x:Key="ReachedTimeoutWaitingForInjection">limite de tempo alcançado esperando a injeção ...</system:String>
     <system:String x:Key="ReceivedUnknownError">recebeu erro desconhecido</system:String>

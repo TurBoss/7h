@@ -831,7 +831,7 @@ Plus tard, si vous souhaitez utiliser des fichiers .OGG de haute qualité, remet
     <system:String x:Key="LaunchingAdditionalProgramsToRunIfAny">Lancement de programmes supplémentaires à exécuter (le cas échéant) ...</system:String>
     <system:String x:Key="WritingTemporaryRuntimeProfileFileTo">Rédaction d'un fichier de profil d'exécution temporaire à</system:String>
 
-    <system:String x:Key="AttemptingToInjectWithEasyHook">Tentative d'injection avec EasyHook : essai # {0} (de {1}) ...</system:String>
+    <system:String x:Key="AttemptingToInjectWithEasyHook">Tentative d'injection avec EasyHook ...</system:String>
     <system:String x:Key="ReceivedErrors">erreurs reçues</system:String>
     <system:String x:Key="ReachedTimeoutWaitingForInjection">a atteint le délai d'attente pour l'injection ...</system:String>
     <system:String x:Key="ReceivedUnknownError">erreur inconnue reçue</system:String>
