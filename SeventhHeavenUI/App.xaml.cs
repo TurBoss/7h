@@ -192,6 +192,39 @@ namespace SeventhHeavenUI
 
                     Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.AutoImportedMod)} {irofilenoext}", true));
                 }
+                else if (parm.StartsWith("/OPENIROP:", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    string iropFile = null;
+                    var importer = new ModImporter();
+
+
+                    try
+                    {
+                        iropFile = parm.Substring(10);
+                        Sys.Message(new WMessage($"Applying patch file {iropFile}", true));
+
+                        importer.ImportProgressChanged += ModPatchImportProgressChanged;
+                        bool didPatch = importer.ImportModPatch(iropFile);
+
+                        if (didPatch)
+                        {
+                            Sys.Message(new WMessage($"Applied patch {iropFile}", true));
+                        }
+                        else
+                        {
+                            Sys.Message(new WMessage($"Failed to apply patch {iropFile}. Check applog for details.", true));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Sys.Message(new WMessage($"Failed to apply patch {iropFile}: {ex.Message}", true) { LoggedException = ex });
+                        continue;
+                    }
+                    finally
+                    {
+                        importer.ImportProgressChanged -= ModPatchImportProgressChanged;
+                    }
+                }
                 else if (parm.StartsWith("/PACKIRO:", StringComparison.InvariantCultureIgnoreCase))
                 {
                     string pathToFolder;
@@ -261,6 +294,11 @@ namespace SeventhHeavenUI
                     }
                 }
             }
+        }
+
+        private static void ModPatchImportProgressChanged(string message, double percentComplete)
+        {
+            Logger.Info(message);
         }
 
         internal static void ShutdownApp()

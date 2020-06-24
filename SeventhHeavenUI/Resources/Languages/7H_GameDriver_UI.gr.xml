@@ -5,10 +5,10 @@
   <Setting xsi:type="DropDown">
     <Group>Γραφικά</Group>
     <Name>API γραφικών</Name>
-    <Description>Ορίζει λογισμικό απόδοσης. Το Auto καθορίζει την καλύτερη επιλογή βάσει της GPU σας. Ενδέχεται να προκύψουν σφάλματα χρησιμοποιώντας το OpenGL με κάρτες AMD.</Description>
+    <Description>Ορίζει το λογισμικό απόδοσης. Το Auto καθορίζει την καλύτερη επιλογή βάσει της κάρτας γραφικών σας. Ενδέχεται να προκύψουν σφάλματα χρησιμοποιώντας το OpenGL με κάρτες AMD.</Description>
     <DefaultValue>renderer_backend = 0</DefaultValue>
     <Option>
-      <Text>Αυτόματο</Text>
+      <Text>Auto</Text>
       <Settings>renderer_backend = 0</Settings>
     </Option>
     <Option>
@@ -24,10 +24,10 @@
   <Setting xsi:type="DropDown">
       <Group>Γραφικά</Group>
       <Name>Ανάλυση</Name>
-      <Description>Ορίζει το μέγεθος του παραθύρου για το παιχνίδι. Αυτόματη χρησιμοποιεί ανάλυση παιχνιδιού σε λειτουργία παραθύρου ή τρέχουσα ανάλυση επιφάνειας εργασίας σε λειτουργία πλήρους οθόνης.</Description>
+      <Description>Ορίζει το μέγεθος του παραθύρου για το παιχνίδι. Το Auto χρησιμοποιεί την ανάλυση παιχνιδιού σε λειτουργία παραθύρου ή την τρέχουσα ανάλυση της επιφάνειας εργασίας σε λειτουργία πλήρους οθόνης.</Description>
       <DefaultValue>window_size_x = 0,window_size_y = 0</DefaultValue>
       <Option>
-        <Text>Αυτόματο</Text>
+        <Text>Auto</Text>
         <Settings>window_size_x = 0,window_size_y = 0</Settings>
       </Option>
       <Option>
@@ -95,25 +95,25 @@
   <Setting xsi:type="DropDown">
     <Group>Γραφικά</Group>
     <Name>Λειτουργία παραθύρου</Name>
-    <Description>Εμφανίστε το παιχνίδι είτε σε ένα τυπικό παράθυρο είτε σε πλήρη οθόνη χωρίς περίγραμμα.</Description>
+    <Description>Εμφάνιση του παιχνιδιού είτε σε ένα τυπικό παράθυρο είτε σε πλήρη οθόνη χωρίς περίγραμμα.</Description>
     <DefaultValue>fullscreen = yes</DefaultValue>
     <Option>
       <Text>Παράθυρο</Text>
       <Settings>fullscreen = no</Settings>
     </Option>
     <Option>
-      <Text>ΠΛΗΡΗΣ ΟΘΟΝΗ</Text>
+      <Text>Πλήρης Οθόνη</Text>
       <Settings>fullscreen = yes</Settings>
     </Option>
   </Setting>
 
   <Setting xsi:type="DropDown">
     <Group>Γραφικά</Group>
-    <Name>Αναλογία απεικόνισης</Name>
-    <Description>Ο λόγος διατήρησης διατήρησης προσθέτει μαύρα περιθώρια όπως απαιτείται για τη διατήρηση της αναλογίας διαστάσεων 4: 3.</Description>
+    <Name>Αναλογία διαστάσεων</Name>
+    <Description>Η διατήρηση της αναλογίας διαστάσεων προσθέτει μαύρες μπάρες όπως απαιτείται για τη διατήρηση της αναλογίας διαστάσεων 4:3.</Description>
     <DefaultValue>preserve_aspect = yes</DefaultValue>
     <Option>
-      <Text>Ντόπιος (4:3)</Text>
+      <Text>Πηγαία (4:3)</Text>
       <Settings>preserve_aspect = yes</Settings>
     </Option>
     <Option>
@@ -124,11 +124,11 @@
 
   <Setting xsi:type="DropDown">
     <Group>Γραφικά</Group>
-    <Name>Αντι ψευδώνυμο</Name>
-    <Description>Εφαρμόζει φιλτράρισμα 2x / 4x / 8x / 16x MSAA. Μειώνει τις οδοντωτές άκρες και βελτιώνει την ποιότητα της εικόνας. Μπορεί να επηρεάσει σοβαρά την απόδοση.</Description>
+    <Name>Antialiasing</Name>
+    <Description>Εφαρμόζει φιλτράρισμα 2x/4x/8x/16x MSAA. Μειώνει τα ακανόνιστα άκρα και βελτιώνει την ποιότητα της εικόνας. Μπορεί να επηρεάσει σοβαρά την απόδοση.</Description>
     <DefaultValue>enable_antialiasing = 0</DefaultValue>
     <Option>
-      <Text>μακριά από</Text>
+      <Text>Οχι</Text>
       <Settings>enable_antialiasing = 0</Settings>
     </Option>
     <Option>
@@ -152,7 +152,7 @@
   <Setting xsi:type="Checkbox">
     <Group>Γραφικά</Group>
     <Name>Ανισοτροπικό φιλτράρισμα</Name>
-    <Description>Εφαρμόζει ένα φίλτρο σε υφές υψηλής ανάλυσης που παράγουν ευκρινή εικόνα. Μπορεί να επηρεάσει την απόδοση λόγω της αυξημένης χρήσης μνήμης</Description>
+    <Description>Εφαρμόζει ένα φίλτρο σε υφές υψηλής ανάλυσης που παράγουν πιο ευκρινή εικόνα. Μπορεί να επηρεάσει την απόδοση λόγω της αυξημένης χρήσης μνήμης.</Description>
     <DefaultValue>enable_anisotropic = yes</DefaultValue>
     <TrueSetting>enable_anisotropic = yes</TrueSetting>
     <FalseSetting>enable_anisotropic = no</FalseSetting>
@@ -161,7 +161,7 @@
   <Setting xsi:type="Checkbox">
     <Group>Γραφικά</Group>
     <Name>Γραμμικό φιλτράρισμα</Name>
-    <Description>Εφαρμόστε ένα φίλτρο σε υφές χαμηλής ανάλυσης. Μπορεί να εμφανιστούν αντικείμενα. Οι υφές υψηλής ανάλυσης δεν επηρεάζονται.</Description>
+    <Description>Εφαρμόζει ένα φίλτρο σε υφές χαμηλής ανάλυσης. Μπορεί να εμφανιστούν αντικείμενα. Οι υφές υψηλής ανάλυσης δεν επηρεάζονται.</Description>
     <DefaultValue>linear_filter = no</DefaultValue>
     <TrueSetting>linear_filter = yes</TrueSetting>
     <FalseSetting>linear_filter = no</FalseSetting>
@@ -170,7 +170,7 @@
   <Setting xsi:type="Checkbox">
     <Group>Γραφικά</Group>
     <Name>Κατακόρυφος συγχρονισμός</Name>
-    <Description>Συγχρονίστε το ρυθμό καρέ του παιχνιδιού με το ρυθμό ανανέωσης της οθόνης. Μπορεί να επηρεάσει αρνητικά την απόδοση ή να σπάσει τις λειτουργίες 60 fps. Ενεργοποιήστε εάν αντιμετωπίζετε σχίσιμο στην οθόνη.</Description>
+    <Description>Συγχρονίζει το ρυθμό των καρέ του παιχνιδιού με το ρυθμό ανανέωσης της οθόνης. Μπορεί να επηρεάσει αρνητικά την απόδοση ή να σπάσει τα mods 60 fps. Ενεργοποιήστε εάν αντιμετωπίζετε σχίσιμο στην οθόνη.</Description>
     <DefaultValue>enable_vsync = no</DefaultValue>
     <TrueSetting>enable_vsync = yes</TrueSetting>
     <FalseSetting>enable_vsync = no</FalseSetting>
@@ -179,66 +179,66 @@
   <!-- ADVANCED TAB -->
 
   <Setting xsi:type="DropDown">
-    <Group>Για προσωρημένους</Group>
+    <Group>Για προχωρημένους</Group>
     <Name>Επιλογή μουσικής</Name>
     <Description>Χρησιμοποιήστε το VGMStream για να παίξετε μουσική υψηλής ποιότητας OGG Vorbis. Απαιτείται για mods μουσικής. Διαφορετικά, χρησιμοποιείται το τυπικό MIDI.</Description>
     <DefaultValue>use_external_music = yes</DefaultValue>
     <Option>
-      <Text>VGMStream (Συνιστάται)</Text>
+      <Text>VGMStream (Προτεινόμενο)</Text>
       <Settings>use_external_music = yes</Settings>
     </Option>
     <Option>
-      <Text>Πρωτότυπο MIDI</Text>
+      <Text>Τυπικό MIDI</Text>
       <Settings>use_external_music = no</Settings>
     </Option>
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Για προσωρημένους</Group>
+    <Group>Για προχωρημένους</Group>
     <Name>Επιλογή ταινίας</Name>
     <Description>Χρησιμοποιήστε το FFMPEG για αναπαραγωγή ταινιών εντός παιχνιδιού (FMV). Εναλλακτικά, χρησιμοποιήστε την αρχική απόδοση, η οποία ενδέχεται να μην υποστηρίζει τόσους κωδικοποιητές ταινιών.</Description>
     <DefaultValue>enable_ffmpeg_videos = yes</DefaultValue>
     <Option>
-      <Text>FFMPEG (Συνιστάται)</Text>
+      <Text>FFMPEG (Προτεινόμενο)</Text>
       <Settings>enable_ffmpeg_videos = yes</Settings>
     </Option>
     <Option>
-      <Text>Πρωτότυπο Renderer</Text>
+      <Text>Αρχική απόδοση</Text>
       <Settings>enable_ffmpeg_videos = no</Settings>
     </Option>
   </Setting>
 
   <Setting xsi:type="Checkbox">
-    <Group>Για προσωρημένους</Group>
+    <Group>Για προχωρημένους</Group>
     <Name>Εμφάνιση πληροφοριών εντοπισμού σφαλμάτων</Name>
-    <Description>Εμφανίζει πληροφορίες σε πραγματικό χρόνο σχετικά με τη διαδικασία απόδοσης / απόδοση σε μια επικάλυψη ή στη γραμμή τίτλου.</Description>
+    <Description>Εμφανίζει πληροφορίες σε πραγματικό χρόνο σχετικά με τη διαδικασία απόδοσης/απόδοση σε μια επικάλυψη ή στη γραμμή τίτλων.</Description>
     <DefaultValue>show_stats = no</DefaultValue>
     <TrueSetting>show_stats = yes</TrueSetting>
     <FalseSetting>show_stats = no</FalseSetting>
   </Setting>
 
   <Setting xsi:type="Checkbox">
-    <Group>Για προσωρημένους</Group>
+    <Group>Για προχωρημένους</Group>
     <Name>Εμφάνιση έκδοσης προγράμματος οδήγησης</Name>
-    <Description>Εμφανίζει την τρέχουσα χρησιμοποιημένη έκδοση προγράμματος οδήγησης σε μια επικάλυψη ή στη γραμμή τίτλου.</Description>
+    <Description>Εμφανίζει την τρέχουσα χρησιμοποιούμενη έκδοση προγράμματος οδήγησης σε μια επικάλυψη ή στη γραμμή τίτλων.</Description>
     <DefaultValue>show_version = no</DefaultValue>
     <TrueSetting>show_version = yes</TrueSetting>
     <FalseSetting>show_version = no</FalseSetting>
   </Setting>
 
   <Setting xsi:type="Checkbox">
-    <Group>Για προσωρημένους</Group>
+    <Group>Για προχωρημένους</Group>
     <Name>Εμφάνιση FPS</Name>
-    <Description>Εμφανίζει τα τρέχοντα καρέ ανά δευτερόλεπτο σε μια επικάλυψη ή στη γραμμή τίτλου.</Description>
+    <Description>Εμφανίζει τα τρέχοντα καρέ ανά δευτερόλεπτο σε μια επικάλυψη ή στη γραμμή τίτλων.</Description>
     <DefaultValue>show_fps = no</DefaultValue>
     <TrueSetting>show_fps = yes</TrueSetting>
     <FalseSetting>show_fps = no</FalseSetting>
   </Setting>
 
   <Setting xsi:type="Checkbox">
-    <Group>Για προσωρημένους</Group>
+    <Group>Για προχωρημένους</Group>
     <Name>Εμφάνιση API γραφικών</Name>
-    <Description>Εμφανίζει το τρέχον χρησιμοποιημένο API γραφικών (OpenGL / DirectX11) σε μια επικάλυψη ή στη γραμμή τίτλου.</Description>
+    <Description>Εμφανίζει το τρέχον χρησιμοποιούμενο API γραφικών (OpenGL/DirectX11) σε μια επικάλυψη ή στη γραμμή τίτλων.</Description>
     <DefaultValue>show_renderer_backend = no</DefaultValue>
     <TrueSetting>show_renderer_backend = yes</TrueSetting>
     <FalseSetting>show_renderer_backend = no</FalseSetting>

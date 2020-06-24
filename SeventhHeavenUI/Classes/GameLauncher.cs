@@ -617,7 +617,7 @@ namespace SeventhHeaven.Classes
                                     }
                                 }
 
-                                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.ReceivedErrors)}: {errors} ...", NLog.LogLevel.Warn);
+                                Logger.Warn($"\t{ResourceHelper.Get(StringKey.ReceivedErrors)}: {errors} ...");
                             }
                             else
                             {

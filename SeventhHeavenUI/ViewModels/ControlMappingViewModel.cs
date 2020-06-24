@@ -1104,7 +1104,13 @@ namespace SeventhHeaven.ViewModels
                             pressedButton = GameController.GetXInputToDInputButton(pressedButton.Value);
                         }
 
-                        // if the user disabled trigger/dpad overrides then don't capture those buttons
+                        if (pressedButton == GamePadButton.Button11 || pressedButton == GamePadButton.Button12)
+                        {
+                            // ignore stick clicks for now (button 11/12 for DInput devices)
+                            continue;
+                        }
+
+                        // if the user disabled dpad overrides then don't capture those buttons
                         if (!IsDpadSupportChecked && IsDpadButton(pressedButton.Value))
                         {
                             continue;

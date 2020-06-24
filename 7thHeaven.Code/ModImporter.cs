@@ -1,4 +1,5 @@
-﻿using Iros._7th;
+﻿using _7thWrapperLib;
+using Iros._7th;
 using Iros._7th.Workshop;
 using System;
 using System.Collections.Generic;
@@ -87,7 +88,7 @@ namespace _7thHeaven.Code
 
             if (!Sys.ActiveProfile.HasItem(m.ID))
             {
-                Sys.ActiveProfile.AddItem(new ProfileItem() { ModID = m.ID, Name = m.Name, Settings = new List<ProfileSetting>(), IsModActive = false });
+                Sys.ActiveProfile.AddItem(new Iros._7th.Workshop.ProfileItem() { ModID = m.ID, Name = m.Name, Settings = new List<ProfileSetting>(), IsModActive = false });
             }
 
             RaiseProgressChanged("Import complete", 100);
@@ -378,6 +379,89 @@ namespace _7thHeaven.Code
         public void RaiseProgressChanged(string message, double percentComplete)
         {
             ImportProgressChanged?.Invoke(message, percentComplete);
+        }
+
+        public bool ImportModPatch(string sourcePatchFile)
+        {
+            System.Xml.XmlDocument doc = null;
+
+            try
+            {
+                RaiseProgressChanged($"Getting mod info from .irop file", 25);
+
+                // check for mod.xml in .irop file and load xml to get mod id
+                using (var patch = new IrosArc(sourcePatchFile))
+                {
+                    if (!patch.HasFile("mod.xml"))
+                    {
+                        RaiseProgressChanged($"Failed to apply patch due to missing mod.xml file in .irop patch", 0);
+                        return false; // no mod.xml found in patch
+                    }
+
+                    doc = new System.Xml.XmlDocument();
+                    doc.Load(patch.GetData("mod.xml"));
+                }
+
+                if (doc == null)
+                {
+                    RaiseProgressChanged($"Failed to load mod.xml file from patch", 0);
+                    return false;
+                }
+
+                Guid parsedModId;
+                string idFromXml = doc.SelectSingleNode("/ModInfo/ID").NodeTextS();
+                if (string.IsNullOrWhiteSpace(idFromXml) || !Guid.TryParse(idFromXml, out parsedModId))
+                {
+                    RaiseProgressChanged($"Failed to apply patch due to Mod ID is missing from mod.xml in patch", 0);
+                    return false; // no mod ID found in mod.xml
+                }
+
+
+                // if no mod id or mod not installed then error
+                InstalledItem installedMod = Sys.Library.GetItem(parsedModId);
+
+                if (installedMod == null)
+                {
+                    RaiseProgressChanged($"No mod is installed with the ID {parsedModId}", 0);
+                    return false; // mod is not installed
+                }
+
+                // open .iro for patching and apply patch
+                RaiseProgressChanged($"Applying patch to '{installedMod.CachedDetails.Name}'", 50);
+
+
+                string sourceFileName = installedMod.LatestInstalled.InstalledLocation;
+                string sourceIro = Path.Combine(Sys.Settings.LibraryLocation, sourceFileName);
+
+                using (var iro = new IrosArc(sourceIro, true))
+                {
+                    using (var patch = new IrosArc(sourcePatchFile))
+                    {
+                        iro.ApplyPatch(patch, (d, msg) =>
+                        {
+                            RaiseProgressChanged(msg, 50);
+                        });
+                    }
+                }
+
+                // update the cached mod details by re-reading the mod.xml
+                RaiseProgressChanged($"Updating cached details of '{installedMod.CachedDetails.Name}'", 75);
+
+                Mod updatedMod = ParseModXmlFromSource(sourceIro, installedMod.CachedDetails);
+
+                installedMod.CachedDetails = updatedMod;
+                installedMod.Versions.Clear();
+                installedMod.Versions.Add(new InstalledVersion() { VersionDetails = updatedMod.LatestVersion, InstalledLocation = sourceFileName });
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Sys.Message(new WMessage($"Failed to apply patch due to unknown error: {ex.Message}", WMessageLogLevel.Error, ex));
+                return false;
+            }
+
+
         }
     }
 }

@@ -716,6 +716,21 @@ namespace SeventhHeaven.ViewModels
 
             iroext.SetValue(String.Empty, "7thHeaven");
 
+            // create registry keys to assocaite .irop files
+            var iropExt = key.CreateSubKey(".irop");
+
+            if (iropExt != null)
+            {
+                icon = iropExt.CreateSubKey("DefaultIcon");
+                shell = iropExt.CreateSubKey("shell");
+                open = shell.CreateSubKey("open");
+                command = open.CreateSubKey("command");
+
+                iropExt.SetValue(String.Empty, "7th Heaven Mod Patch");
+                icon.SetValue(String.Empty, "\"" + app + "\"");
+                command.SetValue(String.Empty, "\"" + app + "\" /OPENIROP:\"%1\"");
+            }
+
             //Refresh Shell/Explorer so icon cache updates
             //do this now because we don't care so much about assoc. URL if it fails
             SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
@@ -731,7 +746,7 @@ namespace SeventhHeaven.ViewModels
         {
             try
             {
-                List<string> subkeys = key.GetSubKeyNames().Where(k => k == "7thHeaven" || k == ".iro").ToList();
+                List<string> subkeys = key.GetSubKeyNames().Where(k => k == "7thHeaven" || k == ".iro" || k == ".irop").ToList();
                 bool deletedKeys = false;
 
                 if (subkeys.Contains("7thHeaven"))
@@ -765,6 +780,13 @@ namespace SeventhHeaven.ViewModels
                 if (subkeys.Contains(".iro"))
                 {
                     key.DeleteSubKeyTree(".iro");
+                    deletedKeys = true;
+                }
+
+
+                if (subkeys.Contains(".irop"))
+                {
+                    key.DeleteSubKeyTree(".irop");
                     deletedKeys = true;
                 }
 

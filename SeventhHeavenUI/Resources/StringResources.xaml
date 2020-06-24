@@ -494,7 +494,7 @@ Click 'Cancel' to stop the process.</system:String>
     
     
     <!--ImportModViewModel Strings-->
-    <system:String x:Key="SelectAnIroFileToImport">Select an .iro file to import into the library folder.</system:String>
+    <system:String x:Key="SelectAnIroFileToImport">Select an .iro or .irop file to import into the library folder.</system:String>
     <system:String x:Key="SelectAFolderThatContainsModFiles">Select a folder that contains mod files. The mod file(s) will be copied into the library folder.</system:String>
     <system:String x:Key="SelectAFolderThatContainsIroModFilesAndFolders">Select a folder that contains .iro mod files and mod folders. All mod files found will be copied into the library folder.</system:String>
     <system:String x:Key="ImportingModsPleaseWait">Importing mod(s)... Please wait ...</system:String>

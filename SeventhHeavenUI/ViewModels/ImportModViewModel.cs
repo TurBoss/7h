@@ -200,6 +200,7 @@ namespace SeventhHeaven.ViewModels
                 if (!didImport)
                 {
                     UpdateHelpText(); // reset the help text since the window will stay open on failure
+                    Sys.Message(new WMessage(ResourceHelper.Get(StringKey.FailedToImportMod)));
                 }
 
                 IsImporting = false;
@@ -223,16 +224,34 @@ namespace SeventhHeaven.ViewModels
                 return false;
             }
 
+            bool isPatchFile = Path.GetExtension(PathToIroArchiveInput) == ".irop";
+
             ModImporter importer = null;
             try
             {
-                string fileName = Path.GetFileNameWithoutExtension(PathToIroArchiveInput);
-
                 importer = new ModImporter();
                 importer.ImportProgressChanged += Importer_ImportProgressChanged;
-                importer.Import(PathToIroArchiveInput, ModImporter.ParseNameFromFileOrFolder(fileName), true, false);
 
-                Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.SuccessfullyImported)} {fileName}!"));
+                string fileName = Path.GetFileNameWithoutExtension(PathToIroArchiveInput);
+
+                if (isPatchFile)
+                {
+                    bool didPatch = importer.ImportModPatch(PathToIroArchiveInput);
+
+                    if (!didPatch)
+                    {
+                        MessageDialogWindow.Show(ResourceHelper.Get(StringKey.FailedToImportModTheErrorHasBeenLogged), ResourceHelper.Get(StringKey.ImportError), MessageBoxButton.OK, MessageBoxImage.Error);
+                        return false;
+                    }
+
+                    Sys.Message(new WMessage($"Successfully applied patch {fileName}!"));
+                }
+                else
+                {
+                    importer.Import(PathToIroArchiveInput, ModImporter.ParseNameFromFileOrFolder(fileName), true, false);
+                    Sys.Message(new WMessage($"{ResourceHelper.Get(StringKey.SuccessfullyImported)} {fileName}!"));
+                }
+
                 return true;
             }
             catch (DuplicateModException de)
