@@ -13,6 +13,7 @@
         PreviewKeyDown="Window_PreviewKeyDown"
         PreviewKeyUp="Window_PreviewKeyUp"
         Closing="windowControls_Closing"
+        Loaded="windowControls_Loaded"
         Height="550" Width="475">
     <Window.Resources>
         <Style x:Key="controlNameLabel" TargetType="TextBlock" BasedOn="{StaticResource PrimaryTextBlockStyle}">
@@ -53,9 +54,9 @@
             </Grid>
         </DataTemplate>
     </Window.Resources>
-    <Grid>
+    <Grid x:Name="gridMain">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto" MinWidth="10"/>
@@ -417,12 +418,13 @@
 
         <Grid Grid.Row="15"
               Grid.ColumnSpan="4"
-              Margin="5,10,5,5">
+              Margin="5,10,15,5">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="20"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -439,37 +441,42 @@
                        HorizontalAlignment="Right"
                        VerticalAlignment="Center"
                        Margin="0,0,1,0"/>
-            <ComboBox Name="cboKeyboards"
-                      VerticalAlignment="Center"
-                      HorizontalAlignment="Left"
-                      FontSize="13"
-                      Grid.Column="1"
-                      Grid.ColumnSpan="2"
-                      MinWidth="325"
-                      MaxWidth="325"
-                      Margin="0,0,0,0"
-                      ToolTip="{DynamicResource ControlsTooltip}"
-                      Style="{StaticResource MainComboBoxStyle}"
-                      ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
-                      ItemTemplate="{StaticResource keyboardItemTemplate}"
-                      SelectedItem="{Binding SelectedGameConfigOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                      ItemsSource="{Binding InGameConfigOptions}"/>
 
-            <Button x:Name="btnDeleteControls"
-                    HorizontalAlignment="Left"
-                    Click="btnDeleteControls_Click"
-                    ToolTip="{DynamicResource DeleteControlsTooltip}"
-                    ToolTipService.ShowOnDisabled="True"
-                    IsEnabled="{Binding IsCustomConfigOptionSelected}"
-                    Style="{StaticResource ImageButton}"
-                    Content="{StaticResource iconDelete}"
-                    Grid.Column="5"
-                    Width="28"
-                    Height="28"/>
+            <WrapPanel Grid.Column="1"
+                       Grid.ColumnSpan="3"
+                       HorizontalAlignment="Left"
+                       MinWidth="310"
+                       Margin="3,0,0,0">
+                <ComboBox Name="cboKeyboards"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Left"
+                          FontSize="13"
+                          MinWidth="310"
+                          MaxWidth="310"
+                          ToolTip="{DynamicResource ControlsTooltip}"
+                          Style="{StaticResource MainComboBoxStyle}"
+                          ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
+                          ItemTemplate="{StaticResource keyboardItemTemplate}"
+                          SelectedItem="{Binding SelectedGameConfigOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          ItemsSource="{Binding InGameConfigOptions}"/>
+
+                <Button x:Name="btnDeleteControls"
+                        HorizontalAlignment="Left"
+                        Click="btnDeleteControls_Click"
+                        ToolTip="{DynamicResource DeleteControlsTooltip}"
+                        ToolTipService.ShowOnDisabled="True"
+                        IsEnabled="{Binding IsCustomConfigOptionSelected}"
+                        Style="{StaticResource ImageButton}"
+                        Content="{StaticResource iconDelete}"
+                        Margin="5,0,0,0"
+                        Width="28"
+                        Height="28"/>
+            </WrapPanel>
+            
 
             <Button x:Name="btnSaveChanges"
                     Grid.Column="2"
-                    Grid.RowSpan="4"
+                    Grid.RowSpan="5"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"
                     ToolTip="{DynamicResource SaveChangesTooltip}"
@@ -479,7 +486,8 @@
                     Content="{DynamicResource Save}"/>
             <Button x:Name="btnCancel"
                     Grid.Column="3"
-                    Grid.RowSpan="4"
+                    Grid.RowSpan="5"
+                    Margin="0,0,5,0"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"
                     MinWidth="75"
@@ -514,7 +522,7 @@
                     Grid.ColumnSpan="4"
                     HorizontalAlignment="Left"
                     FontSize="11"
-                    Grid.Row="3"/>
+                    Grid.Row="4"/>
 
         </Grid>
     </Grid>

@@ -273,5 +273,21 @@ namespace SeventhHeaven.Windows
         {
             ViewModel.ConnectedController?.ReleaseDevice();
         }
+
+        private void windowControls_Loaded(object sender, RoutedEventArgs e)
+        {
+            ResizeWindowToFitContent();
+        }
+
+        private void ResizeWindowToFitContent()
+        {
+            double padding = 5;
+            double newWidth = gridMain.ActualWidth + padding;
+
+            if (newWidth > this.Width)
+            {
+                this.Width = newWidth;
+            }
+        }
     }
 }
