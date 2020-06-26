@@ -17,6 +17,15 @@ namespace Iros._7th.Workshop
             Tags = new List<string>();
             Requirements = new List<ModRequirement>();
             Patches = new List<ModPatch>();
+            LatestVersion = new ModVersion()
+            {
+                CompatibleGameVersions = GameVersions.All,
+                Links = new List<string>(),
+                PreviewImage = string.Empty,
+                ReleaseDate = DateTime.Now,
+                ReleaseNotes = string.Empty,
+                Version = 1.00m,
+            };
         }
 
         public Guid ID { get; set; }

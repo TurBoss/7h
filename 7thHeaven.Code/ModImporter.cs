@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace _7thHeaven.Code
 {
@@ -14,6 +15,103 @@ namespace _7thHeaven.Code
         public delegate void OnImportProgressChanged(string message, double percentComplete);
         public event OnImportProgressChanged ImportProgressChanged;
 
+        private static bool TryParseIDFromXmlDoc(Mod modRef, XmlDocument doc)
+        {
+            string modidstr = doc.SelectSingleNode("/ModInfo/ID").NodeTextS();
+            if (!string.IsNullOrWhiteSpace(modidstr))
+            {
+                try
+                {
+                    modRef.ID = new Guid(modidstr);
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool TryParseVersionFromXmlDoc(Mod modRef, XmlDocument doc)
+        {
+            string versionText = doc.SelectSingleNode("/ModInfo/Version").NodeTextS().Replace(',', '.'); // in-case Xml has "1,7" format then replace with "1.7"
+            if (decimal.TryParse(versionText, System.Globalization.NumberStyles.AllowDecimalPoint, new System.Globalization.CultureInfo(""), out decimal ver))
+            {
+                modRef.LatestVersion.Version = ver;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Removes guid from passed in string and replaces underscores '_' with spaces if guid is found in string.
+        /// </summary>
+        /// <param name="name"> name of mod with possible Guid in string </param>
+        /// <returns> if Guid found then returns parsed string; other wise returns <paramref name="name"/></returns>
+        public static string ParseNameFromFileOrFolder(string name)
+        {
+            string parsedName = name;
+
+            Regex regex = new Regex(@"[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}");
+            Match match = regex.Match(name);
+
+            if (match.Success)
+            {
+                int index = name.IndexOf(match.Value) + match.Length;
+                parsedName = name.Substring(index);
+                parsedName = parsedName.Replace("_", " ").Trim();
+            }
+
+            return parsedName;
+        }
+
+        /// <summary>
+        /// Returns guid from passed in file or folder name if guid is found in string; otherwise returns new guid
+        /// </summary>
+        /// <param name="name"> name of mod file/folder with possible Guid in string </param>
+        /// <returns> if Guid found then returns guid; other wise returns new guid</returns>
+        public static Guid ParseModGuidFromFileOrFolderName(string name)
+        {
+            Regex regex = new Regex(@"[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}");
+            Match match = regex.Match(name);
+
+            Guid parsedGuid = Guid.NewGuid();
+
+            if (match.Success)
+            {
+                if (!Guid.TryParse(match.Value, out parsedGuid))
+                {
+                    parsedGuid = Guid.NewGuid(); // failed to parse, which sets to empty guid so generate a new one
+                }
+            }
+
+            return parsedGuid;
+        }
+
+        /// <summary>
+        /// Static method to import mod 
+        /// </summary>
+        /// <param name="source"> absolute path to .iro or folder to import</param>
+        /// <param name="name"> name to give mod </param>
+        /// <param name="iroMode"> true if importing .iro </param>
+        /// <param name="noCopy"> does not copy the file/folder to the mods Library folder</param>
+        /// <returns>Parsed and imported mod</returns>
+        public static Mod ImportMod(string source, string name, bool iroMode, bool noCopy)
+        {
+            return new ModImporter().Import(source, name, iroMode, noCopy);
+        }
+
+        /// <summary>
+        /// Imports a mod from file/folder into the Library
+        /// </summary>
+        /// <param name="source"> absolute path to .iro or folder to import</param>
+        /// <param name="name"> name to give mod </param>
+        /// <param name="iroMode"> true if importing .iro </param>
+        /// <param name="noCopy"> does not copy the file/folder to the mods Library folder</param>
+        /// <returns>Parsed and imported mod</returns>
         public Mod Import(string source, string name, bool iroMode, bool noCopy)
         {
             Mod m = ParseModXmlFromSource(source); // this will increment the progress changed value up to 50%
@@ -96,6 +194,106 @@ namespace _7thHeaven.Code
         }
 
         /// <summary>
+        /// Imports and applies patch file to installed mod.
+        /// </summary>
+        /// <param name="sourcePatchFile"> absolute path to .irop file</param>
+        /// <returns> true if applied patch. </returns>
+        public bool ImportModPatch(string sourcePatchFile)
+        {
+            XmlDocument doc = null;
+
+            if (!File.Exists(sourcePatchFile))
+            {
+                RaiseProgressChanged($"Patch file does not exist at {sourcePatchFile}", 0);
+                return false;
+            }
+
+            // check for mod.xml in .irop file and load xml to get mod id
+            RaiseProgressChanged($"Getting mod info from .irop file", 25);
+            using (var patch = new IrosArc(sourcePatchFile))
+            {
+                if (!patch.HasFile("mod.xml"))
+                {
+                    RaiseProgressChanged($"Failed to apply patch due to missing mod.xml file in .irop patch", 0);
+                    return false; // no mod.xml found in patch
+                }
+
+                doc = new XmlDocument();
+                doc.Load(patch.GetData("mod.xml"));
+            }
+
+            if (doc == null)
+            {
+                RaiseProgressChanged($"Failed to load mod.xml file from patch", 0);
+                return false;
+            }
+
+
+            Mod parsedMod = new Mod();
+
+            if (!TryParseIDFromXmlDoc(parsedMod, doc))
+            {
+                RaiseProgressChanged($"Failed to apply patch due to Mod ID is missing from mod.xml in patch", 0);
+                return false;
+            }
+
+            if (!TryParseVersionFromXmlDoc(parsedMod, doc))
+            {
+                RaiseProgressChanged($"Failed to apply patch due to Mod Version is missing from mod.xml in patch", 0);
+                return false;
+
+            }
+
+
+            // if no mod id or mod not installed then error
+            InstalledItem installedMod = Sys.Library.GetItem(parsedMod.ID);
+
+            if (installedMod == null)
+            {
+                RaiseProgressChanged($"No mod is installed with the ID {parsedMod.ID}", 0);
+                return false; // mod is not installed
+            }
+
+            // stop patching if patch is older than already installed version
+            if (installedMod.LatestInstalled.VersionDetails.Version >= parsedMod.LatestVersion.Version)
+            {
+                throw new DuplicateModException($"A mod ({installedMod.CachedDetails.Name} v{installedMod.LatestInstalled.VersionDetails.Version}) with the same ID already exists in your library.");
+            }
+
+
+            // open .iro for patching and apply patch
+            RaiseProgressChanged($"Applying patch to '{installedMod.CachedDetails.Name}'", 50);
+
+            string sourceFileName = installedMod.LatestInstalled.InstalledLocation;
+            string sourceIro = Path.Combine(Sys.Settings.LibraryLocation, sourceFileName);
+
+            using (var iro = new IrosArc(sourceIro, true))
+            {
+                using (var patch = new IrosArc(sourcePatchFile))
+                {
+                    iro.ApplyPatch(patch, (d, msg) =>
+                    {
+                        RaiseProgressChanged(msg, 50);
+                    });
+                }
+            }
+
+            // update the cached mod details by re-reading the mod.xml
+            RaiseProgressChanged($"Updating cached details of '{installedMod.CachedDetails.Name}'", 75);
+
+            Mod updatedMod = ParseModXmlFromSource(sourceIro, installedMod.CachedDetails);
+
+            installedMod.CachedDetails = updatedMod;
+            installedMod.Versions.Clear();
+            installedMod.Versions.Add(new InstalledVersion() { VersionDetails = updatedMod.LatestVersion, InstalledLocation = sourceFileName });
+
+            return true;
+
+
+
+        }
+
+        /// <summary>
         /// Parses mod.xml from a folder or .iro and returns the <see cref="Mod"/>
         /// </summary>
         /// <param name="sourceFileOrFolder">absolute path to folder or .iro file </param>
@@ -113,16 +311,7 @@ namespace _7thHeaven.Code
                     ID = ParseModGuidFromFileOrFolderName(sourceFileOrFolder),
                     Link = String.Empty,
                     Tags = new List<string>(),
-                    Name = "",
-                    LatestVersion = new ModVersion()
-                    {
-                        CompatibleGameVersions = GameVersions.All,
-                        Links = new List<string>(),
-                        PreviewImage = String.Empty,
-                        ReleaseDate = DateTime.Now,
-                        ReleaseNotes = String.Empty,
-                        Version = 1.00m,
-                    }
+                    Name = ""
                 };
             }
 
@@ -140,9 +329,8 @@ namespace _7thHeaven.Code
             }
 
             bool isIroFile = sourceFileOrFolder.EndsWith(".iro");
-            System.Xml.XmlDocument doc = null;
-            Func<string, byte[]> getImageData = null;
-            _7thWrapperLib.IrosArc arc = null;
+            XmlDocument doc = null;
+            IrosArc arc = null;
 
             string[] musicFiles = FF7FileLister.GetMusicFiles();
             string[] movieFiles = FF7FileLister.GetMovieFiles().Keys.ToArray();
@@ -152,7 +340,7 @@ namespace _7thHeaven.Code
             {
                 RaiseProgressChanged("Getting mod.xml data from .iro", 10);
 
-                arc = new _7thWrapperLib.IrosArc(sourceFileOrFolder, patchable: false, (i, fileCount) =>
+                arc = new IrosArc(sourceFileOrFolder, patchable: false, (i, fileCount) =>
                 {
                     double newProgress = 10.0 + ((double)i / fileCount) * 30.0;
                     RaiseProgressChanged($"Scanning .iro archive files {i} / {fileCount}", newProgress);
@@ -160,7 +348,7 @@ namespace _7thHeaven.Code
 
                 if (arc.HasFile("mod.xml"))
                 {
-                    doc = new System.Xml.XmlDocument();
+                    doc = new XmlDocument();
                     doc.Load(arc.GetData("mod.xml"));
                 }
 
@@ -182,12 +370,6 @@ namespace _7thHeaven.Code
                         break; // break out of loop to stop scanning since confirmed both music and movie files exist in mod
                     }
                 }
-                
-
-                getImageData = s =>
-                {
-                    return arc.HasFile(s) ? arc.GetBytes(s) : null;
-                };
             }
             else
             {
@@ -218,13 +400,6 @@ namespace _7thHeaven.Code
                         break; // break out of loop to stop scanning since confirmed both music and movie files exist in mod
                     }
                 }
-
-                getImageData = s =>
-                {
-                    string file = Path.Combine(sourceFileOrFolder, s);
-                    if (File.Exists(file)) return File.ReadAllBytes(file);
-                    return null;
-                };
             }
 
 
@@ -233,18 +408,12 @@ namespace _7thHeaven.Code
                 RaiseProgressChanged("Parsing information from mod.xml", 50);
 
                 //If mod.xml contains an ID GUID, then use that instead of generating random one
-                string modidstr = doc.SelectSingleNode("/ModInfo/ID").NodeTextS();
-                if (!string.IsNullOrWhiteSpace(modidstr))
+                bool didParseId = TryParseIDFromXmlDoc(parsedMod, doc);
+
+                if (!didParseId)
                 {
-                    try
-                    {
-                        parsedMod.ID = new Guid(modidstr);
-                    }
-                    catch (Exception e)
-                    {
-                        Sys.Message(new WMessage("Invalid GUID found for Mod ID ... Using guid from file/folder name (or new guid).", WMessageLogLevel.LogOnly, e));
-                        parsedMod.ID = ParseModGuidFromFileOrFolderName(sourceFileOrFolder);
-                    }
+                    Sys.Message(new WMessage("Invalid GUID found for Mod ID ... Using guid from file/folder name (or new guid).", WMessageLogLevel.LogOnly));
+                    parsedMod.ID = ParseModGuidFromFileOrFolderName(sourceFileOrFolder);
                 }
 
                 parsedMod.Name = doc.SelectSingleNode("/ModInfo/Name").NodeTextS();
@@ -294,12 +463,8 @@ namespace _7thHeaven.Code
                     parsedMod.LatestVersion.ReleaseDate = defaultModIfMissing.LatestVersion.ReleaseDate;
                 }
 
-                string versionText = doc.SelectSingleNode("/ModInfo/Version").NodeTextS().Replace(',', '.'); // in-case Xml has "1,7" format then replace with "1.7"
-                if (decimal.TryParse(versionText, System.Globalization.NumberStyles.AllowDecimalPoint, new System.Globalization.CultureInfo(""), out decimal ver))
-                {
-                    parsedMod.LatestVersion.Version = ver;
-                }
-                else
+                bool didParse = TryParseVersionFromXmlDoc(parsedMod, doc);
+                if (!didParse)
                 {
                     parsedMod.LatestVersion.Version = defaultModIfMissing.LatestVersion.Version;
                 }
@@ -308,7 +473,18 @@ namespace _7thHeaven.Code
                 if (pv != null)
                 {
                     // add the preview file to image cache and set the url prefixed with iros://Preview/Auto since it came from auto-import
-                    byte[] data = getImageData(pv.InnerText);
+                    byte[] data = null;
+
+                    if (isIroFile)
+                    {
+                        data = arc.HasFile(pv.InnerText) ? arc.GetBytes(pv.InnerText) : null;
+                    }
+                    else
+                    {
+                        string file = Path.Combine(sourceFileOrFolder, pv.InnerText);
+                        data = File.Exists(file) ? File.ReadAllBytes(file) : null;
+                    }
+
                     if (data != null)
                     {
                         string url = $"iros://Preview/Auto/{parsedMod.ID}_{pv.InnerText.Replace('\\', '_')}";
@@ -326,54 +502,9 @@ namespace _7thHeaven.Code
             return parsedMod;
         }
 
-        public static Mod ImportMod(string source, string name, bool iroMode, bool noCopy)
+        private byte[] GetImageDataFromIrosArc(IrosArc arc, string innerText)
         {
-            return new ModImporter().Import(source, name, iroMode, noCopy);
-        }
-
-        /// <summary>
-        /// Removes guid from passed in string and replaces underscores '_' with spaces if guid is found in string.
-        /// </summary>
-        /// <param name="name"> name of mod with possible Guid in string </param>
-        /// <returns> if Guid found then returns parsed string; other wise returns <paramref name="name"/></returns>
-        public static string ParseNameFromFileOrFolder(string name)
-        {
-            string parsedName = name;
-
-            Regex regex = new Regex(@"[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}");
-            Match match = regex.Match(name);
-
-            if (match.Success)
-            {
-                int index = name.IndexOf(match.Value) + match.Length;
-                parsedName = name.Substring(index);
-                parsedName = parsedName.Replace("_", " ").Trim();
-            }
-
-            return parsedName;
-        }
-
-        /// <summary>
-        /// Returns guid from passed in file or folder name if guid is found in string; otherwise returns new guid
-        /// </summary>
-        /// <param name="name"> name of mod file/folder with possible Guid in string </param>
-        /// <returns> if Guid found then returns guid; other wise returns new guid</returns>
-        public static Guid ParseModGuidFromFileOrFolderName(string name)
-        {
-            Regex regex = new Regex(@"[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}");
-            Match match = regex.Match(name);
-
-            Guid parsedGuid = Guid.NewGuid();
-
-            if (match.Success)
-            {
-                if (!Guid.TryParse(match.Value, out parsedGuid))
-                {
-                    parsedGuid = Guid.NewGuid(); // failed to parse, which sets to empty guid so generate a new one
-                }
-            }
-
-            return parsedGuid;
+            throw new NotImplementedException();
         }
 
         public void RaiseProgressChanged(string message, double percentComplete)
@@ -381,87 +512,5 @@ namespace _7thHeaven.Code
             ImportProgressChanged?.Invoke(message, percentComplete);
         }
 
-        public bool ImportModPatch(string sourcePatchFile)
-        {
-            System.Xml.XmlDocument doc = null;
-
-            try
-            {
-                RaiseProgressChanged($"Getting mod info from .irop file", 25);
-
-                // check for mod.xml in .irop file and load xml to get mod id
-                using (var patch = new IrosArc(sourcePatchFile))
-                {
-                    if (!patch.HasFile("mod.xml"))
-                    {
-                        RaiseProgressChanged($"Failed to apply patch due to missing mod.xml file in .irop patch", 0);
-                        return false; // no mod.xml found in patch
-                    }
-
-                    doc = new System.Xml.XmlDocument();
-                    doc.Load(patch.GetData("mod.xml"));
-                }
-
-                if (doc == null)
-                {
-                    RaiseProgressChanged($"Failed to load mod.xml file from patch", 0);
-                    return false;
-                }
-
-                Guid parsedModId;
-                string idFromXml = doc.SelectSingleNode("/ModInfo/ID").NodeTextS();
-                if (string.IsNullOrWhiteSpace(idFromXml) || !Guid.TryParse(idFromXml, out parsedModId))
-                {
-                    RaiseProgressChanged($"Failed to apply patch due to Mod ID is missing from mod.xml in patch", 0);
-                    return false; // no mod ID found in mod.xml
-                }
-
-
-                // if no mod id or mod not installed then error
-                InstalledItem installedMod = Sys.Library.GetItem(parsedModId);
-
-                if (installedMod == null)
-                {
-                    RaiseProgressChanged($"No mod is installed with the ID {parsedModId}", 0);
-                    return false; // mod is not installed
-                }
-
-                // open .iro for patching and apply patch
-                RaiseProgressChanged($"Applying patch to '{installedMod.CachedDetails.Name}'", 50);
-
-
-                string sourceFileName = installedMod.LatestInstalled.InstalledLocation;
-                string sourceIro = Path.Combine(Sys.Settings.LibraryLocation, sourceFileName);
-
-                using (var iro = new IrosArc(sourceIro, true))
-                {
-                    using (var patch = new IrosArc(sourcePatchFile))
-                    {
-                        iro.ApplyPatch(patch, (d, msg) =>
-                        {
-                            RaiseProgressChanged(msg, 50);
-                        });
-                    }
-                }
-
-                // update the cached mod details by re-reading the mod.xml
-                RaiseProgressChanged($"Updating cached details of '{installedMod.CachedDetails.Name}'", 75);
-
-                Mod updatedMod = ParseModXmlFromSource(sourceIro, installedMod.CachedDetails);
-
-                installedMod.CachedDetails = updatedMod;
-                installedMod.Versions.Clear();
-                installedMod.Versions.Add(new InstalledVersion() { VersionDetails = updatedMod.LatestVersion, InstalledLocation = sourceFileName });
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Sys.Message(new WMessage($"Failed to apply patch due to unknown error: {ex.Message}", WMessageLogLevel.Error, ex));
-                return false;
-            }
-
-
-        }
     }
 }
