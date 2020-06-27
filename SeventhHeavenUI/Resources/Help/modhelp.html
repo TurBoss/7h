@@ -27,7 +27,7 @@
 			line-height: 30px;
 		}
 		code {font-size: 120%;}
-		
+
 		pre code {
 			background-color: #262626;
 			border: 1px solid #999;
@@ -49,7 +49,7 @@
 
 Contents:<br />
 <ol type="1">
-  <li><a href="#basicmodfeatures">Basic Mod.xml Features</a></li>
+  <li><a href="#basicmodfeatures">Basic Mod.xml Features</a>
       <ul>
   <li><a href="#modinfo">Mod Information</a></li>
   <li><a href="#modfolders">Mod Folders</a></li>
@@ -57,19 +57,22 @@ Contents:<br />
   <li><a href="#modconfig">Config Options</a></li>
   <li><a href="#treeviewstyle">Treeview Style</a></li>
   <li><a href="#modoperators">Operators</a></li>
+</li>
 	   </ul>
-  <li><a href="#compatwithothermods">Compatibility With Other Mods</a></li>
+  <li><a href="#compatwithothermods">Compatibility With Other Mods</a>
       <ul>
   <li><a href="#moddependency">Mod Dependency</a></li>
   <li><a href="#modcompatsettings">Mod Compatibility Settings</a></li>
   <li><a href="#modloadorder">Mod Load Order</a></li>
+	</li>
 	   </ul>
-	     <li><a href="#catalogsubs">Catalog Subscriptions</a></li>
+	     <li><a href="#catalogsubs">Catalog Subscriptions</a>
       <ul>
   <li><a href="#linkformats">Link Formats</a></li>
   <li><a href="#downloadingmods">Downloading Mods</a></li>
   <li><a href="#patchingmods">Patching Mods</a></li>
-	   </ul>
+</li>
+		 </ul>
 </ol>
 
 <u><h2><a id="basicmodfeatures">Basic Mod.xml Features</a></h2></u>
@@ -78,7 +81,7 @@ Contents:<br />
   <li><b>ID</b>: <b>This is EXTREMELY IMPORTANT!</b> You should specify a unique 32-character GUID that will identify your mod. This is so 7th Heaven  and other mods know how to identify your mod for updates, sort order, compatibility, settings, etc. You can generate a new, random ID for your mod by opening the <a href="userhelp.html#catalogmodcreationtool">Catalog/Mod Creation Tool</a>.</li>
   <li><b>Name</b>: Give your mod a name.</li>
   <li><b>Author</b>: The name of the author or authors of the mod.</li>
-  <li><b>Version</b>: The version number of your mod in format x.xx.</li>
+  <li><b>Version</b>: The version number of your mod in decimal type format x.xx.</li>
   <li><b>ReleaseDate</b>: The date your mod is/will be released in format YYYY-MM-DD.</li>
   <li><b>Category</b>: The category that your mod belogs to. Valid choices are Animations, Battle Models, Battle Textures, Field Models, Field Textures, Gameplay, Media, Minigames, Miscellaneous, Spell Textures, User Interface, World Models, World Textures. If you do not specify a category, 7th Heaven will categorize it as Unknown.</li>
   <li><b>ReleaseNotes</b>: These are notes for this specific release of your mod, such as "I added this new feature."</li>
@@ -128,7 +131,7 @@ To activate a subfolder in your mod based on a setting variable that you're usin
 
 <pre>
   <code>
-&lt;ModInfo>  
+&lt;ModInfo>
   &lt;ModFolder Folder=&quot;MyModFolder\ModSubFolder&quot;  ActiveWhen=&quot;MySetting = 1&quot; /&gt;
 &lt;/ModInfo&gt;
   </code>
@@ -207,7 +210,7 @@ If both conditions are true then the version of aaba.p from the 'sewer' folder i
     &lt;Description&gt;Character Themes - Expand arrows on the left for track selection options.&lt;/Description&gt;
     &lt;Option Value=&quot;0&quot; Name=&quot;&quot;/&gt;
   &lt;/ConfigOption&gt;
-  
+
   &lt;ConfigOption&gt;
     &lt;Type&gt;List&lt;/Type&gt;
     &lt;Default&gt;1&lt;/Default&gt;
@@ -217,7 +220,7 @@ If both conditions are true then the version of aaba.p from the 'sewer' folder i
     &lt;Option Value=&quot;0&quot; Name=&quot;No Change&quot; PreviewFile=&quot;off.png&quot;/&gt;
     &lt;Option Value=&quot;1&quot; Name=&quot;Default Mix&quot; PreviewFile=&quot;on.png&quot; PreviewAudio=&quot;\vgmstream\earis.ogg&quot;/&gt;
   &lt;/ConfigOption&gt;
-  
+
   &lt;ConfigOption&gt;
     &lt;Type&gt;List&lt;/Type&gt;
     &lt;Default&gt;1&lt;/Default&gt;
@@ -227,7 +230,7 @@ If both conditions are true then the version of aaba.p from the 'sewer' folder i
     &lt;Option Value=&quot;0&quot; Name=&quot;No Change&quot; PreviewFile=&quot;off.png&quot;/&gt;
     &lt;Option Value=&quot;1&quot; Name=&quot;Default Mix&quot; PreviewFile=&quot;on.png&quot; PreviewAudio=&quot;\vgmstream\barret.ogg&quot;/&gt;
   &lt;/ConfigOption&gt;
-  
+
   &lt;ConfigOption&gt;
     &lt;Type&gt;List&lt;/Type&gt;
     &lt;Default&gt;1&lt;/Default&gt;
@@ -237,7 +240,7 @@ If both conditions are true then the version of aaba.p from the 'sewer' folder i
     &lt;Option Value=&quot;0&quot; Name=&quot;No Change&quot; PreviewFile=&quot;off.png&quot;/&gt;
     &lt;Option Value=&quot;1&quot; Name=&quot;Default Mix&quot; PreviewFile=&quot;on.png&quot; PreviewAudio=&quot;\vgmstream\sid2.ogg&quot;/&gt;
   &lt;/ConfigOption&gt;
-  
+
     &lt;ConfigOption&gt;
     &lt;Type&gt;List&lt;/Type&gt;
     &lt;Default&gt;0&lt;/Default&gt;
@@ -379,7 +382,7 @@ ExtractSubFolder is useful if your ZIP contains files that are not useful for th
 ExtractInto is useful if your ZIP doesn't have the right folder structure for 7th Heaven. Like if your avatar files are just inside the ZIP with no folder names, you need to extract them into a folder called "menu_us.lgp" for 7th Heaven to work.
 <br /><br />
 
-<b><a id="patchingmods">Patching Mods</a></b>: If you've released a large mod and want to update it with a small .irop patch file (can be created with the IRO Tools in 7th Heaven), you can add a &lt;Patch&gt; entry in the catalog so people who already have the mod can update using the small .irop patch file. See the example below.</b>
+<b><a id="patchingmods">Patching Mods</a></b>: If you've released a large mod and want to update it with a small .irop patch file (can be created with the IRO Tools in 7th Heaven), you can add a &lt;Patch&gt; entry in the catalog so people who already have the mod can update using the small .irop patch file. See the example below. <i>New in 7th Heaven 2.2, you can distribute .IROP files outside of catalogs and users can double-click them or use the Import Mod feature to apply patches. You must make sure your IROP's mod.xml contains the mod ID so 7H knows which mod to target. Also, you must use the &lt;???(to be determined)&gt; tag to specify which version(s) of your mod the IROP patch applies to if distributing a standalone patch outside of catalogs.</i>
 <pre>
   <code>
     &lt;Mod&gt;
@@ -394,9 +397,6 @@ ExtractInto is useful if your ZIP doesn't have the right folder structure for 7t
       &lt;/Tags&gt;
       &lt;LatestVersion&gt;
         &lt;Link&gt;iros://Url/http$www.myserver.com/Music1.iro&lt;/Link&gt;
-        &lt;ApplyPatch&gt;iros://Url/http$www.myserver.com/Music_0_to_1.irop&lt;/ApplyPatch&gt;
-        &lt;ApplyPatch&gt;iros://Url/http$www.myserver.com/Music_1_to_2.irop&lt;/ApplyPatch&gt;
-	
         &lt;Version&gt;1.2&lt;/Version&gt;
         &lt;ReleaseDate&gt;2014-09-04&lt;/ReleaseDate&gt;
         &lt;CompatibleGameVersions&gt;Original&lt;/CompatibleGameVersions&gt;
@@ -409,8 +409,40 @@ ExtractInto is useful if your ZIP doesn't have the right folder structure for 7t
   </code>
 </pre>
 
+<b>Backup Links for Patches</a></b>: <i>New in 7th Heaven 2.2:</i> You can specify more than 1 link for 7H to attempt to download patches from.</i>
+<pre>
+  <code>
+    &lt;Mod&gt;
+      &lt;ID&gt;BFAE987C-C1E6-42E6-8139-FF809142D72E&lt;/ID&gt;
+      &lt;Author&gt;Iros&lt;/Author&gt;
+      &lt;Link&gt;http://forums.qhimm.com/&lt;/Link&gt;
+      &lt;Name&gt;Test music/patching&lt;/Name&gt;
+      &lt;MetaVersion&gt;2&lt;/MetaVersion&gt;
+      &lt;Description&gt;Testing music in a IRO archive&lt;/Description&gt;
+      &lt;Tags&gt;
+        &lt;string&gt;Music&lt;/string&gt;
+      &lt;/Tags&gt;
+      &lt;LatestVersion&gt;
+        &lt;Link&gt;iros://Url/http$www.myserver.com/Music1.iro&lt;/Link&gt;
+        &lt;Version&gt;1.2&lt;/Version&gt;
+        &lt;ReleaseDate&gt;2014-09-04&lt;/ReleaseDate&gt;
+        &lt;CompatibleGameVersions&gt;Original&lt;/CompatibleGameVersions&gt;
+        &lt;PreviewImage&gt;&lt;/PreviewImage&gt;
+        &lt;ReleaseNotes&gt;&lt;/ReleaseNotes&gt;
+      &lt;/LatestVersion&gt;
+      &lt;Patch VerFrom="1.0" VerTo="1.1"&gt;iros://Url/http$www.myserver.com/Music_0_to_1.irop&lt;/Patch&gt;
+      &lt;Patch VerFrom="1.0" VerTo="1.1"&gt;iros://Url/http$www.backupserver.com/Music_0_to_1.irop&lt;/Patch&gt;
+      &lt;Patch VerFrom="1.1" VerTo="1.2"&gt;iros://Url/http$www.myserver.com/Music_1_to_2.irop&lt;/Patch&gt;
+      &lt;Patch VerFrom="1.1" VerTo="1.2"&gt;iros://Url/http$www.backupserver.com/Music_1_to_2.irop&lt;/Patch&gt;
+
+&lt;!--The below example works to specify multiple versions at once:--&gt;
+&lt;Patch VerFrom="1.0,1.1" VerTo="1.2" DownloadSize="0"&gt;iros://Url/http$www.myserver.com/Music_1x_1.2.irop&lt;/Patch&gt;
+    &lt;/Mod&gt;
+  </code>
+</pre>
+
 <center><a href="#the_top">Top of page</a></center>
       </p>
    </body>
-   
+
 </html>

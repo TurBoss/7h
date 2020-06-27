@@ -425,7 +425,6 @@ namespace SeventhHeaven.Classes
             // Update Registry with new launch settings
             // 
             Instance.SetRegistryValues();
-            Instance.SetCompatibilityFlagsInRegistry();
 
 
             //

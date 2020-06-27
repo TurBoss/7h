@@ -27,7 +27,7 @@
 			line-height: 30px;
 		}
 		code {font-size: 120%;}
-		
+
 		pre code {
 			background-color: #262626;
 			border: 1px solid #999;
@@ -52,8 +52,9 @@
 Contents:<br>
 <ol type="1">
   <li><a href="#about_7h">About 7th Heaven</a></li>
-  <li><a href="#main_features">Main Features</a></li>
-  <li><a href="#whats_new">What's New in 7H 2.0?</a></li>
+	<li><a href="#main_features">Main Features</a></li>
+  <li><a href="#whats_new">What's New in 7H 2.x?</a></li>
+	<li><a href="#credits">Credits and Shout-outs</a></li>
 </ol>
 
 <u><h2><a id="about_7h">About 7th Heaven</a></h2></u>
@@ -63,22 +64,58 @@ Mods allow you to change nearly any aspect of the game, including, but not limit
 <br>
 <u><h2><a id="main_features">Main Features</a></h2></u>
 <ul>
+  <li>Multi-language support</li>
+	<li>Game controls mapping</li>
   <li>Fully integrated and automatic 'Game Converter'.</li>
   <li>Fully integrated replacement for 'FF7Config'</li>
-  <li>'Game Launcher' ensures FF7 is always play-ready when you click the 'Play' button.</li>
-  <li>Import, Activate, Deactivate, or Uninstall mods at the click of a button</li>
+  <li>'Game Launcher' ensures FF7 is always play-ready when you click the 'Play' button</li>
+  <li>Import, activate, deactivate, or uninstall mods at the click of a button</li>
   <li>Rearrange the priority/load order of your mods</li>
-  <li>Powerful new search w/ tags, catalog, and category support</li>
-  <li>Pack or Unpack mods to/from .iro files</li>
+	<li>Powerful new search w/ tags, catalog, and category support</li>
+  <li>Pack or unpack mods to/from .iro files</li>
   <li>Supports mods in a folder structure or iro file format</li>
   <li>Create or browse catalog subscriptions (lists of downloadable mods)</li>
   <li>Integrated mod downloader</li>
   <li>Manage multiple profiles/configurations for your mods</li>
   <li>Chunk Tool for flevel files</li>
   <li>Import movies from disc (for original 1998 users)</li>
-  <li>GUI for configuring OpenGL Driver</li>
+  <li>GUI for configuring the game driver</li>
 </ul>
-<u><h2><a id="whats_new">What's New in 7H 2.0?</a></h2></u>
+<u><h2><a id="whats_new">What's New in 7H 2.2?</a></h2></u>
+<ul>
+<i>
+  <li>Game Exe: Now Large Address Aware and Windows DEP compatible - Game can now access >2GB of memory and won't crash with certain DEP settings. Greatly increases stability and allows for more complex mods.</li>
+  <li>Game Driver: FFNx replaces old game driver - Choice of rendering API, high-DPI support, antialiasing, fixes several game bugs, centered vertical fields, better controller support and ability to use triggers and d-pad, audio fixes and enhancements, music/movies continue playing on lost focus, better stability, performance improvements, additional file format support, and much more</li>
+  <li>Multi-Language Support: UI now available in Brazilian Portuguese, English, French, German, Greek, Italian, and Spanish</li>
+  <li>Multi-Language Support: 'Game Converter' now works with English, French, German, and Spanish versions of the game</li>
+  <li>Game Launcher Settings: Windows 7 users can now auto-mount game disc using WinCDEmu option</li>
+  <li>Game Launcher Settings: SFX/Music volume now pulls from game's registry</li>
+  <li>Game Launcher Settings: Simplified UI layout and removal of deprecated features (High-DPI, Reunion, Code 5 compatibility settings)</li>
+  <li>Game Launcher Settings: Import Movie feature moved to 'Tools' menu</li>
+  <li>Controller Support: Ability to map your game controls directly in 7H</li>
+	<li>Controller Support: D-Pad and triggers support (D-Pad is native w/ FFNx on XInput and emulated w/ 7H on DInput)</li>
+  <li>Controller Support: Create/Edit/Save game control presets</li>
+  <li>Controller Support: Included DS4 XInput driver, ability to use 7H UI w/ DS4 controller</li>
+  <li>Downloader: Better pause/resume/cancel, resume partially downloaded mod, retry install button for failed mod installs</li>
+  <li>Downloader: Added iros://mod/ protocol so mods can be direct-downloaded in 7H via web link</li>
+  <li>Downloader: Replaced code for downloading from Mega host</li>
+  <li>Mod Patches: Added ability to import .IROP mod patch files directly</li>
+  <li>Catalogs: Added Sega Chief's catalog by default to include new mods such as New Threat</li>
+  <li>Setup: Switched to Inno Setup for better install experience, easier 7H upgrade installs, more flexibility and features</li>
+  <li>Bug Fix: Don't crash on startup if FF7 game path is invalid/missing</li>
+  <li>Bug Fix: Updated EasyHook to fix .bin game file loading on startup (Thanks Tsunamix!)</li>
+  <li>Bug Fix: Custom 7H mod functions/variables now working properly (Thanks Carlucci, cmh175!)</li>
+  <li>Bug Fix: .IROP (mod patch) downloads/installs fixed (Thanks Carlucci!)</li>
+  <li>Bug Fix: Profile Details doesn't crash if existing mod's variable names changed (Thanks Chrysalis!)</li>
+  <li>Bug Fix: Play with debugging options doesn't crash</li>
+  <li>Bug Fix: 'Music' and 'Direct' folders created if missing</li>
+  <li>Bug Fix: Auto Sort duplicating mod in list if mod used OrderConstraints</li>
+  <li>Bug Fix: Cancel download crash</li>
+  <li>Bug Fix: Wait up to 120 seconds to load game for slower PCs</li>
+  <li>Bug Fix: Minor UI issues</li>
+  </i>
+</ul>
+<u><h2>Previous Changes in 7H 2.0:</h2></u>
 <ul>
 <i>
   <li>Built-in 'Game Converter'</li>
@@ -120,7 +157,7 @@ Mods allow you to change nearly any aspect of the game, including, but not limit
   <li>Integrated offline help and troubleshooting</li>
   <li>Clearer dialogs and warnings, less nagging</li>
   <li>Includes updated and custom 'Aali' OpenGL driver</li>
-  <li>Improved OpenGL configuration settings - Better organization and description of options</li>
+  <li>Improved game driver configuration settings - Better organization and description of options</li>
   <li>Bug Fix: EasyHook.RemoteHooking.CreateAndInject</li>
   <li>Bug Fix: Refresh Catalog works properly</li>
   <li>Bug Fix: New UI eliminates mouse scrolling issues, glitchy mod movement animations</li>
@@ -129,8 +166,62 @@ Mods allow you to change nearly any aspect of the game, including, but not limit
   <li>Bug Fix: Multiple other crash fixes throughout</li>
   </i>
 </ul>
+<u><h2><a id="credits">Credits and Shout-outs</a></h2></u>
+<b><h3>7th Heaven 2.x</h2></b>
+rodriada000<br>
+unab0mb
+
+<b><h3>7th Heaven 1.x</h2></b>
+ficedula<br>
+Iros<br>
+TrueOdin<br>
+TurBoss
+
+<b><h3>Catalogs and Hosting</h2></b>
+Chrysalis<br>
+EQ2Alyza<br>
+Lord UrQuan<br>
+Sega Chief<br>
+Strife98
+
+<b><h3>Game Driver (Aali OpenGL Driver/FFNx)</h2></b>
+Aali<br>
+Chrysalis<br>
+DLPB<br>
+Maki<br>
+myst6re<br>
+Nax<br>
+OatBran<br>
+quantumpencial<br>
+Sebanisu<br>
+sithlord48<br>
+TrueOdin
+
+<b><h3>Translations and Proofreading</h2></b>
+DBZFan102/Andre1070<br>
+Dragoon_2004<br>
+Franckie<br>
+Kaldarasha<br>
+Khrone<br>
+Leonhart<br>
+LittleTale/youffie<br>
+OatBran<br>
+Rukenu<br>
+Satsuki
+
+<b><h3>UltraSound Plugin</h2></b>
+ficedula<br>
+Martin Barker<br>
+
+<b><h3>Videos (Trailer/Tutorial)</h2></b>
+James Garris (Voice of Sephiroth)<br>
+Tsunamix<br>
+<br>
+
+Thank you to the entire Qhimm and Tsunamods communities for their contributions and participation, whether it be donations, offering support to each other, creating mods/software, feedback, using mods, exchanging ideas, or testing mods/software.
+<br>
 <center><a href="#the_top">Top of page</a></center>
       </p>
    </body>
-   
+
 </html>

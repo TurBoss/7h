@@ -135,8 +135,8 @@
                 <cls:ButtonWithImage x:Name="btnSettings" Content="{DynamicResource Settings}" Margin="0,0,0,0" Style="{StaticResource ButtonWithImageAndDownArrow}" TemplateSource="{StaticResource iconSettings}" ContextMenuService.Placement="Bottom" Click="btnSettings_Click">
                     <cls:ButtonWithImage.ContextMenu>
                         <ContextMenu x:Name="menuSettings" Closed="menuSettings_Closed">
-                            <MenuItem x:Name="menuItemControls" Header="{DynamicResource ControlsMenuItemText}" Click="menuItemControls_Click"/>
                             <MenuItem x:Name="menuItemThemeSettings" Header="{DynamicResource ChangeColorTheme}" Click="menuItemThemeSettings_Click"/>
+                            <MenuItem x:Name="menuItemControls" Header="{DynamicResource ControlsMenuItemText}" Click="menuItemControls_Click"/>
                             <MenuItem x:Name="menuItemAaliSettings" Header="{DynamicResource GameDriver}" Click="menuItemAaliSettings_Click"/>
                             <MenuItem x:Name="menuItemLaunchSettings" Header="{DynamicResource GameLauncher}" Click="menuItemLaunchSettings_Click"/>
                             <MenuItem x:Name="menuItemGeneralSettings" Header="{DynamicResource GeneralSettings}" Click="menuItemGeneralSettings_Click"/>
