@@ -771,6 +771,9 @@ namespace SeventhHeaven.Classes
             if (File.Exists(pathToCurrentFile))
             {
                 currentFileVersion = FileVersionInfo.GetVersionInfo(pathToCurrentFile);
+
+                //If no version detected, trigger copy of driver because it is old
+                if (String.IsNullOrEmpty(currentFileVersion.FileVersion)) currentFileVersion = null;
             }
 
             FileVersionInfo latestFileVersion = FileVersionInfo.GetVersionInfo(pathToLatestFile);

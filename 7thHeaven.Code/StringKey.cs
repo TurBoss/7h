@@ -106,6 +106,7 @@
         SuccessfullyCopiedMovies,
         FinishedCopyingMoviesSomeFailed,
         SaveControlConfiguration,
+        SaveControlsPreset,
         ImportCurrentControlsFromGameAndSaveAs,
         SaveError,
         ControlNameIsEmpty,

@@ -104,7 +104,7 @@
     <system:String x:Key="No">Non</system:String>
     <system:String x:Key="Off">Non</system:String>
     <system:String x:Key="On">Oui</system:String>
-    <system:String x:Key="ResetDefaults">Réinitialisation des Paramètres par Défaut</system:String>
+    <system:String x:Key="ResetDefaults">Réinitialiser par Défaut</system:String>
     <system:String x:Key="Save">Sauvegardez</system:String>
     <system:String x:Key="Load">Chargement</system:String>
     <system:String x:Key="Go">Démarrez</system:String>
@@ -1213,4 +1213,6 @@ Voulez-vous appliquer le réglage et essayer à nouveau?</system:String>
     <system:String x:Key="MountOptionToolTip">Choisissez comment monter le disque virtuel du jeu FF7DISC1. Windows 7 ne peut utiliser que l'option 'Monter le Disque avec WinCDEmu'.</system:String>
     <system:String x:Key="ControlsMenuItemText">Contrôles...</system:String>
 
+    <system:String x:Key="SaveControlsPreset">Vous devez enregistrer les contrôles actuels en tant que nouvelle configuration. Entrez le nom de la configuration:</system:String>
+    
 </ResourceDictionary>

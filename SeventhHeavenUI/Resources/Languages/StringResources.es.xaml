@@ -1214,4 +1214,6 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
 
     <system:String x:Key="ControlsMenuItemText">Controles...</system:String>
 
+    <system:String x:Key="SaveControlsPreset">Tienes que guardar los controles actuales como una configuración nueva. Introduce el nombre para ésta nueva configuración:</system:String>
+    
 </ResourceDictionary>

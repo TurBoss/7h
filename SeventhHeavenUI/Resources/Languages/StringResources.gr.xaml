@@ -1216,4 +1216,6 @@
 
     <system:String x:Key="ControlsMenuItemText">Χειρισμός...</system:String>
 
+    <system:String x:Key="SaveControlsPreset">Πρέπει να αποθηκεύσετε τα τρέχοντα στοιχεία ελέγχου ως νέα διαμόρφωση. Εισαγάγετε όνομα για διαμόρφωση:</system:String>
+    
 </ResourceDictionary>

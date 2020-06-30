@@ -1140,7 +1140,7 @@ namespace SeventhHeaven.ViewModels
         {
             bool isValid = true;
             string title = ResourceHelper.Get(StringKey.SaveControlConfiguration);
-            string prompt = "You must save the current controls as a new configuration. Enter name for configuration:";
+            string prompt = ResourceHelper.Get(StringKey.SaveControlsPreset);
             string controlName;
             string pathToFile;
 

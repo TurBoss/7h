@@ -124,7 +124,7 @@
     <system:String x:Key="InsertDisc">Inserir Disco</system:String>
     <system:String x:Key="MissingRequiredInput">Informação Necessária Faltando</system:String>
     <system:String x:Key="IROToolsWindowTitle">Ferramentas IRO</system:String>
-    <system:String x:Key="ChunkToolWindowTitle">Ferramenta de Extração Parcial</system:String>
+    <system:String x:Key="ChunkToolWindowTitle">Ferramenta de Extração Seletiva</system:String>
     <system:String x:Key="ManageProfiles">Gerenciar Perfis</system:String>
     <system:String x:Key="SetLanguageWindowTitle">Ajustar Língua</system:String>
 
@@ -1212,5 +1212,7 @@ Você quer aplicar essa configuração e tentar de novo?</system:String>
     <system:String x:Key="MountOptionToolTip">Selecione como montar o disco de jogo virtual FF7DISC1. Windows 7 só pode usar a opção 'Montar Disco Com WinCDEmu'.</system:String>
 
     <system:String x:Key="ControlsMenuItemText">Controles...</system:String>
+
+    <system:String x:Key="SaveControlsPreset">Você deve salvar os controles atuais como uma nova configuração. Digite o nome da configuração:</system:String>
     
 </ResourceDictionary>

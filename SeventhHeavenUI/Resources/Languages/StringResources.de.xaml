@@ -1226,5 +1226,6 @@ Aktivieren und erneut versuchen?</system:String>
     <system:String x:Key="MountOptionToolTip">Wählt aus, wie die virtuelle FF7DISC1 CD eingebunden werden soll. Windows 7 und früher funktionieren nur mit der 'WinCDEmu' Option.</system:String>
 
     <system:String x:Key="ControlsMenuItemText">Steuerung...</system:String>
-
+    <system:String x:Key="SaveControlsPreset">Sie müssen die aktuellen Kontrollen als eine neue Konfiguration speichern. Geben Sie den Namen für die Konfiguration:</system:String>
+    
 </ResourceDictionary>

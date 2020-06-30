@@ -1212,4 +1212,5 @@ Vuoi applicare questa modifica e riprovare?</system:String>
 
     <system:String x:Key="ControlsMenuItemText">Comandi...</system:String>
 
+    <system:String x:Key="SaveControlsPreset">È necessario salvare i controlli correnti come nuova configurazione. Inserisci il nome per la configurazione:</system:String>
 </ResourceDictionary>
