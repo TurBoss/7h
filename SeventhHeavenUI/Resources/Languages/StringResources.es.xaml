@@ -1114,7 +1114,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="AppHint29">7th Heaven montará o desmontará automáticamente el disco del juego virtual para ti.</system:String>
     <system:String x:Key="AppHint30">7th Heaven ya no necesita el antiguo Game Converter. ¡Ahora es todo automático!</system:String>
     <system:String x:Key="AppHint31">Ya no necesitas usar FF7Config.exe. Sus características están integradas ahora en Opciones>Lanzador de Juego.</system:String>
-    <system:String x:Key="AppHint32">¿Sabias qué 7th Heaven 1.0 se lanzó por primera vez en 2013? la versión 2.0 se lanzó 7 años después, en 2020.</system:String>
+    <system:String x:Key="AppHint32">¿Sabias que 7th Heaven 1.0 se lanzó por primera vez en 2013? la versión 2.0 se lanzó 7 años después, en 2020.</system:String>
     <system:String x:Key="AppHint33">Tu perfil activo actual se muestra en la barra del titulo entre corchetes.</system:String>
     <system:String x:Key="AppHint34">La compatibilidad con alto-DPI ahora está integrada en el controlador del juego.</system:String>
     <system:String x:Key="AppHint35">Puedes organizar las columnas de Examinar Catalogo haciendo clic en los encabezados de las columnas.</system:String>
@@ -1171,7 +1171,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="ScrollUpLabel">[DESPLAZARSE HACIA ARRIBA]</system:String>
     <system:String x:Key="ScrollDownLabel">[DESPLAZARSE HACIA ABAJO]</system:String>
 
-    <system:String x:Key="CameraLabel">[CAMÁRA]</system:String>
+    <system:String x:Key="CameraLabel">[CÁMARA]</system:String>
     <system:String x:Key="TargetLabel">[OBJETIVO]</system:String>
     <system:String x:Key="AssistLabel">[AYUDA]</system:String>
     <system:String x:Key="StartLabel">[START]</system:String>
@@ -1217,18 +1217,18 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="SaveControlsPreset">Tienes que guardar los controles actuales como una configuración nueva. Introduce el nombre para ésta nueva configuración:</system:String>
 
     <!--DEV NOTE: STRINGS BELOW ADDED 7/11/20-->
-    <system:String x:Key="VerifyingEnglishGameFilesExist">Verifying English game files exist ...</system:String>
-    <system:String x:Key="FoundLanguageInstalledCreatingEnglishGameFiles">Found language installed: {0} Creating English game files...</system:String>
-    <system:String x:Key="ExtractingLGPFiles">Extracting .lgp files ...</system:String>
-    <system:String x:Key="RenamingLanguageSpecificFiles">Renaming language specific files ...</system:String>
-    <system:String x:Key="CouldNotFindFileToRename">Could not find file to rename: {0} ...</system:String>
-    <system:String x:Key="EncodingNewLGPFiles">Encoding new .lgp files ...</system:String>
-    <system:String x:Key="DeletingTemporaryFiles">Deleting temporary files ...</system:String>
-    <system:String x:Key="BeginningToPollForGamePadInput">Beginning to poll for gamepad input ...</system:String>
-    <system:String x:Key="WaitingForFF7WindowToBeVisible">Waiting for FF7 window to be visible ({0} seconds max) ...</system:String>
-    <system:String x:Key="CouldNotFindFileToCopy">Could not find file to copy: {0} ...</system:String>
-    <system:String x:Key="AnErrorOccurredStartingULGP">An error occurred starting ulgp.exe</system:String>
-    <system:String x:Key="UpdatingPathsInSysSettings">Updating paths in Sys.Settings with new installation path</system:String>
-    <system:String x:Key="ForceMinimizingProgram">force minimizing program ...</system:String>
-    <system:String x:Key="FailedToStartAdditionalProgram">Failed to start additional program: {0}</system:String>
+    <system:String x:Key="VerifyingEnglishGameFilesExist">Verificando que los archivos Ingleses existan ...</system:String>
+    <system:String x:Key="FoundLanguageInstalledCreatingEnglishGameFiles">Encontrado idioma instalado: {0} Generando los archivos de juego Ingleses...</system:String>
+    <system:String x:Key="ExtractingLGPFiles">Extrayendo los archivos .lgp ...</system:String>
+    <system:String x:Key="RenamingLanguageSpecificFiles">Renombrando los archivos específicos de idioma ...</system:String>
+    <system:String x:Key="CouldNotFindFileToRename">No se ha podido encontrar el siguiente archivo a renombrar: {0} ...</system:String>
+    <system:String x:Key="EncodingNewLGPFiles">Codificando los nuevos archivos .lgp ...</system:String>
+    <system:String x:Key="DeletingTemporaryFiles">Eliminando los archivos temporales ...</system:String>
+    <system:String x:Key="BeginningToPollForGamePadInput">Esperando respuesta por parte del Gamepad ...</system:String>
+    <system:String x:Key="WaitingForFF7WindowToBeVisible">Esperando a que la ventana de FF7 sea visible ({0} segundos cómo máximo) ...</system:String>
+    <system:String x:Key="CouldNotFindFileToCopy">No se ha podido encontrar el siguiente archivo que copiar: {0} ...</system:String>
+    <system:String x:Key="AnErrorOccurredStartingULGP">Ha ocurrido un error iniciando ulgp.exe</system:String>
+    <system:String x:Key="UpdatingPathsInSysSettings">Actualizando rutas en Sys.Settings con la nueva ruta de instalación</system:String>
+    <system:String x:Key="ForceMinimizingProgram">Forzando la minimización del programa ....</system:String>
+    <system:String x:Key="FailedToStartAdditionalProgram">Fallo al iniciar el siguiente programa adicional: {0}</system:String>
 </ResourceDictionary>
