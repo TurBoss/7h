@@ -1216,18 +1216,18 @@ Você quer aplicar essa configuração e tentar de novo?</system:String>
     <system:String x:Key="SaveControlsPreset">Você deve salvar os controles atuais como uma nova configuração. Digite o nome da configuração:</system:String>
 
     <!--DEV NOTE: STRINGS BELOW ADDED 7/11/20-->
-    <system:String x:Key="VerifyingEnglishGameFilesExist">Verifying English game files exist ...</system:String>
-    <system:String x:Key="FoundLanguageInstalledCreatingEnglishGameFiles">Found language installed: {0} Creating English game files...</system:String>
-    <system:String x:Key="ExtractingLGPFiles">Extracting .lgp files ...</system:String>
-    <system:String x:Key="RenamingLanguageSpecificFiles">Renaming language specific files ...</system:String>
-    <system:String x:Key="CouldNotFindFileToRename">Could not find file to rename: {0} ...</system:String>
-    <system:String x:Key="EncodingNewLGPFiles">Encoding new .lgp files ...</system:String>
-    <system:String x:Key="DeletingTemporaryFiles">Deleting temporary files ...</system:String>
-    <system:String x:Key="BeginningToPollForGamePadInput">Beginning to poll for gamepad input ...</system:String>
-    <system:String x:Key="WaitingForFF7WindowToBeVisible">Waiting for FF7 window to be visible ({0} seconds max) ...</system:String>
-    <system:String x:Key="CouldNotFindFileToCopy">Could not find file to copy: {0} ...</system:String>
-    <system:String x:Key="AnErrorOccurredStartingULGP">An error occurred starting ulgp.exe</system:String>
-    <system:String x:Key="UpdatingPathsInSysSettings">Updating paths in Sys.Settings with new installation path</system:String>
-    <system:String x:Key="ForceMinimizingProgram">force minimizing program ...</system:String>
-    <system:String x:Key="FailedToStartAdditionalProgram">Failed to start additional program: {0}</system:String>
+    <system:String x:Key="VerifyingEnglishGameFilesExist">Verificando se arquivos de jogo em Inglês existem ...</system:String>
+    <system:String x:Key="FoundLanguageInstalledCreatingEnglishGameFiles">Linguagem instalada encontrada: {0} Criando arquivos de jogo em Inglês...</system:String>
+    <system:String x:Key="ExtractingLGPFiles">Extraindo arquivos .lgp ...</system:String>
+    <system:String x:Key="RenamingLanguageSpecificFiles">Renomeando arquivos específos á linguagem ...</system:String>
+    <system:String x:Key="CouldNotFindFileToRename">Não foi possível encontrar arquivo para renomear: {0} ...</system:String>
+    <system:String x:Key="EncodingNewLGPFiles">Codificando novos arquivos .lgp ...</system:String>
+    <system:String x:Key="DeletingTemporaryFiles">Deletando arquivos temporários ...</system:String>
+    <system:String x:Key="BeginningToPollForGamePadInput">Começando a aguardar por informações do controle ...</system:String>
+    <system:String x:Key="WaitingForFF7WindowToBeVisible">Aguardando até janela de FF7 se tornar visível (máximo de {0} segundos) ...</system:String>
+    <system:String x:Key="CouldNotFindFileToCopy">Não foi possível encontrar arquivo para renomear: {0} ...</system:String>
+    <system:String x:Key="AnErrorOccurredStartingULGP">Um erro ocorreu ao inicializar ulgp.exe</system:String>
+    <system:String x:Key="UpdatingPathsInSysSettings">Atualizando caminhos em Sys.Settings com novo caminho de instalação</system:String>
+    <system:String x:Key="ForceMinimizingProgram">forçando programa a minimizar ...</system:String>
+    <system:String x:Key="FailedToStartAdditionalProgram">Incapaz de inicializar programa adicional: {0}</system:String>
 </ResourceDictionary>
