@@ -114,7 +114,7 @@
     <system:String x:Key="GameLauncherWindowTitle">Sto Avviando il Gioco</system:String>
     <system:String x:Key="CatalogCreationWindowTitle">Strumento di Creazione Cataloghi e Mod</system:String>
     <system:String x:Key="GameDriverWindowTitle">Configura Impostazioni Driver di Gioco</system:String>
-    <system:String x:Key="UnexpectedErrorWindowTitle">7th Heaven - Unexpected Error!</system:String>
+    <system:String x:Key="UnexpectedErrorWindowTitle">7th Heaven - Errore Inaspettato!</system:String>
     <system:String x:Key="AllowModToRun">Permettere alla Rom di Avviarsi?</system:String>
     <system:String x:Key="Warning">Attenzione</system:String>
     <system:String x:Key="Requirements">Requisiti</system:String>
@@ -133,7 +133,7 @@
 
 
     <!--Allow Mod To Run Window-->
-    <system:String x:Key="NoDontActivateThisMod">Non, non attivare questa mod</system:String>
+    <system:String x:Key="NoDontActivateThisMod">No, non attivare questa mod</system:String>
     <system:String x:Key="YesActivateThisMod">Sì, attiva questa mod</system:String>
     <system:String x:Key="DontAskAgainForAnyMods">Non chiedermelo più</system:String>
 
@@ -825,7 +825,7 @@ Quando vorrai utilizzare i file .OGG in alta qualità riporta l'opzione a 'VGMst
     <system:String x:Key="CheckingIfReunionModIsInstalled">Controllo presenza della mod Reunion ...</system:String>
     <system:String x:Key="Found">trovata</system:String>
     <system:String x:Key="DisablingReunionMod">Disattivo la mod Reunion (rinomino ddraw.dll -> Reunion.dll.bak) ...</system:String>
-    <system:String x:Key="ReenablingReunionMod">Ri-attivo la mod Reunion Reunion (rinomino ddraw.dll -> Reunion.dll.bak) ...</system:String>
+    <system:String x:Key="ReenablingReunionMod">Ri-attivo la mod Reunion Reunion (rinomino Reunion.dll.bak -> ddraw.dll) ...</system:String>
 
     <system:String x:Key="LaunchingAdditionalProgramsToRunIfAny">Lancio programmi aggiuntivi da eseguire (se presenti) ...</system:String>
     <system:String x:Key="WritingTemporaryRuntimeProfileFileTo">Scrivo profilo runtime provvisorio in</system:String>
@@ -1111,18 +1111,18 @@ Vuoi applicare questa modifica e riprovare?</system:String>
     <system:String x:Key="AppHint26">Puoi trovare le risposte a moltissime domande e problami nel menu Aiuto.</system:String>
     <system:String x:Key="AppHint27">Puoi cambiare le impostazioni grafiche del gioco andando in Impostazioni>Driver di Gioco...</system:String>
     <system:String x:Key="AppHint28">Puoi personalizzare le impostazioni d'aggiornamento di ogni singola mod cliccando sulla freccia presenta nel Pannello Info Mod.</system:String>
-    <system:String x:Key="AppHint29">7th Heaven non ha più bisogno che il disco virtuale di gioco venga montato e smontato manualmente se si usa Windows 8 o superiori.</system:String>
+    <system:String x:Key="AppHint29">7th Heaven non ha più bisogno che il disco virtuale di gioco venga montato e smontato manualmente.</system:String>
     <system:String x:Key="AppHint30">7th Heaven non ha più bisogno del vecchio Game Converter. È tutto automatizzato ora!</system:String>
     <system:String x:Key="AppHint31">Non serve più utilizzare FF7Config.exe. Tutte le sue funzioni sono integrate in Impostazioni>Launcher di Gioco.</system:String>
     <system:String x:Key="AppHint32">Sapevi che 7th Heaven 1.0 è uscito nel 2013? La 2.0 è uscita 7 anni dopo, nel 2020.</system:String>
     <system:String x:Key="AppHint33">Puoi vedere il profilo attivo nell barra del titolo, segnato tra parentesi.</system:String>
-    <system:String x:Key="AppHint34">Se la finestra di gioco è tagliata o decentrata prova ad attivare la Fix per DPI Elevati in Impostazioni.</system:String>
+    <system:String x:Key="AppHint34">Il supporto per DPI elevati è ora integrato nel driver di gioco.</system:String>
     <system:String x:Key="AppHint35">Puoi riordinare le colonne di Sfoglia Catalogo cliccando sul titolo delle colonne stesse.</system:String>
     <system:String x:Key="AppHint36">Puoi riordinare le tue colonne trascinandone il titolo a destra e sinistra.</system:String>
     <system:String x:Key="AppHint37">Puoi filtrare le mod visualizzate cliccando sulla freccia accanto al riquadro di ricerca.</system:String>
-    <system:String x:Key="AppHint38">Puoi modificare velocemente i comandi di tastiera o gamepad da Impostazioni>Launcher di Gioco.</system:String>
+    <system:String x:Key="AppHint38">Puoi modificare velocemente i comandi di tastiera o gamepad da Impostazioni>Controlli.</system:String>
     <system:String x:Key="AppHint39">Lo sapevi? 7th Heaven supporta parametri speciali da linea di comando.</system:String>
-    <system:String x:Key="AppHint40">Hai il gioco originale del 1998? Importa automaticamente i tuoi filmati utilizzando Impostazioni>Launcher di Gioco.</system:String>
+    <system:String x:Key="AppHint40">Hai il gioco originale del 1998? Importa automaticamente i tuoi filmati utilizzando Importa Filmati.</system:String>
     <system:String x:Key="AppHint41">Personalizza i colori di 7th Heaven andando in Impostazioni>Cambia Tema.</system:String>
     <system:String x:Key="AppHint42">Puoi esportare il tuo Tema e condividerlo con gli altri.</system:String>
     <system:String x:Key="AppHint43">Alcuni download possono essere messi in pausa e ripresi in un secondo momento.</system:String>
@@ -1213,4 +1213,20 @@ Vuoi applicare questa modifica e riprovare?</system:String>
     <system:String x:Key="ControlsMenuItemText">Comandi...</system:String>
 
     <system:String x:Key="SaveControlsPreset">È necessario salvare i controlli correnti come nuova configurazione. Inserisci il nome per la configurazione:</system:String>
+
+    <!--DEV NOTE: STRINGS BELOW ADDED 7/11/20-->
+    <system:String x:Key="VerifyingEnglishGameFilesExist">Verifico l'esistenza dei file di gioco in Inglese...</system:String>
+    <system:String x:Key="FoundLanguageInstalledCreatingEnglishGameFiles">Trovata versione in lingua: {0} Creo i file di gioco in Inglese...</system:String>
+    <system:String x:Key="ExtractingLGPFiles">Estraggo i file .lgp ...</system:String>
+    <system:String x:Key="RenamingLanguageSpecificFiles">Rinomino i file specifici della lingua ...</system:String>
+    <system:String x:Key="CouldNotFindFileToRename">Impossibile trovare il file da rinominare: {0} ...</system:String>
+    <system:String x:Key="EncodingNewLGPFiles">Codifico i nuovi file .lgp ...</system:String>
+    <system:String x:Key="DeletingTemporaryFiles">Cancello i file temporanei ...</system:String>
+    <system:String x:Key="BeginningToPollForGamePadInput">Inizio a raccogliere informazioni per l'input da gamepad ...</system:String>
+    <system:String x:Key="WaitingForFF7WindowToBeVisible">Attendo compaia la finestra di FF7 (massimo 10 secondi) ...</system:String>
+    <system:String x:Key="CouldNotFindFileToCopy">Impossibile trovare il file da copiare: {0} ...</system:String>
+    <system:String x:Key="AnErrorOccurredStartingULGP">Si è verificato un errore nell'avvio di ulgp.exe</system:String>
+    <system:String x:Key="UpdatingPathsInSysSettings">Aggiorno i percorsi in Sys.settings per la nuova installazione</system:String>
+    <system:String x:Key="ForceMinimizingProgram">forzo la riduzione del programma nella barra delle applicazioni ...</system:String>
+    <system:String x:Key="FailedToStartAdditionalProgram">Avvio del programma aggiuntivo non riuscito: {0}</system:String>
 </ResourceDictionary>

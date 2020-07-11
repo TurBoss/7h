@@ -25,7 +25,7 @@
     <Group>Gráficos</Group>
     <Name>Resolução</Name>
     <Description>Ajusta o tamanho da janela (ou resolução de tela cheia) de FF7. Automaticamente usa resolução do jogo em modo janela ou resolução atual da área de trabalho em modo tela cheia.</Description>
-      <DefaultValue>window_size_x = 0,window_size_y = 0</DefaultValue>
+      <DefaultValue>window_size_x = 1280,window_size_y = 720</DefaultValue>
       <Option>
         <Text>Automática</Text>
         <Settings>window_size_x = 0,window_size_y = 0</Settings>
@@ -96,7 +96,7 @@
     <Group>Gráficos</Group>
     <Name>Modo de Janela</Name>
     <Description>Exibir jogo em janela com borda, ou tela cheia sem borda.</Description>
-    <DefaultValue>fullscreen = yes</DefaultValue>
+    <DefaultValue>fullscreen = no</DefaultValue>
     <Option>
       <Text>Janela</Text>
       <Settings>fullscreen = no</Settings>

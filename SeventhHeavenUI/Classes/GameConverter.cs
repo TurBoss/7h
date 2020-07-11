@@ -772,8 +772,14 @@ namespace SeventhHeaven.Classes
             {
                 currentFileVersion = FileVersionInfo.GetVersionInfo(pathToCurrentFile);
 
-                //If no version detected, trigger copy of driver because it is old
-                if (String.IsNullOrEmpty(currentFileVersion.FileVersion)) currentFileVersion = null;
+                // If no version detected, trigger copy of driver because it is old
+                // Also if version is 1.7.2.152 (included in 7h 2.2 beta) it is old because
+                // TrueOdin reset version and current 1.7.2.64 is newer than 1.7.2.152
+                // 1.7.2.152 logic can be removed once bundled ffnx ver is above 1.7.2.152 again
+                if (String.IsNullOrWhiteSpace(currentFileVersion.FileVersion) || currentFileVersion.FileVersion.Equals("1.7.2.152"))
+                {
+                    currentFileVersion = null;
+                }
             }
 
             FileVersionInfo latestFileVersion = FileVersionInfo.GetVersionInfo(pathToLatestFile);
@@ -1058,11 +1064,11 @@ namespace SeventhHeaven.Classes
                 }
                 else
                 {
-                    SendMessage($"Could not find file to copy: {sourceFile.Key} ...", NLog.LogLevel.Warn);
+                    SendMessage($"{string.Format(ResourceHelper.Get(StringKey.CouldNotFindFileToCopy), sourceFile.Key)}", NLog.LogLevel.Warn);
                 }
             }
 
-            SendMessage($"\tExtracting .lgp files ...");
+            SendMessage($"\t{ResourceHelper.Get(StringKey.ExtractingLGPFiles)}");
 
             string pathToDiscUs = Path.Combine(Sys.PathToTempFolder, "disc_us");
             string pathToCondor = Path.Combine(Sys.PathToTempFolder, "condor");
@@ -1144,7 +1150,7 @@ namespace SeventhHeaven.Classes
                 {Path.Combine(pathToSub, $"{filePrefix}textd.tex"), "textd.tex"},
             };
 
-            SendMessage($"\trenaming language specific files ...");
+            SendMessage($"\t{ResourceHelper.Get(StringKey.RenamingLanguageSpecificFiles)}");
 
             foreach (var file in filesToRename)
             {
@@ -1156,12 +1162,13 @@ namespace SeventhHeaven.Classes
                 }
                 else
                 {
-                    SendMessage($"Could not find file to rename: {file.Key} ...", NLog.LogLevel.Warn);
+                    SendMessage($"{ResourceHelper.Get(StringKey.CouldNotFindFileToRename)}: {file.Key}", NLog.LogLevel.Warn);
+
                 }
             }
 
             // Run Ulgp to encode altered .lgp file
-            SendMessage($"\tEncoding new .lgp files ...");
+            SendMessage($"\t{ResourceHelper.Get(StringKey.EncodingNewLGPFiles)}");
 
             RunUlgp(pathToDiscUs, Path.Combine(InstallPath, "data", "cd", "disc_us.lgp"));
             RunUlgp(pathToCondor, Path.Combine(InstallPath, "data", "minigame", "condor.lgp"));
@@ -1169,8 +1176,8 @@ namespace SeventhHeaven.Classes
             RunUlgp(pathToSub, Path.Combine(InstallPath, "data", "minigame", "sub.lgp"));
 
 
-            SendMessage($"\tdeleting temporary files ...");
-            
+            SendMessage($"\t{ResourceHelper.Get(StringKey.DeletingTemporaryFiles)}");
+
             string[] foldersToDelete = { pathToDiscUs, pathToCondor, pathToSnowboard, pathToSub };
             foreach (string folder in foldersToDelete)
             {
@@ -1208,7 +1215,7 @@ namespace SeventhHeaven.Classes
             catch (Exception e)
             {
                 Logger.Error(e);
-                SendMessage("An error occurred starting ulgp.exe", NLog.LogLevel.Error);
+                SendMessage($"{ResourceHelper.Get(StringKey.AnErrorOccurredStartingULGP)}", NLog.LogLevel.Error);
             }
         }
 

@@ -826,7 +826,7 @@ Mais tarde, se quiser utilizar os arquivos de alta qualidade .OGG, mude a config
     <system:String x:Key="CheckingIfReunionModIsInstalled">Verificando se mod Reunion está instalado ...</system:String>
     <system:String x:Key="Found">achado</system:String>
     <system:String x:Key="DisablingReunionMod">Desabilitando mod Reunion (renomear ddraw.dll -> Reunion.dll.bak) ...</system:String>
-    <system:String x:Key="ReenablingReunionMod">Reabilitando mod Reunion (renomear ddraw.dll -> Reunion.dll.bak) ...</system:String>
+    <system:String x:Key="ReenablingReunionMod">Reabilitando mod Reunion (renomear Reunion.dll.bak -> ddraw.dll) ...</system:String>
 
     <system:String x:Key="LaunchingAdditionalProgramsToRunIfAny">Executando programas adicionais a rodar (se houver) ...</system:String>
     <system:String x:Key="WritingTemporaryRuntimeProfileFileTo">Salvando arquivo de perfil de execução temporário em</system:String>
@@ -1112,18 +1112,18 @@ Você quer aplicar essa configuração e tentar de novo?</system:String>
     <system:String x:Key="AppHint26">Você pode achar respostas a muitas perguntas ou problemas no menu de Ajuda.</system:String>
     <system:String x:Key="AppHint27">Altere as configurações gráficas do jogo indo até Configurações>Driver de Jogo...</system:String>
     <system:String x:Key="AppHint28">Altere as configurações de atualização de cada mod na seta deslizante no Painel de Informação de Mod.</system:String>
-    <system:String x:Key="AppHint29">7th Heaven irá auto montar/desmontar o disco de jogo virtual se você estiver no Windows 8 ou adiante.</system:String>
+    <system:String x:Key="AppHint29">7th Heaven irá auto montar e desmontar o disco do jogo virtual para você.</system:String>
     <system:String x:Key="AppHint30">7th Heaven não precisa mais do velho Conversor de Jogo. Tudo é automático agora!</system:String>
     <system:String x:Key="AppHint31">Você não precisa mais usar FF7Config.exe. Suas funções já estão embutidas em Configurações>Launcher de Jogo.</system:String>
     <system:String x:Key="AppHint32">Você sabia que 7th Heaven 1.0 foi lançado em 2013? 2.0 foi lançado 7 anos mais tarde em 2020.</system:String>
     <system:String x:Key="AppHint33">Seu perfil ativo atual aparece na barra de título entre colchetes.</system:String>
-    <system:String x:Key="AppHint34">Se a janela do jogo está cortada/não centralizada, tente usar a Correção de Alto DPI em Configurações.</system:String>
+    <system:String x:Key="AppHint34">Suporte de alta DPI agora é built-in para o driver jogo.</system:String>
     <system:String x:Key="AppHint35">Você pode organizar suas colunas de Navegar Catálogo clicando nos cabeçalhos das colunas.</system:String>
     <system:String x:Key="AppHint36">Você pode organizar suas colunas arrastando e soltando os cabeçalhos das colunas.</system:String>
     <system:String x:Key="AppHint37">Você pode filtrar o que quer ver clicando na seta deslizante ao lado da caixa de pesquisa.</system:String>
-    <system:String x:Key="AppHint38">Rapidamente troque opções de controle de teclado/gamepad em 'Configurações de Launcher de Jogo'.</system:String>
+    <system:String x:Key="AppHint38">Rapidamente troque opções de controle de teclado/gamepad em 'Configurações>Controles'.</system:String>
     <system:String x:Key="AppHint39">Você sabia? 7th Heaven tem suporte para parâmetros de linha de comando (switches).</system:String>
-    <system:String x:Key="AppHint40">Tem os discos de 1998? Importe seus filmes automaticamente em 'Configurações de Launcher de Jogo'.</system:String>
+    <system:String x:Key="AppHint40">Tem os discos de 1998? Importe seus filmes automaticamente em 'Importador de Filmes'.</system:String>
     <system:String x:Key="AppHint41">Personalize suas cores de 7th Heaven indo até Configurações>Alterar Tema de Cores.</system:String>
     <system:String x:Key="AppHint42">Você pode exportar e compartilhar seu Tema de Cores personalizado com outros.</system:String>
     <system:String x:Key="AppHint43">Você pode pausar e continuar alguns downloads.</system:String>
@@ -1214,5 +1214,20 @@ Você quer aplicar essa configuração e tentar de novo?</system:String>
     <system:String x:Key="ControlsMenuItemText">Controles...</system:String>
 
     <system:String x:Key="SaveControlsPreset">Você deve salvar os controles atuais como uma nova configuração. Digite o nome da configuração:</system:String>
-    
+
+    <!--DEV NOTE: STRINGS BELOW ADDED 7/11/20-->
+    <system:String x:Key="VerifyingEnglishGameFilesExist">Verifying English game files exist ...</system:String>
+    <system:String x:Key="FoundLanguageInstalledCreatingEnglishGameFiles">Found language installed: {0} Creating English game files...</system:String>
+    <system:String x:Key="ExtractingLGPFiles">Extracting .lgp files ...</system:String>
+    <system:String x:Key="RenamingLanguageSpecificFiles">Renaming language specific files ...</system:String>
+    <system:String x:Key="CouldNotFindFileToRename">Could not find file to rename: {0} ...</system:String>
+    <system:String x:Key="EncodingNewLGPFiles">Encoding new .lgp files ...</system:String>
+    <system:String x:Key="DeletingTemporaryFiles">Deleting temporary files ...</system:String>
+    <system:String x:Key="BeginningToPollForGamePadInput">Beginning to poll for gamepad input ...</system:String>
+    <system:String x:Key="WaitingForFF7WindowToBeVisible">Waiting for FF7 window to be visible ({0} seconds max) ...</system:String>
+    <system:String x:Key="CouldNotFindFileToCopy">Could not find file to copy: {0} ...</system:String>
+    <system:String x:Key="AnErrorOccurredStartingULGP">An error occurred starting ulgp.exe</system:String>
+    <system:String x:Key="UpdatingPathsInSysSettings">Updating paths in Sys.Settings with new installation path</system:String>
+    <system:String x:Key="ForceMinimizingProgram">force minimizing program ...</system:String>
+    <system:String x:Key="FailedToStartAdditionalProgram">Failed to start additional program: {0}</system:String>
 </ResourceDictionary>

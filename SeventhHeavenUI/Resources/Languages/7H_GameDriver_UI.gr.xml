@@ -25,7 +25,7 @@
       <Group>Γραφικά</Group>
       <Name>Ανάλυση</Name>
       <Description>Ορίζει το μέγεθος του παραθύρου για το παιχνίδι. Το Auto χρησιμοποιεί την ανάλυση παιχνιδιού σε λειτουργία παραθύρου ή την τρέχουσα ανάλυση της επιφάνειας εργασίας σε λειτουργία πλήρους οθόνης.</Description>
-      <DefaultValue>window_size_x = 0,window_size_y = 0</DefaultValue>
+      <DefaultValue>window_size_x = 1280,window_size_y = 720</DefaultValue>
       <Option>
         <Text>Auto</Text>
         <Settings>window_size_x = 0,window_size_y = 0</Settings>
@@ -96,7 +96,7 @@
     <Group>Γραφικά</Group>
     <Name>Λειτουργία παραθύρου</Name>
     <Description>Εμφάνιση του παιχνιδιού είτε σε ένα τυπικό παράθυρο είτε σε πλήρη οθόνη χωρίς περίγραμμα.</Description>
-    <DefaultValue>fullscreen = yes</DefaultValue>
+    <DefaultValue>fullscreen = no</DefaultValue>
     <Option>
       <Text>Παράθυρο</Text>
       <Settings>fullscreen = no</Settings>

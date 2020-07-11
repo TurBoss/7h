@@ -825,7 +825,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="CheckingIfReunionModIsInstalled">Comprobando si el Mod Reunion está instalado ...</system:String>
     <system:String x:Key="Found">encontrado</system:String>
     <system:String x:Key="DisablingReunionMod">Deshabilitando el Mod Reunion (renombrando ddraw.dll -> Reunion.dll.bak) ...</system:String>
-    <system:String x:Key="ReenablingReunionMod">Reactivando el Mod Reunion (renombrando ddraw.dll -> Reunion.dll.bak) ...</system:String>
+    <system:String x:Key="ReenablingReunionMod">Reactivando el Mod Reunion (renombrando Reunion.dll.bak -> ddraw.dll) ...</system:String>
 
     <system:String x:Key="LaunchingAdditionalProgramsToRunIfAny">Ejecutando programas adicionales (si los hay) ...</system:String>
     <system:String x:Key="WritingTemporaryRuntimeProfileFileTo">Escribiendo perfil de ejecución temporal hacia</system:String>
@@ -1111,18 +1111,18 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="AppHint26">Puedes encontrar respuestas a varias preguntas o problemas desde el menu de Ayuda.</system:String>
     <system:String x:Key="AppHint27">Cambia tus opciones gráficas desde Opciones>Controlador del Juego...</system:String>
     <system:String x:Key="AppHint28">Cambia las opciones de actualización de cada Mod desde la flecha desplegable en el Panal de Información del Mod.</system:String>
-    <system:String x:Key="AppHint29">7th Heaven montará o desmontará automáticamente el disco de juego virtual si estás en Windows 8 o superior.</system:String>
+    <system:String x:Key="AppHint29">7th Heaven montará o desmontará automáticamente el disco del juego virtual para ti.</system:String>
     <system:String x:Key="AppHint30">7th Heaven ya no necesita el antiguo Game Converter. ¡Ahora es todo automático!</system:String>
     <system:String x:Key="AppHint31">Ya no necesitas usar FF7Config.exe. Sus características están integradas ahora en Opciones>Lanzador de Juego.</system:String>
     <system:String x:Key="AppHint32">¿Sabias qué 7th Heaven 1.0 se lanzó por primera vez en 2013? la versión 2.0 se lanzó 7 años después, en 2020.</system:String>
     <system:String x:Key="AppHint33">Tu perfil activo actual se muestra en la barra del titulo entre corchetes.</system:String>
-    <system:String x:Key="AppHint34">Si la ventana del juego está cortada/descentrada, prueba activando el arreglo de Alto-DPI en las Opciones.</system:String>
+    <system:String x:Key="AppHint34">La compatibilidad con alto-DPI ahora está integrada en el controlador del juego.</system:String>
     <system:String x:Key="AppHint35">Puedes organizar las columnas de Examinar Catalogo haciendo clic en los encabezados de las columnas.</system:String>
     <system:String x:Key="AppHint36">Puedes reorganizar tus columnas arrastrando y soltando los encabezados de las columnas.</system:String>
     <system:String x:Key="AppHint37">Puedes filtrar lo que ves haciendo clic en la flecha desplegable al lado de la caja de búsqueda.</system:String>
-    <system:String x:Key="AppHint38">Cambia rapidamente entre los controles de teclado y mando en las opciones de 'Opciones de Lanzador de Juego'.</system:String>
+    <system:String x:Key="AppHint38">Cambia rapidamente entre los controles de teclado y mando en las opciones de 'Configuración>Controles'.</system:String>
     <system:String x:Key="AppHint39">¿Lo sabías? 7th Heaven admite parámetros de linea de comando (interruptores).</system:String>
-    <system:String x:Key="AppHint40">¿Tienes los discos de 1998? Importa tus cinemáticas automáticamente desde 'Opciones del Lanzador de Juego'.</system:String>
+    <system:String x:Key="AppHint40">¿Tienes los discos de 1998? Importa tus cinemáticas automáticamente desde 'Importador de Cinemáticas'.</system:String>
     <system:String x:Key="AppHint41">Personaliza los colores de 7th Heaven accediendo en Opciones>Cambiar el Color del Tema.</system:String>
     <system:String x:Key="AppHint42">Puedes exportar y compartir tu Color del Tema personalizado con los demás.</system:String>
     <system:String x:Key="AppHint43">Puedes pausar y reanudar algunas descargas.</system:String>
@@ -1215,5 +1215,20 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="ControlsMenuItemText">Controles...</system:String>
 
     <system:String x:Key="SaveControlsPreset">Tienes que guardar los controles actuales como una configuración nueva. Introduce el nombre para ésta nueva configuración:</system:String>
-    
+
+    <!--DEV NOTE: STRINGS BELOW ADDED 7/11/20-->
+    <system:String x:Key="VerifyingEnglishGameFilesExist">Verifying English game files exist ...</system:String>
+    <system:String x:Key="FoundLanguageInstalledCreatingEnglishGameFiles">Found language installed: {0} Creating English game files...</system:String>
+    <system:String x:Key="ExtractingLGPFiles">Extracting .lgp files ...</system:String>
+    <system:String x:Key="RenamingLanguageSpecificFiles">Renaming language specific files ...</system:String>
+    <system:String x:Key="CouldNotFindFileToRename">Could not find file to rename: {0} ...</system:String>
+    <system:String x:Key="EncodingNewLGPFiles">Encoding new .lgp files ...</system:String>
+    <system:String x:Key="DeletingTemporaryFiles">Deleting temporary files ...</system:String>
+    <system:String x:Key="BeginningToPollForGamePadInput">Beginning to poll for gamepad input ...</system:String>
+    <system:String x:Key="WaitingForFF7WindowToBeVisible">Waiting for FF7 window to be visible ({0} seconds max) ...</system:String>
+    <system:String x:Key="CouldNotFindFileToCopy">Could not find file to copy: {0} ...</system:String>
+    <system:String x:Key="AnErrorOccurredStartingULGP">An error occurred starting ulgp.exe</system:String>
+    <system:String x:Key="UpdatingPathsInSysSettings">Updating paths in Sys.Settings with new installation path</system:String>
+    <system:String x:Key="ForceMinimizingProgram">force minimizing program ...</system:String>
+    <system:String x:Key="FailedToStartAdditionalProgram">Failed to start additional program: {0}</system:String>
 </ResourceDictionary>

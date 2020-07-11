@@ -155,15 +155,15 @@ namespace SeventhHeaven.Classes
                 }
 
                 // update settings with new path
-                Logger.Info("\tUpdating paths in Sys.Settings with new installation path");
+                Logger.Info($"\t{ResourceHelper.Get(StringKey.UpdatingPathsInSysSettings)}");
                 Sys.Settings.SetPathsFromInstallationPath(newInstallationPath);
                 converter.InstallPath = newInstallationPath;
             }
 
-            Instance.RaiseProgressChanged($"Verifying english game files exist ...");
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingEnglishGameFilesExist));
             if (!converter.IsEnglishGameInstalled())
             {
-                Instance.RaiseProgressChanged($"\tFound language installed: {converter.GetInstalledLanguage()}. Creating english game files...");
+                Instance.RaiseProgressChanged($"\t{string.Format(ResourceHelper.Get(StringKey.FoundLanguageInstalledCreatingEnglishGameFiles), converter.GetInstalledLanguage())}");
                 converter.ConvertToEnglishInstall();
             }
 
@@ -517,7 +517,7 @@ namespace SeventhHeaven.Classes
 
             if (Sys.Settings.GameLaunchSettings.EnableGamepadPolling)
             {
-                Instance.RaiseProgressChanged("Beginning to poll for gamepad input ...");
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.BeginningToPollForGamePadInput));
 
                 if (Instance._controllerInterceptor == null)
                 {
@@ -737,7 +737,7 @@ namespace SeventhHeaven.Classes
 
                         if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && Instance.DidMountVirtualDisc)
                         {
-                            Instance.RaiseProgressChanged("Auto unmounting game disc ...");
+                            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.AutoUnmountingGameDisc));
                             Instance.DiscMounter.UnmountVirtualGameDisc();
                             Instance.DiscMounter = null;
                         }
@@ -757,7 +757,7 @@ namespace SeventhHeaven.Classes
 
 
                 int secondsToWait = 120;
-                Instance.RaiseProgressChanged(string.Format("Waiting for FF7 window to be visible ({0} seconds max) ...", secondsToWait));
+                Instance.RaiseProgressChanged(string.Format(ResourceHelper.Get(StringKey.WaitingForFF7WindowToBeVisible), secondsToWait));
                 DateTime start = DateTime.Now;
                 while (ff7Proc.MainWindowHandle == IntPtr.Zero)
                 {
@@ -1059,7 +1059,7 @@ namespace SeventhHeaven.Classes
 
             if (changes.Any())
             {
-                Logger.Warn($"The following settings have been changed to make these mods compatible:\n{String.Join("\n", changes)}");
+                Logger.Warn($"{ResourceHelper.Get(StringKey.TheFollowingSettingsHaveBeenChangedToMakeTheseModsCompatible)}\n{String.Join("\n", changes)}");
                 MessageDialogWindow.Show(ResourceHelper.Get(StringKey.TheFollowingSettingsHaveBeenChangedToMakeTheseModsCompatible), String.Join("\n", changes), ResourceHelper.Get(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
@@ -1667,7 +1667,7 @@ namespace SeventhHeaven.Classes
                     // force the process to become minimized
                     if (aproc.MainWindowHandle != IntPtr.Zero || mainWindowHandle != IntPtr.Zero)
                     {
-                        Logger.Info($"\t\tforce minimizing program ...");
+                        Logger.Info($"\t\t{ResourceHelper.Get(StringKey.ForceMinimizingProgram)}");
                         IntPtr handleToMinimize = aproc.MainWindowHandle != IntPtr.Zero ? aproc.MainWindowHandle : mainWindowHandle;
 
                         System.Threading.Thread.Sleep(1500); // add a small delay to ensure the program is showing in taskbar before force minimizing;
@@ -1713,7 +1713,7 @@ namespace SeventhHeaven.Classes
                 catch (Exception e)
                 {
                     Logger.Warn(e);
-                    Instance.RaiseProgressChanged($"\tFailed to start additional program: {al.PathToProgram}", NLog.LogLevel.Warn);
+                    Instance.RaiseProgressChanged($"\t{string.Format(ResourceHelper.Get(StringKey.FailedToStartAdditionalProgram), al.PathToProgram)}", NLog.LogLevel.Warn);
                 }
             }
         }

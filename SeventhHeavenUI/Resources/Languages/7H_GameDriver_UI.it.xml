@@ -25,7 +25,7 @@
       <Group>Grafica</Group>
       <Name>Risoluzione</Name>
       <Description>Imposta le dimensioni della finestra (o dello schermo intero) di FF7. 'Auto' utilizza la risoluzione originale del gioco in modalità finestra e quella del desktop in modalità schermo intero.</Description>
-      <DefaultValue>window_size_x = 0,window_size_y = 0</DefaultValue>
+      <DefaultValue>window_size_x = 1280,window_size_y = 720</DefaultValue>
       <Option>
         <Text>Auto</Text>
         <Settings>window_size_x = 0,window_size_y = 0</Settings>
@@ -96,7 +96,7 @@
     <Group>Grafica</Group>
     <Name>Modalità Finestra</Name>
     <Description>Visualizza il gioco in una finestra o a schermo intero senza bordi.</Description>
-    <DefaultValue>fullscreen = yes</DefaultValue>
+    <DefaultValue>fullscreen = no</DefaultValue>
     <Option>
       <Text>Finestra</Text>
       <Settings>fullscreen = no</Settings>

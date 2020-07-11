@@ -25,7 +25,7 @@
     <Group>Grafik</Group>
     <Name>Auflösung</Name>
     <Description>Fenstergröße (oder Vollbild auflösung) für FF/. Automatisch wählt die standart FF7 Auflösung für Fenstermodus und aktuelle Desktopauflösung für Vollbild aus.</Description>
-      <DefaultValue>window_size_x = 0,window_size_y = 0</DefaultValue>
+      <DefaultValue>window_size_x = 1280,window_size_y = 720</DefaultValue>
       <Option>
       <Text>Automatisch</Text>
         <Settings>window_size_x = 0,window_size_y = 0</Settings>
@@ -96,7 +96,7 @@
     <Group>Grafik</Group>
     <Name>Fenstermodus</Name>
     <Description>Spiel im Fenstermodus oder Vollbild Starten.</Description>
-    <DefaultValue>fullscreen = yes</DefaultValue>
+    <DefaultValue>fullscreen = no</DefaultValue>
     <Option>
       <Text>Fenstermodus</Text>
       <Settings>fullscreen = no</Settings>

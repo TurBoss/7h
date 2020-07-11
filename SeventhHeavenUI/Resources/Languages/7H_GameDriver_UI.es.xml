@@ -25,7 +25,7 @@
     <Group>Gráficos</Group>
     <Name>Resolución</Name>
     <Description>Establece el tamaño de la ventana (o la resolución de pantalla completa) de FF7. Utiliza automáticamente la resolución en modo ventana, o la resolución de escritorio en pantalla completa.</Description>
-      <DefaultValue>window_size_x = 0,window_size_y = 0</DefaultValue>
+      <DefaultValue>window_size_x = 1280,window_size_y = 720</DefaultValue>
       <Option>
         <Text>Automática</Text>
         <Settings>window_size_x = 0,window_size_y = 0</Settings>
@@ -96,7 +96,7 @@
     <Group>Gráficos</Group>
     <Name>Modo de Pantalla</Name>
     <Description>Muestra el juego en modo ventana, o en pantalla completa sin bordes.</Description>
-    <DefaultValue>fullscreen = yes</DefaultValue>
+    <DefaultValue>fullscreen = no</DefaultValue>
     <Option>
       <Text>Ventana</Text>
       <Settings>fullscreen = no</Settings>

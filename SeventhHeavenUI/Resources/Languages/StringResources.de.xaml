@@ -1092,7 +1092,7 @@ Aktivieren und erneut versuchen?</system:String>
 
     <system:String x:Key="SelectCustomThemeXmlFile">Wähle eine eigene Schema .xml Datei</system:String>
     <system:String x:Key="SaveCustomThemeXmlFile">Speichere als eigene Schema .xml Datei</system:String>
-    
+
     <!--App Hints Strings-->
     <system:String x:Key="AppHint1">You can drag and drop a mod to reorder your list.</system:String>
     <system:String x:Key="AppHint2">You can middle-click a mod to activate or deactivate it.</system:String>
@@ -1122,18 +1122,18 @@ Aktivieren und erneut versuchen?</system:String>
     <system:String x:Key="AppHint26">You can find answers to many questions or problems from the Help menu.</system:String>
     <system:String x:Key="AppHint27">Change your game's graphics settings by going to Settings>Game Driver...</system:String>
     <system:String x:Key="AppHint28">Change each mod's update settings from the drop down arrow in the Mod Info Panel.</system:String>
-    <system:String x:Key="AppHint29">7th Heaven will auto mount/dismount the virtual game disc if you're on Windows 8 or newer.</system:String>
+    <system:String x:Key="AppHint29">7th Heaven will auto mount and dismount the virtual game disc for you.</system:String>
     <system:String x:Key="AppHint30">7th Heaven no longer requires the old Game Converter. Everything is now automatic!</system:String>
     <system:String x:Key="AppHint31">You no longer need to use FF7Config.exe. Its features are built into Settings>Game Launcher.</system:String>
     <system:String x:Key="AppHint32">Did you know 7th Heaven 1.0 was released in 2013? 2.0 was released 7 years later in 2020.</system:String>
     <system:String x:Key="AppHint33">Your current active profile shows in the title bar in between brackets.</system:String>
-    <system:String x:Key="AppHint34">If the game window is cut off/not centered, try the High-DPI fix in Settings.</system:String>
+    <system:String x:Key="AppHint34">High-DPI support is now built-in to the game driver.</system:String>
     <system:String x:Key="AppHint35">You can sort your Browse Catalog columns by clicking the column headers.</system:String>
     <system:String x:Key="AppHint36">You can rearrange your columns by dragging and dropping the column headers.</system:String>
     <system:String x:Key="AppHint37">You can filter your views by clicking the drop down arrow next to the search box.</system:String>
-    <system:String x:Key="AppHint38">Quickly switch keyboard/gamepad control options in 'Game Launcher Settings'.</system:String>
+    <system:String x:Key="AppHint38">Quickly switch keyboard/gamepad control options in 'Settings>Controls'.</system:String>
     <system:String x:Key="AppHint39">Did you know? 7th Heaven supports command line parameters (switches).</system:String>
-    <system:String x:Key="AppHint40">Have the 1998 discs? Import your movies automatically from 'Game Launcher Settings'.</system:String>
+    <system:String x:Key="AppHint40">Have the 1998 discs? Import your movies automatically from 'Movie Importer'.</system:String>
     <system:String x:Key="AppHint41">Customize your 7th Heaven colors by going to Settings>Change Color Theme.</system:String>
     <system:String x:Key="AppHint42">You can export and share your custom Color Theme with others.</system:String>
     <system:String x:Key="AppHint43">You can pause and resume some downloads.</system:String>
@@ -1227,5 +1227,20 @@ Aktivieren und erneut versuchen?</system:String>
 
     <system:String x:Key="ControlsMenuItemText">Steuerung...</system:String>
     <system:String x:Key="SaveControlsPreset">Sie müssen die aktuellen Kontrollen als eine neue Konfiguration speichern. Geben Sie den Namen für die Konfiguration:</system:String>
-    
+
+    <!--DEV NOTE: STRINGS BELOW ADDED 7/11/20-->
+    <system:String x:Key="VerifyingEnglishGameFilesExist">Verifying English game files exist ...</system:String>
+    <system:String x:Key="FoundLanguageInstalledCreatingEnglishGameFiles">Found language installed: {0} Creating English game files...</system:String>
+    <system:String x:Key="ExtractingLGPFiles">Extracting .lgp files ...</system:String>
+    <system:String x:Key="RenamingLanguageSpecificFiles">Renaming language specific files ...</system:String>
+    <system:String x:Key="CouldNotFindFileToRename">Could not find file to rename: {0} ...</system:String>
+    <system:String x:Key="EncodingNewLGPFiles">Encoding new .lgp files ...</system:String>
+    <system:String x:Key="DeletingTemporaryFiles">Deleting temporary files ...</system:String>
+    <system:String x:Key="BeginningToPollForGamePadInput">Beginning to poll for gamepad input ...</system:String>
+    <system:String x:Key="WaitingForFF7WindowToBeVisible">Waiting for FF7 window to be visible ({0} seconds max) ...</system:String>
+    <system:String x:Key="CouldNotFindFileToCopy">Could not find file to copy: {0} ...</system:String>
+    <system:String x:Key="AnErrorOccurredStartingULGP">An error occurred starting ulgp.exe</system:String>
+    <system:String x:Key="UpdatingPathsInSysSettings">Updating paths in Sys.Settings with new installation path</system:String>
+    <system:String x:Key="ForceMinimizingProgram">force minimizing program ...</system:String>
+    <system:String x:Key="FailedToStartAdditionalProgram">Failed to start additional program: {0}</system:String>
 </ResourceDictionary>

@@ -825,7 +825,7 @@
     <system:String x:Key="CheckingIfReunionModIsInstalled">Έλεγχος εάν έχει εγκατασταθεί η τροποποίηση 'Reunion' ...</system:String>
     <system:String x:Key="Found">βρέθηκε</system:String>
     <system:String x:Key="DisablingReunionMod">Απενεργοποίηση της τροποποίησης 'Reunion' (μετονομασία ddraw.dll -> Reunion.dll.bak) ...</system:String>
-    <system:String x:Key="ReenablingReunionMod">Επανενεργοποίηση του mod Reunion (μετονομασία ddraw.dll -> Reunion.dll.bak) ...</system:String>
+    <system:String x:Key="ReenablingReunionMod">Επανενεργοποίηση του mod Reunion (μετονομασία Reunion.dll.bak -> ddraw.dll) ...</system:String>
 
     <system:String x:Key="LaunchingAdditionalProgramsToRunIfAny">Εκκίνηση πρόσθετων προγραμμάτων για εκτέλεση (εάν υπάρχουν) ...</system:String>
     <system:String x:Key="WritingTemporaryRuntimeProfileFileTo">Γράφοντας προσωρινό αρχείο Προφίλ Χρόνου εκτέλεσης σε</system:String>
@@ -1111,18 +1111,18 @@
     <system:String x:Key="AppHint26">Μπορείτε να βρείτε απαντήσεις σε πολλές ερωτήσεις ή προβλήματα από το μενού Βοήθεια.</system:String>
     <system:String x:Key="AppHint27">Αλλάξτε τις ρυθμίσεις γραφικών του παιχνιδιού σας μεταβαίνοντας στις Ρυθμίσεις>Πρόγραμμα οδήγησης παιχνιδιού ...</system:String>
     <system:String x:Key="AppHint28">Αλλάξτε τις ρυθμίσεις ενημέρωσης κάθε τροποποίησης από το αναπτυσσόμενο βέλος στον Πίνακα Πληροφοριών Τροποποίησης.</system:String>
-    <system:String x:Key="AppHint29">Το 7th Heaven θα εισάγει/εξάγει αυτόματα τον εικονικό δίσκο παιχνιδιού εάν χρησιμοποιείτε Windows 8 ή νεότερα.</system:String>
+    <system:String x:Key="AppHint29">Το 7th Heaven θα τοποθετήσει αυτόματα και θα αποσυναρμολογήσει τον εικονικό δίσκο παιχνιδιού για εσάς.</system:String>
     <system:String x:Key="AppHint30">To 7th Heaven δεν απαιτεί πλέον τον παλιό Μετατροπέα Παιχνιδιού. Όλα τώρα λειτουργούν αυτόματα!</system:String>
     <system:String x:Key="AppHint31">Δεν χρειάζεται πλέον να χρησιμοποιείτε το FF7Config.exe. Τα χαρακτηριστικά του είναι ενσωματωμένα στις Ρυθμίσεις>Πρόγραμμα Εκκίνησης Παιχνιδιού.</system:String>
     <system:String x:Key="AppHint32">Γνωρίζατε ότι το 7th Heaven 1.0 κυκλοφόρησε το 2013; Το 2.0 κυκλοφόρησε 7 χρόνια αργότερα το 2020.</system:String>
     <system:String x:Key="AppHint33">Το τρέχον ενεργό προφίλ σας εμφανίζεται στη γραμμή τίτλου μεταξύ παρενθέσεων.</system:String>
-    <system:String x:Key="AppHint34">Εάν το παράθυρο του παιχνιδιού εμφανίζεται κομμένο/χωρίς κεντράρισμα, δοκιμάστε τη διόρθωση για Κλιμάκωση Υψηλών Αναλύσεων στις Ρυθμίσεις.</system:String>
+    <system:String x:Key="AppHint34">Η υποστήριξη High-DPI είναι πλέον ενσωματωμένη στο πρόγραμμα οδήγησης του παιχνιδιού.</system:String>
     <system:String x:Key="AppHint35">Μπορείτε να ταξινομήσετε τις στήλες Αναζήτησης Καταλόγου κάνοντας κλικ στις επικεφαλίδες των στηλών.</system:String>
     <system:String x:Key="AppHint36">Μπορείτε να αναδιατάξετε τις στήλες σας μεταφέροντας και αποθέτοντας τις κεφαλίδες στηλών.</system:String>
     <system:String x:Key="AppHint37">Μπορείτε να φιλτράρετε τις προβολές σας κάνοντας κλικ στο αναπτυσσόμενο βέλος δίπλα στο πλαίσιο αναζήτησης.</system:String>
-    <system:String x:Key="AppHint38">Αλλάξτε γρήγορα τις επιλογές ελέγχου πληκτρολογίου/χειριστηρίου στις 'Ρυθμίσεις Προγράμματος Εκκίνησης Παιχνιδιού'.</system:String>
+    <system:String x:Key="AppHint38">Αλλάξτε γρήγορα τις επιλογές ελέγχου πληκτρολογίου/χειριστηρίου στις 'Ρυθμίσεις>Στοιχεία ελέγχου'.</system:String>
     <system:String x:Key="AppHint39">Το γωρίζατε? Το 7th Heaven υποστηρίζει παραμέτρους γραμμής εντολών (διακόπτες).</system:String>
-    <system:String x:Key="AppHint40">Έχετε τους δίσκους του 1998; Εισαγάγετε τις ταινίες σας αυτόματα από τις 'Ρυθμίσεις Προγράμματος Εκκίνησης Παιχνιδιού'</system:String>
+    <system:String x:Key="AppHint40">Έχετε τους δίσκους του 1998; Εισαγάγετε τις ταινίες σας αυτόματα από τις 'Πρόγραμμα Εισαγωγής Ταινίας'</system:String>
     <system:String x:Key="AppHint41">Προσαρμόστε τα χρώματα του 7th Heaven μεταβαίνοντας στις Ρυθμίσεις>Αλλαγή Θέματος Χρώματος.</system:String>
     <system:String x:Key="AppHint42">Μπορείτε να εξαγάγετε και να μοιραστείτε το προσαρμοσμένο θέμα χρώματος με άλλους.</system:String>
     <system:String x:Key="AppHint43">Μπορείτε να κάνετε παύση και συνέχιση ορισμένων λήψεων.</system:String>
@@ -1217,5 +1217,21 @@
     <system:String x:Key="ControlsMenuItemText">Χειρισμός...</system:String>
 
     <system:String x:Key="SaveControlsPreset">Πρέπει να αποθηκεύσετε τα τρέχοντα στοιχεία ελέγχου ως νέα διαμόρφωση. Εισαγάγετε όνομα για διαμόρφωση:</system:String>
-    
+
+    <!--DEV NOTE: STRINGS BELOW ADDED 7/11/20-->
+    <system:String x:Key="VerifyingEnglishGameFilesExist">Υπάρχει επαλήθευση αρχείων αγγλικών παιχνιδιών ...</system:String>
+    <system:String x:Key="FoundLanguageInstalledCreatingEnglishGameFiles">Εγκατεστημένη γλώσσα που βρέθηκε: {0} Δημιουργία αγγλικών αρχείων παιχνιδιών ...</system:String>
+    <system:String x:Key="ExtractingLGPFiles">Εξαγωγή αρχείων .lgp ...</system:String>
+    <system:String x:Key="RenamingLanguageSpecificFiles">Μετονομασία αρχείων ειδικά για τη γλώσσα ...</system:String>
+    <system:String x:Key="CouldNotFindFileToRename">Δεν ήταν δυνατή η εύρεση αρχείου για μετονομασία: {0} ...</system:String>
+    <system:String x:Key="EncodingNewLGPFiles">Κωδικοποίηση νέων αρχείων .lgp ...</system:String>
+    <system:String x:Key="DeletingTemporaryFiles">Διαγραφή προσωρινών αρχείων ...</system:String>
+    <system:String x:Key="BeginningToPollForGamePadInput">Έναρξη ψηφοφορίας για είσοδο ελεγκτή ...</system:String>
+    <system:String x:Key="WaitingForFF7WindowToBeVisible">αναμονή για προβολή του παραθύρου FF7 (μέγιστο {0} δευτερόλεπτα) ...</system:String>
+    <system:String x:Key="CouldNotFindFileToCopy">Δεν ήταν δυνατή η εύρεση αρχείου για αντιγραφή: {0} ...</system:String>
+    <system:String x:Key="AnErrorOccurredStartingULGP">Παρουσιάστηκε σφάλμα κατά την έναρξη του ulgp.exe</system:String>
+    <system:String x:Key="UpdatingPathsInSysSettings">Ενημέρωση διαδρομών στο Sys.Settings με νέα διαδρομή εγκατάστασης</system:String>
+    <system:String x:Key="ForceMinimizingProgram">πρόγραμμα ελαχιστοποίησης δύναμης ...</system:String>
+    <system:String x:Key="FailedToStartAdditionalProgram">Αποτυχία έναρξης πρόσθετου προγράμματος: {0}</system:String>
+
 </ResourceDictionary>

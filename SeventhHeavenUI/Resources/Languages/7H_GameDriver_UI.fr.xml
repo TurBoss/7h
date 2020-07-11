@@ -4,8 +4,8 @@
   <!-- GRAPHICS TAB -->
   <Setting xsi:type="DropDown">
     <Group>Graphismes</Group>
-    <Name>API Graphique</Name>
-    <Description>Définit le logiciel de rendu. Auto détermine le meilleur choix en fonction de votre GPU. Des pannes peuvent survenir en utilisant OpenGL avec des cartes AMD.</Description>
+    <Name>API graphique</Name>
+    <Description>Définit le moteur d'affichage. Auto détermine le meilleur choix en fonction de votre GPU. Des pannes peuvent survenir en utilisant OpenGL avec des cartes AMD.</Description>
     <DefaultValue>renderer_backend = 0</DefaultValue>
     <Option>
       <Text>Automatique</Text>
@@ -17,15 +17,15 @@
     </Option>
     <Option>
       <Text>DirectX 11</Text>
-      <Settings>renderer_backend = 3</Settings>
+      <Settings>renderer_backend = 2</Settings>
     </Option>
   </Setting>
 
   <Setting xsi:type="DropDown">
       <Group>Graphismes</Group>
-      <Name>Resolution</Name>
-      <Description>Définissez la taille de la fenêtre (ou résolution plein écran) de FF7. Le mode Auto utilise la résolution du jeu en mode fenêtré ou la résolution actuelle du bureau en mode plein écran.</Description>
-      <DefaultValue>window_size_x = 0,window_size_y = 0</DefaultValue>
+      <Name>Résolution</Name>
+      <Description>Définissez la taille de la fenêtre (ou la résolution plein écran) de FF7. Le mode Auto utilise la résolution du jeu en mode fenêtré ou la résolution actuelle du bureau en mode plein écran.</Description>
+      <DefaultValue>window_size_x = 1280,window_size_y = 720</DefaultValue>
       <Option>
         <Text>Automatique</Text>
         <Settings>window_size_x = 0,window_size_y = 0</Settings>
@@ -94,11 +94,11 @@
 
   <Setting xsi:type="DropDown">
     <Group>Graphismes</Group>
-    <Name>Mode Fenêtre</Name>
-    <Description>Jeu d'affichage dans une fenêtre encadrée, ou plein écran sans bordure.</Description>
-    <DefaultValue>fullscreen = yes</DefaultValue>
+    <Name>Mode Fenêtré</Name>
+    <Description>Mode d'affichage du jeu, fenêtré ou plein écran.</Description>
+    <DefaultValue>fullscreen = no</DefaultValue>
     <Option>
-      <Text>Fenêtre</Text>
+      <Text>Fenêtré</Text>
       <Settings>fullscreen = no</Settings>
     </Option>
     <Option>
@@ -109,23 +109,23 @@
 
   <Setting xsi:type="DropDown">
     <Group>Graphismes</Group>
-    <Name>Rapport d'Aspect</Name>
-    <Description>Préservez le rapport d'aspect en ajoutant des bordures noires si nécessaire pour préserver un rapport d'aspect de 4:3.</Description>
+    <Name>Format d'affichage</Name>
+    <Description>Conserver le format 4:3 d'origine ou étirer au format de l'écran.</Description>
     <DefaultValue>preserve_aspect = yes</DefaultValue>
     <Option>
-      <Text>Originaire d'aspect 4:3</Text>
+      <Text>Format d'origine 4:3</Text>
       <Settings>preserve_aspect = yes</Settings>
     </Option>
     <Option>
-      <Text>Étirer pour Remplir</Text>
+      <Text>Étirer au format de l'écran</Text>
       <Settings>preserve_aspect = no</Settings>
     </Option>
   </Setting>
 
   <Setting xsi:type="DropDown">
     <Group>Graphismes</Group>
-    <Name>Anticrénelage</Name>
-    <Description>Applique un filtrage MSAA 2x / 4x / 8x / 16x. Réduit les bords irréguliers et améliore la qualité d'image. Peut gravement affecter les performances</Description>
+    <Name>Anti crénelage</Name>
+    <Description>Applique un filtrage MSAA 2x / 4x / 8x / 16x. Réduit les bords irréguliers et améliore la qualité d'image. Peut réduire de façon importante les performances du jeu.</Description>
     <DefaultValue>enable_antialiasing = 0</DefaultValue>
     <Option>
       <Text>De</Text>
@@ -151,8 +151,8 @@
 
   <Setting xsi:type="Checkbox">
     <Group>Graphismes</Group>
-    <Name>filtrage anisotrope</Name>
-    <Description>>Utilisez des filtrage anisotrope pour les textures à haute résolution. Cela peut améliorer les performances et la qualité de l'image, mais utilise davantage de Mémoire de Texture.</Description>
+    <Name>Filtrage anisotrope</Name>
+    <Description>>Utilise le filtrage anisotrope pour les textures à haute résolution. Cela améliore la qualité de l'image, mais utilise davantage de mémoire.</Description>
     <DefaultValue>enable_anisotropic = yes</DefaultValue>
     <TrueSetting>enable_anisotropic = yes</TrueSetting>
     <FalseSetting>enable_anisotropic = no</FalseSetting>
@@ -161,7 +161,7 @@
   <Setting xsi:type="Checkbox">
     <Group>Graphismes</Group>
     <Name>Filtrage Linéaire</Name>
-    <Description>Pourrait améliorer la qualité de la texture en basse résolution. Non recommandé lors de l'utilisation en mode haute résolution. Si vous voyez des artefacts cyan ou violet sur les champs, désactivez cette option.</Description>
+    <Description>Peut améliorer la qualité des textures en basses résolutions mais floute les détails. Non recommandé lors de l'utilisation en mode haute résolution. Si vous voyez des artefacts cyan ou violet sur les champs, désactivez cette option.</Description>
     <DefaultValue>linear_filter = no</DefaultValue>
     <TrueSetting>linear_filter = yes</TrueSetting>
     <FalseSetting>linear_filter = no</FalseSetting>
@@ -170,7 +170,7 @@
   <Setting xsi:type="Checkbox">
     <Group>Graphismes</Group>
     <Name>Synchronisation Verticale</Name>
-    <Description>Synchronisez la fréquence d'images du jeu avec le taux de réactualisation de l'écran. Cela peut avoir un impact négatif sur les performances ou casser les mods 60 fps. Allumez le jeu si vous constatez un déchirement de l'écran.</Description>
+    <Description>Synchronisez la fréquence d'images du jeu avec le taux de rafraîchissement de l'écran. Cela peut avoir un impact négatif sur les performances ou casser les mods 60 fps. Activez cette option si vous constatez un déchirement de l'écran.</Description>
     <DefaultValue>enable_vsync = no</DefaultValue>
     <TrueSetting>enable_vsync = yes</TrueSetting>
     <FalseSetting>enable_vsync = no</FalseSetting>
@@ -180,38 +180,38 @@
 
   <Setting xsi:type="DropDown">
     <Group>Avancé</Group>
-    <Name>Option de la Musique</Name>
-    <Description>Utilisez VGMStream pour jouer de la musique de haute qualité OGG Vorbis. Requis pour les mods de musique. Sinon, la norme MIDI est utilisée.</Description>
+    <Name>Rendu des musiques</Name>
+    <Description>Utilisez VGMStream pour jouer les musiques de haute qualité de type OGG Vorbis. Requis pour les mods de musique. Sinon, le format MIDI (basse qualité) est utilisé.</Description>
     <DefaultValue>use_external_music = yes</DefaultValue>
     <Option>
-      <Text>VGMStream (Recommandé)</Text>
+      <Text>VGMStream (recommandé)</Text>
       <Settings>use_external_music = yes</Settings>
     </Option>
     <Option>
-      <Text>MIDI Original</Text>
+      <Text>MIDI</Text>
       <Settings>use_external_music = no</Settings>
     </Option>
   </Setting>
 
   <Setting xsi:type="DropDown">
     <Group>Avancé</Group>
-    <Name>Option de Film</Name>
-    <Description>Utilisez le FFMPEG pour la lecture des jeux de films (FMV). Ou utilisez le moteur de rendu original, qui peut ne pas prendre en charge autant de codecs de film.</Description>
+    <Name>Rendu des cinématiques</Name>
+    <Description>Utilisez FFMPEG pour la lecture des cinématiques. Ou utilisez le moteur de rendu original, uniquement pour les vidéos d'origines.</Description>
     <DefaultValue>enable_ffmpeg_videos = yes</DefaultValue>
     <Option>
       <Text>FFMPEG (Recommandé)</Text>
       <Settings>enable_ffmpeg_videos = yes</Settings>
     </Option>
     <Option>
-      <Text>Rendu Original</Text>
+      <Text>Rendu original</Text>
       <Settings>enable_ffmpeg_videos = no</Settings>
     </Option>
   </Setting>
 
   <Setting xsi:type="Checkbox">
     <Group>Avancé</Group>
-    <Name>Afficher les Statistiques en Superposition</Name>
-    <Description>Affichage en superposition à l'écran de certaines informations de débogage en temps réel.</Description>
+    <Name>Afficher des Statistiques en Superposition</Name>
+    <Description>Affiche en superposition certaines informations de débogage en temps réel.</Description>
     <DefaultValue>show_stats = no</DefaultValue>
     <TrueSetting>show_stats = yes</TrueSetting>
     <FalseSetting>show_stats = no</FalseSetting>
@@ -220,7 +220,7 @@
   <Setting xsi:type="Checkbox">
     <Group>Avancé</Group>
     <Name>Afficher la version du pilote</Name>
-    <Description>Affiche la version du pilote actuellement utilisé sur une superposition ou dans la barre de titre.</Description>
+    <Description>Affiche la version du pilote actuellement utilisé en superposition ou dans la barre de titre (en fenêtré).</Description>
     <DefaultValue>show_version = no</DefaultValue>
     <TrueSetting>show_version = yes</TrueSetting>
     <FalseSetting>show_version = no</FalseSetting>
@@ -228,8 +228,8 @@
 
   <Setting xsi:type="Checkbox">
     <Group>Avancé</Group>
-    <Name>Afficher le SPF en superposition</Name>
-    <Description>Affiche la superposition transparente Images Par Seconde dans le coin supérieur droit de l'écran.</Description>
+    <Name>Afficher les FPS en superposition</Name>
+    <Description>Affiche les FPS du jeu dans le coin supérieur droit de l'écran.</Description>
     <DefaultValue>show_fps = no</DefaultValue>
     <TrueSetting>show_fps = yes</TrueSetting>
     <FalseSetting>show_fps = no</FalseSetting>
@@ -238,7 +238,7 @@
   <Setting xsi:type="Checkbox">
     <Group>Avancé</Group>
     <Name>Afficher l'API graphique</Name>
-    <Description>Affiche l'API graphique actuellement utilisée (OpenGL / DirectX11) sur une superposition ou dans la barre de titre</Description>
+    <Description>Affiche le moteur d'affichage actuellement utilisée (OpenGL / DirectX11) en superposition ou dans la barre de titre (en fenêtré).</Description>
     <DefaultValue>show_renderer_backend = no</DefaultValue>
     <TrueSetting>show_renderer_backend = yes</TrueSetting>
     <FalseSetting>show_renderer_backend = no</FalseSetting>
