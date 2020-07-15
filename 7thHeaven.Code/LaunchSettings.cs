@@ -62,7 +62,7 @@ namespace _7thHeaven.Code
                 HasDisplayedMovieWarning = false,
                 EnablePs4ControllerService = false,
                 MountingOption = MountDiscOption.MountWithPowerShell,
-                EnableGamepadPolling = true
+                EnableGamepadPolling = false
             };
         }
     }
