@@ -25,16 +25,15 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="87*"/>
+                        <ColumnDefinition Width="88*"/>
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Row="0"
-                               Grid.ColumnSpan="2"
-                               HorizontalAlignment="Stretch"
+                               Grid.ColumnSpan="3"
                                Text="{Binding HelpText, FallbackValue='The selected mod file(s) will be copied into the library folder.'}"
-                               TextWrapping="Wrap"
-                               Margin="15,5,15,5"/>
+                               TextWrapping="Wrap" HorizontalAlignment="Right" Margin="0,0,-0.333,1.667" Width="391"/>
 
                     <TextBox x:Name="txtIro"
                              Grid.Row="1"
@@ -43,16 +42,16 @@
                              VerticalAlignment="Center"
                              IsEnabled="{Binding IsNotImporting}"
                              Text="{Binding PathToIroArchiveInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             Margin="15,5,5,5"/>
+                             Margin="15,5.333,5,5" Grid.ColumnSpan="2"/>
                     <Button x:Name="btnBrowseIro"
                             Grid.Row="1"
                             Click="btnBrowseIro_Click"
                             IsEnabled="{Binding IsNotImporting}"
                             Style="{StaticResource FileEllipsisImageButton}"
-                            Grid.Column="1"
+                            Grid.Column="2"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Margin="0,0,15,0"/>
+                            Margin="0,3.333,14.667,4"/>
                 </Grid>
             </TabItem>
             <TabItem Header="{DynamicResource FromFolder}">
@@ -68,11 +67,9 @@
 
                     <TextBlock Grid.Row="0"
                                Grid.ColumnSpan="2"
-                               HorizontalAlignment="Stretch"
                                Text="{Binding HelpText, FallbackValue='The selected mod file(s) will be copied into the library folder.'}"
-                               TextWrapping="Wrap"
-                               Margin="15,5,15,5"/>
-                    
+                               TextWrapping="Wrap" Margin="0,0,-0.333,0" Height="66" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="391"/>
+
                     <TextBox x:Name="txtModFolder"
                              Grid.Row="1"
                              FontSize="14"
@@ -105,11 +102,9 @@
 
                     <TextBlock Grid.Row="0"
                                Grid.ColumnSpan="2"
-                               HorizontalAlignment="Stretch"
                                Text="{Binding HelpText, FallbackValue='The selected mod file(s) will be copied into the library folder.'}"
-                               TextWrapping="Wrap"
-                               Margin="15,5,15,5"/>
-                    
+                               TextWrapping="Wrap" HorizontalAlignment="Right" Margin="0,0,-0.333,0" Width="391" Height="66" VerticalAlignment="Bottom"/>
+
                     <TextBox x:Name="txtBatchFolder"
                              Grid.Row="1"
                              FontSize="14"

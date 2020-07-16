@@ -147,7 +147,11 @@ namespace SeventhHeaven.Windows
 
             // resize window to fit grid contents (can happen when set to another language other than english)
             double padding = 100; // add to account for padding/margin between two group boxes
-            double newWidth = grpOptions.ActualWidth + grpFolders.ActualWidth + padding; 
+            double newWidth = grpOptions.ActualWidth + grpFolders.ActualWidth + padding;
+
+            // re-position window based on difference between old and new width
+            double deltaX = newWidth - this.Width;
+            this.Left -= deltaX / 2;
 
             if (newWidth > this.Width)
             {
