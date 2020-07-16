@@ -9,7 +9,7 @@
         Style="{StaticResource MainWindowStyle}"
         Title="{DynamicResource IROToolsWindowTitle}"
         ResizeMode="NoResize"
-        Height="325" Width="500">
+        Height="325" Width="500" SizeToContent="Width">
     <Grid>
         <TabControl Margin="0,3,0,0"
                     BorderThickness="0,1,0,0">
