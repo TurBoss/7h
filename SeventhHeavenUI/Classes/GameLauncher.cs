@@ -1418,8 +1418,8 @@ namespace SeventhHeaven.Classes
             SetValueIfChanged(graphicsKeyPath, "Mode", 2, RegistryValueKind.DWord);
             SetValueIfChanged(graphicsVirtualKeyPath, "Mode", 2, RegistryValueKind.DWord);
 
-            SetValueIfChanged(graphicsKeyPath, "Options", 0x12, RegistryValueKind.DWord);
-            SetValueIfChanged(graphicsVirtualKeyPath, "Options", 0x12, RegistryValueKind.DWord);
+            SetValueIfChanged(graphicsKeyPath, "Options", 0, RegistryValueKind.DWord);
+            SetValueIfChanged(graphicsVirtualKeyPath, "Options", 0, RegistryValueKind.DWord);
 
             byte[] emptyGuidBytes = Guid.Empty.ToByteArray();
 
