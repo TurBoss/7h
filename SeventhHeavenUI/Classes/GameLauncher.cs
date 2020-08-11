@@ -574,7 +574,6 @@ namespace SeventhHeaven.Classes
 
                 // attempt to launch the game a few times in the case of an ApplicationException that can be thrown by EasyHook it seems randomly at times
                 // ... The error tends to go away the second time trying but we will try multiple times before failing
-                // ... if we fail to inject with EasyHook then we will give the user a chance to set the compatibility flag to fix the issue
                 string lib = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "7thWrapperLib.dll");
 
                 bool didInject = false;
@@ -649,7 +648,9 @@ namespace SeventhHeaven.Classes
 
                 if (!didInject)
                 {
-                    Instance.RaiseProgressChanged($"{ResourceHelper.Get(StringKey.FailedToInjectAfterMaxAmountOfTries)} ({totalAttempts}) ...", NLog.LogLevel.Warn);
+                    Instance.RaiseProgressChanged($"{ResourceHelper.Get(StringKey.FailedToInjectAfterMaxAmountOfTries)} ({totalAttempts}) ...", NLog.LogLevel.Error);
+                    Instance.RaiseProgressChanged(EasyHook.NativeAPI.RtlGetLastErrorString(),NLog.LogLevel.Error);
+
                     return false;
                 }
 
