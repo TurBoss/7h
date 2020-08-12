@@ -44,7 +44,7 @@ namespace SeventhHeaven.ViewModels
         private bool _isReverseSpeakersChecked;
         private bool _isLogVolumeChecked;
         private string _selectedSoundDevice;
-        private string _selectedMidiDevice;
+        private string _selectedMidiData;
         private int _volumeValue;
 
         private WaveOut _audioTest;
@@ -207,28 +207,28 @@ namespace SeventhHeaven.ViewModels
 
         public Dictionary<string, Guid> SoundDeviceGuids { get; set; }
 
-        public string SelectedMidiDevice
+        public string SelectedMidiData
         {
             get
             {
-                return _selectedMidiDevice;
+                return _selectedMidiData;
             }
             set
             {
-                _selectedMidiDevice = value;
+                _selectedMidiData = value;
                 NotifyPropertyChanged();
             }
         }
 
-        public List<string> MidiDevices
+        public List<string> MidiDataList
         {
             get
             {
-                return MidiDeviceMap?.Keys.ToList();
+                return MidiDataFormats?.Keys.ToList();
             }
         }
 
-        public Dictionary<string, string> MidiDeviceMap { get; set; }
+        public Dictionary<string, string> MidiDataFormats { get; set; }
 
         public int MusicVolumeValue
         {
@@ -467,7 +467,7 @@ namespace SeventhHeaven.ViewModels
 
             SetSelectedSoundDeviceFromSettings(launchSettings);
 
-            SelectedMidiDevice = MidiDeviceMap.Where(s => s.Value == launchSettings.SelectedMidiDevice)
+            SelectedMidiData = MidiDataFormats.Where(s => s.Value == launchSettings.SelectedMidiData)
                                               .Select(s => s.Key)
                                               .FirstOrDefault();
 
@@ -543,7 +543,7 @@ namespace SeventhHeaven.ViewModels
                 Sys.Settings.GameLaunchSettings.DisableReunionOnLaunch = true; // always have this set to true
 
                 Sys.Settings.GameLaunchSettings.SelectedSoundDevice = SoundDeviceGuids[SelectedSoundDevice];
-                Sys.Settings.GameLaunchSettings.SelectedMidiDevice = MidiDeviceMap[SelectedMidiDevice];
+                Sys.Settings.GameLaunchSettings.SelectedMidiData = MidiDataFormats[SelectedMidiData];
                 Sys.Settings.GameLaunchSettings.ReverseSpeakers = IsReverseSpeakersChecked;
                 Sys.Settings.GameLaunchSettings.LogarithmicVolumeControl = IsLogVolumeChecked;
                 SetVolumesInRegistry();
@@ -603,7 +603,7 @@ namespace SeventhHeaven.ViewModels
 
         private void InitMidiDevices()
         {
-            MidiDeviceMap = new Dictionary<string, string>()
+            MidiDataFormats = new Dictionary<string, string>()
             {
                 { "General MIDI", "GENERAL_MIDI" },
                 { "Soundfont MIDI (Creative AWE32/AWE64)", "SOUNDFONT_MIDI" },

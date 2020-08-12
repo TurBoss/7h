@@ -22,7 +22,7 @@ namespace _7thHeaven.Code
         public bool ReverseSpeakers { get; set; }
         public bool LogarithmicVolumeControl { get; set; }
         public Guid SelectedSoundDevice { get; set; }
-        public string SelectedMidiDevice { get; set; }
+        public string SelectedMidiData { get; set; }
 
         public bool ShowLauncherWindow { get; set; }
 
@@ -55,7 +55,7 @@ namespace _7thHeaven.Code
                 SelectedSoundDevice = Guid.Empty,
                 ReverseSpeakers = false,
                 LogarithmicVolumeControl = true,
-                SelectedMidiDevice = "GENERAL_MIDI",
+                SelectedMidiData = "GENERAL_MIDI",
                 ShowLauncherWindow = true,
                 InGameConfigOption = "[Default] Steam KB+PlayStation (Stock).cfg",
                 HasDisplayedOggMusicWarning = false,

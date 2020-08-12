@@ -54,7 +54,7 @@
 
         <DataTemplate x:Key="midiItemTemplate">
             <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
-                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedMidiDevice, FallbackValue='General MIDI'}" Margin="0,0,15,0" 
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedMidiData, FallbackValue='General MIDI'}" Margin="0,0,15,0" 
                            TextWrapping="NoWrap"
                            TextTrimming="CharacterEllipsis"/>
             </Grid>
@@ -179,14 +179,14 @@
                            HorizontalAlignment="Right"
                            VerticalAlignment="Bottom"
                            Margin="0,0,0,10"/>
-                <ComboBox x:Name="cboMidiDevices"
+                <ComboBox x:Name="cboMidiData"
                           Grid.Row="1"
                           Grid.Column="1"
                           Style="{StaticResource MainComboBoxStyle}"
                           ItemTemplate="{StaticResource midiItemTemplate}"
                           ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
-                          SelectedItem="{Binding SelectedMidiDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          ItemsSource="{Binding MidiDevices}"
+                          SelectedItem="{Binding SelectedMidiData, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          ItemsSource="{Binding MidiDataList}"
                           HorizontalAlignment="Left"
                           VerticalAlignment="Center"
                           Margin="4,0,2,3"
