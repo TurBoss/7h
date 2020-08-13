@@ -12,7 +12,7 @@
     <system:String x:Key="Settings">Einstellungen</system:String>
     <system:String x:Key="ChangeColorTheme">Farbschema ändern...</system:String>
     <system:String x:Key="GeneralSettings">Generelle Einstellungen...</system:String>
-    <system:String x:Key="GameDriver">7H Custom Treiber Einstellungen...</system:String>
+    <system:String x:Key="GameDriver">7H Spieltreiber Einstellungen...</system:String>
     <system:String x:Key="GameLauncher">Spielstart Einstellungen ...</system:String>
     <system:String x:Key="Profiles">Profile...</system:String>
     <system:String x:Key="Language">Sprache...</system:String>
@@ -87,7 +87,7 @@
     <system:String x:Key="ImportModTooltip">Mod Importieren</system:String>
     <system:String x:Key="MoveUpTooltip">Hoch bewegen. Rechtsklick um nach ganz oben zu bewegen.</system:String>
     <system:String x:Key="MoveDownTooltip">Runter bewegen. Rechtsklick um nach ganz unten zu bewegen.</system:String>
-    <system:String x:Key="AutoSortTooltip">Mods automatisch nach der Karegorie ladereihenfolge sortieren.</system:String>
+    <system:String x:Key="AutoSortTooltip">Mods automatisch nach der Karegorie Ladereihenfolge sortieren.</system:String>
     <system:String x:Key="ConfigureModTooltip">Mod einstellen</system:String>
     <system:String x:Key="ActivateAllTooltip">Alle Mods aktivieren</system:String>
     <system:String x:Key="DeactivateAllTooltip">Alle Mods deaktivieren</system:String>
@@ -103,7 +103,7 @@
     <system:String x:Key="No">Nein</system:String>
     <system:String x:Key="Off">Aus</system:String>
     <system:String x:Key="On">An</system:String>
-    <system:String x:Key="ResetDefaults">Standart Einstellungen wiederherstellen</system:String>
+    <system:String x:Key="ResetDefaults">Standart wiederherstellen</system:String>
     <system:String x:Key="Save">Speichern</system:String>
     <system:String x:Key="Load">Laden</system:String>
     <system:String x:Key="Go">Start</system:String>
@@ -112,7 +112,7 @@
     <!--Window Titles-->
     <system:String x:Key="GameLauncherWindowTitle">Spiel Starten</system:String>
     <system:String x:Key="CatalogCreationWindowTitle">Catalog und Mod Erstellungswerkzeug</system:String>
-    <system:String x:Key="GameDriverWindowTitle">7H Custom Treiber Einstellungen</system:String>
+    <system:String x:Key="GameDriverWindowTitle">7H Spieltreiber Einstellungen</system:String>
     <system:String x:Key="UnexpectedErrorWindowTitle">7th Heaven - Unerwarteter Fehler!</system:String>
     <system:String x:Key="AllowModToRun">Mod Start erlauben?</system:String>
     <system:String x:Key="Warning">Warnung</system:String>
@@ -139,31 +139,31 @@
     <!--Game Launcher Settings Window-->
     <system:String x:Key="OptionsHeader" xml:space="preserve"> Einstellungen </system:String>
     <system:String x:Key="AutoMountDisc">CD automatisch einbinden</system:String>
-    <system:String x:Key="AutoMountDiscTooltip">Bindet die CD ISO automatisch ein. Nur unterstützt für Windows 8 und höher. Windows 7 und älter erfordern ein manuelles einbinden der CD Iso.</system:String>
+    <system:String x:Key="AutoMountDiscTooltip">Bindet die CD ISO automatisch ein. Nur unterstützt für Windows 8 und höher. Windows 7 und älter erfordern ein manuelles Einbinden der CD Iso.</system:String>
 
     <system:String x:Key="AutoDismountDisc">CD automatisch auswerfen</system:String>
-    <system:String x:Key="AutoDismountDiscTooltip">Wirft die CD ISO automatisch aus. Nur unterstützt für Windows 8 und höher. Windows 7 und älter erfordern ein manuelles auswerfen der CD Iso.</system:String>
+    <system:String x:Key="AutoDismountDiscTooltip">Wirft die CD ISO automatisch aus. Nur unterstützt für Windows 8 und höher. Windows 7 und älter erfordern ein manuelles Auswerfen der CD Iso.</system:String>
 
     <system:String x:Key="AutoUpdatePath">CD Pfad automatisch aktuallisieren</system:String>
-    <system:String x:Key="AutoUpdatePathTooltip">Ermittelt automatisches ändern des CD Pfads und ändert die Spieleinstellungen entsprechend automatisch.</system:String>
+    <system:String x:Key="AutoUpdatePathTooltip">Ermittelt automatisch Änderungen des CD Pfads und passt die Spieleinstellungen entsprechend an.</system:String>
 
     <system:String x:Key="ShowGameLauncher">Launcher starten</system:String>
     <system:String x:Key="ShowGameLauncherTooltip">Startet den Launcher der Steam Version des Spiels.</system:String>
 
     <system:String x:Key="ControlsLabel">Steuerung:</system:String>
 
-    <system:String x:Key="SaveControlsTooltip">Speichert deine aktuelle Controler einstellung des Spiel als neues Profil.</system:String>
+    <system:String x:Key="SaveControlsTooltip">Speichert deine aktuelle Controler einstellung des Spiels als neues Profil.</system:String>
     <system:String x:Key="DeleteControlsTooltip">Entfernt das ausgewählte Controler Profil.</system:String>
     
     <system:String x:Key="CompatibilityHeader" xml:space="preserve"> Kompatibilitäts Einstellungen </system:String>
     <system:String x:Key="HighDpiScalingFix">High-DPI Scaling Korrektur</system:String>
-    <system:String x:Key="HighDpiScalingFixTooltip">Kann den Fehler beheben, dass das Bild abgeschnitten oder nicht zentriert is bei der verwendung von hohen Auflösungen. Alternativ setze die Fenster Scalierung auf 100%.</system:String>
+    <system:String x:Key="HighDpiScalingFixTooltip">Kann den Fehler beheben, dass das Bild abgeschnitten oder nicht zentriert ist bei der Verwendung von hohen Auflösungen. Alternativ setze die Fenster Scalierung auf 100%.</system:String>
 
     <system:String x:Key="Code5Fix">Code 5 Korrektur</system:String>
-    <system:String x:Key="Code5FixTooltip">Kann den 'Code 5' Fehler beheben beim starten des Spiels. Beim nutzen mehrerer Monitore kann es vorkommen, dass das Spiel auf dem 2. Monitor gestartet wird, wenn aktiv.</system:String>
+    <system:String x:Key="Code5FixTooltip">Kann den 'Code 5' Fehler beim starten des Spiels beheben. Beim nutzen mehrerer Monitore kann es vorkommen, dass das Spiel auf dem 2. Monitor gestartet wird, wenn aktiv.</system:String>
 
     <system:String x:Key="ReunionDriverFix">Reunion Treiber Korrektur</system:String>
-    <system:String x:Key="ReunionDriverFixTooltip">Benennt die ddraw.dll temporär um in Reunion.dll.bak beim Spielstart und stellt nach dem das Orginal wieder her. Beeinflusst nicht die spielbarkeit von Reunion außerhalb von 7H.</system:String>
+    <system:String x:Key="ReunionDriverFixTooltip">Benennt die ddraw.dll temporär in Reunion.dll.bak beim Spielstart um und stellt nach dem Spielen das Orginal wieder her. Beeinflusst nicht die Spielbarkeit von Reunion außerhalb von 7H.</system:String>
 
 
     <system:String x:Key="ImportMoviesHeader" xml:space="preserve"> Movies von der CD Importieren </system:String>
@@ -173,14 +173,14 @@
 
     <system:String x:Key="AudioDeviceHeader" xml:space="preserve"> Audio Ausgabegerät </system:String>
     <system:String x:Key="SoundDeviceLabel">Audio Treiber:</system:String>
-    <system:String x:Key="SoundDeviceTooltip">Wählt den ausgabe Treiber für Soundeffekte.</system:String>
+    <system:String x:Key="SoundDeviceTooltip">Wählt den Ausgabetreiber für Soundeffekte.</system:String>
 
-    <system:String x:Key="TestSoundTooltip">Testet den ausgewählten Audio Treiber sowie Musik und Sound Lautstärke. Test Audio wird von Enrico Deiana zur verfügung gestellt.</system:String>
-    <system:String x:Key="TestLeftSoundTooltip">Testet den ausgewählten Audio Treiber sowie Musik und Sound Lautstärke für den linken Lautsprecher. Test Audio wird von Enrico Deiana zur verfügung gestellt.</system:String>
-    <system:String x:Key="TestRightSoundTooltip">Testet den ausgewählten Audio Treiber sowie Musik und Sound Lautstärke für den rechten Lautsprecher. Test Audio wird von Enrico Deiana zur verfügung gestellt.</system:String>
+    <system:String x:Key="TestSoundTooltip">Testet den ausgewählten Audio Treiber sowie Musik und Sound Lautstärke. Test Audio wird von Enrico Deiana zur Verfügung gestellt.</system:String>
+    <system:String x:Key="TestLeftSoundTooltip">Testet den ausgewählten Audio Treiber sowie Musik und Sound Lautstärke für den linken Lautsprecher. Test Audio wird von Enrico Deiana zur Verfügung gestellt.</system:String>
+    <system:String x:Key="TestRightSoundTooltip">Testet den ausgewählten Audio Treiber sowie Musik und Sound Lautstärke für den rechten Lautsprecher. Test Audio wird von Enrico Deiana zur Verfügung gestellt.</system:String>
 
     <system:String x:Key="MidiDeviceLabel">MIDI Treiber:</system:String>
-    <system:String x:Key="MidiDataLabel">MIDI Data:</system:String>
+    <system:String x:Key="MidiDataLabel">MIDI Daten:</system:String>
     <system:String x:Key="MidiDeviceTooltip">Wähle den MIDI Treiber für Final Fantasy 7 aus.</system:String>
 
     <system:String x:Key="SFXVolumeLabel">Sound Lautstärke:</system:String>
@@ -189,7 +189,7 @@
     <system:String x:Key="MusicVolumeLabel">Musik Lautstärke:</system:String>
     <system:String x:Key="MusicVolumeTooltip">Stellt die Lautstärke der Musik im Spiel ein.</system:String>
 
-    <system:String x:Key="LogVolumeControl">logarithmische lautstärkeregelung</system:String>
+    <system:String x:Key="LogVolumeControl">Logarithmische Lautstärkereglung</system:String>
     <system:String x:Key="LogVolumeControlTooltip">Deaktivieren fals die Lautstärkeanpassung nicht weich von statten geht.</system:String>
 
     <system:String x:Key="ReverseSpeakers">Lautsprecher vertauschen</system:String>
@@ -198,13 +198,13 @@
 
     <system:String x:Key="GraphicsDriverHeader" xml:space="preserve"> Grafiktreiber Einstellungen </system:String>
     <system:String x:Key="RendererLabel">Treiber:</system:String>
-    <system:String x:Key="RendererTooltip">Wählt den Grafiktreiber für Final Fantasy 7 aus. Mods funktionieren allerdings nur mit dem 7H Custom Treiber'</system:String>
+    <system:String x:Key="RendererTooltip">Wählt den Grafiktreiber für Final Fantasy 7 aus. Mods funktionieren allerdings nur mit dem 7H Spieltreiber'</system:String>
 
-    <system:String x:Key="QuarterScreen">Quarter Screen</system:String>
-    <system:String x:Key="QuarterScreenTooltip">Startet das Spiel im Fenstermodus (viertelbild). Funktioniert nur bei 'Software Renderer' or 'Direct3D Hardware Acceleration'.</system:String>
+    <system:String x:Key="QuarterScreen">Fenstermodus (Viertelbild)</system:String>
+    <system:String x:Key="QuarterScreenTooltip">Startet das Spiel im Fenstermodus (Viertelbild). Funktioniert nur bei 'Software Renderer' oder 'Direct3D Hardware Acceleration'.</system:String>
 
-    <system:String x:Key="FullScreen">Full Screen</system:String>
-    <system:String x:Key="FullScreenTooltip">Startet das Spiel im Vollbild. Funktioniert nur bei 'Software Renderer' or 'Direct3D Hardware Acceleration'.</system:String>
+    <system:String x:Key="FullScreen">Vollbild</system:String>
+    <system:String x:Key="FullScreenTooltip">Startet das Spiel im Vollbild. Funktioniert nur bei 'Software Renderer' oder 'Direct3D Hardware Acceleration'.</system:String>
 
     <system:String x:Key="HardwareGraphicsTooltip">Optionen für die Hardwarebeschleunigung. Funktioniert nur bei 'Direct3D Hardware Acceleration'.</system:String>
 
@@ -425,9 +425,9 @@ Webbrowser öffen zum herunterladen?</system:String>
     <system:String x:Key="NoFf7InputCfgFoundAt">Keine ff7input.cfg gefunden in</system:String>
     <system:String x:Key="AlreadyExistsAt">Existiert bereits in</system:String>
 
-    <system:String x:Key="ChoosingAnyOtherOptionBesidesCustom7HGameDriver">Eine andere Option als "7H Custom Treiber" auszuwählen, wird dazu führen, dass aktivierte Mods nicht funktionieren!</system:String>
+    <system:String x:Key="ChoosingAnyOtherOptionBesidesCustom7HGameDriver">Eine andere Option als "7H Spieltreiber" auszuwählen, wird dazu führen, dass aktivierte Mods nicht funktionieren!</system:String>
     
-    <system:String x:Key="ReunionWarningMessage" xml:space="preserve">Reunion R06 und neuer, selbst wenn deaktiviert in der Options.ini, zwingt Final Fantasy 7 dazu einen anderen Custom Treiber zu laden. Das führt zu Problemen mit dem 7H Custom Treiber und verursacht Probleme.
+    <system:String x:Key="ReunionWarningMessage" xml:space="preserve">Reunion R06 und neuer, selbst wenn deaktiviert in der Options.ini, zwingt Final Fantasy 7 dazu einen anderen Custom Treiber zu laden. Das führt zu Problemen mit dem 7H Spieltreiber und verursacht Probleme.
 
 Wenn du Reunion spielen willst, nutze bitte eine 7H kompatible Version.
 
@@ -630,10 +630,10 @@ Auf 'Abbrechen' klicken um den Vorgang zu unterbrechen.</system:String>
     <system:String x:Key="PathToCacheFolderDoesNotExist">Pfad zum Cache Ordner wurde nicht gefunden.</system:String>
     <system:String x:Key="TextureCacheCleared">Texture Cache geleert!</system:String>
     <system:String x:Key="FailedToClearTextureCache">Leeren des Texture Cache fehlgeschlagen</system:String>
-    <system:String x:Key="GameDriverSettingsSaved">7H Custom Treiber Einstellungen gespeichert!</system:String>
+    <system:String x:Key="GameDriverSettingsSaved">7H Spieltreiber Einstellungen gespeichert!</system:String>
     <system:String x:Key="CouldNotWriteTo7HGameDriverCfg">Konnte FFNx.cfg nicht speichern. Bitte prüfe, dass die Datei oder der Final Fantasy 7 Ordner nicht schreibgeschützt ist.</system:String>
     <system:String x:Key="UnknownErrorWhileSaving">Unbekannter Fehler beim speichern. Log wurde erstellt.</system:String>
-    <system:String x:Key="GameDriverSettingsResetToDefaults">7H Custom Treiber Einstellungen auf standart zurückgesetzt. Drücke auf 'Speichern' um die Einstellungen zu speichern.</system:String>
+    <system:String x:Key="GameDriverSettingsResetToDefaults">7H Spieltreiber Einstellungen auf standart zurückgesetzt. Drücke auf 'Speichern' um die Einstellungen zu speichern.</system:String>
 
     
     
@@ -777,13 +777,13 @@ Oder aber, du kannst unter Generelle Einstellungen, deinen Movies Pfad auf dein 
     <system:String x:Key="OggMusicFilesAreMissing">.OGG Musik Dateien fehlen!</system:String>
     <system:String x:Key="InOrderToHearHighQualityMusicYouWillNeedMessage" xml:space="preserve">Um Musik in hoher Quallität zu hören, musst du einen Musik Mod installieren.
 
-Alternativ kannst du unter Einstellungen>7H Custom Treiber Einstellungen>Erweitert>Musik Einstellungen die Option "Original MIDI" auswählen. Diese haben allerdings eine schlechtere Quallität.
+Alternativ kannst du unter Einstellungen>7H Spieltreiber Einstellungen>Erweitert>Musik Einstellungen die Option "Original MIDI" auswählen. Diese haben allerdings eine schlechtere Quallität.
 
 Wenn du im nachhinein doch einen Musik Mod benutzen willst, musst du diese Einstellung wieder auf "VGMstream" setzen.</system:String>
 
-    <system:String x:Key="VerifyingLatestGameDriverIsInstalled">Prüfe ob die aktuellste Version des 7H Custom Treiber installiert ist ...</system:String>
-    <system:String x:Key="SomethingWentWrongTryingToDetectGameDriver">Etwas lief schief beim prüfen/installieren des 7H Custom Treiber. Abbruch ...</system:String>
-    <system:String x:Key="VerifyingGameDriverShadersFoldersExist">Prüfe ob der 7H Custom Treiber Shader Ordner verhanden ist ...</system:String>
+    <system:String x:Key="VerifyingLatestGameDriverIsInstalled">Prüfe ob die aktuellste Version des 7H Spieltreiber installiert ist ...</system:String>
+    <system:String x:Key="SomethingWentWrongTryingToDetectGameDriver">Etwas lief schief beim prüfen/installieren des 7H Spieltreiber. Abbruch ...</system:String>
+    <system:String x:Key="VerifyingGameDriverShadersFoldersExist">Prüfe ob der 7H Spieltreiber Shader Ordner verhanden ist ...</system:String>
 
     <system:String x:Key="VerifyingFf7Exe">Prüfe ff7.exe ...</system:String>
     <system:String x:Key="Ff7ExeDetectedToBeDifferent">Deine ff7.exe ist nicht die richtige. Erstelle Backup und kopiere die korrekte ff7.exe ...</system:String>
@@ -933,8 +933,8 @@ Aktivieren und erneut versuchen?</system:String>
     <system:String x:Key="CannotCopySourceFileBecauseItIsMissingAt">Kann die Quelldatei nicht kopieren, da sie nicht gefunden wurde in</system:String>
     <system:String x:Key="CopyingFileFrom">Kopiere Datei von</system:String>
 
-    <system:String x:Key="CannotCheckIfLatestDriverIsInstalledDueToMissingFile">Kann aufgrund von fehlenden Dateien nicht prüfen ob der 7H Custom Treiber aktuell ist</system:String>
-    <system:String x:Key="GameDriverDllFileIsUpToDate">7H Custom Treiber ist aktuell.</system:String>
+    <system:String x:Key="CannotCheckIfLatestDriverIsInstalledDueToMissingFile">Kann aufgrund von fehlenden Dateien nicht prüfen ob der 7H Spieltreiber aktuell ist</system:String>
+    <system:String x:Key="GameDriverDllFileIsUpToDate">7H Spieltreiber ist aktuell.</system:String>
     <system:String x:Key="BackingUpExistingGameDriverTo">Sichere aktuellen Treiber in</system:String>
     <system:String x:Key="BackingUpExistingGameDriverCfgTo">Sichere aktuelle driver.cfg in</system:String>
     <system:String x:Key="GameDriverCfgFileMissingCopyingDefaultFrom">FFNx.cfg fehlt. Kopiere standart Datei von</system:String>
@@ -1211,7 +1211,7 @@ Aktivieren und erneut versuchen?</system:String>
     <system:String x:Key="RetryInstallTooltip">Mod installation wiederholen</system:String>
 
 
-    <system:String x:Key="MovieImporter">Movies Importierer...</system:String>
+    <system:String x:Key="MovieImporter">Movies Importeur...</system:String>
     <system:String x:Key="AllMovieFilesAlreadyImported" xml:space="preserve">Es wurden bereits alle Movies importiert!</system:String>
 
     <system:String x:Key="ImportMoviesFromDisc">Movies von CD importieren</system:String>
@@ -1230,18 +1230,18 @@ Aktivieren und erneut versuchen?</system:String>
     <system:String x:Key="SaveControlsPreset">Sie müssen die aktuellen Kontrollen als eine neue Konfiguration speichern. Geben Sie den Namen für die Konfiguration:</system:String>
 
     <!--DEV NOTE: STRINGS BELOW ADDED 7/11/20-->
-    <system:String x:Key="VerifyingEnglishGameFilesExist">Verifying English game files exist ...</system:String>
-    <system:String x:Key="FoundLanguageInstalledCreatingEnglishGameFiles">Found language installed: {0} Creating English game files...</system:String>
-    <system:String x:Key="ExtractingLGPFiles">Extracting .lgp files ...</system:String>
-    <system:String x:Key="RenamingLanguageSpecificFiles">Renaming language specific files ...</system:String>
-    <system:String x:Key="CouldNotFindFileToRename">Could not find file to rename: {0} ...</system:String>
-    <system:String x:Key="EncodingNewLGPFiles">Encoding new .lgp files ...</system:String>
-    <system:String x:Key="DeletingTemporaryFiles">Deleting temporary files ...</system:String>
-    <system:String x:Key="BeginningToPollForGamePadInput">Beginning to poll for gamepad input ...</system:String>
-    <system:String x:Key="WaitingForFF7WindowToBeVisible">Waiting for FF7 window to be visible ({0} seconds max) ...</system:String>
-    <system:String x:Key="CouldNotFindFileToCopy">Could not find file to copy: {0} ...</system:String>
-    <system:String x:Key="AnErrorOccurredStartingULGP">An error occurred starting ulgp.exe</system:String>
-    <system:String x:Key="UpdatingPathsInSysSettings">Updating paths in Sys.Settings with new installation path</system:String>
-    <system:String x:Key="ForceMinimizingProgram">force minimizing program ...</system:String>
-    <system:String x:Key="FailedToStartAdditionalProgram">Failed to start additional program: {0}</system:String>
+    <system:String x:Key="VerifyingEnglishGameFilesExist">Prüfen ob die englischen Spieldateien vorhanden sind ...</system:String>
+    <system:String x:Key="FoundLanguageInstalledCreatingEnglishGameFiles">Gefunden in: {0} Erstelle englische Spieldateien...</system:String>
+    <system:String x:Key="ExtractingLGPFiles">Entpacke .lgp Dateien ...</system:String>
+    <system:String x:Key="RenamingLanguageSpecificFiles">Sprachbezogene Dateien werden umbenannt ...</system:String>
+    <system:String x:Key="CouldNotFindFileToRename">Die, zum umbenennen, benötigte Datei " {0} " konnte nicht gefunden werden ...</system:String>
+    <system:String x:Key="EncodingNewLGPFiles">Erstelle neue .lgp Dateien ...</system:String>
+    <system:String x:Key="DeletingTemporaryFiles">Lösche temporäre Dateien ...</system:String>
+    <system:String x:Key="BeginningToPollForGamePadInput">Beginne die Abfrage nach Gamepad-Eingaben ...</system:String>
+    <system:String x:Key="WaitingForFF7WindowToBeVisible">Warte darauf, dass das FF7 Fenster angezeigt wird. (Maximal {0} Sekunden) ...</system:String>
+    <system:String x:Key="CouldNotFindFileToCopy">Die Datei " {0} " konnte nicht gefunden werden ...</system:String>
+    <system:String x:Key="AnErrorOccurredStartingULGP">Beim starten der ulgp.exe trat ein Fehler auf</system:String>
+    <system:String x:Key="UpdatingPathsInSysSettings">Aktuallisiere die, in den Einstellungen angegebenenen, Pfade</system:String>
+    <system:String x:Key="ForceMinimizingProgram">Erzwinge Minimierung des Programms ...</system:String>
+    <system:String x:Key="FailedToStartAdditionalProgram">Fehler beim starten des zusätzlichen Programm: {0}</system:String>
 </ResourceDictionary>

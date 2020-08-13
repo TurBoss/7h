@@ -181,7 +181,7 @@
     <system:String x:Key="TestRightSoundTooltip">Δοκίμασε την επιλεγμένη συσκευή ήχου και την ένταση της μουσικής/εφέ για το Δεξί κανάλι. Η δοκιμή ήχου παρέχεται από τον Enrico Deiana.</system:String>
 
     <system:String x:Key="MidiDeviceLabel">Συσκευή MIDI:</system:String>
-    <system:String x:Key="MidiDataLabel">MIDI Data:</system:String>
+    <system:String x:Key="MidiDataLabel">Δεδομένα MIDI:</system:String>
     <system:String x:Key="MidiDeviceTooltip">Επιλογή Συσκευής Εξόδου Ηχου MIDI για το FF7.</system:String>
 
     <system:String x:Key="SFXVolumeLabel">Ενταση ηχητικών εφέ:</system:String>
