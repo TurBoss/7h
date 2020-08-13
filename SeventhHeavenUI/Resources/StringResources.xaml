@@ -1208,7 +1208,7 @@ Do you want to apply the setting and try again?</system:String>
 
     <system:String x:Key="ImportMoviesFromDisc">Import Movies From Disc</system:String>
 
-    <system:String x:Key="EnableTriggerDpadSupport">Emulate DPad via Keyboard</system:String>
+    <system:String x:Key="EnableTriggerDpadSupport">Use Dpad on DInput Devices</system:String>
     <system:String x:Key="TriggerDpadSupportTooltip">Emulates DPad in-game by sending the corresponding keyboard key. (Disable if using a third party mapping tool)</system:String>
 
     <system:String x:Key="MountDiscWithPowershell">Mount Disc With PowerShell</system:String>

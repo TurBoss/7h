@@ -745,6 +745,7 @@ namespace SeventhHeaven.ViewModels
 
                 if (_isPs4SupportChecked)
                 {
+                    IsDpadSupportChecked = false; // do not allow both ps4 and dpad options on at same time
                     ConnectedController?.ReleaseDevice();
                     TurnOnPs4Service();
                 }
@@ -799,6 +800,12 @@ namespace SeventhHeaven.ViewModels
                     SetButtonIcon(nameof(DownIcon), LoadedConfiguration.GamepadInputs[GameControl.Down].GamepadInput.Value);
                     SetButtonIcon(nameof(LeftIcon), LoadedConfiguration.GamepadInputs[GameControl.Left].GamepadInput.Value);
                     SetButtonIcon(nameof(RightIcon), LoadedConfiguration.GamepadInputs[GameControl.Right].GamepadInput.Value);
+                }
+
+                // do not allow both ps4 and dpad options on at same time
+                if (IsDpadSupportChecked) 
+                {
+                    IsPs4SupportChecked = false;
                 }
             }
         }
