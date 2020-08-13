@@ -180,6 +180,7 @@
     <system:String x:Key="TestRightSoundTooltip">Testet den ausgewählten Audio Treiber sowie Musik und Sound Lautstärke für den rechten Lautsprecher. Test Audio wird von Enrico Deiana zur verfügung gestellt.</system:String>
 
     <system:String x:Key="MidiDeviceLabel">MIDI Treiber:</system:String>
+    <system:String x:Key="MidiDataLabel">MIDI Data:</system:String>
     <system:String x:Key="MidiDeviceTooltip">Wähle den MIDI Treiber für Final Fantasy 7 aus.</system:String>
 
     <system:String x:Key="SFXVolumeLabel">Sound Lautstärke:</system:String>

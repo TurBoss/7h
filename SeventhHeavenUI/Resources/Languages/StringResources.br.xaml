@@ -181,6 +181,7 @@
     <system:String x:Key="TestRightSoundTooltip">Testar o dispositivo de som e volume musical selecionados para o canal Direito. Som de teste fornecido por Enrico Deiana.</system:String>
 
     <system:String x:Key="MidiDeviceLabel">Dispositivo MIDI:</system:String>
+    <system:String x:Key="MidiDataLabel">MIDI Data:</system:String>
     <system:String x:Key="MidiDeviceTooltip">Selecione um dispositivo de saída de midi para FF7.</system:String>
 
     <system:String x:Key="SFXVolumeLabel">Volume dos efeitos sonoros:</system:String>

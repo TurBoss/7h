@@ -1432,8 +1432,12 @@ namespace SeventhHeaven.Classes
             string midiKeyPath = $"{ff7KeyPath}\\1.00\\MIDI";
             string midiVirtualKeyPath = $"{virtualStorePath}\\1.00\\MIDI";
 
-            SetValueIfChanged(midiKeyPath, "MIDI_DeviceID", 0x00000000, RegistryValueKind.DWord);
-            SetValueIfChanged(midiVirtualKeyPath, "MIDI_DeviceID", 0x00000000, RegistryValueKind.DWord);
+            // Add registry key values for default MIDI Device if missing from registry
+            if (RegistryHelper.GetValue(midiKeyPath, "MIDI_DeviceID", null) == null || RegistryHelper.GetValue(midiVirtualKeyPath, "MIDI_DeviceID", null) == null)
+            {
+                SetValueIfChanged(midiKeyPath, "MIDI_DeviceID", 0x00000000, RegistryValueKind.DWord);
+                SetValueIfChanged(midiVirtualKeyPath, "MIDI_DeviceID", 0x00000000, RegistryValueKind.DWord);
+            }
 
             SetValueIfChanged(midiKeyPath, "MIDI_data", Sys.Settings.GameLaunchSettings.SelectedMidiData);
             SetValueIfChanged(midiVirtualKeyPath, "MIDI_data", Sys.Settings.GameLaunchSettings.SelectedMidiData);

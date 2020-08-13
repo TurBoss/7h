@@ -3,6 +3,7 @@ using Iros._7th.Workshop;
 using Microsoft.Win32;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
+using NAudio.Midi;
 using SeventhHeaven.Classes;
 using SeventhHeaven.Windows;
 using SeventhHeavenUI;
@@ -45,6 +46,7 @@ namespace SeventhHeaven.ViewModels
         private bool _isLogVolumeChecked;
         private string _selectedSoundDevice;
         private string _selectedMidiData;
+        private string _selectedMidiDevice;
         private int _volumeValue;
 
         private WaveOut _audioTest;
@@ -206,6 +208,29 @@ namespace SeventhHeaven.ViewModels
         }
 
         public Dictionary<string, Guid> SoundDeviceGuids { get; set; }
+        
+        public string SelectedMidiDevice
+        {
+            get
+            {
+                return _selectedMidiDevice;
+            }
+            set
+            {
+                _selectedMidiDevice = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public List<string> MidiDevices
+        {
+            get
+            {
+                return MidiDeviceIDs?.Keys.ToList();
+            }
+        }
+
+        public Dictionary<string, string> MidiDeviceIDs { get; set; }
 
         public string SelectedMidiData
         {
@@ -474,10 +499,32 @@ namespace SeventhHeaven.ViewModels
 
             GetVolumesFromRegistry();
 
+            SetSelectedMidiDeviceFromSettings();
+
             IsReverseSpeakersChecked = launchSettings.ReverseSpeakers;
             IsLogVolumeChecked = launchSettings.LogarithmicVolumeControl;
 
             HasLoaded = true;
+        }
+
+        private void SetMidiDeviceInRegistry()
+        {
+            string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII";
+            string midiKeyPath = $"{ff7KeyPath}\\1.00\\MIDI";
+
+            string virtualStorePath = $"{RegistryHelper.GetKeyPath(FF7RegKey.VirtualStoreKeyPath)}\\Final Fantasy VII";
+            string midiVirtualKeyPath = $"{virtualStorePath}\\1.00\\MIDI";
+
+            RegistryHelper.SetValueIfChanged(midiKeyPath, "MIDI_DeviceID", MidiDeviceIDs[SelectedMidiDevice], RegistryValueKind.DWord);
+            RegistryHelper.SetValueIfChanged(midiVirtualKeyPath, "MIDI_DeviceID", MidiDeviceIDs[SelectedMidiDevice], RegistryValueKind.DWord);
+        }
+
+        private int GetMidiDeviceInRegistry()
+        {
+            string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII";
+            string midiKeyPath = $"{ff7KeyPath}\\1.00\\MIDI";
+
+            return (int)RegistryHelper.GetValue(midiKeyPath, "MIDI_DeviceID", 0);
         }
 
         private void GetVolumesFromRegistry()
@@ -528,6 +575,21 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        private void SetSelectedMidiDeviceFromSettings()
+        {
+            int MidiDevIDFromReg = GetMidiDeviceInRegistry();
+
+            if (MidiDevIDFromReg > MidiDevices.Count - 1)
+            {
+                SelectedMidiDevice = MidiDevices.ElementAt(0);
+            }
+            else
+            {
+                SelectedMidiDevice = MidiDevices.ElementAt(MidiDevIDFromReg);
+            }
+
+        }
+
         internal bool SaveSettings()
         {
             try
@@ -547,6 +609,7 @@ namespace SeventhHeaven.ViewModels
                 Sys.Settings.GameLaunchSettings.ReverseSpeakers = IsReverseSpeakersChecked;
                 Sys.Settings.GameLaunchSettings.LogarithmicVolumeControl = IsLogVolumeChecked;
                 SetVolumesInRegistry();
+                SetMidiDeviceInRegistry();
 
                 Sys.SaveSettings();
 
@@ -609,6 +672,25 @@ namespace SeventhHeaven.ViewModels
                 { "Soundfont MIDI (Creative AWE32/AWE64)", "SOUNDFONT_MIDI" },
                 { "Yamaha XG MIDI", "YAMAHA_XG" }
             };
+
+            var deviceIDs = new Dictionary<string, string>();
+
+            int numofMidiDevices = MidiOut.NumberOfDevices;
+
+            if (numofMidiDevices > 0)
+            {
+                for (int n = 0; n < numofMidiDevices; n++)
+                {
+                    deviceIDs.Add($"{n}: " + MidiOut.DeviceInfo(n).ProductName, n.ToString());
+                }
+            }
+            else
+            {
+                deviceIDs.Add("0: Default MIDI Device", "0");
+            }
+
+            MidiDeviceIDs = deviceIDs;
+            NotifyPropertyChanged(nameof(MidiDevices));    
         }
 
         /// <summary>

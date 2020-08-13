@@ -60,6 +60,14 @@
             </Grid>
         </DataTemplate>
 
+        <DataTemplate x:Key="midiDeviceTemplate">
+            <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedMidiDevice, FallbackValue='0: Default MIDI Device'}" Margin="0,0,15,0" 
+                           TextWrapping="NoWrap"
+                           TextTrimming="CharacterEllipsis"/>
+            </Grid>
+        </DataTemplate>
+
         <DataTemplate x:Key="rendererItemTemplate">
             <Grid x:Name="gd" DataContext="{Binding ElementName=windowSettings, Path=DataContext}" Background="Transparent">
                 <TextBlock Text="{Binding ElementName=gd, Path=DataContext.SelectedRenderer, FallbackValue='Custom 7H Game Driver'}" Margin="0,0,15,0" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
@@ -179,8 +187,26 @@
                            HorizontalAlignment="Right"
                            VerticalAlignment="Bottom"
                            Margin="0,0,0,10"/>
-                <ComboBox x:Name="cboMidiData"
+                <ComboBox x:Name="cboMidiDevice"
                           Grid.Row="1"
+                          Grid.Column="1"
+                          Style="{StaticResource MainComboBoxStyle}"
+                          ItemTemplate="{StaticResource midiDeviceTemplate}"
+                          ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
+                          SelectedItem="{Binding SelectedMidiDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          ItemsSource="{Binding MidiDevices}"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Center"
+                          Margin="4,0,2,3"
+                          Width="{Binding ElementName=cboSoundDevices, Path=ActualWidth}"/>
+
+                <TextBlock Text="{DynamicResource MidiDataLabel}"
+                           Grid.Row="2"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Bottom"
+                           Margin="0,0,0,10"/>
+                <ComboBox x:Name="cboMidiData"
+                          Grid.Row="2"
                           Grid.Column="1"
                           Style="{StaticResource MainComboBoxStyle}"
                           ItemTemplate="{StaticResource midiItemTemplate}"
@@ -190,17 +216,17 @@
                           HorizontalAlignment="Left"
                           VerticalAlignment="Center"
                           Margin="4,0,2,3"
-                          Width="{Binding ElementName=cboSoundDevices, Path=ActualWidth}"/>
+                          Width="{Binding ElementName=cboMidiDevice, Path=ActualWidth}"/>
 
 
                 <TextBlock Text="{DynamicResource SFXVolumeLabel}"
-                           Grid.Row="2"
+                           Grid.Row="3"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
                            Margin="14,0,0,10"/>
 
                 <Slider x:Name="sliderSfxVolume"
-                        Grid.Row="2"
+                        Grid.Row="3"
                         Grid.Column="1"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
@@ -219,14 +245,14 @@
                 </Slider>
 
                 <TextBlock Text="{DynamicResource MusicVolumeLabel}"
-                           Grid.Row="3"
+                           Grid.Row="4"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
                            TextTrimming="CharacterEllipsis"
                            Margin="5,0,0,10"/>
 
                 <Slider x:Name="sliderVolume"
-                        Grid.Row="3"
+                        Grid.Row="4"
                         Grid.Column="1"
                         HorizontalAlignment="Left"
                         Value="{Binding MusicVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
@@ -247,19 +273,17 @@
                 <CheckBox x:Name="chkLogVolume"
                           Content="{DynamicResource LogVolumeControl}" 
                           Grid.Row="4"
-                          Grid.ColumnSpan="2"
                           HorizontalAlignment="Right"
-                          IsChecked="{Binding IsLogVolumeChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                          IsChecked="{Binding IsLogVolumeChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,25,192.333,0" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
                 <CheckBox Content="{DynamicResource ReverseSpeakers}"
-                          Grid.Row="5"
+                          Grid.Row="4"
                           HorizontalAlignment="Right"
-                          Grid.ColumnSpan="2"
-                          IsChecked="{Binding IsReverseSpeakersChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                          IsChecked="{Binding IsReverseSpeakersChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Margin="0,25,-9.667,0" Grid.RowSpan="2"/>
 
             </Grid>
         </GroupBox>
 
-        
+
         <GroupBox x:Name="grpOptions"
                   Grid.Row="1"
                   Header="{DynamicResource OptionsHeader}" 
@@ -388,7 +412,7 @@
                     MinWidth="80"
                     Click="btnCancel_Click"
                     VerticalAlignment="Bottom"/>
-            
+
         </WrapPanel>
 
 
@@ -489,7 +513,7 @@
                             HorizontalAlignment="Center"
                             MinWidth="80"
                             Content="{DynamicResource Cancel}"/>
-                    
+
                 </WrapPanel>
 
             </Grid>

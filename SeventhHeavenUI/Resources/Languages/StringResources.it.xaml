@@ -181,6 +181,7 @@
     <system:String x:Key="TestRightSoundTooltip">Prova il dispositivo audio selezionato e il volume di musica ed effetti sul canale destro. Suono test fornito da Enrico Deiana.</system:String>
 
     <system:String x:Key="MidiDeviceLabel">Dispositivo MIDI:</system:String>
+    <system:String x:Key="MidiDataLabel">MIDI Data:</system:String>
     <system:String x:Key="MidiDeviceTooltip">Scegli un dispositivo di output MIDI per FF7.</system:String>
 
     <system:String x:Key="SFXVolumeLabel">Volume Effetti:</system:String>

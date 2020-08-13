@@ -180,6 +180,7 @@
     <system:String x:Key="TestRightSoundTooltip">Test the selected sound device and music/sfx volume for the Right channel. Test sound provided by Enrico Deiana.</system:String>
 
     <system:String x:Key="MidiDeviceLabel">MIDI Device:</system:String>
+    <system:String x:Key="MidiDataLabel">MIDI Data:</system:String>
     <system:String x:Key="MidiDeviceTooltip">Select an output midi device for FF7.</system:String>
 
     <system:String x:Key="SFXVolumeLabel">SFX Volume:</system:String>
@@ -188,10 +189,10 @@
     <system:String x:Key="MusicVolumeLabel">Music Volume:</system:String>
     <system:String x:Key="MusicVolumeTooltip">Set the in-game music volume.</system:String>
 
-    <system:String x:Key="LogVolumeControl">Logarithmic Volume Control</system:String>
+    <system:String x:Key="LogVolumeControl">Digital Volume Control</system:String>
     <system:String x:Key="LogVolumeControlTooltip">Uncheck this option if you feel that the volume does not change smoothly.</system:String>
 
-    <system:String x:Key="ReverseSpeakers">Reverse Speakers</system:String>
+    <system:String x:Key="ReverseSpeakers">Swap Speakers</system:String>
     <system:String x:Key="ReverseSpeakersTooltip">Swaps left and right channels when checked.</system:String>
 
 

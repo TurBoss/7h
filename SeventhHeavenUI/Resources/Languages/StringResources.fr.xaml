@@ -178,6 +178,7 @@
     <system:String x:Key="TestRightSoundTooltip">Tester la sortie audio sélectionnée et le volume de la musique / des effets sonores (sfx) pour le canal de droite. Son de test fourni par Enrico Deiana.</system:String>
 
     <system:String x:Key="MidiDeviceLabel">Synthétiseur MIDI :</system:String>
+    <system:String x:Key="MidiDataLabel">MIDI Data:</system:String>
     <system:String x:Key="MidiDeviceTooltip">Sélectionner un Synthétiseur midi pour FF7.</system:String>
 
     <system:String x:Key="SFXVolumeLabel">Volume SFX :</system:String>
