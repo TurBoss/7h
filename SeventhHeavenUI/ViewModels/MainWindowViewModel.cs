@@ -680,6 +680,7 @@ namespace SeventhHeavenUI.ViewModels
 
             if (showSettings)
             {
+                MyMods.RefreshModListAsync(); // On upgrade installs, my mods is blank 1st run until refresh occurs.
                 ShowGeneralSettingsWindow();
             }
 
