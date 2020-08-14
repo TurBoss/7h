@@ -83,20 +83,31 @@ namespace SeventhHeavenUI.ViewModels
             ImportProgressVisibility = Visibility.Hidden;
             ImportProgressValue = 0;
             ImportStatusMessage = "";
-            ImportButtonIsEnabled = !GameConverter.AllMovieFilesExist(Sys.Settings.MovieFolder);
+            ImportButtonIsEnabled = false;
 
-            Dictionary<string, string[]> missingMovies = GameConverter.GetMissingMovieFiles(Sys.Settings.MovieFolder);
-
-            if (missingMovies.Count > 0)
+            if (!string.IsNullOrEmpty(Sys.Settings.FF7Exe) & File.Exists(Sys.Settings.FF7Exe))
             {
-                List<string> discsToInsert = GetDiscsToInsertForMissingMovies(missingMovies);
+                ImportButtonIsEnabled = !GameConverter.AllMovieFilesExist(Sys.Settings.MovieFolder);
 
-                ImportStatusMessage = string.Format(ResourceHelper.Get(StringKey.InsertAndClickImport), discsToInsert[0]);
+                Dictionary<string, string[]> missingMovies = GameConverter.GetMissingMovieFiles(Sys.Settings.MovieFolder);
+
+                if (missingMovies.Count > 0)
+                {
+                    List<string> discsToInsert = GetDiscsToInsertForMissingMovies(missingMovies);
+
+                    ImportStatusMessage = string.Format(ResourceHelper.Get(StringKey.InsertAndClickImport), discsToInsert[0]);
+                }
+                else
+                {
+                    ImportStatusMessage = ResourceHelper.Get(StringKey.AllMovieFilesAlreadyImported);
+                }
             }
             else
             {
-                ImportStatusMessage = ResourceHelper.Get(StringKey.AllMovieFilesAlreadyImported);
+                ImportStatusMessage = ResourceHelper.Get(StringKey.Ff7ExeNotFoundYouMayNeedToConfigure);
             }
+
+            
         }
 
         private List<string> GetDiscsToInsertForMissingMovies(Dictionary<string, string[]> missingMovies)
