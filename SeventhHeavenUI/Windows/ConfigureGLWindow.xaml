@@ -10,7 +10,7 @@
         Title="{DynamicResource GameDriverWindowTitle}" 
         Closed="Window_Closed"
         ResizeMode="NoResize"
-        Height="475" Width="775">
+        Height="450" Width="475">
     <Window.Resources>
 
         <DataTemplate x:Key="selectedOptionTemplate">
@@ -55,7 +55,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ContentControl">
-                        <Grid Height="45" Width="425" Margin="0,0,0,0" HorizontalAlignment="Left">
+                        <Grid Height="30" Width="425" Margin="0,0,0,0" HorizontalAlignment="Left">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="10"/>
                                 <ColumnDefinition Width="*"/>
@@ -96,7 +96,7 @@
             </Setter>
         </Style>
     </Window.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -110,11 +110,11 @@
             </TabItem>-->
         </TabControl>
 
-        <TextBlock x:Name="txtStatusMessage" Grid.Row="1"
+        <TextBlock x:Name="txtStatusMessage"
                    HorizontalAlignment="Left"
                    VerticalAlignment="Top"
                    TextWrapping="Wrap"
-                   Margin="5,0,0,5"
+                   Margin="10,312,10.333,5"
                    MaxWidth="420"
                    Text="{Binding StatusMessage, FallbackValue='This is a description of a option or message to the user'}"/>
 
