@@ -680,7 +680,7 @@ namespace SeventhHeavenUI.ViewModels
 
             if (showSettings)
             {
-                MyMods.RefreshModListAsync(); // On upgrade installs, my mods is blank 1st run until refresh occurs.
+                InitActiveProfile(); // On upgrade installs, my mods is blank 1st run until profile reloaded.
                 ShowGeneralSettingsWindow();
             }
 
@@ -1787,11 +1787,18 @@ namespace SeventhHeavenUI.ViewModels
                 }
             }
 
-
-            ConfigureGLWindow gLWindow = new ConfigureGLWindow();
-            if (gLWindow.Init(uiXmlPath, driverCfg))
+            if (File.Exists(driverCfg))
             {
-                gLWindow.ShowDialog();
+                ConfigureGLWindow gLWindow = new ConfigureGLWindow();
+                if (gLWindow.Init(uiXmlPath, driverCfg))
+                {
+                    gLWindow.ShowDialog();
+                }
+            }
+            else
+            {
+                MessageDialogWindow messageDialog = new MessageDialogWindow(ResourceHelper.Get(StringKey.MissingPath), $"FFNX.cfg {ResourceHelper.Get(StringKey.FileNotFound)}", MessageBoxButton.OK, MessageBoxImage.Warning);
+                messageDialog.ShowDialog();
             }
         }
 
