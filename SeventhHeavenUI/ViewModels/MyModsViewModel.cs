@@ -887,58 +887,54 @@ namespace SeventhHeavenUI.ViewModels
                                                             .ToList();
 
             // loop over and check mod info for ordering of before/after other mods
-            int i = 0;
             foreach (var installedMod in sortedList.ToList())
             {
                 _7thWrapperLib.ModInfo info = installedMod.InstallInfo.GetModInfo();
 
                 if (info == null)
                 {
-                    i++;
                     continue;
                 }
 
-                int currentIndex = i; // starts at i but could be changed due to order constraints
-
                 foreach (Guid after in info.OrderAfter)
                 {
-                    int afterIndex = sortedList.FindIndex(m => m.InstallInfo.ModID.Equals(after));
+                    // always find current mod IDs so we don't move wrong mod due to movement
+                    int modAfter = sortedList.FindIndex(m => m.InstallInfo.ModID.Equals(after));
+                    int modtoMove = sortedList.FindIndex(m => m.InstallInfo.ModID.Equals(info.ID));
 
-                    if (afterIndex == -1)
+                    if (modAfter == -1)
                     {
                         // mod could not be found in list
                         continue;
                     }
 
-                    if (afterIndex > currentIndex)
+                    if (modAfter > modtoMove)
                     {
                         // move mod to come after this guid
-                        sortedList.RemoveAt(currentIndex);
-                        sortedList.Insert(afterIndex, installedMod);
-                        currentIndex = afterIndex;
+                        sortedList.RemoveAt(modtoMove);
+                        sortedList.Insert(modAfter, installedMod);
                     }
                 }
 
                 foreach (Guid before in info.OrderBefore)
                 {
-                    int beforeIndex = sortedList.FindIndex(m => m.InstallInfo.ModID.Equals(before));
+                    // always find current mod IDs so we don't move wrong mod due to movement
+                    int modBefore = sortedList.FindIndex(m => m.InstallInfo.ModID.Equals(before));               
+                    int modtoMove = sortedList.FindIndex(m => m.InstallInfo.ModID.Equals(info.ID));
 
-                    if (beforeIndex == -1)
+                    if (modBefore == -1)
                     {
-                        // mod could not be found in list
+                        // mod to go before could not be found in list
                         continue;
                     }
 
-                    if (beforeIndex < currentIndex)
+                    if (modBefore < modtoMove)
                     {
                         // move mod to come before this guid
-                        sortedList.RemoveAt(currentIndex);
-                        sortedList.Insert(beforeIndex, installedMod);
-                        currentIndex = beforeIndex;
+                        sortedList.RemoveAt(modtoMove);
+                        sortedList.Insert(modBefore, installedMod);
                     }
                 }
-
-                i++;
             }
 
             ClearModList();
