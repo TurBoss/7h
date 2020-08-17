@@ -900,13 +900,15 @@ namespace SeventhHeavenUI.ViewModels
                 {
                     // always find current mod IDs so we don't move wrong mod due to movement
                     int modAfter = sortedList.FindIndex(m => m.InstallInfo.ModID.Equals(after));
-                    int modtoMove = sortedList.FindIndex(m => m.InstallInfo.ModID.Equals(info.ID));
 
                     if (modAfter == -1)
                     {
                         // mod could not be found in list
                         continue;
                     }
+
+                    // always find current mod IDs so we don't move wrong mod due to movement
+                    int modtoMove = sortedList.FindIndex(m => m.InstallInfo.ModID.Equals(info.ID));
 
                     if (modAfter > modtoMove)
                     {
@@ -920,13 +922,15 @@ namespace SeventhHeavenUI.ViewModels
                 {
                     // always find current mod IDs so we don't move wrong mod due to movement
                     int modBefore = sortedList.FindIndex(m => m.InstallInfo.ModID.Equals(before));               
-                    int modtoMove = sortedList.FindIndex(m => m.InstallInfo.ModID.Equals(info.ID));
 
                     if (modBefore == -1)
                     {
                         // mod to go before could not be found in list
                         continue;
                     }
+
+                    // always find current mod IDs so we don't move wrong mod due to movement
+                    int modtoMove = sortedList.FindIndex(m => m.InstallInfo.ModID.Equals(info.ID));
 
                     if (modBefore < modtoMove)
                     {
