@@ -68,8 +68,8 @@ namespace SeventhHeaven.Windows
             Dictionary<string, int> tabOrders = new Dictionary<string, int>()
             {
                 {ResourceHelper.Get(StringKey.Graphics), 0},
-                {ResourceHelper.Get(StringKey.Rendering), 1},
-                {ResourceHelper.Get(StringKey.Advanced), 3}
+                {ResourceHelper.Get(StringKey.GameTweaks), 1},
+                {ResourceHelper.Get(StringKey.Advanced), 2}
             };
 
             foreach (var items in _spec.Settings.GroupBy(s => s.Group)

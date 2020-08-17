@@ -60,7 +60,7 @@ namespace SeventhHeaven.ViewModels
             }
             set
             {
-                _description = value;
+                _description = String.Format(value, "\r\n");
                 NotifyPropertyChanged();
             }
         }

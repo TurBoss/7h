@@ -176,8 +176,69 @@
     <FalseSetting>enable_vsync = no</FalseSetting>
   </Setting>
 
-  <!-- ADVANCED TAB -->
+  <!-- GAMETWEAKS TAB -->
+  <Setting xsi:type="DropDown">
+    <Group>Tweaks de Jeu</Group>
+    <Name>Réinitialisation Rapide</Name>
+    <Description>Réinitialisez rapidement le jeu avec une partie terminée.{0}Utiliser: CTRL+R ou L1+L2+R1+R2+Sel+Start (XInput Seulement)</Description>
+    <DefaultValue></DefaultValue>
+    <Option>
+      <Text>Voir Description.</Text>
+      <Settings></Settings>
+    </Option>
+  </Setting>
 
+  <Setting xsi:type="DropDown">
+    <Group>Tweaks de Jeu</Group>
+    <Name>Incrément de Vitesse</Name>
+    <Description>Montant pour augmenter ou diminuer la vitesse à chaque événement.{0}Utiliser: CTRL+Up/Down ou L2+R2+DPAD Up/Down (XInput Seulement)</Description>
+    <DefaultValue>speedhack_step = 1.0</DefaultValue>
+    <Option>
+      <Text>0.5</Text>
+      <Settings>speedhack_step = 0.5</Settings>
+    </Option>
+    <Option>
+      <Text>1.0</Text>
+      <Settings>speedhack_step = 1.0</Settings>
+    </Option>
+    <Option>
+      <Text>2.0</Text>
+      <Settings>speedhack_step = 2.0</Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>Tweaks de Jeu</Group>
+    <Name>Vitesse Maximum</Name>
+    <Description>La vitesse maximale à régler avant de revenir à la vitesse normale.</Description>
+    <DefaultValue>speedhack_max = 7.0</DefaultValue>
+    <Option>
+      <Text>3x</Text>
+      <Settings>speedhack_max = 3.0</Settings>
+    </Option>
+    <Option>
+      <Text>5x</Text>
+      <Settings>speedhack_max = 5.0</Settings>
+    </Option>
+    <Option>
+      <Text>7x</Text>
+      <Settings>speedhack_max = 7.0</Settings>
+    </Option>
+    <Option>
+      <Text>9x</Text>
+      <Settings>speedhack_max = 9.0</Settings>
+    </Option>
+    <Option>
+      <Text>11x</Text>
+      <Settings>speedhack_max = 11.0</Settings>
+    </Option>
+    <Option>
+      <Text>13x</Text>
+      <Settings>speedhack_max = 13.0</Settings>
+    </Option>
+  </Setting>
+
+  <!-- ADVANCED TAB -->
   <Setting xsi:type="DropDown">
     <Group>Avancé</Group>
     <Name>Rendu des musiques</Name>
@@ -206,6 +267,15 @@
       <Text>Rendu original</Text>
       <Settings>enable_ffmpeg_videos = no</Settings>
     </Option>
+  </Setting>
+
+  <Setting xsi:type="Checkbox">
+    <Group>Avancé</Group>
+    <Name>Transparence Fantaisie</Name>
+    <Description>Activez la fusion alpha pour les textures sans effet de fusion existant. Requis pour certains mods.</Description>
+    <DefaultValue>fancy_transparency = yes</DefaultValue>
+    <TrueSetting>fancy_transparency = yes</TrueSetting>
+    <FalseSetting>fancy_transparency = no</FalseSetting>
   </Setting>
 
   <Setting xsi:type="Checkbox">

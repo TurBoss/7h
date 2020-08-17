@@ -437,6 +437,7 @@
         Active,
         Japanese,
         Graphics,
+        GameTweaks,
         Rendering,
         Advanced,
         FailedToCopyDirectory,

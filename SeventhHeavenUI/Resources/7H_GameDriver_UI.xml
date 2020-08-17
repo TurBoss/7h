@@ -176,8 +176,69 @@
     <FalseSetting>enable_vsync = no</FalseSetting>
   </Setting>
 
-  <!-- ADVANCED TAB -->
+  <!-- GAMETWEAKS TAB -->
+  <Setting xsi:type="DropDown">
+    <Group>Game Tweaks</Group>
+    <Name>Soft Reset</Name>
+    <Description>Not configurable. Quickly reset the game with a game over.{0}Usage: CTRL+R or L1+L2+R1+R2+Sel+Start (XInput Only)</Description>
+    <DefaultValue></DefaultValue>
+    <Option>
+      <Text>See Description.</Text>
+      <Settings></Settings>
+    </Option>
+  </Setting>
 
+  <Setting xsi:type="DropDown">
+    <Group>Game Tweaks</Group>
+    <Name>Speed Hack Stepping</Name>
+    <Description>Amount to increase or decrease speed on each trigger.{0}Usage: CTRL+Up/Down or L2+R2+DPAD Up/Down (XInput Only)</Description>
+    <DefaultValue>speedhack_step = 1.0</DefaultValue>
+    <Option>
+      <Text>0.5</Text>
+      <Settings>speedhack_step = 0.5</Settings>
+    </Option>
+    <Option>
+      <Text>1.0</Text>
+      <Settings>speedhack_step = 1.0</Settings>
+    </Option>
+    <Option>
+      <Text>2.0</Text>
+      <Settings>speedhack_step = 2.0</Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>Game Tweaks</Group>
+    <Name>Speed Hack Max</Name>
+    <Description>The maximum speed to set before cycling back to normal speed.</Description>
+    <DefaultValue>speedhack_max = 7.0</DefaultValue>
+    <Option>
+      <Text>3x</Text>
+      <Settings>speedhack_max = 3.0</Settings>
+    </Option>
+    <Option>
+      <Text>5x</Text>
+      <Settings>speedhack_max = 5.0</Settings>
+    </Option>
+    <Option>
+      <Text>7x</Text>
+      <Settings>speedhack_max = 7.0</Settings>
+    </Option>
+    <Option>
+      <Text>9x</Text>
+      <Settings>speedhack_max = 9.0</Settings>
+    </Option>
+    <Option>
+      <Text>11x</Text>
+      <Settings>speedhack_max = 11.0</Settings>
+    </Option>
+    <Option>
+      <Text>13x</Text>
+      <Settings>speedhack_max = 13.0</Settings>
+    </Option>
+  </Setting>
+
+  <!-- ADVANCED TAB -->
   <Setting xsi:type="DropDown">
     <Group>Advanced</Group>
     <Name>Music Option</Name>
@@ -208,6 +269,15 @@
     </Option>
   </Setting>
 
+  <Setting xsi:type="Checkbox">
+    <Group>Advanced</Group>
+    <Name>Fancy Transparency</Name>
+    <Description>Enable alpha blending for textures without an existing blending effect. Required for some mods.</Description>
+    <DefaultValue>fancy_transparency = yes</DefaultValue>
+    <TrueSetting>fancy_transparency = yes</TrueSetting>
+    <FalseSetting>fancy_transparency = no</FalseSetting>
+  </Setting>
+  
   <Setting xsi:type="Checkbox">
     <Group>Advanced</Group>
     <Name>Show Debug Info</Name>

@@ -947,9 +947,9 @@ Voulez-vous appliquer ce réglage et essayer à nouveau ?</system:String>
 
     <!--ConfigureGLWindow.xaml.cs Strings-->
     <system:String x:Key="Graphics">Graphismes</system:String>
+    <system:String x:Key="GameTweaks">Tweaks de Jeu</system:String>
     <system:String x:Key="Rendering">Rendu</system:String>
-	<system:String x:Key="Stats">Statistiques</system:String>
-    <system:String x:Key="Advanced">Avancé</system:String>
+	    <system:String x:Key="Advanced">Avancé</system:String>
 
     <!--FileUtils.cs Strings-->
     <system:String x:Key="FailedToCopyDirectory">échec de la copie du répertoire</system:String>

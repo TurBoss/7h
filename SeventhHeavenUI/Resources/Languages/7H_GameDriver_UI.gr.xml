@@ -176,8 +176,69 @@
     <FalseSetting>enable_vsync = no</FalseSetting>
   </Setting>
 
-  <!-- ADVANCED TAB -->
+  <!-- GAMETWEAKS TAB -->
+  <Setting xsi:type="DropDown">
+    <Group>Τροποποίηση παιχνιδιού</Group>
+    <Name>Γρήγορη επαναφορά</Name>
+    <Description>Επαναφέρετε γρήγορα το παιχνίδι με ένα παιχνίδι τελείωσε.{0}Χρήση: CTRL+R ή L1+L2+R1+R2+Sel+Start (XInput Μόνο)</Description>
+    <DefaultValue></DefaultValue>
+    <Option>
+      <Text>Δείτε την περιγραφή.</Text>
+      <Settings></Settings>
+    </Option>
+  </Setting>
 
+  <Setting xsi:type="DropDown">
+    <Group>Τροποποίηση παιχνιδιού</Group>
+    <Name>Αύξηση ταχύτητας</Name>
+    <Description>Ποσό για αύξηση ή μείωση της ταχύτητας σε κάθε συμβάν.{0}Χρήση: CTRL+Up/Down ή L2+R2+DPAD Up/Down (XInput Μόνο)</Description>
+    <DefaultValue>speedhack_step = 1.0</DefaultValue>
+    <Option>
+      <Text>0.5</Text>
+      <Settings>speedhack_step = 0.5</Settings>
+    </Option>
+    <Option>
+      <Text>1.0</Text>
+      <Settings>speedhack_step = 1.0</Settings>
+    </Option>
+    <Option>
+      <Text>2.0</Text>
+      <Settings>speedhack_step = 2.0</Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>Τροποποίηση παιχνιδιού</Group>
+    <Name>Μέγιστη ταχύτητα</Name>
+    <Description>Η μέγιστη ταχύτητα που πρέπει να ορίσετε πριν επιστρέψετε στην κανονική ταχύτητα.</Description>
+    <DefaultValue>speedhack_max = 7.0</DefaultValue>
+    <Option>
+      <Text>3x</Text>
+      <Settings>speedhack_max = 3.0</Settings>
+    </Option>
+    <Option>
+      <Text>5x</Text>
+      <Settings>speedhack_max = 5.0</Settings>
+    </Option>
+    <Option>
+      <Text>7x</Text>
+      <Settings>speedhack_max = 7.0</Settings>
+    </Option>
+    <Option>
+      <Text>9x</Text>
+      <Settings>speedhack_max = 9.0</Settings>
+    </Option>
+    <Option>
+      <Text>11x</Text>
+      <Settings>speedhack_max = 11.0</Settings>
+    </Option>
+    <Option>
+      <Text>13x</Text>
+      <Settings>speedhack_max = 13.0</Settings>
+    </Option>
+  </Setting>
+
+  <!-- ADVANCED TAB -->
   <Setting xsi:type="DropDown">
     <Group>Για προχωρημένους</Group>
     <Name>Επιλογή μουσικής</Name>
@@ -206,6 +267,15 @@
       <Text>Αρχική απόδοση</Text>
       <Settings>enable_ffmpeg_videos = no</Settings>
     </Option>
+  </Setting>
+
+  <Setting xsi:type="Checkbox">
+    <Group>Για προχωρημένους</Group>
+    <Name>Φανταστική διαφάνεια</Name>
+    <Description>Ενεργοποίηση ανάμειξης άλφα για υφές χωρίς υπάρχον εφέ ανάμειξης. Απαιτείται για ορισμένα mods.</Description>
+    <DefaultValue>fancy_transparency = yes</DefaultValue>
+    <TrueSetting>fancy_transparency = yes</TrueSetting>
+    <FalseSetting>fancy_transparency = no</FalseSetting>
   </Setting>
 
   <Setting xsi:type="Checkbox">

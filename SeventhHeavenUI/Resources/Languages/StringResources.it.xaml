@@ -951,6 +951,7 @@ Vuoi applicare questa modifica e riprovare?</system:String>
 
     <!--ConfigureGLWindow.xaml.cs Strings-->
     <system:String x:Key="Graphics">Grafica</system:String>
+    <system:String x:Key="GameTweaks">Tweaks di Gioco</system:String>
     <system:String x:Key="Rendering">Rendering</system:String>
     <system:String x:Key="Advanced">Avanzate</system:String>
 
