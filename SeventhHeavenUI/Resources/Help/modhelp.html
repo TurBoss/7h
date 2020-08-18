@@ -331,7 +331,8 @@ You can specify that if your mod has certain settings enabled, that other settin
 </pre>
 
 <b><a id="modloadorder">Mod Load Order</a>: </b>
-You can specify in your mod.xml file that your mod requires being above (Before) or below (After) other mod IDs in order to work correctly using the &lt;OrderConstraints&gt; tag. 7th Heaven 2.0's Auto Sort feature will take this into account when auto-sorting the mods. First, mods will be sorted by category, then alphabetically by name, then by the settings specified in the mod load order in mod.xml. You can specify one or many mods at a time. <b>Note: OrderConstraints do NOT go inside the Compatibility tag (despite being in this section of the Help).</b>
+You can specify in your mod.xml file that your mod requires being above (Before) or below (After) other mod IDs in order to work correctly using the &lt;OrderConstraints&gt; tag. 7th Heaven 2.0's Auto Sort feature will take this into account when auto-sorting the mods. First, mods will be sorted by category, then alphabetically by name, then by the settings specified in the mod load order in mod.xml (AFTER is processed FIRST and BEFORE is processed SECOND). You can specify one or many mods at a time.<br />
+<i>Note: OrderConstraints do NOT go inside the Compatibility tag (despite being in this section of the Help).</i>
 <pre>
   <code>
 &lt;!--Specifies that your mod should be placed below (After) the modIDs specified--&gt;
@@ -382,7 +383,7 @@ ExtractSubFolder is useful if your ZIP contains files that are not useful for th
 ExtractInto is useful if your ZIP doesn't have the right folder structure for 7th Heaven. Like if your avatar files are just inside the ZIP with no folder names, you need to extract them into a folder called "menu_us.lgp" for 7th Heaven to work.
 <br /><br />
 
-<b><a id="patchingmods">Patching Mods</a></b>: If you've released a large mod and want to update it with a small .irop patch file (can be created with the IRO Tools in 7th Heaven), you can add a &lt;Patch&gt; entry in the catalog so people who already have the mod can update using the small .irop patch file. See the example below. <i>New in 7th Heaven 2.2, you can distribute .IROP files outside of catalogs and users can double-click them or use the Import Mod feature to apply patches. You must make sure your IROP's mod.xml contains the mod ID so 7H knows which mod to target. Also, you must use the &lt;???(to be determined)&gt; tag to specify which version(s) of your mod the IROP patch applies to if distributing a standalone patch outside of catalogs.</i>
+<b><a id="patchingmods">Patching Mods</a></b>: If you've released a large mod and want to update it with a small .irop patch file (can be created with the IRO Tools in 7th Heaven), you can add a &lt;Patch&gt; entry in the catalog so people who already have the mod can update using the small .irop patch file. See the example below. <i>New in 7th Heaven 2.2, you can distribute .IROP files outside of catalogs and users can double-click them or use the Import Mod feature to apply patches. You must make sure your IROP's mod.xml contains the mod ID so 7H knows which mod to target. Users must apply each patch one after the other in the correct order, otherwise the final mod will not contain all the data that was included in each patch. If your patch contains ALL data/changes needed to upgrade the mod from any previous version, then you do not need to worry about this.</i>
 <pre>
   <code>
     &lt;Mod&gt;

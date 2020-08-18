@@ -75,7 +75,7 @@ namespace SeventhHeavenUI
                         {
                             Mod newMod = new Mod()
                             {
-                                Name = parm,
+                                Name = Path.GetFileName(parm),
                                 ID = Guid.NewGuid(),
                                 LatestVersion = new ModVersion()
                                 {

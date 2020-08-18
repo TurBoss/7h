@@ -610,7 +610,8 @@ Note: You must have each corresponding option below turned<img src="images/butto
 <br /><br />
 <b>Presets: </b>If you've changed any of the key or button assignments, the 'Save' button will become active. When clicking 'Save', if you currently have one of 7H's built-in presets selected, you will be prompted to save your controls to a new preset and to give it a name. If you have one of your own presets selected, it will update your preset with your new key and button selections. If you want to delete an existing preset, select it from the Presets drop down then click<img src="images/buttons/appbar.delete.png" style="max-height:30px; vertical-align:middle">. You can only delete presets you have created yourself.
 <br /><br />
-<b>Emulate DPad via Keyboard: </b>If you're using a DirectInput controller and want to use your DPad, you can toggle this option<img src="images/buttons/toggle.on.png" style="max-height:30px; vertical-align:middle">to have 7H auto-map your DPad buttons to the keyboard.
+<b>Use Dpad on DInput Devices: </b><b>*Do not turn this on if you're using an XInput controller (like DS4 w/ XInput driver or an Xbox controller). Dpad on an XInput controller is supported natively so this option is pointless.*</b> If you're using a DirectInput controller and want to use your Dpad, you can toggle this option<img src="images/buttons/toggle.on.png" style="max-height:30px; vertical-align:middle">to have 7H auto-map your Dpad buttons to the keyboard.<br />
+<i>Note: This option can cause high CPU usage! If you experience stuttering, slowness, or music skipping, then disable this option and use a 3rd party mapping tool instead.</i>
 <br /><br />
 <b>Enable PS4 XInput Driver: </b>By default, Windows installs a DS4 controller as a DirectInput device, limiting its functionality. If you toggle this option<img src="images/buttons/toggle.on.png" style="max-height:30px; vertical-align:middle">, 7H will install an XInput driver for your DS4 so it emulates an Xbox controller for more functionality. Additionally, this will enable you to use the DS4's touchpad as a mouse which you can use to move around the 7th Heaven UI and click buttons by pressing the touchpad. <i>Important! See the 'Open Game Controller Window' option below to properly configure your DS4 for XInput!</i>
 <br /><br />
@@ -711,7 +712,7 @@ Note: You must have each corresponding option below turned<img src="images/butto
 <br /><br />
 <b>What it is: </b>Settings that affect the window mode, resolution, how the game renders graphics, and music type. The driver is a much improved, modern version of what was previously known as the 'Aali driver' or the 'OpenGL driver'. 7th Heaven 2.2+ includes 'FFNx' as the game driver. Special thanks goes to TrueOdin and the other contributors of FFNx for their valued work and time put into this driver.
 <br /><br />
-<b>How to Use: </b>Click on the tabs at the top to view available options in those categories. When you mouse over the different options, toggle buttons, and drop down menus, you will see info displayed on the bottom-left of the window. Therefore, since the Game Driver Settings screen has sort of its own built-in help, it is unnecessary to repeat everything here. If you have trouble with the Game Driver (like texture/graphics problems or crashing) you can try looking in the <a href="troubleshooting.html">Troubleshooting</a> section. <b>Pay special attention to the info displayed on the window, particularly if a setting is known to cause stability issues.</b> For the most part, all of the defaults should be fine for most people and you might only want to change things on the 'Graphics' tab. Advanced users can manually edit the 'FFNx.cfg' file in their FF7 install folder.
+<b>How to Use: </b>Click on the tabs at the top to view available options in those categories. When you mouse over the different options, toggle buttons, and drop down menus, you will see info displayed at the bottom of the window. Therefore, since the Game Driver Settings screen has sort of its own built-in help, it is unnecessary to repeat everything here. If you have trouble with the Game Driver (like texture/graphics problems or crashing) you can try looking in the <a href="troubleshooting.html">Troubleshooting</a> section. <b>Pay special attention to the info displayed on the window, particularly if a setting is known to cause stability issues.</b> For the most part, all of the defaults should be fine for most people and you might only want to change things on the 'Graphics' tab. Advanced users can manually edit the 'FFNx.cfg' file in their FF7 install folder.
 </p>
 
 <p>
@@ -719,25 +720,50 @@ Note: You must have each corresponding option below turned<img src="images/butto
 <center><img src="images/screens/game.launcher.settings.png" style="max-height:500px;"></center>
 <b>To Get Here: </b>Click 'Settings' then 'Game Launcher' in the <a href="#ui_menus_detail">Menu Bar</a>.
 <br /><br />
-<b>What it is: </b>Settings here are applied during the <a href="#gamelauncher">Game Launcher</a> sequence when you click 'Play'. Here you can set your audio device preferences, virtual disc mounting options and you can choose to add programs that you want to launch prior to running the game, such as batch files or other scripts. If you're looking for the 'Compatibility' options, they are no longer needed/present starting with 7th Heaven 2.2.
+<b>What it is: </b>Settings here are applied or verified during the <a href="#gamelauncher">Game Launcher</a> sequence when you click 'Play'. Here you can set your audio device preferences, virtual disc mounting options and you can choose to add programs that you want to launch prior to running the game, such as batch files or other scripts. If you're looking for the 'Compatibility' options, they are no longer needed/present starting with 7th Heaven 2.2.
 <br /><br />
 <b>How to Use: </b>See below for an explanation of each option in the various sections.
 <br /><br />
 
-<b>Audio Output Device: </b>Select your desired output from the drop down list. You can either select a specific device that you want to use or, the recommended option of Auto-Switch (Windows Default). This option means that whatever device Windows is using as the default will be what the game will use. This is useful if you frequently switch between PC speakers and a USB headset for example. Click<img src="images/buttons/appbar.sound.png" style="max-height:30px; vertical-align:middle">next to the list to test the sound output to that device. You can also click<img src="images/buttons/appbar.search.filter.png" style="max-height:30px; vertical-align:middle">next to the<img src="images/buttons/appbar.sound.png" style="max-height:30px; vertical-align:middle">button to test a specific left or right channel<img src="images/buttons/appbar.sound.left.right.png" style="max-height:30px; vertical-align:middle">. You can drag the<img src="images/buttons/slider.png" style="max-width:80px; vertical-align:middle">to adjust the volume of music and/or SFX. You can move the slider during test playback. Turn<img src="images/buttons/toggle.on.png" style="max-height:30px; vertical-align:middle">'Logarithmic Volume Control' to enable smoother digital volume transitions. Turning<img src="images/buttons/toggle.on.png" style="max-height:30px; vertical-align:middle">'Reverse Speakers' will switch your left and right audio channels. The 'MIDI Device' drop down is largely unused and should probably stay on 'General MIDI' unless you have installed/available one of the other options. This only affects music if you have 'Original MIDI' enabled in the <a href="#gamedriversettings">Game Driver Settings</a>. Otherwise, high-quality .OGG audio is used.<br />
-<i>Note: If you select a specific audio device like a USB headset, but that device is not available when you launch the game (such as if it is unplugged), you may experience problems launching the game. Symptoms might be getting a black screen and nothing else, with the game not starting. This is why the 'Auto-Switch' option is recommended.</i><br />
+<b>Audio Output Device: </b>Settings related to your audio playback.
+
 <center><img src="images/screens/launcher.settings.audiodevice.png" style="max-width:350px;"></center>
-<br />
+<ul>
+	<li><b>Sound Device: </b>Select your desired output from the drop down list. You can either select a specific device that you want to use or, the recommended option of Auto-Switch (Windows Default). Auto-Switch means that whatever device Windows is using as the default will be what the game will use. This is useful if you frequently switch between PC speakers and a USB headset for example. Click<img src="images/buttons/appbar.sound.png" style="max-height:30px; vertical-align:middle">next to the list to test the sound output to that device. You can also click<img src="images/buttons/appbar.search.filter.png" style="max-height:30px; vertical-align:middle">next to the<img src="images/buttons/appbar.sound.png" style="max-height:30px; vertical-align:middle">button to test a specific left or right channel<img src="images/buttons/appbar.sound.left.right.png" style="max-height:30px; vertical-align:middle">.
+	</li>
+	<i>Note: If you select a specific audio device like a USB headset, but that device is not available when you launch the game (such as if it is unplugged), you may experience problems launching the game. Symptoms might be getting a black screen and nothing else, with the game not starting. This is why the 'Auto-Switch' option is recommended.</i><br />
+	<br />
+  <li><b>MIDI Device: </b>Select which MIDI device you want MIDI playback to output to.
+		<br />
+		<i>Note: This only affects music if you have 'Original MIDI' enabled in the <a href="#gamedriversettings">Game Driver Settings</a>. Otherwise, high-quality .OGG audio is used.
+		</i>
+		<br />
+	</li>
+  <br />
+	<li><b>MIDI Data: </b>Select which MIDI data format to send to the MIDI playback device.</b>
+		<br />
+		<i>Note: This only affects music if you have 'Original MIDI' enabled in the <a href="#gamedriversettings">Game Driver Settings</a>. Otherwise, high-quality .OGG audio is used.
+		</i>
+		<br />
+	</li>
+  <br />
+  <li><b>SFX/Music Volume: </b>You can drag the<img src="images/buttons/slider.png" style="max-width:80px; vertical-align:middle">to adjust the volume of music and/or sound effects. You can move the sliders during test playback.</li>
+  <br />
+  <li><b>Digital Volume Control: </b>Turn<img src="images/buttons/toggle.on.png" style="max-height:30px; vertical-align:middle">to enable smoother digital volume transitions.</li>
+	<br />
+	<li><b>Swap Speakers: </b>Turning<img src="images/buttons/toggle.on.png" style="max-height:30px; vertical-align:middle">'Swap Speakers' will switch your left and right audio channels.</li>
+  <br />
+</ul>
 
 <b>Options: </b>Settings related to mounting/unmounting the game disc and Game Launcher window visibility.
 <br /><center><img src="images/screens/launcher.settings.options.png" style="max-width:350px;"></center>
 
 <ul>
-	<li><b>Mount Game Disc With (PowerShell/WinCDEmu): </b>A game disc, either an original 1998 physical disc or a virtual disc is required for the game to run. 7th Heaven 2.x includes a virtual game disc. When you click 'Play', the <a href="#gamelauncher">Game Launcher</a> will search to see if you already have a game disc loaded/inserted. If not found, 7H will automatically mount the included virtual disc. There are 2 ways 7H can mount the disc, either with PowerShell or with WinCDEmu. PowerShell is recommended on Windows 8 and above. WinCDEmu is the only option available for Windows 7 users, but it can also be used by modern OS users if for some reason PowerShell is not working for you.</b></li>
+	<li><b>Mount Game Disc With (PowerShell/WinCDEmu): </b>A game disc, either an original 1998 physical disc or a virtual disc is required for the game to run. 7th Heaven 2.x includes a virtual game disc. When you click 'Play', the <a href="#gamelauncher">Game Launcher</a> will search to see if you already have a game disc loaded/inserted. If not found, 7H will automatically mount the included virtual disc. There are 2 ways 7H can mount the disc, either with PowerShell or with WinCDEmu. PowerShell is recommended on Windows 8 and above. WinCDEmu is the only option available for Windows 7 users, but it can also be used by modern OS users if for some reason PowerShell is not working for you.</li>
 	<br />
-  <li><b>Auto-Mount Game Disc: </b>If this option is<img src="images/buttons/toggle.on.png" style="max-height:30px; vertical-align:middle">, 7th Heaven will automatically load/mount the previously mentioned virtual game disc (ISO) for you before starting FF7.</b></li>
+  <li><b>Auto-Mount Game Disc: </b>If this option is<img src="images/buttons/toggle.on.png" style="max-height:30px; vertical-align:middle">, 7th Heaven will automatically load/mount the previously mentioned virtual game disc (ISO) for you before starting FF7.</li>
   <br />
-  <li><b>Auto-Dismount Game Disc: </b>After the game closes, if this option is<img src="images/buttons/toggle.on.png" style="max-height:30px; vertical-align:middle">, 7th Heaven will automatically dismount/eject the virtual game disc.</b></li>
+  <li><b>Auto-Dismount Game Disc: </b>After the game closes, if this option is<img src="images/buttons/toggle.on.png" style="max-height:30px; vertical-align:middle">, 7th Heaven will automatically dismount/eject the virtual game disc.</li>
   <br />
   <li><b>Auto-Update Disc Path: </b>As you add or remove drives such as USB flash drives, DVD-ROMs, virtual discs (ISOs) or external hard drives, sometimes the drive letters have a tendency to change from one letter to another (example, drive D: might become drive E: the next time it is inserted). When you run FF7 and it is expecting your disc to be drive D: but your drive was inserted or mounted as drive E:, then the game will not be able to find the disc and will refuse to start. 7th Heaven solves this problem with this option. If this option is<img src="images/buttons/toggle.on.png" style="max-height:30px; vertical-align:middle">, the <a href="#gamelauncher">Game Launcher</a> will search for your disc, and if it changed drive letters, will update the game to look at the correct drive letter for you automatically.</li>
   <br />
@@ -763,7 +789,7 @@ Note: You must have each corresponding option below turned<img src="images/butto
 
 <p>
 <a id="language"><h3><b>Language</b></h3></a>
-<center><img src="images/screens/language.png" style="max-width:400px;"></center>
+<center><img src="images/screens/language.png" style="max-width:300px;"></center>
 <b>To Get Here: </b>Click 'Settings' then 'Language' in the <a href="#ui_menus_detail">Menu Bar</a>.
 <br /><br />
 <b>What it is: </b>Here you can select what language you want the 7th Heaven UI to be displayed in. Languages currently supported are: Brazilian Portuguese, English, French, German, Greek, Italian and Spanish.
