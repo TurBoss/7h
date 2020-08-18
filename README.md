@@ -1,4 +1,4 @@
-# 7th Heaven 2.0
+# 7th Heaven 2.2
 
 Mod manager for Final Fantasy VII PC.
 
@@ -6,45 +6,54 @@ Mod manager for Final Fantasy VII PC.
 
 ### Downloads
 * Latest installer is available on the [Qhimm forums](http://forums.qhimm.com/index.php?topic=19533.0).
-* Latest portable .exe version is available on the [github releases page](https://github.com/rodriada000/7h/releases).
+* Latest portable .exe version is available on the [Qhimm forums](http://forums.qhimm.com/index.php?topic=19533.0).
 
 ### Installing
 
 #### Using the Installer
-1. Download the installer on the [qhimm forums](http://forums.qhimm.com/index.php?topic=19533.0).
-2. Run the setup.exe.
+1. Download the installer from the [Qhimm forums](http://forums.qhimm.com/index.php?topic=19533.0).
+2. Run the setup.exe file.
 
 #### Portable .Exe
-1. Download the latest release of the zipped up .exe from the [releases page](https://github.com/rodriada000/7h/releases).
-2. Extract the .zip file to your preferred location e.g. Desktop or My Documents.
-3. After extracting, run the `7th Heaven.exe`
+1. Download the latest release of the zipped up .exe from the [Qhimm forums](http://forums.qhimm.com/index.php?topic=19533.0).
+2. Extract the .zip file to your preferred location e.g. C:\7th Heaven.
+3. After extracting, run `7th Heaven.exe`
 
 ## Building From Source
 1. Use Visual Studio 2017 or 2019.
 2. Open the solution, get the NuGet packages, and build.
 
-
-## Authors
-
-* **rodriada000**
-* **unab0mb**
-* **Iros**
-* **Ficedula**
-* **TrueOdin**
-* **TurBoss**
-
-
 ## License
 
 This project is licensed under the MPT License.
 
-## Acknowledgments and Thanks
+## Acknowledgements and Thanks
+## 7th Heaven Developers
+* **rodriada, unab0mb (2.x)**
+* **Ficedula, Iros, TrueOdin, TurBoss (1.x)**
 
-* Aali - Initial OpenGL driver.
-* Chrysalis - Hosting, mod development, feature input and ideas, beta testing.
-* EQ2Alyza - Years of forum support, mod development, Qhimm catalog.
-* Lord UrQuan - Hosting, feature input and ideas, beta testing.
-* Martin Barker - Plugin testing and development.
-* Strife98 - Marketing, support, feature input and ideas, beta testing.
-* Tsunamix - Marketing, support, mod development, and excellent trailer and tutorial videos.
-* And to all the beta testers: Thank you for helping make 7H 2.0 the best it can be.
+## Catalogs and Hosting
+* **Chrysalis, EQ2Alyza, Lord UrQuan,**
+* **Strife98, Sega Chief**
+
+## FFNx Game Driver
+* **Aali, Chrysalis, DLPB, Extapathy,**
+* **Maki, myst6re, Nax, OatBran**
+* **quantumpencial, Sebanisu, sithlord48,**
+* **TrueOdin**
+
+## Language Translations/Proofreading
+* **DBZFan102/Andre1070, Dragoon_2004, Franckie,**
+* **Kaldarasha, Khrone, Leonhart, LittleTale/youffie,**
+* **OatBran, Rukenu, Satsuki**
+
+## Trailer and Tutorial Videos
+* **Creation - Tsunamix**
+* **Trailer Voice - James Garris**
+
+## UltraSound Plugin
+* **ficedula, Martin Barker**
+
+## Additional Acknowledgments
+* Thanks to Jusete for the installer/web artwork!
+* Thank you to the entire Qhimm and Tsunamods communities for their contributions and participation, whether it be donations, offering support to each other, creating mods/software, feedback, using mods, exchanging ideas, or testing mods/software.
