@@ -951,7 +951,7 @@
 
     <!--ConfigureGLWindow.xaml.cs Strings-->
     <system:String x:Key="Graphics">Γραφικά</system:String>
-    <system:String x:Key="GameTweaks">Τροποποίηση παιχνιδιού</system:String>
+    <system:String x:Key="Cheats">Απατώ</system:String>
     <system:String x:Key="Rendering">Απόδοση</system:String>
     <system:String x:Key="Advanced">Για προχωρημένους</system:String>
 

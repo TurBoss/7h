@@ -170,28 +170,39 @@
   <Setting xsi:type="Checkbox">
     <Group>Grafica</Group>
     <Name>V-Sync</Name>
-    <Description>Sincronizza il framerate del gioco con la frequenza d'aggiornamento dello schermo. Potrebbe influire negativamente sulle performance di gioco o rendere le mod che fanno uso di 60 fps inutilizzabili. Attivare solo se si percepisce dello screen tearing.</Description>
+    <Description>Sincronizza il framerate del gioco con la frequenza d'aggiornamento dello schermo. Potrebbe influire negativamente sulle performance di gioco o rendere le mod che fanno uso di 60 fps inutilizzabili. Attivare solo se si percepisce dello screen tearing. *Limita la Velocità del Trucco!*</Description>
     <DefaultValue>enable_vsync = no</DefaultValue>
     <TrueSetting>enable_vsync = yes</TrueSetting>
     <FalseSetting>enable_vsync = no</FalseSetting>
   </Setting>
 
-  <!-- GAMETWEAKS TAB -->
+  <!-- CHEATS TAB -->
   <Setting xsi:type="DropDown">
-    <Group>Tweaks di Gioco</Group>
-    <Name>Ripristino Rapido</Name>
-    <Description>Ripristina rapidamente il gioco con un gioco finito.{0}Utilizzare: CTRL+R o L1+L2+R1+R2+Sel+Start (XInput Solo)</Description>
+    <Group>Barare</Group>
+    <Name>Battaglie Casuali</Name>
+    <Description>Non configurabile. Attiva/disattiva incontri di battaglia casuali durante il gioco.{0}Utilizzo: CTRL+B o L3+R3</Description>
     <DefaultValue></DefaultValue>
     <Option>
-      <Text>Vedi la descrizione.</Text>
+      <Text>Vedi la descrizione</Text>
+      <Settings></Settings>
+    </Option>
+  </Setting>
+  
+  <Setting xsi:type="DropDown">
+    <Group>Barare</Group>
+    <Name>Ripristino Rapido</Name>
+    <Description>Ripristina rapidamente il gioco con un gioco finito.{0}Utilizzo: CTRL+R o L1+L2+R1+R2+Seleziona+Inizio</Description>
+    <DefaultValue></DefaultValue>
+    <Option>
+      <Text>Vedi la descrizione</Text>
       <Settings></Settings>
     </Option>
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Tweaks di Gioco</Group>
+    <Group>Barare</Group>
     <Name>Velocità di Incremento</Name>
-    <Description>Importo per aumentare o diminuire la velocità su ogni evento.{0}Utilizzare: CTRL+Up/Down o L2+R2+DPAD Up/Down (XInput Solo)</Description>
+    <Description>Importo per aumentare o diminuire la velocità su ogni evento.{0}Utilizzo: CTRL+Su/Giù o L2+R2+Su/Giù</Description>
     <DefaultValue>speedhack_step = 1.0</DefaultValue>
     <Option>
       <Text>0.5</Text>
@@ -208,7 +219,7 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Tweaks di Gioco</Group>
+    <Group>Barare</Group>
     <Name>Velocità Massima</Name>
     <Description>La velocità massima da impostare prima di tornare alla velocità normale.</Description>
     <DefaultValue>speedhack_max = 7.0</DefaultValue>

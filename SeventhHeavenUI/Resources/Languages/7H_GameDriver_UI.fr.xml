@@ -170,28 +170,39 @@
   <Setting xsi:type="Checkbox">
     <Group>Graphismes</Group>
     <Name>Synchronisation Verticale</Name>
-    <Description>Synchronisez la fréquence d'images du jeu avec le taux de rafraîchissement de l'écran. Cela peut avoir un impact négatif sur les performances ou casser les mods 60 fps. Activez cette option si vous constatez un déchirement de l'écran.</Description>
+    <Description>Synchronisez la fréquence d'images du jeu avec le taux de rafraîchissement de l'écran. Cela peut avoir un impact négatif sur les performances ou casser les mods 60 fps. Activez cette option si vous constatez un déchirement de l'écran. *Limite la Vitesse de Triche!*</Description>
     <DefaultValue>enable_vsync = no</DefaultValue>
     <TrueSetting>enable_vsync = yes</TrueSetting>
     <FalseSetting>enable_vsync = no</FalseSetting>
   </Setting>
 
-  <!-- GAMETWEAKS TAB -->
+  <!-- CHEATS TAB -->
   <Setting xsi:type="DropDown">
-    <Group>Tweaks de Jeu</Group>
-    <Name>Réinitialisation Rapide</Name>
-    <Description>Réinitialisez rapidement le jeu avec une partie terminée.{0}Utiliser: CTRL+R ou L1+L2+R1+R2+Sel+Start (XInput Seulement)</Description>
+    <Group>Triche de Jeu</Group>
+    <Name>Batailles Aléatoires</Name>
+    <Description>Non configurable. Activez/désactivez les combats aléatoires pendant le jeu.{0}Utilisation: CTRL+B ou L3+R3</Description>
     <DefaultValue></DefaultValue>
     <Option>
-      <Text>Voir Description.</Text>
+      <Text>Voir Description</Text>
+      <Settings></Settings>
+    </Option>
+  </Setting>
+  
+  <Setting xsi:type="DropDown">
+    <Group>Triche de Jeu</Group>
+    <Name>Réinitialisation Rapide</Name>
+    <Description>Réinitialisez rapidement le jeu avec une partie terminée.{0}Utilisation: CTRL+R ou L1+L2+R1+R2+Sélectionner+Démarrer</Description>
+    <DefaultValue></DefaultValue>
+    <Option>
+      <Text>Voir Description</Text>
       <Settings></Settings>
     </Option>
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Tweaks de Jeu</Group>
+    <Group>Triche de Jeu</Group>
     <Name>Incrément de Vitesse</Name>
-    <Description>Montant pour augmenter ou diminuer la vitesse à chaque événement.{0}Utiliser: CTRL+Up/Down ou L2+R2+DPAD Up/Down (XInput Seulement)</Description>
+    <Description>Montant pour augmenter ou diminuer la vitesse à chaque événement.{0}Utilisation: CTRL+Haut/Bas ou L2+R2+Haut/Bas</Description>
     <DefaultValue>speedhack_step = 1.0</DefaultValue>
     <Option>
       <Text>0.5</Text>
@@ -208,7 +219,7 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Tweaks de Jeu</Group>
+    <Group>Triche de Jeu</Group>
     <Name>Vitesse Maximum</Name>
     <Description>La vitesse maximale à régler avant de revenir à la vitesse normale.</Description>
     <DefaultValue>speedhack_max = 7.0</DefaultValue>

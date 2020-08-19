@@ -124,7 +124,7 @@
 
   <Setting xsi:type="DropDown">
     <Group>Γραφικά</Group>
-    <Name>Antialiasing</Name>
+    <Name>Αντιαλίνωση</Name>
     <Description>Εφαρμόζει φιλτράρισμα 2x/4x/8x/16x MSAA. Μειώνει τα ακανόνιστα άκρα και βελτιώνει την ποιότητα της εικόνας. Μπορεί να επηρεάσει σοβαρά την απόδοση.</Description>
     <DefaultValue>enable_antialiasing = 0</DefaultValue>
     <Option>
@@ -170,28 +170,39 @@
   <Setting xsi:type="Checkbox">
     <Group>Γραφικά</Group>
     <Name>Κατακόρυφος συγχρονισμός</Name>
-    <Description>Συγχρονίζει το ρυθμό των καρέ του παιχνιδιού με το ρυθμό ανανέωσης της οθόνης. Μπορεί να επηρεάσει αρνητικά την απόδοση ή να σπάσει τα mods 60 fps. Ενεργοποιήστε εάν αντιμετωπίζετε σχίσιμο στην οθόνη.</Description>
+    <Description>Συγχρονίζει το ρυθμό καρέ του παιχνιδιού με το ρυθμό ανανέωσης της οθόνης. Μπορεί να μειώσει την απόδοση ή να σπάσει τις λειτουργίες 60 fps. Ενεργοποιήστε εάν έχετε δάκρυ στην οθόνη. *Όρια ταχύτητας εξαπάτησης!*</Description>
     <DefaultValue>enable_vsync = no</DefaultValue>
     <TrueSetting>enable_vsync = yes</TrueSetting>
     <FalseSetting>enable_vsync = no</FalseSetting>
   </Setting>
 
-  <!-- GAMETWEAKS TAB -->
+  <!-- CHEATS TAB -->
   <Setting xsi:type="DropDown">
-    <Group>Τροποποίηση παιχνιδιού</Group>
-    <Name>Γρήγορη επαναφορά</Name>
-    <Description>Επαναφέρετε γρήγορα το παιχνίδι με ένα παιχνίδι τελείωσε.{0}Χρήση: CTRL+R ή L1+L2+R1+R2+Sel+Start (XInput Μόνο)</Description>
+    <Group>Απατώ</Group>
+    <Name>Τυχαίες μάχες</Name>
+    <Description>Μη διαμορφώσιμο. Ενεργοποιήστε / απενεργοποιήστε τυχαίες συναντήσεις μάχης ενώ παίζετε το παιχνίδι.{0}Χρήση: CTRL+B ή L3+R3</Description>
     <DefaultValue></DefaultValue>
     <Option>
-      <Text>Δείτε την περιγραφή.</Text>
+      <Text>Δείτε την περιγραφή</Text>
+      <Settings></Settings>
+    </Option>
+  </Setting>
+  
+  <Setting xsi:type="DropDown">
+    <Group>Απατώ</Group>
+    <Name>Γρήγορη επαναφορά</Name>
+    <Description>Επαναφέρετε γρήγορα το παιχνίδι με ένα παιχνίδι τελείωσε.{0}Χρήση: CTRL+R ή L1+L2+R1+R2+Επιλέξτε+Έναρξη</Description>
+    <DefaultValue></DefaultValue>
+    <Option>
+      <Text>Δείτε την περιγραφή</Text>
       <Settings></Settings>
     </Option>
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Τροποποίηση παιχνιδιού</Group>
+    <Group>Απατώ</Group>
     <Name>Αύξηση ταχύτητας</Name>
-    <Description>Ποσό για αύξηση ή μείωση της ταχύτητας σε κάθε συμβάν.{0}Χρήση: CTRL+Up/Down ή L2+R2+DPAD Up/Down (XInput Μόνο)</Description>
+    <Description>Ποσό για αύξηση ή μείωση της ταχύτητας σε κάθε συμβάν.{0}Χρήση: CTRL+Πάνω/Κάτω ή L2+R2+Πάνω/Κάτω</Description>
     <DefaultValue>speedhack_step = 1.0</DefaultValue>
     <Option>
       <Text>0.5</Text>
@@ -208,7 +219,7 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Τροποποίηση παιχνιδιού</Group>
+    <Group>Απατώ</Group>
     <Name>Μέγιστη ταχύτητα</Name>
     <Description>Η μέγιστη ταχύτητα που πρέπει να ορίσετε πριν επιστρέψετε στην κανονική ταχύτητα.</Description>
     <DefaultValue>speedhack_max = 7.0</DefaultValue>

@@ -170,28 +170,40 @@
   <Setting xsi:type="Checkbox">
     <Group>Grafik</Group>
     <Name>Vertikale Syncronisierung</Name>
-    <Description>Bildwiederholungsrate mit dem Monitor syncronisieren. Kann negative auswirkungen auf die Leistung haben. Ausschalten, fals Bildstörungen auftreten.</Description>
+    <Description>Bildwiederholungsrate mit dem Monitor syncronisieren. Kann negative auswirkungen auf die Leistung haben. Ausschalten, fals Bildstörungen auftreten. *Grenzen Geschwindigkeit Betrügen!*</Description>
     <DefaultValue>enable_vsync = no</DefaultValue>
     <TrueSetting>enable_vsync = yes</TrueSetting>
     <FalseSetting>enable_vsync = no</FalseSetting>
   </Setting>
 
-  <!-- GAMETWEAKS TAB -->
+  <!-- CHEATS TAB -->
   <Setting xsi:type="DropDown">
-    <Group>Spielverbesserung</Group>
-    <Name>Schnell Zurücksetzen</Name>
-    <Description>Setzen Sie das Spiel schnell zurück, wenn das Spiel beendet ist.{0}Verwendung: CTRL+R oder L1+L2+R1+R2+Sel+Start (XInput Nur)</Description>
+    <Group>Betrügt</Group>
+    <Name>Zufällige Schlachten</Name>
+    <Description>Nicht konfigurierbar. Schalten Sie zufällige Kampfbegegnungen während des Spiels ein/aus.{0}Verwendung: STRG+B oder L3+R3</Description>
     <DefaultValue></DefaultValue>
     <Option>
-      <Text>Siehe Beschreibung.</Text>
+      <Text>Siehe Beschreibung</Text>
+      <Settings></Settings>
+    </Option>
+  </Setting>
+  
+  <Setting xsi:type="DropDown">
+    <Group>Betrügt</Group>
+    <Name>Schnell Zurücksetzen</Name>
+    <Description>
+      Setzen Sie das Spiel schnell zurück, wenn das Spiel beendet ist.{0}Verwendung: STRG+R oder L1+L2+R1+R2+Wählen Sie+Anfang</Description>
+    <DefaultValue></DefaultValue>
+    <Option>
+      <Text>Siehe Beschreibung</Text>
       <Settings></Settings>
     </Option>
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Spielverbesserung</Group>
+    <Group>Betrügt</Group>
     <Name>Geschwindigkeitssteigerung</Name>
-    <Description>Betrag, um die Geschwindigkeit bei jedem Ereignis zu erhöhen oder zu verringern.{0}Verwendung: CTRL+Up/Down oder L2+R2+DPAD Up/Down (XInput Nur)</Description>
+    <Description>Betrag, um die Geschwindigkeit bei jedem Ereignis zu erhöhen oder zu verringern.{0}Verwendung: STRG+Auf/Ab oder L2+R2+Auf/Ab</Description>
     <DefaultValue>speedhack_step = 1.0</DefaultValue>
     <Option>
       <Text>0.5</Text>
@@ -208,7 +220,7 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Spielverbesserung</Group>
+    <Group>Betrügt</Group>
     <Name>Maximale Geschwindigkeit</Name>
     <Description>Die maximale Geschwindigkeit, die eingestellt werden muss, bevor zur normalen Geschwindigkeit zurückgekehrt wird.</Description>
     <DefaultValue>speedhack_max = 7.0</DefaultValue>

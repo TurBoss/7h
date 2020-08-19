@@ -962,7 +962,7 @@ Aktivieren und erneut versuchen?</system:String>
 
     <!--ConfigureGLWindow.xaml.cs Strings-->
     <system:String x:Key="Graphics">Grafik</system:String>
-    <system:String x:Key="GameTweaks">Spielverbesserung</system:String>
+    <system:String x:Key="Cheats">Betrügt</system:String>
     <system:String x:Key="Rendering">Renderer</system:String>
     <system:String x:Key="Advanced">Erweitert</system:String>
 

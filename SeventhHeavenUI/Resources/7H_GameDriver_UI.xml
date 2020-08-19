@@ -170,28 +170,39 @@
   <Setting xsi:type="Checkbox">
     <Group>Graphics</Group>
     <Name>Vertical Sync</Name>
-    <Description>Sync the frame rate of the game with the monitor refresh rate. May negatively impact performance or break 60 fps mods. Turn on if you experience screen tearing.</Description>
+    <Description>Sync the frame rate of the game with the monitor refresh rate. May negatively impact performance or break 60 fps mods. Turn on if you experience screen tearing. *Limits Speed Hack!*</Description>
     <DefaultValue>enable_vsync = no</DefaultValue>
     <TrueSetting>enable_vsync = yes</TrueSetting>
     <FalseSetting>enable_vsync = no</FalseSetting>
   </Setting>
 
-  <!-- GAMETWEAKS TAB -->
+  <!-- CHEATS TAB -->
   <Setting xsi:type="DropDown">
-    <Group>Game Tweaks</Group>
-    <Name>Soft Reset</Name>
-    <Description>Not configurable. Quickly reset the game with a game over.{0}Usage: CTRL+R or L1+L2+R1+R2+Sel+Start (XInput Only)</Description>
+    <Group>Cheats</Group>
+    <Name>Random Battles</Name>
+    <Description>Not configurable. Toggle on/off random battle encounters while playing the game.{0}Usage: CTRL+B or L3+R3</Description>
     <DefaultValue></DefaultValue>
     <Option>
-      <Text>See Description.</Text>
+      <Text>See Description</Text>
+      <Settings></Settings>
+    </Option>
+  </Setting>
+  
+  <Setting xsi:type="DropDown">
+    <Group>Cheats</Group>
+    <Name>Soft Reset</Name>
+    <Description>Not configurable. Quickly reset the game with a game over.{0}Usage: CTRL+R or L1+L2+R1+R2+Select+Start</Description>
+    <DefaultValue></DefaultValue>
+    <Option>
+      <Text>See Description</Text>
       <Settings></Settings>
     </Option>
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Game Tweaks</Group>
+    <Group>Cheats</Group>
     <Name>Speed Hack Stepping</Name>
-    <Description>Amount to increase or decrease speed on each trigger.{0}Usage: CTRL+Up/Down or L2+R2+DPAD Up/Down (XInput Only)</Description>
+    <Description>Amount to increase or decrease speed on each trigger.{0}Usage: CTRL+Up/Down or L2+R2+Up/Down</Description>
     <DefaultValue>speedhack_step = 1.0</DefaultValue>
     <Option>
       <Text>0.5</Text>
@@ -208,7 +219,7 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Game Tweaks</Group>
+    <Group>Cheats</Group>
     <Name>Speed Hack Max</Name>
     <Description>The maximum speed to set before cycling back to normal speed.</Description>
     <DefaultValue>speedhack_max = 7.0</DefaultValue>

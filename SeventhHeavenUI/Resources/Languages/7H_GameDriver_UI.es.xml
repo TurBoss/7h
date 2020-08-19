@@ -170,28 +170,39 @@
   <Setting xsi:type="Checkbox">
     <Group>Gráficos</Group>
     <Name>Sincronización Vertical</Name>
-    <Description>Sincroniza la velocidad de fotogramas del juego con la tasa de refresco de tu monitor. Puede tener un efecto negativo en el rendimiento o romper Mods de 60 Fps. Activa esta opción si experimentas cortes en la pantalla.</Description>
+    <Description>Sincroniza la velocidad de fotogramas del juego con la tasa de refresco de tu monitor. Puede reducir el rendimiento o romper Mods de 60 Fps. Activa esta opción si experimentas cortes en la pantalla. *¡Limita el Truco de Velocidad!*</Description>
     <DefaultValue>enable_vsync = no</DefaultValue>
     <TrueSetting>enable_vsync = yes</TrueSetting>
     <FalseSetting>enable_vsync = no</FalseSetting>
   </Setting>
 
-  <!-- GAMETWEAKS TAB -->
+  <!-- CHEATS TAB -->
   <Setting xsi:type="DropDown">
-    <Group>Ajustes del Juego</Group>
-    <Name>Reinicio Suave</Name>
-    <Description>Reinicia rápidamente el juego con un juego terminado.{0}Uso: CTRL+R o L1+L2+R1+R2+Sel+Start (XInput Solamente)</Description>
+    <Group>Truco del Juego</Group>
+    <Name>Batallas Aleatorias</Name>
+    <Description>No configurable. Activa o desactiva los encuentros de batalla aleatorios mientras juegas.{0}Uso: CTRL+B o L3+R3</Description>
     <DefaultValue></DefaultValue>
     <Option>
-      <Text>Ver la Descripción.</Text>
+      <Text>Ver la Descripción</Text>
+      <Settings></Settings>
+    </Option>
+  </Setting>
+  
+  <Setting xsi:type="DropDown">
+    <Group>Truco del Juego</Group>
+    <Name>Reinicio Suave</Name>
+    <Description>Reinicia rápidamente el juego con un juego terminado.{0}Uso: CTRL+R o L1+L2+R1+R2+Seleccionar+Iniciar</Description>
+    <DefaultValue></DefaultValue>
+    <Option>
+      <Text>Ver la Descripción</Text>
       <Settings></Settings>
     </Option>
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Ajustes del Juego</Group>
+    <Group>Truco del Juego</Group>
     <Name>Incremento de Velocidad</Name>
-    <Description>Cantidad para aumentar o disminuir la velocidad en cada evento.{0}Uso: CTRL+Up/Down o L2+R2+DPAD Up/Down (XInput Solamente)</Description>
+    <Description>Cantidad para aumentar o disminuir la velocidad en cada evento.{0}Uso: CTRL+Arriba/Abajo o L2+R2+Arriba/Abajo</Description>
     <DefaultValue>speedhack_step = 1.0</DefaultValue>
     <Option>
       <Text>0.5</Text>
@@ -208,7 +219,7 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Ajustes del Juego</Group>
+    <Group>Truco del Juego</Group>
     <Name>Velocidad Máxima</Name>
     <Description>La velocidad máxima que se debe establecer antes de volver a la velocidad normal.</Description>
     <DefaultValue>speedhack_max = 7.0</DefaultValue>

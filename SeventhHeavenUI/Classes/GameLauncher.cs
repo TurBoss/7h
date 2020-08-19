@@ -514,25 +514,30 @@ namespace SeventhHeaven.Classes
             //
             // Initialize the controller input interceptor
             //
-
-            if (Sys.Settings.GameLaunchSettings.EnableGamepadPolling)
+            try
             {
-                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.BeginningToPollForGamePadInput));
-
-                if (Instance._controllerInterceptor == null)
+                if (Sys.Settings.GameLaunchSettings.EnableGamepadPolling)
                 {
-                    Instance._controllerInterceptor = new ControllerInterceptor();
-                }
+                    Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.BeginningToPollForGamePadInput));
 
-                Instance._controllerInterceptor.PollForGamepadInput().ContinueWith((result) =>
-                {
-                    if (result.IsFaulted)
+                    if (Instance._controllerInterceptor == null)
                     {
-                        Logger.Error(result.Exception);
+                        Instance._controllerInterceptor = new ControllerInterceptor();
                     }
-                });
-            }
 
+                    Instance._controllerInterceptor.PollForGamepadInput().ContinueWith((result) =>
+                    {
+                        if (result.IsFaulted)
+                        {
+                            Logger.Error(result.Exception);
+                        }
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.ReceivedUnknownError)}: {e.Message} ...", NLog.LogLevel.Warn);
+            }
 
             // start FF7 proc as normal and return true when running the game as vanilla
             if (runAsVanilla)
