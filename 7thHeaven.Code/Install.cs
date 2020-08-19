@@ -369,9 +369,9 @@ namespace Iros._7th.Workshop
                                 if (!String.IsNullOrEmpty(ExtractInto)) extractTo = Path.Combine(extractTo, ExtractInto);
                                 Directory.CreateDirectory(extractTo);
 
+                                using (var reader = archive.ExtractAllEntries())
                                 {
                                     var entries = archive.Entries.ToArray();
-                                    var reader = archive.ExtractAllEntries();
                                     int count = 0;
                                     while (reader.MoveToNextEntry())
                                     {
