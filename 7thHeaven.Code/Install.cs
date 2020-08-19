@@ -5,6 +5,8 @@
 
 using _7thHeaven.Code;
 using SharpCompress.Archives;
+using SharpCompress.Common;
+using SharpCompress.Readers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -363,29 +365,24 @@ namespace Iros._7th.Workshop
                             {
                                 //extract entire archive...
                                 if (_dest.EndsWith(".iro", StringComparison.InvariantCultureIgnoreCase)) _dest = _dest.Substring(0, _dest.Length - 4);
-                                var entries = archive.Entries.ToArray();
                                 string extractTo = _dest;
                                 if (!String.IsNullOrEmpty(ExtractInto)) extractTo = Path.Combine(extractTo, ExtractInto);
                                 Directory.CreateDirectory(extractTo);
-                                using (var reader = archive.ExtractAllEntries())
+
                                 {
+                                    var entries = archive.Entries.ToArray();
+                                    var reader = archive.ExtractAllEntries();
                                     int count = 0;
                                     while (reader.MoveToNextEntry())
                                     {
                                         if (!reader.Entry.IsDirectory)
                                         {
-                                            string filepath = reader.Entry.Key.Replace('/', '\\');
-                                            if (String.IsNullOrEmpty(ExtractSubFolder) || filepath.StartsWith(ExtractSubFolder, StringComparison.InvariantCultureIgnoreCase))
-                                            {
-                                                string path = Path.Combine(extractTo, filepath.Substring(ExtractSubFolder.Length).TrimStart('\\', '/'));
-                                                Directory.CreateDirectory(Path.GetDirectoryName(path));
-                                                using (var fOut = new FileStream(path, FileMode.Create))
-                                                    reader.WriteEntryTo(fOut);
-                                            }
-                                            count++;
-                                            float prog = (float)count / (float)entries.Length;
-                                            SetPercentComplete?.Invoke((int)(50 * prog) + 50); // start at 50% go up to 100%
+                                            reader.WriteEntryToDirectory(extractTo, new ExtractionOptions() { ExtractFullPath = true, Overwrite = true });
                                         }
+
+                                        count++;
+                                        float prog = (float)count / (float)entries.Length;
+                                        SetPercentComplete?.Invoke((int)(50 * prog) + 50); // start at 50% go up to 100%
                                     }
                                 }
                             }
