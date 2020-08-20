@@ -187,11 +187,22 @@
       <Settings></Settings>
     </Option>
   </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>Triche de Jeu</Group>
+    <Name>Avancer les Films Passés</Name>
+    <Description>Non configurable. Passe immédiatement à la fin d'un film.{0}Utilisation: CTRL+S ou Sélectionner+Démarrer</Description>
+    <DefaultValue></DefaultValue>
+    <Option>
+      <Text>Voir Description</Text>
+      <Settings></Settings>
+    </Option>
+  </Setting>
   
   <Setting xsi:type="DropDown">
     <Group>Triche de Jeu</Group>
     <Name>Réinitialisation Rapide</Name>
-    <Description>Réinitialisez rapidement le jeu avec une partie terminée.{0}Utilisation: CTRL+R ou L1+L2+R1+R2+Sélectionner+Démarrer</Description>
+    <Description>Non configurable. Réinitialisez rapidement le jeu avec une partie terminée.{0}Utilisation: CTRL+R ou L1+L2+R1+R2+Sélectionner+Démarrer</Description>
     <DefaultValue></DefaultValue>
     <Option>
       <Text>Voir Description</Text>
@@ -202,7 +213,7 @@
   <Setting xsi:type="DropDown">
     <Group>Triche de Jeu</Group>
     <Name>Incrément de Vitesse</Name>
-    <Description>Montant pour augmenter ou diminuer la vitesse à chaque événement.{0}Utilisation: CTRL+Haut/Bas ou L2+R2+Haut/Bas</Description>
+    <Description>Montant pour augmenter ou diminuer la vitesse à chaque événement.{0}Utilisation: CTRL+Haut/Bas ou L2+R2+Haut/Bas pour changer la vitesse, CTRL+Gauche/Droite ou L2+R2+Gauche/Droite pour activer/désactiver.</Description>
     <DefaultValue>speedhack_step = 1.0</DefaultValue>
     <Option>
       <Text>0.5</Text>

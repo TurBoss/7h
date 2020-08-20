@@ -187,11 +187,22 @@
       <Settings></Settings>
     </Option>
   </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>Truco del Juego</Group>
+    <Name>Saltar Películas</Name>
+    <Description>No configurable. Salta inmediatamente al final de una película.{0}Uso: CTRL+S o Seleccionar+Iniciar</Description>
+    <DefaultValue></DefaultValue>
+    <Option>
+      <Text>Ver la Descripción</Text>
+      <Settings></Settings>
+    </Option>
+  </Setting>
   
   <Setting xsi:type="DropDown">
     <Group>Truco del Juego</Group>
     <Name>Reinicio Suave</Name>
-    <Description>Reinicia rápidamente el juego con un juego terminado.{0}Uso: CTRL+R o L1+L2+R1+R2+Seleccionar+Iniciar</Description>
+    <Description>No configurable. Reinicia rápidamente el juego con un juego terminado.{0}Uso: CTRL+R o L1+L2+R1+R2+Seleccionar+Iniciar</Description>
     <DefaultValue></DefaultValue>
     <Option>
       <Text>Ver la Descripción</Text>
@@ -202,7 +213,7 @@
   <Setting xsi:type="DropDown">
     <Group>Truco del Juego</Group>
     <Name>Incremento de Velocidad</Name>
-    <Description>Cantidad para aumentar o disminuir la velocidad en cada evento.{0}Uso: CTRL+Arriba/Abajo o L2+R2+Arriba/Abajo</Description>
+    <Description>Cantidad para aumentar o disminuir la velocidad en cada evento.{0}Uso: CTRL+Arriba/Abajo o L2+R2+Arriba/Abajo para cambiar la velocidad, CTRL+Izquierda/Derecha o L2+R2+Izquierda/Derecha para encender/apagar.</Description>
     <DefaultValue>speedhack_step = 1.0</DefaultValue>
     <Option>
       <Text>0.5</Text>

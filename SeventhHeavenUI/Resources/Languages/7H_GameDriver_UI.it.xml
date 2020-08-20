@@ -187,11 +187,22 @@
       <Settings></Settings>
     </Option>
   </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>Barare</Group>
+    <Name>Salta i Film</Name>
+    <Description>Non configurabile. Salta immediatamente alla fine di un film.{0}Utilizzo: CTRL+S o Seleziona+Inizio</Description>
+    <DefaultValue></DefaultValue>
+    <Option>
+      <Text>Vedi la descrizione</Text>
+      <Settings></Settings>
+    </Option>
+  </Setting>
   
   <Setting xsi:type="DropDown">
     <Group>Barare</Group>
     <Name>Ripristino Rapido</Name>
-    <Description>Ripristina rapidamente il gioco con un gioco finito.{0}Utilizzo: CTRL+R o L1+L2+R1+R2+Seleziona+Inizio</Description>
+    <Description>Non configurabile. Ripristina rapidamente il gioco con un gioco finito.{0}Utilizzo: CTRL+R o L1+L2+R1+R2+Seleziona+Inizio</Description>
     <DefaultValue></DefaultValue>
     <Option>
       <Text>Vedi la descrizione</Text>
@@ -202,7 +213,7 @@
   <Setting xsi:type="DropDown">
     <Group>Barare</Group>
     <Name>Velocità di Incremento</Name>
-    <Description>Importo per aumentare o diminuire la velocità su ogni evento.{0}Utilizzo: CTRL+Su/Giù o L2+R2+Su/Giù</Description>
+    <Description>Importo per aumentare o diminuire la velocità su ogni evento.{0}Utilizzo: CTRL+Su/Giù o L2+R2+Su/Giù per cambiare velocità, CTRL+Sinistra/Destra o L2+R2+Sinistra/Destra per accendere/spegnere.</Description>
     <DefaultValue>speedhack_step = 1.0</DefaultValue>
     <Option>
       <Text>0.5</Text>

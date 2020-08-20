@@ -1746,8 +1746,18 @@ namespace SeventhHeavenUI.ViewModels
         internal void ShowGameDriverConfigWindow()
         {
             string driverCfg = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "FFNx.cfg");
-            string appLanguage = App.GetAppLanguage();
+            string appLanguage = System.Configuration.ConfigurationManager.AppSettings["DefaultAppLanguage"];
             string uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "7H_GameDriver_UI.xml"); // default to using english version
+
+            if (string.IsNullOrWhiteSpace(appLanguage))
+            {
+                appLanguage = System.Threading.Thread.CurrentThread.CurrentCulture.ToString();
+            }
+
+            if (appLanguage.Length > 2 && appLanguage != "pt-BR")
+            {
+                appLanguage = appLanguage.Substring(0, 2);
+            }
 
             if (appLanguage == "pt-BR")
             {

@@ -187,12 +187,22 @@
       <Settings></Settings>
     </Option>
   </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>Betrügt</Group>
+    <Name>Filme Uberspringen</Name>
+    <Description>Nicht konfigurierbar. Springt sofort zum Ende eines Films.{0}Verwendung: STRG+S oder Wählen Sie+Anfang</Description>
+    <DefaultValue></DefaultValue>
+    <Option>
+      <Text>Siehe Beschreibung</Text>
+      <Settings></Settings>
+    </Option>
+  </Setting>
   
   <Setting xsi:type="DropDown">
     <Group>Betrügt</Group>
     <Name>Schnell Zurücksetzen</Name>
-    <Description>
-      Setzen Sie das Spiel schnell zurück, wenn das Spiel beendet ist.{0}Verwendung: STRG+R oder L1+L2+R1+R2+Wählen Sie+Anfang</Description>
+    <Description>Nicht konfigurierbar. Setzen Sie das Spiel schnell zurück, wenn das Spiel beendet ist.{0}Verwendung: STRG+R oder L1+L2+R1+R2+Wählen Sie+Anfang</Description>
     <DefaultValue></DefaultValue>
     <Option>
       <Text>Siehe Beschreibung</Text>
@@ -203,7 +213,7 @@
   <Setting xsi:type="DropDown">
     <Group>Betrügt</Group>
     <Name>Geschwindigkeitssteigerung</Name>
-    <Description>Betrag, um die Geschwindigkeit bei jedem Ereignis zu erhöhen oder zu verringern.{0}Verwendung: STRG+Auf/Ab oder L2+R2+Auf/Ab</Description>
+    <Description>Betrag, um die Geschwindigkeit bei jedem Ereignis zu erhöhen oder zu verringern. Verwendung: STRG+Auf/Ab oder L2+R2+Auf/Ab zum Ändern der Geschwindigkeit STRG+Links/Rechts oder L2+R2+Links/Rechts zum Ein- und Ausschalten.</Description>
     <DefaultValue>speedhack_step = 1.0</DefaultValue>
     <Option>
       <Text>0.5</Text>

@@ -180,7 +180,18 @@
   <Setting xsi:type="DropDown">
     <Group>Trapaça</Group>
     <Name>Batalhas Aleatórias</Name>
-    <Description>Não configurável. Ative/desative os encontros de batalha aleatórios durante o jogo.{0}Uso: CTRL+B ou L3+R3</Description>
+    <Description>Não configurável. Ative/desative os encontros de batalha aleatórios durante ou jogo.{0}Uso: CTRL+B ou L3+R3</Description>
+    <DefaultValue></DefaultValue>
+    <Option>
+      <Text>Veja a Descrição</Text>
+      <Settings></Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>Trapaça</Group>
+    <Name>Pular Filmes</Name>
+    <Description>Não configurável. Pula imediatamente para o final de um filme.{0}Uso: CTRL+S ou Selecionar+Iniciar</Description>
     <DefaultValue></DefaultValue>
     <Option>
       <Text>Veja a Descrição</Text>
@@ -191,7 +202,7 @@
   <Setting xsi:type="DropDown">
     <Group>Trapaça</Group>
     <Name>Reinicialização Suave</Name>
-    <Description>Reinicie o jogo rapidamente com o fim do jogo.{0}Uso: CTRL+R ou L1+L2+R1+R2+Selecionar+Iniciar</Description>
+    <Description>Não configurável. Reinicie o jogo rapidamente com o fim do jogo.{0}Uso: CTRL+R ou L1+L2+R1+R2+Selecionar+Iniciar</Description>
     <DefaultValue></DefaultValue>
     <Option>
       <Text>Veja a Descrição</Text>
@@ -202,7 +213,7 @@
   <Setting xsi:type="DropDown">
     <Group>Trapaça</Group>
     <Name>Incremento de Velocidade</Name>
-    <Description>Quantidade para aumentar ou diminuir a velocidade em cada gatilho.{0}Uso: CTRL+Cima/Baixo ou L2+R2+Cima/Baixo.</Description>
+    <Description>Quantidade para aumentar ou diminuir a velocidade em cada gatilho.{0}Uso: CTRL+Cima/Baixo ou L2+R2+Cima/Baixo para alterar a velocidade, CTRL+Esquerda/Direita ou L2+R2+Esquerda/Direita para ligar/desligar.</Description>
     <DefaultValue>speedhack_step = 1.0</DefaultValue>
     <Option>
       <Text>0.5</Text>

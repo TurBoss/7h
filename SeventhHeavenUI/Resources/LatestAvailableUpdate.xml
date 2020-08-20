@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <AvailableUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Version>2.2.3.518</Version>
+  <Version>2.2.3.521</Version>
   <ReleaseDate>08/21/2020</ReleaseDate>
   <ReleaseNotes>
     - Game is now made Large Address and DEP Aware
@@ -16,7 +16,7 @@
     -- Antialiasing, vertical centered fields
     -- Audio and game stability fixes/enhancements
     -- Game still plays on lost focus
-    -- Built-in battle toggle, speed hack, soft reset
+    -- Battle toggle, movie skip, speed hack, soft reset
   </ReleaseNotes>
   <ReleaseDownloadLink>http://forums.qhimm.com/index.php?topic=19533.0</ReleaseDownloadLink>
 

@@ -10,7 +10,7 @@
         Title="{DynamicResource GameDriverWindowTitle}" 
         Closed="Window_Closed"
         ResizeMode="NoResize"
-        Height="450" Width="475">
+        Height="460" Width="475">
     <Window.Resources>
 
         <DataTemplate x:Key="selectedOptionTemplate">

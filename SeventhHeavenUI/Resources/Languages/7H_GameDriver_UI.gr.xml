@@ -187,11 +187,22 @@
       <Settings></Settings>
     </Option>
   </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>Απατώ</Group>
+    <Name>Παράλειψη ταινιών</Name>
+    <Description>Μη διαμορφώσιμο. Μετάβαση στο τέλος μιας ταινίας.{0}Χρήση: CTRL+S ή Επιλέξτε+Έναρξη</Description>
+    <DefaultValue></DefaultValue>
+    <Option>
+      <Text>Δείτε την περιγραφή</Text>
+      <Settings></Settings>
+    </Option>
+  </Setting>
   
   <Setting xsi:type="DropDown">
     <Group>Απατώ</Group>
     <Name>Γρήγορη επαναφορά</Name>
-    <Description>Επαναφέρετε γρήγορα το παιχνίδι με ένα παιχνίδι τελείωσε.{0}Χρήση: CTRL+R ή L1+L2+R1+R2+Επιλέξτε+Έναρξη</Description>
+    <Description>Μη διαμορφώσιμο. Επαναφέρετε γρήγορα το παιχνίδι με ένα παιχνίδι τελείωσε.{0}Χρήση: CTRL+R ή L1+L2+R1+R2+Επιλέξτε+Έναρξη</Description>
     <DefaultValue></DefaultValue>
     <Option>
       <Text>Δείτε την περιγραφή</Text>
@@ -202,7 +213,7 @@
   <Setting xsi:type="DropDown">
     <Group>Απατώ</Group>
     <Name>Αύξηση ταχύτητας</Name>
-    <Description>Ποσό για αύξηση ή μείωση της ταχύτητας σε κάθε συμβάν.{0}Χρήση: CTRL+Πάνω/Κάτω ή L2+R2+Πάνω/Κάτω</Description>
+    <Description>Ποσό για αύξηση ή μείωση της ταχύτητας σε κάθε συμβάν.{0}Χρήση: CTRL+Πάνω/Κάτω ή L2+R2+Πάνω/Κάτω για αλλαγή ταχύτητας, CTRL+Αριστερά/Δεξιά ή L2+R2+Αριστερά/Δεξιά για ενεργοποίηση/απενεργοποίηση.</Description>
     <DefaultValue>speedhack_step = 1.0</DefaultValue>
     <Option>
       <Text>0.5</Text>
