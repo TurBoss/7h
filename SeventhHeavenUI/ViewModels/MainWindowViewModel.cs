@@ -658,7 +658,6 @@ namespace SeventhHeavenUI.ViewModels
 
             InitActiveProfile();
 
-
             // check if the settings window should be showed (on first start or if errors in settings)
             bool showSettings = false;
             if (Sys.Settings.IsFirstStart)
@@ -676,6 +675,12 @@ namespace SeventhHeavenUI.ViewModels
                     Sys.Message(new WMessage(ResourceHelper.Get(StringKey.ErrorsFoundInGeneralSettingsViewAppLog)));
                     showSettings = true;
                 }
+            }
+
+            // if new setting SelectedMidiData is missing, reset Game Launch Settings to defaults
+            if (String.IsNullOrWhiteSpace(Sys.Settings.GameLaunchSettings.SelectedMidiData))
+            {
+                Sys.Settings.GameLaunchSettings = LaunchSettings.DefaultSettings();
             }
 
             if (showSettings)
@@ -1541,11 +1546,11 @@ namespace SeventhHeavenUI.ViewModels
             return AppHints[r.Next(0, AppHints.Count)];
         }
 
-        internal void LaunchGame(bool variableDump = false, bool debugLogging = false, bool noMods = false)
+        internal void LaunchGame(bool variableDump = false, bool debugLogging = false, bool noMods = false, bool noValidation = false)
         {
             IsGameLaunching = true;
             GameLauncher.Instance.LaunchCompleted += GameLauncher_LaunchCompleted;
-            GameLaunchWindow.Show(variableDump, debugLogging, noMods);
+            GameLaunchWindow.Show(variableDump, debugLogging, noMods, noValidation);
         }
 
         private void GameLauncher_LaunchCompleted(bool wasSuccessful)
@@ -1745,7 +1750,7 @@ namespace SeventhHeavenUI.ViewModels
 
         internal void ShowGameDriverConfigWindow()
         {
-            string driverCfg = Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "FFNx.cfg");
+            string driverCfg = Path.Combine(Sys._7HFolder, "Resources\\Game Driver", "GameDriver.cfg");
             string appLanguage = System.Configuration.ConfigurationManager.AppSettings["DefaultAppLanguage"];
             string uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "7H_GameDriver_UI.xml"); // default to using english version
 

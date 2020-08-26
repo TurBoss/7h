@@ -178,9 +178,9 @@
 
   <!-- CHEATS TAB -->
   <Setting xsi:type="DropDown">
-    <Group>Betrügt</Group>
+    <Group>Cheats</Group>
     <Name>Zufällige Schlachten</Name>
-    <Description>Nicht konfigurierbar. Schalten Sie zufällige Kampfbegegnungen während des Spiels ein/aus.{0}Verwendung: STRG+B oder L3+R3</Description>
+    <Description>Nicht konfigurierbar. Schaltet zufällige Kampfbegegnungen während des Spiels ein/aus.{0}Verwendung: STRG+B oder L3+R3</Description>
     <DefaultValue></DefaultValue>
     <Option>
       <Text>Siehe Beschreibung</Text>
@@ -189,9 +189,9 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Betrügt</Group>
-    <Name>Filme Uberspringen</Name>
-    <Description>Nicht konfigurierbar. Springt sofort zum Ende eines Films.{0}Verwendung: STRG+S oder Wählen Sie+Anfang</Description>
+    <Group>Cheats</Group>
+    <Name>Movies Uberspringen</Name>
+    <Description>Nicht konfigurierbar. Springt sofort zum Ende eines Movies.{0}Verwendung: STRG+S oder Wählen Sie+Anfang</Description>
     <DefaultValue></DefaultValue>
     <Option>
       <Text>Siehe Beschreibung</Text>
@@ -200,9 +200,9 @@
   </Setting>
   
   <Setting xsi:type="DropDown">
-    <Group>Betrügt</Group>
+    <Group>Cheats</Group>
     <Name>Schnell Zurücksetzen</Name>
-    <Description>Nicht konfigurierbar. Setzen Sie das Spiel schnell zurück, wenn das Spiel beendet ist.{0}Verwendung: STRG+R oder L1+L2+R1+R2+Wählen Sie+Anfang</Description>
+    <Description>Nicht konfigurierbar. Resettet das Spiel durch ein sofortiges Game Over.{0}Verwendung: STRG+R oder L1+L2+R1+R2+Wählen Sie+Anfang</Description>
     <DefaultValue></DefaultValue>
     <Option>
       <Text>Siehe Beschreibung</Text>
@@ -211,9 +211,9 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Betrügt</Group>
+    <Group>Cheats</Group>
     <Name>Geschwindigkeitssteigerung</Name>
-    <Description>Betrag, um die Geschwindigkeit bei jedem Ereignis zu erhöhen oder zu verringern. Verwendung: STRG+Auf/Ab oder L2+R2+Auf/Ab zum Ändern der Geschwindigkeit STRG+Links/Rechts oder L2+R2+Links/Rechts zum Ein- und Ausschalten.</Description>
+    <Description>Höhe der Spielgeschwindigkeitssteigerung pro Tastendruck. Verwendung: STRG+Auf/Ab oder L2+R2+Auf/Ab zum Ändern der Geschwindigkeit STRG+Links/Rechts oder L2+R2+Links/Rechts zum Ein- und Ausschalten.</Description>
     <DefaultValue>speedhack_step = 1.0</DefaultValue>
     <Option>
       <Text>0.5</Text>
@@ -230,9 +230,9 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Betrügt</Group>
+    <Group>Cheats</Group>
     <Name>Maximale Geschwindigkeit</Name>
-    <Description>Die maximale Geschwindigkeit, die eingestellt werden muss, bevor zur normalen Geschwindigkeit zurückgekehrt wird.</Description>
+    <Description>Die maximale Geschwindigkeit, die eingestellt werden kann, bevor zur normalen Geschwindigkeit zurückgekehrt wird.</Description>
     <DefaultValue>speedhack_max = 7.0</DefaultValue>
     <Option>
       <Text>3x</Text>

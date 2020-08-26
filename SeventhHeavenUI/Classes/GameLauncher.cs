@@ -83,7 +83,7 @@ namespace SeventhHeaven.Classes
         [DllImport("user32.dll", EntryPoint = "FindWindow")]
         private extern static IntPtr FindWindow(string lpClassName, string lpWindowName);
 
-        public static bool LaunchGame(bool varDump, bool debug, bool launchWithNoMods = false)
+        public static bool LaunchGame(bool varDump, bool debug, bool launchWithNoMods = false, bool LaunchWithNoValidation = false)
         {
             Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CheckingFf7IsNotRunning));
             if (IsFF7Running())
@@ -158,6 +158,12 @@ namespace SeventhHeaven.Classes
                 Logger.Info($"\t{ResourceHelper.Get(StringKey.UpdatingPathsInSysSettings)}");
                 Sys.Settings.SetPathsFromInstallationPath(newInstallationPath);
                 converter.InstallPath = newInstallationPath;
+            }
+
+            // if launching with no (minimal) validation checks, skip ahead
+            if (LaunchWithNoValidation)
+            {
+                goto VanillaCheck;
             }
 
             Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingEnglishGameFilesExist));
@@ -426,7 +432,13 @@ namespace SeventhHeaven.Classes
             // 
             Instance.SetRegistryValues();
 
+            //
+            // Copy input.cfg to FF7
+            //
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CopyingFf7InputCfgToFf7Path));
+            bool didCopyCfg = CopyKeyboardInputCfg();
 
+        VanillaCheck:
             //
             // Determine if game will be ran as 'vanilla' with mods so don't have to inject with EasyHook
             //
@@ -444,8 +456,6 @@ namespace SeventhHeaven.Classes
                 runAsVanilla = true;
             }
 
-
-
             RuntimeProfile runtimeProfile = null;
 
             if (!runAsVanilla)
@@ -462,14 +472,6 @@ namespace SeventhHeaven.Classes
                     return false;
                 }
 
-                //
-                // Start Turbolog for Variable Dump
-                //
-                if (varDump)
-                {
-                    Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VariableDumpSetToTrueStartingTurboLog));
-                    StartTurboLogForVariableDump(runtimeProfile);
-                }
 
                 //
                 // Copy EasyHook.dll to FF7
@@ -477,14 +479,6 @@ namespace SeventhHeaven.Classes
                 Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CopyingEasyHookToFf7PathIfNotFoundOrOlder));
                 CopyEasyHookDlls();
             }
-
-
-            //
-            // Copy input.cfg to FF7
-            //
-            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CopyingFf7InputCfgToFf7Path));
-            bool didCopyCfg = CopyKeyboardInputCfg();
-
 
             //
             // Setup log file if debugging
@@ -500,10 +494,17 @@ namespace SeventhHeaven.Classes
             //
             // Check/Disable Reunion Mod
             //
+            bool didDisableReunion = false;
+
+            // if launching with no (minimal) validation checks, skip ahead
+            if (LaunchWithNoValidation)
+            {
+                goto HookandStartGame;
+            }
+
             Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CheckingIfReunionModIsInstalled));
             Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.Found)}: {IsReunionModInstalled()}");
 
-            bool didDisableReunion = false;
             if (IsReunionModInstalled() && Sys.Settings.GameLaunchSettings.DisableReunionOnLaunch)
             {
                 Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.DisablingReunionMod));
@@ -511,6 +512,7 @@ namespace SeventhHeaven.Classes
                 didDisableReunion = true;
             }
 
+        HookandStartGame:
             //
             // Initialize the controller input interceptor
             //
@@ -670,6 +672,7 @@ namespace SeventhHeaven.Classes
                 }
 
                 ff7Proc.EnableRaisingEvents = true;
+
                 if (debug)
                 {
                     Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.DebugLoggingSetToTrueWiringUpLogFile));
@@ -692,6 +695,15 @@ namespace SeventhHeaven.Classes
                             Instance.RaiseProgressChanged($"{ResourceHelper.Get(StringKey.FailedToStartProcessForDebugLog)}: {ex.Message}", NLog.LogLevel.Error);
                         }
                     };
+                }
+
+                //
+                // Start Turbolog for Variable Dump
+                //
+                if (varDump)
+                {
+                    Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VariableDumpSetToTrueStartingTurboLog));
+                    StartTurboLogForVariableDump(runtimeProfile);
                 }
 
                 /// sideload programs for mods before starting FF7 because FF7 losing focus while initializing can cause the intro movies to stop playing
@@ -761,7 +773,6 @@ namespace SeventhHeaven.Classes
 
                 };
 
-
                 int secondsToWait = 120;
                 Instance.RaiseProgressChanged(string.Format(ResourceHelper.Get(StringKey.WaitingForFF7WindowToBeVisible), secondsToWait));
                 DateTime start = DateTime.Now;
@@ -797,8 +808,6 @@ namespace SeventhHeaven.Classes
 
                         ff7Proc.Refresh();
                     }
-
-                    ControllerInterceptor.SendVibrationToConnectedController();
 
                     SetForegroundWindow(ff7Proc.MainWindowHandle); // activate window again
                 }
@@ -1032,8 +1041,6 @@ namespace SeventhHeaven.Classes
                         Logger.Error(ex);
                     }
                 };
-
-                ControllerInterceptor.SendVibrationToConnectedController();
 
                 return true;
             }
@@ -1431,7 +1438,6 @@ namespace SeventhHeaven.Classes
 
             SetValueIfChanged(graphicsKeyPath, "DD_GUID", emptyGuidBytes, RegistryValueKind.Binary);
             SetValueIfChanged(graphicsVirtualKeyPath, "DD_GUID", emptyGuidBytes, RegistryValueKind.Binary);
-
 
             // Add registry key values for MIDI
             string midiKeyPath = $"{ff7KeyPath}\\1.00\\MIDI";

@@ -31,10 +31,11 @@ namespace SeventhHeaven.Windows
             txtLog.MaxLines = int.MaxValue;
         }
 
-        public static GameLaunchViewModel Show(bool variableDump, bool debugLogging, bool noMods = false)
+        public static GameLaunchViewModel Show(bool variableDump, bool debugLogging, bool noMods = false, bool noValidation = false)
         {
             GameLaunchWindow launchWindow = new GameLaunchWindow(variableDump, debugLogging);
             launchWindow.ViewModel.IsLaunchingWithNoMods = noMods;
+            launchWindow.ViewModel.IsLaunchingWithNoValidation = noValidation;
 
             if (!Sys.Settings.GameLaunchSettings.ShowLauncherWindow)
             {

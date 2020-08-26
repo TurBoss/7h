@@ -5,10 +5,10 @@
   <Setting xsi:type="DropDown">
     <Group>Gráficos</Group>
     <Name>API de Gráficos</Name>
-    <Description>Define o software de renderização. Auto determina a melhor escolha com base na sua GPU. Falhas podem ocorrer usando o OpenGL com placas AMD.</Description>
+    <Description>Define o software de renderização. Automático determina a melhor escolha com base na sua GPU. Falhas podem ocorrer usando o OpenGL com placas AMD.</Description>
     <DefaultValue>renderer_backend = 0</DefaultValue>
     <Option>
-      <Text>Automática</Text>
+      <Text>Automático</Text>
       <Settings>renderer_backend = 0</Settings>
     </Option>
     <Option>
@@ -24,7 +24,7 @@
   <Setting xsi:type="DropDown">
     <Group>Gráficos</Group>
     <Name>Resolução</Name>
-    <Description>Ajusta o tamanho da janela (ou resolução de tela cheia) de FF7. Automaticamente usa resolução do jogo em modo janela ou resolução atual da área de trabalho em modo tela cheia.</Description>
+    <Description>Ajusta o tamanho da janela (ou resolução de tela cheia) de FF7. Automático usa resolução do jogo em modo janela ou resolução atual da área de trabalho em modo tela cheia.</Description>
       <DefaultValue>window_size_x = 1280,window_size_y = 720</DefaultValue>
       <Option>
         <Text>Automática</Text>
@@ -170,7 +170,7 @@
   <Setting xsi:type="Checkbox">
     <Group>Gráficos</Group>
     <Name>Sincronização Vertical</Name>
-    <Description>Sincroniza a taxa de quadros do jogo com a taxa de atualização do monitor. Pode negativamente afetar a performance ou quebrar mods de 60 fps. Ative se estiver acontecendo Screen Tearing. *Limita a Trapaça de Velocidade!*</Description>
+    <Description>Sincroniza a taxa de quadros do jogo com a taxa de atualização do monitor. Pode afetar negativamente a performance ou quebrar mods de 60 fps. Ative se estiver acontecendo Screen Tearing. *Limita a Trapaça de Velocidade!*</Description>
     <DefaultValue>enable_vsync = no</DefaultValue>
     <TrueSetting>enable_vsync = yes</TrueSetting>
     <FalseSetting>enable_vsync = no</FalseSetting>
@@ -180,7 +180,7 @@
   <Setting xsi:type="DropDown">
     <Group>Trapaça</Group>
     <Name>Batalhas Aleatórias</Name>
-    <Description>Não configurável. Ative/desative os encontros de batalha aleatórios durante ou jogo.{0}Uso: CTRL+B ou L3+R3</Description>
+    <Description>Não configurável. Ativa/desativa os encontros de batalha aleatórios durante ou jogo.{0}Uso: CTRL+B ou L3+R3</Description>
     <DefaultValue></DefaultValue>
     <Option>
       <Text>Veja a Descrição</Text>
@@ -202,7 +202,7 @@
   <Setting xsi:type="DropDown">
     <Group>Trapaça</Group>
     <Name>Reinicialização Suave</Name>
-    <Description>Não configurável. Reinicie o jogo rapidamente com o fim do jogo.{0}Uso: CTRL+R ou L1+L2+R1+R2+Selecionar+Iniciar</Description>
+    <Description>Não configurável. Reinicia o jogo rapidamente com um game over.{0}Uso: CTRL+R ou L1+L2+R1+R2+Selecionar+Iniciar</Description>
     <DefaultValue></DefaultValue>
     <Option>
       <Text>Veja a Descrição</Text>
@@ -213,7 +213,7 @@
   <Setting xsi:type="DropDown">
     <Group>Trapaça</Group>
     <Name>Incremento de Velocidade</Name>
-    <Description>Quantidade para aumentar ou diminuir a velocidade em cada gatilho.{0}Uso: CTRL+Cima/Baixo ou L2+R2+Cima/Baixo para alterar a velocidade, CTRL+Esquerda/Direita ou L2+R2+Esquerda/Direita para ligar/desligar.</Description>
+    <Description>Quantidade para aumentar ou diminuir a velocidade a cada ativação.{0}Uso: CTRL+Cima/Baixo ou L2+R2+Cima/Baixo para alterar a velocidade, CTRL+Esquerda/Direita ou L2+R2+Esquerda/Direita para ligar/desligar.</Description>
     <DefaultValue>speedhack_step = 1.0</DefaultValue>
     <Option>
       <Text>0.5</Text>
@@ -232,7 +232,7 @@
   <Setting xsi:type="DropDown">
     <Group>Trapaça</Group>
     <Name>Velocidade máxima</Name>
-    <Description>A velocidade máxima a definir antes de voltar à velocidade normal.</Description>
+    <Description>A velocidade máxima a alçancar antes de voltar à velocidade normal.</Description>
     <DefaultValue>speedhack_max = 7.0</DefaultValue>
     <Option>
       <Text>3x</Text>
@@ -264,7 +264,7 @@
   <Setting xsi:type="DropDown">
     <Group>Avançado</Group>
     <Name>Opção de Música</Name>
-    <Description>Use VGMStream para ouvir músicas de alta qualidade OGG Vorbis. Necessário para mods de música. Caso contrário, MIDI padrão será usado.</Description>
+    <Description>Usar VGMStream para ouvir músicas de alta qualidade OGG Vorbis. Necessário para mods de música. Caso contrário, MIDI padrão será usado.</Description>
     <DefaultValue>use_external_music = yes</DefaultValue>
     <Option>
       <Text>VGMStream (Recomendado)</Text>
@@ -279,7 +279,7 @@
   <Setting xsi:type="DropDown">
     <Group>Avançado</Group>
     <Name>Opção de Filme</Name>
-    <Description>Use FFMPEG para rodar filmes do jogo (FMVs). Ou, use o renderizador original, que talvez tenha suporte para um menor número de codecs.</Description>
+    <Description>Usar FFMPEG para rodar filmes do jogo (FMVs). Ou, use o renderizador original, que talvez tenha suporte para um menor número de codecs.</Description>
     <DefaultValue>enable_ffmpeg_videos = yes</DefaultValue>
     <Option>
       <Text>FFMPEG (Recomendado)</Text>
@@ -294,7 +294,7 @@
   <Setting xsi:type="Checkbox">
     <Group>Avançado</Group>
     <Name>Transparência Extravagante</Name>
-    <Description>Ative a mistura alfa para texturas sem um efeito de mistura existente. Obrigatório para alguns mods.</Description>
+    <Description>Ativa a mistura alfa para texturas sem um efeito de mistura existente. Obrigatório para alguns mods.</Description>
     <DefaultValue>fancy_transparency = yes</DefaultValue>
     <TrueSetting>fancy_transparency = yes</TrueSetting>
     <FalseSetting>fancy_transparency = no</FalseSetting>

@@ -161,7 +161,7 @@
   <Setting xsi:type="Checkbox">
     <Group>Gráficos</Group>
     <Name>Filtrado Lineal</Name>
-    <Description>Puede mejorar las texturas de baja resolución. No se recomienda usar mientras hayan Mods de alta resolución activos. Si ves artefactos de color cían o morado en los mapas, desactiva esta opción.</Description>
+    <Description>Puede mejorar las texturas de baja resolución. No se recomienda usar mientras se encuentren Mods de alta resolución activos. Si ves artefactos de color cían o morado en los mapas, desactiva esta opción.</Description>
     <DefaultValue>linear_filter = no</DefaultValue>
     <TrueSetting>linear_filter = yes</TrueSetting>
     <FalseSetting>linear_filter = no</FalseSetting>
@@ -178,9 +178,9 @@
 
   <!-- CHEATS TAB -->
   <Setting xsi:type="DropDown">
-    <Group>Truco del Juego</Group>
-    <Name>Batallas Aleatorias</Name>
-    <Description>No configurable. Activa o desactiva los encuentros de batalla aleatorios mientras juegas.{0}Uso: CTRL+B o L3+R3</Description>
+    <Group>Trucos</Group>
+    <Name>Encuentros Aleatorios</Name>
+    <Description>No configurable. Activa o desactiva los encuentros aleatorios mientras juegas.{0}Uso: CTRL+B o L3+R3</Description>
     <DefaultValue></DefaultValue>
     <Option>
       <Text>Ver la Descripción</Text>
@@ -189,9 +189,9 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Truco del Juego</Group>
-    <Name>Saltar Películas</Name>
-    <Description>No configurable. Salta inmediatamente al final de una película.{0}Uso: CTRL+S o Seleccionar+Iniciar</Description>
+    <Group>Trucos</Group>
+    <Name>Saltar Cinemáticas</Name>
+    <Description>No configurable. Salta inmediatamente al final de una cinemática.{0}Uso: CTRL+S o Seleccionar+Iniciar</Description>
     <DefaultValue></DefaultValue>
     <Option>
       <Text>Ver la Descripción</Text>
@@ -200,9 +200,9 @@
   </Setting>
   
   <Setting xsi:type="DropDown">
-    <Group>Truco del Juego</Group>
-    <Name>Reinicio Suave</Name>
-    <Description>No configurable. Reinicia rápidamente el juego con un juego terminado.{0}Uso: CTRL+R o L1+L2+R1+R2+Seleccionar+Iniciar</Description>
+    <Group>Trucos</Group>
+    <Name>Reinicio Rápido</Name>
+    <Description>No configurable. Reinicia rápidamente el juego con un game over.{0}Uso: CTRL+R o L1+L2+R1+R2+Seleccionar+Iniciar</Description>
     <DefaultValue></DefaultValue>
     <Option>
       <Text>Ver la Descripción</Text>
@@ -211,9 +211,9 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Truco del Juego</Group>
-    <Name>Incremento de Velocidad</Name>
-    <Description>Cantidad para aumentar o disminuir la velocidad en cada evento.{0}Uso: CTRL+Arriba/Abajo o L2+R2+Arriba/Abajo para cambiar la velocidad, CTRL+Izquierda/Derecha o L2+R2+Izquierda/Derecha para encender/apagar.</Description>
+    <Group>Trucos</Group>
+    <Name>Aumento de Velocidad</Name>
+    <Description>Cantidad para aumentar o disminuir la velocidad en cada combinación.{0}Uso: CTRL+Arriba/Abajo o L2+R2+Arriba/Abajo para cambiar la velocidad, CTRL+Izquierda/Derecha o L2+R2+Izquierda/Derecha para activar/desactivar.</Description>
     <DefaultValue>speedhack_step = 1.0</DefaultValue>
     <Option>
       <Text>0.5</Text>
@@ -230,7 +230,7 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Truco del Juego</Group>
+    <Group>Trucos</Group>
     <Name>Velocidad Máxima</Name>
     <Description>La velocidad máxima que se debe establecer antes de volver a la velocidad normal.</Description>
     <DefaultValue>speedhack_max = 7.0</DefaultValue>
@@ -294,7 +294,7 @@
   <Setting xsi:type="Checkbox">
     <Group>Avanzado</Group>
     <Name>Transparencia Elegante</Name>
-    <Description>Habilite la combinación alfa para texturas sin un efecto de combinación existente. Requerido para algunas modificaciones.</Description>
+    <Description>Habilita la combinación alfa para texturas sin un efecto de combinación existente. Necesario para algunos Mods.</Description>
     <DefaultValue>fancy_transparency = yes</DefaultValue>
     <TrueSetting>fancy_transparency = yes</TrueSetting>
     <FalseSetting>fancy_transparency = no</FalseSetting>

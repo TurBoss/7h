@@ -8,6 +8,7 @@
     <system:String x:Key="PlayWithMods">Jouer avec les mods (par défaut)</system:String>
     <system:String x:Key="PlayWithNoMods">Jouer sans les mods</system:String>
     <system:String x:Key="PlayWithDebugLog">Jouer avec le journal de débogage</system:String>
+    <system:String x:Key="PlayWithMinimalValidation">Jouez avec validation minimale</system:String>
     <system:String x:Key="PlayWithVariableDump">Jouer avec le dump des variable</system:String>
 
     <system:String x:Key="Settings">Paramètres</system:String>
@@ -947,7 +948,7 @@ Voulez-vous appliquer ce réglage et essayer à nouveau ?</system:String>
 
     <!--ConfigureGLWindow.xaml.cs Strings-->
     <system:String x:Key="Graphics">Graphismes</system:String>
-    <system:String x:Key="Cheats">Triche de Jeu</system:String>
+    <system:String x:Key="Cheats">Fonctions de triche</system:String>
     <system:String x:Key="Rendering">Rendu</system:String>
 	    <system:String x:Key="Advanced">Avancé</system:String>
 
@@ -1199,8 +1200,8 @@ Voulez-vous appliquer ce réglage et essayer à nouveau ?</system:String>
 
     <system:String x:Key="ImportMoviesFromDisc">Importer les cinématiques à partir d'un CD</system:String>
 
-    <system:String x:Key="EnableTriggerDpadSupport">Émuler le DPad avec le clavier</system:String>
-    <system:String x:Key="TriggerDpadSupportTooltip">Émule le DPad et le Stick analogique en jeu via les touches du clavier. (à désactiver si vous utilisez un logiciel d'émulation tiers)</system:String>
+    <system:String x:Key="EnableTriggerDpadSupport">Émuler la croix directionnelle avec le clavier</system:String>
+    <system:String x:Key="TriggerDpadSupportTooltip">Émule le croix directionnelle et le joystick en jeu via les touches du clavier. (à désactiver si vous utilisez un logiciel d'émulation tiers)</system:String>
 
     <system:String x:Key="MountDiscWithPowershell">Monter le CD via powershell</system:String>
     <system:String x:Key="MountDiscWithWinCDEmu">Monter le CD via WinCDEmu</system:String>

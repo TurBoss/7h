@@ -8,6 +8,7 @@
     <system:String x:Key="PlayWithMods">Jogar Com Mods (padrão)</system:String>
     <system:String x:Key="PlayWithNoMods">Jogar Sem  Mods</system:String>
     <system:String x:Key="PlayWithDebugLog">Jogar Com Registro de Depuração</system:String>
+    <system:String x:Key="PlayWithMinimalValidation">Jogue com Validação Mínima</system:String>
     <system:String x:Key="PlayWithVariableDump">Jogar Com Despejo Variável</system:String>
 
     <system:String x:Key="Settings">Configurações</system:String>
@@ -1204,7 +1205,7 @@ Você quer aplicar essa configuração e tentar de novo?</system:String>
     <system:String x:Key="ImportMoviesFromDisc">Importar Filmes do Disco</system:String>
 
     <system:String x:Key="EnableTriggerDpadSupport">Habilitar Suporte para DPad e Gatilhos</system:String>
-    <system:String x:Key="TriggerDpadSupportTooltip">Habilita suporte para DPad e gatilhos no jogo. (Desabilite caso use uma ferramente de mapeamento de terceiros)</system:String>
+    <system:String x:Key="TriggerDpadSupportTooltip">Habilitar suporte para DPad e gatilhos no jogo. (Desabilite caso use uma ferramente de mapeamento de terceiros)</system:String>
 
     <system:String x:Key="MountDiscWithPowershell">Montar Disco Com PowerShell</system:String>
     <system:String x:Key="MountDiscWithWinCDEmu">Montar Disco Com WinCDEmu</system:String>

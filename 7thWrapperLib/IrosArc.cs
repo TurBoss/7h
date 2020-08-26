@@ -403,13 +403,21 @@ namespace _7thWrapperLib {
 
         public bool HasFolder(string name) {
             bool result = _folderNames.Contains(name);
-            DebugLogger.DetailedWriteLine($"ARCHIVE: Check if {_source} contains folder {name}: {result}");
+            if (result)
+            {
+                DebugLogger.DetailedWriteLine($"ARCHIVE: {_source} contains folder {name}");
+            }
+            
             return result;
         }
 
         public bool HasFile(string name) {
             bool result = _lookup.ContainsKey(name);
-            DebugLogger.DetailedWriteLine($"ARCHIVE: Check if {_source} contains file {name}: {result}");
+            if (result)
+            {
+                DebugLogger.DetailedWriteLine($"ARCHIVE: {_source} contains file {name}");
+            }
+
             return result;
         }
 

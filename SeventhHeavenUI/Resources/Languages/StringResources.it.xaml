@@ -8,6 +8,7 @@
     <system:String x:Key="PlayWithMods">Gioca con le Mod (default)</system:String>
     <system:String x:Key="PlayWithNoMods">Gioca Senza Mod</system:String>
     <system:String x:Key="PlayWithDebugLog">Gioca con Log degli Eventi</system:String>
+    <system:String x:Key="PlayWithMinimalValidation">Gioca con Convalida Minima</system:String>
     <system:String x:Key="PlayWithVariableDump">Gioca con Dump delle Variabili</system:String>
 
     <system:String x:Key="Settings">Impostazioni</system:String>
@@ -826,7 +827,7 @@ Quando vorrai utilizzare i file .OGG in alta qualità riporta l'opzione a 'VGMst
     <system:String x:Key="CheckingIfReunionModIsInstalled">Controllo presenza della mod Reunion ...</system:String>
     <system:String x:Key="Found">trovata</system:String>
     <system:String x:Key="DisablingReunionMod">Disattivo la mod Reunion (rinomino ddraw.dll -> Reunion.dll.bak) ...</system:String>
-    <system:String x:Key="ReenablingReunionMod">Ri-attivo la mod Reunion Reunion (rinomino Reunion.dll.bak -> ddraw.dll) ...</system:String>
+    <system:String x:Key="ReenablingReunionMod">Ri-attivo la mod Reunion (rinomino Reunion.dll.bak -> ddraw.dll) ...</system:String>
 
     <system:String x:Key="LaunchingAdditionalProgramsToRunIfAny">Lancio programmi aggiuntivi da eseguire (se presenti) ...</system:String>
     <system:String x:Key="WritingTemporaryRuntimeProfileFileTo">Scrivo profilo runtime provvisorio in</system:String>
@@ -951,7 +952,7 @@ Vuoi applicare questa modifica e riprovare?</system:String>
 
     <!--ConfigureGLWindow.xaml.cs Strings-->
     <system:String x:Key="Graphics">Grafica</system:String>
-    <system:String x:Key="Cheats">Barare</system:String>
+    <system:String x:Key="Cheats">Trucchi</system:String>
     <system:String x:Key="Rendering">Rendering</system:String>
     <system:String x:Key="Advanced">Avanzate</system:String>
 
@@ -1202,8 +1203,8 @@ Vuoi applicare questa modifica e riprovare?</system:String>
 
     <system:String x:Key="ImportMoviesFromDisc">Importa Filmati da Disco</system:String>
 
-    <system:String x:Key="EnableTriggerDpadSupport">Abilita Supporto a DPad e Tasti Dorsali</system:String>
-    <system:String x:Key="TriggerDpadSupportTooltip">Abilita il supporto in gioco del DPad e dei tasti dorsali. (Disattivare se è in uso uno strumento di mappatura dei comandi di terze parti)</system:String>
+    <system:String x:Key="EnableTriggerDpadSupport">Emula il DPad su dispositivi DInput.</system:String>
+    <system:String x:Key="TriggerDpadSupportTooltip">Emula il DPad in-gioco inviando i corrispondenti input da tastiera. (Disattivare se si usa un controller XInput.)</system:String>
 
     <system:String x:Key="MountDiscWithPowershell">Monta Disco con PowerShell</system:String>
     <system:String x:Key="MountDiscWithWinCDEmu">Monta Disco con WinCDEmu</system:String>

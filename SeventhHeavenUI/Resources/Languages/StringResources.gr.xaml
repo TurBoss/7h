@@ -8,6 +8,7 @@
     <system:String x:Key="PlayWithMods">Εναρξη με τροποποιήσεις (προκαθορισμένες)</system:String>
     <system:String x:Key="PlayWithNoMods">Εναρξη χωρίς τροποποιήσεις</system:String>
     <system:String x:Key="PlayWithDebugLog">Εναρξη με το αρχείο καταγραφής εντοπισμού σφαλμάτων</system:String>
+    <system:String x:Key="PlayWithMinimalValidation">Εναρξη με ελάχιστη επικύρωση</system:String>
     <system:String x:Key="PlayWithVariableDump">Εναρξη με το αρχείο μεταβλητής χωρητικότητας</system:String>
 
     <system:String x:Key="Settings">Ρυθμίσεις</system:String>

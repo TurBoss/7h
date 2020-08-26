@@ -496,7 +496,6 @@ namespace SeventhHeaven.ViewModels
                                               .Select(s => s.Key)
                                               .FirstOrDefault();
 
-
             GetVolumesFromRegistry();
 
             SetSelectedMidiDeviceFromSettings();

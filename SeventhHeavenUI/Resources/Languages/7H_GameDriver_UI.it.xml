@@ -170,7 +170,7 @@
   <Setting xsi:type="Checkbox">
     <Group>Grafica</Group>
     <Name>V-Sync</Name>
-    <Description>Sincronizza il framerate del gioco con la frequenza d'aggiornamento dello schermo. Potrebbe influire negativamente sulle performance di gioco o rendere le mod che fanno uso di 60 fps inutilizzabili. Attivare solo se si percepisce dello screen tearing. *Limita la Velocità del Trucco!*</Description>
+    <Description>Sincronizza il framerate del gioco con la frequenza d'aggiornamento dello schermo. Potrebbe influire negativamente sulle performance di gioco o rendere le mod che fanno uso di 60 fps inutilizzabili. Attivare solo se si percepisce dello screen tearing. *Limita la Velocità dei Trucchi!*</Description>
     <DefaultValue>enable_vsync = no</DefaultValue>
     <TrueSetting>enable_vsync = yes</TrueSetting>
     <FalseSetting>enable_vsync = no</FalseSetting>
@@ -178,9 +178,9 @@
 
   <!-- CHEATS TAB -->
   <Setting xsi:type="DropDown">
-    <Group>Barare</Group>
+    <Group>Trucchi</Group>
     <Name>Battaglie Casuali</Name>
-    <Description>Non configurabile. Attiva/disattiva incontri di battaglia casuali durante il gioco.{0}Utilizzo: CTRL+B o L3+R3</Description>
+    <Description>Non configurabile. Attiva/disattiva le battaglie casuali durante il gioco.{0}Utilizzo: CTRL+B o L3+R3</Description>
     <DefaultValue></DefaultValue>
     <Option>
       <Text>Vedi la descrizione</Text>
@@ -189,9 +189,9 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Barare</Group>
-    <Name>Salta i Film</Name>
-    <Description>Non configurabile. Salta immediatamente alla fine di un film.{0}Utilizzo: CTRL+S o Seleziona+Inizio</Description>
+    <Group>Trucchi</Group>
+    <Name>Salta i Filmati</Name>
+    <Description>Non configurabile. Salta immediatamente alla fine di un filmato.{0}Utilizzo: CTRL+S o SELECT+START</Description>
     <DefaultValue></DefaultValue>
     <Option>
       <Text>Vedi la descrizione</Text>
@@ -200,9 +200,9 @@
   </Setting>
   
   <Setting xsi:type="DropDown">
-    <Group>Barare</Group>
-    <Name>Ripristino Rapido</Name>
-    <Description>Non configurabile. Ripristina rapidamente il gioco con un gioco finito.{0}Utilizzo: CTRL+R o L1+L2+R1+R2+Seleziona+Inizio</Description>
+    <Group>Trucchi</Group>
+    <Name>Soft Reset</Name>
+    <Description>Non configurabile. Causa un immediato Game Over per tornare al menù principale.{0}Utilizzo: CTRL+R o L1+L2+R1+R2+SELECT+START</Description>
     <DefaultValue></DefaultValue>
     <Option>
       <Text>Vedi la descrizione</Text>
@@ -211,9 +211,9 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Barare</Group>
-    <Name>Velocità di Incremento</Name>
-    <Description>Importo per aumentare o diminuire la velocità su ogni evento.{0}Utilizzo: CTRL+Su/Giù o L2+R2+Su/Giù per cambiare velocità, CTRL+Sinistra/Destra o L2+R2+Sinistra/Destra per accendere/spegnere.</Description>
+    <Group>Trucchi</Group>
+    <Name>Speed Hack Graduale</Name>
+    <Description>Aumenta o diminuisce del valore selezionato la velocità richiesta per l'interazione con certi eventi.{0}Utilizzo: CTRL+Su/Giù o L2+R2+Su/Giù per cambiare velocità, CTRL+Sinistra/Destra o L2+R2+Sinistra/Destra per attivare/disattivare.</Description>
     <DefaultValue>speedhack_step = 1.0</DefaultValue>
     <Option>
       <Text>0.5</Text>
@@ -230,9 +230,9 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-    <Group>Barare</Group>
-    <Name>Velocità Massima</Name>
-    <Description>La velocità massima da impostare prima di tornare alla velocità normale.</Description>
+    <Group>Trucchi</Group>
+    <Name>Speed Hack Massimo</Name>
+    <Description>La velocità massima impostabile prima di tornare a quella normale.</Description>
     <DefaultValue>speedhack_max = 7.0</DefaultValue>
     <Option>
       <Text>3x</Text>
@@ -293,8 +293,8 @@
 
   <Setting xsi:type="Checkbox">
     <Group>Avanzate</Group>
-    <Name>Trasparenza Fantasia</Name>
-    <Description>Abilita la fusione alfa per le trame senza un effetto di fusione esistente. Richiesto per alcune mod.</Description>
+    <Name>Trasparenza Forzata</Name>
+    <Description>Abilita lo alpha blending per le texture prive di effetti di trasparenza. Richiesto per alcune mod.</Description>
     <DefaultValue>fancy_transparency = yes</DefaultValue>
     <TrueSetting>fancy_transparency = yes</TrueSetting>
     <FalseSetting>fancy_transparency = no</FalseSetting>

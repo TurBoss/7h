@@ -8,6 +8,7 @@
     <system:String x:Key="PlayWithMods">Jugar con Mods (Predeterminado)</system:String>
     <system:String x:Key="PlayWithNoMods">Jugar sin Mods</system:String>
     <system:String x:Key="PlayWithDebugLog">Jugar con Debug Log</system:String>
+    <system:String x:Key="PlayWithMinimalValidation">Jugar con Validación Mínima</system:String>
     <system:String x:Key="PlayWithVariableDump">Jugar con Variable Dump</system:String>
 
     <system:String x:Key="Settings">Opciones</system:String>
@@ -951,7 +952,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
 
     <!--ConfigureGLWindow.xaml.cs Strings-->
     <system:String x:Key="Graphics">Gráficos</system:String>
-    <system:String x:Key="Cheats">Truco del Juego</system:String>
+    <system:String x:Key="Cheats">Trucos</system:String>
     <system:String x:Key="Rendering">Representación</system:String>
     <system:String x:Key="Advanced">Avanzado</system:String>
 
@@ -1205,7 +1206,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="ImportMoviesFromDisc">Importar Cinemáticas Desde Disco</system:String>
 
     <system:String x:Key="EnableTriggerDpadSupport">Habilitar Soporte para DPAD y los Gatillos.</system:String>
-    <system:String x:Key="TriggerDpadSupportTooltip">Añade soporte dentro de el juego para el DPAD y los Gatillos. (Desactivar al usar una herramienta de terceros para mapeado del mando)</system:String>
+    <system:String x:Key="TriggerDpadSupportTooltip">Añade soporte dentro de el juego para el DPAD y los Gatillos. (Desactivar al usar una herramienta de terceros para mapeado de mando)</system:String>
 
     <system:String x:Key="MountDiscWithPowershell">Montar Disco Con PowerShell</system:String>
     <system:String x:Key="MountDiscWithWinCDEmu">Montar Disco Con WinCDEmu</system:String>

@@ -177,18 +177,5 @@ namespace SeventhHeaven.Classes
             });
 
         }
-
-        internal static void SendVibrationToConnectedController(int lengthInMilliseconds = 750)
-        {
-            //PlayerIndex? connectedController = GetConnectedController();
-
-            //if (connectedController.HasValue)
-            //{
-            //    GamePad.SetVibration(connectedController.Value, 0.75f, 0.75f);
-            //    Thread.Sleep(lengthInMilliseconds);
-            //    GamePad.SetVibration(connectedController.Value, 0f, 0f);
-            //}
-        }
-
     }
 }

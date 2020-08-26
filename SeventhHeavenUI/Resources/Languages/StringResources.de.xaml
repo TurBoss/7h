@@ -7,6 +7,7 @@
     <system:String x:Key="PlayWithMods">Starten mit Mods (Standart)</system:String>
     <system:String x:Key="PlayWithNoMods">Starten ohne Mods</system:String>
     <system:String x:Key="PlayWithDebugLog">Starten mit Debug Log</system:String>
+    <system:String x:Key="PlayWithMinimalValidation">Starten mit Minimaler Validierung</system:String>
     <system:String x:Key="PlayWithVariableDump">Starten mit Log der Variablen</system:String>
 
     <system:String x:Key="Settings">Einstellungen</system:String>
@@ -962,7 +963,7 @@ Aktivieren und erneut versuchen?</system:String>
 
     <!--ConfigureGLWindow.xaml.cs Strings-->
     <system:String x:Key="Graphics">Grafik</system:String>
-    <system:String x:Key="Cheats">Betrügt</system:String>
+    <system:String x:Key="Cheats">Cheats</system:String>
     <system:String x:Key="Rendering">Renderer</system:String>
     <system:String x:Key="Advanced">Erweitert</system:String>
 

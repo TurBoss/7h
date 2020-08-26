@@ -6,6 +6,7 @@
     <system:String x:Key="Play">Play</system:String>
     <system:String x:Key="PlayWithMods">Play With Mods (default)</system:String>
     <system:String x:Key="PlayWithNoMods">Play Without Mods</system:String>
+    <system:String x:Key="PlayWithMinimalValidation">Play With Minimal Validation</system:String>
     <system:String x:Key="PlayWithDebugLog">Play With Debug Log</system:String>
     <system:String x:Key="PlayWithVariableDump">Play With Variable Dump</system:String>
 

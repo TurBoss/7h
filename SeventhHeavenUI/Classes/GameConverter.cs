@@ -748,23 +748,43 @@ namespace SeventhHeaven.Classes
         /// <summary>
         /// Checks FFNx.dll is up to date and matches file in Resources/Game Driver/ folder.
         /// If files are different then game driver files are copied to ff7 install path
+        /// Also copies/overwrites the game driver cfg file in ff7 folder
         /// </summary>
         /// <returns>returns false if error occurred</returns>
         internal bool InstallLatestGameDriver(string backupFolderPath)
         {
             string pathToLatestFile = Path.Combine(Sys.PathToGameDriverFolder, "FFNx.dll");
-            string pathToLatestCfg = Path.Combine(Sys.PathToGameDriverFolder, "FFNx.cfg");
+            string pathToLatestCfg = Path.Combine(Sys.PathToGameDriverFolder, "GameDriver.cfg");
             string pathToCurrentFile = Path.Combine(InstallPath, "FFNx.dll");
             string pathToCurrentCfg = Path.Combine(InstallPath, "FFNx.cfg");
 
             string pathToOldCustomDriver = Path.Combine(InstallPath, "7H_GameDriver.dll");
             string pathToOldCustomCfg = Path.Combine(InstallPath, "7H_GameDriver.cfg");
 
-
             if (!File.Exists(pathToLatestFile))
             {
                 SendMessage($"{ResourceHelper.Get(StringKey.CannotCheckIfLatestDriverIsInstalledDueToMissingFile)}: {pathToLatestFile}", NLog.LogLevel.Warn);
                 return true; // return true so it does not halt process
+            }
+
+            try
+            {
+                // copy latest config to ff7 game folder
+                if (File.Exists(pathToLatestCfg))
+                {
+                    SendMessage($"\t{ResourceHelper.Get(StringKey.Copying)} {pathToLatestCfg} -> {pathToCurrentCfg} ...");
+                    File.Copy(pathToLatestCfg, pathToCurrentCfg, true);
+                }
+                else
+                {
+                    SendMessage($"\t{ResourceHelper.Get(StringKey.CannotCreateDefaultCfgDueToMissingFile)}: {pathToLatestCfg} ...", NLog.LogLevel.Error);
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+                return false;
             }
 
             FileVersionInfo currentFileVersion = null;
@@ -774,7 +794,7 @@ namespace SeventhHeaven.Classes
 
                 // If no version detected, trigger copy of driver because it is old
                 // Also if version is 1.7.2.152 (included in 7h 2.2 beta) it is old because
-                // TrueOdin reset version and current 1.7.2.64 is newer than 1.7.2.152
+                // TrueOdin reset version and current 1.7.2.124 is newer than 1.7.2.152
                 // 1.7.2.152 logic can be removed once bundled ffnx ver is above 1.7.2.152 again
                 if (String.IsNullOrWhiteSpace(currentFileVersion.FileVersion) || currentFileVersion.FileVersion.Equals("1.7.2.152"))
                 {
@@ -787,7 +807,7 @@ namespace SeventhHeaven.Classes
             if (currentFileVersion != null && latestFileVersion != null && new Version(currentFileVersion.FileVersion).CompareTo(new Version(latestFileVersion.FileVersion)) >= 0)
             {
                 SendMessage($"\t{ResourceHelper.Get(StringKey.GameDriverDllFileIsUpToDate)}");
-                return true; // file exist and matches what is in /Game Driver folder
+                return true; // file exists and matches what is in /Game Driver folder
             }
 
             try
@@ -811,28 +831,6 @@ namespace SeventhHeaven.Classes
                     Directory.CreateDirectory(backupFolderPath);
                     SendMessage($"\t{ResourceHelper.Get(StringKey.BackingUpExistingGameDriverTo)} {backupFolderPath} ...");
                     File.Copy(pathToCurrentFile, Path.Combine(backupFolderPath, "FFNx.dll"), true);
-                }
-
-                if (File.Exists(pathToCurrentCfg))
-                {
-                    // backup existing driver cfg if it exists
-                    Directory.CreateDirectory(backupFolderPath);
-                    SendMessage($"\t{ResourceHelper.Get(StringKey.BackingUpExistingGameDriverCfgTo)} {backupFolderPath} ...");
-                    File.Copy(pathToCurrentCfg, Path.Combine(backupFolderPath, "FFNx.cfg"), true);
-                }
-                else
-                {
-                    // copy default .cfg if it is missing
-                    if (File.Exists(pathToLatestCfg))
-                    {
-                        SendMessage($"\t{ResourceHelper.Get(StringKey.GameDriverCfgFileMissingCopyingDefaultFrom)} {Sys.PathToGameDriverFolder} ...", NLog.LogLevel.Warn);
-                        File.Copy(pathToLatestCfg, pathToCurrentCfg, true);
-                    }
-                    else
-                    {
-                        SendMessage($"\t{ResourceHelper.Get(StringKey.CannotCreateDefaultCfgDueToMissingFile)}: {pathToLatestCfg} ...", NLog.LogLevel.Error);
-                        return false;
-                    }
                 }
 
                 // backup old shaders and delete
@@ -871,8 +869,26 @@ namespace SeventhHeaven.Classes
                 }
 
                 // copy entire contents of GameDriver folder to ff7 folder
+                // Lists are CaSe SeNsItIvE!
+                List<string> gameDriverFilesToIgnore = new List<string>() { "COPYING.TXT",
+                                                                        "FFNx._GLOBALS.txt",
+                                                                        "FFNx.BATTLE.fullscreen.txt",
+                                                                        "FFNx.BATTLE.restore_modals.txt",
+                                                                        "FFNx.BATTLE.transparent_modals.txt",
+                                                                        "FFNx.FIELD.transparent_modals.txt",
+                                                                        "FFNx.MENU.cursor_vertical_center.txt",
+                                                                        "FFNx.MENU.save_everywhere.txt",
+                                                                        "FFNx.reg",
+                                                                        "FFNx.cfg",
+                                                                        "GameDriver.cfg" };
+
+                List<string> gameDriverFoldersToIgnore = new List<string>() { "ff8",
+                                                                        "de",
+                                                                        "es",
+                                                                        "fr" };
+
                 SendMessage($"\t{ResourceHelper.Get(StringKey.CopyingContentsOf)} {Sys.PathToGameDriverFolder} -> {InstallPath} ...");
-                FileUtils.CopyDirectoryRecursively(Sys.PathToGameDriverFolder, InstallPath);
+                FileUtils.CopyDirectoryRecursively(Sys.PathToGameDriverFolder, InstallPath, gameDriverFilesToIgnore, gameDriverFoldersToIgnore, false);
             }
             catch (Exception ex)
             {
