@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
 <AvailableUpdate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Version>2.2.3.521</Version>
-  <ReleaseDate>08/21/2020</ReleaseDate>
+  <Version>2.2.3.522</Version>
+  <ReleaseDate>08/27/2020</ReleaseDate>
   <ReleaseNotes>
+    - *WARNING*: Do NOT use Animations 3.0>60 fps!
+    --Because it crashes FFNx (therefore 7H 2.2+)
     - Game is now made Large Address and DEP Aware
     - Multi-language support (game version and 7H UI)
     - Dpad support for DInput/XInput gamepads
