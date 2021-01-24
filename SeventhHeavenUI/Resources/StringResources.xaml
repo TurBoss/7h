@@ -631,7 +631,7 @@ Click 'Cancel' to stop the process.</system:String>
     <system:String x:Key="TextureCacheCleared">Texture cache cleared!</system:String>
     <system:String x:Key="FailedToClearTextureCache">Failed to clear texture cache</system:String>
     <system:String x:Key="GameDriverSettingsSaved">Game Driver settings saved!</system:String>
-    <system:String x:Key="CouldNotWriteTo7HGameDriverCfg">Could not write to FFNx.cfg file. Check that it is not set to read only, and that FF7 is installed in a folder you have full write access to.</system:String>
+    <system:String x:Key="CouldNotWriteTo7HGameDriverCfg">Could not write to FFNx.toml file. Check that it is not set to read only, and that FF7 is installed in a folder you have full write access to.</system:String>
     <system:String x:Key="UnknownErrorWhileSaving">Unknown error while saving. error has been logged.</system:String>
     <system:String x:Key="GameDriverSettingsResetToDefaults">Game Driver settings reset to defaults. Click 'Save' to save changes.</system:String>
 
@@ -930,7 +930,7 @@ Do you want to apply the setting and try again?</system:String>
     <system:String x:Key="GameDriverDllFileIsUpToDate">FFNx.dll file is up to date.</system:String>
     <system:String x:Key="BackingUpExistingGameDriverTo">backing up existing game driver to</system:String>
     <system:String x:Key="BackingUpExistingGameDriverCfgTo">backing up existing game driver .cfg to</system:String>
-    <system:String x:Key="GameDriverCfgFileMissingCopyingDefaultFrom">FFNx.cfg file is missing. Copying default from</system:String>
+    <system:String x:Key="GameDriverCfgFileMissingCopyingDefaultFrom">FFNx.toml file is missing. Copying default from</system:String>
     <system:String x:Key="CannotCreateDefaultCfgDueToMissingFile">cannot create default .cfg due to missing file</system:String>
     <system:String x:Key="BackingUpExistingShadersFolderTo">backing up existing 'shaders' folder to</system:String>
     <system:String x:Key="CopyingContentsOf">copying contents of</system:String>

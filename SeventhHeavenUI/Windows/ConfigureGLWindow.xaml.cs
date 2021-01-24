@@ -56,13 +56,7 @@ namespace SeventhHeaven.Windows
                 return false;
             }
 
-            if (!File.Exists(_file))
-            {
-                // copy default .cfg file if missing
-                File.Copy(Path.Combine(Sys.PathToGameDriverFolder, "FFNx.cfg"), _file, true);
-            }
-
-            _settings = new Iros._7th.Workshop.ConfigSettings.Settings(File.ReadAllLines(_file));
+            _settings = new Iros._7th.Workshop.ConfigSettings.Settings(_file);
             _settings.SetMissingDefaults(_spec.Settings);
 
             Dictionary<string, int> tabOrders = new Dictionary<string, int>()
@@ -201,7 +195,7 @@ namespace SeventhHeaven.Windows
                     item.Save(_settings);
                 }
 
-                File.WriteAllLines(_file, _settings.GetOutput());
+                _settings.Save(_file);
 
                 Sys.Message(new WMessage(ResourceHelper.Get(StringKey.GameDriverSettingsSaved)));
                 this.Close();

@@ -921,7 +921,7 @@
         </Setter>
     </Style>
 
-
+    <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MainComboBoxStyle}"/>
 
     <Style x:Key="MainComboBoxItemStyle" TargetType="{x:Type ComboBoxItem}">
         <Setter Property="Template">
@@ -946,6 +946,8 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="{x:Type ComboBoxItem}" BasedOn="{StaticResource MainComboBoxItemStyle}"/>
 
     <Style x:Key="TextComboBoxItemStyle" TargetType="{x:Type ComboBoxItem}">
         <Setter Property="Template">

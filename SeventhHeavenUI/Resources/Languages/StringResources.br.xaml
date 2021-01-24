@@ -632,7 +632,7 @@ Clique em 'Cancelar' para parar o processo.</system:String>
     <system:String x:Key="TextureCacheCleared">Cache de texturas apagado!</system:String>
     <system:String x:Key="FailedToClearTextureCache">Não foi possível apagar cache de texturas</system:String>
     <system:String x:Key="GameDriverSettingsSaved">Configurações de driver de jogos salvas!</system:String>
-    <system:String x:Key="CouldNotWriteTo7HGameDriverCfg">Não foi possível alterar arquivo FFNx.cfg. Certifique-se de que ele não está em modo apenas leitura, e de que 7H está instalado em uma pasta da qual você tem acesso completo.</system:String>
+    <system:String x:Key="CouldNotWriteTo7HGameDriverCfg">Não foi possível alterar arquivo FFNx.toml. Certifique-se de que ele não está em modo apenas leitura, e de que 7H está instalado em uma pasta da qual você tem acesso completo.</system:String>
     <system:String x:Key="UnknownErrorWhileSaving">Erro desconhecido ao salvar. O erro foi registrado.</system:String>
     <system:String x:Key="GameDriverSettingsResetToDefaults">Configurações de Driver de Jogo restauradas ao padrão. Clique em 'Salvar' para salvar alterações.</system:String>
 
@@ -930,7 +930,7 @@ Você quer aplicar essa configuração e tentar de novo?</system:String>
     <system:String x:Key="GameDriverDllFileIsUpToDate">Arquivo FFNx.dll está atualizado.</system:String>
     <system:String x:Key="BackingUpExistingGameDriverTo">copiando driver de jogo existente para</system:String>
     <system:String x:Key="BackingUpExistingGameDriverCfgTo">copiando .cfg de driver de jogo existente para</system:String>
-    <system:String x:Key="GameDriverCfgFileMissingCopyingDefaultFrom">Arquivo FFNx.cfg está faltando. Copiando padrão de</system:String>
+    <system:String x:Key="GameDriverCfgFileMissingCopyingDefaultFrom">Arquivo FFNx.toml está faltando. Copiando padrão de</system:String>
     <system:String x:Key="CannotCreateDefaultCfgDueToMissingFile">impossível criar .cfg padrão devido a arquivo ausente</system:String>
     <system:String x:Key="BackingUpExistingShadersFolderTo">copiando pasta 'shaders' existente para</system:String>
     <system:String x:Key="CopyingContentsOf">copiando conteúdos de</system:String>

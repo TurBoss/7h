@@ -231,7 +231,7 @@ namespace TurBoLog {
 			try {
 				// Everything after the first DWORD is our debugging text
 				IntPtr pString = new IntPtr(
-					m_SharedMem.ToInt32() + Marshal.SizeOf(typeof(int))
+					m_SharedMem.ToInt64() + Marshal.SizeOf(typeof(int))
 				);
 
 				while (true) {		

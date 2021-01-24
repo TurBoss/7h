@@ -632,7 +632,7 @@ Auf 'Abbrechen' klicken um den Vorgang zu unterbrechen.</system:String>
     <system:String x:Key="TextureCacheCleared">Texture Cache geleert!</system:String>
     <system:String x:Key="FailedToClearTextureCache">Leeren des Texture Cache fehlgeschlagen</system:String>
     <system:String x:Key="GameDriverSettingsSaved">7H Spieltreiber Einstellungen gespeichert!</system:String>
-    <system:String x:Key="CouldNotWriteTo7HGameDriverCfg">Konnte FFNx.cfg nicht speichern. Bitte prüfe, dass die Datei oder der Final Fantasy 7 Ordner nicht schreibgeschützt ist.</system:String>
+    <system:String x:Key="CouldNotWriteTo7HGameDriverCfg">Konnte FFNx.toml nicht speichern. Bitte prüfe, dass die Datei oder der Final Fantasy 7 Ordner nicht schreibgeschützt ist.</system:String>
     <system:String x:Key="UnknownErrorWhileSaving">Unbekannter Fehler beim speichern. Log wurde erstellt.</system:String>
     <system:String x:Key="GameDriverSettingsResetToDefaults">7H Spieltreiber Einstellungen auf standart zurückgesetzt. Drücke auf 'Speichern' um die Einstellungen zu speichern.</system:String>
 
@@ -938,7 +938,7 @@ Aktivieren und erneut versuchen?</system:String>
     <system:String x:Key="GameDriverDllFileIsUpToDate">7H Spieltreiber ist aktuell.</system:String>
     <system:String x:Key="BackingUpExistingGameDriverTo">Sichere aktuellen Treiber in</system:String>
     <system:String x:Key="BackingUpExistingGameDriverCfgTo">Sichere aktuelle driver.cfg in</system:String>
-    <system:String x:Key="GameDriverCfgFileMissingCopyingDefaultFrom">FFNx.cfg fehlt. Kopiere standart Datei von</system:String>
+    <system:String x:Key="GameDriverCfgFileMissingCopyingDefaultFrom">FFNx.toml fehlt. Kopiere standart Datei von</system:String>
     <system:String x:Key="CannotCreateDefaultCfgDueToMissingFile">Kann die standart .cfg nicht kopieren, weil die Datei fehlt.</system:String>
     <system:String x:Key="BackingUpExistingShadersFolderTo">Sichere aktuellen "shaders" Ordner in</system:String>
     <system:String x:Key="CopyingContentsOf">Kopiere Inhalt von</system:String>

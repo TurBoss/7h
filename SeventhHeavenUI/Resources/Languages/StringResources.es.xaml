@@ -630,7 +630,7 @@ Haz clic en 'Cancelar' para detener el proceso.</system:String>
     <system:String x:Key="TextureCacheCleared">¡Caché de Texturas depurado!</system:String>
     <system:String x:Key="FailedToClearTextureCache">Error al intentar depurar el caché de texturas</system:String>
     <system:String x:Key="GameDriverSettingsSaved">¡Opciones del Lanzador de Juego guardadas!</system:String>
-    <system:String x:Key="CouldNotWriteTo7HGameDriverCfg">No se ha podido escribir al archivo FFNx.cfg. Revisa que no esté habilitado para solo lectura, y que FF7 está instalado en una carpeta en la que tengas acceso completo.</system:String>
+    <system:String x:Key="CouldNotWriteTo7HGameDriverCfg">No se ha podido escribir al archivo FFNx.toml. Revisa que no esté habilitado para solo lectura, y que FF7 está instalado en una carpeta en la que tengas acceso completo.</system:String>
     <system:String x:Key="UnknownErrorWhileSaving">Ha ocurrido un error desconico mientras se guardaba. El error ha sido registrado.</system:String>
     <system:String x:Key="GameDriverSettingsResetToDefaults">Las opciones del Lanzador de Juego han sido reiniciadas. Haz clic en 'Guardar' para aplicar los cambios.</system:String>
 
@@ -928,7 +928,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="GameDriverDllFileIsUpToDate">El archivo FFNx.dll esta actualizado.</system:String>
     <system:String x:Key="BackingUpExistingGameDriverTo">realizando copia de seguridad del controlador de juego existente hacia</system:String>
     <system:String x:Key="BackingUpExistingGameDriverCfgTo">relizando copia de seguridad del controlador de juego .cgf existente hacia</system:String>
-    <system:String x:Key="GameDriverCfgFileMissingCopyingDefaultFrom">No se pudo encontrar FFNx.cfg. Copiando el default desde</system:String>
+    <system:String x:Key="GameDriverCfgFileMissingCopyingDefaultFrom">No se pudo encontrar FFNx.toml. Copiando el default desde</system:String>
     <system:String x:Key="CannotCreateDefaultCfgDueToMissingFile">no se pudo crear defaut .cfg debido a un archivo faltante</system:String>
     <system:String x:Key="BackingUpExistingShadersFolderTo">creando copia de seguridad de la carpeta existende 'shaders' hacia</system:String>
     <system:String x:Key="CopyingContentsOf">copiando el contenido de</system:String>

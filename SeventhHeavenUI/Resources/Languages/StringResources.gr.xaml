@@ -632,7 +632,7 @@
     <system:String x:Key="TextureCacheCleared">Η προσωρινή μνήμη για υφές καθάρισε!</system:String>
     <system:String x:Key="FailedToClearTextureCache">Αποτυχία καθαρισμού προσωρινής μνήμης για υφές</system:String>
     <system:String x:Key="GameDriverSettingsSaved">Οι ρυθμίσεις του προγράμματος οδήγησης παιχνιδιού αποθηκεύτηκαν!</system:String>
-    <system:String x:Key="CouldNotWriteTo7HGameDriverCfg">Αδυναμία εγγραφής στο αρχείο FFNx.cfg. Ελέγξτε μήπως δεν είναι επιλεγμένη η ρύθμιση "μόνο για αναγνωση" στις ιδιότητες του αρχείου, και το FF7 είναι εγκατεστημένο σε φάκελο στον οποίο έχετε δικαίωμα πρόσβασης για εγγραφή.</system:String>
+    <system:String x:Key="CouldNotWriteTo7HGameDriverCfg">Αδυναμία εγγραφής στο αρχείο FFNx.toml. Ελέγξτε μήπως δεν είναι επιλεγμένη η ρύθμιση "μόνο για αναγνωση" στις ιδιότητες του αρχείου, και το FF7 είναι εγκατεστημένο σε φάκελο στον οποίο έχετε δικαίωμα πρόσβασης για εγγραφή.</system:String>
     <system:String x:Key="UnknownErrorWhileSaving">Αγνωστο σφάλμα κατά την αποθήκευση. Το σφάλμα καταγράφηκε.</system:String>
     <system:String x:Key="GameDriverSettingsResetToDefaults">Επαναφορά προκαθορισμένων ρυθμίσεων για το πρόγραμμα οδήγησης παιχνιδιού. Κάντε κλικ στο 'Αποθήκευση' για αποθήκευση των αλλαγών.</system:String>
 
@@ -929,7 +929,7 @@
     <system:String x:Key="GameDriverDllFileIsUpToDate">Το αρχείο FFNx.dll είναι ενημερωμένο.</system:String>
     <system:String x:Key="BackingUpExistingGameDriverTo">δημιουργία αντιγράφων ασφαλείας του υπάρχοντος προγράμματος οδήγησης παιχνιδιού</system:String>
     <system:String x:Key="BackingUpExistingGameDriverCfgTo">δημιουργία αντιγράφων ασφαλείας του υπάρχοντος προγράμματος οδήγησης παιχνιδιού .cfg στο</system:String>
-    <system:String x:Key="GameDriverCfgFileMissingCopyingDefaultFrom">Λείπει το αρχείο FFNx.cfg. Αντιγραφή προεπιλεγμένου από</system:String>
+    <system:String x:Key="GameDriverCfgFileMissingCopyingDefaultFrom">Λείπει το αρχείο FFNx.toml. Αντιγραφή προεπιλεγμένου από</system:String>
     <system:String x:Key="CannotCreateDefaultCfgDueToMissingFile">Δεν είναι δυνατή η δημιουργία προεπιλεγμένου αρχείου .cfg λόγω αρχείου που λείπει</system:String>
     <system:String x:Key="BackingUpExistingShadersFolderTo">δημιουργία αντιγράφων ασφαλείας του υπάρχοντος φακέλου "shaders" στο</system:String>
     <system:String x:Key="CopyingContentsOf">αντιγραφή περιεχομένων του αρχείου</system:String>

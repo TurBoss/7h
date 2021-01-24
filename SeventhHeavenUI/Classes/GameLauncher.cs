@@ -281,10 +281,7 @@ namespace SeventhHeaven.Classes
                 return false;
             }
 
-
             Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingGameDriverShadersFoldersExist));
-            converter.CopyMissingShaders();
-
 
             Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingFf7Exe));
             if (new FileInfo(Sys.Settings.FF7Exe).Name.Equals("ff7.exe", StringComparison.InvariantCultureIgnoreCase))

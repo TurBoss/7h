@@ -46,6 +46,8 @@ namespace SeventhHeaven.ViewModels
         private ObservableCollection<string> _extraFolderList;
         private string _statusMessage;
 
+        private FFNxUpdateChannelOptions _ffnxUpdateChannel;
+
         public delegate void OnListDataChanged();
 
         /// <summary>
@@ -114,6 +116,19 @@ namespace SeventhHeaven.ViewModels
             set
             {
                 _statusMessage = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public FFNxUpdateChannelOptions FFNxUpdateChannel
+        {
+            get
+            {
+                return _ffnxUpdateChannel;
+            }
+            set
+            {
+                _ffnxUpdateChannel = value;
                 NotifyPropertyChanged();
             }
         }
@@ -388,6 +403,8 @@ namespace SeventhHeaven.ViewModels
             MoviesPathInput = settings.MovieFolder;
             TexturesPathInput = settings.AaliFolder;
 
+            FFNxUpdateChannel = settings.FFNxUpdateChannel;
+
             AutoUpdateModsByDefault = settings.HasOption(GeneralOptions.AutoUpdateMods);
             ActivateInstalledModsAuto = settings.HasOption(GeneralOptions.AutoActiveNewMods);
             ImportLibraryFolderAuto = settings.HasOption(GeneralOptions.AutoImportMods);
@@ -494,7 +511,7 @@ namespace SeventhHeaven.ViewModels
             Sys.Settings.Subscriptions = GetUpdatedSubscriptions();
             Sys.Settings.ExtraFolders = ExtraFolderList.Distinct().ToList();
 
-            // ensure 'direct' and 'music' folders are always in ExtraFolders list
+            // ensure 'direct', 'music', 'sfx' and 'voice' folders are always in ExtraFolders list
             if (!Sys.Settings.ExtraFolders.Contains("direct", StringComparer.InvariantCultureIgnoreCase))
             {
                 Sys.Settings.ExtraFolders.Add("direct");
@@ -505,10 +522,21 @@ namespace SeventhHeaven.ViewModels
                 Sys.Settings.ExtraFolders.Add("music");
             }
 
+            if (!Sys.Settings.ExtraFolders.Contains("sfx", StringComparer.InvariantCultureIgnoreCase))
+            {
+                Sys.Settings.ExtraFolders.Add("sfx");
+            }
+
+            if (!Sys.Settings.ExtraFolders.Contains("voice", StringComparer.InvariantCultureIgnoreCase))
+            {
+                Sys.Settings.ExtraFolders.Add("voice");
+            }
+
             Sys.Settings.FF7Exe = FF7ExePathInput;
             Sys.Settings.LibraryLocation = LibraryPathInput;
             Sys.Settings.MovieFolder = MoviesPathInput;
             Sys.Settings.AaliFolder = TexturesPathInput;
+            Sys.Settings.FFNxUpdateChannel = FFNxUpdateChannel;
 
 
             Sys.Settings.Options = GetUpdatedOptions();

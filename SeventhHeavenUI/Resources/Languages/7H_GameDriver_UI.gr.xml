@@ -16,8 +16,20 @@
       <Settings>renderer_backend = 1</Settings>
     </Option>
     <Option>
+      <Text>DirectX 9 ( Πειραματικός )</Text>
+      <Settings>renderer_backend = 2</Settings>
+    </Option>
+    <Option>
       <Text>DirectX 11</Text>
       <Settings>renderer_backend = 3</Settings>
+    </Option>
+    <Option>
+      <Text>DirectX 12</Text>
+      <Settings>renderer_backend = 4</Settings>
+    </Option>
+    <Option>
+      <Text>Vulkan</Text>
+      <Settings>renderer_backend = 5</Settings>
     </Option>
   </Setting>
 
@@ -96,14 +108,14 @@
     <Group>Γραφικά</Group>
     <Name>Λειτουργία παραθύρου</Name>
     <Description>Εμφάνιση του παιχνιδιού είτε σε ένα τυπικό παράθυρο είτε σε πλήρη οθόνη χωρίς περίγραμμα.</Description>
-    <DefaultValue>fullscreen = no</DefaultValue>
+    <DefaultValue>fullscreen = false</DefaultValue>
     <Option>
       <Text>Παράθυρο</Text>
-      <Settings>fullscreen = no</Settings>
+      <Settings>fullscreen = false</Settings>
     </Option>
     <Option>
       <Text>Πλήρης Οθόνη</Text>
-      <Settings>fullscreen = yes</Settings>
+      <Settings>fullscreen = true</Settings>
     </Option>
   </Setting>
 
@@ -111,14 +123,14 @@
     <Group>Γραφικά</Group>
     <Name>Αναλογία διαστάσεων</Name>
     <Description>Η διατήρηση της αναλογίας διαστάσεων προσθέτει μαύρες μπάρες όπως απαιτείται για τη διατήρηση της αναλογίας διαστάσεων 4:3.</Description>
-    <DefaultValue>preserve_aspect = yes</DefaultValue>
+    <DefaultValue>preserve_aspect = true</DefaultValue>
     <Option>
       <Text>Πηγαία (4:3)</Text>
-      <Settings>preserve_aspect = yes</Settings>
+      <Settings>preserve_aspect = true</Settings>
     </Option>
     <Option>
       <Text>Τέντωμα για συμπλήρωση</Text>
-      <Settings>preserve_aspect = no</Settings>
+      <Settings>preserve_aspect = false</Settings>
     </Option>
   </Setting>
 
@@ -153,27 +165,18 @@
     <Group>Γραφικά</Group>
     <Name>Ανισοτροπικό φιλτράρισμα</Name>
     <Description>Εφαρμόζει ένα φίλτρο σε υφές υψηλής ανάλυσης που παράγουν πιο ευκρινή εικόνα. Μπορεί να επηρεάσει την απόδοση λόγω της αυξημένης χρήσης μνήμης.</Description>
-    <DefaultValue>enable_anisotropic = yes</DefaultValue>
-    <TrueSetting>enable_anisotropic = yes</TrueSetting>
-    <FalseSetting>enable_anisotropic = no</FalseSetting>
-  </Setting>
-
-  <Setting xsi:type="Checkbox">
-    <Group>Γραφικά</Group>
-    <Name>Γραμμικό φιλτράρισμα</Name>
-    <Description>Εφαρμόζει ένα φίλτρο σε υφές χαμηλής ανάλυσης. Μπορεί να εμφανιστούν αντικείμενα. Οι υφές υψηλής ανάλυσης δεν επηρεάζονται.</Description>
-    <DefaultValue>linear_filter = no</DefaultValue>
-    <TrueSetting>linear_filter = yes</TrueSetting>
-    <FalseSetting>linear_filter = no</FalseSetting>
+    <DefaultValue>enable_anisotropic = true</DefaultValue>
+    <TrueSetting>enable_anisotropic = true</TrueSetting>
+    <FalseSetting>enable_anisotropic = false</FalseSetting>
   </Setting>
 
   <Setting xsi:type="Checkbox">
     <Group>Γραφικά</Group>
     <Name>Κατακόρυφος συγχρονισμός</Name>
     <Description>Συγχρονίζει το ρυθμό καρέ του παιχνιδιού με το ρυθμό ανανέωσης της οθόνης. Μπορεί να μειώσει την απόδοση ή να σπάσει τις λειτουργίες 60 fps. Ενεργοποιήστε εάν έχετε δάκρυ στην οθόνη. *Όρια ταχύτητας εξαπάτησης!*</Description>
-    <DefaultValue>enable_vsync = no</DefaultValue>
-    <TrueSetting>enable_vsync = yes</TrueSetting>
-    <FalseSetting>enable_vsync = no</FalseSetting>
+    <DefaultValue>enable_vsync = false</DefaultValue>
+    <TrueSetting>enable_vsync = true</TrueSetting>
+    <FalseSetting>enable_vsync = false</FalseSetting>
   </Setting>
 
   <!-- CHEATS TAB -->
@@ -214,7 +217,7 @@
     <Group>Απατώ</Group>
     <Name>Αύξηση ταχύτητας</Name>
     <Description>Ποσό για αύξηση ή μείωση της ταχύτητας σε κάθε συμβάν.{0}Χρήση: CTRL+Πάνω/Κάτω ή L2+R2+Πάνω/Κάτω για αλλαγή ταχύτητας, CTRL+Αριστερά/Δεξιά ή L2+R2+Αριστερά/Δεξιά για ενεργοποίηση/απενεργοποίηση.</Description>
-    <DefaultValue>speedhack_step = 1.0</DefaultValue>
+    <DefaultValue>speedhack_step = 0.5</DefaultValue>
     <Option>
       <Text>0.5</Text>
       <Settings>speedhack_step = 0.5</Settings>
@@ -233,30 +236,30 @@
     <Group>Απατώ</Group>
     <Name>Μέγιστη ταχύτητα</Name>
     <Description>Η μέγιστη ταχύτητα που πρέπει να ορίσετε πριν επιστρέψετε στην κανονική ταχύτητα.</Description>
-    <DefaultValue>speedhack_max = 7.0</DefaultValue>
+    <DefaultValue>speedhack_max = 8.0</DefaultValue>
     <Option>
-      <Text>3x</Text>
-      <Settings>speedhack_max = 3.0</Settings>
+      <Text>2x</Text>
+      <Settings>speedhack_max = 2.0</Settings>
     </Option>
     <Option>
-      <Text>5x</Text>
-      <Settings>speedhack_max = 5.0</Settings>
+      <Text>4x</Text>
+      <Settings>speedhack_max = 4.0</Settings>
     </Option>
     <Option>
-      <Text>7x</Text>
-      <Settings>speedhack_max = 7.0</Settings>
+      <Text>6x</Text>
+      <Settings>speedhack_max = 6.0</Settings>
     </Option>
     <Option>
-      <Text>9x</Text>
-      <Settings>speedhack_max = 9.0</Settings>
+      <Text>8x</Text>
+      <Settings>speedhack_max = 8.0</Settings>
     </Option>
     <Option>
-      <Text>11x</Text>
-      <Settings>speedhack_max = 11.0</Settings>
+      <Text>10x</Text>
+      <Settings>speedhack_max = 10.0</Settings>
     </Option>
     <Option>
-      <Text>13x</Text>
-      <Settings>speedhack_max = 13.0</Settings>
+      <Text>12x</Text>
+      <Settings>speedhack_max = 12.0</Settings>
     </Option>
   </Setting>
 
@@ -265,14 +268,29 @@
     <Group>Για προχωρημένους</Group>
     <Name>Επιλογή μουσικής</Name>
     <Description>Χρησιμοποιήστε το VGMStream για να παίξετε μουσική υψηλής ποιότητας OGG Vorbis. Απαιτείται για mods μουσικής. Διαφορετικά, χρησιμοποιείται το τυπικό MIDI.</Description>
-    <DefaultValue>use_external_music = yes</DefaultValue>
+    <DefaultValue>use_external_music = true</DefaultValue>
     <Option>
       <Text>VGMStream (Προτεινόμενο)</Text>
-      <Settings>use_external_music = yes</Settings>
+      <Settings>use_external_music = true</Settings>
     </Option>
     <Option>
       <Text>Τυπικό MIDI</Text>
-      <Settings>use_external_music = no</Settings>
+      <Settings>use_external_music = false</Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>Για προχωρημένους</Group>
+    <Name>SFX Option</Name>
+    <Description>Use VGMStream to play OGG Vorbis high-quality SFX effects. Required for SFX mods. Otherwise, native audio.dat is used.</Description>
+    <DefaultValue>use_external_sfx = true</DefaultValue>
+    <Option>
+      <Text>VGMStream (Προτεινόμενο)</Text>
+      <Settings>use_external_sfx = true</Settings>
+    </Option>
+    <Option>
+      <Text>Original audio.dat</Text>
+      <Settings>use_external_sfx = false</Settings>
     </Option>
   </Setting>
 
@@ -280,60 +298,64 @@
     <Group>Για προχωρημένους</Group>
     <Name>Επιλογή ταινίας</Name>
     <Description>Χρησιμοποιήστε το FFMPEG για αναπαραγωγή ταινιών εντός παιχνιδιού (FMV). Εναλλακτικά, χρησιμοποιήστε την αρχική απόδοση, η οποία ενδέχεται να μην υποστηρίζει τόσους κωδικοποιητές ταινιών.</Description>
-    <DefaultValue>enable_ffmpeg_videos = yes</DefaultValue>
+    <DefaultValue>enable_ffmpeg_videos = 1</DefaultValue>
     <Option>
-      <Text>FFMPEG (Προτεινόμενο)</Text>
-      <Settings>enable_ffmpeg_videos = yes</Settings>
+      <Text>Autodetect (Recommended)</Text>
+      <Settings>enable_ffmpeg_videos = -1</Settings>
+    </Option>
+    <Option>
+      <Text>FFMPEG</Text>
+      <Settings>enable_ffmpeg_videos = 1</Settings>
     </Option>
     <Option>
       <Text>Αρχική απόδοση</Text>
-      <Settings>enable_ffmpeg_videos = no</Settings>
+      <Settings>enable_ffmpeg_videos = 0</Settings>
     </Option>
   </Setting>
 
   <Setting xsi:type="Checkbox">
     <Group>Για προχωρημένους</Group>
-    <Name>Φανταστική διαφάνεια</Name>
-    <Description>Ενεργοποίηση ανάμειξης άλφα για υφές χωρίς υπάρχον εφέ ανάμειξης. Απαιτείται για ορισμένα mods.</Description>
-    <DefaultValue>fancy_transparency = yes</DefaultValue>
-    <TrueSetting>fancy_transparency = yes</TrueSetting>
-    <FalseSetting>fancy_transparency = no</FalseSetting>
+    <Name>Animated Textures</Name>
+    <Description>Enable support for high quality animated textures. NOTE: This feature requires a MODERN CPU. If you notice slowdows, please DISABLE this flag.</Description>
+    <DefaultValue>enable_animated_textures = false</DefaultValue>
+    <TrueSetting>enable_animated_textures = true</TrueSetting>
+    <FalseSetting>enable_animated_textures = false</FalseSetting>
   </Setting>
 
   <Setting xsi:type="Checkbox">
     <Group>Για προχωρημένους</Group>
     <Name>Εμφάνιση πληροφοριών εντοπισμού σφαλμάτων</Name>
     <Description>Εμφανίζει πληροφορίες σε πραγματικό χρόνο σχετικά με τη διαδικασία απόδοσης/απόδοση σε μια επικάλυψη ή στη γραμμή τίτλων.</Description>
-    <DefaultValue>show_stats = no</DefaultValue>
-    <TrueSetting>show_stats = yes</TrueSetting>
-    <FalseSetting>show_stats = no</FalseSetting>
+    <DefaultValue>show_stats = false</DefaultValue>
+    <TrueSetting>show_stats = true</TrueSetting>
+    <FalseSetting>show_stats = false</FalseSetting>
   </Setting>
 
   <Setting xsi:type="Checkbox">
     <Group>Για προχωρημένους</Group>
     <Name>Εμφάνιση έκδοσης προγράμματος οδήγησης</Name>
     <Description>Εμφανίζει την τρέχουσα χρησιμοποιούμενη έκδοση προγράμματος οδήγησης σε μια επικάλυψη ή στη γραμμή τίτλων.</Description>
-    <DefaultValue>show_version = no</DefaultValue>
-    <TrueSetting>show_version = yes</TrueSetting>
-    <FalseSetting>show_version = no</FalseSetting>
+    <DefaultValue>show_version = false</DefaultValue>
+    <TrueSetting>show_version = true</TrueSetting>
+    <FalseSetting>show_version = false</FalseSetting>
   </Setting>
 
   <Setting xsi:type="Checkbox">
     <Group>Για προχωρημένους</Group>
     <Name>Εμφάνιση FPS</Name>
     <Description>Εμφανίζει τα τρέχοντα καρέ ανά δευτερόλεπτο σε μια επικάλυψη ή στη γραμμή τίτλων.</Description>
-    <DefaultValue>show_fps = no</DefaultValue>
-    <TrueSetting>show_fps = yes</TrueSetting>
-    <FalseSetting>show_fps = no</FalseSetting>
+    <DefaultValue>show_fps = false</DefaultValue>
+    <TrueSetting>show_fps = true</TrueSetting>
+    <FalseSetting>show_fps = false</FalseSetting>
   </Setting>
 
   <Setting xsi:type="Checkbox">
     <Group>Για προχωρημένους</Group>
     <Name>Εμφάνιση API γραφικών</Name>
     <Description>Εμφανίζει το τρέχον χρησιμοποιούμενο API γραφικών (OpenGL/DirectX11) σε μια επικάλυψη ή στη γραμμή τίτλων.</Description>
-    <DefaultValue>show_renderer_backend = no</DefaultValue>
-    <TrueSetting>show_renderer_backend = yes</TrueSetting>
-    <FalseSetting>show_renderer_backend = no</FalseSetting>
+    <DefaultValue>show_renderer_backend = false</DefaultValue>
+    <TrueSetting>show_renderer_backend = true</TrueSetting>
+    <FalseSetting>show_renderer_backend = false</FalseSetting>
   </Setting>
 
 </ConfigSpec>

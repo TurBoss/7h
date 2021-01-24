@@ -5,6 +5,7 @@ using SeventhHeaven.ViewModels;
 using SeventhHeavenUI.ViewModels;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace SeventhHeaven.Windows
 {
@@ -16,6 +17,8 @@ namespace SeventhHeaven.Windows
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         public GeneralSettingsViewModel ViewModel { get; set; }
+
+        private FFNxDriverUpdater updater = new FFNxDriverUpdater();
 
         public GeneralSettingsWindow()
         {
@@ -415,6 +418,22 @@ namespace SeventhHeaven.Windows
         private void btnDefaults_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.ResetToDefaults();
+        }
+
+        private void cmbFFNxChannel_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (ViewModel != null)
+            {
+                ViewModel.FFNxUpdateChannel = (FFNxUpdateChannelOptions)cmbFFNxChannel.SelectedIndex;
+
+                // Bypass the default save button in order to make the Check for Updates button work instantly
+                Sys.Settings.FFNxUpdateChannel = ViewModel.FFNxUpdateChannel;
+            }
+        }
+
+        private void btnFFNxCheckForUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            updater.CheckForUpdates(Sys.Settings.FFNxUpdateChannel);
         }
     }
 }

@@ -16,8 +16,20 @@
       <Settings>renderer_backend = 1</Settings>
     </Option>
     <Option>
+      <Text>DirectX 9 ( Experimental )</Text>
+      <Settings>renderer_backend = 2</Settings>
+    </Option>
+    <Option>
       <Text>DirectX 11</Text>
       <Settings>renderer_backend = 3</Settings>
+    </Option>
+    <Option>
+      <Text>DirectX 12</Text>
+      <Settings>renderer_backend = 4</Settings>
+    </Option>
+    <Option>
+      <Text>Vulkan</Text>
+      <Settings>renderer_backend = 5</Settings>
     </Option>
   </Setting>
 
@@ -96,14 +108,14 @@
     <Group>Gráficos</Group>
     <Name>Modo de Janela</Name>
     <Description>Exibir jogo em janela com borda, ou tela cheia sem borda.</Description>
-    <DefaultValue>fullscreen = no</DefaultValue>
+    <DefaultValue>fullscreen = false</DefaultValue>
     <Option>
       <Text>Janela</Text>
-      <Settings>fullscreen = no</Settings>
+      <Settings>fullscreen = false</Settings>
     </Option>
     <Option>
       <Text>Tela Cheia</Text>
-      <Settings>fullscreen = yes</Settings>
+      <Settings>fullscreen = true</Settings>
     </Option>
   </Setting>
 
@@ -111,14 +123,14 @@
     <Group>Gráficos</Group>
     <Name>Relação de Aspecto</Name>
     <Description>Preservar relação de aspecto adiciona bordas pretas como necessário para preservar uma relação de aspecto 4:3.</Description>
-    <DefaultValue>preserve_aspect = yes</DefaultValue>
+    <DefaultValue>preserve_aspect = true</DefaultValue>
     <Option>
       <Text>preservar uma proporção de 4:3</Text>
-      <Settings>preserve_aspect = yes</Settings>
+      <Settings>preserve_aspect = true</Settings>
     </Option>
     <Option>
       <Text>Alongar para preencher</Text>
-      <Settings>preserve_aspect = no</Settings>
+      <Settings>preserve_aspect = false</Settings>
     </Option>
   </Setting>
 
@@ -153,27 +165,18 @@
     <Group>Gráficos</Group>
     <Name>filtragem anisotrópica</Name>
     <Description>Usa mapas MIP para ver texturas de alta resolução. Isso pode melhorar a performance e qualidade das imagens, mas usa mais memória pras texturas.</Description>
-    <DefaultValue>enable_anisotropic = yes</DefaultValue>
-    <TrueSetting>enable_anisotropic = yes</TrueSetting>
-    <FalseSetting>enable_anisotropic = no</FalseSetting>
-  </Setting>
-
-  <Setting xsi:type="Checkbox">
-    <Group>Gráficos</Group>
-    <Name>Filtragem Linear</Name>
-    <Description>Talvez melhore a qualidade de texturas de baixa resolução. Não recomendado quando utilizando mods de alta resolução. Se artefatos roxos ou cianos aparecerem no campo, desative esta opção.</Description>
-    <DefaultValue>linear_filter = no</DefaultValue>
-    <TrueSetting>linear_filter = yes</TrueSetting>
-    <FalseSetting>linear_filter = no</FalseSetting>
+    <DefaultValue>enable_anisotropic = true</DefaultValue>
+    <TrueSetting>enable_anisotropic = true</TrueSetting>
+    <FalseSetting>enable_anisotropic = false</FalseSetting>
   </Setting>
 
   <Setting xsi:type="Checkbox">
     <Group>Gráficos</Group>
     <Name>Sincronização Vertical</Name>
     <Description>Sincroniza a taxa de quadros do jogo com a taxa de atualização do monitor. Pode afetar negativamente a performance ou quebrar mods de 60 fps. Ative se estiver acontecendo Screen Tearing. *Limita a Trapaça de Velocidade!*</Description>
-    <DefaultValue>enable_vsync = no</DefaultValue>
-    <TrueSetting>enable_vsync = yes</TrueSetting>
-    <FalseSetting>enable_vsync = no</FalseSetting>
+    <DefaultValue>enable_vsync = false</DefaultValue>
+    <TrueSetting>enable_vsync = true</TrueSetting>
+    <FalseSetting>enable_vsync = false</FalseSetting>
   </Setting>
 
   <!-- CHEATS TAB -->
@@ -214,7 +217,7 @@
     <Group>Trapaça</Group>
     <Name>Incremento de Velocidade</Name>
     <Description>Quantidade para aumentar ou diminuir a velocidade a cada ativação.{0}Uso: CTRL+Cima/Baixo ou L2+R2+Cima/Baixo para alterar a velocidade, CTRL+Esquerda/Direita ou L2+R2+Esquerda/Direita para ligar/desligar.</Description>
-    <DefaultValue>speedhack_step = 1.0</DefaultValue>
+    <DefaultValue>speedhack_step = 0.5</DefaultValue>
     <Option>
       <Text>0.5</Text>
       <Settings>speedhack_step = 0.5</Settings>
@@ -233,30 +236,30 @@
     <Group>Trapaça</Group>
     <Name>Velocidade máxima</Name>
     <Description>A velocidade máxima a alçancar antes de voltar à velocidade normal.</Description>
-    <DefaultValue>speedhack_max = 7.0</DefaultValue>
+    <DefaultValue>speedhack_max = 8.0</DefaultValue>
     <Option>
-      <Text>3x</Text>
-      <Settings>speedhack_max = 3.0</Settings>
+      <Text>2x</Text>
+      <Settings>speedhack_max = 2.0</Settings>
     </Option>
     <Option>
-      <Text>5x</Text>
-      <Settings>speedhack_max = 5.0</Settings>
+      <Text>4x</Text>
+      <Settings>speedhack_max = 4.0</Settings>
     </Option>
     <Option>
-      <Text>7x</Text>
-      <Settings>speedhack_max = 7.0</Settings>
+      <Text>6x</Text>
+      <Settings>speedhack_max = 6.0</Settings>
     </Option>
     <Option>
-      <Text>9x</Text>
-      <Settings>speedhack_max = 9.0</Settings>
+      <Text>8x</Text>
+      <Settings>speedhack_max = 8.0</Settings>
     </Option>
     <Option>
-      <Text>11x</Text>
-      <Settings>speedhack_max = 11.0</Settings>
+      <Text>10x</Text>
+      <Settings>speedhack_max = 10.0</Settings>
     </Option>
     <Option>
-      <Text>13x</Text>
-      <Settings>speedhack_max = 13.0</Settings>
+      <Text>12x</Text>
+      <Settings>speedhack_max = 12.0</Settings>
     </Option>
   </Setting>
 
@@ -265,14 +268,29 @@
     <Group>Avançado</Group>
     <Name>Opção de Música</Name>
     <Description>Usar VGMStream para ouvir músicas de alta qualidade OGG Vorbis. Necessário para mods de música. Caso contrário, MIDI padrão será usado.</Description>
-    <DefaultValue>use_external_music = yes</DefaultValue>
+    <DefaultValue>use_external_music = true</DefaultValue>
     <Option>
       <Text>VGMStream (Recomendado)</Text>
-      <Settings>use_external_music = yes</Settings>
+      <Settings>use_external_music = true</Settings>
     </Option>
     <Option>
       <Text>MIDI Original</Text>
-      <Settings>use_external_music = no</Settings>
+      <Settings>use_external_music = false</Settings>
+    </Option>
+  </Setting>
+
+  <Setting xsi:type="DropDown">
+    <Group>Avançado</Group>
+    <Name>SFX Option</Name>
+    <Description>Use VGMStream to play OGG Vorbis high-quality SFX effects. Required for SFX mods. Otherwise, native audio.dat is used.</Description>
+    <DefaultValue>use_external_sfx = true</DefaultValue>
+    <Option>
+      <Text>VGMStream (Recomendado)</Text>
+      <Settings>use_external_sfx = true</Settings>
+    </Option>
+    <Option>
+      <Text>Original audio.dat</Text>
+      <Settings>use_external_sfx = false</Settings>
     </Option>
   </Setting>
 
@@ -280,60 +298,64 @@
     <Group>Avançado</Group>
     <Name>Opção de Filme</Name>
     <Description>Usar FFMPEG para rodar filmes do jogo (FMVs). Ou, use o renderizador original, que talvez tenha suporte para um menor número de codecs.</Description>
-    <DefaultValue>enable_ffmpeg_videos = yes</DefaultValue>
+    <DefaultValue>enable_ffmpeg_videos = 1</DefaultValue>
     <Option>
-      <Text>FFMPEG (Recomendado)</Text>
-      <Settings>enable_ffmpeg_videos = yes</Settings>
+      <Text>Autodetect (Recommended)</Text>
+      <Settings>enable_ffmpeg_videos = -1</Settings>
+    </Option>
+    <Option>
+      <Text>FFMPEG</Text>
+      <Settings>enable_ffmpeg_videos = 1</Settings>
     </Option>
     <Option>
       <Text>Renderizador Original</Text>
-      <Settings>enable_ffmpeg_videos = no</Settings>
+      <Settings>enable_ffmpeg_videos = 0</Settings>
     </Option>
   </Setting>
 
   <Setting xsi:type="Checkbox">
     <Group>Avançado</Group>
-    <Name>Transparência Extravagante</Name>
-    <Description>Ativa a mistura alfa para texturas sem um efeito de mistura existente. Obrigatório para alguns mods.</Description>
-    <DefaultValue>fancy_transparency = yes</DefaultValue>
-    <TrueSetting>fancy_transparency = yes</TrueSetting>
-    <FalseSetting>fancy_transparency = no</FalseSetting>
+    <Name>Animated Textures</Name>
+    <Description>Enable support for high quality animated textures. NOTE: This feature requires a MODERN CPU. If you notice slowdows, please DISABLE this flag.</Description>
+    <DefaultValue>enable_animated_textures = false</DefaultValue>
+    <TrueSetting>enable_animated_textures = true</TrueSetting>
+    <FalseSetting>enable_animated_textures = false</FalseSetting>
   </Setting>
 
   <Setting xsi:type="Checkbox">
     <Group>Avançado</Group>
     <Name>Mostrar estatísticas</Name>
     <Description>Exibe algumas informações de depuração em tempo real na tela.</Description>
-    <DefaultValue>show_stats = no</DefaultValue>
-    <TrueSetting>show_stats = yes</TrueSetting>
-    <FalseSetting>show_stats = no</FalseSetting>
+    <DefaultValue>show_stats = false</DefaultValue>
+    <TrueSetting>show_stats = true</TrueSetting>
+    <FalseSetting>show_stats = false</FalseSetting>
   </Setting>
 
   <Setting xsi:type="Checkbox">
     <Group>Avançado</Group>
     <Name>Mostrar versão do driver</Name>
     <Description>Exibe a versão do driver atualmente usada em uma sobreposição ou na barra de título.</Description>
-    <DefaultValue>show_version = no</DefaultValue>
-    <TrueSetting>show_version = yes</TrueSetting>
-    <FalseSetting>show_version = no</FalseSetting>
+    <DefaultValue>show_version = false</DefaultValue>
+    <TrueSetting>show_version = true</TrueSetting>
+    <FalseSetting>show_version = false</FalseSetting>
   </Setting>
 
   <Setting xsi:type="Checkbox">
     <Group>Avançado</Group>
     <Name>Mostrar FPS</Name>
     <Description>Mostra os quadros por segundo no canto superior direito da tela.</Description>
-    <DefaultValue>show_fps = no</DefaultValue>
-    <TrueSetting>show_fps = yes</TrueSetting>
-    <FalseSetting>show_fps = no</FalseSetting>
+    <DefaultValue>show_fps = false</DefaultValue>
+    <TrueSetting>show_fps = true</TrueSetting>
+    <FalseSetting>show_fps = false</FalseSetting>
   </Setting>
 
   <Setting xsi:type="Checkbox">
     <Group>Avançado</Group>
     <Name>Mostrar API de gráficos</Name>
     <Description>Exibe a API de gráficos usada atualmente (OpenGL / DirectX11) em uma sobreposição ou na barra de título.</Description>
-    <DefaultValue>show_renderer_backend = no</DefaultValue>
-    <TrueSetting>show_renderer_backend = yes</TrueSetting>
-    <FalseSetting>show_renderer_backend = no</FalseSetting>
+    <DefaultValue>show_renderer_backend = false</DefaultValue>
+    <TrueSetting>show_renderer_backend = true</TrueSetting>
+    <FalseSetting>show_renderer_backend = false</FalseSetting>
   </Setting>
 
 </ConfigSpec>

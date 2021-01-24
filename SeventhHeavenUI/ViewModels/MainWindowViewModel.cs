@@ -1750,7 +1750,7 @@ namespace SeventhHeavenUI.ViewModels
 
         internal void ShowGameDriverConfigWindow()
         {
-            string driverCfg = Path.Combine(Sys._7HFolder, "Resources\\Game Driver", "GameDriver.cfg");
+            string driverCfg = Path.Combine(Sys.InstallPath, "FFNx.toml");
             string appLanguage = System.Configuration.ConfigurationManager.AppSettings["DefaultAppLanguage"];
             string uiXmlPath = Path.Combine(Sys._7HFolder, "Resources", "7H_GameDriver_UI.xml"); // default to using english version
 
@@ -1812,7 +1812,7 @@ namespace SeventhHeavenUI.ViewModels
             }
             else
             {
-                MessageDialogWindow messageDialog = new MessageDialogWindow(ResourceHelper.Get(StringKey.MissingPath), $"FFNX.cfg {ResourceHelper.Get(StringKey.FileNotFound)}", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow messageDialog = new MessageDialogWindow(ResourceHelper.Get(StringKey.MissingPath), $"FFNx.toml {ResourceHelper.Get(StringKey.FileNotFound)}\n\nPlease run the game at least once and try again.", MessageBoxButton.OK, MessageBoxImage.Warning);
                 messageDialog.ShowDialog();
             }
         }

@@ -117,6 +117,13 @@ namespace Iros._7th.Workshop
         public static AvailableUpdate LastCheckedVersion { get; set; }
         public static string _7HFolder { get; private set; }
         public static string SysFolder { get; private set; }
+        public static string InstallPath
+        {
+            get
+            {
+                return Path.GetDirectoryName(Settings.FF7Exe);
+            }
+        }
 
         public static string PathToCurrentProfileFile
         {

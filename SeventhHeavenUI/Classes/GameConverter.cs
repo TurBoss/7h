@@ -746,155 +746,35 @@ namespace SeventhHeaven.Classes
         }
 
         /// <summary>
-        /// Checks FFNx.dll is up to date and matches file in Resources/Game Driver/ folder.
-        /// If files are different then game driver files are copied to ff7 install path
-        /// Also copies/overwrites the game driver cfg file in ff7 folder
+        /// Checks FFNx.dll is present in the current game directory.
+        /// If not present it will automatically download and install the latest stable version.
         /// </summary>
         /// <returns>returns false if error occurred</returns>
         internal bool InstallLatestGameDriver(string backupFolderPath)
         {
-            string pathToLatestFile = Path.Combine(Sys.PathToGameDriverFolder, "FFNx.dll");
-            string pathToLatestCfg = Path.Combine(Sys.PathToGameDriverFolder, "GameDriver.cfg");
-            string pathToCurrentFile = Path.Combine(InstallPath, "FFNx.dll");
-            string pathToCurrentCfg = Path.Combine(InstallPath, "FFNx.cfg");
+            string pathToCurrentDriver = Path.Combine(InstallPath, "FFNx.dll");
+            bool currentDriverExists = File.Exists(pathToCurrentDriver);
 
-            string pathToOldCustomDriver = Path.Combine(InstallPath, "7H_GameDriver.dll");
-            string pathToOldCustomCfg = Path.Combine(InstallPath, "7H_GameDriver.cfg");
-
-            if (!File.Exists(pathToLatestFile))
+            if (!currentDriverExists)
             {
-                SendMessage($"{ResourceHelper.Get(StringKey.CannotCheckIfLatestDriverIsInstalledDueToMissingFile)}: {pathToLatestFile}", NLog.LogLevel.Warn);
-                return true; // return true so it does not halt process
-            }
-
-            try
-            {
-                // copy latest config to ff7 game folder
-                if (File.Exists(pathToLatestCfg))
+                try
                 {
-                    SendMessage($"\t{ResourceHelper.Get(StringKey.Copying)} {pathToLatestCfg} -> {pathToCurrentCfg} ...");
-                    File.Copy(pathToLatestCfg, pathToCurrentCfg, true);
+                    FFNxDriverUpdater updater = new FFNxDriverUpdater();
+
+                    SendMessage($"Download and extracting the latest FFNx Stable version to {Sys.InstallPath}...");
+                    updater.DownloadAndExtractLatestVersion(FFNxUpdateChannelOptions.Stable);
                 }
-                else
+                catch (Exception ex)
                 {
-                    SendMessage($"\t{ResourceHelper.Get(StringKey.CannotCreateDefaultCfgDueToMissingFile)}: {pathToLatestCfg} ...", NLog.LogLevel.Error);
+                    Logger.Error(ex);
                     return false;
                 }
             }
-            catch (Exception ex)
+            else
             {
-                Logger.Error(ex);
-                return false;
+                SendMessage($"FFNx seems to be present.");
             }
-
-            FileVersionInfo currentFileVersion = null;
-            if (File.Exists(pathToCurrentFile))
-            {
-                currentFileVersion = FileVersionInfo.GetVersionInfo(pathToCurrentFile);
-
-                // If no version detected, trigger copy of driver because it is old
-                // Also if version is 1.7.2.152 (included in 7h 2.2 beta) it is old because
-                // TrueOdin reset version and current 1.7.2.124 is newer than 1.7.2.152
-                // 1.7.2.152 logic can be removed once bundled ffnx ver is above 1.7.2.152 again
-                if (String.IsNullOrWhiteSpace(currentFileVersion.FileVersion) || currentFileVersion.FileVersion.Equals("1.7.2.152"))
-                {
-                    currentFileVersion = null;
-                }
-            }
-
-            FileVersionInfo latestFileVersion = FileVersionInfo.GetVersionInfo(pathToLatestFile);
-
-            if (currentFileVersion != null && latestFileVersion != null && new Version(currentFileVersion.FileVersion).CompareTo(new Version(latestFileVersion.FileVersion)) >= 0)
-            {
-                SendMessage($"\t{ResourceHelper.Get(StringKey.GameDriverDllFileIsUpToDate)}");
-                return true; // file exists and matches what is in /Game Driver folder
-            }
-
-            try
-            {
-                // delete old 7H_GameDriver.dll and .cfg that was used for 7H 2.0
-                if (File.Exists(pathToOldCustomDriver))
-                {
-                    Logger.Info($"deleting {pathToOldCustomDriver} ...");
-                    File.Delete(pathToOldCustomDriver);
-                }
-
-                if (File.Exists(pathToOldCustomCfg))
-                {
-                    Logger.Info($"deleting {pathToOldCustomCfg} ...");
-                    File.Delete(pathToOldCustomCfg);
-                }
-
-                // backup existing driver dll to backup folder
-                if (File.Exists(pathToCurrentFile))
-                {
-                    Directory.CreateDirectory(backupFolderPath);
-                    SendMessage($"\t{ResourceHelper.Get(StringKey.BackingUpExistingGameDriverTo)} {backupFolderPath} ...");
-                    File.Copy(pathToCurrentFile, Path.Combine(backupFolderPath, "FFNx.dll"), true);
-                }
-
-                // backup old shaders and delete
-                string pathToShaders = Path.Combine(InstallPath, "shaders");
-                if (Directory.Exists(pathToShaders) && Directory.GetFiles(pathToShaders).Length > 0)
-                {
-                    SendMessage($"\t{ResourceHelper.Get(StringKey.BackingUpExistingShadersFolderTo)} {backupFolderPath} ...");
-                    Directory.CreateDirectory(Path.Combine(backupFolderPath, "shaders"));
-                    FileUtils.CopyDirectoryRecursively(Path.Combine(InstallPath, "shaders"), Path.Combine(backupFolderPath, "shaders"));
-                    Directory.Delete(pathToShaders, true);
-                }
-
-                // move old game driver (*.fgp) plugins to backup folder and delete plugins folder if empty
-                string pathToPlugins = Path.Combine(InstallPath, "plugins");
-                if (Directory.Exists(pathToPlugins))
-                {
-                    string[] pluginFiles = new string[] { "ff7music.fgp", "ffmpeg_movies.fgp", "vgmstream_music.fgp" };
-
-                    foreach (string file in pluginFiles)
-                    {
-                        string absolutePath = Path.Combine(pathToPlugins, file);
-                        string targetPath = Path.Combine(backupFolderPath, "plugins", file);
-
-                        if (File.Exists(absolutePath))
-                        {
-                            Directory.CreateDirectory(Path.GetDirectoryName(targetPath));
-                            File.Move(absolutePath, targetPath);
-                        }
-                    }
-
-                    if (Directory.GetFileSystemEntries(pathToPlugins).Length == 0)
-                    {
-                        // delete now empty plugins folder
-                        Directory.Delete(pathToPlugins);
-                    }
-                }
-
-                // copy entire contents of GameDriver folder to ff7 folder
-                // Lists are CaSe SeNsItIvE!
-                List<string> gameDriverFilesToIgnore = new List<string>() { "COPYING.TXT",
-                                                                        "FFNx._GLOBALS.txt",
-                                                                        "FFNx.BATTLE.fullscreen.txt",
-                                                                        "FFNx.BATTLE.restore_modals.txt",
-                                                                        "FFNx.BATTLE.transparent_modals.txt",
-                                                                        "FFNx.FIELD.transparent_modals.txt",
-                                                                        "FFNx.MENU.cursor_vertical_center.txt",
-                                                                        "FFNx.MENU.save_everywhere.txt",
-                                                                        "FFNx.reg",
-                                                                        "FFNx.cfg",
-                                                                        "GameDriver.cfg" };
-
-                List<string> gameDriverFoldersToIgnore = new List<string>() { "ff8",
-                                                                        "de",
-                                                                        "es",
-                                                                        "fr" };
-
-                SendMessage($"\t{ResourceHelper.Get(StringKey.CopyingContentsOf)} {Sys.PathToGameDriverFolder} -> {InstallPath} ...");
-                FileUtils.CopyDirectoryRecursively(Sys.PathToGameDriverFolder, InstallPath, gameDriverFilesToIgnore, gameDriverFoldersToIgnore, false);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-                return false;
-            }
+                
 
             return true;
         }
@@ -929,7 +809,9 @@ namespace SeventhHeaven.Classes
                 Path.Combine(InstallPath, "direct", "world"),
                 Path.Combine(InstallPath, "music"),
                 Path.Combine(InstallPath, "music", "vgmstream"),
+                Path.Combine(InstallPath, "sfx"),
                 Path.Combine(InstallPath, "shaders"),
+                Path.Combine(InstallPath, "voice"),
             };
 
             foreach (string dir in requiredFolders)
@@ -963,34 +845,6 @@ namespace SeventhHeaven.Classes
                 DeleteCacheFiles();
 
                 RegistryHelper.DeleteKey(converterKeyPath);
-            }
-        }
-
-        internal void CopyMissingShaders()
-        {
-            string pathToShaders = Path.Combine(InstallPath, "shaders");
-
-            // create missing directory
-            if (!Directory.Exists(pathToShaders))
-            {
-                SendMessage($"\t{ResourceHelper.Get(StringKey.MissingShadersFolderCreatingDirectory)}");
-                Directory.CreateDirectory(pathToShaders);
-            }
-
-            // copy missing files from shaders folder to ff7 install
-            string sourcePath = Path.Combine(Sys.PathToGameDriverFolder, "shaders");
-            string[] sourceFiles = Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories);
-
-            foreach (string shaderFile in sourceFiles)
-            {
-                string targetPath = shaderFile.Replace(sourcePath, pathToShaders);
-
-                if (!File.Exists(targetPath))
-                {
-                    SendMessage($"\t{string.Format(ResourceHelper.Get(StringKey.MissingShadersFilesCopyingFrom), targetPath, sourcePath)}");
-                    Directory.CreateDirectory(Path.GetDirectoryName(targetPath)); // ensure any missing sub folders are created
-                    File.Copy(shaderFile, targetPath, true);
-                }
             }
         }
 

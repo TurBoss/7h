@@ -5,25 +5,20 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml.Serialization;
+using Tomlyn;
+using Tomlyn.Model;
 
 namespace Iros._7th.Workshop.ConfigSettings {
 
     public class Settings {
-        private Dictionary<string, string> _values = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
-        private List<string> _lines;
-
-        /// <summary>
-        /// settings not to include in output
-        /// </summary>
-        public List<string> _settingsToExclude = new List<string>() { "vert_source", "frag_source", "yuv_source" };
+        private TomlTable _toml = null;
 
         public string Get(string setting) {
-            string s;
-            _values.TryGetValue(setting, out s);
-            return s;
+            return (string)_toml[setting];
         }
         public bool IsMatched(string spec) {
             string[] parts = spec.Split(',');
@@ -35,8 +30,7 @@ namespace Iros._7th.Workshop.ConfigSettings {
                     string trimmedName = set[0].Trim();
                     string trimmedVal = set[1].Trim();
 
-                    string value;
-                    _values.TryGetValue(trimmedName, out value);
+                    string value = _toml[trimmedName].ToString();
                     if (!trimmedVal.Equals(value ?? String.Empty, StringComparison.InvariantCultureIgnoreCase))
                         return false;
                 }                    
@@ -53,7 +47,44 @@ namespace Iros._7th.Workshop.ConfigSettings {
                 if (set.Length == 2) {
                     string trimmedName = set[0].Trim();
                     string trimmedVal = set[1].Trim();
-                    _values[trimmedName] = trimmedVal;
+
+                    if (trimmedName.StartsWith("speedhack_"))
+                    {
+                        CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+                        ci.NumberFormat.CurrencyDecimalSeparator = ".";
+
+                        _toml[trimmedName] = double.Parse(trimmedVal, NumberStyles.Any, ci);
+                        break;
+                    }
+                    else
+                    {
+                        switch (_toml[trimmedName])
+                        {
+                            case string s:
+                                {
+                                    _toml[trimmedName] = trimmedVal;
+                                    break;
+                                }
+                            case bool b:
+                                {
+                                    _toml[trimmedName] = bool.Parse(trimmedVal);
+                                    break;
+                                }
+                            case double d:
+                                {
+                                    CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+                                    ci.NumberFormat.CurrencyDecimalSeparator = ".";
+
+                                    _toml[trimmedName] = double.Parse(trimmedVal, NumberStyles.Any, ci);
+                                    break;
+                                }
+                            case Int64 i:
+                                {
+                                    _toml[trimmedName] = Int64.Parse(trimmedVal);
+                                    break;
+                                }
+                        }
+                    }
                 }
             }
         }
@@ -73,22 +104,28 @@ namespace Iros._7th.Workshop.ConfigSettings {
                     string trimmedName = set[0].Trim();
                     string trimmedVal = set[1].Trim();
 
-                    exists.Add(_values.ContainsKey(trimmedName));
+                    exists.Add(_toml.ContainsKey(trimmedName));
                 }
             }
 
             return exists.Count > 0 && exists.All(s => s);
         }
 
-        public Settings(IEnumerable<string> lines) {
-            _lines = lines.ToList();
+        public Settings(string _filePath) {
+            _toml = Toml.Parse(File.ReadAllBytes(_filePath)).ToModel();
+        }
 
-            foreach (string line in _lines) {
-                string[] parts = line.Split(new[] { " = " }, 2, StringSplitOptions.None);
-                if (parts.Length == 2 && !parts[0].StartsWith("#")) {
-                    _values[parts[0]] = parts[1];
-                }
-            }
+        private void OverrideKnownInternals()
+        {
+            _toml["external_sfx_path"] = "sfx";
+            _toml["external_sfx_ext"] = "ogg";
+            _toml["external_music_path"] = "music/vgmstream";
+            _toml["external_music_ext"] = "ogg";
+            _toml["external_voice_path"] = "voice";
+            _toml["external_voice_ext"] = "ogg";
+            _toml["ffmpeg_video_ext"] = "avi";
+            _toml["mod_path"] = "mods/Textures";
+            _toml["direct_mode_path"] = "direct";
         }
 
         /// <summary>
@@ -105,44 +142,98 @@ namespace Iros._7th.Workshop.ConfigSettings {
             }
         }
 
-        public IEnumerable<string> GetOutput() {
+        public void Save(string _filePath) {
+            List<string> _read = File.ReadAllLines(_filePath).ToList();
+            List<string> _write = new List<string>();
 
-            List<string> writtenKeys = new List<string>();
-            List<string> outputLines = new List<string>();
+            // Override known internal keys on save to preserve mod behavior override logic
+            OverrideKnownInternals();
 
-
-            foreach (string line in _lines) {
+            foreach (string line in _read)
+            {
                 string[] parts = line.Split(new[] { "=" }, 2, StringSplitOptions.None);
                 if (!line.StartsWith("#") && parts.Length == 2)
                 {
                     string settingName = parts[0].Trim();
 
-                    if (_values.ContainsKey(settingName) && !_settingsToExclude.Any(s => s == settingName))
+                    if (_toml.ContainsKey(settingName))
                     {
-                        outputLines.Add(settingName + " = " + _values[settingName]);
-                        writtenKeys.Add(settingName);
+                        dynamic node = _toml[settingName];
+
+                        if (settingName.StartsWith("speedhack_"))
+                        {
+                            _write.Add($"{settingName} = {node.ToString().Replace(",", ".")}");
+                        }
+                        else
+                        {
+                            switch (node)
+                            {
+                                case bool b:
+                                    {
+                                        _write.Add($"{settingName} = \"{ b.ToString().ToLower() }\"");
+                                        break;
+                                    }
+                                case string s:
+                                    {
+                                        _write.Add($"{settingName} = \"{ s.ToLower() }\"");
+                                        break;
+                                    }
+                                case double d:
+                                    {
+                                        _write.Add($"{settingName} = {node.ToString().Replace(",", ".")}");
+                                        break;
+                                    }
+                                case Int64 i:
+                                    {
+                                        if (settingName == "devtools_hotkey")
+                                        {
+                                            _write.Add($"{settingName} = 0x{i.ToString("X")}");
+                                        }
+                                        else
+                                        {
+                                            _write.Add($"{settingName} = {i.ToString()}");
+                                        }
+                                        break;
+                                    }
+                                case TomlArray ta:
+                                    {
+                                        if (ta.Count > 0)
+                                        {
+                                            if (node[0].GetType() == typeof(string))
+                                            {
+                                                _write.Add($"{settingName} = [\"{ string.Join("\", \"", ta.Select(w => w.ToString())) }\"]");
+                                            }
+                                            else
+                                            {
+                                                _write.Add($"{settingName} = [{ string.Join(", ", ta.Select(w => w.ToString())) }]");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            _write.Add($"{settingName} = []");
+                                        }
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        _write.Add($"{settingName} = {node.ToString()}");
+                                        break;
+                                    }
+                            }
+                        }
                     }
                     else
                     {
-                        outputLines.Add(line);
+                        _write.Add(line);
                     }
                 }
                 else
                 {
-                    outputLines.Add(line);
+                    _write.Add(line);
                 }
             }
 
-            // loop over new settings to add to cfg if it does not exist in the file
-            foreach (string key in _values.Keys)
-            {
-                if (!writtenKeys.Contains(key) && !_settingsToExclude.Any(s => s == key))
-                {
-                    outputLines.Add($"{key} = {_values[key]}");
-                }
-            }
-
-            return outputLines;
+            File.WriteAllLines(_filePath, _write);
         }
     }
 

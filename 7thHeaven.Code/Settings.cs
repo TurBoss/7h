@@ -28,6 +28,12 @@ namespace Iros._7th.Workshop {
         AutoUpdateMods
     }
 
+    public enum FFNxUpdateChannelOptions
+    {
+        Stable = 0,
+        Canary
+    }
+
     [Flags]
     public enum InterfaceOptions {
         None = 0,
@@ -93,6 +99,7 @@ namespace Iros._7th.Workshop {
         public List<ProgramLaunchInfo> ProgramsToLaunchPrior { get; set; }
         public string AaliFolder { get; set; }
         public string MovieFolder { get; set; }
+        public FFNxUpdateChannelOptions FFNxUpdateChannel { get; set; }
 
         public DateTime LastUpdateCheck { get; set; }
         public List<GeneralOptions> Options { get; set; }
@@ -154,9 +161,12 @@ namespace Iros._7th.Workshop {
             defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/http$pastebin.com/raw.php?i=EpQBv5PL", Name = "Qhimm Catalog" });
             defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/http$pastebin.com/raw.php?i=vXc4PpBS", Name = "Sega Catalog" });
 
-
             defaultSettings.ExtraFolders.Add("direct");
             defaultSettings.ExtraFolders.Add("music");
+            defaultSettings.ExtraFolders.Add("sfx");
+            defaultSettings.ExtraFolders.Add("voice");
+
+            defaultSettings.FFNxUpdateChannel = FFNxUpdateChannelOptions.Stable;
 
             defaultSettings.UserColumnSettings = ColumnSettings.GetDefaultSettings();
 

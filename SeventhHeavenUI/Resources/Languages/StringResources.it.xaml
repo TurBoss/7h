@@ -631,7 +631,7 @@ Premi 'Annulla' per interrompere il processo.</system:String>
     <system:String x:Key="TextureCacheCleared">Cache texture svuotata!</system:String>
     <system:String x:Key="FailedToClearTextureCache">Svuotamento cache texture non riuscito</system:String>
     <system:String x:Key="GameDriverSettingsSaved">Impostazioni Driver di Gioco salvate!</system:String>
-    <system:String x:Key="CouldNotWriteTo7HGameDriverCfg">Impossibile scrivere il file FFNx.cfg. Controlla che non sia impostato come Sola Lettura e che FF7 sia installato in una cartella su cui hai un controllo di scrittura totale.</system:String>
+    <system:String x:Key="CouldNotWriteTo7HGameDriverCfg">Impossibile scrivere il file FFNx.toml. Controlla che non sia impostato come Sola Lettura e che FF7 sia installato in una cartella su cui hai un controllo di scrittura totale.</system:String>
     <system:String x:Key="UnknownErrorWhileSaving">Errore sconosciuto durante il salvataggio. L'errore è stato riportato nel log dell'applicazione.</system:String>
     <system:String x:Key="GameDriverSettingsResetToDefaults">Impostazioni del Driver di Gioco riportate ai valori predefiniti. Clicca 'Salva' per salvare i cambiamenti.</system:String>
 
@@ -929,7 +929,7 @@ Vuoi applicare questa modifica e riprovare?</system:String>
     <system:String x:Key="GameDriverDllFileIsUpToDate">FFNx.dll è aggiornato.</system:String>
     <system:String x:Key="BackingUpExistingGameDriverTo">backup del driver di gioco esistente in</system:String>
     <system:String x:Key="BackingUpExistingGameDriverCfgTo">backup del .cfg dei driver di gioco esistente in</system:String>
-    <system:String x:Key="GameDriverCfgFileMissingCopyingDefaultFrom">FFNx.cfg mancante. Copia della versione predefinita da</system:String>
+    <system:String x:Key="GameDriverCfgFileMissingCopyingDefaultFrom">FFNx.toml mancante. Copia della versione predefinita da</system:String>
     <system:String x:Key="CannotCreateDefaultCfgDueToMissingFile">impossibile creare file .cfg da copia predefinita a causa di un file mancante</system:String>
     <system:String x:Key="BackingUpExistingShadersFolderTo">backup della cartella 'shaders' esistente in</system:String>
     <system:String x:Key="CopyingContentsOf">copia dei contenuti di</system:String>

@@ -12,8 +12,18 @@
         ResizeMode="NoResize"
         Deactivated="Window_Deactivated"
         LocationChanged="Window_LocationChanged"
-        Height="600" Width="825">
+        Height="751.061" Width="825">
     <Window.Resources>
+
+        <DataTemplate x:Key="selectedOptionTemplate">
+            <Grid x:Name="gd" DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContentControl}, Path=DataContext}" Background="Transparent">
+                <TextBlock Text="{Binding ElementName=gd, Path=DataContext.FFNxUpdateChannel, FallbackValue='Dark Mode'}" Margin="0,0,15,0" TextWrapping="Wrap"/>
+            </Grid>
+        </DataTemplate>
+
+        <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource MainComboBoxStyle}">
+            <Setter Property="ItemTemplate" Value="{StaticResource selectedOptionTemplate}"/>
+        </Style>
 
         <Style x:Key="MultiLineTextBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource PrimaryTextBoxStyle}">
             <Setter Property="MinWidth" Value="325"/>
@@ -38,6 +48,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -121,9 +132,8 @@
         <GroupBox x:Name="grpShell"
                   Header="{DynamicResource ShellIntegrationHeader}" Grid.Row="2" Margin="10,10,0,0" 
                   Width="{Binding ElementName=grpOptions, Path=ActualWidth}"
-                  Height="{Binding ElementName=grpFolders, Path=ActualHeight}"
                   HorizontalAlignment="Left"
-                  VerticalAlignment="Top">
+                  VerticalAlignment="Top" Height="126" Grid.RowSpan="2">
             <StackPanel Margin="3" HorizontalAlignment="Right" VerticalAlignment="Center">
                 <CheckBox Height="25" Content="{DynamicResource OpenIrosLinksWith7thHeaven}" IsChecked="{Binding OpenIrosLinks, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <CheckBox Height="25" Content="{DynamicResource OpenModFilesWith7thHeaven}" IsChecked="{Binding OpenModFilesWith7H, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -208,12 +218,12 @@
         </GroupBox>
 
         <GroupBox x:Name="grpFolders"
-                  Grid.Row="2" 
+                  Grid.Row="2"
                   Grid.Column="1"
                   MinWidth="350"
                   VerticalAlignment="Bottom"
                   Header="{DynamicResource AdditionalFoldersToMonitorHeader}" 
-                  Margin="25,5,10,0">
+                  Margin="25,0,10,0" Height="283" Grid.RowSpan="2">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
@@ -268,28 +278,25 @@
                 <ListBox x:Name="lstExtraFolders" Grid.Column="1"
                           ItemsSource="{Binding ExtraFolderList}" 
                           VirtualizingPanel.IsVirtualizing="false"
-                         MaxHeight="95"
                           ItemContainerStyle="{StaticResource MainListBoxItemStyle}"
-                          Margin="3" Grid.ColumnSpan="2">
+                          Margin="3,0" Grid.ColumnSpan="2">
 
                 </ListBox>
             </Grid>
         </GroupBox>
 
-        <TextBlock Grid.Row="3"
-                   Grid.ColumnSpan="2"
+        <TextBlock Grid.Row="4"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Left"
-                   Margin="10,0,0,0"
+                   Margin="10,19,0,173"
                    TextTrimming="CharacterEllipsis"
                    Text="{Binding StatusMessage, FallbackValue='Select a subscription to edit.'}"/>
 
-        <WrapPanel Grid.Row="3"
-                   Grid.Column="0"
-                   Grid.ColumnSpan="2"
+        <WrapPanel Grid.Row="4"
+                   Grid.Column="1"
                    HorizontalAlignment="Right"
-                   VerticalAlignment="Bottom"
-                   Margin="0,5,10,10">
+                   VerticalAlignment="Center"
+                   Margin="0,0,14,156">
             <Button x:Name="btnDefaults" 
                     Content="{DynamicResource ResetDefaults}" 
                     Click="btnDefaults_Click"
@@ -312,8 +319,8 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"/>
         </WrapPanel>
-                   
-       
+
+
 
         <Popup x:Name="popupSubscription"
                IsOpen="{Binding IsSubscriptionPopupOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -401,5 +408,15 @@
 
             </Grid>
         </Popup>
+        <GroupBox Header="FFNx Management" HorizontalAlignment="Left" Height="143" Margin="10,11,0,0" Grid.Row="3" VerticalAlignment="Bottom" Width="402">
+            <Grid>
+                <TextBlock HorizontalAlignment="Left" Margin="10,24,0,0" TextWrapping="Wrap" Text="Current Channel:" VerticalAlignment="Top"/>
+                <ComboBox x:Name="cmbFFNxChannel" HorizontalAlignment="Left" Margin="126,21,0,0" VerticalAlignment="Top" Width="254" SelectionChanged="cmbFFNxChannel_SelectionChanged">
+                    <ComboBoxItem Content="Stable"/>
+                    <ComboBoxItem Content="Canary"/>
+                </ComboBox>
+                <Button x:Name="btnFFNxCheckForUpdate" Content="Check for Updates" HorizontalAlignment="Left" Margin="126,71,0,0" VerticalAlignment="Top" Width="254" Click="btnFFNxCheckForUpdate_Click"/>
+            </Grid>
+        </GroupBox>
     </Grid>
 </Window>

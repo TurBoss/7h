@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TestPlugin</RootNamespace>
     <AssemblyName>TestPlugin</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <ReleaseVersion>1.56</ReleaseVersion>
@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -50,10 +53,6 @@
     <ProjectReference Include="..\7thWrapperLib\7thWrapperLib.csproj">
       <Project>{f80db232-4102-4249-8b31-2ddd5c7fa404}</Project>
       <Name>7thWrapperLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpCompress\src\SharpCompress\SharpCompress.csproj">
-      <Project>{8c6b794e-f8b2-45b2-a8d2-7ac73e967d80}</Project>
-      <Name>SharpCompress</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

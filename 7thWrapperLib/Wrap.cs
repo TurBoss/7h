@@ -612,16 +612,30 @@ namespace _7thWrapperLib {
                 {
                     if (lpFileName.StartsWith(path, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        //DebugLogger.WriteLine("Trying to override file {0} found in path {1}", lpFileName, path);
-                        OverrideFile mapped = LGPWrapper.MapFile(lpFileName.Substring(path.Length), _profile);
+                        string match = lpFileName.Substring(path.Length);
+                        OverrideFile mapped = LGPWrapper.MapFile(match, _profile);
+
+                        //DebugLogger.WriteLine($"Attempting match '{match}' for {lpFileName}...");
+
+                        if (mapped == null)
+                        {
+                            // Attempt a second round, this time relaxing the path match replacing only the game folder path.
+                            match = lpFileName.Substring(_profile.FF7Path.Length + 1);
+
+                            mapped = LGPWrapper.MapFile(match, _profile);
+
+                            //DebugLogger.WriteLine($"Attempting match '{match}' for {lpFileName}...");
+                        }
+
                         if (mapped != null)
+                        {
+                            DebugLogger.WriteLine($"Remapping {lpFileName} to {mapped.File} [ Matched: '{match}' ]");
+
                             if (mapped.Archive == null)
-                            {
-                                DebugLogger.WriteLine($"Remapping {lpFileName} to {mapped.File}");
                                 lpFileName = mapped.File;
-                            }
                             else
                                 return CreateVA(mapped);
+                        }
                     }
                 }
             } else

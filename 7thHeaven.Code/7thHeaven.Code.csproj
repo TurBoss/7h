@@ -11,7 +11,7 @@
     <AssemblyName>7thHeaven.Code</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <ReleaseVersion>1.56</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -69,6 +69,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -113,16 +116,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\7thWrapperLib\7thWrapperLib.csproj">
-      <Project>{f80db232-4102-4249-8b31-2ddd5c7fa404}</Project>
-      <Name>7thWrapperLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpCompress\src\SharpCompress\SharpCompress.csproj">
-      <Project>{8c6b794e-f8b2-45b2-a8d2-7ac73e967d80}</Project>
-      <Name>SharpCompress</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Workshop.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Workshop.Designer.cs</LastGenOutput>
@@ -130,6 +123,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Loader.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\7thWrapperLib\7thWrapperLib.csproj">
+      <Project>{f80db232-4102-4249-8b31-2ddd5c7fa404}</Project>
+      <Name>7thWrapperLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="SharpCompress">
+      <Version>0.27.1</Version>
+    </PackageReference>
+    <PackageReference Include="Tomlyn">
+      <Version>0.1.2</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
