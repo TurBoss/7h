@@ -783,7 +783,7 @@ namespace SeventhHeaven.Classes
                     { "hext\\ff8", true },
                     { "hext\\ff7\\de", true },
                     { "hext\\ff7\\fr", true },
-                    { "hext\\ff7\\sp", true },
+                    { "hext\\ff7\\es", true },
                     { "hext\\ff7\\en\\FFNx._GLOBALS.txt", false },
                     { "hext\\ff7\\en\\FFNx.BATTLE.fullscreen.txt", false },
                     { "hext\\ff7\\en\\FFNx.BATTLE.restore_modals.txt", false },
