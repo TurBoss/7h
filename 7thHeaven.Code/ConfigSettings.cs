@@ -170,7 +170,7 @@ namespace Iros._7th.Workshop.ConfigSettings {
                             {
                                 case bool b:
                                     {
-                                        _write.Add($"{settingName} = \"{ b.ToString().ToLower() }\"");
+                                        _write.Add($"{settingName} = { b.ToString().ToLower() }");
                                         break;
                                     }
                                 case string s:
