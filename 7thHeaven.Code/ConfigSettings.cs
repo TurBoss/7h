@@ -22,6 +22,7 @@ namespace Iros._7th.Workshop.ConfigSettings {
         }
         public bool IsMatched(string spec) {
             string[] parts = spec.Split(',');
+
             foreach (string p in parts) {
                 string trimmedParts = p.Trim();
 
@@ -30,11 +31,35 @@ namespace Iros._7th.Workshop.ConfigSettings {
                     string trimmedName = set[0].Trim();
                     string trimmedVal = set[1].Trim();
 
-                    string value = _toml[trimmedName].ToString();
-                    if (!trimmedVal.Equals(value ?? String.Empty, StringComparison.InvariantCultureIgnoreCase))
-                        return false;
+                    switch (_toml[trimmedName])
+                    {
+                        case string s:
+                            {
+                                if (s != trimmedVal) return false;
+                                break;
+                            }
+                        case bool b:
+                            {
+                                if (b != bool.Parse(trimmedVal)) return false;
+                                break;
+                            }
+                        case double d:
+                            {
+                                CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+                                ci.NumberFormat.CurrencyDecimalSeparator = ".";
+
+                                if (d != double.Parse(trimmedVal, NumberStyles.Any, ci)) return false;
+                                break;
+                            }
+                        case Int64 i:
+                            {
+                                if (i != Int64.Parse(trimmedVal)) return false;
+                                break;
+                            }
+                    }
                 }                    
             }
+
             return true;
         }
         public void Apply(string spec) {
@@ -48,42 +73,31 @@ namespace Iros._7th.Workshop.ConfigSettings {
                     string trimmedName = set[0].Trim();
                     string trimmedVal = set[1].Trim();
 
-                    if (trimmedName.StartsWith("speedhack_"))
+                    switch (_toml[trimmedName])
                     {
-                        CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
-                        ci.NumberFormat.CurrencyDecimalSeparator = ".";
+                        case string s:
+                            {
+                                _toml[trimmedName] = trimmedVal;
+                                break;
+                            }
+                        case bool b:
+                            {
+                                _toml[trimmedName] = bool.Parse(trimmedVal);
+                                break;
+                            }
+                        case double d:
+                            {
+                                CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+                                ci.NumberFormat.NumberDecimalSeparator = ".";
 
-                        _toml[trimmedName] = double.Parse(trimmedVal, NumberStyles.Any, ci);
-                        break;
-                    }
-                    else
-                    {
-                        switch (_toml[trimmedName])
-                        {
-                            case string s:
-                                {
-                                    _toml[trimmedName] = trimmedVal;
-                                    break;
-                                }
-                            case bool b:
-                                {
-                                    _toml[trimmedName] = bool.Parse(trimmedVal);
-                                    break;
-                                }
-                            case double d:
-                                {
-                                    CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
-                                    ci.NumberFormat.CurrencyDecimalSeparator = ".";
-
-                                    _toml[trimmedName] = double.Parse(trimmedVal, NumberStyles.Any, ci);
-                                    break;
-                                }
-                            case Int64 i:
-                                {
-                                    _toml[trimmedName] = Int64.Parse(trimmedVal);
-                                    break;
-                                }
-                        }
+                                _toml[trimmedName] = double.Parse(trimmedVal, NumberStyles.Any, ci);
+                                break;
+                            }
+                        case Int64 i:
+                            {
+                                _toml[trimmedName] = Int64.Parse(trimmedVal);
+                                break;
+                            }
                     }
                 }
             }
@@ -160,66 +174,62 @@ namespace Iros._7th.Workshop.ConfigSettings {
                     {
                         dynamic node = _toml[settingName];
 
-                        if (settingName.StartsWith("speedhack_"))
+                        switch (node)
                         {
-                            _write.Add($"{settingName} = {node.ToString().Replace(",", ".")}");
-                        }
-                        else
-                        {
-                            switch (node)
-                            {
-                                case bool b:
+                            case bool b:
+                                {
+                                    _write.Add($"{settingName} = { b.ToString().ToLower() }");
+                                    break;
+                                }
+                            case string s:
+                                {
+                                    _write.Add($"{settingName} = \"{ s.ToLower() }\"");
+                                    break;
+                                }
+                            case double d:
+                                {
+                                    CultureInfo ci = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+                                    ci.NumberFormat.NumberDecimalSeparator = ".";
+
+                                    _write.Add($"{settingName} = {((double)node).ToString("0.0", ci)}");
+                                    break;
+                                }
+                            case Int64 i:
+                                {
+                                    if (settingName == "devtools_hotkey")
                                     {
-                                        _write.Add($"{settingName} = { b.ToString().ToLower() }");
-                                        break;
+                                        _write.Add($"{settingName} = 0x{i.ToString("X")}");
                                     }
-                                case string s:
+                                    else
                                     {
-                                        _write.Add($"{settingName} = \"{ s.ToLower() }\"");
-                                        break;
+                                        _write.Add($"{settingName} = {i.ToString()}");
                                     }
-                                case double d:
+                                    break;
+                                }
+                            case TomlArray ta:
+                                {
+                                    if (ta.Count > 0)
                                     {
-                                        _write.Add($"{settingName} = {node.ToString().Replace(",", ".")}");
-                                        break;
-                                    }
-                                case Int64 i:
-                                    {
-                                        if (settingName == "devtools_hotkey")
+                                        if (node[0].GetType() == typeof(string))
                                         {
-                                            _write.Add($"{settingName} = 0x{i.ToString("X")}");
+                                            _write.Add($"{settingName} = [\"{ string.Join("\", \"", ta.Select(w => w.ToString())) }\"]");
                                         }
                                         else
                                         {
-                                            _write.Add($"{settingName} = {i.ToString()}");
+                                            _write.Add($"{settingName} = [{ string.Join(", ", ta.Select(w => w.ToString())) }]");
                                         }
-                                        break;
                                     }
-                                case TomlArray ta:
+                                    else
                                     {
-                                        if (ta.Count > 0)
-                                        {
-                                            if (node[0].GetType() == typeof(string))
-                                            {
-                                                _write.Add($"{settingName} = [\"{ string.Join("\", \"", ta.Select(w => w.ToString())) }\"]");
-                                            }
-                                            else
-                                            {
-                                                _write.Add($"{settingName} = [{ string.Join(", ", ta.Select(w => w.ToString())) }]");
-                                            }
-                                        }
-                                        else
-                                        {
-                                            _write.Add($"{settingName} = []");
-                                        }
-                                        break;
+                                        _write.Add($"{settingName} = []");
                                     }
-                                default:
-                                    {
-                                        _write.Add($"{settingName} = {node.ToString()}");
-                                        break;
-                                    }
-                            }
+                                    break;
+                                }
+                            default:
+                                {
+                                    _write.Add($"{settingName} = {node.ToString()}");
+                                    break;
+                                }
                         }
                     }
                     else
