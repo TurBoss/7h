@@ -165,6 +165,7 @@ namespace Iros._7th.Workshop {
             defaultSettings.ExtraFolders.Add("music");
             defaultSettings.ExtraFolders.Add("sfx");
             defaultSettings.ExtraFolders.Add("voice");
+            defaultSettings.ExtraFolders.Add("ambient");
 
             defaultSettings.FFNxUpdateChannel = FFNxUpdateChannelOptions.Stable;
 
