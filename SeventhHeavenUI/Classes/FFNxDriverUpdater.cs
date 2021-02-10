@@ -83,7 +83,7 @@ namespace SeventhHeaven.Classes
                     Path.Combine(Sys.InstallPath, "FFNx.dll")
                 );
             }
-            catch (FileNotFoundException ex)
+            catch (FileNotFoundException)
             {
                 _currentDriverVersion = null;
             }
@@ -139,7 +139,7 @@ namespace SeventhHeaven.Classes
                                 break;
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         MessageDialogWindow.Show("Something went wrong while checking for FFNx updates. Please try again later.", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
                         Sys.Message(new WMessage() { Text = $"Could not parse the FFNx release json at {GetUpdateChannel(channel)}", LoggedException = e.Error });
@@ -181,7 +181,7 @@ namespace SeventhHeaven.Classes
                         Version newVersion = new Version(GetUpdateVersion(release.name.Value));
                         DownloadAndExtract(GetUpdateReleaseUrl(release.assets), newVersion.ToString());
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         MessageDialogWindow.Show("Something went wrong while checking for FFNx updates. Please try again later.", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
                         Sys.Message(new WMessage() { Text = $"Could not parse the FFNx release json at {GetUpdateChannel(channel)}", LoggedException = e.Error });
