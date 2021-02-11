@@ -10,6 +10,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
@@ -311,7 +312,9 @@ namespace SeventhHeavenUI
 
         public static Version GetAppVersion()
         {
-            return typeof(SeventhHeavenUI.App).Assembly.GetName().Version;
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+            return new Version(fileVersionInfo.ProductVersion);
         }
 
         public static bool IsRunningAppAsAdministrator()

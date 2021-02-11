@@ -23,16 +23,30 @@ pool:
 
 steps:
 - checkout: self
+- task: PowerShell@2
+  displayName: 'Prepare $(_RELEASE_NAME) Env'
+  inputs:
+    filePath: $(Build.Repository.LocalPath)\.ci\prepare.ps1
+- task: bleddynrichards.Assembly-Info-Task.Assembly-Info-Task.Assembly-Info-NetFramework@2
+  displayName: 'Set $(_RELEASE_NAME) Assembly Manifest Data'
+  inputs:
+    FileNames: |
+      **\AssemblyInfo.cs
+    InsertAttributes: true
+    WriteBOM: true
+    VersionNumber: $(_BUILD_VERSION)
+    FileVersionNumber: $(_BUILD_VERSION)
+    InformationalVersion: $(_BUILD_VERSION)
 - task: NuGetCommand@2
   displayName: 'Restore $(_RELEASE_NAME) NuGet Packages'
   inputs:
     command: restore
-    restoreSolution: $(Build.Repository.LocalPath)\7thWrapperSln.sln
+    restoreSolution: $(Build.Repository.LocalPath)\$(_RELEASE_NAME).sln
 - task: VSBuild@1
   displayName: 'Build $(_RELEASE_NAME)'
   inputs:
-    solution: $(Build.Repository.LocalPath)\7thWrapperSln.sln
-    platform: x86
+    solution: $(Build.Repository.LocalPath)\$(_RELEASE_NAME).sln
+    platform: Any CPU
     configuration: $(_RELEASE_CONFIGURATION)
     msbuildArgs: /p:WindowsTargetPlatformVersion=10.0.19041.0
 - task: PowerShell@2
