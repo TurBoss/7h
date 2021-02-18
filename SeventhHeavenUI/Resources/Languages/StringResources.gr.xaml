@@ -1130,7 +1130,7 @@
     <system:String x:Key="AppHint42">Μπορείτε να εξαγάγετε και να μοιραστείτε το προσαρμοσμένο θέμα χρώματος με άλλους.</system:String>
     <system:String x:Key="AppHint43">Μπορείτε να κάνετε παύση και συνέχιση ορισμένων λήψεων.</system:String>
 
-    <system:String x:Key="ModManagerForFinalFantasy7">Διαχειριστής Τροποποιήσεων για το Final Fantasy 7</system:String>
+    <system:String x:Key="ModManagerForFinalFantasy7">Διαχειριστής Τροποποιήσεων για το Final Fantasy 7 ( Maintained by the Tsunamods Team )</system:String>
 
 
     <system:String x:Key="ReleaseDateLabel">Ημερομηνία Κυκλοφορίας:</system:String>

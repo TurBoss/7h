@@ -1130,7 +1130,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="AppHint42">Puedes exportar y compartir tu Color del Tema personalizado con los demás.</system:String>
     <system:String x:Key="AppHint43">Puedes pausar y reanudar algunas descargas.</system:String>
 
-    <system:String x:Key="ModManagerForFinalFantasy7">Mod Manager para Final Fantasy 7</system:String>
+    <system:String x:Key="ModManagerForFinalFantasy7">Mod Manager para Final Fantasy 7 ( Maintained by the Tsunamods Team )</system:String>
 
 
     <system:String x:Key="ReleaseDateLabel">Fecha de Lanzamiento:</system:String>

@@ -1131,7 +1131,7 @@ Você quer aplicar essa configuração e tentar de novo?</system:String>
     <system:String x:Key="AppHint42">Você pode exportar e compartilhar seu Tema de Cores personalizado com outros.</system:String>
     <system:String x:Key="AppHint43">Você pode pausar e continuar alguns downloads.</system:String>
 
-    <system:String x:Key="ModManagerForFinalFantasy7">Gerenciador de Mods para Final Fantasy 7</system:String>
+    <system:String x:Key="ModManagerForFinalFantasy7">Gerenciador de Mods para Final Fantasy 7 ( Maintained by the Tsunamods Team )</system:String>
 
 
     <system:String x:Key="ReleaseDateLabel">Data de Lançamento:</system:String>

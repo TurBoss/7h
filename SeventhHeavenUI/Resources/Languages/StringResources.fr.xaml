@@ -1126,7 +1126,7 @@ Voulez-vous appliquer ce réglage et essayer à nouveau ?</system:String>
     <system:String x:Key="AppHint42">Vous pouvez exporter et partager votre thème de Couleur personnalisé avec d'autres utilisateurs de 7th Heaven.</system:String>
     <system:String x:Key="AppHint43">Vous pouvez mettre en pause et reprendre certains téléchargements.</system:String>
 
-    <system:String x:Key="ModManagerForFinalFantasy7">Mod manager pour Final Fantasy 7</system:String>
+    <system:String x:Key="ModManagerForFinalFantasy7">Mod manager pour Final Fantasy 7 ( Maintained by the Tsunamods Team )</system:String>
 
 
     <system:String x:Key="ReleaseDateLabel">Date de sortie :</system:String>

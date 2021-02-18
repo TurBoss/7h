@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("7th Heaven")]
-[assembly: AssemblyCopyright("Tsunamods © 2021")]
+[assembly: AssemblyCopyright("Tsunamods Team © 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

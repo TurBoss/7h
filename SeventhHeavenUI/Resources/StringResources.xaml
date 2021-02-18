@@ -1133,7 +1133,7 @@ Do you want to apply the setting and try again?</system:String>
     <system:String x:Key="AppHint42">You can export and share your custom Color Theme with others.</system:String>
     <system:String x:Key="AppHint43">You can pause and resume some downloads.</system:String>
 
-    <system:String x:Key="ModManagerForFinalFantasy7">Mod Manager for Final Fantasy 7</system:String>
+    <system:String x:Key="ModManagerForFinalFantasy7">Mod Manager for Final Fantasy 7 ( Maintained by the Tsunamods Team )</system:String>
 
 
     <system:String x:Key="ReleaseDateLabel">Release Date:</system:String>

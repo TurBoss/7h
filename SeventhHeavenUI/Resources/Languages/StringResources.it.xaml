@@ -1130,7 +1130,7 @@ Vuoi applicare questa modifica e riprovare?</system:String>
     <system:String x:Key="AppHint42">Puoi esportare il tuo Tema e condividerlo con gli altri.</system:String>
     <system:String x:Key="AppHint43">Alcuni download possono essere messi in pausa e ripresi in un secondo momento.</system:String>
 
-    <system:String x:Key="ModManagerForFinalFantasy7">Mod Manager per Final Fantasy 7</system:String>
+    <system:String x:Key="ModManagerForFinalFantasy7">Mod Manager per Final Fantasy 7 ( Maintained by the Tsunamods Team )</system:String>
 
 
     <system:String x:Key="ReleaseDateLabel">Data d'Uscita:</system:String>
