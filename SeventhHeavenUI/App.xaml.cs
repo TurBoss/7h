@@ -35,7 +35,7 @@ namespace SeventhHeavenUI
 
         public App()
         {
-            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13;
 
             uniqueMutex = new Mutex(true, uniqueAppGuid, out bool gotMutex);
             GC.KeepAlive(App.uniqueMutex);
