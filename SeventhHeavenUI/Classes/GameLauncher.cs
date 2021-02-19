@@ -563,9 +563,6 @@ namespace SeventhHeaven.Classes
             int pid;
             try
             {
-                RegistryKey ff7CompatKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers", true);
-                ff7CompatKey.SetValue(Sys.Settings.FF7Exe, "~ 640X480 HIGHDPIAWARE");
-
                 Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.LaunchingAdditionalProgramsToRunIfAny));
                 Instance.LaunchAdditionalProgramsToRunPrior();
 
@@ -765,9 +762,6 @@ namespace SeventhHeaven.Classes
                         {
                             EnableOrDisableReunionMod(doEnable: true);
                         }
-
-                        // Remove compatibility flags required to ensure success with EasyHook
-                        ff7CompatKey.SetValue(Sys.Settings.FF7Exe, "");
                     }
                     catch (Exception ex)
                     {
