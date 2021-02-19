@@ -10,6 +10,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Security.Principal;
 using System.Threading;
@@ -34,6 +35,8 @@ namespace SeventhHeavenUI
 
         public App()
         {
+            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+
             uniqueMutex = new Mutex(true, uniqueAppGuid, out bool gotMutex);
             GC.KeepAlive(App.uniqueMutex);
 
