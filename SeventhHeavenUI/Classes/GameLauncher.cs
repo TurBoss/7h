@@ -563,6 +563,8 @@ namespace SeventhHeaven.Classes
             int pid;
             try
             {
+                SetCompatibilityFlagsInRegistry();
+
                 Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.LaunchingAdditionalProgramsToRunIfAny));
                 Instance.LaunchAdditionalProgramsToRunPrior();
 
@@ -762,6 +764,8 @@ namespace SeventhHeaven.Classes
                         {
                             EnableOrDisableReunionMod(doEnable: true);
                         }
+
+                        DeleteCompatibilityFlagsInRegistry();
                     }
                     catch (Exception ex)
                     {
@@ -1514,27 +1518,43 @@ namespace SeventhHeaven.Classes
             }
         }
 
-        /// <summary>
-        /// Set/Delete compatibility flags in registry for ~ HIGHDPIAWARE
-        /// </summary>
-        public void SetCompatibilityFlagsInRegistry()
+        private static void SetCompatibilityFlagsInRegistry()
         {
-            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.ApplyingCompatibilityFlagsInRegistry));
-
-            RegistryKey ff7CompatKey;
-            string keyPath = @"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers";
-
-            // delete compatibility flags if set in launch settings
-            Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.Code5FixHighDpiFixSetToFalseDeletingFlags)}");
-            ff7CompatKey = Registry.CurrentUser.OpenSubKey(keyPath, true);
-
-            if (ff7CompatKey != null && ff7CompatKey.GetValue(Sys.Settings.FF7Exe) != null)
+            if (Sys.Settings.GameLaunchSettings.WorkaroundErrorCode5)
             {
-                Instance.RaiseProgressChanged($"\t\t{ResourceHelper.Get(StringKey.CompatibilityFlagsFoundDeleting)}");
-                ff7CompatKey.DeleteValue(Sys.Settings.FF7Exe);
+                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.ApplyingCompatibilityFlagsInRegistry));
+
+                RegistryKey ff7CompatKey;
+                string keyPath = @"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers";
+
+                ff7CompatKey = Registry.CurrentUser.OpenSubKey(keyPath, true);
+
+                if (ff7CompatKey != null)
+                {
+                    ff7CompatKey.SetValue(Sys.Settings.FF7Exe, "~ 640X480 HIGHDPIAWARE");
+                }
+
+                ff7CompatKey.Close();
             }
         }
 
+        private static void DeleteCompatibilityFlagsInRegistry()
+        {
+            if (Sys.Settings.GameLaunchSettings.WorkaroundErrorCode5)
+            {
+                RegistryKey ff7CompatKey;
+                string keyPath = @"Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers";
+
+                ff7CompatKey = Registry.CurrentUser.OpenSubKey(keyPath, true);
+
+                if (ff7CompatKey != null)
+                {
+                    ff7CompatKey.SetValue(Sys.Settings.FF7Exe, "");
+                }
+
+                ff7CompatKey.Close();
+            }
+        }
 
         public static bool CopyKeyboardInputCfg()
         {

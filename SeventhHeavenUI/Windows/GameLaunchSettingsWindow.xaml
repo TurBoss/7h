@@ -15,7 +15,7 @@
         ResizeMode="NoResize"
         Title="{DynamicResource GameLauncherSettings}" 
         Width="470"
-        Height="620">
+        Height="650">
     <Window.Resources>
 
         <DataTemplate x:Key="programItem">
@@ -88,7 +88,7 @@
             <Setter Property="Width" Value="24" />
         </Style>
     </Window.Resources>
-    <Grid>
+    <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -300,6 +300,7 @@
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>
                 <ComboBox x:Name="cboMountOptions"
                           Style="{StaticResource MainComboBoxStyle}"
@@ -325,6 +326,9 @@
                 <CheckBox Height="25" Content="{DynamicResource ShowGameLauncher}" 
                           Grid.Row="4"
                           IsChecked="{Binding IsShowLauncherChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <CheckBox Height="25" Content="{DynamicResource Code5Fix}" 
+                          Grid.Row="5"
+                          IsChecked="{Binding DoWorkaroundErrorCode5, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
         </GroupBox>
 
@@ -395,7 +399,7 @@
         <WrapPanel Grid.Row="3"
                    HorizontalAlignment="Right"
                    VerticalAlignment="Bottom"
-                   Margin="0,0,10,5">
+                   Margin="0,0,10,10">
             <Button x:Name="btnDefaults" 
                     Content="{DynamicResource ResetDefaults}" 
                     Click="btnDefaults_Click"

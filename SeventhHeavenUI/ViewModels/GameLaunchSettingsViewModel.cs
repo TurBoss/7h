@@ -48,6 +48,7 @@ namespace SeventhHeaven.ViewModels
         private string _selectedMidiData;
         private string _selectedMidiDevice;
         private int _volumeValue;
+        private bool _doWorkaroundErrorCode5;
 
         private WaveOut _audioTest;
 
@@ -275,6 +276,19 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
+        public bool DoWorkaroundErrorCode5
+        {
+            get
+            {
+                return _doWorkaroundErrorCode5;
+            }
+            set
+            {
+                _doWorkaroundErrorCode5 = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public int SfxVolumeValue
         {
             get
@@ -472,7 +486,7 @@ namespace SeventhHeaven.ViewModels
             ProgramList = new ObservableCollection<ProgramToRunViewModel>(Sys.Settings.ProgramsToLaunchPrior.Select(s => new ProgramToRunViewModel(s.PathToProgram, s.ProgramArgs)));
 
             AutoUpdatePathChecked = launchSettings.AutoUpdateDiscPath;
-
+            DoWorkaroundErrorCode5 = launchSettings.WorkaroundErrorCode5;
             IsShowLauncherChecked = launchSettings.ShowLauncherWindow;
 
 
@@ -609,6 +623,8 @@ namespace SeventhHeaven.ViewModels
                 Sys.Settings.GameLaunchSettings.LogarithmicVolumeControl = IsLogVolumeChecked;
                 SetVolumesInRegistry();
                 SetMidiDeviceInRegistry();
+
+                Sys.Settings.GameLaunchSettings.WorkaroundErrorCode5 = DoWorkaroundErrorCode5;
 
                 Sys.SaveSettings();
 
