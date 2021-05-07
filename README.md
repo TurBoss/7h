@@ -56,4 +56,4 @@ This project is licensed under the MPT License.
 
 ## Additional Acknowledgments
 * Thanks to Jusete for the installer/web artwork!
-* Thank you to the entire Qhimm and Tsunamods communities for their contributions and participation, whether it be donations, offering support to each other, creating mods/software, feedback, using mods, exchanging ideas, or testing mods/software.
+* Thank you to the entire [Qhimm](http://forums.qhimm.com/) and [Tsunamods communities](https://www.tsunamods.com) for their contributions and participation, whether it be donations, offering support to each other, creating mods/software, feedback, using mods, exchanging ideas, or testing mods/software.
