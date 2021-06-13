@@ -106,7 +106,7 @@ namespace Iros._7th.Workshop {
         public string AaliFolder { get; set; }
         public string MovieFolder { get; set; }
         public FFNxUpdateChannelOptions FFNxUpdateChannel { get; set; }
-
+        public AppUpdateChannelOptions AppUpdateChannel { get; set; }
         public DateTime LastUpdateCheck { get; set; }
         public List<GeneralOptions> Options { get; set; }
         public InterfaceOptions IntOptions { get; set; }
@@ -172,6 +172,7 @@ namespace Iros._7th.Workshop {
             defaultSettings.ExtraFolders.Add("ambient");
 
             defaultSettings.FFNxUpdateChannel = FFNxUpdateChannelOptions.Stable;
+            defaultSettings.AppUpdateChannel = AppUpdateChannelOptions.Stable;
 
             defaultSettings.UserColumnSettings = ColumnSettings.GetDefaultSettings();
 
