@@ -79,7 +79,7 @@ namespace SeventhHeaven.Classes
             });
         }
 
-        public void CheckForUpdates(AppUpdateChannelOptions channel)
+        public void CheckForUpdates(AppUpdateChannelOptions channel, bool manualCheck = false)
         {
             try
             {
@@ -129,7 +129,8 @@ namespace SeventhHeaven.Classes
                                     DownloadAndExtract(GetUpdateReleaseUrl(release.assets), newVersion.ToString());
                                 break;
                             case 0: // SAME
-                                MessageDialogWindow.Show("You seem to be up to date!", "No update found", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+                                if (manualCheck)
+                                    MessageDialogWindow.Show("You seem to be up to date!", "No update found", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
                                 break;
                             case -1: // OLDER
                                 if (
