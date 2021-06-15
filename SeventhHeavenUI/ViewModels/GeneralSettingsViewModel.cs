@@ -418,6 +418,7 @@ namespace SeventhHeaven.ViewModels
             TexturesPathInput = settings.AaliFolder;
 
             FFNxUpdateChannel = settings.FFNxUpdateChannel;
+            AppUpdateChannel = settings.AppUpdateChannel;
 
             AutoUpdateModsByDefault = settings.HasOption(GeneralOptions.AutoUpdateMods);
             ActivateInstalledModsAuto = settings.HasOption(GeneralOptions.AutoActiveNewMods);
