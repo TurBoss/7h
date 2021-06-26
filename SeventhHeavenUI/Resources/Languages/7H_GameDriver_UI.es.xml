@@ -37,12 +37,12 @@
     <Group>Gráficos</Group>
     <Name>Resolución</Name>
     <Description>Establece el tamaño de la ventana (o la resolución de pantalla completa) de FF7. Utiliza automáticamente la resolución en modo ventana, o la resolución de escritorio en pantalla completa.</Description>
-      <DefaultValue>window_size_x = 1280,window_size_y = 720</DefaultValue>
-      <Option>
-        <Text>Automática</Text>
-        <Settings>window_size_x = 0,window_size_y = 0</Settings>
-      </Option>
-    </Setting>
+    <DefaultValue>window_size_x = 1280,window_size_y = 720</DefaultValue>
+    <Option>
+      <Text>Automática</Text>
+      <Settings>window_size_x = 0,window_size_y = 0</Settings>
+    </Option>
+  </Setting>
 
   <Setting xsi:type="DropDown">
     <Group>Gráficos</Group>

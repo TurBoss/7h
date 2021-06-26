@@ -34,15 +34,15 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-      <Group>Graphics</Group>
-      <Name>Resolution</Name>
-      <Description>Sets the window size for the game. Auto uses game resolution in windowed mode or current desktop resolution in fullscreen mode.</Description>
-      <DefaultValue>window_size_x = 1280,window_size_y = 720</DefaultValue>
-      <Option>
-        <Text>Auto</Text>
-        <Settings>window_size_x = 0,window_size_y = 0</Settings>
-      </Option>
-    </Setting>
+    <Group>Graphics</Group>
+    <Name>Resolution</Name>
+    <Description>Sets the window size for the game. Auto uses game resolution in windowed mode or current desktop resolution in fullscreen mode.</Description>
+    <DefaultValue>window_size_x = 1280,window_size_y = 720</DefaultValue>
+    <Option>
+      <Text>Auto</Text>
+      <Settings>window_size_x = 0,window_size_y = 0</Settings>
+    </Option>
+  </Setting>
 
   <Setting xsi:type="DropDown">
     <Group>Graphics</Group>

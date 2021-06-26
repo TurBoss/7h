@@ -34,15 +34,15 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-      <Group>Graphismes</Group>
-      <Name>Résolution</Name>
-      <Description>Définissez la taille de la fenêtre (ou la résolution plein écran) de FF7. Le mode Auto utilise la résolution du jeu en mode fenêtré ou la résolution actuelle du bureau en mode plein écran.</Description>
-      <DefaultValue>window_size_x = 1280,window_size_y = 720</DefaultValue>
-      <Option>
-        <Text>Automatique</Text>
-        <Settings>window_size_x = 0,window_size_y = 0</Settings>
-      </Option>
-    </Setting>
+    <Group>Graphismes</Group>
+    <Name>Résolution</Name>
+    <Description>Définissez la taille de la fenêtre (ou la résolution plein écran) de FF7. Le mode Auto utilise la résolution du jeu en mode fenêtré ou la résolution actuelle du bureau en mode plein écran.</Description>
+    <DefaultValue>window_size_x = 1280,window_size_y = 720</DefaultValue>
+    <Option>
+      <Text>Automatique</Text>
+      <Settings>window_size_x = 0,window_size_y = 0</Settings>
+    </Option>
+  </Setting>
 
   <Setting xsi:type="DropDown">
     <Group>Graphismes</Group>

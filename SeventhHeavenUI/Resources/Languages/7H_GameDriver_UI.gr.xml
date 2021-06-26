@@ -34,15 +34,15 @@
   </Setting>
 
   <Setting xsi:type="DropDown">
-      <Group>Γραφικά</Group>
-      <Name>Ανάλυση</Name>
-      <Description>Ορίζει το μέγεθος του παραθύρου για το παιχνίδι. Το Auto χρησιμοποιεί την ανάλυση παιχνιδιού σε λειτουργία παραθύρου ή την τρέχουσα ανάλυση της επιφάνειας εργασίας σε λειτουργία πλήρους οθόνης.</Description>
-      <DefaultValue>window_size_x = 1280,window_size_y = 720</DefaultValue>
-      <Option>
-        <Text>Auto</Text>
-        <Settings>window_size_x = 0,window_size_y = 0</Settings>
-      </Option>
-    </Setting>
+    <Group>Γραφικά</Group>
+    <Name>Ανάλυση</Name>
+    <Description>Ορίζει το μέγεθος του παραθύρου για το παιχνίδι. Το Auto χρησιμοποιεί την ανάλυση παιχνιδιού σε λειτουργία παραθύρου ή την τρέχουσα ανάλυση της επιφάνειας εργασίας σε λειτουργία πλήρους οθόνης.</Description>
+    <DefaultValue>window_size_x = 1280,window_size_y = 720</DefaultValue>
+    <Option>
+      <Text>Auto</Text>
+      <Settings>window_size_x = 0,window_size_y = 0</Settings>
+    </Option>
+  </Setting>
 
   <Setting xsi:type="DropDown">
     <Group>Γραφικά</Group>
