@@ -37,12 +37,12 @@
     <Group>Gráficos</Group>
     <Name>Resolução</Name>
     <Description>Ajusta o tamanho da janela (ou resolução de tela cheia) de FF7. Automático usa resolução do jogo em modo janela ou resolução atual da área de trabalho em modo tela cheia.</Description>
-      <DefaultValue>window_size_x = 1280,window_size_y = 720</DefaultValue>
-      <Option>
-        <Text>Automática</Text>
-        <Settings>window_size_x = 0,window_size_y = 0</Settings>
-      </Option>
-    </Setting>
+    <DefaultValue>window_size_x = 1280,window_size_y = 720</DefaultValue>
+    <Option>
+      <Text>Automática</Text>
+      <Settings>window_size_x = 0,window_size_y = 0</Settings>
+    </Option>
+  </Setting>
 
   <Setting xsi:type="DropDown">
     <Group>Gráficos</Group>
