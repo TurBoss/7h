@@ -391,6 +391,7 @@ namespace _7thWrapperLib {
                         }
                     }
                 }
+                profile.Mods.Reverse();
             } catch (Exception e) {
                 DebugLogger.WriteLine(e.ToString());
                 return;
