@@ -1,4 +1,4 @@
-﻿using _7thHeaven.Code;
+using _7thHeaven.Code;
 using Iros._7th;
 using Iros._7th.Workshop;
 using SeventhHeaven.Classes;
@@ -81,7 +81,7 @@ namespace SeventhHeaven.Windows
             };
 
             foreach (var items in _spec.Settings.GroupBy(s => s.Group)
-                                                .Select(g => new { settingGroup = g, SortOrder = tabOrders[g.Key] })
+                                                .Select(g => new { settingGroup = g, SortOrder = tabOrders[ResourceHelper.Get((StringKey)Enum.Parse(typeof(StringKey), g.Key))] })
                                                 .OrderBy(g => g.SortOrder)
                                                 .Select(g => g.settingGroup))
             {
