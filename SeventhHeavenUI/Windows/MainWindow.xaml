@@ -8,7 +8,7 @@
         xmlns:cls="clr-namespace:SeventhHeaven.Classes"
         xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
         mc:Ignorable="d"
-        Title="{Binding WindowTitle, FallbackValue='7th Heaven v2.0.0 - Mod Manager for Final Fantasy 7 ( Maintained by the Tsunamods Team ) [Current Loaded Profile]'}"
+        Title="{Binding WindowTitle, FallbackValue='7th Heaven v2.3.3 - Mod Manager for Final Fantasy 7 ( Maintained by the Tsunamods Team ) [Current Loaded Profile]'}"
         Style="{StaticResource MainWindowStyle}"
         WindowStartupLocation="CenterScreen"
         Loaded="Window_Loaded"
@@ -159,7 +159,17 @@
                     </cls:ButtonWithImage.ContextMenu>
                 </cls:ButtonWithImage>
 
-                <cls:ButtonWithImage x:Name="btnHelp" Content="{DynamicResource Help}" TemplateSource="{StaticResource iconHelp}" Margin="0,0,5,0" Padding="0,8,10,0" Click="btnHelp_Click"/>
+                <cls:ButtonWithImage x:Name="btnHelp" 
+                Margin="0,0,0,0" ContextMenuService.Placement="Bottom"
+                Content="{DynamicResource Help}" Style="{StaticResource ButtonWithImageAndDownArrow}" TemplateSource="{StaticResource iconHelp}" VerticalAlignment="Center"
+                Click="btnHelp_Click">
+                    <cls:ButtonWithImage.ContextMenu>
+                        <ContextMenu x:Name="menuHelp" Closed="menuHelp_Closed">
+                            <MenuItem x:Name="menuItemHelp" Header="{DynamicResource HelpOpen}" Click="btnHelpOpen_Click"/>
+                            <MenuItem x:Name="menuItemAbout" Header="{DynamicResource HelpOpenAbout}" Click="menuItemAbout_Click"/>
+                        </ContextMenu>
+                    </cls:ButtonWithImage.ContextMenu>
+                </cls:ButtonWithImage>
 
             </WrapPanel>
         </Viewbox>
