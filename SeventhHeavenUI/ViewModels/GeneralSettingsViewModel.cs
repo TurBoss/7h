@@ -46,7 +46,6 @@ namespace SeventhHeaven.ViewModels
         private ObservableCollection<string> _extraFolderList;
         private string _statusMessage;
 
-        private FFNxUpdateChannelOptions _ffnxUpdateChannel;
         private AppUpdateChannelOptions _appUpdateChannel;
 
         public delegate void OnListDataChanged();
@@ -117,19 +116,6 @@ namespace SeventhHeaven.ViewModels
             set
             {
                 _statusMessage = value;
-                NotifyPropertyChanged();
-            }
-        }
-
-        public FFNxUpdateChannelOptions FFNxUpdateChannel
-        {
-            get
-            {
-                return _ffnxUpdateChannel;
-            }
-            set
-            {
-                _ffnxUpdateChannel = value;
                 NotifyPropertyChanged();
             }
         }
@@ -417,7 +403,6 @@ namespace SeventhHeaven.ViewModels
             MoviesPathInput = settings.MovieFolder;
             TexturesPathInput = settings.AaliFolder;
 
-            FFNxUpdateChannel = settings.FFNxUpdateChannel;
             AppUpdateChannel = settings.AppUpdateChannel;
 
             AutoUpdateModsByDefault = settings.HasOption(GeneralOptions.AutoUpdateMods);
@@ -556,7 +541,6 @@ namespace SeventhHeaven.ViewModels
             Sys.Settings.LibraryLocation = LibraryPathInput;
             Sys.Settings.MovieFolder = MoviesPathInput;
             Sys.Settings.AaliFolder = TexturesPathInput;
-            Sys.Settings.FFNxUpdateChannel = FFNxUpdateChannel;
             Sys.Settings.AppUpdateChannel = AppUpdateChannel;
 
 

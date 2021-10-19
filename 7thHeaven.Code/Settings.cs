@@ -34,12 +34,6 @@ namespace Iros._7th.Workshop {
         Canary
     }
 
-    public enum FFNxUpdateChannelOptions
-    {
-        Stable = 0,
-        Canary
-    }
-
     [Flags]
     public enum InterfaceOptions {
         None = 0,
@@ -105,7 +99,6 @@ namespace Iros._7th.Workshop {
         public List<ProgramLaunchInfo> ProgramsToLaunchPrior { get; set; }
         public string AaliFolder { get; set; }
         public string MovieFolder { get; set; }
-        public FFNxUpdateChannelOptions FFNxUpdateChannel { get; set; }
         public AppUpdateChannelOptions AppUpdateChannel { get; set; }
         public DateTime LastUpdateCheck { get; set; }
         public List<GeneralOptions> Options { get; set; }
@@ -171,7 +164,6 @@ namespace Iros._7th.Workshop {
             defaultSettings.ExtraFolders.Add("voice");
             defaultSettings.ExtraFolders.Add("ambient");
 
-            defaultSettings.FFNxUpdateChannel = FFNxUpdateChannelOptions.Stable;
             defaultSettings.AppUpdateChannel = AppUpdateChannelOptions.Stable;
 
             defaultSettings.UserColumnSettings = ColumnSettings.GetDefaultSettings();

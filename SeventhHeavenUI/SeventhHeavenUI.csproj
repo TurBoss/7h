@@ -125,6 +125,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AssemblyInfo1.cs" />
     <Compile Include="Classes\BoolWithMessage.cs" />
     <Compile Include="Classes\ButtonWithImage.cs" />
     <Compile Include="Classes\Constraint.cs" />
@@ -134,7 +135,6 @@
     <Compile Include="Classes\ControlMapper.cs" />
     <Compile Include="Classes\DateTimeComparer.cs" />
     <Compile Include="Classes\DS4ControllerService.cs" />
-    <Compile Include="Classes\FFNxDriverUpdater.cs" />
     <Compile Include="Classes\FileDialogHelper.cs" />
     <Compile Include="Classes\GameController.cs" />
     <Compile Include="Classes\GameConverter.cs" />
@@ -153,7 +153,6 @@
     <Compile Include="Classes\Themes\ITheme.cs" />
     <Compile Include="Classes\Themes\ThemeSettings.cs" />
     <Compile Include="Classes\Themes\TsunamodsTheme.cs" />
-    <Compile Include="Classes\UpdateChecker.cs" />
     <Compile Include="Classes\GameDiscMounter.cs" />
     <Compile Include="Classes\WCF\ServiceHost.cs" />
     <Compile Include="UserControls\CatalogUserControl.xaml.cs">

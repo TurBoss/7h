@@ -604,7 +604,6 @@ namespace SeventhHeavenUI.ViewModels
 
         #endregion
 
-        private UpdateChecker updater = new UpdateChecker();
         
         public MainWindowViewModel()
         {
@@ -725,16 +724,6 @@ namespace SeventhHeavenUI.ViewModels
 
             // Ensure temp directory exists
             Directory.CreateDirectory(Sys.PathToTempFolder);
-
-            if (Sys.Settings.HasOption(GeneralOptions.CheckForUpdates))
-            {
-                Task.Factory.StartNew(() =>
-                {
-                    System.Threading.Thread.Sleep(5000); // wait 5 seconds after init before checking for update to let UI render
-                    Sys.Message(new WMessage(ResourceHelper.Get(StringKey.CheckingForUpdates), WMessageLogLevel.LogOnly));
-                    updater.CheckForUpdates(Sys.Settings.AppUpdateChannel);
-                });
-            }
         }
 
         private void CatalogList_RefreshRequested()

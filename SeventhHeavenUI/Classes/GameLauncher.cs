@@ -276,17 +276,6 @@ namespace SeventhHeaven.Classes
 
 
             converter.CheckAndCopyOldGameConverterFiles(backupFolderPath);
-
-
-            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingLatestGameDriverIsInstalled));
-            if (!converter.InstallLatestGameDriver(backupFolderPath))
-            {
-                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.SomethingWentWrongTryingToDetectGameDriver), NLog.LogLevel.Error);
-                return false;
-            }
-
-            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingGameDriverShadersFoldersExist));
-
             Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingFf7Exe));
             if (new FileInfo(Sys.Settings.FF7Exe).Name.Equals("ff7.exe", StringComparison.InvariantCultureIgnoreCase))
             {

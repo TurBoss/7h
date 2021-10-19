@@ -18,10 +18,6 @@ namespace SeventhHeaven.Windows
 
         public GeneralSettingsViewModel ViewModel { get; set; }
         
-        private UpdateChecker CoreUpdater = new UpdateChecker();
-
-        private FFNxDriverUpdater FFNxUpdater = new FFNxDriverUpdater();
-
         public GeneralSettingsWindow()
         {
             InitializeComponent();
@@ -420,38 +416,6 @@ namespace SeventhHeaven.Windows
         private void btnDefaults_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.ResetToDefaults();
-        }
-
-        private void cmbFFNxChannel_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (ViewModel != null)
-            {
-                ViewModel.FFNxUpdateChannel = (FFNxUpdateChannelOptions)cmbFFNxChannel.SelectedIndex;
-
-                // Bypass the default save button in order to make the Check for Updates button work instantly
-                Sys.Settings.FFNxUpdateChannel = ViewModel.FFNxUpdateChannel;
-            }
-        }
-
-        private void cmb7thChannel_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            if (ViewModel != null)
-            {
-                ViewModel.AppUpdateChannel = (AppUpdateChannelOptions)cmb7thChannel.SelectedIndex;
-
-                // Bypass the default save button in order to make the Check for Updates button work instantly
-                Sys.Settings.AppUpdateChannel = ViewModel.AppUpdateChannel;
-            }
-        }
-
-        private void btnFFNxCheckForUpdate_Click(object sender, RoutedEventArgs e)
-        {
-            FFNxUpdater.CheckForUpdates(Sys.Settings.FFNxUpdateChannel);
-        }
-
-        private void btn7thCheckForUpdate_Click(object sender, RoutedEventArgs e)
-        {
-            CoreUpdater.CheckForUpdates(Sys.Settings.AppUpdateChannel, true);
         }
     }
 }
