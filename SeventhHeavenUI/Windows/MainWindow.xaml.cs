@@ -406,7 +406,7 @@ namespace SeventhHeavenUI
 
         private void menuItemAbout_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.MessageBox.Show("7th heaven is made possible by use of FFNx, 7th Heaven is maintained by the Tsunamods Team", "7th heaven Version 2.3.3");
+            new AboutWindow().ShowDialog();
         }
     }
 }

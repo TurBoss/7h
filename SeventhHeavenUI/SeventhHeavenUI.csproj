@@ -243,6 +243,9 @@
     <Compile Include="Windows\AllowModToRunWindow.xaml.cs">
       <DependentUpon>AllowModToRunWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\MessageDialogWindow.xaml.cs">
       <DependentUpon>MessageDialogWindow.xaml</DependentUpon>
     </Compile>
@@ -460,6 +463,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\AllowModToRunWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\AboutWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
