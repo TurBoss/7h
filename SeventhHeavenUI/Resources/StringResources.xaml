@@ -25,6 +25,8 @@
     <system:String x:Key="IROTools">IRO Tools...</system:String>
 
     <system:String x:Key="Help">Help</system:String>
+    <system:String x:Key="HelpOpen">Open Help</system:String>
+    <system:String x:Key="HelpOpenAbout">About</system:String>
 
     <system:String x:Key="MyMods">My Mods</system:String>
     <system:String x:Key="MyModsTooltip">Right-click My Mods tab to open your Mod Library Folder</system:String>

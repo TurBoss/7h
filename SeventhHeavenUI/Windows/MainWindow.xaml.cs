@@ -157,7 +157,22 @@ namespace SeventhHeavenUI
             }
         }
 
+        private void btnHelp_Click(object sender, RoutedEventArgs e)
+        {
+            if (!menuHelp.IsOpen)
+            {
+                menuHelp.PlacementTarget = btnHelp;
+                menuHelp.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+                menuHelp.IsOpen = true;
+                btnTools.IsEnabled = false;
+            }
+        }
+
         private void menuTools_Closed(object sender, RoutedEventArgs e)
+        {
+            btnTools.IsEnabled = true;
+        }
+        private void menuHelp_Closed(object sender, RoutedEventArgs e)
         {
             btnTools.IsEnabled = true;
         }
@@ -204,7 +219,7 @@ namespace SeventhHeavenUI
             ViewModel.IsPlayToggleButtonEnabled = true;
         }
 
-        private void btnHelp_Click(object sender, RoutedEventArgs e)
+        private void btnHelpOpen_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.LaunchHelpPage();
         }
@@ -387,6 +402,11 @@ namespace SeventhHeavenUI
         private void menuItemMovieImport_Click(object sender, RoutedEventArgs e)
         {
             new MovieImportWindow().ShowDialog();
+        }
+
+        private void menuItemAbout_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.MessageBox.Show("7th heaven is made possible by use of FFNx, 7th Heaven is maintained by the Tsunamods Team", "7th heaven Version 2.3.3");
         }
     }
 }
