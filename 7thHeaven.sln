@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29102.190
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31710.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7thWrapperLib", "7thWrapperLib\7thWrapperLib.csproj", "{F80DB232-4102-4249-8B31-2DDD5C7FA404}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TurBoLog", "TurBoLog\TurBoLog.csproj", "{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeventhHeavenUI", "SeventhHeavenUI\SeventhHeavenUI.csproj", "{5F6C267D-0F93-4C71-BA58-0C1AD6242383}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Installer", "Installer\Installer.csproj", "{7EF4B1CF-952A-4F8E-BE96-FDDBAA0810DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +39,10 @@ Global
 		{5F6C267D-0F93-4C71-BA58-0C1AD6242383}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F6C267D-0F93-4C71-BA58-0C1AD6242383}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F6C267D-0F93-4C71-BA58-0C1AD6242383}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EF4B1CF-952A-4F8E-BE96-FDDBAA0810DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EF4B1CF-952A-4F8E-BE96-FDDBAA0810DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EF4B1CF-952A-4F8E-BE96-FDDBAA0810DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EF4B1CF-952A-4F8E-BE96-FDDBAA0810DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
