@@ -12,7 +12,6 @@ namespace Iros._7th.Workshop.ConfigSettings
     public class FFNxConfigManager
     {
         private string _pathToFFNxToml = Sys.PathToFFNxToml;
-
         private string _pathToFFNxTomlBak = Sys.PathToFFNxToml + ".bak";
 
         private TomlTable _toml = null;
@@ -228,9 +227,12 @@ namespace Iros._7th.Workshop.ConfigSettings
 
         public void Backup()
         {
-            if (File.Exists(_pathToFFNxTomlBak)) File.Delete(_pathToFFNxTomlBak);
+            if (File.Exists(_pathToFFNxToml))
+            {
+                if (File.Exists(_pathToFFNxTomlBak)) File.Delete(_pathToFFNxTomlBak);
 
-            File.Copy(_pathToFFNxToml, _pathToFFNxTomlBak);
+                File.Copy(_pathToFFNxToml, _pathToFFNxTomlBak);
+            }
         }
 
         public void RestoreBackup()
