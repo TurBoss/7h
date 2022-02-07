@@ -750,67 +750,7 @@ namespace SeventhHeaven.Classes
                 foreach (RuntimeMod mod in runtimeProfile.Mods)
                 {
                     StartPluginsForMod(mod);
-                }
-
-                // wire up process to stop plugins and side processes when proc has exited
-                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.SettingUpFf7ExeToStopPluginsAndModPrograms));
-                ff7Proc.Exited += (o, e) =>
-                {
-                    if (!IsFF7Running() && Instance._controllerInterceptor != null)
-                    {
-                        // stop polling for input once all ff7 procs are closed (could be multiple instances open)
-                        Instance._controllerInterceptor.PollingInput = false;
-                    }
-
-                    for (int i = 0; i < Instance._plugins.Count; i++)
-                    {
-                        try
-                        {
-                            string key = Instance._plugins.ElementAt(i).Key;
-                            Instance._plugins[key].Stop();
-                            Instance._plugins[key] = null;
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Error(ex);
-                        }
-                    }
-
-                    // wrapped in try/catch so an unhandled exception when exiting the game does not crash 7H
-                    try
-                    {
-                        Instance._plugins.Clear();
-
-                        Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.StoppingOtherProgramsForMods));
-                        Instance.StopAllSideProcessesForMods();
-
-                        if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && Instance.DidMountVirtualDisc)
-                        {
-                            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.AutoUnmountingGameDisc));
-                            if (Instance.DiscMounter != null)
-                            {
-                                Instance.DiscMounter.UnmountVirtualGameDisc();
-                            }
-                            Instance.DiscMounter = null;
-                        }
-
-                        // ensure Reunion is re-enabled when ff7 process exits in case it failed above for any reason
-                        if (File.Exists(Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "Reunion.dll.bak")))
-                        {
-                            EnableOrDisableReunionMod(doEnable: true);
-                        }
-
-                        DeleteCompatibilityFlagsInRegistry();
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error(ex);
-                    }
-
-                    // Restore FFNx config after the game is closed
-                    Sys.FFNxConfig.RestoreBackup();
-                };
-            
+                }           
 
                 // ensure ff7 window is active at end of launching
                 if (ff7Proc.MainWindowHandle != IntPtr.Zero)
@@ -837,6 +777,60 @@ namespace SeventhHeaven.Classes
                             Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.ReenablingReunionMod));
                             EnableOrDisableReunionMod(doEnable: true);
                         }
+
+                        if (!IsFF7Running() && Instance._controllerInterceptor != null)
+                        {
+                            // stop polling for input once all ff7 procs are closed (could be multiple instances open)
+                            Instance._controllerInterceptor.PollingInput = false;
+                        }
+
+                        for (int i = 0; i < Instance._plugins.Count; i++)
+                        {
+                            try
+                            {
+                                string key = Instance._plugins.ElementAt(i).Key;
+                                Instance._plugins[key].Stop();
+                                Instance._plugins[key] = null;
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Error(ex);
+                            }
+                        }
+
+                        // wrapped in try/catch so an unhandled exception when exiting the game does not crash 7H
+                        try
+                        {
+                            Instance._plugins.Clear();
+
+                            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.StoppingOtherProgramsForMods));
+                            Instance.StopAllSideProcessesForMods();
+
+                            if (Sys.Settings.GameLaunchSettings.AutoUnmountGameDisc && Instance.DidMountVirtualDisc)
+                            {
+                                Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.AutoUnmountingGameDisc));
+                                if (Instance.DiscMounter != null)
+                                {
+                                    Instance.DiscMounter.UnmountVirtualGameDisc();
+                                }
+                                Instance.DiscMounter = null;
+                            }
+
+                            // ensure Reunion is re-enabled when ff7 process exits in case it failed above for any reason
+                            if (File.Exists(Path.Combine(Path.GetDirectoryName(Sys.Settings.FF7Exe), "Reunion.dll.bak")))
+                            {
+                                EnableOrDisableReunionMod(doEnable: true);
+                            }
+
+                            DeleteCompatibilityFlagsInRegistry();
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex);
+                        }
+
+                        // Restore FFNx config after the game is closed
+                        Sys.FFNxConfig.RestoreBackup();
                     };
 
                     SetForegroundWindow(ff7Proc.MainWindowHandle); // activate window again
