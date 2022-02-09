@@ -2,6 +2,7 @@
 using Installer.Registry;
 using IWshRuntimeLibrary;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -22,20 +23,46 @@ namespace Installer
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static String installer7thHeavenVersion = "2.3.4.0";
+
+        public static bool versionCompaire(string vs)
+        {
+            List<ushort> i1 = new List<ushort>();
+            List<ushort> i2 = new List<ushort>();
+            string[] s1 = installer7thHeavenVersion.Split('.');
+            string[] s2 = vs.Split('.');
+            foreach (string s in s1) i1.Add(ushort.Parse(s));
+            foreach (string s in s2) i2.Add(ushort.Parse(s));
+            for(ushort i = 0; i < i1.Count; i++) if (i1[i] > i2[i]) return true;
+            return false;
+        }
         public MainWindow()
         {
             InitializeComponent();
             if (App.RepairMode)
             {
-                BrowserFFVIIBtn.IsEnabled = false;
                 BrowserFFVIIBtn.Foreground = new SolidColorBrush(Color.FromRgb(0,0,0));
-                browserInstallLocation.IsEnabled = false;
                 browserInstallLocation.Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 0));
                 InstallBtn.Content = "Repair";
 
                 ff7InstallDirectory.Text = Registry.Uninstall.GetGameLocation();
                 sevenHInstalPathTxt.Text = Registry.Uninstall.GetInstallLocation();
                 Console.WriteLine(sevenHInstalPathTxt.Text);
+            }
+            else
+            {
+                string ff7Dir = Registry.Uninstall.GetGameLocation();
+                string thdir = Registry.Uninstall.GetInstallLocation();
+                if (thdir != "")
+                {
+                    FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(Path.Combine(thdir, "7th Heaven.exe"));
+                    if (versionCompaire(fvi.FileVersion))
+                    {
+                        InstallBtn.Content = "Upgrade";
+                        ff7InstallDirectory.Text = Registry.Uninstall.GetGameLocation();
+                        sevenHInstalPathTxt.Text = Registry.Uninstall.GetInstallLocation();
+                    }
+                }
             }
             Status_Text.Content = "Waiting for user input";
 
