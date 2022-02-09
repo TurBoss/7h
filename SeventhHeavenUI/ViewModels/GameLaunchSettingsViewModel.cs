@@ -403,11 +403,16 @@ namespace SeventhHeaven.ViewModels
             get
             {
                 // this list matches the order of the mountoption enum
-                return new List<string>()
+                List<string> ret = new List<string>();
+                if (IsAutoMountSupported)
                 {
-                    ResourceHelper.Get(StringKey.MountDiscWithPowershell),
-                    ResourceHelper.Get(StringKey.MountDiscWithWinCDEmu)
-                };
+
+                    re.Add(ResourceHelper.Get(StringKey.MountDiscWithPowershell));
+                }
+
+                ret.Add(ResourceHelper.Get(StringKey.MountDiscWithWinCDEmu));
+                ret.Add(ResourceHelper.Get(StringKey.DoNotMount));
+                return ret;
             }
         }
 

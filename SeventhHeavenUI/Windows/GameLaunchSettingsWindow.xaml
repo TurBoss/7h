@@ -304,7 +304,7 @@
                 </Grid.RowDefinitions>
                 <ComboBox x:Name="cboMountOptions"
                           Style="{StaticResource MainComboBoxStyle}"
-                          IsEnabled="{Binding IsAutoMountSupported}"
+                          IsEnabled="True"
                           ItemContainerStyle="{StaticResource TextComboBoxItemStyle}"
                           ItemTemplate="{StaticResource mountItemTemplate}"
                           SelectedItem="{Binding SelectedMountOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"

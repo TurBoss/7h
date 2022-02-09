@@ -27,6 +27,11 @@ namespace _7thHeaven.Code
         /// </remarks>
         public bool MountVirtualGameDisc()
         {
+            if(MountOption == MountDiscOption.DoNotMount)
+            {
+                return true;
+            }
+
             bool usePowerShell = MountOption == MountDiscOption.MountWithPowerShell;
 
             if (!OSHasBuiltInMountSupport())
@@ -71,6 +76,11 @@ namespace _7thHeaven.Code
         /// <returns></returns>
         public bool UnmountVirtualGameDisc()
         {
+            if (MountOption == MountDiscOption.DoNotMount)
+            {
+                return true;
+            }
+
             bool usePowerShell = MountOption == MountDiscOption.MountWithPowerShell;
 
             if (!OSHasBuiltInMountSupport())
