@@ -1206,6 +1206,7 @@ Voulez-vous appliquer ce réglage et essayer à nouveau ?</system:String>
 
     <system:String x:Key="MountDiscWithPowershell">Monter le CD via powershell</system:String>
     <system:String x:Key="MountDiscWithWinCDEmu">Monter le CD via WinCDEmu</system:String>
+    <system:String x:Key="DoNotMount">Ne pas monter le CD automatiquement</system:String>
 
     <system:String x:Key="LoadingDevices">Lecteurs disque...</system:String>
 

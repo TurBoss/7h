@@ -1210,6 +1210,7 @@ Você quer aplicar essa configuração e tentar de novo?</system:String>
 
     <system:String x:Key="MountDiscWithPowershell">Montar Disco Com PowerShell</system:String>
     <system:String x:Key="MountDiscWithWinCDEmu">Montar Disco Com WinCDEmu</system:String>
+    <system:String x:Key="DoNotMount">Não montar automaticamente Disco</system:String>
 
     <system:String x:Key="LoadingDevices">Carregando Aparelhos ...</system:String>
 

@@ -1212,7 +1212,8 @@
     <system:String x:Key="TriggerDpadSupportTooltip">Ενεργοποιεί την υποστήριξη DPad και σκανδάλης εντός του παιχνιδιού. (Απενεργοποίηση εάν χρησιμοποιείτε εργαλείο χαρτογράφησης τρίτου μέρους)</system:String>
 
     <system:String x:Key="MountDiscWithPowershell">Προσάρτηση δίσκου με PowerShell</system:String>
-    <system:String x:Key="MountDiscWithWinCDEmu"> Προσάρτηση δίσκου με WinCDEmu</system:String>
+    <system:String x:Key="MountDiscWithWinCDEmu">Προσάρτηση δίσκου με WinCDEmu</system:String>
+    <system:String x:Key="DoNotMount">Μην τοποθετείτε αυτόματα το δίσκο</system:String>
 
     <system:String x:Key="LoadingDevices">Φόρτωση Συσκευών ...</system:String>
 

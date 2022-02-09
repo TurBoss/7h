@@ -1215,6 +1215,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
 
     <system:String x:Key="MountDiscWithPowershell">Montar el disco con PowerShell</system:String>
     <system:String x:Key="MountDiscWithWinCDEmu">Montar el disco con WinCDEmu</system:String>
+    <system:String x:Key="DoNotMount">No montar automáticamente el disco</system:String>
 
     <system:String x:Key="LoadingDevices">Cargando dispositivos ...</system:String>
 

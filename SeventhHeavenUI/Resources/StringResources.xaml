@@ -1218,6 +1218,7 @@ Do you want to apply the setting and try again?</system:String>
 
     <system:String x:Key="MountDiscWithPowershell">Mount Disc With PowerShell</system:String>
     <system:String x:Key="MountDiscWithWinCDEmu">Mount Disc With WinCDEmu</system:String>
+    <system:String x:Key="DoNotMount">Do not auto mount Disk</system:String>
 
     <system:String x:Key="LoadingDevices">Loading Devices ...</system:String>
 

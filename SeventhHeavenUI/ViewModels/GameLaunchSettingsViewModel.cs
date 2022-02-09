@@ -407,7 +407,7 @@ namespace SeventhHeaven.ViewModels
                 if (IsAutoMountSupported)
                 {
 
-                    re.Add(ResourceHelper.Get(StringKey.MountDiscWithPowershell));
+                    ret.Add(ResourceHelper.Get(StringKey.MountDiscWithPowershell));
                 }
 
                 ret.Add(ResourceHelper.Get(StringKey.MountDiscWithWinCDEmu));
