@@ -1222,8 +1222,9 @@ Aktivieren und erneut versuchen?</system:String>
     <system:String x:Key="EnableTriggerDpadSupport">DPad and Trigger unterstützung aktivieren</system:String>
     <system:String x:Key="TriggerDpadSupportTooltip">DPad and Trigger unterstüzung im Spiel aktivieren. (Deaktiveren fals ein externes Tool wie Joytokey oder ähnlich benutzt wird)</system:String>
 
-    <system:String x:Key="MountDiscWithPowershell">CD mit PowerShell einbinden</system:String>
-    <system:String x:Key="MountDiscWithWinCDEmu">CD mit WinCDEmu einbinden</system:String>
+    <system:String x:Key="MountDiscWithPowershell">CD-Image mit PowerShell einbinden</system:String>
+    <system:String x:Key="MountDiscWithWinCDEmu">CD-Image mit WinCDEmu einbinden</system:String>
+    <system:String x:Key="DoNotMount">CD-Image nicht einbinden</system:String>
 
     <system:String x:Key="LoadingDevices">Lade Geräte	...</system:String>
 

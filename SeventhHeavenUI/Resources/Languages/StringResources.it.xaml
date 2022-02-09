@@ -1209,6 +1209,7 @@ Vuoi applicare questa modifica e riprovare?</system:String>
 
     <system:String x:Key="MountDiscWithPowershell">Monta Disco con PowerShell</system:String>
     <system:String x:Key="MountDiscWithWinCDEmu">Monta Disco con WinCDEmu</system:String>
+    <system:String x:Key="DoNotMount">Non montare il disco automaticamente</system:String>
 
     <system:String x:Key="LoadingDevices">Caricamento Dispositivi ...</system:String>
 
