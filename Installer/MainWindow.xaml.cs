@@ -47,7 +47,6 @@ namespace Installer
 
                 ff7InstallDirectory.Text = Registry.Uninstall.GetGameLocation();
                 sevenHInstalPathTxt.Text = Registry.Uninstall.GetInstallLocation();
-                Console.WriteLine(sevenHInstalPathTxt.Text);
             }
             else
             {
@@ -58,9 +57,36 @@ namespace Installer
                     FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(Path.Combine(thdir, "7th Heaven.exe"));
                     if (versionCompaire(fvi.FileVersion))
                     {
-                        InstallBtn.Content = "Upgrade";
-                        ff7InstallDirectory.Text = Registry.Uninstall.GetGameLocation();
-                        sevenHInstalPathTxt.Text = Registry.Uninstall.GetInstallLocation();
+                        if (MessageBox.Show("Detected Old Install Would you like to update it?", "7th heaven install detected.", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                        {
+                            InstallBtn.Content = "Upgrade";
+                            ff7InstallDirectory.Text = Registry.Uninstall.GetGameLocation();
+                            sevenHInstalPathTxt.Text = Registry.Uninstall.GetInstallLocation();
+                        }
+                        else
+                        {
+                            InstallBtn.Content = "Reinstall";
+                            ff7InstallDirectory.Text = Registry.Uninstall.GetGameLocation();
+                            sevenHInstalPathTxt.Text = Registry.Uninstall.GetInstallLocation();
+                        }
+                    }
+                    else
+                    {
+                        if (MessageBox.Show("Detected Old Install Would you like to repair it?", "7th heaven install detected.", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                        {
+                            BrowserFFVIIBtn.Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 0));
+                            browserInstallLocation.Foreground = new SolidColorBrush(Color.FromRgb(0, 0, 0));
+                            InstallBtn.Content = "Repair";
+
+                            ff7InstallDirectory.Text = Registry.Uninstall.GetGameLocation();
+                            sevenHInstalPathTxt.Text = Registry.Uninstall.GetInstallLocation();
+                        }
+                        else
+                        {
+                            InstallBtn.Content = "Reinstall";
+                            ff7InstallDirectory.Text = Registry.Uninstall.GetGameLocation();
+                            sevenHInstalPathTxt.Text = Registry.Uninstall.GetInstallLocation();
+                        }
                     }
                 }
             }
