@@ -1024,9 +1024,9 @@ namespace SeventhHeavenUI.ViewModels
                 return;
             }
 
-            if (item.Category == DownloadCategory.Image && download.ContentLength > (3 * 1024*1024))
+            if (item.Category == DownloadCategory.Image && download.ContentLength > (5 * 1024*1024))
             {
-                Logger.Warn("preview image greater than 3MB, cancelling download");
+                Logger.Warn("preview image greater than 5MB, cancelling download");
                 item.PerformCancel?.Invoke();
                 return;
             }
