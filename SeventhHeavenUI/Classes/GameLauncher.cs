@@ -645,7 +645,7 @@ namespace SeventhHeaven.Classes
                         var waitTask = Task.Factory.StartNew(() =>
                         {
                             LaunchFF7Exe();
-                            EasyHook.RemoteHooking.Inject(GameLauncher.ff7Proc.Id, lib, null, parms);
+                            EasyHook.RemoteHooking.Inject(GameLauncher.ff7Proc.Id, lib, lib, parms);
                         }).ContinueWith((taskResult) =>
                         {
                             if (taskResult.IsFaulted)
