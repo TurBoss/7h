@@ -131,7 +131,7 @@ namespace Iros._7th.Workshop {
             IsFirstStart = false;
             GameLaunchSettings = LaunchSettings.DefaultSettings();
             UserColumnSettings = new ColumnSettings();
-            DownloadPreviewSize = 0;
+            DownloadPreviewSize = 2;
         }
 
         public bool HasOption(GeneralOptions option)
