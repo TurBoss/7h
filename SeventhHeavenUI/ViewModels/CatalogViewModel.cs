@@ -1030,19 +1030,19 @@ namespace SeventhHeavenUI.ViewModels
             {
                 case 0:
                     allowedSize = 3;
-                    displaySize = "3MB";
+                    displaySize = "3MiB";
                     break;
                 case 1:
                     allowedSize = 5;
-                    displaySize = "5MB";
+                    displaySize = "5MiB";
                     break;
                 case 2:
                     allowedSize = 10;
-                    displaySize = "10MB";
+                    displaySize = "10MiB";
                     break;
                 case 3:
                     allowedSize = 50;
-                    displaySize = "50MB";
+                    displaySize = "50MiB";
                     break;
             }
             allowedSize *= (1024 * 1024);
