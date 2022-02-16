@@ -620,7 +620,7 @@ namespace SeventhHeaven.Classes
 
                 bool didInject = false;
                 int attemptCount = 0;
-                int totalAttempts = 14;
+                int totalAttempts = 5;
 
                 Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.AttemptingToInjectWithEasyHook));
 
@@ -677,6 +677,10 @@ namespace SeventhHeaven.Classes
                     }
                     catch (Exception e)
                     {
+                        try
+                        {
+                            ff7Proc.Kill();
+                        }catch { }
                         Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.ReceivedUnknownError)}: {e.Message} ...", NLog.LogLevel.Warn);
                     }
                     finally
@@ -688,7 +692,7 @@ namespace SeventhHeaven.Classes
                 if (!didInject)
                 {
                     Instance.RaiseProgressChanged($"{ResourceHelper.Get(StringKey.FailedToInjectAfterMaxAmountOfTries)} ({totalAttempts}) ...", NLog.LogLevel.Error);
-                    Instance.RaiseProgressChanged(EasyHook.NativeAPI.RtlGetLastErrorString(),NLog.LogLevel.Error);
+                    Instance.RaiseProgressChanged("NativeAPI:"+EasyHook.NativeAPI.RtlGetLastErrorString(),NLog.LogLevel.Error);
 
                     return false;
                 }
