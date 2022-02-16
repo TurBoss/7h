@@ -198,6 +198,12 @@ namespace Iros._7th.Workshop.ConfigSettings
 
         public void OverrideInternalKeys()
         {
+            // first launch the Sys Path was not setup correctly yet so _toml is null
+            if(_toml == null)
+            {
+                _pathToFFNxToml = Sys.PathToFFNxToml;
+                Reload();
+            }
             // Override known internal keys on save to preserve mod behavior override logic
             _toml["external_sfx_path"] = "sfx";
             _toml["external_sfx_ext"] = "ogg";
