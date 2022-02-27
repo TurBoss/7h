@@ -84,3 +84,10 @@ steps:
     gitHubConnection: github_ci
     assets: $(Build.Repository.LocalPath)\.dist\*.zip
     title: $(_RELEASE_NAME)-$(_RELEASE_VERSION)
+- task: PowerShell@2
+  condition: and(not(contains(variables._BUILD_BRANCH, 'refs/pull/')), succeeded())
+  displayName: 'Alert the $(_RELEASE_NAME) Release'
+  inputs:
+    filePath: .ci\alert.ps1
+  env:
+    _MAP_7TH_INTERNAL: $(_7TH_INTERNAL)
