@@ -182,6 +182,8 @@ namespace SeventhHeaven.Classes
                     {
                         string ExtractPath = Path.Combine(Sys.PathToTempFolder, $"7thHeaven-v{version}");
 
+                        Directory.CreateDirectory(ExtractPath);
+
                         using (var archive = ZipArchive.Open(download.SaveFilePath))
                         {
                             foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
