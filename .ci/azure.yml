@@ -19,7 +19,7 @@ variables:
   _BUILD_BRANCH: $(Build.SourceBranch)
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'windows-2019'
 
 steps:
 - checkout: self
