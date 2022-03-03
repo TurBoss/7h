@@ -255,15 +255,6 @@
 
   <Setting xsi:type="Checkbox">
     <Group>Avanzado</Group>
-    <Name>Texturas Animadas</Name>
-    <Description>Activa el soporte para las texturas animadas de alta calidad. NOTA: Esta característica necesita una CPU MODERNA. Si tienes ralentizaciones, DESACTIVA esta opción.</Description>
-    <DefaultValue>enable_animated_textures = false</DefaultValue>
-    <TrueSetting>enable_animated_textures = true</TrueSetting>
-    <FalseSetting>enable_animated_textures = false</FalseSetting>
-  </Setting>
-
-  <Setting xsi:type="Checkbox">
-    <Group>Avanzado</Group>
     <Name>Mostrar Interfaz de Datos</Name>
     <Description>Enseña a tiempo real información de depuración en una interfaz en pantalla.</Description>
     <DefaultValue>show_stats = false</DefaultValue>

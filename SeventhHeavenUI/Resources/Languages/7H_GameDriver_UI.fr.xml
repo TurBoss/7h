@@ -255,15 +255,6 @@
 
   <Setting xsi:type="Checkbox">
     <Group>Avancé</Group>
-    <Name>Animated Textures</Name>
-    <Description>Enable support for high quality animated textures. NOTE: This feature requires a MODERN CPU. If you notice slowdows, please DISABLE this flag.</Description>
-    <DefaultValue>enable_animated_textures = false</DefaultValue>
-    <TrueSetting>enable_animated_textures = true</TrueSetting>
-    <FalseSetting>enable_animated_textures = false</FalseSetting>
-  </Setting>
-
-  <Setting xsi:type="Checkbox">
-    <Group>Avancé</Group>
     <Name>Afficher des Statistiques en Superposition</Name>
     <Description>Affiche en superposition certaines informations de débogage en temps réel.</Description>
     <DefaultValue>show_stats = false</DefaultValue>
