@@ -26,3 +26,5 @@ $discordPost = @"
 "@
 
 Invoke-RestMethod -Uri $env:_MAP_7TH_INTERNAL -ContentType "application/json" -Method Post -Body $discordPost
+Invoke-RestMethod -Uri $env:_MAP_7TH_QHIMM -ContentType "application/json" -Method Post -Body $discordPost
+Invoke-RestMethod -Uri $env:_MAP_7TH_TSUNAMODS -ContentType "application/json" -Method Post -Body $discordPost

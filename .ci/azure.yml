@@ -100,3 +100,5 @@ steps:
     filePath: .ci\alert.ps1
   env:
     _MAP_7TH_INTERNAL: $(_7TH_INTERNAL)
+    _MAP_7TH_QHIMM: $(_7TH_QHIMM)
+    _MAP_7TH_TSUNAMODS: $(_7TH_TSUNAMODS)
