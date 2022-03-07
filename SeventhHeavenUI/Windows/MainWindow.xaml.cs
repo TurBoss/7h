@@ -408,5 +408,10 @@ namespace SeventhHeavenUI
         {
             new AboutWindow().ShowDialog();
         }
+
+        private void SupportUkraine_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://helpukraine.simple.ink/");
+        }
     }
 }

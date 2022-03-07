@@ -230,7 +230,7 @@
                             <TextBlock Text="{Binding PreviewModVersion, FallbackValue='1.3'}"
                                        Margin="2,0,3,1"
                                        Style="{StaticResource ModInfoDetailsStyle}"/>
-                            
+
                             <Button x:Name="btnUpdateMod" 
                                     Content="{Binding UpdateModButtonText, FallbackValue='Update Available'}"
                                     IsEnabled="{Binding IsUpdateModButtonEnabled}"
@@ -365,7 +365,7 @@
                                PreviewMouseRightButtonUp="MyModsTabItem_MouseRightButtonUp"
                                Padding="0"/>
                 </TabItem.Header>
-                
+
                 <ctrl:MyModsUserControl x:Name="ctrlMyMods"/>
             </TabItem>
             <TabItem MouseRightButtonUp="BrowseCatalogTabItem_MouseRightButtonUp"
@@ -375,7 +375,7 @@
                                PreviewMouseRightButtonUp="BrowseCatalogTabItem_MouseRightButtonUp"
                                Padding="0"/>
                 </TabItem.Header>
-                
+
                 <ctrl:CatalogUserControl x:Name="ctrlCatalog"/>
             </TabItem>
         </TabControl>
@@ -384,7 +384,7 @@
               Margin="0,25,56,0"
               HorizontalAlignment="Right"
               VerticalAlignment="Top">
-            
+
             <TextBox x:Name="txtSearch"
                      Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      TextChanged="txtSearch_TextChanged"
@@ -505,5 +505,6 @@
                 </StatusBarItem.Style>
             </StatusBarItem>
         </StatusBar>
+        <Image x:Name="SupportUkraine" Grid.Column="2" HorizontalAlignment="Left" Height="45" Margin="246,5,0,0" VerticalAlignment="Top" Width="130" Source="/Resources/SupportUkraine.png" Stretch="UniformToFill" Grid.RowSpan="2" Cursor="Hand" MouseUp="SupportUkraine_MouseUp"/>
     </Grid>
 </Window>
