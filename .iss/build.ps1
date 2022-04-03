@@ -1,0 +1,1 @@
+iscc ${env:buildPath}\.iss\installer.iss "/dMyAppVersion=${env:_BUILD_VERSION}" "/dMyAppPath=${env:buildPath}\SeventhHeavenUI" "/dMyAppRelease=${env:_RELEASE_CONFIGURATION}" "/O${env:buildPath}\.dist" "/F${env:_RELEASE_NAME}-${env:_RELEASE_VERSION}_${env:_RELEASE_CONFIGURATION}"
