@@ -52,7 +52,7 @@ namespace SeventhHeaven.Classes
             {
                 string url = asset.browser_download_url.Value;
 
-                if (url.Contains("7thHeaven-v"))
+                if (url.Contains("7thHeaven-v") && url.EndsWith(".zip"))
                     return url;
             }
 
