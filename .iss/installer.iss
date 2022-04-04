@@ -24,7 +24,7 @@ AppPublisherURL={#MyAppURL}
 AppCopyright="Microsoft Public License (MS-PL)"
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={commonpf}\{#MyAppName}
+DefaultDirName={autopf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 Compression=lzma2/ultra
 InternalCompressLevel=ultra
@@ -34,6 +34,7 @@ VersionInfoVersion={#MyAppVersion}
 SetupIconFile="{#MyAppPath}\7H.ico"
 UninstallDisplayIcon="{app}\uninstall.ico"
 UninstallDisplayName={#MyAppName}
+ArchitecturesInstallIn64BitMode=x64
 
 [Files]
 Source: "{#MyAppPath}\bin\{#MyAppRelease}\*"; DestDir: "{app}"; Flags: recursesubdirs
