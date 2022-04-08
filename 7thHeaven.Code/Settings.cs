@@ -162,8 +162,8 @@ namespace Iros._7th.Workshop {
             defaultSettings.Options.Add(GeneralOptions.OpenModFilesWith7H);
             defaultSettings.Options.Add(GeneralOptions.CheckForUpdates);
 
-            defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/http$qhimm.7thheaven.rocks/catalog", Name = "Qhimm Catalog" });
-            defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/http$pastebin.com/raw.php?i=vXc4PpBS", Name = "Sega Catalog" });
+            defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/https$github.com/tsunamods-codes/7th-Heaven-Catalogs/releases/download/canary/qhimm.xml", Name = "Qhimm Catalog" });
+            defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/https$github.com/tsunamods-codes/7th-Heaven-Catalogs/releases/download/canary/sega.xml", Name = "Sega Catalog" });
 
             defaultSettings.ExtraFolders.Add("direct");
             defaultSettings.ExtraFolders.Add("music");
