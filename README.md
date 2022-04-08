@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/julianxhokaxhiu/FFNx/blob/master/.logo/tsunamods.png" alt="">
+  <img src="https://github.com/tsunamods-codes/7th-Heaven/blob/master/.logo/tsunamods.png" alt="">
   <br><small>7thHeaven is now officially part of the <strong>Tsunamods</strong> initiative!</small>
 </div>
 
