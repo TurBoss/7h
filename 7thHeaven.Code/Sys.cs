@@ -385,6 +385,24 @@ namespace Iros._7th.Workshop
                 Settings = Settings.UseDefaultSettings();
                 Settings.IsFirstStart = true;
             }
+            else
+            {
+                /* Force default catalog entries to the built-in URL to ensure catalog integrity */
+
+                // Get default settings, including catalogs
+                Settings defaultSettings = Settings.UseDefaultSettings();
+
+                foreach(var sub in Settings.Subscriptions)
+                {
+                    foreach (var defSub in defaultSettings.Subscriptions)
+                    {
+                        if (defSub.Name == sub.Name)
+                        {
+                            sub.Url = defSub.Url;
+                        }
+                    }
+                }
+            }
 
             string lfile = Path.Combine(SysFolder, "library.xml");
             if (File.Exists(lfile))
