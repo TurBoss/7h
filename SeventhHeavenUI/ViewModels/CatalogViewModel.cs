@@ -399,6 +399,16 @@ namespace SeventhHeavenUI.ViewModels
                 int subTotalCount = Sys.Settings.SubscribedUrls.Count; // amount of subscriptions to update
                 int subUpdateCount = 0; // amount of subscriptions updated
 
+                if (File.Exists(catFile))
+                {
+                    FileInfo catFileInfo = new FileInfo(catFile);
+                    if (catFileInfo.LastAccessTime < DateTime.Now.AddDays(-1))
+                    {
+                        // if the catalog file is older than 1 day, force the check for updates
+                        forceCheck = true;
+                    }
+                }
+
                 if (forceCheck)
                 {
                     // on force check, initialize a new catalog to ignore any cached items
