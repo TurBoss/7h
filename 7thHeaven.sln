@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeventhHeavenUI", "SeventhHeavenUI\SeventhHeavenUI.csproj", "{5F6C267D-0F93-4C71-BA58-0C1AD6242383}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7thWrapperLib", "7thWrapperLib\7thWrapperLib.csproj", "{F80DB232-4102-4249-8B31-2DDD5C7FA404}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPlugin", "TestPlugin\TestPlugin.csproj", "{A64400A1-1E22-4F22-884E-568A776141C5}"
@@ -10,8 +12,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7thHeaven.Code", "7thHeaven.Code\7thHeaven.Code.csproj", "{CD2F4CCB-4735-4DEE-8867-B0ED2CA04303}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TurBoLog", "TurBoLog\TurBoLog.csproj", "{03EEDE27-0ABB-4CDA-A7F2-F746E2083202}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeventhHeavenUI", "SeventhHeavenUI\SeventhHeavenUI.csproj", "{5F6C267D-0F93-4C71-BA58-0C1AD6242383}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
