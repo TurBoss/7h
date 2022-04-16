@@ -47,3 +47,6 @@ Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"; 
 
 [Run]
 Filename: "{app}\7th Heaven.exe"; Flags: nowait postinstall runascurrentuser; Description: "Launch {#MyAppName}"
+
+[InstallDelete]
+Name: {app}\7thWorkshop\catalog.xml; Type: files
