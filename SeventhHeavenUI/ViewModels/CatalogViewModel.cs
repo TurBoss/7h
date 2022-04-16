@@ -408,6 +408,9 @@ namespace SeventhHeavenUI.ViewModels
                         forceCheck = true;
                     }
                 }
+                else
+                    // if the catalog file is not found, force an update check
+                    forceCheck = true;
 
                 if (forceCheck)
                 {
