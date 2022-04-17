@@ -1,12 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 namespace _7thWrapperLib
 {
     // Thanks to Paul Welter, https://weblogs.asp.net/pwelter34/444961
     [XmlRoot("dictionary")]
-    public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
+    [Serializable]
+    public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable, ISerializable
     {
+        public SerializableDictionary()
+        {
+
+        }
+
+        protected SerializableDictionary(SerializationInfo info, StreamingContext context)
+        {
+
+        }
+
         #region IXmlSerializable Members
         public System.Xml.Schema.XmlSchema GetSchema()
         {
