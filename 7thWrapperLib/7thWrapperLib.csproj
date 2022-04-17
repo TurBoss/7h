@@ -109,6 +109,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="RuntimeVar.cs" />
+    <Compile Include="SerializableDictionary.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="VFile.cs" />
     <Compile Include="VStreamFile.cs" />
