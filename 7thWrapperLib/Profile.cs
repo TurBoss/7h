@@ -1331,14 +1331,14 @@ namespace _7thWrapperLib
         public string Key;
         public string Value;
         public List<string> Values;
-        public Dictionary<string, int> Attributes;
+        public SerializableDictionary<string, int> Attributes;
 
         public FFNxFlag()
         {
             Key = String.Empty;
             Value = String.Empty;
             Values = new List<string>();
-            Attributes = new Dictionary<string, int>();
+            Attributes = new SerializableDictionary<string, int>();
         }
     }
 
