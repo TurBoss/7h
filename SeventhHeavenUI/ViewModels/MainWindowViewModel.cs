@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
@@ -734,6 +735,13 @@ namespace SeventhHeavenUI.ViewModels
                     Sys.Message(new WMessage(ResourceHelper.Get(StringKey.CheckingForUpdates), WMessageLogLevel.LogOnly));
                     updater.CheckForUpdates(Sys.Settings.AppUpdateChannel);
                 });
+            }
+
+            // Check if there are errors in the FFNx.toml file and show to the user the output
+            Exception FFNxConfigError = Sys.FFNxConfig.GetLastError();
+            if (FFNxConfigError != null)
+            {
+                MessageDialogWindow.Show("Something went wrong while parsing \"" + Sys.PathToFFNxToml + "\".\n\n" + Encoding.UTF8.GetString(Encoding.Default.GetBytes(FFNxConfigError.Message)), "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
         }
 
