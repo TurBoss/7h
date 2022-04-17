@@ -24,7 +24,11 @@ namespace Iros._7th.Workshop.ConfigSettings
 
         public Exception GetLastError()
         {
-            return _lastException;
+            Exception ret = _lastException;
+
+            _lastException = null;
+
+            return ret;
         }
 
         public void Reload()
