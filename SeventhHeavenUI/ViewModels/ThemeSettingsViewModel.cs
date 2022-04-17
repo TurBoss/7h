@@ -378,6 +378,7 @@ namespace SeventhHeaven.ViewModels
                 settings.PrimaryControlDisabledForeground = ControlDisabledFgText;
                 settings.PrimaryControlBackground = ControlBackgroundText;
                 settings.PrimaryControlForeground = ControlForegroundText;
+                settings.PrimaryControlSecondary = ControlSecondaryText;
                 settings.PrimaryControlMouseOver = ControlMouseOverText;
                 settings.PrimaryControlPressed = ControlPressedText;
             }
