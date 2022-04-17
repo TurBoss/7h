@@ -31,6 +31,7 @@ namespace SeventhHeaven.ViewModels
         private string _controlDisabledFgText;
         private string _controlBackgroundText;
         private string _controlForegroundText;
+        private string _controlSecondaryText;
         private string _controlMouseOverText;
         private string _controlPressedText;
         private string _backgroundImageText;
@@ -154,6 +155,19 @@ namespace SeventhHeaven.ViewModels
             set
             {
                 _controlForegroundText = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string ControlSecondaryText
+        {
+            get
+            {
+                return _controlSecondaryText;
+            }
+            set
+            {
+                _controlSecondaryText = value;
                 NotifyPropertyChanged();
             }
         }
@@ -416,6 +430,7 @@ namespace SeventhHeaven.ViewModels
             SecondaryBackgroundText = theme.SecondaryAppBackground;
             ControlBackgroundText = theme.PrimaryControlBackground;
             ControlForegroundText = theme.PrimaryControlForeground;
+            ControlSecondaryText = theme.PrimaryControlSecondary;
             ControlPressedText = theme.PrimaryControlPressed;
             ControlMouseOverText = theme.PrimaryControlMouseOver;
             ControlDisabledBgText = theme.PrimaryControlDisabledBackground;
@@ -454,6 +469,7 @@ namespace SeventhHeaven.ViewModels
 
                 App.Current.Resources["PrimaryControlBackground"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(ControlBackgroundText));
                 App.Current.Resources["PrimaryControlForeground"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(ControlForegroundText));
+                App.Current.Resources["PrimaryControlSecondary"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(ControlSecondaryText));
                 App.Current.Resources["PrimaryControlPressed"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(ControlPressedText));
                 App.Current.Resources["PrimaryControlMouseOver"] = (SolidColorBrush)(new BrushConverter().ConvertFrom(ControlMouseOverText));
 
@@ -486,6 +502,7 @@ namespace SeventhHeaven.ViewModels
                 SecondaryBackgroundText = theme.SecondaryAppBackground;
                 ControlBackgroundText = theme.PrimaryControlBackground;
                 ControlForegroundText = theme.PrimaryControlForeground;
+                ControlSecondaryText = theme.PrimaryControlSecondary;
                 ControlPressedText = theme.PrimaryControlPressed;
                 ControlMouseOverText = theme.PrimaryControlMouseOver;
                 ControlDisabledBgText = theme.PrimaryControlDisabledBackground;
@@ -556,6 +573,7 @@ namespace SeventhHeaven.ViewModels
             SecondaryBackgroundText = savedTheme.SecondaryAppBackground;
             ControlBackgroundText = savedTheme.PrimaryControlBackground;
             ControlForegroundText = savedTheme.PrimaryControlForeground;
+            ControlSecondaryText = savedTheme.PrimaryControlSecondary;
             ControlPressedText = savedTheme.PrimaryControlPressed;
             ControlMouseOverText = savedTheme.PrimaryControlMouseOver;
             ControlDisabledBgText = savedTheme.PrimaryControlDisabledBackground;

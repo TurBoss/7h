@@ -49,6 +49,15 @@ namespace SeventhHeaven.Classes.Themes
             }
         }
 
+        public string PrimaryControlSecondary
+        {
+            get
+            {
+                Color? colorResource = App.Current.TryFindResource("LightControlSecondary") as Color?;
+                return ThemeSettings.ColorToHexString(colorResource.Value);
+            }
+        }
+
         public string PrimaryControlPressed
         {
             get

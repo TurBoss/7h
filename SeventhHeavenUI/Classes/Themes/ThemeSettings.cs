@@ -15,6 +15,7 @@ namespace SeventhHeaven.Classes.Themes
         public string SecondaryAppBackground { get; set; }
         public string PrimaryControlBackground { get; set; }
         public string PrimaryControlForeground { get; set; }
+        public string PrimaryControlSecondary { get; set; }
         public string PrimaryControlPressed { get; set; }
         public string PrimaryControlMouseOver { get; set; }
         public string PrimaryControlDisabledBackground { get; set; }

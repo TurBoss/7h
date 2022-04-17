@@ -48,6 +48,16 @@
             <Setter Property="Margin" Value="0,0,0,0"/>
         </Style>
 
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="IsEnabled" Value="{Binding IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground" Value="{DynamicResource PrimaryControlSecondary}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>

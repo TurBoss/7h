@@ -12,6 +12,7 @@
 
     <Color x:Key="DarkControlBackground">#1f1f1f</Color>
     <Color x:Key="DarkControlForeground">#ffffff</Color>
+    <Color x:Key="DarkControlSecondary">#999999</Color>
     <Color x:Key="DarkControlPressed">#CF2D2A</Color>
     <Color x:Key="DarkControlMouseOver">#5e5e5e</Color>
 
@@ -25,6 +26,7 @@
 
     <Color x:Key="LightControlBackground">#CFD8DC</Color>
     <Color x:Key="LightControlForeground">#212121</Color>
+    <Color x:Key="LightControlSecondary">#FFCCCCCC</Color>
     <Color x:Key="LightControlPressed">#59B3E7</Color>
     <Color x:Key="LightControlMouseOver">#B0BEC5</Color>
 
@@ -38,6 +40,7 @@
 
     <Color x:Key="ClassicControlBackground">#FFC0C0FF</Color>
     <Color x:Key="ClassicControlForeground">#FF000000</Color>
+    <Color x:Key="ClassicControlSecondary">#FFCCCCCC</Color>
     <Color x:Key="ClassicControlPressed">#FF90EE90</Color>
     <Color x:Key="ClassicControlMouseOver">#FFACACE5</Color>
 
@@ -50,6 +53,7 @@
 
     <Color x:Key="TsunamodsControlBackground">#FF333333</Color>
     <Color x:Key="TsunamodsControlForeground">#FFFFECDB</Color>
+    <Color x:Key="TsunamodsControlSecondary">#FF888888</Color>
     <Color x:Key="TsunamodsControlPressed">#FF78A7AF</Color>
     <Color x:Key="TsunamodsControlMouseOver">#FF78A7AF</Color>
 
@@ -66,6 +70,7 @@
     
     <SolidColorBrush x:Key="PrimaryControlBackground" Color="{DynamicResource DarkControlBackground}"/>
     <SolidColorBrush x:Key="PrimaryControlForeground" Color="{DynamicResource DarkControlForeground}"/>
+    <SolidColorBrush x:Key="PrimaryControlSecondary" Color="{DynamicResource DarkControlSecondary}"/>
     <SolidColorBrush x:Key="PrimaryControlPressed" Color="{DynamicResource DarkControlPressed}"/>
     <SolidColorBrush x:Key="PrimaryControlMouseOver" Color="{DynamicResource DarkControlMouseOver}"/>
     <SolidColorBrush x:Key="PrimaryControlDisabledBackground" Color="{DynamicResource DarkControlDisabledBackground}"/>
