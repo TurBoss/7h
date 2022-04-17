@@ -1008,6 +1008,7 @@
     <system:String x:Key="BackgroundImage">Εικόνα φόντου:</system:String>
     <system:String x:Key="ControlsBackground">Έλεγχος Φόντου:</system:String>
     <system:String x:Key="ControlsForeground">Έλεγχος Προσκηνίου:</system:String>
+    <system:String x:Key="ControlsSecondary">Controls Secondary Text:</system:String>
     <system:String x:Key="ControlsMouseOver">Έλεγχος Κύλισης Κέρσορα:</system:String>
     <system:String x:Key="ControlsPressed">Έλεγχος κατά την Πίεση:</system:String>
     <system:String x:Key="ImportTheme">Εισαγωγή Θέματος</system:String>

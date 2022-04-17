@@ -1019,6 +1019,7 @@ Aktivieren und erneut versuchen?</system:String>
     <system:String x:Key="BackgroundImage">Hintergrundbild:</system:String>
     <system:String x:Key="ControlsBackground">Aktivierte Buttons, Hintergrundfarbe:</system:String>
     <system:String x:Key="ControlsForeground">Aktivierte Buttons, Vordergrundfarbe:</system:String>
+    <system:String x:Key="ControlsSecondary">Controls Secondary Text:</system:String>
     <system:String x:Key="ControlsMouseOver">Mouse over Buttons Farbe:</system:String>
     <system:String x:Key="ControlsPressed">Buttons gedrückt Farbe:</system:String>
     <system:String x:Key="ImportTheme">Importiere Schema</system:String>

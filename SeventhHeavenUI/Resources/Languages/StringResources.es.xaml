@@ -1011,6 +1011,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="BackgroundImage">Imagen de fondo:</system:String>
     <system:String x:Key="ControlsBackground">Fondo de los controles:</system:String>
     <system:String x:Key="ControlsForeground">Texto de los controles:</system:String>
+    <system:String x:Key="ControlsSecondary">Controls Secondary Text:</system:String>
     <system:String x:Key="ControlsMouseOver">Ratón al pasar por control:</system:String>
     <system:String x:Key="ControlsPressed">Controles presionados:</system:String>
     <system:String x:Key="ImportTheme">Importar tema</system:String>

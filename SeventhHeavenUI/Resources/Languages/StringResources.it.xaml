@@ -1008,6 +1008,7 @@ Vuoi applicare questa modifica e riprovare?</system:String>
     <system:String x:Key="BackgroundImage">Immagine di Sfondo:</system:String>
     <system:String x:Key="ControlsBackground">Comandi sullo Sfondo:</system:String>
     <system:String x:Key="ControlsForeground">Comandi in Primo Piano:</system:String>
+    <system:String x:Key="ControlsSecondary">Controls Secondary Text:</system:String>
     <system:String x:Key="ControlsMouseOver">Comandi al Passaggio del Mouse:</system:String>
     <system:String x:Key="ControlsPressed">Comandi al Clic:</system:String>
     <system:String x:Key="ImportTheme">Importa Tema</system:String>

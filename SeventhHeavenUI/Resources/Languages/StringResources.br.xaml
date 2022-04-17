@@ -1009,6 +1009,7 @@ Você quer aplicar essa configuração e tentar de novo?</system:String>
     <system:String x:Key="BackgroundImage">Imagem de Fundo:</system:String>
     <system:String x:Key="ControlsBackground">Fundo Controles:</system:String>
     <system:String x:Key="ControlsForeground">Prim. Plano Controles:</system:String>
+    <system:String x:Key="ControlsSecondary">Controls Secondary Text:</system:String>
     <system:String x:Key="ControlsMouseOver">Controles Passando o Mouse:</system:String>
     <system:String x:Key="ControlsPressed">Controles Pressionados:</system:String>
     <system:String x:Key="ImportTheme">Importar Tema</system:String>

@@ -1013,6 +1013,7 @@ Do you want to apply the setting and try again?</system:String>
     <system:String x:Key="BackgroundImage">Background Image:</system:String>
     <system:String x:Key="ControlsBackground">Controls Background:</system:String>
     <system:String x:Key="ControlsForeground">Controls Foreground:</system:String>
+    <system:String x:Key="ControlsSecondary">Controls Secondary Text:</system:String>
     <system:String x:Key="ControlsMouseOver">Controls Mouse Over:</system:String>
     <system:String x:Key="ControlsPressed">Controls Pressed:</system:String>
     <system:String x:Key="ImportTheme">Import Theme</system:String>

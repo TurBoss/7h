@@ -1004,6 +1004,7 @@ Voulez-vous appliquer ce réglage et essayer à nouveau ?</system:String>
     <system:String x:Key="BackgroundImage">Image de Fond :</system:String>
     <system:String x:Key="ControlsBackground">Contrôles en arrière-plan :</system:String>
     <system:String x:Key="ControlsForeground">Contrôles au premier-plan :</system:String>
+    <system:String x:Key="ControlsSecondary">Controls Secondary Text:</system:String>
     <system:String x:Key="ControlsMouseOver">Contrôles au survol de la souris :</system:String>
     <system:String x:Key="ControlsPressed">Contrôles appuyés :</system:String>
     <system:String x:Key="ImportTheme">Importer le thème</system:String>

@@ -43,6 +43,7 @@ namespace SeventhHeaven.Windows
                 pickerDisabledFg.SelectedColor = (Color)ColorConverter.ConvertFromString(ViewModel.ControlDisabledFgText);
                 pickerControlBg.SelectedColor = (Color)ColorConverter.ConvertFromString(ViewModel.ControlBackgroundText);
                 pickerControlFg.SelectedColor = (Color)ColorConverter.ConvertFromString(ViewModel.ControlForegroundText);
+                pickerControlSecnd.SelectedColor = (Color)ColorConverter.ConvertFromString(ViewModel.ControlSecondaryText);
                 pickerMouseOver.SelectedColor = (Color)ColorConverter.ConvertFromString(ViewModel.ControlMouseOverText);
                 pickerPressed.SelectedColor = (Color)ColorConverter.ConvertFromString(ViewModel.ControlPressedText);
             }
@@ -168,6 +169,10 @@ namespace SeventhHeaven.Windows
         private void pickerControlFg_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             ViewModel.ColorChanged(nameof(ViewModel.ControlForegroundText), e.NewValue);
+        }
+        private void pickerControlSecnd_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            ViewModel.ColorChanged(nameof(ViewModel.ControlSecondaryText), e.NewValue);
         }
         private void pickerMouseOver_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
