@@ -13,6 +13,7 @@ namespace Iros._7th.Workshop.ConfigSettings
     {
         private string _pathToFFNxToml = Sys.PathToFFNxToml;
         private string _pathToFFNxTomlBak = Sys.PathToFFNxToml + ".bak";
+        private Exception _lastException = null;
 
         private TomlTable _toml = null;
 
@@ -21,9 +22,22 @@ namespace Iros._7th.Workshop.ConfigSettings
             Reload();
         }
 
+        public Exception GetLastError()
+        {
+            return _lastException;
+        }
+
         public void Reload()
         {
-            if (File.Exists(_pathToFFNxToml)) _toml = Toml.Parse(File.ReadAllBytes(_pathToFFNxToml)).ToModel();
+            try
+            {
+                if (File.Exists(_pathToFFNxToml)) _toml = Toml.Parse(File.ReadAllBytes(_pathToFFNxToml)).ToModel();
+            }
+            catch (Exception ex)
+            {
+                _lastException = ex;
+                Sys.Message(new WMessage() { Text = $"Something went wrong while parsing \"{_pathToFFNxToml}\"", LoggedException = _lastException, LogLevel = WMessageLogLevel.Error });
+            }
         }
 
         public string Get(string key)
