@@ -171,15 +171,15 @@ namespace SeventhHeavenUI.ViewModels
             }
             else if (size < 100 * 1024)
             {
-                return String.Format("{0:0.0}MB", size / 1024m);
+                return String.Format("{0:0.0}MiB", size / 1024m);
             }
             else if (size < 500 * 1024)
             {
-                return String.Format("{0:0}MB", size / 1024m);
+                return String.Format("{0:0}MiB", size / 1024m);
             }
             else
             {
-                return String.Format("{0:0.0}GB", size / (1024m * 1024m));
+                return String.Format("{0:0.0}GiB", size / (1024m * 1024m));
             }
         }
 

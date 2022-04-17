@@ -1039,7 +1039,7 @@ namespace SeventhHeavenUI.ViewModels
 
             if (item.Category == DownloadCategory.Image && download.ContentLength > (3 * 1024*1024))
             {
-                Logger.Warn("preview image greater than 3MB, cancelling download");
+                Logger.Warn("preview image greater than 3MiB, cancelling download");
                 item.PerformCancel?.Invoke();
                 return;
             }
