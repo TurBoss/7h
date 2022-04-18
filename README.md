@@ -1,3 +1,5 @@
+![License](https://img.shields.io/github/license/tsunamods-codes/7th-Heaven) ![Latest Stable Downloads](https://img.shields.io/github/downloads/tsunamods-codes/7th-Heaven/latest/total?label=Latest%20Stable%20Downloads&sort=semver) ![Latest Canary Downloads](https://img.shields.io/github/downloads/tsunamods-codes/7th-Heaven/canary/total?label=Latest%20Canary%20Downloads) [![Build Status](https://dev.azure.com/julianxhokaxhiu/Github/_apis/build/status/tsunamods-codes.7th-Heaven?branchName=master)](https://dev.azure.com/julianxhokaxhiu/Github/_build/latest?definitionId=26&branchName=master)
+
 <div align="center">
   <img src="https://github.com/tsunamods-codes/7th-Heaven/blob/master/.logo/tsunamods.png" alt="">
   <br><small>7thHeaven is now officially part of the <strong>Tsunamods</strong> initiative!</small>
