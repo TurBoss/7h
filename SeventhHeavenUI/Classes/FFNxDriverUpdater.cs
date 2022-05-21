@@ -80,7 +80,7 @@ namespace SeventhHeaven.Classes
             });
         }
 
-        public void CheckForUpdates(FFNxUpdateChannelOptions channel)
+        public void CheckForUpdates(FFNxUpdateChannelOptions channel, bool manualCheck = false)
         {
             try
             {
@@ -117,30 +117,46 @@ namespace SeventhHeaven.Classes
                         Version curVersion = new Version(GetCurrentDriverVersion());
                         Version newVersion = new Version(GetUpdateVersion(release.name.Value));
 
-                        switch(newVersion.CompareTo(curVersion))
+                        switch (newVersion.CompareTo(curVersion))
                         {
                             case 1: // NEWER
-                                if (
-                                    MessageDialogWindow.Show(
-                                        $"New FFNx Update driver found!\n\nCurrent Version: {curVersion.ToString()}\nNew Version: {newVersion.ToString()}\n\nWould you like to update?",
-                                        "Update found!",
-                                        System.Windows.MessageBoxButton.YesNo,
-                                        System.Windows.MessageBoxImage.Question
-                                    ).Result == System.Windows.MessageBoxResult.Yes)
+                                if (manualCheck)
+                                {
+                                    if (
+                                        MessageDialogWindow.Show(
+                                            $"New FFNx Update driver found!\n\nCurrent Version: {curVersion.ToString()}\nNew Version: {newVersion.ToString()}\n\nWould you like to update?",
+                                            "Update found!",
+                                            System.Windows.MessageBoxButton.YesNo,
+                                            System.Windows.MessageBoxImage.Question
+                                        ).Result == System.Windows.MessageBoxResult.Yes)
                                         DownloadAndExtract(GetUpdateReleaseUrl(release.assets), newVersion.ToString());
+                                }
+                                else
+                                {
+                                    App.Current.Dispatcher.Invoke(() =>
+                                    {
+                                        MainWindow window = App.Current.MainWindow as MainWindow;
+
+                                        window.ViewModel.FFNxUpdateVersion = $"{newVersion.ToString()} ({Sys.Settings.FFNxUpdateChannel.ToString()})";
+                                    });
+                                }
                                 break;
                             case 0: // SAME
-                                MessageDialogWindow.Show("Your FFNx Driver version seems to be up to date!", "No update found", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+                                if (manualCheck)
+                                    MessageDialogWindow.Show("Your FFNx Driver version seems to be up to date!", "No update found", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
                                 break;
                             case -1: // OLDER
-                                if (
-                                    MessageDialogWindow.Show(
-                                        $"Your current FFNx driver version seems newer than the one presently available.\n\nCurrent Version: {curVersion.ToString()}\nNew Version: {newVersion.ToString()}\n\nWould you like to install it anyway?",
-                                        "Update found!",
-                                        System.Windows.MessageBoxButton.YesNo,
-                                        System.Windows.MessageBoxImage.Question
-                                    ).Result == System.Windows.MessageBoxResult.Yes)
-                                        DownloadAndExtract(GetUpdateReleaseUrl(release.assets), newVersion.ToString());
+                                if (manualCheck)
+                                {
+                                    if (
+                                        MessageDialogWindow.Show(
+                                            $"Your current FFNx driver version seems newer than the one presently available.\n\nCurrent Version: {curVersion.ToString()}\nNew Version: {newVersion.ToString()}\n\nWould you like to install it anyway?",
+                                            "Update found!",
+                                            System.Windows.MessageBoxButton.YesNo,
+                                            System.Windows.MessageBoxImage.Question
+                                        ).Result == System.Windows.MessageBoxResult.Yes)
+                                            DownloadAndExtract(GetUpdateReleaseUrl(release.assets), newVersion.ToString());
+                                }
                                 break;
                         }
                     }

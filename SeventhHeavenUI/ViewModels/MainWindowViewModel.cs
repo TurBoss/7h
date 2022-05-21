@@ -88,6 +88,7 @@ namespace SeventhHeavenUI.ViewModels
         private string _catFile;
         private string _statusMessage;
         private string _currentProfile;
+        private string _ffnxUpdateVersion;
         private string _searchText;
         private int _selectedTabIndex;
         private List<FilterItemViewModel> _availableFilters;
@@ -123,7 +124,7 @@ namespace SeventhHeavenUI.ViewModels
         {
             get
             {
-                return $"{App.GetAppName()} v{App.GetAppVersion().ToString()} - {ResourceHelper.Get(StringKey.ModManagerForFinalFantasy7)} [{CurrentProfile}]";
+                return $"{App.GetAppName()} v{App.GetAppVersion().ToString()} - {ResourceHelper.Get(StringKey.ModManagerForFinalFantasy7)} [{CurrentProfile}] {FFNxUpdateVersion}";
             }
         }
 
@@ -205,6 +206,20 @@ namespace SeventhHeavenUI.ViewModels
             set
             {
                 _currentProfile = value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(WindowTitle));
+            }
+        }
+
+        public string FFNxUpdateVersion
+        {
+            get
+            {
+                return _ffnxUpdateVersion;
+            }
+            set
+            {
+                _ffnxUpdateVersion = $"[FFNx Update available: {value}]";
                 NotifyPropertyChanged();
                 NotifyPropertyChanged(nameof(WindowTitle));
             }
@@ -606,6 +621,7 @@ namespace SeventhHeavenUI.ViewModels
         #endregion
 
         private UpdateChecker updater = new UpdateChecker();
+        private FFNxDriverUpdater ffnxUpdater = new FFNxDriverUpdater();
         
         public MainWindowViewModel()
         {
@@ -734,6 +750,7 @@ namespace SeventhHeavenUI.ViewModels
                     System.Threading.Thread.Sleep(5000); // wait 5 seconds after init before checking for update to let UI render
                     Sys.Message(new WMessage(ResourceHelper.Get(StringKey.CheckingForUpdates), WMessageLogLevel.LogOnly));
                     updater.CheckForUpdates(Sys.Settings.AppUpdateChannel);
+                    ffnxUpdater.CheckForUpdates(Sys.Settings.FFNxUpdateChannel);
                 });
             }
 

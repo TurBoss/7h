@@ -446,7 +446,7 @@ namespace SeventhHeaven.Windows
 
         private void btnFFNxCheckForUpdate_Click(object sender, RoutedEventArgs e)
         {
-            FFNxUpdater.CheckForUpdates(Sys.Settings.FFNxUpdateChannel);
+            FFNxUpdater.CheckForUpdates(Sys.Settings.FFNxUpdateChannel, true);
         }
 
         private void btn7thCheckForUpdate_Click(object sender, RoutedEventArgs e)
