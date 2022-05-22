@@ -47,7 +47,7 @@ namespace SeventhHeaven.ViewModels
         private string _selectedSoundDevice;
         private string _selectedMidiData;
         private string _selectedMidiDevice;
-        private int _volumeValue;
+        private int _musicVolumeValue;
         private bool _doWorkaroundErrorCode5;
 
         private WaveOut _audioTest;
@@ -260,18 +260,18 @@ namespace SeventhHeaven.ViewModels
         {
             get
             {
-                return _volumeValue;
+                return _musicVolumeValue;
             }
             set
             {
-                _volumeValue = value;
+                _musicVolumeValue = value;
                 NotifyPropertyChanged();
                 NotifyPropertyChanged(nameof(MusicVolumeDisplayText));
                 LastVolumeSliderChanged = VolumeSlider.Music;
 
                 if (IsAudioPlaying && LastVolumeSliderChanged == VolumeSlider.Music)
                 {
-                    _audioTest.Volume = (float)_volumeValue / (float)100.0;
+                    _audioTest.Volume = (float)_musicVolumeValue / (float)100.0;
                 }
             }
         }
