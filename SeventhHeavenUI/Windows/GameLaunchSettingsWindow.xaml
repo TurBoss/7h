@@ -15,7 +15,7 @@
         ResizeMode="NoResize"
         Title="{DynamicResource GameLauncherSettings}" 
         Width="470"
-        Height="650">
+        Height="750">
     <Window.Resources>
 
         <DataTemplate x:Key="programItem">
@@ -104,6 +104,9 @@
                   VerticalAlignment="Top">
             <Grid Margin="3" x:Name="gridAudio">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -270,15 +273,95 @@
                     </Slider.ToolTip>
                 </Slider>
 
+                <TextBlock Text="{DynamicResource VoiceVolumeLabel}"
+                           Grid.Row="5"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis"
+                           Margin="5,0,0,10"/>
+
+                <Slider x:Name="sliderVoiceVolume"
+                        Grid.Row="5"
+                        Grid.Column="1"
+                        HorizontalAlignment="Left"
+                        Value="{Binding VoiceVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
+                        ToolTipService.InitialShowDelay="100"
+                        ValueChanged="sliderVoiceVolume_ValueChanged"
+                        PreviewMouseLeftButtonUp="sliderVoiceVolume_PreviewMouseLeftButtonUp"
+                        Minimum="0"
+                        Maximum="100"
+                        MinWidth="125"
+                        VerticalAlignment="Center"
+                        Width="{Binding ElementName=cboSoundDevices, Path=ActualWidth}"
+                        Margin="4,0,4,5">
+                    <Slider.ToolTip>
+                        <ToolTip Content="{Binding VoiceVolumeDisplayText}"/>
+                    </Slider.ToolTip>
+                </Slider>
+
+                <TextBlock Text="{DynamicResource AmbientVolumeLabel}"
+                           Grid.Row="6"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis"
+                           Margin="5,0,0,10"/>
+
+                <Slider x:Name="sliderAmbientVolume"
+                        Grid.Row="6"
+                        Grid.Column="1"
+                        HorizontalAlignment="Left"
+                        Value="{Binding AmbientVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
+                        ToolTipService.InitialShowDelay="100"
+                        ValueChanged="sliderAmbientVolume_ValueChanged"
+                        PreviewMouseLeftButtonUp="sliderAmbientVolume_PreviewMouseLeftButtonUp"
+                        Minimum="0"
+                        Maximum="100"
+                        MinWidth="125"
+                        VerticalAlignment="Center"
+                        Width="{Binding ElementName=cboSoundDevices, Path=ActualWidth}"
+                        Margin="4,0,4,5">
+                    <Slider.ToolTip>
+                        <ToolTip Content="{Binding AmbientVolumeDisplayText}"/>
+                    </Slider.ToolTip>
+                </Slider>
+
+                <TextBlock Text="{DynamicResource MovieVolumeLabel}"
+                           Grid.Row="7"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis"
+                           Margin="5,0,0,10"/>
+
+                <Slider x:Name="sliderMovieVolume"
+                        Grid.Row="7"
+                        Grid.Column="1"
+                        HorizontalAlignment="Left"
+                        Value="{Binding MovieVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
+                        ToolTipService.InitialShowDelay="100"
+                        ValueChanged="sliderMovieVolume_ValueChanged"
+                        PreviewMouseLeftButtonUp="sliderMovieVolume_PreviewMouseLeftButtonUp"
+                        Minimum="0"
+                        Maximum="100"
+                        MinWidth="125"
+                        VerticalAlignment="Center"
+                        Width="{Binding ElementName=cboSoundDevices, Path=ActualWidth}"
+                        Margin="4,0,4,5">
+                    <Slider.ToolTip>
+                        <ToolTip Content="{Binding MovieVolumeDisplayText}"/>
+                    </Slider.ToolTip>
+                </Slider>
+
                 <CheckBox x:Name="chkLogVolume"
                           Content="{DynamicResource LogVolumeControl}" 
-                          Grid.Row="4"
+                          Grid.Row="7"
+                          Grid.Column="0"
                           HorizontalAlignment="Right"
                           IsChecked="{Binding IsLogVolumeChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,25,192.333,0" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
                 <CheckBox Content="{DynamicResource ReverseSpeakers}"
-                          Grid.Row="4"
+                          Grid.Column="1"
+                          Grid.Row="7"
                           HorizontalAlignment="Right"
-                          IsChecked="{Binding IsReverseSpeakersChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Margin="0,25,-9.667,0" Grid.RowSpan="2"/>
+                          IsChecked="{Binding IsReverseSpeakersChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,25,-9.667,0" Grid.RowSpan="2"/>
 
             </Grid>
         </GroupBox>

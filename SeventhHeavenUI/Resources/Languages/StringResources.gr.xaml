@@ -191,6 +191,15 @@
     <system:String x:Key="MusicVolumeLabel">Ενταση της μουσικής:</system:String>
     <system:String x:Key="MusicVolumeTooltip">Ορισμός έντασης της μουσικής εντός παιχνιδιού.</system:String>
 
+    <system:String x:Key="VoiceVolumeLabel">Voice Volume:</system:String>
+    <system:String x:Key="VoiceVolumeTooltip">Set the in-game voice volume.</system:String>
+
+    <system:String x:Key="AmbientVolumeLabel">Ambient Volume:</system:String>
+    <system:String x:Key="AmbientVolumeTooltip">Set the in-game ambient volume.</system:String>
+
+    <system:String x:Key="MovieVolumeLabel">Movie Volume:</system:String>
+    <system:String x:Key="MovieVolumeTooltip">Set the in-game movie volume.</system:String>
+
     <system:String x:Key="LogVolumeControl">Λογαριθμικός έλεγχος έντασης</system:String>
     <system:String x:Key="LogVolumeControlTooltip">Απενεργοποίησε την επιλογή αν νιώθεις πως η ένταση δεν αλλάζει ομαλά.</system:String>
 

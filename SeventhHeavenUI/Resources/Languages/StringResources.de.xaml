@@ -190,6 +190,15 @@
     <system:String x:Key="MusicVolumeLabel">Musik Lautstärke:</system:String>
     <system:String x:Key="MusicVolumeTooltip">Stellt die Lautstärke der Musik im Spiel ein.</system:String>
 
+    <system:String x:Key="VoiceVolumeLabel">Voice Volume:</system:String>
+    <system:String x:Key="VoiceVolumeTooltip">Set the in-game voice volume.</system:String>
+
+    <system:String x:Key="AmbientVolumeLabel">Ambient Volume:</system:String>
+    <system:String x:Key="AmbientVolumeTooltip">Set the in-game ambient volume.</system:String>
+
+    <system:String x:Key="MovieVolumeLabel">Movie Volume:</system:String>
+    <system:String x:Key="MovieVolumeTooltip">Set the in-game movie volume.</system:String>
+
     <system:String x:Key="LogVolumeControl">Logarithmische Lautstärkereglung</system:String>
     <system:String x:Key="LogVolumeControlTooltip">Deaktivieren fals die Lautstärkeanpassung nicht weich von statten geht.</system:String>
 

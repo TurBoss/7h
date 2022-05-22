@@ -193,6 +193,36 @@ namespace SeventhHeaven.Windows
             ShowOrHideToolTip(sliderMusicVolume.ToolTip as ToolTip, false);
         }
 
+        private void sliderVoiceVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            ShowOrHideToolTip(sliderVoiceVolume.ToolTip as ToolTip, true);
+        }
+
+        private void sliderVoiceVolume_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ShowOrHideToolTip(sliderVoiceVolume.ToolTip as ToolTip, false);
+        }
+
+        private void sliderAmbientVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            ShowOrHideToolTip(sliderAmbientVolume.ToolTip as ToolTip, true);
+        }
+
+        private void sliderAmbientVolume_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ShowOrHideToolTip(sliderAmbientVolume.ToolTip as ToolTip, false);
+        }
+
+        private void sliderMovieVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            ShowOrHideToolTip(sliderMovieVolume.ToolTip as ToolTip, true);
+        }
+
+        private void sliderMovieVolume_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ShowOrHideToolTip(sliderMovieVolume.ToolTip as ToolTip, false);
+        }
+
         private void btnMoveProgramUp_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (ViewModel.IsProgramPopupOpen)
