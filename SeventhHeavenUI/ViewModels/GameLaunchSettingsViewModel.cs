@@ -30,7 +30,10 @@ namespace SeventhHeaven.ViewModels
     internal enum VolumeSlider
     {
         Music,
-        Sfx
+        Sfx,
+        Voice,
+        Ambient,
+        Movie
     }
 
     class GameLaunchSettingsViewModel : ViewModelBase
@@ -61,6 +64,10 @@ namespace SeventhHeaven.ViewModels
         private VolumeSlider _lastVolumeSliderChanged;
         private bool _isSoundDevicesLoaded;
         private string _selectedMountOption;
+
+        private int _voiceVolumeValue;
+        private int _ambientVolumeValue;
+        private int _movieVolumeValue;
 
         #endregion
 
@@ -275,6 +282,65 @@ namespace SeventhHeaven.ViewModels
                 }
             }
         }
+        public int VoiceVolumeValue
+        {
+            get
+            {
+                return _voiceVolumeValue;
+            }
+            set
+            {
+                _voiceVolumeValue = value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(VoiceVolumeDisplayText));
+                LastVolumeSliderChanged = VolumeSlider.Voice;
+
+                if (IsAudioPlaying && LastVolumeSliderChanged == VolumeSlider.Voice)
+                {
+                    _audioTest.Volume = (float)_voiceVolumeValue / (float)100.0;
+                }
+            }
+        }
+
+        public int AmbientVolumeValue
+        {
+            get
+            {
+                return _ambientVolumeValue;
+            }
+            set
+            {
+                _ambientVolumeValue = value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(AmbientVolumeDisplayText));
+                LastVolumeSliderChanged = VolumeSlider.Ambient;
+
+                if (IsAudioPlaying && LastVolumeSliderChanged == VolumeSlider.Ambient)
+                {
+                    _audioTest.Volume = (float)_ambientVolumeValue / (float)100.0;
+                }
+            }
+        }
+
+        public int MovieVolumeValue
+        {
+            get
+            {
+                return _movieVolumeValue;
+            }
+            set
+            {
+                _movieVolumeValue = value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(MovieVolumeDisplayText));
+                LastVolumeSliderChanged = VolumeSlider.Movie;
+
+                if (IsAudioPlaying && LastVolumeSliderChanged == VolumeSlider.Movie)
+                {
+                    _audioTest.Volume = (float)_movieVolumeValue / (float)100.0;
+                }
+            }
+        }
 
         public bool DoWorkaroundErrorCode5
         {
@@ -322,6 +388,28 @@ namespace SeventhHeaven.ViewModels
             get
             {
                 return $"{ResourceHelper.Get(StringKey.Volume)}: {MusicVolumeValue}";
+            }
+        }
+
+        public string VoiceVolumeDisplayText
+        {
+            get
+            {
+                return $"{ResourceHelper.Get(StringKey.Volume)}: {VoiceVolumeValue}";
+            }
+        }
+        public string AmbientVolumeDisplayText
+        {
+            get
+            {
+                return $"{ResourceHelper.Get(StringKey.Volume)}: {AmbientVolumeValue}";
+            }
+        }
+        public string MovieVolumeDisplayText
+        {
+            get
+            {
+                return $"{ResourceHelper.Get(StringKey.Volume)}: {MovieVolumeValue}";
             }
         }
 
@@ -553,6 +641,10 @@ namespace SeventhHeaven.ViewModels
 
             SfxVolumeValue = (int) RegistryHelper.GetValue(soundKeyPath, "SFXVolume", 100);
             MusicVolumeValue = (int)RegistryHelper.GetValue(midiKeyPath, "MusicVolume", 100);
+            
+            VoiceVolumeValue = (int)RegistryHelper.GetValue(ff7KeyPath, "VoiceVolume", 100);
+            AmbientVolumeValue = (int)RegistryHelper.GetValue(ff7KeyPath, "AmbientVolume", 100);
+            MovieVolumeValue = (int)RegistryHelper.GetValue(ff7KeyPath, "MovieVolume", 100);
         }
 
         private void SetVolumesInRegistry()
@@ -571,6 +663,15 @@ namespace SeventhHeaven.ViewModels
 
             RegistryHelper.SetValueIfChanged(midiKeyPath, "MusicVolume", MusicVolumeValue, RegistryValueKind.DWord);
             RegistryHelper.SetValueIfChanged(midiVirtualKeyPath, "MusicVolume", MusicVolumeValue, RegistryValueKind.DWord);
+
+            RegistryHelper.SetValueIfChanged(ff7KeyPath, "VoiceVolume", VoiceVolumeValue, RegistryValueKind.DWord);
+            RegistryHelper.SetValueIfChanged(virtualStorePath, "VoiceVolume", VoiceVolumeValue, RegistryValueKind.DWord);
+
+            RegistryHelper.SetValueIfChanged(ff7KeyPath, "AmbientVolume", AmbientVolumeValue, RegistryValueKind.DWord);
+            RegistryHelper.SetValueIfChanged(virtualStorePath, "AmbientVolume", AmbientVolumeValue, RegistryValueKind.DWord);
+
+            RegistryHelper.SetValueIfChanged(ff7KeyPath, "MovieVolume", MovieVolumeValue, RegistryValueKind.DWord);
+            RegistryHelper.SetValueIfChanged(virtualStorePath, "MovieVolume", MovieVolumeValue, RegistryValueKind.DWord);
         }
 
         private void SetSelectedSoundDeviceFromSettings(LaunchSettings launchSettings)
