@@ -183,14 +183,14 @@ namespace SeventhHeaven.Windows
             }
         }
 
-        private void sliderVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void sliderMusicVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            ShowOrHideToolTip(sliderVolume.ToolTip as ToolTip, true);
+            ShowOrHideToolTip(sliderMusicVolume.ToolTip as ToolTip, true);
         }
 
-        private void sliderVolume_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void sliderMusicVolume_PreviewMouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            ShowOrHideToolTip(sliderVolume.ToolTip as ToolTip, false);
+            ShowOrHideToolTip(sliderMusicVolume.ToolTip as ToolTip, false);
         }
 
         private void btnMoveProgramUp_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)

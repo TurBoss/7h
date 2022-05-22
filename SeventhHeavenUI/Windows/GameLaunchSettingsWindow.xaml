@@ -251,14 +251,14 @@
                            TextTrimming="CharacterEllipsis"
                            Margin="5,0,0,10"/>
 
-                <Slider x:Name="sliderVolume"
+                <Slider x:Name="sliderMusicVolume"
                         Grid.Row="4"
                         Grid.Column="1"
                         HorizontalAlignment="Left"
                         Value="{Binding MusicVolumeValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='50'}"
                         ToolTipService.InitialShowDelay="100"
-                        ValueChanged="sliderVolume_ValueChanged"
-                        PreviewMouseLeftButtonUp="sliderVolume_PreviewMouseLeftButtonUp"
+                        ValueChanged="sliderMusicVolume_ValueChanged"
+                        PreviewMouseLeftButtonUp="sliderMusicVolume_PreviewMouseLeftButtonUp"
                         Minimum="0"
                         Maximum="100"
                         MinWidth="125"
