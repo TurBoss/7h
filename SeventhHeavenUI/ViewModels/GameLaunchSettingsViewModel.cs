@@ -638,13 +638,14 @@ namespace SeventhHeaven.ViewModels
             string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII";
             string midiKeyPath = $"{ff7KeyPath}\\1.00\\MIDI";
             string soundKeyPath = $"{ff7KeyPath}\\1.00\\Sound";
+            string ffnxKeyPath = $"{ff7KeyPath}\\1.00\\FFNx";
 
             SfxVolumeValue = (int) RegistryHelper.GetValue(soundKeyPath, "SFXVolume", 100);
             MusicVolumeValue = (int)RegistryHelper.GetValue(midiKeyPath, "MusicVolume", 100);
             
-            VoiceVolumeValue = (int)RegistryHelper.GetValue(ff7KeyPath, "VoiceVolume", 100);
-            AmbientVolumeValue = (int)RegistryHelper.GetValue(ff7KeyPath, "AmbientVolume", 100);
-            MovieVolumeValue = (int)RegistryHelper.GetValue(ff7KeyPath, "MovieVolume", 100);
+            VoiceVolumeValue = (int)RegistryHelper.GetValue(ffnxKeyPath, "VoiceVolume", 100);
+            AmbientVolumeValue = (int)RegistryHelper.GetValue(ffnxKeyPath, "AmbientVolume", 100);
+            MovieVolumeValue = (int)RegistryHelper.GetValue(ffnxKeyPath, "MovieVolume", 100);
         }
 
         private void SetVolumesInRegistry()
@@ -652,11 +653,12 @@ namespace SeventhHeaven.ViewModels
             string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII";
             string midiKeyPath = $"{ff7KeyPath}\\1.00\\MIDI";
             string soundKeyPath = $"{ff7KeyPath}\\1.00\\Sound";
+            string ffnxKeyPath = $"{ff7KeyPath}\\1.00\\FFNx";
 
             string virtualStorePath = $"{RegistryHelper.GetKeyPath(FF7RegKey.VirtualStoreKeyPath)}\\Final Fantasy VII";
             string midiVirtualKeyPath = $"{virtualStorePath}\\1.00\\MIDI";
             string soundVirtualKeyPath = $"{virtualStorePath}\\1.00\\Sound";
-
+            string ffnxVirtualKeyPath = $"{virtualStorePath}\\1.00\\FFNx";
 
             RegistryHelper.SetValueIfChanged(soundKeyPath, "SFXVolume", SfxVolumeValue, RegistryValueKind.DWord);
             RegistryHelper.SetValueIfChanged(soundVirtualKeyPath, "SFXVolume", SfxVolumeValue, RegistryValueKind.DWord);
@@ -664,14 +666,14 @@ namespace SeventhHeaven.ViewModels
             RegistryHelper.SetValueIfChanged(midiKeyPath, "MusicVolume", MusicVolumeValue, RegistryValueKind.DWord);
             RegistryHelper.SetValueIfChanged(midiVirtualKeyPath, "MusicVolume", MusicVolumeValue, RegistryValueKind.DWord);
 
-            RegistryHelper.SetValueIfChanged(ff7KeyPath, "VoiceVolume", VoiceVolumeValue, RegistryValueKind.DWord);
-            RegistryHelper.SetValueIfChanged(virtualStorePath, "VoiceVolume", VoiceVolumeValue, RegistryValueKind.DWord);
+            RegistryHelper.SetValueIfChanged(ffnxKeyPath, "VoiceVolume", VoiceVolumeValue, RegistryValueKind.DWord);
+            RegistryHelper.SetValueIfChanged(ffnxVirtualKeyPath, "VoiceVolume", VoiceVolumeValue, RegistryValueKind.DWord);
 
-            RegistryHelper.SetValueIfChanged(ff7KeyPath, "AmbientVolume", AmbientVolumeValue, RegistryValueKind.DWord);
-            RegistryHelper.SetValueIfChanged(virtualStorePath, "AmbientVolume", AmbientVolumeValue, RegistryValueKind.DWord);
+            RegistryHelper.SetValueIfChanged(ffnxKeyPath, "AmbientVolume", AmbientVolumeValue, RegistryValueKind.DWord);
+            RegistryHelper.SetValueIfChanged(ffnxVirtualKeyPath, "AmbientVolume", AmbientVolumeValue, RegistryValueKind.DWord);
 
-            RegistryHelper.SetValueIfChanged(ff7KeyPath, "MovieVolume", MovieVolumeValue, RegistryValueKind.DWord);
-            RegistryHelper.SetValueIfChanged(virtualStorePath, "MovieVolume", MovieVolumeValue, RegistryValueKind.DWord);
+            RegistryHelper.SetValueIfChanged(ffnxKeyPath, "MovieVolume", MovieVolumeValue, RegistryValueKind.DWord);
+            RegistryHelper.SetValueIfChanged(ffnxVirtualKeyPath, "MovieVolume", MovieVolumeValue, RegistryValueKind.DWord);
         }
 
         private void SetSelectedSoundDeviceFromSettings(LaunchSettings launchSettings)
