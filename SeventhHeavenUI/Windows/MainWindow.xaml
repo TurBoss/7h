@@ -275,7 +275,7 @@
                         </Popup>
 
                         <WrapPanel Margin="3,0,3,0" Grid.Row="4">
-                            <TextBlock Text="{DynamicResource DescriptionLabel}" Style="{StaticResource ModInfoLabelStyle}"/>
+                            <TextBlock Text="{DynamicResource DescriptionLabel}" Style="{StaticResource ModInfoLabelStyle}" VerticalAlignment="Top"/>
                             <TextBlock Text="{Binding PreviewModDescription, FallbackValue='This is a short description of my cool new mod and it does these things like a and b and even x and y.'}" 
                                Style="{StaticResource ModInfoDetailsStyle}"/>
                         </WrapPanel>
