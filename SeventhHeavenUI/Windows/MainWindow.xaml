@@ -320,7 +320,7 @@
 
 
                         <WrapPanel Margin="3,0,3,0" Grid.Row="7">
-                            <TextBlock Text="{DynamicResource ReleaseNotesLabel}" Style="{StaticResource ModInfoLabelStyle}"/>
+                            <TextBlock Text="{DynamicResource ReleaseNotesLabel}" Style="{StaticResource ModInfoLabelStyle}" VerticalAlignment="Top"/>
                             <TextBlock Text="{Binding PreviewModReleaseNotes, FallbackValue='Some notes about this mod...'}" 
                                        Style="{StaticResource ModInfoDetailsStyle}"/>
                         </WrapPanel>
