@@ -577,7 +577,7 @@ namespace SeventhHeavenUI.ViewModels
                 ID = parsedID,
                 Name = NameInput,
                 Author = AuthorInput,
-                Category = ResourceHelper.ModCategoryTranslations[CategoryInput],
+                Category = ResourceHelper.ModCategoryTranslations[string.IsNullOrEmpty(CategoryInput) ? "Unknown" : CategoryInput],
                 Tags = TagsInput.Split(new string[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries).ToList(),
                 Description = DescriptionInput,
                 Link = InfoLinkInput,
