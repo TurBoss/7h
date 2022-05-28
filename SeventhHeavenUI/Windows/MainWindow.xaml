@@ -58,7 +58,7 @@
             <Setter Property="Content" Value="{DynamicResource ClickHere}"/>
             <Setter Property="Padding" Value="5,2,2,2"/>
             <Style.Triggers>
-                <DataTrigger Binding="{Binding DonationModHasLink, FallbackValue='False'}" Value="False">
+                <DataTrigger Binding="{Binding PreviewDonationModHasLink, FallbackValue='False'}" Value="False">
                     <Setter Property="Content" Value="{DynamicResource None}"/>
                     <Setter Property="Padding" Value="2"/>
                 </DataTrigger>

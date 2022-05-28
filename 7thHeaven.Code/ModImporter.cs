@@ -310,6 +310,7 @@ namespace _7thHeaven.Code
                     Category = "Unknown",
                     ID = ParseModGuidFromFileOrFolderName(sourceFileOrFolder),
                     Link = String.Empty,
+                    DonationLink = String.Empty,
                     Tags = new List<string>(),
                     Name = ""
                 };
@@ -428,11 +429,16 @@ namespace _7thHeaven.Code
                     parsedMod.Author = defaultModIfMissing.Author;
                 }
 
-
                 parsedMod.Link = doc.SelectSingleNode("/ModInfo/Link").NodeTextS();
                 if (string.IsNullOrWhiteSpace(parsedMod.Link))
                 {
                     parsedMod.Link = defaultModIfMissing.Link;
+                }
+
+                parsedMod.DonationLink = doc.SelectSingleNode("/ModInfo/DonationLink").NodeTextS();
+                if (string.IsNullOrWhiteSpace(parsedMod.DonationLink))
+                {
+                    parsedMod.DonationLink = defaultModIfMissing.DonationLink;
                 }
 
                 parsedMod.Description = doc.SelectSingleNode("/ModInfo/Description").NodeTextS();

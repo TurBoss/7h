@@ -116,7 +116,8 @@ namespace Iros._7th.Workshop
                     this.Description != other.Description ||
                     this.Category != other.Category ||
                     this.Author != other.Author ||
-                    this.Link != other.Link);
+                    this.Link != other.Link ||
+                    this.DonationLink != other.DonationLink);
         }
 
         public static Mod CopyMod(Mod modToCopy)
@@ -128,6 +129,7 @@ namespace Iros._7th.Workshop
                 Category = modToCopy.Category,
                 ID = modToCopy.ID,
                 Link = modToCopy.Link,
+                DonationLink = modToCopy.DonationLink,
                 Tags = modToCopy.Tags?.ToList(),
                 Name = modToCopy.Name,
                 ContainsMovies = modToCopy.ContainsMovies,
