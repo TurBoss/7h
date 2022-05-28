@@ -220,7 +220,7 @@ namespace SeventhHeavenUI.ViewModels
             }
             set
             {
-                _ffnxUpdateVersion = $"[FFNx Update available: {value}]";
+                _ffnxUpdateVersion = $"[{ResourceHelper.Get(StringKey.UpdateAvailable)}: FFNx v{value}]";
                 NotifyPropertyChanged();
                 NotifyPropertyChanged(nameof(WindowTitle));
             }
