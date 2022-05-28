@@ -24,6 +24,7 @@ namespace SeventhHeavenUI.ViewModels
         private string _metaVersionInput;
         private string _previewImageInput;
         private string _infoLinkInput;
+        private string _donationLinkInput;
         private string _releaseNotesInput;
         private string _modOutput;
         private string _releaseDateInput;
@@ -167,6 +168,19 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
+        public string DonationLinkInput
+        {
+            get
+            {
+                return _donationLinkInput;
+            }
+            set
+            {
+                _donationLinkInput = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public string ReleaseNotesInput
         {
             get
@@ -288,6 +302,7 @@ namespace SeventhHeavenUI.ViewModels
 
                     _selectedMod.Mod.Description = DescriptionInput;
                     _selectedMod.Mod.Link = InfoLinkInput;
+                    _selectedMod.Mod.DonationLink = DonationLinkInput;
 
                     if (Guid.TryParse(IDInput, out Guid parsedID))
                     {
@@ -326,6 +341,7 @@ namespace SeventhHeavenUI.ViewModels
                     TagsInput = string.Join("\n", _modToEdit.Tags);
                     DescriptionInput = _modToEdit.Description;
                     InfoLinkInput = _modToEdit.Link;
+                    DonationLinkInput = _modToEdit.DonationLink;
                     ReleaseNotesInput = _modToEdit.LatestVersion.ReleaseNotes;
                     PreviewImageInput = _modToEdit.LatestVersion.PreviewImage;
                     VersionInput = _modToEdit.LatestVersion.Version.ToString();
@@ -387,6 +403,7 @@ namespace SeventhHeavenUI.ViewModels
                 PreviewImageInput = "";
                 TagsInput = "";
                 InfoLinkInput = mod.Link;
+                DonationLinkInput = mod.DonationLink;
                 ReleaseNotesInput = mod.ReleaseNotes;
                 ReleaseDateInput = mod.ReleaseDate.ToString("MM/dd/yyyy");
 
@@ -432,6 +449,7 @@ namespace SeventhHeavenUI.ViewModels
                 PreviewImageInput = "";
                 TagsInput = "";
                 InfoLinkInput = parsedMod.Link;
+                DonationLinkInput = parsedMod.DonationLink;
                 ReleaseNotesInput = parsedMod.LatestVersion.ReleaseNotes;
                 ReleaseDateInput = parsedMod.LatestVersion.ReleaseDate.ToString("MM/dd/yyyy");
 
@@ -501,6 +519,7 @@ namespace SeventhHeavenUI.ViewModels
             MetaVersionInput = "1.00";
             PreviewImageInput = "";
             InfoLinkInput = "";
+            DonationLinkInput = "";
             ReleaseNotesInput = "";
             ReleaseDateInput = DateTime.Now.ToString("MM/dd/yyyy");
             DownloadLinkList.Clear();
@@ -562,6 +581,7 @@ namespace SeventhHeavenUI.ViewModels
                 Tags = TagsInput.Split(new string[] { "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries).ToList(),
                 Description = DescriptionInput,
                 Link = InfoLinkInput,
+                DonationLink = DonationLinkInput,
                 MetaVersion = parsedMetaVersion,
                 LatestVersion = new ModVersion()
                 {

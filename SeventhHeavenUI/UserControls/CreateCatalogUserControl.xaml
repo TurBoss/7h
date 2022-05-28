@@ -191,6 +191,7 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
@@ -322,12 +323,19 @@
                         Style="{StaticResource createTextboxStyle}"
                         Grid.Column="1" Grid.Row="10"/>
 
+                    <TextBlock Text="{DynamicResource DonationLinkLabel}"
+                        Style="{StaticResource createLabelStyle}"
+                        Grid.Row="11"/>
+                    <TextBox Text="{Binding DonationLinkInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Style="{StaticResource createTextboxStyle}"
+                        Grid.Column="1" Grid.Row="11"/>
 
-                    <Rectangle Grid.Row="11" Grid.ColumnSpan="2" Height="1" Fill="{DynamicResource PrimaryControlForeground}"
+
+                    <Rectangle Grid.Row="12" Grid.ColumnSpan="2" Height="1" Fill="{DynamicResource PrimaryControlForeground}"
                                Opacity="0.75"
                                VerticalAlignment="Top"
                                Margin="10,20,10,10"/>
-                    <GroupBox Header="{DynamicResource DownloadLinksHeader}" Grid.Row="11" Grid.ColumnSpan="2" Margin="5,0,5,0" BorderThickness="0">
+                    <GroupBox Header="{DynamicResource DownloadLinksHeader}" Grid.Row="12" Grid.ColumnSpan="2" Margin="5,0,5,0" BorderThickness="0">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*"/>

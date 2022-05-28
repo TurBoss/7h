@@ -1028,6 +1028,7 @@ namespace _7thWrapperLib
         public DateTime ReleaseDate { get; set; }
 
         public string Link { get; set; }
+        public string DonationLink { get; set; }
         public string PreviewFile { get; set; }
 
         [XmlElement(ElementName = "ModFolder")]

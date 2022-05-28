@@ -22,6 +22,7 @@ namespace SeventhHeavenUI.ViewModels
         private string _versionInput;
         private string _previewImageInput;
         private string _infoLinkInput;
+        private string _donationLinkInput;
         private string _releaseNotesInput;
         private List<string> _linkKindList;
         private string _linkKindInput;
@@ -147,6 +148,19 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
+        public string DonationLinkInput
+        {
+            get
+            {
+                return _donationLinkInput;
+            }
+            set
+            {
+                _donationLinkInput = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         public string ReleaseNotesInput
         {
             get
@@ -229,6 +243,7 @@ namespace SeventhHeavenUI.ViewModels
             VersionInput = "1.0";
             PreviewImageInput = "";
             InfoLinkInput = "";
+            DonationLinkInput = "";
             LinkKindInput = "GDrive";
             ReleaseNotesInput = "";
             SourceLinkInput = "";
@@ -252,6 +267,7 @@ namespace SeventhHeavenUI.ViewModels
                     Category = translatedCategory,
                     Description = DescriptionInput,
                     Link = InfoLinkInput,
+                    DonationLink = DonationLinkInput,
                     PreviewFile = PreviewImageInput,
                     ReleaseDate = DateTime.Now,
                     ReleaseNotes = ReleaseNotesInput
@@ -266,6 +282,7 @@ namespace SeventhHeavenUI.ViewModels
                 LoadedMod.Category = translatedCategory;
                 LoadedMod.Description = DescriptionInput;
                 LoadedMod.Link = InfoLinkInput;
+                LoadedMod.DonationLink = DonationLinkInput;
                 LoadedMod.PreviewFile = PreviewImageInput;
                 LoadedMod.ReleaseDate = DateTime.Now;
                 LoadedMod.ReleaseNotes = ReleaseNotesInput;
@@ -362,6 +379,7 @@ namespace SeventhHeavenUI.ViewModels
                 VersionInput = LoadedMod.Version.ToString();
                 PreviewImageInput = LoadedMod.PreviewFile;
                 InfoLinkInput = LoadedMod.Link;
+                DonationLinkInput = LoadedMod.DonationLink;
                 ReleaseNotesInput = LoadedMod.ReleaseNotes;
             }
             catch (Exception e)
