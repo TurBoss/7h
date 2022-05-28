@@ -58,6 +58,7 @@
     <system:String x:Key="LinkLabel">Σύνδεσμος:</system:String>
     <system:String x:Key="ReadmeLabel">Διάβασέ με:</system:String>
     <system:String x:Key="ReleaseNotesLabel">Σημειώσεις Κυκλοφορίας:</system:String>
+    <system:String x:Key="DonationLinkLabel">Donation Link:</system:String>
 
     <system:String x:Key="NoPreviewImage">Καμιά εικόνα προεπισκόπισης</system:String>
 

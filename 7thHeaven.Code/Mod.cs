@@ -31,6 +31,7 @@ namespace Iros._7th.Workshop
         public Guid ID { get; set; }
         public string Author { get; set; }
         public string Link { get; set; }
+        public string DonationLink { get; set; }
         public ModVersion LatestVersion { get; set; }
         public decimal MetaVersion { get; set; }
 

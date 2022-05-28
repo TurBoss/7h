@@ -229,6 +229,11 @@ namespace SeventhHeavenUI
             ViewModel.OpenPreviewModLink();
         }
 
+        private void btnOpenDonationModLink_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.OpenDonationModLink();
+        }
+
         private void btnOpenModReadme_Click(object sender, RoutedEventArgs e)
         {
             ViewModel.OpenPreviewModReadMe();

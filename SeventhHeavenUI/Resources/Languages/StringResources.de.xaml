@@ -57,6 +57,7 @@
     <system:String x:Key="LinkLabel">Link:</system:String>
     <system:String x:Key="ReadmeLabel">Info/Readme:</system:String>
     <system:String x:Key="ReleaseNotesLabel">Release Informationen:</system:String>
+    <system:String x:Key="DonationLinkLabel">Donation Link:</system:String>
 
     <system:String x:Key="NoPreviewImage">Keine Vorschau vorhanden</system:String>
 

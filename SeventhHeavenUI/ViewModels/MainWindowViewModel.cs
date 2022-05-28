@@ -102,6 +102,7 @@ namespace SeventhHeavenUI.ViewModels
         private string _previewModCategory;
         private string _previewModDescription;
         private string _previewModLink;
+        private string _previewDonationModLink;
         private Uri _previewModImageSource;
         private bool _previewModHasReadMe;
         private bool _previewIsNotifyAboutUpdatesChecked;
@@ -330,11 +331,33 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
+        public string PreviewDonationModLink
+        {
+            get
+            {
+                return _previewDonationModLink;
+            }
+            set
+            {
+                _previewDonationModLink = value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(PreviewDonationModHasLink));
+            }
+        }
+
         public bool PreviewModHasLink
         {
             get
             {
                 return !string.IsNullOrEmpty(PreviewModLink);
+            }
+        }
+
+        public bool PreviewDonationModHasLink
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(PreviewDonationModLink);
             }
         }
 
@@ -924,6 +947,7 @@ namespace SeventhHeavenUI.ViewModels
                 PreviewModCategory = "";
                 PreviewModDescription = "";
                 PreviewModLink = "";
+                PreviewDonationModLink = "";
                 PreviewIsAutoUpdateModsChecked = false;
                 PreviewIsNotifyAboutUpdatesChecked = false;
                 PreviewIgnoreModUpdatesChecked = false;
@@ -941,6 +965,7 @@ namespace SeventhHeavenUI.ViewModels
             PreviewModCategory = selected.Category;
             PreviewModDescription = selected.InstallInfo.CachedDetails.Description;
             PreviewModLink = selected.InstallInfo.CachedDetails.Link;
+            PreviewDonationModLink = selected.InstallInfo.CachedDetails.DonationLink;
 
             PreviewModHasReadMe = selected.HasReadMe; // checks if mod .iro or folder has a readme file and caches the result since the disc lookup is slow on larger mods
 
@@ -977,6 +1002,7 @@ namespace SeventhHeavenUI.ViewModels
                 PreviewModCategory = "";
                 PreviewModDescription = "";
                 PreviewModLink = "";
+                PreviewDonationModLink = "";
                 PreviewModImageSource = null;
                 return;
             }
@@ -991,6 +1017,7 @@ namespace SeventhHeavenUI.ViewModels
             PreviewModCategory = selected.Category;
             PreviewModDescription = selected.Mod.Description;
             PreviewModLink = selected.Mod.Link;
+            PreviewDonationModLink = selected.Mod.DonationLink;
             PreviewModHasReadMe = false; // no READMEs for catalog (only installed mods)
 
             ModUpdateMenuVisibility = Visibility.Collapsed; // do not display the 'update avaialble' menu on catalog mods
@@ -1267,6 +1294,30 @@ namespace SeventhHeavenUI.ViewModels
                 ProcessStartInfo startInfo = new ProcessStartInfo()
                 {
                     FileName = PreviewModLink
+                };
+
+                Process.Start(startInfo);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
+
+        }
+
+        internal void OpenDonationModLink()
+        {
+            if (string.IsNullOrEmpty(PreviewDonationModLink))
+            {
+                Logger.Warn("link is null/empty");
+                return;
+            }
+
+            try
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo()
+                {
+                    FileName = PreviewDonationModLink
                 };
 
                 Process.Start(startInfo);

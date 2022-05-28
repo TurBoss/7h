@@ -54,6 +54,17 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="OpenDonationLinkStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource HyperlinkButton}">
+            <Setter Property="Content" Value="{DynamicResource ClickHere}"/>
+            <Setter Property="Padding" Value="5,2,2,2"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding DonationModHasLink, FallbackValue='False'}" Value="False">
+                    <Setter Property="Content" Value="{DynamicResource None}"/>
+                    <Setter Property="Padding" Value="2"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
         <DataTemplate x:Key="FilterItemTemplate">
             <Border Background="{DynamicResource PrimaryControlBackground}" Padding="5" Focusable="False">
                 <CheckBox Content="{Binding Name, FallbackValue='Category Name'}"
@@ -197,6 +208,7 @@
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
 
 
@@ -293,8 +305,21 @@
                                     Style="{StaticResource ReadMeStyle}"/>
                         </WrapPanel>
 
-
                         <WrapPanel Margin="3,0,3,0" Grid.Row="6">
+                            <TextBlock Text="{DynamicResource DonationLinkLabel}" Style="{StaticResource ModInfoLabelStyle}"/>
+                            <Button x:Name="btnOpenModDonationLink" 
+                                    MinWidth="80"
+                                    FontSize="12"
+                                    Background="Transparent"
+                                    Margin="2,0,5,0"
+                                    Click="btnOpenDonationModLink_Click"
+                                    ToolTip="{Binding PreviewDonationModLink}"
+                                    IsEnabled="{Binding PreviewDonationModHasLink, FallbackValue='False'}"
+                                    Style="{StaticResource OpenDonationLinkStyle}"/>
+                        </WrapPanel>
+
+
+                        <WrapPanel Margin="3,0,3,0" Grid.Row="7">
                             <TextBlock Text="{DynamicResource ReleaseNotesLabel}" Style="{StaticResource ModInfoLabelStyle}"/>
                             <TextBlock Text="{Binding PreviewModReleaseNotes, FallbackValue='Some notes about this mod...'}" 
                                        Style="{StaticResource ModInfoDetailsStyle}"/>

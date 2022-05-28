@@ -59,6 +59,7 @@
     <system:String x:Key="ReadmeLabel">Lisez-moi :</system:String>
     <system:String x:Key="ReleaseNotesLabel">Notes :</system:String>
     <system:String x:Key="NoPreviewImage">Pas d'aperçu</system:String>
+    <system:String x:Key="DonationLinkLabel">Donation Link:</system:String>
 
 
     <!-- Browse Catalog Tab -->
