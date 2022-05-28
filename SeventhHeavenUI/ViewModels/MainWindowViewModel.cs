@@ -216,11 +216,11 @@ namespace SeventhHeavenUI.ViewModels
         {
             get
             {
-                return _ffnxUpdateVersion;
+                return string.IsNullOrEmpty(_ffnxUpdateVersion) ? string.Empty : $"[{ResourceHelper.Get(StringKey.UpdateAvailable)}: FFNx v{_ffnxUpdateVersion}]";
             }
             set
             {
-                _ffnxUpdateVersion = $"[{ResourceHelper.Get(StringKey.UpdateAvailable)}: FFNx v{value}]";
+                _ffnxUpdateVersion = value;
                 NotifyPropertyChanged();
                 NotifyPropertyChanged(nameof(WindowTitle));
             }
