@@ -5,13 +5,15 @@ using Iros._7th.Workshop;
 using Microsoft.Win32;
 using SeventhHeaven.Windows;
 using SeventhHeavenUI;
+using SharpCompress.Archives;
+using SharpCompress.Archives.Zip;
+using SharpCompress.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
@@ -821,6 +823,9 @@ namespace SeventhHeaven.Classes
                     {
                         Logger.Error(ex);
                     }
+
+                    // Did the game crash? If yes, generate a report
+                    if (ff7Proc.ExitCode < 0) Instance.CollectCrashReport();
 
                     // Restore FFNx config after the game is closed
                     Sys.FFNxConfig.RestoreBackup();
@@ -1732,6 +1737,40 @@ namespace SeventhHeaven.Classes
                             otherProc.Kill();
                     }
                 }
+            }
+        }
+
+        private void CollectCrashReport()
+        {
+            var zipOutPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), $"7thCrashReport-{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}.zip");
+
+            // Flush logs before saving in order to obtain any possible leftover in memory
+            Logger.Factory.Flush(0);
+
+            using (var archive = ZipArchive.Create())
+            {
+                // === FF7 files ===
+                var saveFiles = Directory.GetFiles(Path.Combine(Sys.InstallPath, "save"));
+                foreach (var file in saveFiles)
+                {
+                    archive.AddEntry(Path.Combine("save", Path.GetFileName(file)), file);
+                }
+
+                // === FFNx files ===
+                archive.AddEntry("FFNx.log", Sys.PathToFFNxLog);
+                archive.AddEntry("FFNx.toml", Sys.PathToFFNxToml);
+
+                // === 7th files ===
+                archive.AddEntry("applog.txt", File.Open(Sys.PathToApplog, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
+                archive.AddEntry("profile.xml", Sys.PathToCurrentProfileFile);
+                archive.AddEntry("settings.xml", Sys.PathToSettings);
+
+                // =================================================================================================
+
+                archive.SaveTo(zipOutPath, CompressionType.Deflate);
+
+                // Inform the user about the generated file
+                MessageDialogWindow.Show($"Your game crashed and a new report has been generated at this path:\n\n{zipOutPath}\n\nRemember to attach this file when reporting this issue. Thank you!", "Crash report generated!", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
             }
         }
 

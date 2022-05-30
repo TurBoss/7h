@@ -127,6 +127,22 @@ namespace Iros._7th.Workshop
             }
         }
 
+        public static string PathToApplog
+        {
+            get
+            {
+                return Path.Combine(SysFolder, "applog.txt");
+            }
+        }
+
+        public static string PathToSettings
+        {
+            get
+            {
+                return Path.Combine(SysFolder, "settings.xml");
+            }
+        }
+
         public static string PathToCurrentProfileFile
         {
             get
@@ -212,6 +228,15 @@ namespace Iros._7th.Workshop
                 return Sys.InstallPath != null ? Path.Combine(Sys.InstallPath, "FFNx.toml") : null;
             }
         }
+
+        public static string PathToFFNxLog
+        {
+            get
+            {
+                return Sys.InstallPath != null ? Path.Combine(Sys.InstallPath, "FFNx.log") : null;
+            }
+        }
+
         public static string PathToGameDriverUiXml(string appLanguage = null)
         {
             if (string.IsNullOrWhiteSpace(appLanguage) || appLanguage.StartsWith("en") || appLanguage.StartsWith("ja"))
@@ -321,7 +346,7 @@ namespace Iros._7th.Workshop
         /// </summary>
         public static void SaveSettings()
         {
-            string sfile = Path.Combine(SysFolder, "settings.xml");
+            string sfile = PathToSettings;
 
             using (var fs = new FileStream(sfile, FileMode.Create))
                 Util.Serialize(Settings, fs);
@@ -368,7 +393,7 @@ namespace Iros._7th.Workshop
             Directory.CreateDirectory(SysFolder);
 
 
-            string sfile = Path.Combine(SysFolder, "settings.xml");
+            string sfile = PathToSettings;
             if (File.Exists(sfile))
             {
                 try
