@@ -226,6 +226,14 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
+        public bool IsUpdateAvailable
+        {
+            get
+            {
+                return InstallInfo.IsUpdateAvailable;
+            }
+        }
+
         public InstalledModViewModel(InstalledItem installedItem, ProfileItem profileItem)
         {
             InstallInfo = installedItem;

@@ -59,10 +59,16 @@
         </Style>
 
         <Style x:Key="ConfigureModMiscButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MainButtonStyle}">
-            <Setter Property="Content" Value="{DynamicResource ConfigureMod}"/>
-            <Setter Property="Padding" Value="5"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding HasOptions, FallbackValue='False'}" Value="False">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="UpdateModMiscButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MainButtonStyle}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsUpdateAvailable, FallbackValue='False'}" Value="False">
                     <Setter Property="Visibility" Value="Hidden"/>
                 </DataTrigger>
             </Style.Triggers>
@@ -125,7 +131,10 @@
                         <GridViewColumnHeader Content="{DynamicResource Miscellaneous}" SizeChanged="GridViewColumnHeader_SizeChanged"/>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Style="{StaticResource ConfigureModMiscButtonStyle}" Click="btnConfigure_Click"/>
+                                <WrapPanel>
+                                    <Button Style="{StaticResource ConfigureModMiscButtonStyle}" Content="{DynamicResource ConfigureMod}" Click="btnConfigure_Click" Margin="0,0,5,0" Padding="5"/>
+                                    <Button Style="{StaticResource UpdateModMiscButtonStyle}" Content="{DynamicResource UpdateAvailable}" Click="btnUpdateMod_Click" Margin="0,0,5,0" Padding="5"/>
+                                </WrapPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
