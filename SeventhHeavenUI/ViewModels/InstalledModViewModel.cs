@@ -213,6 +213,19 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
+        public bool HasOptions
+        {
+            get
+            {
+                var info = InstallInfo.GetModInfo() ?? new _7thWrapperLib.ModInfo();
+
+                if (info.Options.Count == 0)
+                    return false;
+
+                return true;
+            }
+        }
+
         public InstalledModViewModel(InstalledItem installedItem, ProfileItem profileItem)
         {
             InstallInfo = installedItem;

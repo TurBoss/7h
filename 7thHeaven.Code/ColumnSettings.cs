@@ -24,6 +24,7 @@ namespace _7thHeaven.Code
             defaults.MyModsColumns.Add(new ColumnInfo("Author", 0, true));
             defaults.MyModsColumns.Add(new ColumnInfo("Category", 140));
             defaults.MyModsColumns.Add(new ColumnInfo("Active", 80));
+            defaults.MyModsColumns.Add(new ColumnInfo("Miscellaneous", 300));
 
             defaults.BrowseCatalogColumns.Add(new ColumnInfo("Name", 0, true));
             defaults.BrowseCatalogColumns.Add(new ColumnInfo("Author", 0, true));

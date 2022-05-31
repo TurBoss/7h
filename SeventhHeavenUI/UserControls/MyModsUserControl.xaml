@@ -58,6 +58,16 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="ConfigureModMiscButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MainButtonStyle}">
+            <Setter Property="Content" Value="{DynamicResource ConfigureMod}"/>
+            <Setter Property="Padding" Value="5"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding HasOptions, FallbackValue='False'}" Value="False">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -90,7 +100,7 @@
                     <GridViewColumn x:Name="colAuthor" Width="Auto" DisplayMemberBinding="{Binding Author}">
                         <GridViewColumnHeader Content="{DynamicResource Author}" SizeChanged="GridViewColumnHeader_SizeChanged"/>
                     </GridViewColumn>
-                    <GridViewColumn x:Name="colCategory" Width="135">
+                    <GridViewColumn x:Name="colCategory" Width="140">
                         <GridViewColumnHeader Content="{DynamicResource Category}" SizeChanged="GridViewColumnHeader_SizeChanged"/>
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -108,6 +118,14 @@
                                           MinWidth="45"
                                           IsChecked="{Binding IsActive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                           IsTabStop="False"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn x:Name="colMisc" Width="300">
+                        <GridViewColumnHeader Content="{DynamicResource Miscellaneous}" SizeChanged="GridViewColumnHeader_SizeChanged"/>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource ConfigureModMiscButtonStyle}" Click="btnConfigure_Click"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

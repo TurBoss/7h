@@ -29,7 +29,8 @@ namespace SeventhHeaven.UserControls
             { "Name", 100 },
             { "Author", 60 },
             { "Category", 140 },
-            { "Active", 80 }
+            { "Active", 80 },
+            { "Miscellaneous", 300 },
         };
 
         Dictionary<string, string> ColumnTranslations
@@ -41,7 +42,8 @@ namespace SeventhHeaven.UserControls
                     { ResourceHelper.Get(StringKey.Name), "Name" },
                     { ResourceHelper.Get(StringKey.Author), "Author" },
                     { ResourceHelper.Get(StringKey.Category), "Category" },
-                    { ResourceHelper.Get(StringKey.Active), "Active" }
+                    { ResourceHelper.Get(StringKey.Active), "Active" },
+                    { ResourceHelper.Get(StringKey.Miscellaneous), "Miscellaneous" },
                 };
             }
         }
@@ -184,6 +186,14 @@ namespace SeventhHeaven.UserControls
 
         private void btnConfigure_Click(object sender, RoutedEventArgs e)
         {
+            var src = (Button)e.OriginalSource;
+
+            // If we arrive here through the "Configure Mod" button in the list item, then select the current item in list and proceed as usual
+            if (src.DataContext.GetType() == typeof(InstalledModViewModel))
+            {
+                lstMods.SelectedItem = src.DataContext;
+            }
+
             if (!IsModSelected())
             {
                 return;
@@ -335,9 +345,9 @@ namespace SeventhHeaven.UserControls
         {
             if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
             {
-                if (e.OriginalSource is CheckBox || FindVisualParent<ComboBox>((DependencyObject)e.OriginalSource) != null)
+                if (e.OriginalSource is CheckBox || FindVisualParent<ComboBox>((DependencyObject)e.OriginalSource) != null || e.OriginalSource is Button)
                 {
-                    return; // do not do drag/drop since user is clicking on checkbox to activate mod or selecting category
+                    return; // do not do drag/drop since user is clicking on checkbox to activate mod or selecting category or clicking one of the misc buttons
                 }
 
                 if ((e.OriginalSource as FrameworkElement)?.DataContext is InstalledModViewModel)
