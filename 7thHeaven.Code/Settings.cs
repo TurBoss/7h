@@ -6,6 +6,7 @@
 using _7thHeaven.Code;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -116,6 +117,7 @@ namespace Iros._7th.Workshop {
         public decimal AutoUpdateOffered { get; set; }
 
         public string DateTimeStringFormat { get; set; }
+        public string DateTimeCulture { get; set; }
 
         /// <summary>
         /// Flag to determine if the app is being launched for the first time.
@@ -133,6 +135,7 @@ namespace Iros._7th.Workshop {
             Options = new List<GeneralOptions>();
             AutoUpdateSource = "#F!yBlHTYiJ!SFpmT2xII7iXcgXAmNYLJg";
             DateTimeStringFormat = "MM/dd/yyyy";
+            DateTimeCulture = "en-US";
             IsFirstStart = false;
             GameLaunchSettings = LaunchSettings.DefaultSettings();
             UserColumnSettings = new ColumnSettings();
