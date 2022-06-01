@@ -325,7 +325,7 @@ namespace SeventhHeavenUI.ViewModels
                     decimal.TryParse(MetaVersionInput, System.Globalization.NumberStyles.AllowDecimalPoint, new System.Globalization.CultureInfo(""), out decimal parsedMetaVersion);
                     _selectedMod.Mod.MetaVersion = parsedMetaVersion;
 
-                    _selectedMod.ReleaseDate = parsedDate.ToString("MM/dd/yyyy");
+                    _selectedMod.ReleaseDate = parsedDate.ToString(Sys.Settings.DateTimeStringFormat);
                 }
 
                 _selectedMod = value;
@@ -346,7 +346,7 @@ namespace SeventhHeavenUI.ViewModels
                     PreviewImageInput = _modToEdit.LatestVersion.PreviewImage;
                     VersionInput = _modToEdit.LatestVersion.Version.ToString();
                     MetaVersionInput = _modToEdit.MetaVersion.ToString();
-                    ReleaseDateInput = _modToEdit.LatestVersion.ReleaseDate.ToString("MM/dd/yyyy");
+                    ReleaseDateInput = _modToEdit.LatestVersion.ReleaseDate.ToString(Sys.Settings.DateTimeStringFormat);
 
                     DownloadLinkList.Clear();
                     foreach (string link in _modToEdit.LatestVersion.Links)
@@ -405,7 +405,7 @@ namespace SeventhHeavenUI.ViewModels
                 InfoLinkInput = mod.Link;
                 DonationLinkInput = mod.DonationLink;
                 ReleaseNotesInput = mod.ReleaseNotes;
-                ReleaseDateInput = mod.ReleaseDate.ToString("MM/dd/yyyy");
+                ReleaseDateInput = mod.ReleaseDate.ToString(Sys.Settings.DateTimeStringFormat);
 
                 if (string.IsNullOrWhiteSpace(CategoryInput))
                 {
@@ -451,7 +451,7 @@ namespace SeventhHeavenUI.ViewModels
                 InfoLinkInput = parsedMod.Link;
                 DonationLinkInput = parsedMod.DonationLink;
                 ReleaseNotesInput = parsedMod.LatestVersion.ReleaseNotes;
-                ReleaseDateInput = parsedMod.LatestVersion.ReleaseDate.ToString("MM/dd/yyyy");
+                ReleaseDateInput = parsedMod.LatestVersion.ReleaseDate.ToString(Sys.Settings.DateTimeStringFormat);
 
                 if (string.IsNullOrWhiteSpace(CategoryInput))
                 {
@@ -521,7 +521,7 @@ namespace SeventhHeavenUI.ViewModels
             InfoLinkInput = "";
             DonationLinkInput = "";
             ReleaseNotesInput = "";
-            ReleaseDateInput = DateTime.Now.ToString("MM/dd/yyyy");
+            ReleaseDateInput = DateTime.Now.ToString(Sys.Settings.DateTimeStringFormat);
             DownloadLinkList.Clear();
             AddEmptyDownloadLink();
         }
