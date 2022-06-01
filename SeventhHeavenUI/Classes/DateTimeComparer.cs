@@ -2,7 +2,6 @@
 using System;
 using System.Collections;
 using System.ComponentModel;
-using System.Globalization;
 
 namespace SeventhHeaven.Classes
 {
@@ -29,8 +28,8 @@ namespace SeventhHeaven.Classes
             CatalogModItemViewModel ax = (x as CatalogModItemViewModel);
             CatalogModItemViewModel ay = (y as CatalogModItemViewModel);
 
-            DateTime.TryParseExact(ax?.ReleaseDate, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dx);
-            DateTime.TryParseExact(ay?.ReleaseDate, "MM/dd/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dy);
+            DateTime.TryParse(ax?.ReleaseDate, out DateTime dx);
+            DateTime.TryParse(ay?.ReleaseDate, out DateTime dy);
 
             if (SortDirection == ListSortDirection.Ascending)
             {
