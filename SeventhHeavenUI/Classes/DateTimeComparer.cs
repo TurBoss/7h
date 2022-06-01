@@ -1,7 +1,9 @@
-﻿using SeventhHeavenUI.ViewModels;
+﻿using Iros._7th.Workshop;
+using SeventhHeavenUI.ViewModels;
 using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Globalization;
 
 namespace SeventhHeaven.Classes
 {
@@ -14,6 +16,8 @@ namespace SeventhHeaven.Classes
     public class DateTimeComparer : IComparer
     {
         public ListSortDirection SortDirection = ListSortDirection.Ascending;
+
+        private CultureInfo culture = CultureInfo.CreateSpecificCulture(Sys.Settings.DateTimeCulture);
 
         public int Compare(DateTime? x, DateTime? y)
         {
@@ -28,8 +32,8 @@ namespace SeventhHeaven.Classes
             CatalogModItemViewModel ax = (x as CatalogModItemViewModel);
             CatalogModItemViewModel ay = (y as CatalogModItemViewModel);
 
-            DateTime.TryParse(ax?.ReleaseDate, out DateTime dx);
-            DateTime.TryParse(ay?.ReleaseDate, out DateTime dy);
+            DateTime.TryParse(ax?.ReleaseDate, culture, DateTimeStyles.None, out DateTime dx);
+            DateTime.TryParse(ay?.ReleaseDate, culture, DateTimeStyles.None, out DateTime dy);
 
             if (SortDirection == ListSortDirection.Ascending)
             {
