@@ -214,6 +214,8 @@ namespace SeventhHeaven.UserControls
 
             if (mod.InstallInfo.IsUpdateAvailable)
             {
+                lstMods.SelectedItem = src.DataContext;
+
                 Install.DownloadAndInstall(Sys.GetModFromCatalog(mod.InstallInfo.ModID), true);
             }
         }
