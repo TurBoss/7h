@@ -11,11 +11,11 @@ namespace SeventhHeaven.Windows
     /// </summary>
     public partial class AboutWindow : Window
     {
-
         public AboutWindow()
         {
             InitializeComponent();
 
+            this.Title = $"About {App.GetAppName()} v{App.GetAppVersion().ToString()}";
             btnClose.Focus();
         }
 

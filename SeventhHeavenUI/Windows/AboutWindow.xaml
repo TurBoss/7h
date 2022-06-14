@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeventhHeaven.Windows"
         mc:Ignorable="d"
-        Title="About 7th Heaven 2.3.3" 
+        Title="{Binding WindowTitle, FallbackValue='About 7th Heaven'}"
         Style="{StaticResource MainWindowStyle}"
         WindowStartupLocation="CenterScreen"
         Topmost="True"
