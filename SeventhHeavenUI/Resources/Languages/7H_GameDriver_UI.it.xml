@@ -57,6 +57,10 @@
       <Text>Schermo Intero</Text>
       <Settings>fullscreen = true</Settings>
     </Option>
+    <Option>
+      <Text>Borderless</Text>
+      <Settings>borderless = true</Settings>
+    </Option>
   </Setting>
 
   <Setting xsi:type="DropDown">
