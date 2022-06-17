@@ -1746,7 +1746,7 @@ namespace SeventhHeaven.Classes
 
         private void CollectCrashReport()
         {
-            var zipOutPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"7thCrashReport-{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}.zip");
+            var zipOutPath = Path.Combine(Sys.PathToCrashReports, $"7thCrashReport-{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}.zip");
 
             // Flush logs before saving in order to obtain any possible leftover in memory
             Logger.Factory.Flush(0);
@@ -1775,6 +1775,9 @@ namespace SeventhHeaven.Classes
 
                 // Inform the user about the generated file
                 MessageDialogWindow.Show($"Your game crashed and a new report has been generated at this path:\n\n{zipOutPath}\n\nRemember to attach this file when reporting this issue. Thank you!", "Crash report generated!", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+
+                // Open the crash reports explorer window
+                Process.Start(Sys.PathToCrashReports);
             }
         }
 

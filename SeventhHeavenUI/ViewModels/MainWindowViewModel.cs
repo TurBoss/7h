@@ -766,6 +766,9 @@ namespace SeventhHeavenUI.ViewModels
             // Ensure temp directory exists
             Directory.CreateDirectory(Sys.PathToTempFolder);
 
+            // Ensure crashreports directory exists
+            Directory.CreateDirectory(Sys.PathToCrashReports);
+
             if (Sys.Settings.HasOption(GeneralOptions.CheckForUpdates))
             {
                 Task.Factory.StartNew(() =>

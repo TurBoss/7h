@@ -167,6 +167,14 @@ namespace Iros._7th.Workshop
             }
         }
 
+        public static string PathToCrashReports
+        {
+            get
+            {
+                return Path.Combine(SysFolder, "crashreports");
+            }
+        }
+
         public static string PathToControlsFolder
         {
             get
