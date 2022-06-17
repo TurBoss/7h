@@ -825,7 +825,11 @@ namespace SeventhHeaven.Classes
                     }
 
                     // Did the game crash? If yes, generate a report
-                    if (ff7Proc.ExitCode < 0) Instance.CollectCrashReport();
+                    if (ff7Proc.ExitCode < 0)
+                    {
+                        Logger.Error($"FF7.exe Crashed while exiting with code {ff7Proc.ExitCode}. Generating report...");
+                        Instance.CollectCrashReport();
+                    }
 
                     // Restore FFNx config after the game is closed
                     Sys.FFNxConfig.RestoreBackup();
