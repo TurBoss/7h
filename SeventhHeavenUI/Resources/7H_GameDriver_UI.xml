@@ -48,18 +48,18 @@
     <Group>Graphics</Group>
     <Name>Window Mode</Name>
     <Description>Display the game in either a standard window, or borderless fullscreen.</Description>
-    <DefaultValue>fullscreen = false</DefaultValue>
+    <DefaultValue>fullscreen = false,borderless = false</DefaultValue>
     <Option>
       <Text>Windowed</Text>
-      <Settings>fullscreen = false</Settings>
+      <Settings>fullscreen = false,borderless = false</Settings>
     </Option>
     <Option>
       <Text>Fullscreen</Text>
-      <Settings>fullscreen = true</Settings>
+      <Settings>fullscreen = true,borderless = false</Settings>
     </Option>
     <Option>
       <Text>Borderless</Text>
-      <Settings>borderless = true</Settings>
+      <Settings>fullscreen = false,borderless = true</Settings>
     </Option>
   </Setting>
 

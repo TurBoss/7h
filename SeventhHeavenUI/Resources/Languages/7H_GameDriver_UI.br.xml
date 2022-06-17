@@ -48,18 +48,18 @@
     <Group>Gráficos</Group>
     <Name>Modo de Janela</Name>
     <Description>Exibir jogo em janela com borda, ou tela cheia sem borda.</Description>
-    <DefaultValue>fullscreen = false</DefaultValue>
+    <DefaultValue>fullscreen = false,borderless = false</DefaultValue>
     <Option>
-      <Text>Janela</Text>
-      <Settings>fullscreen = false</Settings>
+      <Text>Windowed</Text>
+      <Settings>fullscreen = false,borderless = false</Settings>
     </Option>
     <Option>
-      <Text>Tela Cheia</Text>
-      <Settings>fullscreen = true</Settings>
+      <Text>Fullscreen</Text>
+      <Settings>fullscreen = true,borderless = false</Settings>
     </Option>
     <Option>
       <Text>Borderless</Text>
-      <Settings>borderless = true</Settings>
+      <Settings>fullscreen = false,borderless = true</Settings>
     </Option>
   </Setting>
 
