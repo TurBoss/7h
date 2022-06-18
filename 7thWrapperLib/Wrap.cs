@@ -635,7 +635,9 @@ namespace _7thWrapperLib {
                         {
                             DebugLogger.WriteLine($"Remapping {lpFileName} to {mapped.File} [ Matched: '{match}' ]");
 
-                            mappedFilesCache[lpFileName] = mapped;
+                            // Cache only static resolutions
+                            if (mapped.CFolder == null)
+                                mappedFilesCache[lpFileName] = mapped;
 
                             if (mapped.Archive == null)
                                 lpFileName = mapped.File;
