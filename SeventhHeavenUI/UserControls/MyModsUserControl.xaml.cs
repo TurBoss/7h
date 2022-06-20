@@ -215,6 +215,7 @@ namespace SeventhHeaven.UserControls
             if (mod.InstallInfo.IsUpdateAvailable)
             {
                 lstMods.SelectedItem = src.DataContext;
+                src.Content = ResourceHelper.Get(StringKey.UpdateDownloading);
 
                 Install.DownloadAndInstall(Sys.GetModFromCatalog(mod.InstallInfo.ModID), true);
             }
