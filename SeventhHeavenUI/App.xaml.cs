@@ -345,16 +345,8 @@ namespace SeventhHeavenUI
             System.Windows.Forms.Application.EnableVisualStyles();
             System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
 
-            string defaultLang;
-            try
-            {
-                // check if default language saved in app settings; otherwise detect language from thread
-                defaultLang = ConfigurationManager.AppSettings["DefaultAppLanguage"];
-            }
-            catch (Exception)
-            {
-                defaultLang = GetCultureFromCurrentThread();
-            }
+            // check if default language saved in app settings; otherwise detect language from thread
+            string defaultLang = Sys.Settings.AppLanguage;
 
             if (string.IsNullOrWhiteSpace(defaultLang))
             {
@@ -412,10 +404,7 @@ namespace SeventhHeavenUI
         {
             ResourceDictionary dict = new ResourceDictionary();
 
-            if (string.IsNullOrWhiteSpace(cultureCode) || cultureCode.Length < 2)
-            {
-                return; // could not determine culture from thread so default language resource (English) will be used
-            }
+            if (string.IsNullOrWhiteSpace(cultureCode) || cultureCode.Length < 2) cultureCode = "en";
 
             if (cultureCode == "pt-BR")
             {
@@ -423,11 +412,10 @@ namespace SeventhHeavenUI
             }
             else
             {
-                switch (cultureCode.Substring(0, 2))
+                cultureCode = cultureCode.Substring(0, 2);
+
+                switch (cultureCode)
                 {
-                    case "en":
-                        dict.Source = new Uri("Resources\\StringResources.xaml", UriKind.Relative);
-                        break;
                     case "fr":
                         dict.Source = new Uri("Resources\\Languages\\StringResources.fr.xaml", UriKind.Relative);
                         break;
@@ -440,28 +428,29 @@ namespace SeventhHeavenUI
                     case "gr":
                         dict.Source = new Uri("Resources\\Languages\\StringResources.gr.xaml", UriKind.Relative);
                         break;
-                    //case "ja":
-                    //    dict.Source = new Uri("Resources\\Languages\\StringResources.ja.xaml", UriKind.Relative);
-                    //    break;
                     case "it":
                         dict.Source = new Uri("Resources\\Languages\\StringResources.it.xaml", UriKind.Relative);
                         break;
                     default:
-                        dict.Source = new Uri("Resources\\StringResources.xaml", UriKind.Relative);
+                        cultureCode = "en";
                         break;
                 }
             }
 
+            if (cultureCode != "en")
+            {
+                this.Resources.MergedDictionaries.RemoveAt(1); // remove the default string resources dictionary (second in merged dictionary in App.xaml)
+                this.Resources.MergedDictionaries.Add(dict);
+            }
 
-            this.Resources.MergedDictionaries.RemoveAt(1); // remove the default string resources dictionary (second in merged dictionary in App.xaml)
-            this.Resources.MergedDictionaries.Add(dict);
+            Sys.Settings.AppLanguage = cultureCode;
         }
 
         public static string GetAppLanguage()
         {
             try
             {
-                string defaultLang = ConfigurationManager.AppSettings["DefaultAppLanguage"];
+                string defaultLang = Sys.Settings.AppLanguage;
 
                 if (string.IsNullOrWhiteSpace(defaultLang))
                 {
