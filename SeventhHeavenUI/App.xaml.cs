@@ -416,6 +416,9 @@ namespace SeventhHeavenUI
 
                 switch (cultureCode)
                 {
+                    case "en":
+                        dict.Source = new Uri("Resources\\StringResources.xaml", UriKind.Relative);
+                        break;
                     case "fr":
                         dict.Source = new Uri("Resources\\Languages\\StringResources.fr.xaml", UriKind.Relative);
                         break;
@@ -432,18 +435,16 @@ namespace SeventhHeavenUI
                         dict.Source = new Uri("Resources\\Languages\\StringResources.it.xaml", UriKind.Relative);
                         break;
                     default:
+                        dict.Source = new Uri("Resources\\StringResources.xaml", UriKind.Relative);
                         cultureCode = "en";
                         break;
                 }
             }
 
-            if (cultureCode != "en")
-            {
-                this.Resources.MergedDictionaries.RemoveAt(1); // remove the default string resources dictionary (second in merged dictionary in App.xaml)
-                this.Resources.MergedDictionaries.Add(dict);
-            }
-
             Sys.Settings.AppLanguage = cultureCode;
+
+            this.Resources.MergedDictionaries.RemoveAt(1); // remove the default string resources dictionary (second in merged dictionary in App.xaml)
+            this.Resources.MergedDictionaries.Add(dict);
         }
 
         public static string GetAppLanguage()

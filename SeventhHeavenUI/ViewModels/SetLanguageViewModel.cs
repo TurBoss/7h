@@ -82,7 +82,6 @@ namespace SeventhHeavenUI.ViewModels
             try
             {
                 Sys.Settings.AppLanguage = LanguagesMap[SelectedLanguage];
-                ConfigurationManager.RefreshSection("appSettings");
 
                 (App.Current as SeventhHeavenUI.App).SetLanguageDictionary(Sys.Settings.AppLanguage);
             }
