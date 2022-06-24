@@ -127,6 +127,7 @@ namespace SeventhHeaven.Classes
             GameConverter converter = new GameConverter(Path.GetDirectoryName(Sys.Settings.FF7Exe));
             converter.MessageSent += GameConverter_MessageSent;
 
+            FFNxDriverUpdater.CleanupUnnecessaryFiles();
 
             Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingInstalledGameIsCompatible));
             if (converter.IsGamePirated())
@@ -331,9 +332,6 @@ namespace SeventhHeaven.Classes
                     return false;
                 }
             }
-
-
-
 
             //
             // GAME SHOULD BE FULLY 'CONVERTED' AND READY TO LAUNCH FOR MODS AT THIS POINT
