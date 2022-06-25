@@ -96,6 +96,12 @@ namespace SeventhHeavenUI
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (GameLauncher.IsFF7Running())
+            {
+                e.Cancel = true;
+                return;
+            }
+
             if (ViewModel.CatalogMods.DownloadList.Count > 0)
             {
                 var result = MessageDialogWindow.Show(ResourceHelper.Get(StringKey.AreYouSureYouWantToExitPendingDownloads), ResourceHelper.Get(StringKey.ConfirmExit), MessageBoxButton.YesNo, MessageBoxImage.Warning);
