@@ -763,6 +763,9 @@ namespace SeventhHeavenUI.ViewModels
                 DS4ControllerService.Instance.StartService();
             }
 
+            // Ensure game driver directory exists
+            Directory.CreateDirectory(Sys.PathToGameDriverFolder);
+
             // Ensure temp directory exists
             Directory.CreateDirectory(Sys.PathToTempFolder);
 

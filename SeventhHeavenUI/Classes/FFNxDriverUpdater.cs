@@ -251,6 +251,7 @@ namespace SeventhHeaven.Classes
                         }
 
                         SwitchToModPanel();
+                        Sys.FFNxConfig.Backup();
                         Sys.FFNxConfig.Reload();
                         Sys.FFNxConfig.ResetTo7thHeavenDefaults();
                         Sys.FFNxConfig.OverrideInternalKeys();
