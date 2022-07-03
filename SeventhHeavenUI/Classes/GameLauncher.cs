@@ -5,6 +5,7 @@ using Iros._7th.Workshop;
 using Microsoft.Win32;
 using SeventhHeaven.Windows;
 using SeventhHeavenUI;
+using SeventhHeavenUI.ViewModels;
 using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
 using SharpCompress.Common;
@@ -91,6 +92,9 @@ namespace SeventhHeaven.Classes
 
         public static bool LaunchGame(bool varDump, bool debug, bool launchWithNoMods = false, bool LaunchWithNoValidation = false)
         {
+            MainWindowViewModel.SaveActiveProfile();
+            Sys.Save();
+
             Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CheckingFf7IsNotRunning));
             if (IsFF7Running())
             {
