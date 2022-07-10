@@ -1748,6 +1748,14 @@ namespace SeventhHeaven.Classes
 
         private void CollectCrashReport()
         {
+            // Cleanup any old report older than 1 day
+
+            DirectoryInfo dir = new DirectoryInfo(Sys.PathToCrashReports);
+            FileInfo[] files = dir.GetFiles().Where(file => file.CreationTime < DateTime.Now.AddDays(-1)).ToArray();
+            foreach (FileInfo file in files) file.Delete();
+
+            // Create the new report
+
             var zipOutPath = Path.Combine(Sys.PathToCrashReports, $"7thCrashReport-{DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss")}.zip");
 
             // Flush logs before saving in order to obtain any possible leftover in memory
