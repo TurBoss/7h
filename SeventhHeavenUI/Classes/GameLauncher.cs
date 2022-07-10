@@ -1775,12 +1775,6 @@ namespace SeventhHeaven.Classes
 
                 archive.SaveTo(zipOutPath, CompressionType.Deflate);
             }
-
-            // Inform the user about the generated file
-            MessageDialogWindow.Show($"Your game crashed and a new report has been generated at this path:\n\n{zipOutPath}\n\nRemember to attach this file when reporting this issue. Thank you!", "Crash report generated!", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
-
-            // Open the crash reports explorer window
-            Process.Start(Sys.PathToCrashReports);
         }
 
         internal void LaunchProgramsForMod(RuntimeMod mod)
