@@ -7,6 +7,7 @@ using SeventhHeaven.Windows;
 using SeventhHeavenUI.ViewModels;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -338,7 +339,7 @@ namespace SeventhHeavenUI
 
         private void btnOpenAppLog_Click(object sender, RoutedEventArgs e)
         {
-            Sys.OpenAppLog();
+            Process.Start(Sys.PathToCrashReports);
         }
 
         private void MyModsTabItem_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
