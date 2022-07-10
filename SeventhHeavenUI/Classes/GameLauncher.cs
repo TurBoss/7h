@@ -171,6 +171,9 @@ namespace SeventhHeaven.Classes
                 converter.InstallPath = newInstallationPath;
             }
 
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CreatingMissingRequiredDirectories));
+            converter.CreateMissingDirectories();
+
             // if launching with no (minimal) validation checks, skip ahead
             if (LaunchWithNoValidation)
             {
@@ -184,18 +187,12 @@ namespace SeventhHeaven.Classes
                 converter.ConvertToEnglishInstall();
             }
 
-
             Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingGameIsMaxInstall));
             if (!converter.VerifyFullInstallation())
             {
                 Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.YourFf7InstallationFolderIsMissingCriticalFiles), NLog.LogLevel.Error);
                 return false;
             }
-
-
-            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CreatingMissingRequiredDirectories));
-            converter.CreateMissingDirectories();
-
 
             Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingAdditionalFilesForBattleAndKernelFoldersExist));
             if (!converter.VerifyAdditionalFilesExist())
