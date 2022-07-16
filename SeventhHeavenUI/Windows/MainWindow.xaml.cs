@@ -339,6 +339,11 @@ namespace SeventhHeavenUI
 
         private void btnOpenAppLog_Click(object sender, RoutedEventArgs e)
         {
+            Sys.OpenAppLog();
+        }
+
+        private void btnOpenAppLog_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
             Process.Start(Sys.PathToCrashReports);
         }
 
