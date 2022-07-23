@@ -288,11 +288,7 @@ Diese Option sollte nur für die Fehlerdiagnose eines einzelnen Mods verwendet w
     <system:String x:Key="FollowingErrorsFoundInConfiguration">Die folgenden fehler wurden in deinen Einstellungen gefunden:</system:String>
     <system:String x:Key="ErrorsFoundInGeneralSettingsViewAppLog">Fehler in den Einstellungen gefunden. App.log für genaue Fehler Deteils bitte einsehen.</system:String>
 
-    <system:String x:Key="AppUpdateIsAvailableMessage" xml:space="preserve">Ein Update ist verfügbar für {0}
-auf Ja klicken um den Browser zu öffnen.
-        
-{1} Release Notes: {2}
-    </system:String>
+    <system:String x:Key="AppUpdateIsAvailableMessage" xml:space="preserve">Ein Update ist verfügbar für {0}\nauf Ja klicken um den Browser zu öffnen.\n\n{1} Release Notes:</system:String>
     <system:String x:Key="NewVersionAvailable">Eine neue Version ist verfügbar!</system:String>
 
     <system:String x:Key="ThisModContainsDataThatCouldHarm" xml:space="preserve">Der Mod '{0}' beinhaltet Daten, die deinem PC eventuell schaden könnten. Aktiviere nur Mods, deren Autor du vertraust.

@@ -289,11 +289,7 @@ Você deveria usar essa opção apenas para testar um único mod ativo para pode
     <system:String x:Key="FollowingErrorsFoundInConfiguration">Os seguintes erros foram encontrados na sua configuração:</system:String>
     <system:String x:Key="ErrorsFoundInGeneralSettingsViewAppLog">Erros encontrados nas configurações gerais. Veja app.log para detalhes do(s) erro(s).</system:String>
 
-    <system:String x:Key="AppUpdateIsAvailableMessage" xml:space="preserve">Atualização disponível {0}
-Clique em 'Sim' para abrir a página de downloads no navegador.
-        
-{1} Notas de Lançamento: {2}
-    </system:String>
+    <system:String x:Key="AppUpdateIsAvailableMessage" xml:space="preserve">Atualização disponível {0}\nClique em 'Sim' para abrir a página de downloads no navegador.\n\n{1} Notas de Lançamento:</system:String>
     <system:String x:Key="NewVersionAvailable">Nova Versão Disponível!</system:String>
 
     <system:String x:Key="ThisModContainsDataThatCouldHarm" xml:space="preserve">Este mod '{0}' contém dados que poderiam potencialmente danificar o seu computador. Você deve ativar apenas mods confiáveis.

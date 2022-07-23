@@ -286,11 +286,7 @@ Vous ne devez utiliser cette option que lors du dépannage d'un seul mod actif a
     <system:String x:Key="FollowingErrorsFoundInConfiguration">Les erreurs suivantes ont été trouvées dans votre configuration :</system:String>
     <system:String x:Key="ErrorsFoundInGeneralSettingsViewAppLog">Erreurs trouvées dans les paramètres généraux. Voir le journal des applications (app.log) pour plus de détails sur les erreurs.</system:String>
 
-    <system:String x:Key="AppUpdateIsAvailableMessage" xml:space="preserve">Une mise à jour est disponible pour {0}
-Cliquer sur 'Oui' pour ouvrir la page de téléchargement dans un navigateur.
-
-{1} Notes : {2}
-    </system:String>
+    <system:String x:Key="AppUpdateIsAvailableMessage" xml:space="preserve">Une mise à jour est disponible pour {0}\nCliquer sur 'Oui' pour ouvrir la page de téléchargement dans un navigateur.\n\n{1} Notes:</system:String>
     <system:String x:Key="NewVersionAvailable">Nouvelle Version Disponible !</system:String>
 
     <system:String x:Key="ThisModContainsDataThatCouldHarm" xml:space="preserve">Ce mod '{0}' contient des données qui pourraient potentiellement endommager votre ordinateur. Vous ne devez activer que les mods auxquels vous faites confiance.

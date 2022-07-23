@@ -289,11 +289,7 @@
     <system:String x:Key="FollowingErrorsFoundInConfiguration">Τα εξής σφάλματα εντοπίστηκαν στη διαμόρφωση που κάνατε:</system:String>
     <system:String x:Key="ErrorsFoundInGeneralSettingsViewAppLog">Σφάλματα εντοπίστηκαν στις γενικές ρυθμίσεις. Δες το app.log για λεπτομέρειες σχετικά με σφάλμα(τα).</system:String>
 
-    <system:String x:Key="AppUpdateIsAvailableMessage" xml:space="preserve">Μια ενημέρωση είναι διαθέσιμη για {0}
-Κάντε κλικ στο 'Ναι' για να ανοίξετε τη σελίδα των λήψεων σε μια μηχανή αναζήτησης.
-
-{1} Σημειώσεις έκδοσης: {2}
-    </system:String>
+    <system:String x:Key="AppUpdateIsAvailableMessage" xml:space="preserve">Μια ενημέρωση είναι διαθέσιμη για {0}\nΚάντε κλικ στο 'Ναι' για να ανοίξετε τη σελίδα των λήψεων σε μια μηχανή αναζήτησης.\n\n{1} Σημειώσεις έκδοσης:</system:String>
     <system:String x:Key="NewVersionAvailable">Νέα έκδοση διαθέσιμη!</system:String>
 
     <system:String x:Key="ThisModContainsDataThatCouldHarm" xml:space="preserve">Αυτή τη τροποποίηση '{0}' περιέχει δεδομένα που ενδεχομένως να βλάψουν τον υπολογιστή σας. Καλύτερα να ενεργοποιείς μόνο τροποποιήσεις που εμπιστεύεσαι.
