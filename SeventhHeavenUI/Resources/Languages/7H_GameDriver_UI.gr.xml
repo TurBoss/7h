@@ -76,6 +76,10 @@
       <Text>Τέντωμα για συμπλήρωση</Text>
       <Settings>aspect_ratio = 1</Settings>
     </Option>
+    <Option>
+      <Text>Widescreen (16:9)</Text>
+      <Settings>aspect_ratio = 2</Settings>
+    </Option>
   </Setting>
 
   <Setting xsi:type="DropDown">
