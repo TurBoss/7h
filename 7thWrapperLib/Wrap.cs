@@ -658,29 +658,6 @@ namespace _7thWrapperLib {
                 {
                     _saveFiles.Add(handle, lpFileName);
                 }
-
-                if (System.IO.Path.GetExtension(lpFileName).Equals(".lgp", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    try
-                    {
-                        DebugLogger.WriteLine($"Hooked CreateFileW for {lpFileName} under {handle.ToInt32()}");
-                        //var fs = new System.IO.FileStream(handle, FileAccess.Read, false);
-                        //_hMap[handle] = ProcMonParser.FF7Files.LoadLGP(fs, lpFileName);
-                        //_hNames[handle] = System.IO.Path.GetFileName(lpFileName);
-                        //fs.Position = 0;
-                        LGPWrapper lgp = new LGPWrapper(handle, System.IO.Path.GetFileName(lpFileName), _profile);
-                        if (lgp.IsActive)
-                        {
-                            DebugLogger.WriteLine("Overrides found, activating VFile");
-                            _hMap[handle] = lgp;
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        DebugLogger.WriteLine("ERROR: " + e.ToString());
-                        throw;
-                    }
-                }
                 
                 DebugLogger.DetailedWriteLine($"CreateFileW: {lpFileName} -> {handle}");
             }
