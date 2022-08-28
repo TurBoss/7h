@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Management.Automation;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -1074,7 +1073,7 @@ namespace SeventhHeaven.Classes
                     WorkingDirectory = Path.GetDirectoryName(Sys.PathToUlgpExe),
                     Arguments = $"\"{sourcePath}\" \"{destPath}\"",
                     CreateNoWindow = true,
-                    UseShellExecute = false,
+                    UseShellExecute = true,
                     Verb = "runas", // ensures the process is started as Admin
                 };
 
