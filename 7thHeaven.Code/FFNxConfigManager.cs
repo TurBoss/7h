@@ -47,7 +47,7 @@ namespace Iros._7th.Workshop.ConfigSettings
 
         public string Get(string key)
         {
-            return (string)_toml[key];
+            return _toml[key].ToString();
         }
 
         public void Set(string key, string value)
