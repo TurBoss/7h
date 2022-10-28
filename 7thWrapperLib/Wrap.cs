@@ -389,7 +389,7 @@ namespace _7thWrapperLib {
                 IntPtr _bytes = new IntPtr(bytes);
 
                 if (_varchives.TryGetValue(_handle, out va))
-                    ret = va.ReadFile(_handle, numBytesToRead, ref *numBytesRead);
+                    ret = va.ReadFile(_bytes, numBytesToRead, ref *numBytesRead);
                 else if (_streamFiles.TryGetValue(_handle, out vsf))
                     ret = vsf.Read(_bytes, *numBytesRead, ref *numBytesRead);
                 else if (_hMap.TryGetValue(_handle, out lgp))
