@@ -56,7 +56,7 @@ namespace Iros._7th {
 
         public unsafe static void CopyToIntPtr(byte[] source, IntPtr dest, int size, int offset = 0)
         {
-            source.AsSpan(offset).CopyTo(new Span<byte>((void*)dest, size));
+            source.AsSpan(offset, size).CopyTo(new Span<byte>(dest.ToPointer(), size));
         }
     }
 
