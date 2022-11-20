@@ -1,0 +1,8 @@
+{
+  "default": {
+    "nethost": {
+      "baseline": "7.0.0",
+      "port-version": 0
+    }
+  }
+}
