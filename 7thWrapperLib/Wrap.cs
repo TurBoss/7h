@@ -13,6 +13,7 @@ using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 using System.IO;
 using System.Diagnostics;
+using static _7thWrapperLib.Win32;
 
 namespace _7thWrapperLib {
     public static unsafe class Wrap {
@@ -22,38 +23,6 @@ namespace _7thWrapperLib {
         //private static Dictionary<IntPtr, string> _saveFiles = new Dictionary<IntPtr, string>();
         private static Dictionary<IntPtr, VArchiveData> _varchives = new Dictionary<IntPtr, VArchiveData>();
         private static RuntimeProfile _profile;
-
-        [StructLayout(LayoutKind.Sequential)]
-        public unsafe struct HostExports
-        {
-            public delegate* unmanaged<int> DetourTransactionBegin;
-            public delegate* unmanaged<void**, void*, int> DetourAttach;
-            public delegate* unmanaged<void**, void*, int> DetourDetach;
-            public delegate* unmanaged<int> DetourTransactionCommit;
-        }
-        private static unsafe HostExports* _exports;
-
-        [StructLayout(LayoutKind.Sequential)]
-        struct Methods
-        {
-            public delegate* unmanaged<ushort*, uint, uint, void*, uint, uint, void*, void*> CreateFileW;
-            public delegate* unmanaged<void*, void*, uint, uint*, void*, int> ReadFile;
-            //public delegate* unmanaged<void*, void*, uint, uint*, void*, int> WriteFile;
-            public delegate* unmanaged<ushort*, void*, void*> FindFirstFileW;
-            public delegate* unmanaged<void*, long, long*, uint, uint> SetFilePointer;
-            public delegate* unmanaged<void*, long, long*, uint, int> SetFilePointerEx;
-            public delegate* unmanaged<void*, int> CloseHandle;
-            public delegate* unmanaged<void*, uint> GetFileType;
-            public delegate* unmanaged<void*, Win32.BY_HANDLE_FILE_INFORMATION*, int> GetFileInformationByHandle;
-            public delegate* unmanaged<void*, void*, void*, void**, uint, int, uint, int> DuplicateHandle;
-            //public delegate* unmanaged<ushort*, ushort*, void*, void*, int, uint, void*, ushort*, void*, void*, int> CreateProcessW;
-            public delegate* unmanaged<void*, uint*, uint> GetFileSize;
-            public delegate* unmanaged<void*, uint*, uint> GetFileSizeEx;
-        }
-
-        static int s_MainThreadId;
-        static Methods s_Trampolines;
-        static Methods s_Detours;
 
         private static void MonitorThread(object rpo)
         {
@@ -95,12 +64,10 @@ namespace _7thWrapperLib {
             } while (true);
         }
 
-        public unsafe static void Run(IntPtr exports, Process currentProcess, string profileFile = ".7thWrapperProfile")
+        public unsafe static void Run(Process currentProcess, string profileFile = ".7thWrapperProfile")
         {
             System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US", false);
             try {
-                _exports = (HostExports*)exports;
-
                 using (var fs = new FileStream(profileFile, FileMode.Open))
                 {
                     _profile = Iros._7th.Util.DeserializeBinary<RuntimeProfile>(fs);
@@ -132,16 +99,6 @@ namespace _7thWrapperLib {
                     DebugLogger.WriteLine($"  Mod: {item.BaseFolder} has {item.Conditionals.Count} conditionals");
                     DebugLogger.WriteLine("     Additional paths: " + String.Join(", ", item.ExtraFolders));
                     item.Startup();
-                }
-
-                try
-                {
-                    DetourTransaction.Initialize(_exports);
-                    InitializeHooks(Environment.CurrentManagedThreadId);
-                }
-                catch (Exception ex)
-                {
-                    DebugLogger.WriteLine(ex.ToString());
                 }
 
                 if (_profile.MonitorVars != null)
@@ -189,76 +146,11 @@ namespace _7thWrapperLib {
             }
         }
 
-        public static void InitializeHooks(int mainThreadId)
-        {
-            s_MainThreadId = mainThreadId;
-            s_Detours = new()
-            {
-                CreateFileW = &HCreateFileW,
-                ReadFile = &HReadFile,
-                //WriteFile = &HWriteFile,
-                FindFirstFileW = &HFindFirstFileW,
-                SetFilePointer = &HSetFilePointer,
-                SetFilePointerEx = &HSetFilePointerEx,
-                CloseHandle = &HCloseHandle,
-                GetFileType = &HGetFileType,
-                GetFileInformationByHandle = &HGetFileInformationByHandle,
-                DuplicateHandle = &HDuplicateHandle,
-                //CreateProcessW = &HCreateProcessW,
-                GetFileSize = &HGetFileSize,
-                GetFileSizeEx = &HGetFileSizeEx,
-            };
-
-            // Ensure console is initialized before we hook WinAPI.
-            _ = Console.In;
-            _ = Console.Out;
-            _ = Console.Error;
-
-            fixed (Methods* targets = &s_Trampolines)
-            {
-                var kernel32 = NativeLibrary.Load("kernel32");
-                using var transaction = new DetourTransaction();
-
-                // Locate addresses
-                *(void**)&targets->CreateFileW = (void*)NativeLibrary.GetExport(kernel32, "CreateFileW");
-                *(void**)&targets->ReadFile = (void*)NativeLibrary.GetExport(kernel32, "ReadFile");
-                //*(void**)&targets->WriteFile = (void*)NativeLibrary.GetExport(kernel32, "WriteFile");
-                *(void**)&targets->FindFirstFileW = (void*)NativeLibrary.GetExport(kernel32, "FindFirstFileW");
-                *(void**)&targets->SetFilePointer = (void*)NativeLibrary.GetExport(kernel32, "SetFilePointer");
-                *(void**)&targets->SetFilePointerEx = (void*)NativeLibrary.GetExport(kernel32, "SetFilePointerEx");
-                *(void**)&targets->CloseHandle = (void*)NativeLibrary.GetExport(kernel32, "CloseHandle");
-                *(void**)&targets->GetFileType = (void*)NativeLibrary.GetExport(kernel32, "GetFileType");
-                *(void**)&targets->GetFileInformationByHandle = (void*)NativeLibrary.GetExport(kernel32, "GetFileInformationByHandle");
-                *(void**)&targets->DuplicateHandle = (void*)NativeLibrary.GetExport(kernel32, "DuplicateHandle");
-                //*(void**)&targets->CreateProcessW = (void*)NativeLibrary.GetExport(kernel32, "CreateProcessW");
-                *(void**)&targets->GetFileSize = (void*)NativeLibrary.GetExport(kernel32, "GetFileSize");
-                *(void**)&targets->GetFileSizeEx = (void*)NativeLibrary.GetExport(kernel32, "GetFileSizeEx");
-
-                // Attach detours
-                transaction.Attach((void**)&targets->CreateFileW, s_Detours.CreateFileW);
-                transaction.Attach((void**)&targets->ReadFile, s_Detours.ReadFile);
-                //transaction.Attach((void**)&targets->WriteFile, s_Detours.WriteFile);
-                transaction.Attach((void**)&targets->FindFirstFileW, s_Detours.FindFirstFileW);
-                transaction.Attach((void**)&targets->SetFilePointer, s_Detours.SetFilePointer);
-                transaction.Attach((void**)&targets->SetFilePointerEx, s_Detours.SetFilePointerEx);
-                transaction.Attach((void**)&targets->CloseHandle, s_Detours.CloseHandle);
-                transaction.Attach((void**)&targets->GetFileType, s_Detours.GetFileType);
-                transaction.Attach((void**)&targets->GetFileInformationByHandle, s_Detours.GetFileInformationByHandle);
-                transaction.Attach((void**)&targets->DuplicateHandle, s_Detours.DuplicateHandle);
-                //transaction.Attach((void**)&targets->CreateProcessW, s_Detours.CreateProcessW);
-                transaction.Attach((void**)&targets->GetFileSize, s_Detours.GetFileSize);
-                transaction.Attach((void**)&targets->GetFileSizeEx, s_Detours.GetFileSizeEx);
-            }
-        }
-
         // ------------------------------------------------------------------------------------------------------
         [UnmanagedCallersOnly]
         static int HCloseHandle(void* hObject)
         {
             int ret = 0;
-
-            if (Environment.CurrentManagedThreadId != s_MainThreadId)
-                return s_Trampolines.CloseHandle(hObject);
 
             try
             {
@@ -277,7 +169,7 @@ namespace _7thWrapperLib {
                 //if (_saveFiles.ContainsKey(_hObject))
                 //    _saveFiles.Remove(_hObject);
 
-                ret = s_Trampolines.CloseHandle(hObject);
+                //ret = s_Trampolines.CloseHandle(hObject);
             }
             catch (Exception ex)
             {
@@ -304,7 +196,7 @@ namespace _7thWrapperLib {
                 }
                 else
                 {
-                    ret = s_Trampolines.GetFileType(hFile);
+                    //ret = s_Trampolines.GetFileType(hFile);
                 }
             }
             catch (Exception ex)
@@ -340,7 +232,7 @@ namespace _7thWrapperLib {
                 }
                 else
                 {
-                    ret = s_Trampolines.SetFilePointer(handle, lDistanceTomove, lpDistanceToMoveHigh, dwMoveMethod);
+                    //ret = s_Trampolines.SetFilePointer(handle, lDistanceTomove, lpDistanceToMoveHigh, dwMoveMethod);
                 }
             }
             catch (Exception ex)
@@ -397,16 +289,16 @@ namespace _7thWrapperLib {
                     //DebugLogger.WriteLine("Hooked ReadFile on {0} for {1} bytes", handle.ToInt32(), numBytesToRead);
                     //if (overlapped != IntPtr.Zero) DebugLogger.WriteLine("(is overlapped)");
 
-                    uint pos = s_Trampolines.SetFilePointer(handle, 0, null, (uint)Win32.EMoveMethod.Current);
+                    int pos = SetFilePointer(_handle, 0, IntPtr.Zero, EMoveMethod.Current);
                     //DebugLogger.WriteLine("Hooked ReadFile on {0} for {1} bytes at {2}", handle.ToInt32(), numBytesToRead, pos);
                     lgp.VFile.Read((uint)pos, numBytesToRead, _bytes, ref *numBytesRead);
                     //DebugLogger.WriteLine("--{0} bytes read", numBytesRead);
-                    s_Trampolines.SetFilePointer(handle, (int)(pos + numBytesRead), null, (uint)Win32.EMoveMethod.Begin);
+                    SetFilePointer(_handle, (int)(pos + numBytesRead), IntPtr.Zero, EMoveMethod.Begin);
                     lgp.Ping();
                     ret = -1;
                 }
-                else
-                    ret = s_Trampolines.ReadFile(handle, bytes, numBytesToRead, numBytesRead, overlapped);
+                //else
+                //    ret = s_Trampolines.ReadFile(handle, bytes, numBytesToRead, numBytesRead, overlapped);
             }
             catch (Exception ex)
             {
@@ -498,8 +390,8 @@ namespace _7thWrapperLib {
                 else
                     DebugLogger.DetailedWriteLine($"Skipped file {_lpFileName}");
 
-                if (ret == null)
-                    ret = s_Trampolines.CreateFileW((ushort*)Marshal.StringToHGlobalAuto(_lpFileName).ToPointer(), dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+                //if (ret == null)
+                //    ret = s_Trampolines.CreateFileW((ushort*)Marshal.StringToHGlobalAuto(_lpFileName).ToPointer(), dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
 
                 //DebugLogger.WriteLine("Hooked CreateFileW for {0} under {1}", _lpFileName, handle.ToInt32());
 
@@ -530,7 +422,7 @@ namespace _7thWrapperLib {
             try
             {
                 DebugLogger.WriteLine("FindFirstFile for " + new string((char*)lpFileName));
-                ret = s_Trampolines.FindFirstFileW(lpFileName, lpFindFileData);
+                //ret = s_Trampolines.FindFirstFileW(lpFileName, lpFindFileData);
             }
             catch (Exception ex)
             {
@@ -583,7 +475,7 @@ namespace _7thWrapperLib {
             int result = 0;
             try
             {
-                result = s_Trampolines.GetFileInformationByHandle(hFile, lpFileInformation);
+                //result = s_Trampolines.GetFileInformationByHandle(hFile, lpFileInformation);
                 VArchiveData va;
                 IntPtr _hFile = new IntPtr(hFile);
                 if (result > 0 && _varchives.TryGetValue(_hFile, out va))
@@ -611,7 +503,7 @@ namespace _7thWrapperLib {
             {
                 IntPtr _hSourceHandle = new IntPtr(hSourceHandle);
                 IntPtr _lpTargetHandle = new IntPtr(lpTargetHandle);
-                result = s_Trampolines.DuplicateHandle(hSourceProcessHandle, hSourceHandle, hTargetProcessHandle, lpTargetHandle, dwDesiredAccess, bInheritHandle, dwOptions);
+               //result = s_Trampolines.DuplicateHandle(hSourceProcessHandle, hSourceHandle, hTargetProcessHandle, lpTargetHandle, dwDesiredAccess, bInheritHandle, dwOptions);
                 if (result > 0 && _varchives.ContainsKey(_hSourceHandle))
                 {
                     _varchives[_lpTargetHandle] = _varchives[_hSourceHandle];
@@ -638,8 +530,8 @@ namespace _7thWrapperLib {
                 IntPtr _lpFileSizeHigh = new IntPtr(lpFileSizeHigh);
                 if (_varchives.TryGetValue(_hFile, out va))
                     ret = va.GetFileSize(_lpFileSizeHigh);
-                else
-                    ret = s_Trampolines.GetFileSize(hFile, lpFileSizeHigh);
+                //else
+                //    ret = s_Trampolines.GetFileSize(hFile, lpFileSizeHigh);
             }
             catch (Exception ex)
             {
@@ -663,8 +555,8 @@ namespace _7thWrapperLib {
                     *lpFileSize = (uint)va.Size;
                     ret = 1;
                 }
-                else
-                    ret = s_Trampolines.GetFileSizeEx(hFile, lpFileSize);
+                //else
+                //    ret = s_Trampolines.GetFileSizeEx(hFile, lpFileSize);
             }
             catch (Exception ex)
             {
@@ -687,8 +579,8 @@ namespace _7thWrapperLib {
 
                 if (_varchives.TryGetValue(_hFile, out va))
                     ret = va.SetFilePointerEx(_hFile, liDistanceToMove, _lpNewFilePointer, (uint)dwMoveMethod);
-                else
-                    ret = s_Trampolines.SetFilePointerEx(hFile, liDistanceToMove, lpNewFilePointer, dwMoveMethod);
+                //else
+                //    ret = s_Trampolines.SetFilePointerEx(hFile, liDistanceToMove, lpNewFilePointer, dwMoveMethod);
             }
             catch (Exception ex)
             {

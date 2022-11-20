@@ -17,21 +17,8 @@
 #define MAIN_TYP_NAME L"_7thWrapperProxy.Proxy"
 #define MAIN_FUN_NAME L"Main"
 
-// APIs to export from the host to managed code
-struct host_exports
-{
-#define X(n) decltype(&n) n;
-#include "host_exports.x.h"
-#undef X
-} exports =
-{
-    #define X(n) &n,
-    #include "host_exports.x.h"
-    #undef X
-};
-
 // API to initialize 7th Heaven.
-HRESULT(WINAPI* HostInitialize)(const host_exports*);
+HRESULT(WINAPI* HostInitialize)();
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 {
@@ -69,7 +56,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
         hostfxr_close(context);
 
         load_assembly_and_get_function_pointer(MAIN_ASM_NAME L".dll", MAIN_TYP_NAME L", " MAIN_ASM_NAME, MAIN_FUN_NAME, UNMANAGEDCALLERSONLY_METHOD, nullptr, (void**)&HostInitialize);
-        HostInitialize(&exports);
+        HostInitialize();
 
         return target();
     };
