@@ -14,6 +14,7 @@ using Microsoft.Win32.SafeHandles;
 using System.IO;
 using System.Diagnostics;
 using static _7thWrapperLib.Win32;
+using Iros._7th;
 
 namespace _7thWrapperLib {
     public static unsafe class Wrap {
@@ -64,7 +65,7 @@ namespace _7thWrapperLib {
             } while (true);
         }
 
-        public unsafe static void Run(Process currentProcess, string profileFile = ".7thWrapperProfile")
+        public static void Run(Process currentProcess, string profileFile = ".7thWrapperProfile")
         {
             System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US", false);
             try {
@@ -147,445 +148,321 @@ namespace _7thWrapperLib {
         }
 
         // ------------------------------------------------------------------------------------------------------
-        [UnmanagedCallersOnly]
-        static int HCloseHandle(void* hObject)
+        public static int HCloseHandle(IntPtr hObject)
         {
             int ret = 0;
 
-            try
+            if (_varchives.ContainsKey(hObject))
             {
-                VArchiveData va;
-                IntPtr _hObject = new IntPtr(hObject);
-
-                if (_varchives.TryGetValue(_hObject, out va))
-                {
-                    _varchives.Remove(_hObject);
-                    DebugLogger.WriteLine($"Closing dummy handle {_hObject}");
-                }
-
-                if (_streamFiles.ContainsKey(_hObject))
-                    _streamFiles.Remove(_hObject);
-
-                //if (_saveFiles.ContainsKey(_hObject))
-                //    _saveFiles.Remove(_hObject);
-
-                //ret = s_Trampolines.CloseHandle(hObject);
+                _varchives.Remove(hObject);
+                DebugLogger.WriteLine($"Closing dummy handle {hObject}");
             }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.ToString());
-            }
+
+            if (_streamFiles.ContainsKey(hObject))
+                _streamFiles.Remove(hObject);
+
+            //if (_saveFiles.ContainsKey(hObject))
+            //    _saveFiles.Remove(hObject);
+
+            //ret = s_Trampolines.CloseHandle(hObject);
 
             return ret;
         }
 
-        [UnmanagedCallersOnly]
-        static uint HGetFileType(void* hFile)
+        public static uint HGetFileType(IntPtr hFile)
         {            
             uint ret = 0;
 
-            try
+            DebugLogger.DetailedWriteLine($"GetFileType on {hFile}");
+            VArchiveData va;
+            if (_varchives.TryGetValue(hFile, out va))
             {
-                IntPtr _hFile = new IntPtr(hFile);
-                DebugLogger.DetailedWriteLine($"GetFileType on {_hFile}");
-                VArchiveData va;
-                if (_varchives.TryGetValue(_hFile, out va))
-                {
-                    //DebugLogger.WriteLine(" ---faking dummy file");
-                    ret = 1;
-                }
-                else
-                {
-                    //ret = s_Trampolines.GetFileType(hFile);
-                }
+                //DebugLogger.WriteLine(" ---faking dummy file");
+                ret = 1;
             }
-            catch (Exception ex)
+            else
             {
-                Debug.WriteLine(ex.ToString());
+                //ret = s_Trampolines.GetFileType(hFile);
             }
 
             return ret;
         }
 
-        [UnmanagedCallersOnly]
-        static uint HSetFilePointer(void* handle, long lDistanceTomove, long* lpDistanceToMoveHigh, uint dwMoveMethod)
+        public static uint HSetFilePointer(IntPtr hFile, int lDistanceTomove, IntPtr lpDistanceToMoveHigh, uint dwMoveMethod)
         {
             //DebugLogger.WriteLine("SetFilePointer on {0} to {1} by {2}", handle, lDistanceTomove, dwMoveMethod);
-            uint ret = 0;
+            uint ret = uint.MaxValue;
 
-            try
+            VArchiveData va;
+            VStreamFile vsf;
+            int offset = lDistanceTomove;
+            if (!lpDistanceToMoveHigh.Equals(IntPtr.Zero))
+                offset |= Marshal.ReadInt32(lpDistanceToMoveHigh) << 32;
+
+            if (_varchives.TryGetValue(hFile, out va))
             {
-                VArchiveData va;
-                VStreamFile vsf;
-                long offset = lDistanceTomove;
-                if (lpDistanceToMoveHigh != null)
-                    offset |= ((long)lpDistanceToMoveHigh << 32);
-
-                IntPtr _handle = new IntPtr(handle);
-                if (_varchives.TryGetValue(_handle, out va))
-                {
-                    ret = (uint)va.SetFilePointer(offset, (Win32.EMoveMethod)dwMoveMethod);
-                }
-                else if (_streamFiles.TryGetValue(_handle, out vsf))
-                {
-                    ret = (uint)_streamFiles[_handle].SetPosition(offset, (Win32.EMoveMethod)dwMoveMethod);
-                }
-                else
-                {
-                    //ret = s_Trampolines.SetFilePointer(handle, lDistanceTomove, lpDistanceToMoveHigh, dwMoveMethod);
-                }
+                ret = (uint)va.SetFilePointer(offset, (Win32.EMoveMethod)dwMoveMethod);
             }
-            catch (Exception ex)
+            else if (_streamFiles.TryGetValue(hFile, out vsf))
             {
-                Debug.WriteLine(ex.ToString());
+                ret = (uint)_streamFiles[hFile].SetPosition(offset, (Win32.EMoveMethod)dwMoveMethod);
+            }
+            else
+            {
+                //ret = s_Trampolines.SetFilePointer(handle, lDistanceTomove, lpDistanceToMoveHigh, dwMoveMethod);
             }
             
             return ret;
         }
 
-        //[UnmanagedCallersOnly]
-        //static unsafe int HWriteFile(void* hFile, void* lpBuffer, uint nNumberOfBytesToWrite, uint* lpNumberOfBytesWritten, void* lpOverlapped)
+        //public static int HWriteFile(IntPtr hFile, IntPtr lpBuffer, uint nNumberOfBytesToWrite, uint lpNumberOfBytesWritten, [In] ref System.Threading.NativeOverlapped lpOverlapped)
         //{
         //    int result = 0;
-        //    *lpNumberOfBytesWritten = 0;
-        //    try
-        //    {
-        //        result = s_Trampolines.WriteFile(hFile, lpBuffer, nNumberOfBytesToWrite, lpNumberOfBytesWritten, lpOverlapped);
-        //        //DebugLogger.WriteLine(String.Format("Write {0} bytes on {1}", lpNumberOfBytesWritten, hFile.ToInt32()));
 
-        //        IntPtr _hFile = new IntPtr(hFile);
-        //        if (_saveFiles.ContainsKey(_hFile))
-        //        {
-        //            uint offset = s_Trampolines.SetFilePointer(hFile, 0, null, (uint)Win32.EMoveMethod.Current);
-        //            //DebugLogger.WriteLine(String.Format("Write {0} bytes to {1} at offset {2}", lpNumberOfBytesWritten, _saveFiles[hFile], offset));
-        //        }
-        //    }
-        //    catch (Exception ex)
+        //    result = WriteFile(hFile, lpBuffer, nNumberOfBytesToWrite, lpNumberOfBytesWritten, ref lpOverlapped);
+        //    //DebugLogger.WriteLine(String.Format("Write {0} bytes on {1}", lpNumberOfBytesWritten, hFile.ToInt32()));
+
+        //    if (_saveFiles.ContainsKey(hFile))
         //    {
-        //        Debug.WriteLine(ex.ToString());
+        //        int offset = SetFilePointer(hFile, 0, IntPtr.Zero, EMoveMethod.Current);
+        //        //DebugLogger.WriteLine(String.Format("Write {0} bytes to {1} at offset {2}", lpNumberOfBytesWritten, _saveFiles[hFile], offset));
         //    }
 
         //    return result;
         //}
 
-        [UnmanagedCallersOnly]
-        static int HReadFile(void* handle, void* bytes, uint numBytesToRead, uint* numBytesRead, void* overlapped)
+        public static int HReadFile(IntPtr handle, IntPtr bytes, uint numBytesToRead, IntPtr numBytesRead, IntPtr overlapped)
         {
             int ret = 0;
-            try
+
+            uint _numBytesRead = 0;
+            VArchiveData va;
+            if (_varchives.TryGetValue(handle, out va))
             {
-                VArchiveData va;
-                VStreamFile vsf;
-                LGPWrapper lgp;
-                IntPtr _handle = new IntPtr(handle);
-                IntPtr _bytes = new IntPtr(bytes);
+                ret = va.ReadFile(bytes, numBytesToRead, ref _numBytesRead);
+                uint* ptrNumBytesRead = (uint*)numBytesRead.ToPointer();
+                *ptrNumBytesRead = _numBytesRead;
+                return ret;
+            }
 
-                if (_varchives.TryGetValue(_handle, out va))
-                    ret = va.ReadFile(_bytes, numBytesToRead, ref *numBytesRead);
-                else if (_streamFiles.TryGetValue(_handle, out vsf))
-                    ret = vsf.Read(_bytes, *numBytesRead, ref *numBytesRead);
-                else if (_hMap.TryGetValue(_handle, out lgp))
+            VStreamFile vsf;
+            if (_streamFiles.TryGetValue(handle, out vsf))
+            {
+                ret = vsf.Read(bytes, _numBytesRead, ref _numBytesRead);
+                uint* ptrNumBytesRead = (uint*)numBytesRead.ToPointer();
+                *ptrNumBytesRead = _numBytesRead;
+                return ret;
+            }
+
+            //DebugLogger.WriteLine("Hooked ReadFile on {0} for {1} bytes", handle.ToInt32(), numBytesToRead);
+            //if (overlapped != IntPtr.Zero) DebugLogger.WriteLine("(is overlapped)");
+
+            LGPWrapper lgp;
+            if (_hMap.TryGetValue(handle, out lgp))
+            {
+                try
                 {
-                    //DebugLogger.WriteLine("Hooked ReadFile on {0} for {1} bytes", handle.ToInt32(), numBytesToRead);
-                    //if (overlapped != IntPtr.Zero) DebugLogger.WriteLine("(is overlapped)");
-
-                    int pos = SetFilePointer(_handle, 0, IntPtr.Zero, EMoveMethod.Current);
+                    int pos = SetFilePointer(handle, 0, IntPtr.Zero, EMoveMethod.Current);
                     //DebugLogger.WriteLine("Hooked ReadFile on {0} for {1} bytes at {2}", handle.ToInt32(), numBytesToRead, pos);
-                    lgp.VFile.Read((uint)pos, numBytesToRead, _bytes, ref *numBytesRead);
+                    lgp.VFile.Read((uint)pos, numBytesToRead, bytes, ref _numBytesRead);
+                    uint* ptrNumBytesRead = (uint*)numBytesRead.ToPointer();
+                    *ptrNumBytesRead = _numBytesRead;
                     //DebugLogger.WriteLine("--{0} bytes read", numBytesRead);
-                    SetFilePointer(_handle, (int)(pos + numBytesRead), IntPtr.Zero, EMoveMethod.Begin);
+                    SetFilePointer(handle, (int)(pos + numBytesRead), IntPtr.Zero, EMoveMethod.Begin);
                     lgp.Ping();
                     ret = -1;
                 }
-                //else
-                //    ret = s_Trampolines.ReadFile(handle, bytes, numBytesToRead, numBytesRead, overlapped);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.ToString());
+                catch (Exception e)
+                {
+                    DebugLogger.WriteLine("ERROR: " + e.ToString());
+                    throw;
+                }
             }
 
             return ret;
+            // return s_Trampolines.ReadFile(handle, bytes, numBytesToRead, numBytesRead, overlapped);
         }
 
-        static IntPtr CreateVA(OverrideFile of) {
-            IntPtr dummy = IntPtr.Zero;
-
-            try
-            {
-                VArchiveData va = new VArchiveData(of.Archive.GetBytes(of.File));
-                dummy = of.Archive.GetDummyHandle();
-                DebugLogger.WriteLine($"Creating dummy file handle {dummy} to access {of.Archive}{of.File}");
-                _varchives[dummy] = va;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.ToString());
-            }
+        public static IntPtr CreateVA(OverrideFile of) {
+            VArchiveData va = new VArchiveData(of.Archive.GetBytes(of.File));
+            IntPtr dummy = of.Archive.GetDummyHandle();
+            DebugLogger.WriteLine($"Creating dummy file handle {dummy} to access {of.Archive}{of.File}");
+            _varchives[dummy] = va;
 
             return dummy;
         }
 
-        // ushort*, uint, uint, void*, uint, uint, void*, void*
-        [UnmanagedCallersOnly]
-        static void* HCreateFileW(ushort* lpFileName, uint dwDesiredAccess, uint dwShareMode, void*lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, void* hTemplateFile)
+        public static IntPtr HCreateFileW(
+            [MarshalAs(UnmanagedType.LPWStr)] string lpFileName,
+            [MarshalAs(UnmanagedType.U4)] FileAccess dwDesiredAccess,
+            [MarshalAs(UnmanagedType.U4)] FileShare dwShareMode,
+            IntPtr lpSecurityAttributes,
+            [MarshalAs(UnmanagedType.U4)] FileMode dwCreationDisposition,
+            [MarshalAs(UnmanagedType.U4)] FileAttributes dwFlagsAndAttributes,
+            IntPtr hTemplateFile)
         {
-            void* ret = null;
-            try
-            {
-                string _lpFileName = new string((char*)lpFileName);
+            IntPtr ret = IntPtr.Zero;
 
-                // Usually this check should be enough...
-                bool isFF7GameFile = _lpFileName.StartsWith(_profile.FF7Path, StringComparison.InvariantCultureIgnoreCase);
-                // ...but if it fails, last resort is to check if the file exists in the game directory
-                if (!isFF7GameFile && !_lpFileName.StartsWith("\\", StringComparison.InvariantCultureIgnoreCase) && !Path.IsPathRooted(_lpFileName))
+            // Usually this check should be enough...
+            bool isFF7GameFile = lpFileName.StartsWith(_profile.FF7Path, StringComparison.InvariantCultureIgnoreCase);
+            // ...but if it fails, last resort is to check if the file exists in the game directory
+            if (!isFF7GameFile && !lpFileName.StartsWith("\\", StringComparison.InvariantCultureIgnoreCase) && !Path.IsPathRooted(lpFileName))
+            {
+                isFF7GameFile = _profile.gameFiles.Any(s => s.EndsWith(lpFileName, StringComparison.InvariantCultureIgnoreCase));
+            }
+
+            // If a game file is found, process with replacing its content with relative mod file
+            if (isFF7GameFile)
+            {
+                lpFileName = lpFileName.Replace("\\/", "\\").Replace("/", "\\").Replace("\\\\", "\\");
+                DebugLogger.DetailedWriteLine($"CreateFileW for {lpFileName}...");
+                if (lpFileName.IndexOf('\\') < 0)
                 {
-                    isFF7GameFile = _profile.gameFiles.Any(s => s.EndsWith(_lpFileName, StringComparison.InvariantCultureIgnoreCase));
+                    //DebugLogger.WriteLine("No path: curdir is {0}", System.IO.Directory.GetCurrentDirectory(), 0);
+                    lpFileName = Path.Combine(Directory.GetCurrentDirectory(), lpFileName);
                 }
 
-                // If a game file is found, process with replacing its content with relative mod file
-                if (isFF7GameFile)
+                foreach (string path in _profile.MonitorPaths)
                 {
-                    _lpFileName = _lpFileName.Replace("\\/", "\\").Replace("/", "\\").Replace("\\\\", "\\");
-                    DebugLogger.DetailedWriteLine($"CreateFileW for {_lpFileName}...");
-                    if (_lpFileName.IndexOf('\\') < 0)
+                    if (lpFileName.StartsWith(path, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        //DebugLogger.WriteLine("No path: curdir is {0}", System.IO.Directory.GetCurrentDirectory(), 0);
-                        _lpFileName = Path.Combine(Directory.GetCurrentDirectory(), _lpFileName);
-                    }
+                        string match = lpFileName.Substring(path.Length);
+                        OverrideFile mapped = LGPWrapper.MapFile(match, _profile);
 
-                    foreach (string path in _profile.MonitorPaths)
-                    {
-                        if (_lpFileName.StartsWith(path, StringComparison.InvariantCultureIgnoreCase))
+                        //DebugLogger.WriteLine($"Attempting match '{match}' for {lpFileName}...");
+
+                        if (mapped == null)
                         {
-                            string match = _lpFileName.Substring(path.Length);
-                            OverrideFile mapped = LGPWrapper.MapFile(match, _profile);
+                            // Attempt a second round, this time relaxing the path match replacing only the game folder path.
+                            match = lpFileName.Substring(_profile.FF7Path.Length + 1);
+                            mapped = LGPWrapper.MapFile(match, _profile);
 
-                            //DebugLogger.WriteLine($"Attempting match '{match}' for {_lpFileName}...");
+                            //DebugLogger.WriteLine($"Attempting match '{match}' for {lpFileName}...");
+                        }
 
-                            if (mapped == null)
+                        if (mapped != null)
+                        {
+                            DebugLogger.WriteLine($"Remapping {lpFileName} to {mapped.File} [ Matched: '{match}' ]");
+
+                            if (mapped.Archive == null)
                             {
-                                // Attempt a second round, this time relaxing the path match replacing only the game folder path.
-                                match = _lpFileName.Substring(_profile.FF7Path.Length + 1);
-                                mapped = LGPWrapper.MapFile(match, _profile);
-
-                                //DebugLogger.WriteLine($"Attempting match '{match}' for {_lpFileName}...");
+                                lpFileName = mapped.File;
                             }
-
-                            if (mapped != null)
+                            else
                             {
-                                DebugLogger.WriteLine($"Remapping {_lpFileName} to {mapped.File} [ Matched: '{match}' ]");
-
-                                if (mapped.Archive == null)
-                                    _lpFileName = mapped.File;
-                                else
-                                {
-                                    ret = CreateVA(mapped).ToPointer();
-                                    break;
-                                }
+                                ret = CreateVA(mapped);
+                                break;
                             }
                         }
                     }
                 }
-                else
-                    DebugLogger.DetailedWriteLine($"Skipped file {_lpFileName}");
-
-                //if (ret == null)
-                //    ret = s_Trampolines.CreateFileW((ushort*)Marshal.StringToHGlobalAuto(_lpFileName).ToPointer(), dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
-
-                //DebugLogger.WriteLine("Hooked CreateFileW for {0} under {1}", _lpFileName, handle.ToInt32());
-
-                //if (isFF7GameFile && ret != null)
-                //{
-                //    IntPtr _ret = new IntPtr(ret);
-
-                //    if (System.IO.Path.GetExtension(_lpFileName).Equals(".ff7", StringComparison.InvariantCultureIgnoreCase))
-                //    {
-                //        _saveFiles.Add(_ret, _lpFileName);
-                //    }
-
-                //    DebugLogger.DetailedWriteLine($"CreateFileW: {_lpFileName} -> {_ret}");
-                //}
             }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.ToString());
-            }
+            else
+                DebugLogger.DetailedWriteLine($"Skipped file {lpFileName}");
+
+            if (ret == IntPtr.Zero)
+                ret = CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+
+            //DebugLogger.WriteLine("Hooked CreateFileW for {0} under {1}", lpFileName, handle.ToInt32());
+
+            //if (isFF7GameFile && ret != null)
+            //{
+            //    IntPtr _ret = new IntPtr(ret);
+
+            //    if (System.IO.Path.GetExtension(lpFileName).Equals(".ff7", StringComparison.InvariantCultureIgnoreCase))
+            //    {
+            //        _saveFiles.Add(_ret, lpFileName);
+            //    }
+
+            //    DebugLogger.DetailedWriteLine($"CreateFileW: {lpFileName} -> {_ret}");
+            //}
 
             return ret;
         }
 
-        [UnmanagedCallersOnly]
-        static void* HFindFirstFileW(ushort* lpFileName, void* lpFindFileData) {
-            void* ret = null;
+        public static IntPtr HFindFirstFileW(string lpFileName, IntPtr lpFindFileData)
+        {
+            DebugLogger.WriteLine("FindFirstFile for " + lpFileName);
+            //ret = s_Trampolines.FindFirstFileW(lpFileName, lpFindFileData);
 
-            try
-            {
-                DebugLogger.WriteLine("FindFirstFile for " + new string((char*)lpFileName));
-                //ret = s_Trampolines.FindFirstFileW(lpFileName, lpFindFileData);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.ToString());
-            }
-
-            return ret;
+            return IntPtr.Zero;
         }
 
-        //[UnmanagedCallersOnly]
-        //private static bool HCreateProcessW(string lpApplicationName,
-        //    string lpCommandLine, ref SECURITY_ATTRIBUTES lpProcessAttributes,
-        //    ref SECURITY_ATTRIBUTES lpThreadAttributes, bool bInheritHandles,
-        //    uint dwCreationFlags, IntPtr lpEnvironment, string lpCurrentDirectory,
-        //    [In] ref STARTUPINFO lpStartupInfo,
-        //    out PROCESS_INFORMATION lpProcessInformation)
-        //{
+        public static uint HGetFileInformationByHandle(IntPtr hFile, IntPtr lpFileInformation)
+        {
+            VArchiveData va;
+            BY_HANDLE_FILE_INFORMATION _lpFileInformation;
 
-        //    DebugLogger.WriteLine($"CreateProcessW for {lpApplicationName}, {lpCommandLine}");
-        //    string exe = lpApplicationName;
-        //    if (String.IsNullOrWhiteSpace(exe)) exe = lpCommandLine;
-        //    exe = exe.Replace('/', '\\');
-
-        //    bool ret;
-        //    if (System.IO.Path.GetFileName(exe).IndexOf("FF7", StringComparison.InvariantCultureIgnoreCase) >= 0)
-        //    {
-        //        if (System.IO.File.Exists(exe + ".exe")) exe += ".exe";
-        //        //int pid;
-        //        try
-        //        {
-        //            string lib = System.Reflection.Assembly.GetExecutingAssembly().Location;
-        //            DebugLogger.WriteLine("--Injecting into " + exe + " with library " + lib);
-
-        //            ret = CreateProcessW(lpApplicationName, lpCommandLine, ref lpProcessAttributes, ref lpThreadAttributes, bInheritHandles, dwCreationFlags, lpEnvironment, lpCurrentDirectory, ref lpStartupInfo, out lpProcessInformation);
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            DebugLogger.WriteLine(ex.ToString());
-        //            throw;
-        //        }
-        //    }
-        //    else
-        //        ret = CreateProcessW(lpApplicationName, lpCommandLine, ref lpProcessAttributes, ref lpThreadAttributes, bInheritHandles, dwCreationFlags, lpEnvironment, lpCurrentDirectory, ref lpStartupInfo, out lpProcessInformation);
-
-        //    return ret;
-        //}
-
-        [UnmanagedCallersOnly]
-        static int HGetFileInformationByHandle(void* hFile, Win32.BY_HANDLE_FILE_INFORMATION* lpFileInformation) {
-            int result = 0;
-            try
+            bool result = GetFileInformationByHandle(hFile, out _lpFileInformation);
+            if (result && _varchives.TryGetValue(hFile, out va))
             {
-                //result = s_Trampolines.GetFileInformationByHandle(hFile, lpFileInformation);
-                VArchiveData va;
-                IntPtr _hFile = new IntPtr(hFile);
-                if (result > 0 && _varchives.TryGetValue(_hFile, out va))
-                {
-                    DebugLogger.DetailedWriteLine($"Overriding GetFileInformationByHandle for dummy file {_hFile}");
-                    lpFileInformation->FileSizeHigh = (uint)(va.Size >> 32);
-                    lpFileInformation->FileSizeLow = (uint)(va.Size & 0xffffffff);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.ToString());
+                DebugLogger.DetailedWriteLine($"Overriding GetFileInformationByHandle for dummy file {hFile}");
+                BY_HANDLE_FILE_INFORMATION* ptr = (BY_HANDLE_FILE_INFORMATION*)lpFileInformation;
+
+                *ptr = _lpFileInformation;
+                ptr->FileSizeHigh = (uint)(va.Size >> 32);
+                ptr->FileSizeLow = (uint)(va.Size & 0xffffffff);
             }
 
-            return result;
+            return (uint)(result ? 1 : 0);
         }
 
-        [UnmanagedCallersOnly]
-        static int HDuplicateHandle(void* hSourceProcessHandle, void* hSourceHandle, void* hTargetProcessHandle, void** lpTargetHandle, uint dwDesiredAccess, int bInheritHandle, uint dwOptions)
+        public static int HDuplicateHandle(IntPtr hSourceProcessHandle, IntPtr hSourceHandle, IntPtr hTargetProcessHandle, IntPtr lpTargetHandle, uint dwDesiredAccess, int bInheritHandle, uint dwOptions)
         {
             // DebugLogger.DetailedWriteLine("DuplicateHandle on {0}", hSourceHandle);
 
             int result = 0;
-            try
+
+            if (result > 0 && _varchives.ContainsKey(hSourceHandle))
             {
-                IntPtr _hSourceHandle = new IntPtr(hSourceHandle);
-                IntPtr _lpTargetHandle = new IntPtr(lpTargetHandle);
-               //result = s_Trampolines.DuplicateHandle(hSourceProcessHandle, hSourceHandle, hTargetProcessHandle, lpTargetHandle, dwDesiredAccess, bInheritHandle, dwOptions);
-                if (result > 0 && _varchives.ContainsKey(_hSourceHandle))
-                {
-                    _varchives[_lpTargetHandle] = _varchives[_hSourceHandle];
-                    DebugLogger.DetailedWriteLine($"Duplicating dummy handle {_hSourceHandle} to {_lpTargetHandle}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.ToString());
+                _varchives[lpTargetHandle] = _varchives[hSourceHandle];
+                DebugLogger.DetailedWriteLine($"Duplicating dummy handle {hSourceHandle} to {lpTargetHandle}");
             }
 
             return result;
         }
 
-        [UnmanagedCallersOnly]
-        static uint HGetFileSize(void* hFile, uint* lpFileSizeHigh)
+        public static uint HGetFileSize(IntPtr hFile, IntPtr lpFileSizeHigh)
         {
-            VArchiveData va;
+            uint ret = 0xFFFFFFFF;
 
-            uint ret = 0;
-            try
-            {
-                IntPtr _hFile = new IntPtr(hFile);
-                IntPtr _lpFileSizeHigh = new IntPtr(lpFileSizeHigh);
-                if (_varchives.TryGetValue(_hFile, out va))
-                    ret = va.GetFileSize(_lpFileSizeHigh);
-                //else
-                //    ret = s_Trampolines.GetFileSize(hFile, lpFileSizeHigh);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.ToString());
-            }
+            VArchiveData va;
+            if (_varchives.TryGetValue(hFile, out va))
+                ret = va.GetFileSize(lpFileSizeHigh);
+            //else
+            //    ret = s_Trampolines.GetFileSize(hFile, lpFileSizeHigh);
 
             return ret;
         }
 
-        [UnmanagedCallersOnly]
-        static uint HGetFileSizeEx(void* hFile, uint* lpFileSize)
+        public static uint HGetFileSizeEx(IntPtr hFile, IntPtr lpFileSize)
         {
             uint ret = 0;
-            try
+
+            VArchiveData va;
+            if (_varchives.TryGetValue(hFile, out va))
             {
-                VArchiveData va;
-                IntPtr _hFile = new IntPtr(hFile);
-                if (_varchives.TryGetValue(_hFile, out va))
-                {
-                    DebugLogger.WriteLine($"GetFileSizeEx on dummy handle {_hFile}");
-                    *lpFileSize = (uint)va.Size;
-                    ret = 1;
-                }
-                //else
-                //    ret = s_Trampolines.GetFileSizeEx(hFile, lpFileSize);
+                DebugLogger.WriteLine($"GetFileSizeEx on dummy handle {hFile}");
+
+                long* _lpFileSize = (long*)lpFileSize.ToPointer();
+                *_lpFileSize = va.Size;
+                ret = 1;
             }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.ToString());
-            }
+            //else
+            //    ret = s_Trampolines.GetFileSizeEx(hFile, lpFileSize);
 
             return ret;
         }
 
-        [UnmanagedCallersOnly]
-        static int HSetFilePointerEx(void* hFile, long liDistanceToMove, long* lpNewFilePointer, uint dwMoveMethod)
+        public static uint HSetFilePointerEx(IntPtr hFile, long liDistanceToMove, IntPtr lpNewFilePointer, uint dwMoveMethod)
         {
+            uint ret = 0;
+
             VArchiveData va;
-
-            int ret = 0;
-            try
-            {
-                IntPtr _hFile = new IntPtr(hFile);
-                IntPtr _lpNewFilePointer = new IntPtr(lpNewFilePointer);
-
-                if (_varchives.TryGetValue(_hFile, out va))
-                    ret = va.SetFilePointerEx(_hFile, liDistanceToMove, _lpNewFilePointer, (uint)dwMoveMethod);
-                //else
-                //    ret = s_Trampolines.SetFilePointerEx(hFile, liDistanceToMove, lpNewFilePointer, dwMoveMethod);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.ToString());
-            }
+            if (_varchives.TryGetValue(hFile, out va))
+                ret = (uint)va.SetFilePointerEx(hFile, liDistanceToMove, lpNewFilePointer, (uint)dwMoveMethod);
+            //else
+            //    ret = s_Trampolines.SetFilePointerEx(hFile, liDistanceToMove, lpNewFilePointer, dwMoveMethod);
 
             return ret;
         }

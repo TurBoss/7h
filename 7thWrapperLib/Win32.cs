@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 namespace _7thWrapperLib {
-    static class Win32 {
+    public static class Win32 {
         public enum EMoveMethod : uint
         {
             Begin = 0,
@@ -20,14 +20,14 @@ namespace _7thWrapperLib {
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public unsafe struct FILETIME
+        public struct FILETIME
         {
             public uint dwLowDateTime;
             public uint dwHighDateTime;
         };
 
         [StructLayout(LayoutKind.Sequential)]
-        public unsafe struct BY_HANDLE_FILE_INFORMATION
+        public struct BY_HANDLE_FILE_INFORMATION
         {
             public uint FileAttributes;
             public FILETIME CreationTime;
@@ -80,6 +80,12 @@ namespace _7thWrapperLib {
         internal static extern IntPtr GetCurrentProcess();
 
         [DllImport("kernel32.dll", SetLastError = true)]
+        static internal extern bool GetFileInformationByHandle(
+            IntPtr hFile,
+            out BY_HANDLE_FILE_INFORMATION lpFileInformation
+        );
+
+        [DllImport("kernel32.dll", SetLastError = true)]
         static internal extern unsafe int ReadFile(IntPtr handle, IntPtr bytes, uint numBytesToRead, ref uint numBytesRead, IntPtr overlapped);
 
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -97,6 +103,9 @@ namespace _7thWrapperLib {
             [In] IntPtr lpDistanceToMoveHigh,
             [In] EMoveMethod dwMoveMethod);
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static internal extern int WriteFile(IntPtr hFile, IntPtr lpBuffer, uint nNumberOfBytesToWrite,
+            out uint lpNumberOfBytesWritten, [In] ref System.Threading.NativeOverlapped lpOverlapped);
     }
 
 }

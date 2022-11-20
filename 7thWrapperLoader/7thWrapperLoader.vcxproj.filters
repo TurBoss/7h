@@ -29,5 +29,8 @@
     <ClInclude Include="hostfxr.x.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="host_exports.x.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
