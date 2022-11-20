@@ -38,17 +38,17 @@ namespace _7thWrapperLib {
         {
             public delegate* unmanaged<ushort*, uint, uint, void*, uint, uint, void*, void*> CreateFileW;
             public delegate* unmanaged<void*, void*, uint, uint*, void*, int> ReadFile;
-            //public delegate* unmanaged<void*, void*, ulong, ulong*, void*, int> WriteFile;
+            //public delegate* unmanaged<void*, void*, uint, uint*, void*, int> WriteFile;
             public delegate* unmanaged<ushort*, void*, void*> FindFirstFileW;
-            public delegate* unmanaged<void*, long, long*, ulong, ulong> SetFilePointer;
-            public delegate* unmanaged<void*, long, long*, ulong, ulong> SetFilePointerEx;
+            public delegate* unmanaged<void*, long, long*, uint, uint> SetFilePointer;
+            public delegate* unmanaged<void*, long, long*, uint, int> SetFilePointerEx;
             public delegate* unmanaged<void*, int> CloseHandle;
-            public delegate* unmanaged<void*, ulong> GetFileType;
+            public delegate* unmanaged<void*, uint> GetFileType;
             public delegate* unmanaged<void*, Win32.BY_HANDLE_FILE_INFORMATION*, int> GetFileInformationByHandle;
-            public delegate* unmanaged<void*, void*, void*, void**, ulong, int, ulong, int> DuplicateHandle;
-            //public delegate* unmanaged<ushort*, ushort*, void*, void*, int, ulong, void*, ushort*, void*, void*, int> CreateProcessW;
-            public delegate* unmanaged<void*, ulong*, ulong> GetFileSize;
-            public delegate* unmanaged<void*, ulong*, ulong> GetFileSizeEx;
+            public delegate* unmanaged<void*, void*, void*, void**, uint, int, uint, int> DuplicateHandle;
+            //public delegate* unmanaged<ushort*, ushort*, void*, void*, int, uint, void*, ushort*, void*, void*, int> CreateProcessW;
+            public delegate* unmanaged<void*, uint*, uint> GetFileSize;
+            public delegate* unmanaged<void*, uint*, uint> GetFileSizeEx;
         }
 
         static int s_MainThreadId;
@@ -288,9 +288,9 @@ namespace _7thWrapperLib {
         }
 
         [UnmanagedCallersOnly]
-        static ulong HGetFileType(void* hFile)
+        static uint HGetFileType(void* hFile)
         {            
-            ulong ret = 0;
+            uint ret = 0;
 
             try
             {
@@ -316,10 +316,10 @@ namespace _7thWrapperLib {
         }
 
         [UnmanagedCallersOnly]
-        static ulong HSetFilePointer(void* handle, long lDistanceTomove, long* lpDistanceToMoveHigh, ulong dwMoveMethod)
+        static uint HSetFilePointer(void* handle, long lDistanceTomove, long* lpDistanceToMoveHigh, uint dwMoveMethod)
         {
             //DebugLogger.WriteLine("SetFilePointer on {0} to {1} by {2}", handle, lDistanceTomove, dwMoveMethod);
-            ulong ret = 0;
+            uint ret = 0;
 
             try
             {
@@ -332,11 +332,11 @@ namespace _7thWrapperLib {
                 IntPtr _handle = new IntPtr(handle);
                 if (_varchives.TryGetValue(_handle, out va))
                 {
-                    ret = (ulong)va.SetFilePointer(offset, (Win32.EMoveMethod)dwMoveMethod);
+                    ret = (uint)va.SetFilePointer(offset, (Win32.EMoveMethod)dwMoveMethod);
                 }
                 else if (_streamFiles.TryGetValue(_handle, out vsf))
                 {
-                    ret = (ulong)_streamFiles[_handle].SetPosition(offset, (Win32.EMoveMethod)dwMoveMethod);
+                    ret = (uint)_streamFiles[_handle].SetPosition(offset, (Win32.EMoveMethod)dwMoveMethod);
                 }
                 else
                 {
@@ -352,7 +352,7 @@ namespace _7thWrapperLib {
         }
 
         //[UnmanagedCallersOnly]
-        //static unsafe int HWriteFile(void* hFile, void* lpBuffer, ulong nNumberOfBytesToWrite, ulong* lpNumberOfBytesWritten, void* lpOverlapped)
+        //static unsafe int HWriteFile(void* hFile, void* lpBuffer, uint nNumberOfBytesToWrite, uint* lpNumberOfBytesWritten, void* lpOverlapped)
         //{
         //    int result = 0;
         //    *lpNumberOfBytesWritten = 0;
@@ -364,7 +364,7 @@ namespace _7thWrapperLib {
         //        IntPtr _hFile = new IntPtr(hFile);
         //        if (_saveFiles.ContainsKey(_hFile))
         //        {
-        //            ulong offset = s_Trampolines.SetFilePointer(hFile, 0, null, (ulong)Win32.EMoveMethod.Current);
+        //            uint offset = s_Trampolines.SetFilePointer(hFile, 0, null, (uint)Win32.EMoveMethod.Current);
         //            //DebugLogger.WriteLine(String.Format("Write {0} bytes to {1} at offset {2}", lpNumberOfBytesWritten, _saveFiles[hFile], offset));
         //        }
         //    }
@@ -397,11 +397,11 @@ namespace _7thWrapperLib {
                     //DebugLogger.WriteLine("Hooked ReadFile on {0} for {1} bytes", handle.ToInt32(), numBytesToRead);
                     //if (overlapped != IntPtr.Zero) DebugLogger.WriteLine("(is overlapped)");
 
-                    ulong pos = s_Trampolines.SetFilePointer(handle, 0, null, (ulong)Win32.EMoveMethod.Current);
+                    uint pos = s_Trampolines.SetFilePointer(handle, 0, null, (uint)Win32.EMoveMethod.Current);
                     //DebugLogger.WriteLine("Hooked ReadFile on {0} for {1} bytes at {2}", handle.ToInt32(), numBytesToRead, pos);
                     lgp.VFile.Read((uint)pos, numBytesToRead, _bytes, ref *numBytesRead);
                     //DebugLogger.WriteLine("--{0} bytes read", numBytesRead);
-                    s_Trampolines.SetFilePointer(handle, (int)(pos + numBytesRead), null, (ulong)Win32.EMoveMethod.Begin);
+                    s_Trampolines.SetFilePointer(handle, (int)(pos + numBytesRead), null, (uint)Win32.EMoveMethod.Begin);
                     lgp.Ping();
                     ret = -1;
                 }
@@ -602,7 +602,7 @@ namespace _7thWrapperLib {
         }
 
         [UnmanagedCallersOnly]
-        static int HDuplicateHandle(void* hSourceProcessHandle, void* hSourceHandle, void* hTargetProcessHandle, void** lpTargetHandle, ulong dwDesiredAccess, int bInheritHandle, ulong dwOptions)
+        static int HDuplicateHandle(void* hSourceProcessHandle, void* hSourceHandle, void* hTargetProcessHandle, void** lpTargetHandle, uint dwDesiredAccess, int bInheritHandle, uint dwOptions)
         {
             // DebugLogger.DetailedWriteLine("DuplicateHandle on {0}", hSourceHandle);
 
@@ -627,11 +627,11 @@ namespace _7thWrapperLib {
         }
 
         [UnmanagedCallersOnly]
-        static ulong HGetFileSize(void* hFile, ulong* lpFileSizeHigh)
+        static uint HGetFileSize(void* hFile, uint* lpFileSizeHigh)
         {
             VArchiveData va;
 
-            ulong ret = 0;
+            uint ret = 0;
             try
             {
                 IntPtr _hFile = new IntPtr(hFile);
@@ -650,9 +650,9 @@ namespace _7thWrapperLib {
         }
 
         [UnmanagedCallersOnly]
-        static ulong HGetFileSizeEx(void* hFile, ulong* lpFileSize)
+        static uint HGetFileSizeEx(void* hFile, uint* lpFileSize)
         {
-            ulong ret = 0;
+            uint ret = 0;
             try
             {
                 VArchiveData va;
@@ -660,7 +660,7 @@ namespace _7thWrapperLib {
                 if (_varchives.TryGetValue(_hFile, out va))
                 {
                     DebugLogger.WriteLine($"GetFileSizeEx on dummy handle {_hFile}");
-                    *lpFileSize = (ulong)va.Size;
+                    *lpFileSize = (uint)va.Size;
                     ret = 1;
                 }
                 else
@@ -675,11 +675,11 @@ namespace _7thWrapperLib {
         }
 
         [UnmanagedCallersOnly]
-        static ulong HSetFilePointerEx(void* hFile, long liDistanceToMove, long* lpNewFilePointer, ulong dwMoveMethod)
+        static int HSetFilePointerEx(void* hFile, long liDistanceToMove, long* lpNewFilePointer, uint dwMoveMethod)
         {
             VArchiveData va;
 
-            ulong ret = 0;
+            int ret = 0;
             try
             {
                 IntPtr _hFile = new IntPtr(hFile);
