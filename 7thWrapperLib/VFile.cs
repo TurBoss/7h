@@ -600,7 +600,7 @@ namespace _7thWrapperLib {
             if (_position > _size) return -1;
             return (int)_position;
         }
-        public ulong SetFilePointerEx(IntPtr hFile, long liDistanceToMove, IntPtr lpNewFilePointer, uint dwMoveMethod) {
+        public int SetFilePointerEx(IntPtr hFile, long liDistanceToMove, IntPtr lpNewFilePointer, uint dwMoveMethod) {
             SetFilePointer(liDistanceToMove, (Win32.EMoveMethod)dwMoveMethod);
             if (lpNewFilePointer != IntPtr.Zero)
                 System.Runtime.InteropServices.Marshal.WriteInt64(lpNewFilePointer, _position);
@@ -610,8 +610,7 @@ namespace _7thWrapperLib {
             numBytesRead = Math.Min(numBytesToRead, (uint)(_size - _position));
             if (numBytesRead == 0) return 1;
 
-            fixed (byte* ptr = &_data[_position])
-                memcpy(bytes, new IntPtr(ptr), numBytesRead);
+            Util.CopyToIntPtr(_data, bytes, (int)numBytesRead, (int)_position);
             _position += numBytesRead;
             return 1;
         }
