@@ -24,6 +24,7 @@ namespace _7thWrapperLib {
         //private static Dictionary<IntPtr, string> _saveFiles = new Dictionary<IntPtr, string>();
         private static Dictionary<IntPtr, VArchiveData> _varchives = new Dictionary<IntPtr, VArchiveData>();
         private static RuntimeProfile _profile;
+        private static Process _process;
 
         private static void MonitorThread(object rpo)
         {
@@ -72,6 +73,7 @@ namespace _7thWrapperLib {
                 using (var fs = new FileStream(profileFile, FileMode.Open))
                 {
                     _profile = Iros._7th.Util.DeserializeBinary<RuntimeProfile>(fs);
+                    _process = currentProcess;
                 }
 
                 File.Delete(profileFile);
@@ -89,7 +91,7 @@ namespace _7thWrapperLib {
                     }
                 }
 
-                DebugLogger.WriteLine($"Wrap run... PName: {currentProcess.ProcessName} PID: {currentProcess.Id} Path: {_profile.ModPath} Capture: {String.Join(", ", _profile.MonitorPaths)}");
+                DebugLogger.WriteLine($"Wrap run... PName: {_process.ProcessName} PID: {_process.Id} Path: {_profile.ModPath} Capture: {String.Join(", ", _profile.MonitorPaths)}");
                 for (int i = _profile.MonitorPaths.Count - 1; i >= 0; i--) {
                     if (!_profile.MonitorPaths[i].EndsWith(System.IO.Path.DirectorySeparatorChar.ToString()))
                         _profile.MonitorPaths[i] += System.IO.Path.DirectorySeparatorChar;
@@ -285,7 +287,7 @@ namespace _7thWrapperLib {
 
         public static IntPtr CreateVA(OverrideFile of) {
             VArchiveData va = new VArchiveData(of.Archive.GetBytes(of.File));
-            IntPtr dummy = of.Archive.GetDummyHandle();
+            IntPtr dummy = of.Archive.GetDummyHandle(_process);
             DebugLogger.WriteLine($"Creating dummy file handle {dummy} to access {of.Archive}{of.File}");
             _varchives[dummy] = va;
 

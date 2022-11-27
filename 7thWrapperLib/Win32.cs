@@ -76,9 +76,6 @@ namespace _7thWrapperLib {
            IntPtr hSourceHandle, IntPtr hTargetProcessHandle, out IntPtr lpTargetHandle,
            uint dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, uint dwOptions);
 
-        [DllImport("kernel32.dll")]
-        internal static extern IntPtr GetCurrentProcess();
-
         [DllImport("kernel32.dll", SetLastError = true)]
         static internal extern bool GetFileInformationByHandle(
             IntPtr hFile,

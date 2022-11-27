@@ -7,6 +7,7 @@ using Iros._7th;
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -564,10 +565,10 @@ namespace _7thWrapperLib {
             }
         }
 
-        public IntPtr GetDummyHandle() {
+        public IntPtr GetDummyHandle(Process process) {
             IntPtr h;
 
-            Win32.DuplicateHandle(Win32.GetCurrentProcess(), _data.SafeFileHandle.DangerousGetHandle(), Win32.GetCurrentProcess(), out h, 0, false, 0x2);
+            Win32.DuplicateHandle(process.Handle, _data.SafeFileHandle.DangerousGetHandle(), process.Handle, out h, 0, false, 0x2);
 
             return h;
         }
