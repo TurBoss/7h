@@ -8,13 +8,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
-using Microsoft.Win32.SafeHandles;
 using System.IO;
 using System.Diagnostics;
-using static _7thWrapperLib.Win32;
-using Iros._7th;
 
 namespace _7thWrapperLib {
     public static unsafe class Wrap {
@@ -363,7 +359,7 @@ namespace _7thWrapperLib {
                 DebugLogger.DetailedWriteLine($"Skipped file {lpFileName}");
 
             if (ret == IntPtr.Zero)
-                ret = CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
+                ret = Win32.CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
 
             //DebugLogger.WriteLine("Hooked CreateFileW for {0} under {1}", lpFileName, handle.ToInt32());
 
@@ -393,13 +389,13 @@ namespace _7thWrapperLib {
         public static int HGetFileInformationByHandle(IntPtr hFile, IntPtr lpFileInformation)
         {
             VArchiveData va;
-            BY_HANDLE_FILE_INFORMATION _lpFileInformation;
+            Win32.BY_HANDLE_FILE_INFORMATION _lpFileInformation;
 
-            bool result = GetFileInformationByHandle(hFile, out _lpFileInformation);
+            bool result = Win32.GetFileInformationByHandle(hFile, out _lpFileInformation);
             if (result && _varchives.TryGetValue(hFile, out va))
             {
                 DebugLogger.DetailedWriteLine($"Overriding GetFileInformationByHandle for dummy file {hFile}");
-                BY_HANDLE_FILE_INFORMATION* ptr = (BY_HANDLE_FILE_INFORMATION*)lpFileInformation;
+                Win32.BY_HANDLE_FILE_INFORMATION* ptr = (Win32.BY_HANDLE_FILE_INFORMATION*)lpFileInformation;
 
                 *ptr = _lpFileInformation;
                 ptr->FileSizeHigh = (uint)(va.Size >> 32);
