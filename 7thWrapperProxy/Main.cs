@@ -17,13 +17,13 @@ namespace _7thWrapperProxy
             //public delegate* unmanaged<void*, void*, uint, uint*, void*, int> WriteFile;
             public delegate* unmanaged<ushort*, void*, void*> FindFirstFileW;
             public delegate* unmanaged<void*, int, int*, uint, uint> SetFilePointer;
-            public delegate* unmanaged<void*, long, long*, uint, uint> SetFilePointerEx;
+            public delegate* unmanaged<void*, long, long*, uint, int> SetFilePointerEx;
             public delegate* unmanaged<void*, int> CloseHandle;
             public delegate* unmanaged<void*, uint> GetFileType;
-            public delegate* unmanaged<void*, void*, uint> GetFileInformationByHandle;
+            public delegate* unmanaged<void*, void*, int> GetFileInformationByHandle;
             public delegate* unmanaged<void*, void*, void*, void**, uint, int, uint, int> DuplicateHandle;
             public delegate* unmanaged<void*, uint*, uint> GetFileSize;
-            public delegate* unmanaged<void*, int*, uint> GetFileSizeEx;
+            public delegate* unmanaged<void*, int*, int> GetFileSizeEx;
         }
 
         private static unsafe HostExports* _exports;
@@ -139,15 +139,15 @@ namespace _7thWrapperProxy
         }
 
         [UnmanagedCallersOnly]
-        public static uint HSetFilePointerEx(void* hFile, long liDistanceToMove, long* lpNewFilePointer, uint dwMoveMethod)
+        public static int HSetFilePointerEx(void* hFile, long liDistanceToMove, long* lpNewFilePointer, uint dwMoveMethod)
         {
-            uint ret = 0;
+            int ret = 0;
 
             try
             {
                 MethodInfo? m = null;
                 if (t != null) m = t.GetMethod("HSetFilePointerEx", BindingFlags.Static | BindingFlags.Public);
-                if (m != null) ret = (uint)(m.Invoke(null, new object[] { new IntPtr(hFile), liDistanceToMove, new IntPtr(lpNewFilePointer), dwMoveMethod }) ?? 0);
+                if (m != null) ret = (int)(m.Invoke(null, new object[] { new IntPtr(hFile), liDistanceToMove, new IntPtr(lpNewFilePointer), dwMoveMethod }) ?? 0);
             }
             catch (Exception ex)
             {
@@ -196,15 +196,15 @@ namespace _7thWrapperProxy
         }
 
         [UnmanagedCallersOnly]
-        public static uint HGetFileInformationByHandle(void* hFile, void* lpFileInformation)
+        public static int HGetFileInformationByHandle(void* hFile, void* lpFileInformation)
         {
-            uint ret = 0;
+            int ret = 0;
 
             try
             {
                 MethodInfo? m = null;
                 if (t != null) m = t.GetMethod("HGetFileInformationByHandle", BindingFlags.Static | BindingFlags.Public);
-                if (m != null) ret = (uint)(m.Invoke(null, new object[] { new IntPtr(hFile), new IntPtr(lpFileInformation) }) ?? 0);
+                if (m != null) ret = (int)(m.Invoke(null, new object[] { new IntPtr(hFile), new IntPtr(lpFileInformation) }) ?? 0);
             }
             catch (Exception ex)
             {
@@ -253,15 +253,15 @@ namespace _7thWrapperProxy
         }
 
         [UnmanagedCallersOnly]
-        public static uint HGetFileSizeEx(void* hFile, int* lpFileSize)
+        public static int HGetFileSizeEx(void* hFile, int* lpFileSize)
         {
-            uint ret = 0;
+            int ret = 0;
 
             try
             {
                 MethodInfo? m = null;
                 if (t != null) m = t.GetMethod("HGetFileSizeEx", BindingFlags.Static | BindingFlags.Public);
-                if (m != null) ret = (uint)(m.Invoke(null, new object[] { new IntPtr(hFile), new IntPtr(lpFileSize) }) ?? 0);
+                if (m != null) ret = (int)(m.Invoke(null, new object[] { new IntPtr(hFile), new IntPtr(lpFileSize) }) ?? 0);
             }
             catch (Exception ex)
             {

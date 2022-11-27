@@ -388,7 +388,7 @@ namespace _7thWrapperLib {
             return IntPtr.Zero;
         }
 
-        public static uint HGetFileInformationByHandle(IntPtr hFile, IntPtr lpFileInformation)
+        public static int HGetFileInformationByHandle(IntPtr hFile, IntPtr lpFileInformation)
         {
             VArchiveData va;
             BY_HANDLE_FILE_INFORMATION _lpFileInformation;
@@ -404,7 +404,7 @@ namespace _7thWrapperLib {
                 ptr->FileSizeLow = (uint)(va.Size & 0xffffffff);
             }
 
-            return (uint)(result ? 1 : 0);
+            return result ? 1 : 0;
         }
 
         public static int HDuplicateHandle(IntPtr hSourceProcessHandle, IntPtr hSourceHandle, IntPtr hTargetProcessHandle, IntPtr lpTargetHandle, uint dwDesiredAccess, int bInheritHandle, uint dwOptions)
@@ -433,9 +433,9 @@ namespace _7thWrapperLib {
             return ret;
         }
 
-        public static uint HGetFileSizeEx(IntPtr hFile, IntPtr lpFileSize)
+        public static int HGetFileSizeEx(IntPtr hFile, IntPtr lpFileSize)
         {
-            uint ret = 0;
+            int ret = 0;
 
             VArchiveData va;
             if (_varchives.TryGetValue(hFile, out va))
@@ -452,13 +452,13 @@ namespace _7thWrapperLib {
             return ret;
         }
 
-        public static uint HSetFilePointerEx(IntPtr hFile, long liDistanceToMove, IntPtr lpNewFilePointer, uint dwMoveMethod)
+        public static int HSetFilePointerEx(IntPtr hFile, long liDistanceToMove, IntPtr lpNewFilePointer, uint dwMoveMethod)
         {
-            uint ret = 0;
+            int ret = 0;
 
             VArchiveData va;
             if (_varchives.TryGetValue(hFile, out va))
-                ret = (uint)va.SetFilePointerEx(hFile, liDistanceToMove, lpNewFilePointer, (uint)dwMoveMethod);
+                ret = va.SetFilePointerEx(hFile, liDistanceToMove, lpNewFilePointer, (uint)dwMoveMethod);
             //else
             //    ret = s_Trampolines.SetFilePointerEx(hFile, liDistanceToMove, lpNewFilePointer, dwMoveMethod);
 
