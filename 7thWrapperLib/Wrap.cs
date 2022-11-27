@@ -195,7 +195,7 @@ namespace _7thWrapperLib {
             //VStreamFile vsf;
             long offset = lDistanceTomove;
             if (!lpDistanceToMoveHigh.Equals(IntPtr.Zero))
-                offset |= Marshal.ReadInt32(lpDistanceToMoveHigh) << 32;
+                offset |= ((long)Marshal.ReadInt32(lpDistanceToMoveHigh) << 32);
 
             if (_varchives.TryGetValue(hFile, out va))
             {
@@ -440,8 +440,7 @@ namespace _7thWrapperLib {
             {
                 DebugLogger.WriteLine($"GetFileSizeEx on dummy handle {hFile}");
 
-                long* _lpFileSize = (long*)lpFileSize.ToPointer();
-                *_lpFileSize = va.Size;
+                *(long*)lpFileSize.ToPointer() = va.Size;
                 ret = 1;
             }
             //else
