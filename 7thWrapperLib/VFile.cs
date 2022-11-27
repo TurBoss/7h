@@ -584,7 +584,7 @@ namespace _7thWrapperLib {
             _position = 0;
         }
 
-        public int SetFilePointer(long offset, Win32.EMoveMethod method) {
+        public uint SetFilePointer(long offset, Win32.EMoveMethod method) {
             switch (method) {
                 case Win32.EMoveMethod.Begin:
                     _position = offset;
@@ -596,14 +596,17 @@ namespace _7thWrapperLib {
                     _position += offset;
                     break;
             }
-            if (_position < 0) return -1;
-            if (_position > _size) return -1;
-            return (int)_position;
+            if (_position < 0) return uint.MaxValue;
+            if (_position > _size) return uint.MaxValue;
+            return (uint)_position;
         }
         public int SetFilePointerEx(IntPtr hFile, long liDistanceToMove, IntPtr lpNewFilePointer, uint dwMoveMethod) {
             SetFilePointer(liDistanceToMove, (Win32.EMoveMethod)dwMoveMethod);
             if (lpNewFilePointer != IntPtr.Zero)
-                System.Runtime.InteropServices.Marshal.WriteInt64(lpNewFilePointer, _position);
+            {
+                byte[] _data = BitConverter.GetBytes(_position);
+                Util.CopyToIntPtr(_data, lpNewFilePointer, _data.Length);
+            }
             return 1;
         }
         public unsafe int ReadFile(IntPtr bytes, uint numBytesToRead, ref uint numBytesRead) {
@@ -616,7 +619,10 @@ namespace _7thWrapperLib {
         }
         public uint GetFileSize(IntPtr lpFileSizeHigh) {
             if (lpFileSizeHigh != IntPtr.Zero)
-                System.Runtime.InteropServices.Marshal.WriteInt32(lpFileSizeHigh, (int)(_size >> 32));
+            {
+                byte[] _data = BitConverter.GetBytes((int)(_size >> 32));
+                Util.CopyToIntPtr(_data, lpFileSizeHigh, _data.Length);
+            }
             return (uint)(_size & 0xffffffff);
         }
     }
@@ -658,7 +664,10 @@ namespace _7thWrapperLib {
             DebugLogger.WriteLine("VArchive SetFilePointerEx");
             SetFilePointer(liDistanceToMove, (Win32.EMoveMethod)dwMoveMethod);
             if (lpNewFilePointer != IntPtr.Zero)
-                System.Runtime.InteropServices.Marshal.WriteInt64(lpNewFilePointer, _position);
+            {
+                byte[] _data = BitConverter.GetBytes(_position);
+                Util.CopyToIntPtr(_data, lpNewFilePointer, _data.Length);
+            }
             return true;
         }
 
@@ -673,7 +682,10 @@ namespace _7thWrapperLib {
         public uint GetFileSize(IntPtr lpFileSizeHigh) {
             DebugLogger.WriteLine($"VArchive GetFileSize on {_filename} = {_size}");
             if (lpFileSizeHigh != IntPtr.Zero)
-                System.Runtime.InteropServices.Marshal.WriteInt32(lpFileSizeHigh, (int)(_size >> 32));
+            {
+                byte[] _data = BitConverter.GetBytes((int)(_size >> 32));
+                Util.CopyToIntPtr(_data, lpFileSizeHigh, _data.Length);
+            }
             return (uint)(_size & 0xffffffff);
         }
     }

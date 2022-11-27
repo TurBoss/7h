@@ -192,14 +192,14 @@ namespace _7thWrapperLib {
             uint ret = uint.MaxValue;
 
             VArchiveData va;
-            VStreamFile vsf;
-            int offset = lDistanceTomove;
+            //VStreamFile vsf;
+            long offset = lDistanceTomove;
             if (!lpDistanceToMoveHigh.Equals(IntPtr.Zero))
                 offset |= Marshal.ReadInt32(lpDistanceToMoveHigh) << 32;
 
             if (_varchives.TryGetValue(hFile, out va))
             {
-                ret = (uint)va.SetFilePointer(offset, (Win32.EMoveMethod)dwMoveMethod);
+                ret = va.SetFilePointer(offset, (Win32.EMoveMethod)dwMoveMethod);
             }
             //else if (_streamFiles.TryGetValue(hFile, out vsf))
             //{
