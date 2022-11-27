@@ -411,15 +411,13 @@ namespace _7thWrapperLib {
         {
             // DebugLogger.DetailedWriteLine("DuplicateHandle on {0}", hSourceHandle);
 
-            int result = 0;
-
-            if (result > 0 && _varchives.ContainsKey(hSourceHandle))
+            if (_varchives.ContainsKey(hSourceHandle))
             {
                 _varchives[lpTargetHandle] = _varchives[hSourceHandle];
                 DebugLogger.DetailedWriteLine($"Duplicating dummy handle {hSourceHandle} to {lpTargetHandle}");
             }
 
-            return result;
+            return 1;
         }
 
         public static uint HGetFileSize(IntPtr hFile, IntPtr lpFileSizeHigh)
