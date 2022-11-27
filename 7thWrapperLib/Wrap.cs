@@ -18,9 +18,9 @@ using Iros._7th;
 
 namespace _7thWrapperLib {
     public static unsafe class Wrap {
-        private static Dictionary<IntPtr, LGPWrapper> _hMap = new Dictionary<IntPtr, LGPWrapper>();
-        private static Dictionary<IntPtr, string> _hNames = new Dictionary<IntPtr, string>();
-        private static Dictionary<IntPtr, VStreamFile> _streamFiles = new Dictionary<IntPtr, VStreamFile>();
+        //private static Dictionary<IntPtr, LGPWrapper> _hMap = new Dictionary<IntPtr, LGPWrapper>();
+        //private static Dictionary<IntPtr, string> _hNames = new Dictionary<IntPtr, string>();
+        //private static Dictionary<IntPtr, VStreamFile> _streamFiles = new Dictionary<IntPtr, VStreamFile>();
         //private static Dictionary<IntPtr, string> _saveFiles = new Dictionary<IntPtr, string>();
         private static Dictionary<IntPtr, VArchiveData> _varchives = new Dictionary<IntPtr, VArchiveData>();
         private static RuntimeProfile _profile;
@@ -160,8 +160,8 @@ namespace _7thWrapperLib {
                 DebugLogger.WriteLine($"Closing dummy handle {hObject}");
             }
 
-            if (_streamFiles.ContainsKey(hObject))
-                _streamFiles.Remove(hObject);
+            //if (_streamFiles.ContainsKey(hObject))
+            //    _streamFiles.Remove(hObject);
 
             //if (_saveFiles.ContainsKey(hObject))
             //    _saveFiles.Remove(hObject);
@@ -205,14 +205,14 @@ namespace _7thWrapperLib {
             {
                 ret = (uint)va.SetFilePointer(offset, (Win32.EMoveMethod)dwMoveMethod);
             }
-            else if (_streamFiles.TryGetValue(hFile, out vsf))
-            {
-                ret = (uint)_streamFiles[hFile].SetPosition(offset, (Win32.EMoveMethod)dwMoveMethod);
-            }
-            else
-            {
-                //ret = s_Trampolines.SetFilePointer(handle, lDistanceTomove, lpDistanceToMoveHigh, dwMoveMethod);
-            }
+            //else if (_streamFiles.TryGetValue(hFile, out vsf))
+            //{
+            //    ret = (uint)_streamFiles[hFile].SetPosition(offset, (Win32.EMoveMethod)dwMoveMethod);
+            //}
+            //else
+            //{
+            //    ret = s_Trampolines.SetFilePointer(handle, lDistanceTomove, lpDistanceToMoveHigh, dwMoveMethod);
+            //}
             
             return ret;
         }
@@ -247,39 +247,39 @@ namespace _7thWrapperLib {
                 return ret;
             }
 
-            VStreamFile vsf;
-            if (_streamFiles.TryGetValue(handle, out vsf))
-            {
-                ret = vsf.Read(bytes, _numBytesRead, ref _numBytesRead);
-                uint* ptrNumBytesRead = (uint*)numBytesRead.ToPointer();
-                *ptrNumBytesRead = _numBytesRead;
-                return ret;
-            }
+            //VStreamFile vsf;
+            //if (_streamFiles.TryGetValue(handle, out vsf))
+            //{
+            //    ret = vsf.Read(bytes, _numBytesRead, ref _numBytesRead);
+            //    uint* ptrNumBytesRead = (uint*)numBytesRead.ToPointer();
+            //    *ptrNumBytesRead = _numBytesRead;
+            //    return ret;
+            //}
 
             //DebugLogger.WriteLine("Hooked ReadFile on {0} for {1} bytes", handle.ToInt32(), numBytesToRead);
             //if (overlapped != IntPtr.Zero) DebugLogger.WriteLine("(is overlapped)");
 
-            LGPWrapper lgp;
-            if (_hMap.TryGetValue(handle, out lgp))
-            {
-                try
-                {
-                    int pos = SetFilePointer(handle, 0, IntPtr.Zero, EMoveMethod.Current);
-                    //DebugLogger.WriteLine("Hooked ReadFile on {0} for {1} bytes at {2}", handle.ToInt32(), numBytesToRead, pos);
-                    lgp.VFile.Read((uint)pos, numBytesToRead, bytes, ref _numBytesRead);
-                    uint* ptrNumBytesRead = (uint*)numBytesRead.ToPointer();
-                    *ptrNumBytesRead = _numBytesRead;
-                    //DebugLogger.WriteLine("--{0} bytes read", numBytesRead);
-                    SetFilePointer(handle, (int)(pos + numBytesRead), IntPtr.Zero, EMoveMethod.Begin);
-                    lgp.Ping();
-                    ret = -1;
-                }
-                catch (Exception e)
-                {
-                    DebugLogger.WriteLine("ERROR: " + e.ToString());
-                    throw;
-                }
-            }
+            //LGPWrapper lgp;
+            //if (_hMap.TryGetValue(handle, out lgp))
+            //{
+            //    try
+            //    {
+            //        int pos = SetFilePointer(handle, 0, IntPtr.Zero, EMoveMethod.Current);
+            //        //DebugLogger.WriteLine("Hooked ReadFile on {0} for {1} bytes at {2}", handle.ToInt32(), numBytesToRead, pos);
+            //        lgp.VFile.Read((uint)pos, numBytesToRead, bytes, ref _numBytesRead);
+            //        uint* ptrNumBytesRead = (uint*)numBytesRead.ToPointer();
+            //        *ptrNumBytesRead = _numBytesRead;
+            //        //DebugLogger.WriteLine("--{0} bytes read", numBytesRead);
+            //        SetFilePointer(handle, (int)(pos + numBytesRead), IntPtr.Zero, EMoveMethod.Begin);
+            //        lgp.Ping();
+            //        ret = -1;
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        DebugLogger.WriteLine("ERROR: " + e.ToString());
+            //        throw;
+            //    }
+            //}
 
             return ret;
             // return s_Trampolines.ReadFile(handle, bytes, numBytesToRead, numBytesRead, overlapped);
