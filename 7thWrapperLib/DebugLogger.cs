@@ -63,6 +63,7 @@ namespace _7thWrapperLib
                 lock (_fileLock)
                 {
                     LogFile.WriteLine(message);
+                    LogFile.Flush();
                 }
             }
             catch (Exception)
