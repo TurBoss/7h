@@ -86,7 +86,7 @@ static BOOL(WINAPI* TrueGetFileSizeEx)(HANDLE hFile, PLARGE_INTEGER lpFileSize) 
 
 DWORD currentMainThreadId = 0;
 HANDLE currentMainThread = nullptr;
-BOOL in7thHeaven = false;
+BOOL inDotNetCode = false;
 
 // FUNCTIONS -------------------------------------
 
@@ -96,11 +96,11 @@ HANDLE WINAPI _CreateFileW(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD dwSh
 
     if (exports.CreateFileW)
     {
-        if (!in7thHeaven && GetCurrentThreadId() == currentMainThreadId)
+        if (!inDotNetCode && GetCurrentThreadId() == currentMainThreadId)
         {
-            in7thHeaven = true;
+            inDotNetCode = true;
             ret = exports.CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
-            in7thHeaven = false;
+            inDotNetCode = false;
         }
     }
 
@@ -116,11 +116,9 @@ BOOL WINAPI _ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
 
     if (exports.ReadFile)
     {
-        if (!in7thHeaven && GetCurrentThreadId() == currentMainThreadId)
+        if (GetCurrentThreadId() == currentMainThreadId)
         {
-            in7thHeaven = true;
             ret = exports.ReadFile(hFile, lpBuffer, nNumberOfBytesToRead, lpNumberOfBytesRead, lpOverlapped);
-            in7thHeaven = false;
         }
     }
 
@@ -134,11 +132,9 @@ HANDLE WINAPI _FindFirstFileW(LPCWSTR lpFileName, LPWIN32_FIND_DATAW lpFindFileD
 {
     if (exports.FindFirstFileW)
     {
-        if (!in7thHeaven && GetCurrentThreadId() == currentMainThreadId)
+        if (GetCurrentThreadId() == currentMainThreadId)
         {
-            in7thHeaven = true;
             exports.FindFirstFileW(lpFileName, lpFindFileData);
-            in7thHeaven = false;
         }
     }
 
@@ -151,11 +147,9 @@ DWORD WINAPI _SetFilePointer(HANDLE hFile, LONG lDistanceToMove, PLONG lpDistanc
 
     if (exports.SetFilePointer)
     {
-        if (!in7thHeaven && GetCurrentThreadId() == currentMainThreadId)
+        if (GetCurrentThreadId() == currentMainThreadId)
         {
-            in7thHeaven = true;
             ret = exports.SetFilePointer(hFile, lDistanceToMove, lpDistanceToMoveHigh, dwMoveMethod);
-            in7thHeaven = false;
         }
     }
 
@@ -171,11 +165,9 @@ BOOL WINAPI _SetFilePointerEx(HANDLE hFile, LARGE_INTEGER liDistanceToMove, PLAR
 
     if (exports.SetFilePointer)
     {
-        if (!in7thHeaven && GetCurrentThreadId() == currentMainThreadId)
+        if (GetCurrentThreadId() == currentMainThreadId)
         {
-            in7thHeaven = true;
             ret = exports.SetFilePointerEx(hFile, liDistanceToMove, lpNewFilePointer, dwMoveMethod);
-            in7thHeaven = false;
         }
     }
 
@@ -189,11 +181,9 @@ BOOL WINAPI _CloseHandle(HANDLE hObject)
 {
     if (exports.CloseHandle)
     {
-        if (!in7thHeaven && GetCurrentThreadId() == currentMainThreadId)
+        if (GetCurrentThreadId() == currentMainThreadId)
         {
-            in7thHeaven = true;
             exports.CloseHandle(hObject);
-            in7thHeaven = false;
         }
     }
 
@@ -206,11 +196,9 @@ DWORD WINAPI _GetFileType(HANDLE hFile)
 
     if (exports.GetFileType)
     {
-        if (!in7thHeaven && GetCurrentThreadId() == currentMainThreadId)
+        if (GetCurrentThreadId() == currentMainThreadId)
         {
-            in7thHeaven = true;
             ret = exports.GetFileType(hFile);
-            in7thHeaven = false;
         }
     }
 
@@ -226,11 +214,11 @@ BOOL WINAPI _GetFileInformationByHandle(HANDLE hFile, LPBY_HANDLE_FILE_INFORMATI
 
     if (exports.GetFileInformationByHandle)
     {
-        if (!in7thHeaven && GetCurrentThreadId() == currentMainThreadId)
+        if (!inDotNetCode && GetCurrentThreadId() == currentMainThreadId)
         {
-            in7thHeaven = true;
+            inDotNetCode = true;
             ret = exports.GetFileInformationByHandle(hFile, lpFileInformation);
-            in7thHeaven = false;
+            inDotNetCode = false;
         }
     }
 
@@ -243,11 +231,9 @@ BOOL WINAPI _DuplicateHandle(HANDLE hSourceProcessHandle, HANDLE hSourceHandle, 
 
     if (exports.DuplicateHandle)
     {
-        if (!in7thHeaven && GetCurrentThreadId() == currentMainThreadId)
+        if (GetCurrentThreadId() == currentMainThreadId)
         {
-            in7thHeaven = true;
             exports.DuplicateHandle(hSourceProcessHandle, hSourceHandle, hTargetProcessHandle, lpTargetHandle, dwDesiredAccess, bInheritHandle, dwOptions);
-            in7thHeaven = false;
         }
     }
 
@@ -260,11 +246,9 @@ DWORD WINAPI _GetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh)
 
     if (exports.GetFileSize)
     {
-        if (!in7thHeaven && GetCurrentThreadId() == currentMainThreadId)
+        if (GetCurrentThreadId() == currentMainThreadId)
         {
-            in7thHeaven = true;
             ret = exports.GetFileSize(hFile, lpFileSizeHigh);
-            in7thHeaven = false;
         }
     }
 
@@ -280,11 +264,9 @@ BOOL WINAPI _GetFileSizeEx(HANDLE hFile, PLARGE_INTEGER lpFileSize)
 
     if (exports.GetFileSizeEx)
     {
-        if (!in7thHeaven && GetCurrentThreadId() == currentMainThreadId)
+        if (GetCurrentThreadId() == currentMainThreadId)
         {
-            in7thHeaven = true;
             ret = exports.GetFileSizeEx(hFile, lpFileSize);
-            in7thHeaven = false;
         }
     }
 
