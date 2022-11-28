@@ -83,10 +83,10 @@ namespace _7thWrapperLib {
         );
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        static internal extern unsafe int ReadFile(IntPtr handle, IntPtr bytes, uint numBytesToRead, ref uint numBytesRead, IntPtr overlapped);
+        static internal extern int ReadFile(IntPtr handle, IntPtr bytes, uint numBytesToRead, ref uint numBytesRead, IntPtr overlapped);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        static internal extern unsafe int ReadFile(IntPtr handle, IntPtr bytes, uint numBytesToRead, ref uint numBytesRead, ref OVERLAPPED overlapped);
+        static internal extern int ReadFile(IntPtr handle, IntPtr bytes, uint numBytesToRead, ref uint numBytesRead, ref OVERLAPPED overlapped);
 
         [DllImport("kernel32.dll")]
         static extern bool ReadFileEx(IntPtr hFile, [Out] byte[] lpBuffer,
@@ -94,7 +94,7 @@ namespace _7thWrapperLib {
            ReadFileCompletionDelegate lpCompletionRoutine);
 
         [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        static internal extern unsafe int SetFilePointer(
+        static internal extern int SetFilePointer(
             [In] IntPtr hFile,
             [In] int lDistanceToMove,
             [In] IntPtr lpDistanceToMoveHigh,

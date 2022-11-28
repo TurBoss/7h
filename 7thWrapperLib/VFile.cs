@@ -609,7 +609,7 @@ namespace _7thWrapperLib {
             }
             return 1;
         }
-        public unsafe int ReadFile(IntPtr bytes, uint numBytesToRead, ref uint numBytesRead) {
+        public int ReadFile(IntPtr bytes, uint numBytesToRead, ref uint numBytesRead) {
             numBytesRead = Math.Min(numBytesToRead, (uint)(_size - _position));
             if (numBytesRead == 0) return 1;
 
