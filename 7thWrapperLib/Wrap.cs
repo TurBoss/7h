@@ -11,9 +11,10 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.IO;
 using System.Diagnostics;
+using Iros._7th;
 
 namespace _7thWrapperLib {
-    public static unsafe class Wrap {
+    public static class Wrap {
         //private static Dictionary<IntPtr, LGPWrapper> _hMap = new Dictionary<IntPtr, LGPWrapper>();
         //private static Dictionary<IntPtr, string> _hNames = new Dictionary<IntPtr, string>();
         //private static Dictionary<IntPtr, VStreamFile> _streamFiles = new Dictionary<IntPtr, VStreamFile>();
@@ -238,8 +239,8 @@ namespace _7thWrapperLib {
             if (_varchives.TryGetValue(handle, out va))
             {
                 ret = va.ReadFile(bytes, numBytesToRead, ref _numBytesRead);
-                uint* ptrNumBytesRead = (uint*)numBytesRead.ToPointer();
-                *ptrNumBytesRead = _numBytesRead;
+                byte[] tmp = BitConverter.GetBytes(_numBytesRead);
+                Util.CopyToIntPtr(tmp, numBytesRead, tmp.Length);
                 return ret;
             }
 
@@ -395,11 +396,16 @@ namespace _7thWrapperLib {
             if (result && _varchives.TryGetValue(hFile, out va))
             {
                 DebugLogger.DetailedWriteLine($"Overriding GetFileInformationByHandle for dummy file {hFile}");
-                Win32.BY_HANDLE_FILE_INFORMATION* ptr = (Win32.BY_HANDLE_FILE_INFORMATION*)lpFileInformation;
 
-                *ptr = _lpFileInformation;
-                ptr->FileSizeHigh = (uint)(va.Size >> 32);
-                ptr->FileSizeLow = (uint)(va.Size & 0xffffffff);
+                byte[] tmp = null;
+
+                // FileSizeHigh
+                tmp = BitConverter.GetBytes((uint)(va.Size >> 32));
+                Util.CopyToIntPtr(tmp, IntPtr.Add(lpFileInformation, 32), 4);
+
+                // FileSizeLow
+                tmp = BitConverter.GetBytes((uint)(va.Size & 0xffffffff));
+                Util.CopyToIntPtr(tmp, IntPtr.Add(lpFileInformation, 36), 4);
             }
 
             return result ? 1 : 0;
@@ -440,7 +446,10 @@ namespace _7thWrapperLib {
             {
                 DebugLogger.WriteLine($"GetFileSizeEx on dummy handle {hFile}");
 
-                *(long*)lpFileSize.ToPointer() = va.Size;
+                byte[] tmp = null;
+                tmp = BitConverter.GetBytes(va.Size);
+                Util.CopyToIntPtr(tmp, lpFileSize, tmp.Length);
+
                 ret = 1;
             }
             //else
