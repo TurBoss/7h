@@ -17,7 +17,7 @@ namespace _7thWrapperProxy
             //public delegate* unmanaged<void*, void*, uint, uint*, void*, int> WriteFile;
             public delegate* unmanaged<ushort*, void*, void*> FindFirstFileW;
             public delegate* unmanaged<void*, int, int*, uint, uint> SetFilePointer;
-            public delegate* unmanaged<void*, long, long*, uint, int> SetFilePointerEx;
+            public delegate* unmanaged<void*, long, void*, uint, int> SetFilePointerEx;
             public delegate* unmanaged<void*, int> CloseHandle;
             public delegate* unmanaged<void*, uint> GetFileType;
             public delegate* unmanaged<void*, void*, int> GetFileInformationByHandle;
@@ -139,7 +139,7 @@ namespace _7thWrapperProxy
         }
 
         [UnmanagedCallersOnly]
-        public static int HSetFilePointerEx(void* hFile, long liDistanceToMove, long* lpNewFilePointer, uint dwMoveMethod)
+        public static int HSetFilePointerEx(void* hFile, long liDistanceToMove, void* lpNewFilePointer, uint dwMoveMethod)
         {
             int ret = 0;
 
