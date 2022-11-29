@@ -150,9 +150,9 @@ DWORD WINAPI _SetFilePointer(HANDLE hFile, LONG lDistanceToMove, PLONG lpDistanc
 
 BOOL WINAPI _SetFilePointerEx(HANDLE hFile, LARGE_INTEGER liDistanceToMove, PLARGE_INTEGER lpNewFilePointer, DWORD dwMoveMethod)
 {
-    DWORD ret = FALSE;
+    BOOL ret = FALSE;
 
-    if (exports.SetFilePointer)
+    if (exports.SetFilePointerEx)
     {
         if (GetCurrentThreadId() == currentMainThreadId)
         {
