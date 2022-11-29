@@ -210,7 +210,7 @@ DWORD WINAPI _GetFileType(HANDLE hFile)
 
 BOOL WINAPI _GetFileInformationByHandle(HANDLE hFile, LPBY_HANDLE_FILE_INFORMATION lpFileInformation)
 {
-    BOOL ret = TrueGetFileInformationByHandle(hFile, lpFileInformation);
+    BOOL ret = FALSE;
 
     if (exports.GetFileInformationByHandle)
     {
@@ -221,6 +221,9 @@ BOOL WINAPI _GetFileInformationByHandle(HANDLE hFile, LPBY_HANDLE_FILE_INFORMATI
             inDotNetCode = false;
         }
     }
+
+    if (ret == FALSE)
+        ret = TrueGetFileInformationByHandle(hFile, lpFileInformation);
 
     return ret;
 }

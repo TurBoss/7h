@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -57,6 +58,25 @@ namespace Iros._7th {
         public unsafe static void CopyToIntPtr(byte[] source, IntPtr dest, int size, int offset = 0)
         {
             source.AsSpan(offset, size).CopyTo(new Span<byte>(dest.ToPointer(), size));
+        }
+
+        public static byte[] StructToBytes<T>(T str)
+        {
+            int size = Marshal.SizeOf(str);
+            byte[] arr = new byte[size];
+
+            IntPtr ptr = IntPtr.Zero;
+            try
+            {
+                ptr = Marshal.AllocHGlobal(size);
+                Marshal.StructureToPtr(str, ptr, true);
+                Marshal.Copy(ptr, arr, 0, size);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(ptr);
+            }
+            return arr;
         }
     }
 

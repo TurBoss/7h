@@ -393,19 +393,19 @@ namespace _7thWrapperLib {
             Win32.BY_HANDLE_FILE_INFORMATION _lpFileInformation;
 
             bool result = Win32.GetFileInformationByHandle(hFile, out _lpFileInformation);
+
+            byte[] tmp = Util.StructToBytes(_lpFileInformation);
+            Util.CopyToIntPtr(tmp, lpFileInformation, tmp.Length);
+
             if (result && _varchives.TryGetValue(hFile, out va))
             {
                 DebugLogger.DetailedWriteLine($"Overriding GetFileInformationByHandle for dummy file {hFile}");
+                _lpFileInformation.FileSizeHigh = (uint)(va.Size >> 32);
+                _lpFileInformation.FileSizeLow = (uint)(va.Size & 0xffffffff);
 
-                byte[] tmp = null;
-
-                // FileSizeHigh
-                tmp = BitConverter.GetBytes((uint)(va.Size >> 32));
-                Util.CopyToIntPtr(tmp, IntPtr.Add(lpFileInformation, 32), 4);
-
-                // FileSizeLow
-                tmp = BitConverter.GetBytes((uint)(va.Size & 0xffffffff));
-                Util.CopyToIntPtr(tmp, IntPtr.Add(lpFileInformation, 36), 4);
+                // Update again the struct
+                tmp = Util.StructToBytes(_lpFileInformation);
+                Util.CopyToIntPtr(tmp, lpFileInformation, tmp.Length);
             }
 
             return result ? 1 : 0;
@@ -430,7 +430,10 @@ namespace _7thWrapperLib {
 
             VArchiveData va;
             if (_varchives.TryGetValue(hFile, out va))
+            {
+                DebugLogger.WriteLine($"GetFileSize on dummy handle {hFile}");
                 ret = va.GetFileSize(lpFileSizeHigh);
+            }
             //else
             //    ret = s_Trampolines.GetFileSize(hFile, lpFileSizeHigh);
 
@@ -445,9 +448,7 @@ namespace _7thWrapperLib {
             if (_varchives.TryGetValue(hFile, out va))
             {
                 DebugLogger.WriteLine($"GetFileSizeEx on dummy handle {hFile}");
-
-                byte[] tmp = null;
-                tmp = BitConverter.GetBytes(va.Size);
+                byte[] tmp = BitConverter.GetBytes(va.Size);
                 Util.CopyToIntPtr(tmp, lpFileSize, tmp.Length);
 
                 ret = 1;
