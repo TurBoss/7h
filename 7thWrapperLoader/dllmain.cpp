@@ -101,7 +101,7 @@ HANDLE WINAPI _CreateFileW(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD dwSh
 
 BOOL WINAPI _ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped)
 {
-    int ret = FALSE;
+    BOOL ret = FALSE;
 
     if (exports.ReadFile)
     {
