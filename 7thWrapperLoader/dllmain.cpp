@@ -39,47 +39,36 @@ struct host_exports
 static HRESULT(WINAPI* HostInitialize)(host_exports*) = nullptr;
 
 // CreateFileW
-static HANDLE(WINAPI* _7thCreateFileW)(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile) = nullptr;
 static HANDLE(WINAPI* TrueCreateFileW)(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile) = CreateFileW;
 
 // ReadFile
-static BOOL(WINAPI* _7thReadFile)(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped) = nullptr;
 static BOOL(WINAPI* TrueReadFile)(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped) = ReadFile;
 
 // FindFirstFileW
-static HANDLE(WINAPI* _7thFindFirstFileW)(LPCWSTR lpFileName, LPWIN32_FIND_DATAW lpFindFileData) = nullptr;
 static HANDLE(WINAPI* TrueFindFirstFileW)(LPCWSTR lpFileName, LPWIN32_FIND_DATAW lpFindFileData) = FindFirstFileW;
 
 // SetFilePointer
-static DWORD(WINAPI* _7thSetFilePointer)(HANDLE hFile, LONG lDistanceToMove, PLONG lpDistanceToMoveHigh, DWORD dwMoveMethod) = nullptr;
 static DWORD(WINAPI* TrueSetFilePointer)(HANDLE hFile, LONG lDistanceToMove, PLONG lpDistanceToMoveHigh, DWORD dwMoveMethod) = SetFilePointer;
 
 // SetFilePointerEx
-static BOOL(WINAPI* _7thSetFilePointerEx)(HANDLE hFile, LARGE_INTEGER liDistanceToMove, PLARGE_INTEGER lpNewFilePointer, DWORD dwMoveMethod) = nullptr;
 static BOOL(WINAPI* TrueSetFilePointerEx)(HANDLE hFile, LARGE_INTEGER liDistanceToMove, PLARGE_INTEGER lpNewFilePointer, DWORD dwMoveMethod) = SetFilePointerEx;
 
 // CloseHandle
-static BOOL(WINAPI* _7thCloseHandle)(HANDLE hObject) = nullptr;
 static BOOL(WINAPI* TrueCloseHandle)(HANDLE hObject) = CloseHandle;
 
 // GetFileType
-static DWORD(WINAPI* _7thGetFileType)(HANDLE hFile) = nullptr;
 static DWORD(WINAPI* TrueGetFileType)(HANDLE hFile) = GetFileType;
 
 // GetFileInformationByHandle
-static BOOL(WINAPI* _7thGetFileInformationByHandle)(HANDLE hFile, LPBY_HANDLE_FILE_INFORMATION lpFileInformation) = nullptr;
 static BOOL(WINAPI* TrueGetFileInformationByHandle)(HANDLE hFile, LPBY_HANDLE_FILE_INFORMATION lpFileInformation) = GetFileInformationByHandle;
 
 // DuplicateHandle
-static BOOL(WINAPI* _7thDuplicateHandle)(HANDLE hSourceProcessHandle, HANDLE hSourceHandle, HANDLE hTargetProcessHandle, LPHANDLE lpTargetHandle, DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwOptions) = nullptr;
 static BOOL(WINAPI* TrueDuplicateHandle)(HANDLE hSourceProcessHandle, HANDLE hSourceHandle, HANDLE hTargetProcessHandle, LPHANDLE lpTargetHandle, DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwOptions) = DuplicateHandle;
 
 // GetFileSize
-static DWORD(WINAPI* _7thGetFileSize)(HANDLE hFile, LPDWORD lpFileSizeHigh) = nullptr;
 static DWORD(WINAPI* TrueGetFileSize)(HANDLE hFile, LPDWORD lpFileSizeHigh) = GetFileSize;
 
 // GetFileSizeEx
-static BOOL(WINAPI* _7thGetFileSizeEx)(HANDLE hFile, PLARGE_INTEGER lpFileSize) = nullptr;
 static BOOL(WINAPI* TrueGetFileSizeEx)(HANDLE hFile, PLARGE_INTEGER lpFileSize) = GetFileSizeEx;
 
 // VARS ------------------------------------------
