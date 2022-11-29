@@ -10,7 +10,7 @@ namespace _7thWrapperProxy
         private static Type? t;
 
         [StructLayout(LayoutKind.Sequential)]
-        public unsafe struct HostExports
+        public struct HostExports
         {
             public delegate* unmanaged<ushort*, uint, uint, void*, uint, uint, void*, void*> CreateFileW;
             public delegate* unmanaged<void*, void*, uint, uint*, void*, int> ReadFile;
@@ -26,10 +26,10 @@ namespace _7thWrapperProxy
             public delegate* unmanaged<void*, int*, int> GetFileSizeEx;
         }
 
-        private static unsafe HostExports* _exports;
+        private static HostExports* _exports;
 
         [UnmanagedCallersOnly]
-        public unsafe static int Main(void* exports)
+        public static int Main(void* exports)
         {
             try
             {

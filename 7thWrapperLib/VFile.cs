@@ -570,9 +570,6 @@ namespace _7thWrapperLib {
     }
 
     class VArchiveData {
-        [DllImport("msvcrt.dll", EntryPoint = "memcpy", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
-        public static extern IntPtr memcpy(IntPtr dest, IntPtr src, uint count);
-
         private long _position, _size;
         private byte[] _data;
 
