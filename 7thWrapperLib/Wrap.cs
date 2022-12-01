@@ -15,7 +15,7 @@ using Iros._7th;
 
 namespace _7thWrapperLib {
     public static class Wrap {
-        private static Dictionary<IntPtr, VArchiveData> _varchives = new Dictionary<IntPtr, VArchiveData>();
+        private static Dictionary<IntPtr, VArchiveData> _varchives = new();
         private static RuntimeProfile _profile;
         private static Process _process;
 
