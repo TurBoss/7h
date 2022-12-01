@@ -176,7 +176,8 @@ namespace _7thWrapperLib {
             uint ret = uint.MaxValue;
 
             long offset = lDistanceTomove;
-            if (!lpDistanceToMoveHigh.Equals(IntPtr.Zero))
+
+            if (lpDistanceToMoveHigh != IntPtr.Zero)
                 offset |= ((long)Marshal.ReadInt32(lpDistanceToMoveHigh) << 32);
 
             if (_varchives.ContainsKey(hFile))
@@ -333,7 +334,7 @@ namespace _7thWrapperLib {
 
         public static uint HGetFileSize(IntPtr hFile, IntPtr lpFileSizeHigh)
         {
-            uint ret = 0xFFFFFFFF;
+            uint ret = uint.MaxValue;
 
             if (_varchives.ContainsKey(hFile))
             {
