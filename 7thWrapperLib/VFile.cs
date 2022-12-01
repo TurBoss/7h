@@ -569,20 +569,27 @@ namespace _7thWrapperLib {
         }
     }
 
-    class VArchiveData {
+    class VArchiveData
+    {
+        [DllImport("msvcrt.dll", EntryPoint = "memcpy", CallingConvention = CallingConvention.Cdecl, SetLastError = false)]
+        public static extern IntPtr memcpy(IntPtr dest, IntPtr src, uint count);
+
         private long _position, _size;
         private byte[] _data;
 
         public long Size { get { return _size; } }
 
-        public VArchiveData(byte[] data) {
+        public VArchiveData(byte[] data)
+        {
             _data = data;
             _size = _data.LongLength;
             _position = 0;
         }
 
-        public uint SetFilePointer(long offset, Win32.EMoveMethod method) {
-            switch (method) {
+        public uint SetFilePointer(long offset, Win32.EMoveMethod method)
+        {
+            switch (method)
+            {
                 case Win32.EMoveMethod.Begin:
                     _position = offset;
                     break;
@@ -595,31 +602,29 @@ namespace _7thWrapperLib {
             }
             if (_position < 0) return uint.MaxValue;
             if (_position > _size) return uint.MaxValue;
-            return (uint)_position;
+            return Convert.ToUInt32(_position);
         }
-        public int SetFilePointerEx(IntPtr hFile, long liDistanceToMove, IntPtr lpNewFilePointer, uint dwMoveMethod) {
+        public int SetFilePointerEx(IntPtr hFile, long liDistanceToMove, IntPtr lpNewFilePointer, uint dwMoveMethod)
+        {
             SetFilePointer(liDistanceToMove, (Win32.EMoveMethod)dwMoveMethod);
             if (lpNewFilePointer != IntPtr.Zero)
-            {
-                byte[] _data = BitConverter.GetBytes(_position);
-                Util.CopyToIntPtr(_data, lpNewFilePointer, _data.Length);
-            }
+                System.Runtime.InteropServices.Marshal.WriteInt64(lpNewFilePointer, _position);
             return 1;
         }
-        public int ReadFile(IntPtr bytes, uint numBytesToRead, ref uint numBytesRead) {
+        public unsafe int ReadFile(IntPtr bytes, uint numBytesToRead, ref uint numBytesRead)
+        {
             numBytesRead = Math.Min(numBytesToRead, (uint)(_size - _position));
             if (numBytesRead == 0) return 1;
 
-            Util.CopyToIntPtr(_data, bytes, (int)numBytesRead, (int)_position);
+            fixed (byte* ptr = &_data[_position])
+                memcpy(bytes, new IntPtr(ptr), numBytesRead);
             _position += numBytesRead;
             return 1;
         }
-        public uint GetFileSize(IntPtr lpFileSizeHigh) {
+        public uint GetFileSize(IntPtr lpFileSizeHigh)
+        {
             if (lpFileSizeHigh != IntPtr.Zero)
-            {
-                byte[] _data = BitConverter.GetBytes((int)(_size >> 32));
-                Util.CopyToIntPtr(_data, lpFileSizeHigh, _data.Length);
-            }
+                System.Runtime.InteropServices.Marshal.WriteInt32(lpFileSizeHigh, (int)(_size >> 32));
             return (uint)(_size & 0xffffffff);
         }
     }
