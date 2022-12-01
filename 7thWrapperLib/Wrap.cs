@@ -15,10 +15,6 @@ using Iros._7th;
 
 namespace _7thWrapperLib {
     public static class Wrap {
-        //private static Dictionary<IntPtr, LGPWrapper> _hMap = new Dictionary<IntPtr, LGPWrapper>();
-        //private static Dictionary<IntPtr, string> _hNames = new Dictionary<IntPtr, string>();
-        //private static Dictionary<IntPtr, VStreamFile> _streamFiles = new Dictionary<IntPtr, VStreamFile>();
-        //private static Dictionary<IntPtr, string> _saveFiles = new Dictionary<IntPtr, string>();
         private static Dictionary<IntPtr, VArchiveData> _varchives = new Dictionary<IntPtr, VArchiveData>();
         private static RuntimeProfile _profile;
         private static Process _process;
@@ -157,14 +153,6 @@ namespace _7thWrapperLib {
                 DebugLogger.WriteLine($"Closing dummy handle {hObject}");
             }
 
-            //if (_streamFiles.ContainsKey(hObject))
-            //    _streamFiles.Remove(hObject);
-
-            //if (_saveFiles.ContainsKey(hObject))
-            //    _saveFiles.Remove(hObject);
-
-            //ret = s_Trampolines.CloseHandle(hObject);
-
             return ret;
         }
 
@@ -173,15 +161,10 @@ namespace _7thWrapperLib {
             uint ret = 0;
 
             DebugLogger.DetailedWriteLine($"GetFileType on {hFile}");
-            VArchiveData va;
-            if (_varchives.TryGetValue(hFile, out va))
+            if (_varchives.ContainsKey(hFile))
             {
                 //DebugLogger.WriteLine(" ---faking dummy file");
                 ret = 1;
-            }
-            else
-            {
-                //ret = s_Trampolines.GetFileType(hFile);
             }
 
             return ret;
@@ -192,94 +175,32 @@ namespace _7thWrapperLib {
             //DebugLogger.WriteLine("SetFilePointer on {0} to {1} by {2}", handle, lDistanceTomove, dwMoveMethod);
             uint ret = uint.MaxValue;
 
-            VArchiveData va;
-            //VStreamFile vsf;
             long offset = lDistanceTomove;
             if (!lpDistanceToMoveHigh.Equals(IntPtr.Zero))
                 offset |= ((long)Marshal.ReadInt32(lpDistanceToMoveHigh) << 32);
 
-            if (_varchives.TryGetValue(hFile, out va))
+            if (_varchives.ContainsKey(hFile))
             {
-                ret = va.SetFilePointer(offset, (Win32.EMoveMethod)dwMoveMethod);
+                ret = _varchives[hFile].SetFilePointer(offset, (Win32.EMoveMethod)dwMoveMethod);
             }
-            //else if (_streamFiles.TryGetValue(hFile, out vsf))
-            //{
-            //    ret = (uint)_streamFiles[hFile].SetPosition(offset, (Win32.EMoveMethod)dwMoveMethod);
-            //}
-            //else
-            //{
-            //    ret = s_Trampolines.SetFilePointer(handle, lDistanceTomove, lpDistanceToMoveHigh, dwMoveMethod);
-            //}
             
             return ret;
         }
-
-        //public static int HWriteFile(IntPtr hFile, IntPtr lpBuffer, uint nNumberOfBytesToWrite, uint lpNumberOfBytesWritten, [In] ref System.Threading.NativeOverlapped lpOverlapped)
-        //{
-        //    int result = 0;
-
-        //    result = WriteFile(hFile, lpBuffer, nNumberOfBytesToWrite, lpNumberOfBytesWritten, ref lpOverlapped);
-        //    //DebugLogger.WriteLine(String.Format("Write {0} bytes on {1}", lpNumberOfBytesWritten, hFile.ToInt32()));
-
-        //    if (_saveFiles.ContainsKey(hFile))
-        //    {
-        //        int offset = SetFilePointer(hFile, 0, IntPtr.Zero, EMoveMethod.Current);
-        //        //DebugLogger.WriteLine(String.Format("Write {0} bytes to {1} at offset {2}", lpNumberOfBytesWritten, _saveFiles[hFile], offset));
-        //    }
-
-        //    return result;
-        //}
 
         public static int HReadFile(IntPtr handle, IntPtr bytes, uint numBytesToRead, IntPtr numBytesRead, IntPtr overlapped)
         {
             int ret = 0;
 
             uint _numBytesRead = 0;
-            VArchiveData va;
-            if (_varchives.TryGetValue(handle, out va))
+            if (_varchives.ContainsKey(handle))
             {
-                ret = va.ReadFile(bytes, numBytesToRead, ref _numBytesRead);
+                ret = _varchives[handle].ReadFile(bytes, numBytesToRead, ref _numBytesRead);
                 byte[] tmp = BitConverter.GetBytes(_numBytesRead);
                 Util.CopyToIntPtr(tmp, numBytesRead, tmp.Length);
                 return ret;
             }
 
-            //VStreamFile vsf;
-            //if (_streamFiles.TryGetValue(handle, out vsf))
-            //{
-            //    ret = vsf.Read(bytes, _numBytesRead, ref _numBytesRead);
-            //    uint* ptrNumBytesRead = (uint*)numBytesRead.ToPointer();
-            //    *ptrNumBytesRead = _numBytesRead;
-            //    return ret;
-            //}
-
-            //DebugLogger.WriteLine("Hooked ReadFile on {0} for {1} bytes", handle.ToInt32(), numBytesToRead);
-            //if (overlapped != IntPtr.Zero) DebugLogger.WriteLine("(is overlapped)");
-
-            //LGPWrapper lgp;
-            //if (_hMap.TryGetValue(handle, out lgp))
-            //{
-            //    try
-            //    {
-            //        int pos = SetFilePointer(handle, 0, IntPtr.Zero, EMoveMethod.Current);
-            //        //DebugLogger.WriteLine("Hooked ReadFile on {0} for {1} bytes at {2}", handle.ToInt32(), numBytesToRead, pos);
-            //        lgp.VFile.Read((uint)pos, numBytesToRead, bytes, ref _numBytesRead);
-            //        uint* ptrNumBytesRead = (uint*)numBytesRead.ToPointer();
-            //        *ptrNumBytesRead = _numBytesRead;
-            //        //DebugLogger.WriteLine("--{0} bytes read", numBytesRead);
-            //        SetFilePointer(handle, (int)(pos + numBytesRead), IntPtr.Zero, EMoveMethod.Begin);
-            //        lgp.Ping();
-            //        ret = -1;
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        DebugLogger.WriteLine("ERROR: " + e.ToString());
-            //        throw;
-            //    }
-            //}
-
             return ret;
-            // return s_Trampolines.ReadFile(handle, bytes, numBytesToRead, numBytesRead, overlapped);
         }
 
         public static IntPtr CreateVA(OverrideFile of) {
@@ -364,32 +285,18 @@ namespace _7thWrapperLib {
 
             //DebugLogger.WriteLine("Hooked CreateFileW for {0} under {1}", lpFileName, handle.ToInt32());
 
-            //if (isFF7GameFile && ret != null)
-            //{
-            //    IntPtr _ret = new IntPtr(ret);
-
-            //    if (System.IO.Path.GetExtension(lpFileName).Equals(".ff7", StringComparison.InvariantCultureIgnoreCase))
-            //    {
-            //        _saveFiles.Add(_ret, lpFileName);
-            //    }
-
-            //    DebugLogger.DetailedWriteLine($"CreateFileW: {lpFileName} -> {_ret}");
-            //}
-
             return ret;
         }
 
         public static IntPtr HFindFirstFileW(string lpFileName, IntPtr lpFindFileData)
         {
             DebugLogger.WriteLine("FindFirstFile for " + lpFileName);
-            //ret = s_Trampolines.FindFirstFileW(lpFileName, lpFindFileData);
 
             return IntPtr.Zero;
         }
 
         public static int HGetFileInformationByHandle(IntPtr hFile, IntPtr lpFileInformation)
         {
-            VArchiveData va;
             Win32.BY_HANDLE_FILE_INFORMATION _lpFileInformation;
 
             bool result = Win32.GetFileInformationByHandle(hFile, out _lpFileInformation);
@@ -397,11 +304,11 @@ namespace _7thWrapperLib {
             byte[] tmp = Util.StructToBytes(_lpFileInformation);
             Util.CopyToIntPtr(tmp, lpFileInformation, tmp.Length);
 
-            if (result && _varchives.TryGetValue(hFile, out va))
+            if (result && _varchives.ContainsKey(hFile))
             {
                 DebugLogger.DetailedWriteLine($"Overriding GetFileInformationByHandle for dummy file {hFile}");
-                _lpFileInformation.FileSizeHigh = (uint)(va.Size >> 32);
-                _lpFileInformation.FileSizeLow = (uint)(va.Size & 0xffffffff);
+                _lpFileInformation.FileSizeHigh = (uint)(_varchives[hFile].Size >> 32);
+                _lpFileInformation.FileSizeLow = (uint)(_varchives[hFile].Size & 0xffffffff);
 
                 // Update again the struct
                 tmp = Util.StructToBytes(_lpFileInformation);
@@ -428,14 +335,11 @@ namespace _7thWrapperLib {
         {
             uint ret = 0xFFFFFFFF;
 
-            VArchiveData va;
-            if (_varchives.TryGetValue(hFile, out va))
+            if (_varchives.ContainsKey(hFile))
             {
                 DebugLogger.WriteLine($"GetFileSize on dummy handle {hFile}");
-                ret = va.GetFileSize(lpFileSizeHigh);
+                ret = _varchives[hFile].GetFileSize(lpFileSizeHigh);
             }
-            //else
-            //    ret = s_Trampolines.GetFileSize(hFile, lpFileSizeHigh);
 
             return ret;
         }
@@ -444,17 +348,14 @@ namespace _7thWrapperLib {
         {
             int ret = 0;
 
-            VArchiveData va;
-            if (_varchives.TryGetValue(hFile, out va))
+            if (_varchives.ContainsKey(hFile))
             {
                 DebugLogger.WriteLine($"GetFileSizeEx on dummy handle {hFile}");
-                byte[] tmp = BitConverter.GetBytes(va.Size);
+                byte[] tmp = BitConverter.GetBytes(_varchives[hFile].Size);
                 Util.CopyToIntPtr(tmp, lpFileSize, tmp.Length);
 
                 ret = 1;
             }
-            //else
-            //    ret = s_Trampolines.GetFileSizeEx(hFile, lpFileSize);
 
             return ret;
         }
@@ -463,11 +364,8 @@ namespace _7thWrapperLib {
         {
             int ret = 0;
 
-            VArchiveData va;
-            if (_varchives.TryGetValue(hFile, out va))
-                ret = va.SetFilePointerEx(hFile, liDistanceToMove, lpNewFilePointer, (uint)dwMoveMethod);
-            //else
-            //    ret = s_Trampolines.SetFilePointerEx(hFile, liDistanceToMove, lpNewFilePointer, dwMoveMethod);
+            if (_varchives.ContainsKey(hFile))
+                ret = _varchives[hFile].SetFilePointerEx(hFile, liDistanceToMove, lpNewFilePointer, (uint)dwMoveMethod);
 
             return ret;
         }
