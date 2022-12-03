@@ -915,6 +915,7 @@ namespace SeventhHeaven.Classes
         {
             string dest = Path.GetDirectoryName(Sys.Settings.FF7Exe);
 
+            Directory.Delete(Path.Combine(dest, "7thWorkshop"), true);
             File.Delete(Path.Combine(dest, "7thWrapperProxy.runtimeconfig.json"));
             File.Delete(Path.Combine(dest, "7thWrapperProxy.dll"));
             File.Delete(Path.Combine(dest, "SharpCompress.dll"));
