@@ -85,7 +85,7 @@ steps:
     buildPath: $(Build.Repository.LocalPath)
 - task: PublishPipelineArtifact@1
   displayName: 'Publish $(_RELEASE_NAME) Artifact'
-  condition: and(eq(variables._IS_GITHUB_RELEASE, 'false'), succeeded())
+  condition: and(eq(variables._IS_GITHUB_RELEASE, 'false'), not(contains(variables._BUILD_BRANCH, 'refs/pull/')), succeeded())
   inputs:
     targetPath: .dist\
     artifactName: $(_RELEASE_NAME)-$(_RELEASE_VERSION)
