@@ -15,7 +15,7 @@
 #endif
 
 #ifndef MyAppTargetFramework
-  #define MyAppTargetFramework "net6.0-windows"
+  #define MyAppTargetFramework "net7.0-windows"
 #endif
 
 [Setup]
