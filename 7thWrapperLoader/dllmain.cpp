@@ -85,7 +85,7 @@ HANDLE WINAPI _CreateFileW(LPCWSTR lpFileName, DWORD dwDesiredAccess, DWORD dwSh
 
     if (exports.CreateFileW)
     {
-        if (!inDotNetCode && GetCurrentThreadId() == currentMainThreadId)
+        if (!inDotNetCode)
         {
             inDotNetCode = true;
             ret = exports.CreateFileW(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
@@ -105,10 +105,7 @@ BOOL WINAPI _ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
 
     if (exports.ReadFile)
     {
-        if (GetCurrentThreadId() == currentMainThreadId)
-        {
-            ret = exports.ReadFile(hFile, lpBuffer, nNumberOfBytesToRead, lpNumberOfBytesRead, lpOverlapped);
-        }
+        ret = exports.ReadFile(hFile, lpBuffer, nNumberOfBytesToRead, lpNumberOfBytesRead, lpOverlapped);
     }
 
     if (ret == FALSE)
@@ -121,10 +118,7 @@ HANDLE WINAPI _FindFirstFileW(LPCWSTR lpFileName, LPWIN32_FIND_DATAW lpFindFileD
 {
     if (exports.FindFirstFileW)
     {
-        if (GetCurrentThreadId() == currentMainThreadId)
-        {
-            exports.FindFirstFileW(lpFileName, lpFindFileData);
-        }
+        exports.FindFirstFileW(lpFileName, lpFindFileData);
     }
 
     return TrueFindFirstFileW(lpFileName, lpFindFileData);
@@ -136,10 +130,7 @@ DWORD WINAPI _SetFilePointer(HANDLE hFile, LONG lDistanceToMove, PLONG lpDistanc
 
     if (exports.SetFilePointer)
     {
-        if (GetCurrentThreadId() == currentMainThreadId)
-        {
-            ret = exports.SetFilePointer(hFile, lDistanceToMove, lpDistanceToMoveHigh, dwMoveMethod);
-        }
+        ret = exports.SetFilePointer(hFile, lDistanceToMove, lpDistanceToMoveHigh, dwMoveMethod);
     }
 
     if (ret == INVALID_SET_FILE_POINTER)
@@ -154,10 +145,7 @@ BOOL WINAPI _SetFilePointerEx(HANDLE hFile, LARGE_INTEGER liDistanceToMove, PLAR
 
     if (exports.SetFilePointerEx)
     {
-        if (GetCurrentThreadId() == currentMainThreadId)
-        {
-            ret = exports.SetFilePointerEx(hFile, liDistanceToMove, lpNewFilePointer, dwMoveMethod);
-        }
+        ret = exports.SetFilePointerEx(hFile, liDistanceToMove, lpNewFilePointer, dwMoveMethod);
     }
 
     if (ret == FALSE)
@@ -185,10 +173,7 @@ DWORD WINAPI _GetFileType(HANDLE hFile)
 
     if (exports.GetFileType)
     {
-        if (GetCurrentThreadId() == currentMainThreadId)
-        {
-            ret = exports.GetFileType(hFile);
-        }
+        ret = exports.GetFileType(hFile);
     }
 
     if (ret == FILE_TYPE_UNKNOWN)
@@ -203,7 +188,7 @@ BOOL WINAPI _GetFileInformationByHandle(HANDLE hFile, LPBY_HANDLE_FILE_INFORMATI
 
     if (exports.GetFileInformationByHandle)
     {
-        if (!inDotNetCode && GetCurrentThreadId() == currentMainThreadId)
+        if (!inDotNetCode)
         {
             inDotNetCode = true;
             ret = exports.GetFileInformationByHandle(hFile, lpFileInformation);
@@ -238,10 +223,7 @@ DWORD WINAPI _GetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh)
 
     if (exports.GetFileSize)
     {
-        if (GetCurrentThreadId() == currentMainThreadId)
-        {
-            ret = exports.GetFileSize(hFile, lpFileSizeHigh);
-        }
+        ret = exports.GetFileSize(hFile, lpFileSizeHigh);
     }
 
     if (ret == INVALID_FILE_SIZE)
@@ -256,10 +238,7 @@ BOOL WINAPI _GetFileSizeEx(HANDLE hFile, PLARGE_INTEGER lpFileSize)
 
     if (exports.GetFileSizeEx)
     {
-        if (GetCurrentThreadId() == currentMainThreadId)
-        {
-            ret = exports.GetFileSizeEx(hFile, lpFileSize);
-        }
+        ret = exports.GetFileSizeEx(hFile, lpFileSize);
     }
 
     if (ret == FALSE)
