@@ -1236,7 +1236,7 @@ namespace SeventhHeavenUI.ViewModels
             if (!hasCode) return true;
 
 
-            if (Sys.Settings.HasOption(GeneralOptions.WarnAboutModCode))
+            if (Sys.IsRunningAppAsAdministrator() && Sys.Settings.HasOption(GeneralOptions.WarnAboutModCode))
             {
                 // invoke the message on the Dispatcher UI Thread since this could be called from background threads
                 return App.Current.Dispatcher.Invoke(() =>

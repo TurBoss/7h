@@ -322,12 +322,6 @@ namespace SeventhHeavenUI
             return new Version(fileVersionInfo.ProductVersion);
         }
 
-        public static bool IsRunningAppAsAdministrator()
-        {
-            // reference: https://stackoverflow.com/questions/11660184/c-sharp-check-if-run-as-administrator
-            return (new WindowsPrincipal(WindowsIdentity.GetCurrent())).IsInRole(WindowsBuiltInRole.Administrator);
-        }
-
         internal static string GetAppName()
         {
             foreach (object item in System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(false))

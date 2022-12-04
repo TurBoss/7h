@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -693,6 +694,12 @@ namespace Iros._7th.Workshop
             }
 
             return false;
+        }
+
+        public static bool IsRunningAppAsAdministrator()
+        {
+            // reference: https://stackoverflow.com/questions/11660184/c-sharp-check-if-run-as-administrator
+            return (new WindowsPrincipal(WindowsIdentity.GetCurrent())).IsInRole(WindowsBuiltInRole.Administrator);
         }
     }
 }
