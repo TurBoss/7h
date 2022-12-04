@@ -1628,10 +1628,14 @@ namespace SeventhHeaven.Classes
             using (var archive = ZipArchive.Create())
             {
                 // === FF7 files ===
-                var saveFiles = Directory.GetFiles(Path.Combine(Sys.InstallPath, "save"));
-                foreach (var file in saveFiles)
+                var savePath = Path.Combine(Sys.InstallPath, "save");
+                if (Directory.Exists(savePath))
                 {
-                    archive.AddEntry(Path.Combine("save", Path.GetFileName(file)), file);
+                    var saveFiles = Directory.GetFiles(savePath);
+                    foreach (var file in saveFiles)
+                    {
+                        archive.AddEntry(Path.Combine("save", Path.GetFileName(file)), file);
+                    }
                 }
 
                 // === FFNx files ===
