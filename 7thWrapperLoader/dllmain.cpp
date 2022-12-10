@@ -5,8 +5,6 @@
 #define MAIN_TYP_NAME L"_7thWrapperProxy.Proxy"
 #define MAIN_FUN_NAME L"Main"
 
-#define FMT_USE_NONTYPE_TEMPLATE_ARGS 0
-
 // PRAGMA ----------------------------------------
 
 #pragma comment(linker, "/export:DirectInputCreateA=C:\\Windows\\System32\\dinput.DirectInputCreateA,@1")
@@ -22,14 +20,36 @@
 #include <coreclr_delegates.h>
 #include <TlHelp32.h>
 #include <StackWalker.h>
-#include <spdlog/spdlog.h>
-#include <spdlog/sinks/basic_file_sink.h>
-#include <spdlog/sinks/msvc_sink.h>
+#include <plog/Log.h>
+#include <plog/Initializers/RollingFileInitializer.h>
+#include "plog.formatter.h"
 
 #define X(n) n##_fn n;
 #include "hostfxr.x.h"
 #include "delegates.x.h"
 #undef X
+
+// UTILS
+
+// trim from start (in place)
+static inline void ltrim(std::string& s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+        return !std::isspace(ch);
+        }));
+}
+
+// trim from end (in place)
+static inline void rtrim(std::string& s) {
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+        return !std::isspace(ch);
+        }).base(), s.end());
+}
+
+// trim from both ends (in place)
+static inline void trim(std::string& s) {
+    rtrim(s);
+    ltrim(s);
+}
 
 // EXPORTS ---------------------------------------
 
@@ -291,7 +311,9 @@ protected:
     {
         if (!_muted)
         {
-            spdlog::trace(szText);
+            std::string tmp(szText);
+            trim(tmp);
+            PLOGV << tmp;
         }
     }
 private:
@@ -302,7 +324,7 @@ private:
 
 LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS* ep)
 {
-    spdlog::trace(fmt::runtime("*** Exception 0x{0:x}, address 0x{1:x} ***\n"), ep->ExceptionRecord->ExceptionCode, ep->ExceptionRecord->ExceptionAddress);
+    PLOGV << "*** Exception 0x" << std::hex << ep->ExceptionRecord->ExceptionCode << ", address 0x" << std::hex << ep->ExceptionRecord->ExceptionAddress << " ***";
     
     _7thStackWalker sw;
     sw.ShowCallstack(
@@ -310,7 +332,7 @@ LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS* ep)
         ep->ContextRecord
     );
 
-    spdlog::error("Unhandled Exception. See dumped information above.\n");
+    PLOGE << "Unhandled Exception. See dumped information above.";
 
     // let OS handle the crash
     SetUnhandledExceptionFilter(0);
@@ -368,22 +390,12 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
     if (fdwReason != DLL_PROCESS_ATTACH) return TRUE;
     if (DetourIsHelperProcess()) return TRUE;
 
-    // Setup logging layer and log unhandled exceptions
-    try
-    {
-        auto logger = spdlog::basic_logger_mt("basic_logger", "7thWrapperLoader.log", true);
-        spdlog::set_default_logger(logger);
-    }
-    catch (const spdlog::spdlog_ex& ex)
-    {
-        char log[4096]{ 0 };
-        sprintf_s(log, sizeof(log), "Log init failed: %s\n", ex.what());
-        OutputDebugStringA(log);
-    }
-    spdlog::set_level(spdlog::level::trace);
-    spdlog::flush_on(spdlog::level::trace);
-    spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e %z] %l: %v");
-    spdlog::info("7thWrapperLoader init log");
+    // Setup logging layer
+    remove("7thWrapperLoader.log");
+    plog::init<plog::_7thFormatter>(plog::verbose, "7thWrapperLoader.log");
+    PLOGI << "7thWrapperLoader init log";
+
+    // Log unhandled exceptions
     SetUnhandledExceptionFilter(ExceptionHandler);
 
     // Save current main thread if for FF7.exe

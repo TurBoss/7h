@@ -184,6 +184,7 @@
     <ClInclude Include="delegates.x.h" />
     <ClInclude Include="hostfxr.x.h" />
     <ClInclude Include="host_exports.x.h" />
+    <ClInclude Include="plog.formatter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

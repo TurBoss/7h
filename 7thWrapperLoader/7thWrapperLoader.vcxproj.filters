@@ -32,5 +32,8 @@
     <ClInclude Include="host_exports.x.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="plog.formatter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

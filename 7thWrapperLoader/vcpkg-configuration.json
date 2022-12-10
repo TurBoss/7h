@@ -5,7 +5,6 @@
       "path": ".vcpkg",
       "packages": [
         "nethost",
-        "spdlog",
         "stackwalker"
       ]
     }
