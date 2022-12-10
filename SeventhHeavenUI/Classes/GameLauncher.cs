@@ -1645,6 +1645,7 @@ namespace SeventhHeaven.Classes
                 archive.AddEntry("FFNx.toml", Sys.PathToFFNxToml);
 
                 // === 7th files ===
+                archive.AddEntry("7thWrapperLoader.log", Path.Combine(Sys.InstallPath, "7thWrapperLoader.log"));
                 archive.AddEntry("applog.txt", File.Open(Sys.PathToApplog, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
                 archive.AddEntry("profile.xml", Sys.PathToCurrentProfileFile);
                 archive.AddEntry("settings.xml", Sys.PathToSettings);
