@@ -378,6 +378,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
         sprintf_s(log, sizeof(log), "Log init failed: %s\n", ex.what());
         OutputDebugStringA(log);
     }
+    spdlog::set_level(spdlog::level::trace);
     spdlog::flush_on(spdlog::level::trace);
     spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e %z] %l: %v");
     spdlog::info("7thWrapperLoader init log");
