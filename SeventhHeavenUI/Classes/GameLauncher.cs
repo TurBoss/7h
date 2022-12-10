@@ -909,6 +909,7 @@ namespace SeventhHeaven.Classes
             File.Copy(Path.Combine(src, "SharpCompress.dll"), Path.Combine(dest, "SharpCompress.dll"), true);
             File.Copy(Path.Combine(src, "7thWrapperLib.dll"), Path.Combine(dest, "7thWrapperLib.dll"), true);
             File.Copy(Path.Combine(src, "7thWrapperLoader.dll"), Path.Combine(dest, "dinput.dll"), true);
+            File.Copy(Path.Combine(src, "7thWrapperLoader.pdb"), Path.Combine(dest, "7thWrapperLoader.pdb"), true);
         }
 
         private static void Delete7thWrapperDlls()
@@ -923,6 +924,7 @@ namespace SeventhHeaven.Classes
             File.Delete(Path.Combine(dest, "SharpCompress.dll"));
             File.Delete(Path.Combine(dest, "7thWrapperLib.dll"));
             File.Delete(Path.Combine(dest, "dinput.dll"));
+            File.Delete(Path.Combine(dest, "7thWrapperLoader.pdb"));
         }
 
         private static void StartTurboLogForVariableDump(RuntimeProfile runtimeProfiles)
