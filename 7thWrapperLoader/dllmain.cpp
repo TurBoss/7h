@@ -5,6 +5,8 @@
 #define MAIN_TYP_NAME L"_7thWrapperProxy.Proxy"
 #define MAIN_FUN_NAME L"Main"
 
+#define FMT_USE_NONTYPE_TEMPLATE_ARGS 0
+
 // PRAGMA ----------------------------------------
 
 #pragma comment(linker, "/export:DirectInputCreateA=C:\\Windows\\System32\\dinput.DirectInputCreateA,@1")
@@ -300,7 +302,7 @@ private:
 
 LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS* ep)
 {
-    spdlog::trace("*** Exception 0x%x, address 0x%x ***\n", ep->ExceptionRecord->ExceptionCode, ep->ExceptionRecord->ExceptionAddress);
+    spdlog::trace(fmt::runtime("*** Exception 0x{0:x}, address 0x{1:x} ***\n"), ep->ExceptionRecord->ExceptionCode, ep->ExceptionRecord->ExceptionAddress);
     
     _7thStackWalker sw;
     sw.ShowCallstack(
