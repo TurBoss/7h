@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TurBoLog", "TurBoLog\TurBoL
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "7thWrapperLoader", "7thWrapperLoader\7thWrapperLoader.vcxproj", "{D95622DB-5459-4369-9585-F6457AAF3FC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7thWrapperProxy", "7thWrapperProxy\7thWrapperProxy.csproj", "{F955F161-A47E-4399-9FD2-DB0D83E6461A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "7thWrapperProxy", "7thWrapperProxy\7thWrapperProxy.csproj", "{F955F161-A47E-4399-9FD2-DB0D83E6461A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,8 +91,8 @@ Global
 		{D95622DB-5459-4369-9585-F6457AAF3FC3}.Debug|x64.Build.0 = Debug|x64
 		{D95622DB-5459-4369-9585-F6457AAF3FC3}.Debug|x86.ActiveCfg = Debug|Win32
 		{D95622DB-5459-4369-9585-F6457AAF3FC3}.Debug|x86.Build.0 = Debug|Win32
-		{D95622DB-5459-4369-9585-F6457AAF3FC3}.Release|Any CPU.ActiveCfg = Release|Win32
-		{D95622DB-5459-4369-9585-F6457AAF3FC3}.Release|Any CPU.Build.0 = Release|Win32
+		{D95622DB-5459-4369-9585-F6457AAF3FC3}.Release|Any CPU.ActiveCfg = RelWithDebInfo|win32
+		{D95622DB-5459-4369-9585-F6457AAF3FC3}.Release|Any CPU.Build.0 = RelWithDebInfo|win32
 		{D95622DB-5459-4369-9585-F6457AAF3FC3}.Release|x64.ActiveCfg = Release|x64
 		{D95622DB-5459-4369-9585-F6457AAF3FC3}.Release|x64.Build.0 = Release|x64
 		{D95622DB-5459-4369-9585-F6457AAF3FC3}.Release|x86.ActiveCfg = Release|Win32
