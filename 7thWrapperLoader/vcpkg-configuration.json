@@ -4,7 +4,9 @@
       "kind": "filesystem",
       "path": ".vcpkg",
       "packages": [
-        "nethost"
+        "nethost",
+        "spdlog",
+        "stackwalker"
       ]
     }
   ]

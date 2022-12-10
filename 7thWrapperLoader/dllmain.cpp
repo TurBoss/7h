@@ -11,6 +11,7 @@
 
 // INCLUDE ---------------------------------------
 
+#include <iostream>
 #include <Windows.h>
 #include <stdio.h>
 #include <detours/detours.h>
@@ -18,6 +19,10 @@
 #include <hostfxr.h>
 #include <coreclr_delegates.h>
 #include <TlHelp32.h>
+#include <StackWalker.h>
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/sinks/msvc_sink.h>
 
 #define X(n) n##_fn n;
 #include "hostfxr.x.h"
@@ -249,6 +254,67 @@ BOOL WINAPI _GetFileSizeEx(HANDLE hFile, PLARGE_INTEGER lpFileSize)
 
 // MAIN ------------------------------------------
 
+class _7thStackWalker : public StackWalker
+{
+public:
+    _7thStackWalker(bool muted = false) : StackWalker(), _baseAddress(0), _size(0), _muted(muted) {}
+    DWORD64 getBaseAddress() const {
+        return _baseAddress;
+    }
+    DWORD getSize() const {
+        return _size;
+    }
+protected:
+    virtual void OnLoadModule(LPCSTR img, LPCSTR mod, DWORD64 baseAddr,
+        DWORD size, DWORD result, LPCSTR symType, LPCSTR pdbName,
+        ULONGLONG fileVersion
+    )
+    {
+        if (_baseAddress == 0 && _size == 0)
+        {
+            _baseAddress = baseAddr;
+            _size = size;
+        }
+        StackWalker::OnLoadModule(
+            img, mod, baseAddr, size, result, symType, pdbName, fileVersion
+        );
+    }
+
+    virtual void OnDbgHelpErr(LPCSTR szFuncName, DWORD gle, DWORD64 addr)
+    {
+        // Silence is golden.
+    }
+
+    virtual void OnOutput(LPCSTR szText)
+    {
+        if (!_muted)
+        {
+            spdlog::trace(szText);
+        }
+    }
+private:
+    DWORD64 _baseAddress;
+    DWORD _size;
+    bool _muted;
+};
+
+LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS* ep)
+{
+    spdlog::trace("*** Exception 0x%x, address 0x%x ***\n", ep->ExceptionRecord->ExceptionCode, ep->ExceptionRecord->ExceptionAddress);
+    
+    _7thStackWalker sw;
+    sw.ShowCallstack(
+        GetCurrentThread(),
+        ep->ContextRecord
+    );
+
+    spdlog::error("Unhandled Exception. See dumped information above.\n");
+
+    // let OS handle the crash
+    SetUnhandledExceptionFilter(0);
+    return EXCEPTION_CONTINUE_EXECUTION;
+}
+
 #ifndef MAKEULONGLONG
 #define MAKEULONGLONG(ldw, hdw) ((ULONGLONG(hdw) << 32) | ((ldw) & 0xFFFFFFFF))
 #endif
@@ -296,15 +362,31 @@ DWORD GetCurrentProcessMainThreadId()
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 {
-    if (DetourIsHelperProcess()) {
-        return TRUE;
+    // Move on if the current process is an helper process or the reason is not attach
+    if (fdwReason != DLL_PROCESS_ATTACH) return TRUE;
+    if (DetourIsHelperProcess()) return TRUE;
+
+    // Setup logging layer and log unhandled exceptions
+    try
+    {
+        auto logger = spdlog::basic_logger_mt("basic_logger", "7thWrapperLoader.log", true);
+        spdlog::set_default_logger(logger);
     }
+    catch (const spdlog::spdlog_ex& ex)
+    {
+        char log[4096]{ 0 };
+        sprintf_s(log, sizeof(log), "Log init failed: %s\n", ex.what());
+        OutputDebugStringA(log);
+    }
+    spdlog::flush_on(spdlog::level::trace);
+    spdlog::set_pattern("[%Y-%m-%d %H:%M:%S.%e %z] %l: %v");
+    spdlog::info("7thWrapperLoader init log");
+    SetUnhandledExceptionFilter(ExceptionHandler);
 
-    if (fdwReason != DLL_PROCESS_ATTACH)
-        return TRUE;
-
+    // Save current main thread if for FF7.exe
     currentMainThreadId = GetCurrentProcessMainThreadId();
 
+    // Begin the detouring
     static auto target = &GetCommandLineA;
     static decltype(target) detour = []()
     {
