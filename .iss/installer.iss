@@ -18,6 +18,9 @@
   #define MyAppTargetFramework "net7.0-windows"
 #endif
 
+#define public Dependency_NoExampleSetup
+#include "CodeDependencies.iss"
+
 [Setup]
 AppId={{E66AE545-C285-4B8C-8BD0-67282E160BF4}
 AppName={#MyAppName}
@@ -43,6 +46,8 @@ ArchitecturesInstallIn64BitMode=x64
 [Files]
 Source: "{#MyAppPath}\bin\{#MyAppRelease}\{#MyAppTargetFramework}\*"; DestDir: "{app}"; Flags: recursesubdirs
 Source: "{#MyAppPath}\7H.ico"; DestDir: "{app}"; DestName: "uninstall.ico"
+Source: "netcorecheck.exe"; Flags: dontcopy noencryption
+Source: "netcorecheck_x64.exe"; Flags: dontcopy noencryption
 
 [Icons]
 Name: "{group}\7th Heaven"; Filename: {app}\7th Heaven.exe;
@@ -54,3 +59,11 @@ Filename: "{app}\7th Heaven.exe"; Flags: nowait postinstall runascurrentuser ski
 
 [InstallDelete]
 Name: {app}\7thWorkshop\catalog.xml; Type: files
+
+[Code]
+function InitializeSetup: Boolean;
+begin
+  Dependency_AddDotNet70Desktop;
+
+  Result := True;
+end;
