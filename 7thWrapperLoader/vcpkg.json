@@ -5,6 +5,7 @@
   "dependencies": [
     "detours",
     "nethost",
+    "nlohmann-json",
     "plog",
     "stackwalker"
   ],
@@ -17,6 +18,11 @@
     {
       "name": "nethost",
       "version": "7.0.0",
+      "port-version": 0
+    },
+    {
+      "name": "nlohmann-json",
+      "version": "3.11.2",
       "port-version": 0
     },
     {

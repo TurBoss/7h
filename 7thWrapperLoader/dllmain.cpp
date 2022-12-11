@@ -12,6 +12,10 @@
 // INCLUDE ---------------------------------------
 
 #include <iostream>
+#include <fstream>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 #include <Windows.h>
 #include <stdio.h>
 #include <detours/detours.h>
@@ -334,6 +338,14 @@ LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS* ep)
 
     PLOGE << "Unhandled Exception. See dumped information above.";
 
+    // This exception is mostly called for this reason, hint the user
+    std::ifstream f(MAIN_ASM_NAME L".runtimeconfig.json");
+    json data = json::parse(f);
+
+    std::string version = data["runtimeOptions"]["framework"]["version"];
+    std::string msg = "Could not start the .NET Desktop Runtime version " + version + ".\nPlease make sure you have both the x86/x64 editions installed.\n\nVisit https://dotnet.microsoft.com for more information.";
+    MessageBoxA(NULL, msg.c_str(), "Error", MB_OK | MB_ICONERROR);
+
     // let OS handle the crash
     SetUnhandledExceptionFilter(0);
     return EXCEPTION_CONTINUE_EXECUTION;
@@ -427,7 +439,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 
         hostfxr_handle context = nullptr;
         hostfxr_set_error_writer([](auto message) { OutputDebugString(message); });
-        hostfxr_initialize_for_runtime_config(MAIN_ASM_NAME L".runtimeconfig.json", nullptr, &context);
+        hostfxr_initialize_for_runtime_config(MAIN_ASM_NAME L".runtimeconfig.jsona", nullptr, &context);
 
 #define X(n) hostfxr_get_runtime_delegate(context, hdt_##n, (void**)&n);
 #include "delegates.x.h"
