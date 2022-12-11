@@ -53,15 +53,15 @@ Source: "netcorecheck.exe"; Flags: dontcopy noencryption
 Source: "netcorecheck_x64.exe"; Flags: dontcopy noencryption
 
 [Icons]
-Name: "{group}\7th Heaven"; Filename: {app}\7th Heaven.exe;
-Name: "{group}\TurBoLog"; Filename: {app}\TurBoLog.exe;
+Name: "{group}\7th Heaven"; Filename: "{app}\7th Heaven.exe";
+Name: "{group}\TurBoLog"; Filename: "{app}\TurBoLog.exe";
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"; IconFilename: "{app}\uninstall.ico"
 
 [Run]
 Filename: "{app}\7th Heaven.exe"; Flags: nowait postinstall runascurrentuser skipifsilent; Description: "Launch {#MyAppName}"
 
 [InstallDelete]
-Name: {app}\7thWorkshop\catalog.xml; Type: files
+Name: "{app}\7thWorkshop\catalog.xml"; Type: files
 
 [Code]
 function InitializeSetup: Boolean;
