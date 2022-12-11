@@ -439,7 +439,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 
         hostfxr_handle context = nullptr;
         hostfxr_set_error_writer([](auto message) { OutputDebugString(message); });
-        hostfxr_initialize_for_runtime_config(MAIN_ASM_NAME L".runtimeconfig.jsona", nullptr, &context);
+        hostfxr_initialize_for_runtime_config(MAIN_ASM_NAME L".runtimeconfig.json", nullptr, &context);
 
 #define X(n) hostfxr_get_runtime_delegate(context, hdt_##n, (void**)&n);
 #include "delegates.x.h"
