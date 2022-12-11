@@ -20,11 +20,23 @@ This is a fork of the original [7th Heaven 2.x](https://github.com/unab0mb/7h) r
 
 ## Install
 
-1. Download the latest release using one of the links above
-2. Extract the .zip file to your preferred location e.g. C:\7th Heaven.
-3. Run `7th Heaven.exe`
+> **HINT:** For an easier experience you can also use the setup .exe file in the release which will take care of doing the following steps for you.
+
+0. Download and install the latest [.NET Desktop Runtime 7.0](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) for BOTH x86 and x64
+1. Download and install the latest [Microsoft Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-studio-2015-2017-2019-and-2022) for BOTH x86 and x64
+2. Download the latest release using one of the links above
+3. Extract the .zip file to your preferred location e.g. C:\7th Heaven.
+4. Run `7th Heaven.exe`
 
 ## Build
+
+### Preparation
+
+0. Clone the [vcpkg](https://vcpkg.io) project in the root folder of your `C:` drive ( `git clone https://github.com/Microsoft/vcpkg.git` )
+1. Go inside the `C:\vcpkg` folder and double click `bootstrap-vcpkg.bat`
+2. Open a `cmd` window in `C:\vcpkg` and run the following command: `vcpkg integrate install`
+
+### Visual Studio
 
 0. Download the the latest [Visual Studio Community](https://visualstudio.microsoft.com/vs/community/) installer
 1. Run the installer and import this [.vsconfig](.vsconfig) file in the installer to pick the required components to build this project
@@ -32,7 +44,7 @@ This is a fork of the original [7th Heaven 2.x](https://github.com/unab0mb/7h) r
 
 ## Special thanks
 
-The .NET 6 migration would not have been possibile without the help of these people. The order is purely Alphabetical.
+The .NET 7 migration would not have been possibile without the help of these people. The order is purely Alphabetical.
 
 These people are:
 
