@@ -43,6 +43,9 @@ UninstallDisplayIcon="{app}\uninstall.ico"
 UninstallDisplayName={#MyAppName}
 ArchitecturesInstallIn64BitMode=x64
 
+[Dirs]
+Name: "{app}\7thWorkshop"; Permissions: users-modify
+
 [Files]
 Source: "{#MyAppPath}\bin\{#MyAppRelease}\{#MyAppTargetFramework}\*"; DestDir: "{app}"; Flags: recursesubdirs
 Source: "{#MyAppPath}\7H.ico"; DestDir: "{app}"; DestName: "uninstall.ico"
