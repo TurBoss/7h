@@ -63,6 +63,9 @@ Filename: "{app}\7th Heaven.exe"; Flags: nowait postinstall runascurrentuser ski
 [InstallDelete]
 Name: "{app}\7thWorkshop\catalog.xml"; Type: files
 
+[UninstallDelete]
+Name: "{app}\7thWorkshop"; Type: filesandordirs
+
 [Code]
 function InitializeSetup: Boolean;
 begin
