@@ -64,11 +64,11 @@ Name: {app}\7thWorkshop\catalog.xml; Type: files
 function InitializeSetup: Boolean;
 begin
   Dependency_ForceX86 := True;
-  Dependency_AddVC2015To2022
+  Dependency_AddVC2015To2022;
   Dependency_AddDotNet70Desktop;
 
   Dependency_ForceX86 := False;
-  Dependency_AddVC2015To2022
+  Dependency_AddVC2015To2022;
   Dependency_AddDotNet70Desktop;
 
   Result := True;
