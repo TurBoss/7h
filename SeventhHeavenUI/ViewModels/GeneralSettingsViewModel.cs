@@ -581,6 +581,8 @@ namespace SeventhHeaven.ViewModels
         /// </summary>
         private void ApplyOptions()
         {
+            RegistryHelper.BeginTransaction();
+
             // ensure direct and music folder exist since they are defaults and can not be removed
             foreach (string folder in Settings.UseDefaultSettings().ExtraFolders)
             {
@@ -614,6 +616,8 @@ namespace SeventhHeaven.ViewModels
             {
                 RemoveFileExplorerContextMenuAssociationWith7H();
             }
+
+            RegistryHelper.CommitTransaction();
 
             // ensure only applying option if it has changed
             if (Sys.Settings.HasOption(GeneralOptions.AutoUpdateMods) && Sys.Library.DefaultUpdate == UpdateType.Notify)

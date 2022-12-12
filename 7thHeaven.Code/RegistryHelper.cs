@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 
 namespace _7thHeaven.Code
@@ -18,6 +19,11 @@ namespace _7thHeaven.Code
 
     public static class RegistryHelper
     {
+
+        private static bool isAtomicTransaction = false;
+
+        private static List<string> transaction = new();
+
         public const string SteamKeyPath64Bit = @"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 39140";
 
         public const string SteamKeyPath32Bit = @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 39140";
@@ -386,30 +392,78 @@ namespace _7thHeaven.Code
                 bitness = "64";
             }
 
-            Process proc = new Process();
+            if (isAtomicTransaction)
+            {
+                transaction.Add($"@reg.exe {args} /reg:{bitness}");
+                return true;
+            }
+            else
+            {
+                Process proc = new Process();
+
+                try
+                {
+                    ProcessStartInfo startInfo = new ProcessStartInfo("reg.exe")
+                    {
+                        Arguments = $"{args} /reg:{bitness}",
+                        Verb = "runas",
+                        CreateNoWindow = true,
+                        UseShellExecute = true
+                    };
+                    proc = Process.Start(startInfo);
+
+                    if (proc != null) proc.WaitForExit();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                finally
+                {
+                    if (proc != null) proc.Dispose();
+                }
+            }
+        }
+
+        public static void BeginTransaction()
+        {
+            isAtomicTransaction = true;
+        }
+
+        public static void CommitTransaction()
+        {
+            string fileName = Path.Combine(Sys.PathToTempFolder, "settings_update.bat");
+
+            System.IO.File.WriteAllText(
+                fileName,
+                $"@echo off\n" + String.Join("\n", transaction)
+            );
 
             try
             {
-                ProcessStartInfo startInfo = new ProcessStartInfo("reg.exe")
+                // Execute temp batch script with admin privileges
+                ProcessStartInfo startInfo = new ProcessStartInfo(fileName)
                 {
-                    Arguments = $"{args} /reg:{bitness}",
                     Verb = "runas",
                     CreateNoWindow = true,
                     UseShellExecute = true
                 };
-                proc = Process.Start(startInfo);
 
-                if (proc != null) proc.WaitForExit();
-                return true;
+                // Launch process, wait and then save exit code
+                using (Process temp = Process.Start(startInfo))
+                {
+                    temp.WaitForExit();
+                }
+
+                transaction.Clear();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return false;
+                Sys.Message(new WMessage() { Text = $"Error while trying to update 7thHeaven settings", LoggedException = e });
             }
-            finally
-            {
-                if (proc != null) proc.Dispose();
-            }
+
+            isAtomicTransaction = false;
         }
     }
 }
