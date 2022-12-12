@@ -233,6 +233,7 @@ namespace _7thHeaven.Code
                 case RegistryValueKind.String:
                 case RegistryValueKind.Unknown:
                     regType = "REG_SZ";
+                    value = $"\"{value.ToString().Replace("\"","\"\"")}\"";
                     break;
             }
 
@@ -249,7 +250,7 @@ namespace _7thHeaven.Code
             if (valueName == String.Empty)
                 valueName = "/ve";
             else
-                valueName = $"/v {valueName}";
+                valueName = $"/v \"{valueName}\"";
 
             return ExecReg($"add \"{key}\" {valueName} /d {value} /t {regType} /f"); ;
         }
