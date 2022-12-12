@@ -135,6 +135,10 @@ namespace _7thHeaven.Code
             {
                 return RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, view);
             }
+            else if (fullRegPath.StartsWith("HKEY_CLASSES_ROOT"))
+            {
+                return RegistryKey.OpenBaseKey(RegistryHive.ClassesRoot, view);
+            }
 
             return null;
         }
@@ -146,6 +150,24 @@ namespace _7thHeaven.Code
         private static string RemoveBaseKeyFromPath(string fullRegKeyPath)
         {
             return fullRegKeyPath.Replace(@"HKEY_LOCAL_MACHINE\", "").Replace(@"HKEY_CURRENT_USER\", "");
+        }
+
+        private static string ReplaceBaseKeyFromPath(string fullRegKeyPath)
+        {
+            if (fullRegKeyPath.StartsWith("HKEY_LOCAL_MACHINE"))
+            {
+                return fullRegKeyPath.Replace("HKEY_LOCAL_MACHINE", "HKLM");
+            }
+            else if (fullRegKeyPath.StartsWith("HKEY_CURRENT_USER"))
+            {
+                return fullRegKeyPath.Replace("HKEY_CURRENT_USER", "HKCU");
+            }
+            else if (fullRegKeyPath.StartsWith("HKEY_CLASSES_ROOT"))
+            {
+                return fullRegKeyPath.Replace("HKEY_CLASSES_ROOT", "HKCR");
+            }
+
+            return String.Empty;
         }
 
         public static object GetValue(FF7RegKey key, string valueName, object defaultVal = null)
@@ -218,7 +240,12 @@ namespace _7thHeaven.Code
             // remove from key path if exists since not needed to open a Subkey
             string fullRegPath = RemoveBaseKeyFromPath(key);
 
-            return ExecReg($"add \"{key}\" /v {valueName} /d {value} /t {regType} /f"); ;
+            if (valueName == String.Empty)
+                valueName = "/ve";
+            else
+                valueName = $"/v {valueName}";
+
+            return ExecReg($"add \"{key}\" {valueName} /d {value} /t {regType} /f"); ;
         }
 
         /// <summary>
@@ -247,8 +274,7 @@ namespace _7thHeaven.Code
 
             try
             {
-                string fullRegPath = RemoveBaseKeyFromPath(keyPath);
-                return ExecReg($"delete \"{keyPath}\" /va /f");
+                return ExecReg($"delete \"{ReplaceBaseKeyFromPath(keyPath)}\" /f");
             }
             catch (Exception)
             {

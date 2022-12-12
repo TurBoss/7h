@@ -748,282 +748,30 @@ namespace SeventhHeaven.ViewModels
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        private static bool AssociateIroFilesWith7H(RegistryKey key)
-        {
-            string app = System.Reflection.Assembly.GetExecutingAssembly().Location;
-
-            //Create Prog_ID in Registry so we can associate file types
-            var progid = key.CreateSubKey("7thHeaven");
-            if (progid == null) return false;
-
-            var icon = progid.CreateSubKey("DefaultIcon");
-            var shell = progid.CreateSubKey("shell");
-            var open = shell.CreateSubKey("open");
-            var command = open.CreateSubKey("command");
-            progid.SetValue(String.Empty, "7th Heaven Mod File");
-            icon.SetValue(String.Empty, "\"" + app + "\"");
-            command.SetValue(String.Empty, "\"" + app + "\" /OPENIRO:\"%1\"");
-
-            //Associate .iro mod files with 7H's Prog_ID- .IRO extension
-            var iroext = key.CreateSubKey(".iro");
-            if (iroext == null) return false;
-
-            iroext.SetValue(String.Empty, "7thHeaven");
-
-            // create registry keys to assocaite .irop files
-            var iropExt = key.CreateSubKey(".irop");
-
-            if (iropExt != null)
-            {
-                icon = iropExt.CreateSubKey("DefaultIcon");
-                shell = iropExt.CreateSubKey("shell");
-                open = shell.CreateSubKey("open");
-                command = open.CreateSubKey("command");
-
-                iropExt.SetValue(String.Empty, "7th Heaven Mod Patch");
-                icon.SetValue(String.Empty, "\"" + app + "\"");
-                command.SetValue(String.Empty, "\"" + app + "\" /OPENIROP:\"%1\"");
-            }
-
-            //Refresh Shell/Explorer so icon cache updates
-            //do this now because we don't care so much about assoc. URL if it fails
-            SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
-
-            return true;
-        }
-
-        /// <summary>
-        /// Deletes Registry keys/values (if they exist) to unassociate .iro mod files with 7H
-        /// </summary>
-        /// <param name="key"> could be HKEY_CLASSES_ROOT or HKEY_CURRENT_USER/Software/Classes </param>
-        private static bool RemoveIroFileAssociationFromRegistry(RegistryKey key)
+        private static bool AssociateIroFilesWith7H()
         {
             try
             {
-                List<string> subkeys = key.GetSubKeyNames().Where(k => k == "7thHeaven" || k == ".iro" || k == ".irop").ToList();
-                bool deletedKeys = false;
+                string app = System.Reflection.Assembly.GetExecutingAssembly().Location;
 
-                if (subkeys.Contains("7thHeaven"))
-                {
-                    var progKey = key.OpenSubKey("7thHeaven", true);
-                    string[] subKeys = progKey.GetSubKeyNames();
+                //Create Prog_ID in Registry so we can associate file types
+                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\7thHeaven", "", $"7th Heaven Mod File");
+                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\7thHeaven\\DefaultIcon", "", $"\"{app}\"");
+                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\7thHeaven\\shell\\Unpack IRO\\command", "", $"\"{app}\" /OPENIRO:\"%1\"");
 
-                    if (subKeys.Any(k => k == "shell"))
-                    {
-                        var shell = progKey.OpenSubKey("shell", true);
-                        if (shell.GetSubKeyNames().Any(k => k == "open"))
-                        {
-                            shell.DeleteSubKeyTree("open");
-                            deletedKeys = true;
-                        }
-                    }
+                //Associate .iro mod files with 7H's Prog_ID- .IRO extension
+                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\.iro", "", $"7thHeaven Mod");
 
-                    if (subKeys.Any(k => k == ".iro"))
-                    {
-                        progKey.DeleteSubKeyTree(".iro");
-                        deletedKeys = true;
-                    }
+                // create registry keys to assocaite .irop files
+                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\.irop", "", $"7th Heaven Mod Patch");
+                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\.irop\\DefaultIcon", "", $"\"{app}\"");
+                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\.irop\\shell\\open\\command", "", $"\"{app}\" /OPENIROP:\"%1\"");
 
-                    if (subKeys.Any(k => k == "DefaultIcon"))
-                    {
-                        progKey.DeleteSubKeyTree("DefaultIcon");
-                        deletedKeys = true;
-                    }
-                }
-
-                if (subkeys.Contains(".iro"))
-                {
-                    key.DeleteSubKeyTree(".iro");
-                    deletedKeys = true;
-                }
-
-
-                if (subkeys.Contains(".irop"))
-                {
-                    key.DeleteSubKeyTree(".irop");
-                    deletedKeys = true;
-                }
-
-                if (deletedKeys)
-                {
-                    //Refresh Shell/Explorer so icon cache updates
-                    //do this now because we don't care so much about assoc. URL if it fails
-                    SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
-                }
+                //Refresh Shell/Explorer so icon cache updates
+                //do this now because we don't care so much about assoc. URL if it fails
+                SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
 
                 return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Warn(e); // could be error thrown if already deleted
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Update Registry to asssociate iros:// URL with 7H
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        private static bool AssociateIrosUrlWith7H(RegistryKey key)
-        {
-            string app = System.Reflection.Assembly.GetExecutingAssembly().Location;
-
-            var iros = key.CreateSubKey("iros");
-            if (iros == null) return false;
-
-            iros.SetValue(String.Empty, "7H Catalog Subscription");
-            iros.SetValue("URL Protocol", String.Empty);
-
-
-            var icon = iros.CreateSubKey("DefaultIcon");
-            icon.SetValue(String.Empty, "\"" + app + "\"");
-
-            var shell = iros.CreateSubKey("shell");
-            var open = shell.CreateSubKey("open");
-            var command = open.CreateSubKey("command");
-            command.SetValue(String.Empty, "\"" + app + "\" \"%1\"");
-
-            //Refresh Shell/Explorer so icon cache updates
-            //do this now because we don't care so much about assoc. URL if it fails
-            SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
-
-            return true;
-        }
-
-        /// <summary>
-        /// Deletes Registry key/values (if they exist) to unasssociate iros:// URL with 7H
-        /// </summary>
-        /// <param name="key"> could be HKEY_CLASSES_ROOT or HKEY_CURRENT_USER/Software/Classes </param>
-        /// <returns></returns>
-        private static bool RemoveIrosUrlAssociationFromRegistry(RegistryKey key)
-        {
-            try
-            {
-                List<string> subkeys = key.GetSubKeyNames().Where(k => k == "iros").ToList();
-
-                if (subkeys.Contains("iros"))
-                {
-                    key.DeleteSubKeyTree("iros");
-
-                    //Refresh Shell/Explorer so icon cache updates
-                    //do this now because we don't care so much about assoc. URL if it fails
-                    SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
-                }
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Warn(e); // could be error thrown if already deleted
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Update Registry to add 7th Heaven Context menu options to Windows File Explorer
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        private static bool AssociateFileExplorerContextMenuWith7H(RegistryKey key)
-        {
-            string app = System.Reflection.Assembly.GetExecutingAssembly().Location;
-
-            // create registry keys for 'Pack IRO' for folders
-            var dir = key.CreateSubKey("Directory");
-            if (dir == null) return false;
-
-            var shell = dir.CreateSubKey("shell");
-            var name = shell.CreateSubKey("Pack into IRO");
-            var command = name.CreateSubKey("command");
-
-            command.SetValue(String.Empty, "\"" + app + "\" \"/PACKIRO:%1\"");
-            name.SetValue("Icon", "\"" + app + "\"");
-
-            // create registry keys for 'Unpack IRO' for files
-            var progid = key.CreateSubKey("7thHeaven");
-            if (progid == null) return false;
-
-            var iroShell = progid.CreateSubKey("shell");
-            var unpackCmdName = iroShell.CreateSubKey("Unpack IRO");
-            var unpackCommand = unpackCmdName.CreateSubKey("command");
-
-            unpackCommand.SetValue(String.Empty, "\"" + app + "\" \"/UNPACKIRO:%1\"");
-            unpackCmdName.SetValue("Icon", "\"" + app + "\"");
-
-            SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
-
-            return true;
-        }
-
-        /// <summary>
-        /// Deletes Registry key/values (if they exist) to unasssociate 7th heaven context menu options from Windows File Explorer
-        /// </summary>
-        /// <param name="key"> could be HKEY_CLASSES_ROOT or HKEY_CURRENT_USER/Software/Classes </param>
-        /// <returns></returns>
-        private static bool RemoveContextMenuAssociationFromRegistry(RegistryKey key)
-        {
-            try
-            {
-                List<string> subkeys = key.GetSubKeyNames().Where(k => k == "Directory" || k == "7thHeaven").ToList();
-
-                if (subkeys.Contains("Directory"))
-                {
-                    var dirKey = key.OpenSubKey("Directory", true);
-
-                    if (dirKey.GetSubKeyNames().Any(k => k == "shell"))
-                    {
-                        var shell = dirKey.OpenSubKey("shell", true);
-                        if (shell.GetSubKeyNames().Any(k => k == "Pack into IRO"))
-                        {
-                            shell.DeleteSubKeyTree("Pack into IRO");
-                        }
-                    }
-
-                    //Refresh Shell/Explorer so icon cache updates
-                    SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
-                }
-
-                if (subkeys.Contains("7thHeaven"))
-                {
-                    var dirKey = key.OpenSubKey("7thHeaven", true);
-
-                    if (dirKey.GetSubKeyNames().Any(k => k == "shell"))
-                    {
-                        var shell = dirKey.OpenSubKey("shell", true);
-                        if (shell.GetSubKeyNames().Any(k => k == "Unpack IRO"))
-                        {
-                            shell.DeleteSubKeyTree("Unpack IRO");
-                        }
-                    }
-
-                    //Refresh Shell/Explorer so icon cache updates
-                    SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
-                }
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Warn(e); // could be error thrown if already deleted
-                return false;
-            }
-        }
-
-
-        internal static bool AssociateIroFilesWith7H()
-        {
-            try
-            {
-                RegistryKey key = Registry.ClassesRoot;
-                bool global = AssociateIroFilesWith7H(key);
-                if (!global)
-                {
-                    key = Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Classes");
-                    global = AssociateIroFilesWith7H(key);
-                }
-
-                return global;
             }
             catch (Exception e)
             {
@@ -1031,23 +779,27 @@ namespace SeventhHeaven.ViewModels
                 Sys.Message(new WMessage(ResourceHelper.Get(StringKey.FailedToRegisterIroModFilesWith7thHeaven)));
                 return false;
             }
-
-
         }
 
-        internal static bool RemoveIroFileAssociationFromRegistry()
+        /// <summary>
+        /// Deletes Registry keys/values (if they exist) to unassociate .iro mod files with 7H
+        /// </summary>
+        /// <param name="key"> could be HKEY_CLASSES_ROOT or HKEY_CURRENT_USER/Software/Classes </param>
+        private static bool RemoveIroFileAssociationFromRegistry()
         {
             try
             {
-                RegistryKey key = Registry.ClassesRoot;
-                bool global = RemoveIroFileAssociationFromRegistry(key);
-                if (!global)
-                {
-                    key = Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Classes");
-                    global = RemoveIroFileAssociationFromRegistry(key);
-                }
+                RegistryHelper.DeleteKey("HKEY_CLASSES_ROOT\\7thHeaven\\shell\\Unpack IRO\\command");
+                RegistryHelper.DeleteKey("HKEY_CLASSES_ROOT\\7thHeaven\\DefaultIcon");
 
-                return global;
+                RegistryHelper.DeleteKey("HKEY_CLASSES_ROOT\\.iro");
+                RegistryHelper.DeleteKey("HKEY_CLASSES_ROOT\\.irop");
+
+                //Refresh Shell/Explorer so icon cache updates
+                //do this now because we don't care so much about assoc. URL if it fails
+                SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
+
+                return true;
             }
             catch (Exception e)
             {
@@ -1057,19 +809,52 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-        internal static bool RemoveIrosUrlAssociationFromRegistry()
+        /// <summary>
+        /// Update Registry to asssociate iros:// URL with 7H
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private static bool AssociateIrosUrlWith7H()
         {
             try
             {
-                RegistryKey key = Registry.ClassesRoot;
-                bool global = RemoveIrosUrlAssociationFromRegistry(key);
-                if (!global)
-                {
-                    key = Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Classes");
-                    global = RemoveIrosUrlAssociationFromRegistry(key);
-                }
+                string app = System.Reflection.Assembly.GetExecutingAssembly().Location;
 
-                return global;
+                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\iros", "", $"7H Catalog Subscription");
+                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\iros", "URL Protocol", $"");
+                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\iros\\DefaultIcon", "", $"\"{app}\"");
+                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\iros\\shell\\open\\command", "", $"\"{app}\" \"%1\"");
+
+                //Refresh Shell/Explorer so icon cache updates
+                //do this now because we don't care so much about assoc. URL if it fails
+                SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                Sys.Message(new WMessage(ResourceHelper.Get(StringKey.FailedToRegisterIrosLinksWith7thHeaven)));
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Deletes Registry key/values (if they exist) to unasssociate iros:// URL with 7H
+        /// </summary>
+        /// <param name="key"> could be HKEY_CLASSES_ROOT or HKEY_CURRENT_USER/Software/Classes </param>
+        /// <returns></returns>
+        private static bool RemoveIrosUrlAssociationFromRegistry()
+        {
+            try
+            {
+                RegistryHelper.DeleteKey("HKEY_CLASSES_ROOT\\iros");
+
+                //Refresh Shell/Explorer so icon cache updates
+                //do this now because we don't care so much about assoc. URL if it fails
+                SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
+
+                return true;
             }
             catch (Exception e)
             {
@@ -1079,63 +864,57 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-        internal static bool AssociateFileExplorerContextMenuWith7H()
+        /// <summary>
+        /// Update Registry to add 7th Heaven Context menu options to Windows File Explorer
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private static bool AssociateFileExplorerContextMenuWith7H()
         {
             try
             {
-                RegistryKey key = Registry.ClassesRoot;
-                bool global = AssociateFileExplorerContextMenuWith7H(key);
-                if (!global)
-                {
-                    key = Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Classes");
-                    global = AssociateFileExplorerContextMenuWith7H(key);
-                }
-                return global;
+                string app = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
+                // create registry keys for 'Pack IRO' for folders
+                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\Directory\\shell\\Pack into IRO", "Icon", $"\"{app}\"");
+                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\Directory\\shell\\Pack into IRO\\command", "", $"\"{app}\" /PACKIRO:\"%1\"");
+
+                // create registry keys for 'Unpack IRO' for files
+                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\7thHeaven\\shell\\Unpack IRO", "Icon", $"\"{app}\"");
+                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\7thHeaven\\shell\\Unpack IRO\\command", "", $"\"{app}\" /UNPACKIRO:\"%1\"");
+
+                SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
+
+                return true;
             }
             catch (Exception e)
             {
+                Logger.Error(e);
                 Sys.Message(new WMessage(ResourceHelper.Get(StringKey.FailedToCreate7thHeavenContextMenuEntries), WMessageLogLevel.Error, e));
                 return false;
             }
         }
 
-        internal static bool RemoveFileExplorerContextMenuAssociationWith7H()
+        /// <summary>
+        /// Deletes Registry key/values (if they exist) to unasssociate 7th heaven context menu options from Windows File Explorer
+        /// </summary>
+        /// <param name="key"> could be HKEY_CLASSES_ROOT or HKEY_CURRENT_USER/Software/Classes </param>
+        /// <returns></returns>
+        private static bool RemoveFileExplorerContextMenuAssociationWith7H()
         {
             try
             {
-                RegistryKey key = Registry.ClassesRoot;
-                bool global = RemoveContextMenuAssociationFromRegistry(key);
-                if (!global)
-                {
-                    key = Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Classes");
-                    global = RemoveContextMenuAssociationFromRegistry(key);
-                }
-                return global;
-            }
-            catch (Exception e)
-            {
-                Sys.Message(new WMessage(ResourceHelper.Get(StringKey.FailedToRemove7thHeavenContextMenuEntries), WMessageLogLevel.Error, e));
-                return false;
-            }
-        }
+                RegistryHelper.DeleteKey("HKEY_CLASSES_ROOT\\Directory\\shell\\Pack into IRO");
+                RegistryHelper.DeleteKey("HKEY_CLASSES_ROOT\\7thHeaven\\shell\\Unpack IRO");
 
-        internal static bool AssociateIrosUrlWith7H()
-        {
-            try
-            {
-                RegistryKey key = Registry.ClassesRoot;
-                bool global = AssociateIrosUrlWith7H(key);
-                if (!global)
-                {
-                    key = Registry.CurrentUser.OpenSubKey("Software").OpenSubKey("Classes");
-                    global = AssociateIrosUrlWith7H(key);
-                }
-                return global;
+                SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
+
+                return true;
             }
             catch (Exception e)
             {
                 Logger.Error(e);
-                Sys.Message(new WMessage(ResourceHelper.Get(StringKey.FailedToRegisterIrosLinksWith7thHeaven)));
+                Sys.Message(new WMessage(ResourceHelper.Get(StringKey.FailedToRemove7thHeavenContextMenuEntries), WMessageLogLevel.Error, e));
                 return false;
             }
         }
