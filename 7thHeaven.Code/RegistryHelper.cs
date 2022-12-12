@@ -456,6 +456,8 @@ namespace _7thHeaven.Code
                     temp.WaitForExit();
                 }
 
+                File.Delete(fileName);
+
                 transaction.Clear();
             }
             catch (Exception e)
