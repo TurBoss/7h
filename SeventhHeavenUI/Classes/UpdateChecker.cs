@@ -234,7 +234,7 @@ namespace SeventhHeaven.Classes
 @echo Waiting for the update to take place, please wait...
 @timeout /t 5 /nobreak
 @rmdir /s /q ""{sourcePath}""
-@start """" /d ""{Sys._7HFolder}"" ""{Path.Combine(Sys._7HFolder, "7th Heaven.exe")}""
+@start """" /d ""{Sys._7HFolder}"" ""{Sys._7HExe}""
 @del ""{fileName}""
 "
             );
