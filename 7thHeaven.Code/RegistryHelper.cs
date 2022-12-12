@@ -155,7 +155,7 @@ namespace _7thHeaven.Code
         /// <returns> modified registry key path </returns>
         private static string RemoveBaseKeyFromPath(string fullRegKeyPath)
         {
-            return fullRegKeyPath.Replace(@"HKEY_LOCAL_MACHINE\", "").Replace(@"HKEY_CURRENT_USER\", "");
+            return fullRegKeyPath.Replace(@"HKEY_LOCAL_MACHINE\", "").Replace(@"HKEY_CURRENT_USER\", "").Replace(@"HKEY_CLASSES_ROOT\", ""); ;
         }
 
         private static string ReplaceBaseKeyFromPath(string fullRegKeyPath)
@@ -233,7 +233,7 @@ namespace _7thHeaven.Code
                 case RegistryValueKind.String:
                 case RegistryValueKind.Unknown:
                     regType = "REG_SZ";
-                    value = $"\"{value.ToString().Replace("\"","\"\"")}\"";
+                    value = $"\"{value.ToString().Replace("\"","\"\"").Replace("%", "%%")}\"";
                     break;
             }
 
