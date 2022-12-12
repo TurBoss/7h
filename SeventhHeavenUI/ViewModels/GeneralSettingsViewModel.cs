@@ -759,17 +759,17 @@ namespace SeventhHeaven.ViewModels
                 string app = System.Reflection.Assembly.GetExecutingAssembly().Location;
 
                 //Create Prog_ID in Registry so we can associate file types
-                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\7thHeaven", "", $"7th Heaven Mod File");
-                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\7thHeaven\\DefaultIcon", "", $"\"{app}\"");
-                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\7thHeaven\\shell\\Unpack IRO\\command", "", $"\"{app}\" /OPENIRO:\"%1\"");
+                RegistryHelper.SetValueIfChanged("HKEY_CLASSES_ROOT\\7thHeaven", "", $"7th Heaven Mod File");
+                RegistryHelper.SetValueIfChanged("HKEY_CLASSES_ROOT\\7thHeaven\\DefaultIcon", "", $"\"{app}\"");
+                RegistryHelper.SetValueIfChanged("HKEY_CLASSES_ROOT\\7thHeaven\\shell\\Unpack IRO\\command", "", $"\"{app}\" /OPENIRO:\"%1\"");
 
                 //Associate .iro mod files with 7H's Prog_ID- .IRO extension
-                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\.iro", "", $"7thHeaven Mod");
+                RegistryHelper.SetValueIfChanged("HKEY_CLASSES_ROOT\\.iro", "", $"7thHeaven Mod");
 
                 // create registry keys to assocaite .irop files
-                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\.irop", "", $"7th Heaven Mod Patch");
-                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\.irop\\DefaultIcon", "", $"\"{app}\"");
-                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\.irop\\shell\\open\\command", "", $"\"{app}\" /OPENIROP:\"%1\"");
+                RegistryHelper.SetValueIfChanged("HKEY_CLASSES_ROOT\\.irop", "", $"7th Heaven Mod Patch");
+                RegistryHelper.SetValueIfChanged("HKEY_CLASSES_ROOT\\.irop\\DefaultIcon", "", $"\"{app}\"");
+                RegistryHelper.SetValueIfChanged("HKEY_CLASSES_ROOT\\.irop\\shell\\open\\command", "", $"\"{app}\" /OPENIROP:\"%1\"");
 
                 //Refresh Shell/Explorer so icon cache updates
                 //do this now because we don't care so much about assoc. URL if it fails
@@ -824,10 +824,10 @@ namespace SeventhHeaven.ViewModels
             {
                 string app = System.Reflection.Assembly.GetExecutingAssembly().Location;
 
-                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\iros", "", $"7H Catalog Subscription");
-                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\iros", "URL Protocol", $"");
-                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\iros\\DefaultIcon", "", $"\"{app}\"");
-                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\iros\\shell\\open\\command", "", $"\"{app}\" \"%1\"");
+                RegistryHelper.SetValueIfChanged("HKEY_CLASSES_ROOT\\iros", "", $"7H Catalog Subscription");
+                RegistryHelper.SetValueIfChanged("HKEY_CLASSES_ROOT\\iros", "URL Protocol", $"");
+                RegistryHelper.SetValueIfChanged("HKEY_CLASSES_ROOT\\iros\\DefaultIcon", "", $"\"{app}\"");
+                RegistryHelper.SetValueIfChanged("HKEY_CLASSES_ROOT\\iros\\shell\\open\\command", "", $"\"{app}\" \"%1\"");
 
                 //Refresh Shell/Explorer so icon cache updates
                 //do this now because we don't care so much about assoc. URL if it fails
@@ -880,12 +880,12 @@ namespace SeventhHeaven.ViewModels
                 string app = System.Reflection.Assembly.GetExecutingAssembly().Location;
 
                 // create registry keys for 'Pack IRO' for folders
-                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\Directory\\shell\\Pack into IRO", "Icon", $"\"{app}\"");
-                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\Directory\\shell\\Pack into IRO\\command", "", $"\"{app}\" /PACKIRO:\"%1\"");
+                RegistryHelper.SetValueIfChanged("HKEY_CLASSES_ROOT\\Directory\\shell\\Pack into IRO", "Icon", $"\"{app}\"");
+                RegistryHelper.SetValueIfChanged("HKEY_CLASSES_ROOT\\Directory\\shell\\Pack into IRO\\command", "", $"\"{app}\" /PACKIRO:\"%1\"");
 
                 // create registry keys for 'Unpack IRO' for files
-                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\7thHeaven\\shell\\Unpack IRO", "Icon", $"\"{app}\"");
-                RegistryHelper.SetValue("HKEY_CLASSES_ROOT\\7thHeaven\\shell\\Unpack IRO\\command", "", $"\"{app}\" /UNPACKIRO:\"%1\"");
+                RegistryHelper.SetValueIfChanged("HKEY_CLASSES_ROOT\\7thHeaven\\shell\\Unpack IRO", "Icon", $"\"{app}\"");
+                RegistryHelper.SetValueIfChanged("HKEY_CLASSES_ROOT\\7thHeaven\\shell\\Unpack IRO\\command", "", $"\"{app}\" /UNPACKIRO:\"%1\"");
 
                 SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
 
