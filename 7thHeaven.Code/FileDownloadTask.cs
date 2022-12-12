@@ -214,10 +214,10 @@ namespace _7thHeaven.Code
                     fs.Close();
                     responseStream.Close();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     downloadItem.OnCancel?.Invoke();
-                    throw new Exception("Failed to download - Please report this to 7th-Heaven-Bugs channel in the Tsunamods Discord");
+                    throw new Exception("Failed to download - Please report this to 7th-Heaven-Bugs channel in the Tsunamods Discord", ex);
                 }
             }
 
