@@ -120,6 +120,7 @@ namespace Iros._7th.Workshop
 
         public static AvailableUpdate LastCheckedVersion { get; set; }
         public static string _7HFolder { get; private set; }
+        public static string _7HExe { get; private set; }
         public static string SysFolder { get; private set; }
         public static string InstallPath
         {
@@ -398,6 +399,7 @@ namespace Iros._7th.Workshop
         {
             string appPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             _7HFolder = appPath;
+            _7HExe = Path.Combine(appPath, "7th Heaven.exe");
 
             SysFolder = Path.Combine(appPath, "7thWorkshop");
             Directory.CreateDirectory(SysFolder);
