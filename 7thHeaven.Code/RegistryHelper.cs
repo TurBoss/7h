@@ -434,36 +434,39 @@ namespace _7thHeaven.Code
 
         public static void CommitTransaction()
         {
-            string fileName = Path.Combine(Sys.PathToTempFolder, "settings_update.bat");
-
-            System.IO.File.WriteAllText(
-                fileName,
-                $"@echo off\n" + String.Join("\n", transaction)
-            );
-
-            try
+            if (transaction.Count > 0)
             {
-                // Execute temp batch script with admin privileges
-                ProcessStartInfo startInfo = new ProcessStartInfo(fileName)
-                {
-                    Verb = "runas",
-                    CreateNoWindow = true,
-                    UseShellExecute = true
-                };
+                string fileName = Path.Combine(Sys.PathToTempFolder, "settings_update.bat");
 
-                // Launch process, wait and then save exit code
-                using (Process temp = Process.Start(startInfo))
+                System.IO.File.WriteAllText(
+                    fileName,
+                    $"@echo off\n" + String.Join("\n", transaction)
+                );
+
+                try
                 {
-                    temp.WaitForExit();
+                    // Execute temp batch script with admin privileges
+                    ProcessStartInfo startInfo = new ProcessStartInfo(fileName)
+                    {
+                        Verb = "runas",
+                        CreateNoWindow = true,
+                        UseShellExecute = true
+                    };
+
+                    // Launch process, wait and then save exit code
+                    using (Process temp = Process.Start(startInfo))
+                    {
+                        temp.WaitForExit();
+                    }
+
+                    File.Delete(fileName);
+
+                    transaction.Clear();
                 }
-
-                File.Delete(fileName);
-
-                transaction.Clear();
-            }
-            catch (Exception e)
-            {
-                Sys.Message(new WMessage() { Text = $"Error while trying to update 7thHeaven settings", LoggedException = e });
+                catch (Exception e)
+                {
+                    Sys.Message(new WMessage() { Text = $"Error while trying to update 7thHeaven settings", LoggedException = e });
+                }
             }
 
             isAtomicTransaction = false;
