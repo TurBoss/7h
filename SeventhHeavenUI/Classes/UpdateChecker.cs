@@ -25,6 +25,15 @@ namespace SeventhHeaven.Classes
 
         public string GetCurrentAppVersion()
         {
+            try
+            {
+                _currentAppVersion = FileVersionInfo.GetVersionInfo(Sys._7HExe);
+            }
+            catch (FileNotFoundException)
+            {
+                _currentAppVersion = null;
+            }
+
             return _currentAppVersion != null ? _currentAppVersion.FileVersion : "0.0.0.0";
         }
 
@@ -81,17 +90,6 @@ namespace SeventhHeaven.Classes
 
         public void CheckForUpdates(AppUpdateChannelOptions channel, bool manualCheck = false)
         {
-            try
-            {
-                _currentAppVersion = FileVersionInfo.GetVersionInfo(
-                    Path.Combine(Sys._7HFolder, $"{App.GetAppName()}.exe")
-                );
-            }
-            catch (FileNotFoundException)
-            {
-                _currentAppVersion = null;
-            }
-
             DownloadItem download = new DownloadItem()
             {
                 Links = new List<string>() { LocationUtil.FormatHttpUrl(GetUpdateChannel(channel)) },
