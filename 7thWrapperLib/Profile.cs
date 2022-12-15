@@ -490,9 +490,9 @@ namespace _7thWrapperLib
                         _activated.Add(file);
                         yield return file.Substring(spath.Length).TrimStart('\\');
                     }
-                foreach (string extra in ExtraFolders)
+                foreach (var cf in Conditionals)
                 {
-                    spath = System.IO.Path.Combine(BaseFolder, extra, path);
+                    spath = System.IO.Path.Combine(BaseFolder, cf.Folder, path);
                     if (DirExists(spath))
                         foreach (string file in System.IO.Directory.GetFiles(spath, "*", System.IO.SearchOption.AllDirectories))
                         {
@@ -500,9 +500,9 @@ namespace _7thWrapperLib
                             yield return file.Substring(spath.Length).TrimStart('\\');
                         }
                 }
-                foreach (var cf in Conditionals)
+                foreach (string extra in ExtraFolders)
                 {
-                    spath = System.IO.Path.Combine(BaseFolder, cf.Folder, path);
+                    spath = System.IO.Path.Combine(BaseFolder, extra, path);
                     if (DirExists(spath))
                         foreach (string file in System.IO.Directory.GetFiles(spath, "*", System.IO.SearchOption.AllDirectories))
                         {
