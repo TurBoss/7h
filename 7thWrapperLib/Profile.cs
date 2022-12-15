@@ -182,31 +182,6 @@ namespace _7thWrapperLib
 
         }
 
-        private void ScanChunk()
-        {
-            _chunkFiles = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
-            foreach (string file in _archive.AllFileNames())
-            {
-                string[] parts = file.Split('\\');
-                if (parts.Length > 2)
-                {
-                    if (ExtraFolders.Contains(parts[0]) || Conditionals.Any(cf => cf.Folder.Equals(parts[0], StringComparison.InvariantCultureIgnoreCase)))
-                    {
-                        parts = parts.Skip(1).ToArray();
-                    }
-                    else
-                        continue;
-                }
-                if (parts.Length < 2) continue;
-                int chunk = parts[1].IndexOf(".chunk.", StringComparison.InvariantCultureIgnoreCase);
-                if (chunk > 0)
-                {
-                    _chunkFiles.Add(parts[0] + "\\" + parts[1].Substring(0, chunk));
-                }
-            }
-            DebugLogger.WriteLine("    Finished scan for chunks, found " + String.Join(",", _chunkFiles));
-        }
-
         /// <summary>
         /// Ensure the <see cref="_archive"/> is loaded if mod is an .iro
         /// </summary>
@@ -216,7 +191,6 @@ namespace _7thWrapperLib
             {
                 DebugLogger.WriteLine("      Loading archive " + BaseFolder);
                 _archive = new IrosArc(BaseFolder);
-                ScanChunk();
             }
         }
 
