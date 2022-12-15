@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace _7thHeaven.Code
@@ -108,120 +107,63 @@ namespace _7thHeaven.Code
             BytesWritten = 0;
         }
 
-        private async Task<long> GetContentLengthAsync()
-        {
-            var request = (HttpWebRequest)WebRequest.Create(_sourceUrl);
-            request.Method = "HEAD";
-            request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)";
-            request.KeepAlive = false;
-            request.Proxy = null;
-            request.Timeout = 5000; // should not take more than 5 seconds to get the content-length
-
-            try
-            {
-                using (WebResponse response = await request.GetResponseAsync())
-                    return response.ContentLength;
-            }
-            catch (Exception)
-            {
-                return -1;
-            }
-        }
-
-        private long GetContentRange(WebResponse response)
-        {
-            string crange = ((HttpWebResponse) response).Headers[HttpResponseHeader.ContentRange];
-            if (crange != null)
-            {
-                int spos = crange.LastIndexOf('/');
-                if (spos >= 0)
-                {
-                    long range = -1;
-                    long.TryParse(crange.Substring(spos + 1), out range);
-                    return range;
-                }
-            }
-
-            return -1;
-        }
-
         private async Task Start(long range)
         {
             if (IsPaused || IsCanceled)
                 return;
 
-            if (_contentLength == null)
+            var handler = _cookies != null ? new HttpClientHandler() { CookieContainer = _cookies } : new HttpClientHandler();
+            var client = new HttpClient(handler);
+            client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
+            if (Headers != null)  client.DefaultRequestHeaders.Add("Referer", Headers["Referer"]);
+            var request = new HttpRequestMessage { RequestUri = new Uri(_sourceUrl) };
+            if (range > 0) request.Headers.Range = new RangeHeaderValue(0, range);
+
+            try
             {
-                _contentLength = await GetContentLengthAsync();
-            }
+                HttpResponseMessage response = await client.SendAsync(request);
+                if (ContentLength == -1 && !_checkedContentRange)
+                {
+                    _checkedContentRange = true;
+                    _contentLength = response.Content.Headers.ContentLength;
+                }
 
-            if (range != _contentLength)
+                Stream responseStream = response.Content.ReadAsStream();
+
+                FileMode fileMode = FileMode.Append;
+
+                if (!IsStarted)
+                {
+                    fileMode = FileMode.Create;
+                }
+
+                FileStream fs = new FileStream(_destination, fileMode, FileAccess.Write, FileShare.ReadWrite);
+
+                while (AllowedToRun && !IsCanceled)
+                {
+                    _isStarted = true;
+                    byte[] buffer = new byte[_chunkSize];
+                    int bytesRead = await responseStream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+
+                    if (bytesRead == 0) break;
+
+                    await fs.WriteAsync(buffer, 0, bytesRead);
+                    BytesWritten += bytesRead;
+
+                    float prog = (float)BytesWritten / (float)ContentLength;
+                    var e = new ProgressChangedEventArgs((int)(prog * 100), _userState);
+                    DownloadProgressChanged?.Invoke(this, e);
+                }
+
+                await fs.FlushAsync();
+                fs.Close();
+                responseStream.Close();
+            }
+            catch (Exception ex)
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_sourceUrl);
-                request.Method = "GET";
-                request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)";
-                request.KeepAlive = false;
-                request.Proxy = null;
-                request.AddRange(range);
-
-                if (_cookies != null)
-                {
-                    request.CookieContainer = _cookies;
-                }
-
-                if (Headers != null)
-                {
-                    request.Referer = Headers["Referer"];
-                }
-
-                try
-                {
-                    WebResponse response = await request.GetResponseAsync();
-                    if (ContentLength == -1 && !_checkedContentRange)
-                    {
-                        _checkedContentRange = true;
-                        _contentLength = GetContentRange(response);
-                    }
-
-                    Stream responseStream = response.GetResponseStream();
-
-                    FileMode fileMode = FileMode.Append;
-
-                    if (!IsStarted)
-                    {
-                        fileMode = FileMode.Create;
-                    }
-
-                    FileStream fs = new FileStream(_destination, fileMode, FileAccess.Write, FileShare.ReadWrite);
-
-                    while (AllowedToRun && !IsCanceled)
-                    {
-                        _isStarted = true;
-                        byte[] buffer = new byte[_chunkSize];
-                        int bytesRead = await responseStream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
-
-                        if (bytesRead == 0) break;
-
-                        await fs.WriteAsync(buffer, 0, bytesRead);
-                        BytesWritten += bytesRead;
-
-                        float prog = (float)BytesWritten / (float)ContentLength;
-                        var e = new ProgressChangedEventArgs((int)(prog * 100), _userState);
-                        DownloadProgressChanged?.Invoke(this, e);
-                    }
-
-                    await fs.FlushAsync();
-                    fs.Close();
-                    responseStream.Close();
-                }
-                catch (Exception ex)
-                {
-                    downloadItem.OnCancel?.Invoke();
-                    throw new Exception("Failed to download - Please report this to 7th-Heaven-Bugs channel in the Tsunamods Discord", ex);
-                }
+                downloadItem.OnCancel?.Invoke();
+                throw new Exception("Failed to download - Please report this to 7th-Heaven-Bugs channel in the Tsunamods Discord", ex);
             }
-
-
 
             if (AllowedToRun && !IsCanceled && (BytesWritten == ContentLength) || (ContentLength == -1)) // -1 is returned when response doesnt have the content-length
             {
