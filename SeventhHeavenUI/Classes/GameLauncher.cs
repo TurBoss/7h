@@ -1386,6 +1386,8 @@ namespace SeventhHeaven.Classes
         {
             Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.ApplyingChangedValuesToRegistry));
 
+            RegistryHelper.BeginTransaction();
+
             string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII";
             string virtualStorePath = $"{RegistryHelper.GetKeyPath(FF7RegKey.VirtualStoreKeyPath)}\\Final Fantasy VII";
 
@@ -1509,6 +1511,8 @@ namespace SeventhHeaven.Classes
                 SetValueIfChanged(midiKeyPath, "MusicVolume", 100, RegistryValueKind.DWord);
                 SetValueIfChanged(midiVirtualKeyPath, "MusicVolume", 100, RegistryValueKind.DWord);
             }
+
+            RegistryHelper.CommitTransaction();
         }
 
         /// <summary>
