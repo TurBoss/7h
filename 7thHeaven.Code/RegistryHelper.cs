@@ -214,6 +214,7 @@ namespace _7thHeaven.Code
             {
                 case RegistryValueKind.Binary:
                     regType = "REG_BINARY";
+                    value = $"\"{value}\"";
                     break;
                 case RegistryValueKind.DWord:
                     regType = "REG_DWORD";
