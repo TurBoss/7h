@@ -252,7 +252,7 @@ namespace _7thHeaven.Code
             else
                 valueName = $"/v \"{valueName}\"";
 
-            return ExecReg($"add \"{key}\" {valueName} /d {value} /t {regType} /f"); ;
+            return ExecReg($"add \"{key}\" /f {valueName} /d {value} /t {regType}"); ;
         }
 
         /// <summary>
