@@ -1655,6 +1655,7 @@ namespace SeventhHeaven.Classes
                 archive.AddEntry("applog.txt", File.Open(Sys.PathToApplog, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
                 archive.AddEntry("profile.xml", Sys.PathToCurrentProfileFile);
                 archive.AddEntry("settings.xml", Sys.PathToSettings);
+                archive.AddEntry("registry_transaction.bat", Path.Combine(Sys.PathToTempFolder, "registry_transaction.bat"));
 
                 // =================================================================================================
 

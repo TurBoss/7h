@@ -436,7 +436,7 @@ namespace _7thHeaven.Code
         {
             if (transaction.Count > 0)
             {
-                string fileName = Path.Combine(Sys.PathToTempFolder, "settings_update.bat");
+                string fileName = Path.Combine(Sys.PathToTempFolder, "registry_transaction.bat");
 
                 System.IO.File.WriteAllText(
                     fileName,
@@ -458,8 +458,6 @@ namespace _7thHeaven.Code
                     {
                         temp.WaitForExit();
                     }
-
-                    File.Delete(fileName);
 
                     transaction.Clear();
                 }
