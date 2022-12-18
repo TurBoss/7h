@@ -1449,7 +1449,7 @@ namespace SeventhHeaven.Classes
             SetValueIfChanged(graphicsKeyPath, "Options", 0, RegistryValueKind.DWord);
             SetValueIfChanged(graphicsVirtualKeyPath, "Options", 0, RegistryValueKind.DWord);
 
-            string emptyGuidBytes = Guid.Empty.ToString("N");
+            Guid emptyGuidBytes = Guid.Empty;
 
             SetValueIfChanged(graphicsKeyPath, "DD_GUID", emptyGuidBytes, RegistryValueKind.Binary);
             SetValueIfChanged(graphicsVirtualKeyPath, "DD_GUID", emptyGuidBytes, RegistryValueKind.Binary);
@@ -1483,7 +1483,7 @@ namespace SeventhHeaven.Classes
             string soundKeyPath = $"{ff7KeyPath}\\1.00\\Sound";
             string soundVirtualKeyPath = $"{virtualStorePath}\\1.00\\Sound";
 
-            string soundGuidBytes = Sys.Settings.GameLaunchSettings.SelectedSoundDevice.ToString("N");
+            Guid soundGuidBytes = Sys.Settings.GameLaunchSettings.SelectedSoundDevice;
 
             SetValueIfChanged(soundKeyPath, "Sound_GUID", soundGuidBytes, RegistryValueKind.Binary);
             SetValueIfChanged(soundVirtualKeyPath, "Sound_GUID", soundGuidBytes, RegistryValueKind.Binary);

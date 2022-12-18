@@ -214,10 +214,11 @@ namespace _7thHeaven.Code
             {
                 case RegistryValueKind.Binary:
                     regType = "REG_BINARY";
-                    value = $"\"{value}\"";
+                    if (value is Guid) value = $"\"{((Guid)value).ToString("N")}\"";
                     break;
                 case RegistryValueKind.DWord:
                     regType = "REG_DWORD";
+                    value = $"\"{value}\"";
                     break;
                 case RegistryValueKind.ExpandString:
                     regType = "REG_EXPAND_SZ";
@@ -361,12 +362,11 @@ namespace _7thHeaven.Code
             object currentValue = GetValue(regKeyPath, regValueName, null);
             bool isValuesEqual;
 
-            if (newValue is byte[])
+            if (newValue is Guid)
             {
-                string currentConverted = currentValue == null ? "" : BitConverter.ToString(currentValue as byte[]);
-                string newConverted = newValue == null ? "" : BitConverter.ToString(newValue as byte[]);
+                Guid currentConverted = currentValue == null ? new Guid() : new Guid(currentValue as byte[]);
 
-                isValuesEqual = currentConverted != null && currentConverted.Equals(newConverted);
+                isValuesEqual = currentConverted.Equals(newValue);
             }
             else
             {
