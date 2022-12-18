@@ -235,7 +235,7 @@ namespace _7thHeaven.Code
                 case RegistryValueKind.String:
                 case RegistryValueKind.Unknown:
                     regType = "REG_SZ";
-                    value = $"\"{value.ToString().Replace(@"""", @"""""").Replace("%", "%%").Replace(@"\""", @"\\""")}\"";
+                    value = $"\"{value.ToString().Replace("\"", "\"\"").Replace("%", "%%").Replace("\\", "\\\\")}\"";
                     break;
             }
 
