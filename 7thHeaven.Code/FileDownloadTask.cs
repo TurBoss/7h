@@ -121,7 +121,7 @@ namespace _7thHeaven.Code
 
             try
             {
-                HttpResponseMessage response = await client.SendAsync(request);
+                HttpResponseMessage response = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
                 if (ContentLength == -1 && !_checkedContentRange)
                 {
                     _checkedContentRange = true;
