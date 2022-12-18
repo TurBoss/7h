@@ -237,7 +237,7 @@ namespace SeventhHeaven.ViewModels
             }
         }
 
-        public Dictionary<string, string> MidiDeviceIDs { get; set; }
+        public Dictionary<string, int> MidiDeviceIDs { get; set; }
 
         public string SelectedMidiData
         {
@@ -714,8 +714,11 @@ namespace SeventhHeaven.ViewModels
                 Sys.Settings.GameLaunchSettings.SelectedMidiData = MidiDataFormats[SelectedMidiData];
                 Sys.Settings.GameLaunchSettings.ReverseSpeakers = IsReverseSpeakersChecked;
                 Sys.Settings.GameLaunchSettings.LogarithmicVolumeControl = IsLogVolumeChecked;
+
+                RegistryHelper.BeginTransaction();
                 SetVolumesInRegistry();
                 SetMidiDeviceInRegistry();
+                RegistryHelper.CommitTransaction();
 
                 Sys.SaveSettings();
 
@@ -779,7 +782,7 @@ namespace SeventhHeaven.ViewModels
                 { "Yamaha XG MIDI", "YAMAHA_XG" }
             };
 
-            var deviceIDs = new Dictionary<string, string>();
+            var deviceIDs = new Dictionary<string, int>();
 
             int numofMidiDevices = MidiOut.NumberOfDevices;
 
@@ -787,12 +790,12 @@ namespace SeventhHeaven.ViewModels
             {
                 for (int n = 0; n < numofMidiDevices; n++)
                 {
-                    deviceIDs.Add($"{n}: " + MidiOut.DeviceInfo(n).ProductName, n.ToString());
+                    deviceIDs.Add($"{n}: " + MidiOut.DeviceInfo(n).ProductName, n);
                 }
             }
             else
             {
-                deviceIDs.Add("0: Default MIDI Device", "0");
+                deviceIDs.Add("0: Default MIDI Device", 0);
             }
 
             MidiDeviceIDs = deviceIDs;
