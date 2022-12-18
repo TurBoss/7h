@@ -435,15 +435,15 @@ namespace _7thHeaven.Code
 
         public static void CommitTransaction()
         {
+            string fileName = Path.Combine(Sys.PathToTempFolder, "registry_transaction.bat");
+
+            System.IO.File.WriteAllText(
+                fileName,
+                $"@echo off\n" + String.Join("\n", transaction)
+            );
+
             if (transaction.Count > 0)
             {
-                string fileName = Path.Combine(Sys.PathToTempFolder, "registry_transaction.bat");
-
-                System.IO.File.WriteAllText(
-                    fileName,
-                    $"@echo off\n" + String.Join("\n", transaction)
-                );
-
                 try
                 {
                     // Execute temp batch script with admin privileges
