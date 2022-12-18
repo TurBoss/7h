@@ -169,12 +169,12 @@ namespace Iros._7th.Workshop {
             defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/https$github.com/tsunamods-codes/7th-Heaven-Catalogs/releases/download/canary/qhimm.xml", Name = "Qhimm Catalog" });
             defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/https$github.com/tsunamods-codes/7th-Heaven-Catalogs/releases/download/canary/sega.xml", Name = "Sega Catalog" });
 
+            defaultSettings.ExtraFolders.Add("ambient");
             defaultSettings.ExtraFolders.Add("direct");
+            defaultSettings.ExtraFolders.Add("lighting");
             defaultSettings.ExtraFolders.Add("music");
             defaultSettings.ExtraFolders.Add("sfx");
             defaultSettings.ExtraFolders.Add("voice");
-            defaultSettings.ExtraFolders.Add("ambient");
-            defaultSettings.ExtraFolders.Add("lighting");
             defaultSettings.ExtraFolders.Add("widescreen");
 
             defaultSettings.FFNxUpdateChannel = FFNxUpdateChannelOptions.Stable;
