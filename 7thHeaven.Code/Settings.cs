@@ -174,6 +174,7 @@ namespace Iros._7th.Workshop {
             defaultSettings.ExtraFolders.Add("lighting");
             defaultSettings.ExtraFolders.Add("music");
             defaultSettings.ExtraFolders.Add("sfx");
+            defaultSettings.ExtraFolders.Add("time");
             defaultSettings.ExtraFolders.Add("voice");
             defaultSettings.ExtraFolders.Add("widescreen");
 
