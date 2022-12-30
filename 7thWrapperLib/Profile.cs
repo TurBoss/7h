@@ -164,8 +164,6 @@ namespace _7thWrapperLib
 
         private HashSet<string> _activated = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
         [NonSerialized]
-        private HashSet<string> _chunkFiles;
-        [NonSerialized]
         private IrosArc _archive;
 
         public RuntimeMod(string folder, IEnumerable<ConditionalFolder> conditionalFolders, IEnumerable<string> extraFolders, ModInfo modInfo)
@@ -371,23 +369,6 @@ namespace _7thWrapperLib
             else
                 return new System.IO.FileStream(System.IO.Path.Combine(BaseFolder, file), System.IO.FileMode.Open, System.IO.FileAccess.Read);
 
-        }
-
-        public bool SupportsChunks(string file)
-        {
-            if (_archive != null)
-            {
-                return _chunkFiles.Contains(file);
-            }
-            else
-            {
-                string path = System.IO.Path.GetDirectoryName(file);
-                string fn = System.IO.Path.GetFileName(file);
-                var files = GetPathOverrideNames(path);
-                bool chunked = files.Any(s => s.StartsWith(fn + ".chunk.", StringComparison.InvariantCultureIgnoreCase));
-                DebugLogger.DetailedWriteLine($"MOD: Check if any chunk files present in {file}: {chunked}");
-                return chunked;
-            }
         }
 
         public IEnumerable<OverrideFile> GetOverrides(string path)
