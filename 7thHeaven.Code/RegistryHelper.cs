@@ -214,7 +214,7 @@ namespace _7thHeaven.Code
             {
                 case RegistryValueKind.Binary:
                     regType = "REG_BINARY";
-                    if (value is Guid) value = $"\"{((Guid)value).ToString("N")}\"";
+                    if (value is Guid) value = $"\"{BitConverter.ToString(((Guid)value).ToByteArray()).ToLower().Replace("-","")}\"";
                     break;
                 case RegistryValueKind.DWord:
                     regType = "REG_DWORD";
