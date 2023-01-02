@@ -487,6 +487,18 @@ namespace Iros._7th.Workshop
             {
                 LastCheckedVersion = new AvailableUpdate();
             }
+
+            // Create the temp folder if does not exist
+            if (!Directory.Exists(PathToTempFolder))
+            {
+                Directory.CreateDirectory(PathToTempFolder);
+            }
+            else
+            {
+                // Cleanup the temp folder and recreate it
+                Directory.Delete(PathToTempFolder, true);
+                Directory.CreateDirectory(PathToTempFolder);
+            }
         }
 
         /// <summary>
