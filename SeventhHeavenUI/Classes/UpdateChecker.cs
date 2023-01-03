@@ -243,7 +243,8 @@ namespace SeventhHeaven.Classes
                 ProcessStartInfo startInfo = new ProcessStartInfo(fileName)
                 {
                     CreateNoWindow = false,
-                    UseShellExecute = true
+                    UseShellExecute = true,
+                    Verb = FileUtils.IsLocatedInSystemFolders(fileName) ? "runas" : ""
                 };
 
                 // Launch process, wait and then save exit code
