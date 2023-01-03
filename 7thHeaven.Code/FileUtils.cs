@@ -314,6 +314,21 @@ namespace _7thHeaven.Code
             }
         }
 
+        public static bool IsLocatedInSystemFolders(string InstallPath)
+        {
+            if (!Directory.Exists(InstallPath))
+            {
+                return false;
+            }
+
+            List<string> protectedFolders = new List<string>() { Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+                                                                 Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                                                                 Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                                                                 Environment.GetFolderPath(Environment.SpecialFolder.Windows) };
+
+            return protectedFolders.Any(s => InstallPath.Contains(s));
+        }
+
         class CopySettings
         {
             public bool IsMovingFiles { get; set; }

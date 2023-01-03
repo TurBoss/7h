@@ -191,17 +191,7 @@ namespace SeventhHeaven.Classes
 
         public bool IsGameLocatedInSystemFolders()
         {
-            if (!Directory.Exists(InstallPath))
-            {
-                return false;
-            }
-
-            List<string> protectedFolders = new List<string>() { Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                                                                 Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-                                                                 Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                                                                 Environment.GetFolderPath(Environment.SpecialFolder.Windows) };
-
-            return protectedFolders.Any(s => InstallPath.Contains(s));
+            return FileUtils.IsLocatedInSystemFolders(InstallPath);
         }
 
         public bool CopyGame(string targetPath = @"C:\Games\Final Fantasy VII")
