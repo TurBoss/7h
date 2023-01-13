@@ -471,6 +471,8 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
         // ------------------------------------
         DetourTransactionCommit();
 
+        PLOGI << "7thWrapperLoader started successfully";
+
         return target();
     };
 
