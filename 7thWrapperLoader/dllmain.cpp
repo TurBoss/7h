@@ -59,6 +59,7 @@ static inline void trim(std::string& s) {
 
 struct host_exports
 {
+    void (*Shutdown)();
 #define X(n) decltype(&n) n;
 #include "host_exports.x.h"
 #undef X
@@ -301,6 +302,9 @@ VOID WINAPI _PostQuitMessage(int nExitCode)
     DetourDetach((PVOID*)&TruePostQuitMessage, _PostQuitMessage);
     // ------------------------------------
     DetourTransactionCommit();
+
+    // Ask the .NET code to gracefully shutdown
+    if (exports.Shutdown) exports.Shutdown();
 
     // Continue with the usual execution
     TruePostQuitMessage(nExitCode);

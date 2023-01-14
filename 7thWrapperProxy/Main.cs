@@ -12,6 +12,7 @@ namespace _7thWrapperProxy
         [StructLayout(LayoutKind.Sequential)]
         public struct HostExports
         {
+            public delegate* unmanaged<void> Shutdown;
             public delegate* unmanaged<ushort*, uint, uint, void*, uint, uint, void*, void*> CreateFileW;
             public delegate* unmanaged<void*, void*, uint, uint*, void*, int> ReadFile;
             //public delegate* unmanaged<void*, void*, uint, uint*, void*, int> WriteFile;
@@ -35,6 +36,7 @@ namespace _7thWrapperProxy
             {
                 _exports = (HostExports*)exports;
 
+                _exports->Shutdown = &Shutdown;
                 _exports->CreateFileW = &HCreateFileW;
                 _exports->ReadFile = &HReadFile;
                 _exports->FindFirstFileW = &HFindFirstFileW;
@@ -60,6 +62,29 @@ namespace _7thWrapperProxy
             }
 
             return 0;
+        }
+
+        [UnmanagedCallersOnly]
+        public static void Shutdown()
+        {
+            try
+            {
+                MethodInfo? m = null;
+                if (t != null) m = t.GetMethod("Shutdown", BindingFlags.Static | BindingFlags.Public);
+                if (m != null) m.Invoke(null, null);
+
+                t = null;
+                lib = null;
+                _exports = null;
+
+                System.GC.Collect();
+                System.GC.WaitForPendingFinalizers();
+                System.GC.WaitForFullGCComplete();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
         }
 
         [UnmanagedCallersOnly]
