@@ -170,6 +170,14 @@ namespace Iros._7th.Workshop
             }
         }
 
+        public static string PathToLibraryTempFolder
+        {
+            get
+            {
+                return Path.Combine(Sys.Settings.LibraryLocation, "temp");
+            }
+        }
+
         public static string PathToCrashReports
         {
             get
@@ -498,6 +506,22 @@ namespace Iros._7th.Workshop
                 // Cleanup the temp folder and recreate it
                 Directory.Delete(PathToTempFolder, true);
                 Directory.CreateDirectory(PathToTempFolder);
+            }
+
+            // Cleanup the library temp folder if it exist
+            if (Sys.Settings.LibraryLocation != String.Empty)
+            {
+                // Create the temp folder if does not exist
+                if (!Directory.Exists(PathToLibraryTempFolder))
+                {
+                    Directory.CreateDirectory(PathToLibraryTempFolder);
+                }
+                else
+                {
+                    // Cleanup the temp folder and recreate it
+                    Directory.Delete(PathToLibraryTempFolder, true);
+                    Directory.CreateDirectory(PathToLibraryTempFolder);
+                }
             }
         }
 
