@@ -6,8 +6,22 @@ namespace _7thWrapperProxy
 {
     static unsafe class Proxy
     {
-        private static Assembly? lib;
-        private static Type? t;
+        private static Assembly? lib = null;
+        private static Type? t = null;
+
+        private static MethodInfo? _mRun = null;
+        private static MethodInfo? _mShutdown = null;
+        private static MethodInfo? _mHCreateFileW = null;
+        private static MethodInfo? _mHReadFile = null;
+        private static MethodInfo? _mHFindFirstFileW = null;
+        private static MethodInfo? _mHSetFilePointer = null;
+        private static MethodInfo? _mHSetFilePointerEx = null;
+        private static MethodInfo? _mHCloseHandle = null;
+        private static MethodInfo? _mHGetFileType = null;
+        private static MethodInfo? _mHGetFileInformationByHandle = null;
+        private static MethodInfo? _mHDuplicateHandle = null;
+        private static MethodInfo? _mHGetFileSize = null;
+        private static MethodInfo? _mHGetFileSizeEx = null;
 
         [StructLayout(LayoutKind.Sequential)]
         public struct HostExports
@@ -52,9 +66,24 @@ namespace _7thWrapperProxy
                 lib = Assembly.LoadFrom(Path.Combine(Directory.GetCurrentDirectory(), "7thWrapperLib.dll"));
                 t = lib.GetType("_7thWrapperLib.Wrap");
 
-                MethodInfo? m = null;
-                if (t != null) m = t.GetMethod("Run", BindingFlags.Static | BindingFlags.Public);
-                if (m != null) m.Invoke(null, new object[] { Process.GetCurrentProcess(), Type.Missing });
+                if (t != null)
+                {
+                    _mRun = t.GetMethod("Run", BindingFlags.Static | BindingFlags.Public);
+                    _mShutdown = t.GetMethod("Shutdown", BindingFlags.Static | BindingFlags.Public);
+                    _mHCreateFileW = t.GetMethod("HCreateFileW", BindingFlags.Static | BindingFlags.Public);
+                    _mHReadFile = t.GetMethod("HReadFile", BindingFlags.Static | BindingFlags.Public);
+                    _mHFindFirstFileW = t.GetMethod("HFindFirstFileW", BindingFlags.Static | BindingFlags.Public);
+                    _mHSetFilePointer = t.GetMethod("HSetFilePointer", BindingFlags.Static | BindingFlags.Public);
+                    _mHSetFilePointerEx = t.GetMethod("HSetFilePointerEx", BindingFlags.Static | BindingFlags.Public);
+                    _mHCloseHandle = t.GetMethod("HCloseHandle", BindingFlags.Static | BindingFlags.Public);
+                    _mHGetFileType = t.GetMethod("HGetFileType", BindingFlags.Static | BindingFlags.Public);
+                    _mHGetFileInformationByHandle = t.GetMethod("HGetFileInformationByHandle", BindingFlags.Static | BindingFlags.Public);
+                    _mHDuplicateHandle = t.GetMethod("HDuplicateHandle", BindingFlags.Static | BindingFlags.Public);
+                    _mHGetFileSize = t.GetMethod("HGetFileSize", BindingFlags.Static | BindingFlags.Public);
+                    _mHGetFileSizeEx = t.GetMethod("HGetFileSizeEx", BindingFlags.Static | BindingFlags.Public);
+                }
+
+                if (_mRun != null) _mRun.Invoke(null, new object[] { Process.GetCurrentProcess(), Type.Missing });
             }
             catch (Exception ex)
             {
@@ -69,9 +98,7 @@ namespace _7thWrapperProxy
         {
             try
             {
-                MethodInfo? m = null;
-                if (t != null) m = t.GetMethod("Shutdown", BindingFlags.Static | BindingFlags.Public);
-                if (m != null) m.Invoke(null, null);
+                if (_mShutdown != null) _mShutdown.Invoke(null, null);
 
                 t = null;
                 lib = null;
@@ -94,9 +121,7 @@ namespace _7thWrapperProxy
 
             try
             {
-                MethodInfo? m = null;
-                if (t != null) m = t.GetMethod("HCreateFileW", BindingFlags.Static | BindingFlags.Public);
-                if (m != null) ret = (IntPtr)(m.Invoke(null, new object[] { new string((char*)lpFileName), (System.IO.FileAccess)dwDesiredAccess, (System.IO.FileShare)dwShareMode, new IntPtr(lpSecurityAttributes), (System.IO.FileMode)dwCreationDisposition, (System.IO.FileAttributes)dwFlagsAndAttributes, new IntPtr(hTemplateFile) }) ?? IntPtr.Zero);
+                if (_mHCreateFileW != null) ret = (IntPtr)(_mHCreateFileW.Invoke(null, new object[] { new string((char*)lpFileName), (System.IO.FileAccess)dwDesiredAccess, (System.IO.FileShare)dwShareMode, new IntPtr(lpSecurityAttributes), (System.IO.FileMode)dwCreationDisposition, (System.IO.FileAttributes)dwFlagsAndAttributes, new IntPtr(hTemplateFile) }) ?? IntPtr.Zero);
             }
             catch (Exception ex)
             {
@@ -113,9 +138,7 @@ namespace _7thWrapperProxy
 
             try
             {
-                MethodInfo? m = null;
-                if (t != null) m = t.GetMethod("HReadFile", BindingFlags.Static | BindingFlags.Public);
-                if (m != null) ret = (int)(m.Invoke(null, new object[] { new IntPtr(handle), new IntPtr(bytes), numBytesToRead, new IntPtr(numBytesRead), new IntPtr(overlapped) }) ?? 0);
+                if (_mHReadFile != null) ret = (int)(_mHReadFile.Invoke(null, new object[] { new IntPtr(handle), new IntPtr(bytes), numBytesToRead, new IntPtr(numBytesRead), new IntPtr(overlapped) }) ?? 0);
             }
             catch (Exception ex)
             {
@@ -132,9 +155,7 @@ namespace _7thWrapperProxy
 
             try
             {
-                MethodInfo? m = null;
-                if (t != null) m = t.GetMethod("HFindFirstFileW", BindingFlags.Static | BindingFlags.Public);
-                if (m != null) ret = (IntPtr)(m.Invoke(null, new object[] { new string((char*)lpFileName), new IntPtr(lpFindFileData) }) ?? IntPtr.Zero);
+                if (_mHFindFirstFileW != null) ret = (IntPtr)(_mHFindFirstFileW.Invoke(null, new object[] { new string((char*)lpFileName), new IntPtr(lpFindFileData) }) ?? IntPtr.Zero);
             }
             catch (Exception ex)
             {
@@ -151,9 +172,7 @@ namespace _7thWrapperProxy
 
             try
             {
-                MethodInfo? m = null;
-                if (t != null) m = t.GetMethod("HSetFilePointer", BindingFlags.Static | BindingFlags.Public);
-                if (m != null) ret = (uint)(m.Invoke(null, new object[] { new IntPtr(hFile), lDistanceTomove, new IntPtr(lpDistanceToMoveHigh), dwMoveMethod }) ?? 0);
+                if (_mHSetFilePointer != null) ret = (uint)(_mHSetFilePointer.Invoke(null, new object[] { new IntPtr(hFile), lDistanceTomove, new IntPtr(lpDistanceToMoveHigh), dwMoveMethod }) ?? 0);
             }
             catch (Exception ex)
             {
@@ -170,9 +189,7 @@ namespace _7thWrapperProxy
 
             try
             {
-                MethodInfo? m = null;
-                if (t != null) m = t.GetMethod("HSetFilePointerEx", BindingFlags.Static | BindingFlags.Public);
-                if (m != null) ret = (int)(m.Invoke(null, new object[] { new IntPtr(hFile), liDistanceToMove, new IntPtr(lpNewFilePointer), dwMoveMethod }) ?? 0);
+                if (_mHSetFilePointerEx != null) ret = (int)(_mHSetFilePointerEx.Invoke(null, new object[] { new IntPtr(hFile), liDistanceToMove, new IntPtr(lpNewFilePointer), dwMoveMethod }) ?? 0);
             }
             catch (Exception ex)
             {
@@ -189,9 +206,7 @@ namespace _7thWrapperProxy
 
             try
             {
-                MethodInfo? m = null;
-                if (t != null) m = t.GetMethod("HCloseHandle", BindingFlags.Static | BindingFlags.Public);
-                if (m != null) ret = (int)(m.Invoke(null, new object[] { new IntPtr(hObject) }) ?? 0);
+                if (_mHCloseHandle != null) ret = (int)(_mHCloseHandle.Invoke(null, new object[] { new IntPtr(hObject) }) ?? 0);
             }
             catch (Exception ex)
             {
@@ -208,9 +223,7 @@ namespace _7thWrapperProxy
 
             try
             {
-                MethodInfo? m = null;
-                if (t != null) m = t.GetMethod("HGetFileType", BindingFlags.Static | BindingFlags.Public);
-                if (m != null) ret = (uint)(m.Invoke(null, new object[] { new IntPtr(hFile) }) ?? 0);
+                if (_mHGetFileType != null) ret = (uint)(_mHGetFileType.Invoke(null, new object[] { new IntPtr(hFile) }) ?? 0);
             }
             catch (Exception ex)
             {
@@ -227,9 +240,7 @@ namespace _7thWrapperProxy
 
             try
             {
-                MethodInfo? m = null;
-                if (t != null) m = t.GetMethod("HGetFileInformationByHandle", BindingFlags.Static | BindingFlags.Public);
-                if (m != null) ret = (int)(m.Invoke(null, new object[] { new IntPtr(hFile), new IntPtr(lpFileInformation) }) ?? 0);
+                if (_mHGetFileInformationByHandle != null) ret = (int)(_mHGetFileInformationByHandle.Invoke(null, new object[] { new IntPtr(hFile), new IntPtr(lpFileInformation) }) ?? 0);
             }
             catch (Exception ex)
             {
@@ -246,9 +257,7 @@ namespace _7thWrapperProxy
 
             try
             {
-                MethodInfo? m = null;
-                if (t != null) m = t.GetMethod("HDuplicateHandle", BindingFlags.Static | BindingFlags.Public);
-                if (m != null) ret = (int)(m.Invoke(null, new object[] { new IntPtr(hSourceProcessHandle), new IntPtr(hSourceHandle), new IntPtr(hTargetProcessHandle), new IntPtr(lpTargetHandle), dwDesiredAccess, bInheritHandle, dwOptions }) ?? 0);
+                if (_mHDuplicateHandle != null) ret = (int)(_mHDuplicateHandle.Invoke(null, new object[] { new IntPtr(hSourceProcessHandle), new IntPtr(hSourceHandle), new IntPtr(hTargetProcessHandle), new IntPtr(lpTargetHandle), dwDesiredAccess, bInheritHandle, dwOptions }) ?? 0);
             }
             catch (Exception ex)
             {
@@ -265,9 +274,7 @@ namespace _7thWrapperProxy
 
             try
             {
-                MethodInfo? m = null;
-                if (t != null) m = t.GetMethod("HGetFileSize", BindingFlags.Static | BindingFlags.Public);
-                if (m != null) ret = (uint)(m.Invoke(null, new object[] { new IntPtr(hFile), new IntPtr(lpFileSizeHigh) }) ?? 0);
+                if (_mHGetFileSize != null) ret = (uint)(_mHGetFileSize.Invoke(null, new object[] { new IntPtr(hFile), new IntPtr(lpFileSizeHigh) }) ?? 0);
             }
             catch (Exception ex)
             {
@@ -284,9 +291,7 @@ namespace _7thWrapperProxy
 
             try
             {
-                MethodInfo? m = null;
-                if (t != null) m = t.GetMethod("HGetFileSizeEx", BindingFlags.Static | BindingFlags.Public);
-                if (m != null) ret = (int)(m.Invoke(null, new object[] { new IntPtr(hFile), new IntPtr(lpFileSize) }) ?? 0);
+                if (_mHGetFileSizeEx != null) ret = (int)(_mHGetFileSizeEx.Invoke(null, new object[] { new IntPtr(hFile), new IntPtr(lpFileSize) }) ?? 0);
             }
             catch (Exception ex)
             {
