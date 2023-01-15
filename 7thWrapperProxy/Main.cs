@@ -102,7 +102,19 @@ namespace _7thWrapperProxy
 
                 t = null;
                 lib = null;
-                _exports = null;
+
+                _exports->Shutdown = null;
+                _exports->CreateFileW = null;
+                _exports->ReadFile = null;
+                _exports->FindFirstFileW = null;
+                _exports->SetFilePointer = null;
+                _exports->SetFilePointerEx = null;
+                _exports->CloseHandle = null;
+                _exports->GetFileType = null;
+                _exports->GetFileInformationByHandle = null;
+                _exports->DuplicateHandle = null;
+                _exports->GetFileSize = null;
+                _exports->GetFileSizeEx = null;
 
                 System.GC.Collect();
                 System.GC.WaitForPendingFinalizers();
