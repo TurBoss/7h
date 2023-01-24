@@ -130,11 +130,19 @@ namespace Iros._7th.Workshop
             }
         }
 
+        public static string PathToFF7Data
+        {
+            get
+            {
+                return Path.Combine(InstallPath, "data");
+            }
+        }
+
         public static string PathToFF7Movies
         {
             get
             {
-                return Path.Combine(InstallPath, "data", "movies");
+                return Path.Combine(PathToFF7Data, "movies");
             }
         }
 

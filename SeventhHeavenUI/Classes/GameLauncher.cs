@@ -850,8 +850,6 @@ namespace SeventhHeaven.Classes
 
         internal static RuntimeProfile CreateRuntimeProfile()
         {
-            string ff7Folder = Sys.InstallPath;
-            string pathToDataFolder = Path.Combine(ff7Folder, "data");
             List<RuntimeMod> runtimeMods = null;
 
             try
@@ -869,17 +867,17 @@ namespace SeventhHeaven.Classes
             RuntimeProfile runtimeProfiles = new RuntimeProfile()
             {
                 MonitorPaths = new List<string>() {
-                    pathToDataFolder,
+                    Sys.PathToFF7Data,
                     Sys.PathToFF7Textures,
                 },
                 ModPath = Sys.Settings.LibraryLocation,
-                FF7Path = ff7Folder,
-                gameFiles = Directory.GetFiles(ff7Folder, "*.*", SearchOption.AllDirectories),
+                FF7Path = Sys.InstallPath,
+                gameFiles = Directory.GetFiles(Sys.InstallPath, "*.*", SearchOption.AllDirectories),
                 Mods = runtimeMods
             };
 
             Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.AddingPathsToMonitor)}");
-            runtimeProfiles.MonitorPaths.AddRange(Sys.Settings.ExtraFolders.Where(s => s.Length > 0).Select(s => Path.Combine(ff7Folder, s)));
+            runtimeProfiles.MonitorPaths.AddRange(Sys.Settings.ExtraFolders.Where(s => s.Length > 0).Select(s => Path.Combine(Sys.InstallPath, s)));
             return runtimeProfiles;
         }
 
