@@ -186,6 +186,14 @@ namespace Iros._7th.Workshop
             }
         }
 
+        public static string PathToCacheFolder
+        {
+            get
+            {
+                return Path.Combine(SysFolder, "cache");
+            }
+        }
+
         public static string PathToTempFolder
         {
             get
@@ -496,7 +504,7 @@ namespace Iros._7th.Workshop
 
             _statuses = Library.Items.ToDictionary(i => i.ModID, _ => ModStatus.Installed);
 
-            ImageCache = new ImageCache(Path.Combine(SysFolder, "cache"));
+            ImageCache = new ImageCache(PathToCacheFolder);
 
             AppVersion = new Version();
 
