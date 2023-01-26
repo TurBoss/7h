@@ -25,8 +25,6 @@ namespace SeventhHeaven.Windows
 
         private List<GLSettingViewModel> ViewModels { get; set; }
 
-        private Button btnClearTextureCache;
-
         public ConfigureGLWindow()
         {
             InitializeComponent();
@@ -112,22 +110,6 @@ namespace SeventhHeaven.Windows
                     stackPanel.Children.Add(settingControl);
                 }
 
-                if (items.Key == ResourceHelper.Get(StringKey.Advanced))
-                {
-                    // add clear texture cache button
-                    btnClearTextureCache = new Button()
-                    {
-                        Content = ResourceHelper.Get(StringKey.ClearTextureCache),
-                        ToolTip = $"{ResourceHelper.Get(StringKey.WillDeleteEverythingUnder)} {Path.Combine(Sys.PathToFF7Textures, "cache")}",
-                        HorizontalAlignment = HorizontalAlignment.Left,
-                        VerticalAlignment = VerticalAlignment.Top,
-                        Margin = new Thickness(5, 0, 0, 0)
-                    };
-                    btnClearTextureCache.Click += BtnClearTextureCache_Click;
-
-                    stackPanel.Children.Add(btnClearTextureCache);
-                }
-
                 // Update driver version label
                 FFNxDriverUpdater ffnxUpdater = new FFNxDriverUpdater();
                 txtDriverVersion.Text = $"FFNx v{ffnxUpdater.GetCurrentDriverVersion()}";
@@ -138,47 +120,6 @@ namespace SeventhHeaven.Windows
             }
 
             return true;
-        }
-
-        private void BtnClearTextureCache_Click(object sender, RoutedEventArgs e)
-        {
-            ClearTextureCache();
-        }
-
-        private void ClearTextureCache()
-        {
-            string pathToCache = Path.Combine(Sys.PathToFF7Textures, "cache");
-
-            if (!Directory.Exists(pathToCache))
-            {
-                SetStatusMessage(ResourceHelper.Get(StringKey.PathToCacheFolderDoesNotExist));
-                return;
-            }
-
-            try
-            {
-                foreach (string file in Directory.GetFiles(pathToCache, "*.ctx", SearchOption.AllDirectories))
-                {
-                    try
-                    {
-                        File.Delete(file);
-                    }
-                    catch (IOException ex)
-                    {
-                        Logger.Warn(ex); // add warning to log if fail to delete file but continue deleting other files
-                    }
-                }
-
-                // delete empty folders recursively
-                FileUtils.DeleteEmptyFolders(pathToCache);
-
-                SetStatusMessage(ResourceHelper.Get(StringKey.TextureCacheCleared));
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex);
-                SetStatusMessage($"{ResourceHelper.Get(StringKey.FailedToClearTextureCache)}: {ex.Message}");
-            }
         }
 
         private void SettingControl_MouseEnter(object sender, MouseEventArgs e)
@@ -240,14 +181,6 @@ namespace SeventhHeaven.Windows
             }
 
             SetStatusMessage(ResourceHelper.Get(StringKey.GameDriverSettingsResetToDefaults));
-        }
-
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            if (btnClearTextureCache != null)
-            {
-                btnClearTextureCache.Click -= BtnClearTextureCache_Click;
-            }
         }
     }
 }

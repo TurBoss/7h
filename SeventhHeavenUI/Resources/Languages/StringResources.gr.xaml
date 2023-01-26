@@ -631,7 +631,6 @@
 
     <!--ConfigureGLWindow.xaml.cs Strings-->
     <system:String x:Key="FailedToReadRequiredSpecXmlFile">Αποτυχία ανάγνωσης του αρχείου xml για τις απαιτούμενες ρυθμίσεις οθόνης. Το παράθυρο πρέπει να κλείσει.</system:String>
-    <system:String x:Key="ClearTextureCache">Καθαρισμός προσωρινής μνήμης για υφές</system:String>
     <system:String x:Key="WillDeleteEverythingUnder">Θα διαγραφούν όλα κάτω από</system:String>
     <system:String x:Key="PathToCacheFolderDoesNotExist">Η διαδρομή του φακέλου προσωρινής μνήμης δεν υπάρχει.</system:String>
     <system:String x:Key="TextureCacheCleared">Η προσωρινή μνήμη για υφές καθάρισε!</system:String>

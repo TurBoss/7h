@@ -8,7 +8,6 @@
         WindowStartupLocation="CenterScreen"
         Style="{StaticResource MainWindowStyle}"
         Title="{DynamicResource GameDriverWindowTitle}" 
-        Closed="Window_Closed"
         ResizeMode="NoResize"
         Height="500" Width="475">
     <Window.Resources>

@@ -626,7 +626,6 @@ Cliquer sur 'Annuler' pour arrêter la copie.</system:String>
 
     <!--ConfigureGLWindow.xaml.cs Strings-->
     <system:String x:Key="FailedToReadRequiredSpecXmlFile">Impossible de lire le fichier xml requis pour afficher les paramètres. La fenêtre va se fermer.</system:String>
-    <system:String x:Key="ClearTextureCache">Effacer le cache des textures</system:String>
     <system:String x:Key="WillDeleteEverythingUnder">Supprimera tout ce qui se trouve sous</system:String>
     <system:String x:Key="PathToCacheFolderDoesNotExist">Le chemin d'accès au dossier du cache n'existe pas.</system:String>
     <system:String x:Key="TextureCacheCleared">Cache des texture effacé !</system:String>

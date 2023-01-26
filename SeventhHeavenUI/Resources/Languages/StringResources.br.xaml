@@ -631,7 +631,6 @@ Clique em 'Cancelar' para parar o processo.</system:String>
 
     <!--ConfigureGLWindow.xaml.cs Strings-->
     <system:String x:Key="FailedToReadRequiredSpecXmlFile">Não foi possível ler o arquivo spec xml necessário para exibir configurações. A janela precisa fechar.</system:String>
-    <system:String x:Key="ClearTextureCache">Apagar cache de texturas</system:String>
     <system:String x:Key="WillDeleteEverythingUnder">Irá deletar tudo em</system:String>
     <system:String x:Key="PathToCacheFolderDoesNotExist">Caminho da pasta de cache não existe.</system:String>
     <system:String x:Key="TextureCacheCleared">Cache de texturas apagado!</system:String>

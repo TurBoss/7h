@@ -631,7 +631,6 @@ Auf 'Abbrechen' klicken um den Vorgang zu unterbrechen.</system:String>
     
     <!--ConfigureGLWindow.xaml.cs Strings-->
     <system:String x:Key="FailedToReadRequiredSpecXmlFile">Kann die benötigte spec.xml nicht lesen. Optionen können nicht angezeigt werden. Das Fenster wird geschlossen.</system:String>
-    <system:String x:Key="ClearTextureCache">Texture Cache leeren</system:String>
     <system:String x:Key="WillDeleteEverythingUnder">Löscht alle Datein im Ordner</system:String>
     <system:String x:Key="PathToCacheFolderDoesNotExist">Pfad zum Cache Ordner wurde nicht gefunden.</system:String>
     <system:String x:Key="TextureCacheCleared">Texture Cache geleert!</system:String>

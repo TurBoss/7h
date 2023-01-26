@@ -210,7 +210,6 @@
         CouldNotLoadModXmlFromIroFile,
         CouldNotLoadCatalogXml,
         FailedToReadRequiredSpecXmlFile,
-        ClearTextureCache,
         WillDeleteEverythingUnder,
         PathToCacheFolderDoesNotExist,
         TextureCacheCleared,

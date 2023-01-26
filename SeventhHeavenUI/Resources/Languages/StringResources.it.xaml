@@ -630,7 +630,6 @@ Premi 'Annulla' per interrompere il processo.</system:String>
 
     <!--ConfigureGLWindow.xaml.cs Strings-->
     <system:String x:Key="FailedToReadRequiredSpecXmlFile">Impossibile leggere il file xml delle specifiche richiesto per le impostazioni grafiche. La finestra si chiuderà.</system:String>
-    <system:String x:Key="ClearTextureCache">Svuota Cache Texture</system:String>
     <system:String x:Key="WillDeleteEverythingUnder">Cancellerà tutto ciò che si trova sotto</system:String>
     <system:String x:Key="PathToCacheFolderDoesNotExist">Il percorso per la cartella cache non esiste.</system:String>
     <system:String x:Key="TextureCacheCleared">Cache texture svuotata!</system:String>
