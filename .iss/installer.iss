@@ -44,6 +44,10 @@ UninstallDisplayIcon="{app}\uninstall.ico"
 UninstallDisplayName={#MyAppName}
 ArchitecturesInstallIn64BitMode=x64
 
+[Tasks]
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
+
 [Files]
 Source: "{#MyAppPath}\bin\{#MyAppRelease}\{#MyAppTargetFramework}\*"; DestDir: "{app}"; Flags: recursesubdirs
 Source: "{#MyAppPath}\7H.ico"; DestDir: "{app}"; DestName: "uninstall.ico"
@@ -54,6 +58,8 @@ Source: "netcorecheck_x64.exe"; Flags: dontcopy noencryption
 Name: "{group}\7th Heaven"; Filename: "{app}\7th Heaven.exe";
 Name: "{group}\TurBoLog"; Filename: "{app}\TurBoLog.exe";
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"; IconFilename: "{app}\uninstall.ico"
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\7th Heaven.exe"; Tasks: desktopicon
+Name: "{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}"; Filename: "{app}\7th Heaven.exe"; Tasks: quicklaunchicon
 
 [Run]
 Filename: "{app}\7th Heaven.exe"; Flags: nowait postinstall runascurrentuser skipifsilent; Description: "Launch {#MyAppName}"
