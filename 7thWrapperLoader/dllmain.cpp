@@ -284,27 +284,30 @@ BOOL WINAPI _GetFileSizeEx(HANDLE hFile, PLARGE_INTEGER lpFileSize)
 
 VOID WINAPI _PostQuitMessage(int nExitCode)
 {
-    // Unhook Win32 APIs
-    DetourTransactionBegin();
-    DetourUpdateThread(GetCurrentThread());
-    // ------------------------------------
-    DetourDetach((PVOID*)&TrueCreateFileW, _CreateFileW);
-    DetourDetach((PVOID*)&TrueReadFile, _ReadFile);
-    DetourDetach((PVOID*)&TrueFindFirstFileW, _FindFirstFileW);
-    DetourDetach((PVOID*)&TrueSetFilePointer, _SetFilePointer);
-    DetourDetach((PVOID*)&TrueSetFilePointerEx, _SetFilePointerEx);
-    DetourDetach((PVOID*)&TrueCloseHandle, _CloseHandle);
-    DetourDetach((PVOID*)&TrueGetFileType, _GetFileType);
-    DetourDetach((PVOID*)&TrueGetFileInformationByHandle, _GetFileInformationByHandle);
-    DetourDetach((PVOID*)&TrueDuplicateHandle, _DuplicateHandle);
-    DetourDetach((PVOID*)&TrueGetFileSize, _GetFileSize);
-    DetourDetach((PVOID*)&TrueGetFileSizeEx, _GetFileSizeEx);
-    DetourDetach((PVOID*)&TruePostQuitMessage, _PostQuitMessage);
-    // ------------------------------------
-    DetourTransactionCommit();
+    if (GetCurrentThreadId() == currentMainThreadId)
+    {
+        // Unhook Win32 APIs
+        DetourTransactionBegin();
+        DetourUpdateThread(GetCurrentThread());
+        // ------------------------------------
+        DetourDetach((PVOID*)&TrueCreateFileW, _CreateFileW);
+        DetourDetach((PVOID*)&TrueReadFile, _ReadFile);
+        DetourDetach((PVOID*)&TrueFindFirstFileW, _FindFirstFileW);
+        DetourDetach((PVOID*)&TrueSetFilePointer, _SetFilePointer);
+        DetourDetach((PVOID*)&TrueSetFilePointerEx, _SetFilePointerEx);
+        DetourDetach((PVOID*)&TrueCloseHandle, _CloseHandle);
+        DetourDetach((PVOID*)&TrueGetFileType, _GetFileType);
+        DetourDetach((PVOID*)&TrueGetFileInformationByHandle, _GetFileInformationByHandle);
+        DetourDetach((PVOID*)&TrueDuplicateHandle, _DuplicateHandle);
+        DetourDetach((PVOID*)&TrueGetFileSize, _GetFileSize);
+        DetourDetach((PVOID*)&TrueGetFileSizeEx, _GetFileSizeEx);
+        DetourDetach((PVOID*)&TruePostQuitMessage, _PostQuitMessage);
+        // ------------------------------------
+        DetourTransactionCommit();
 
-    // Ask the .NET code to gracefully shutdown
-    if (exports.Shutdown) exports.Shutdown();
+        // Ask the .NET code to gracefully shutdown
+        if (exports.Shutdown) exports.Shutdown();
+    }
 
     // Continue with the usual execution
     TruePostQuitMessage(nExitCode);
