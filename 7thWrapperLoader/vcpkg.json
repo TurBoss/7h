@@ -1,7 +1,7 @@
 {
   "name": "7th-wrapper-loader",
   "version": "1.0.0",
-  "builtin-baseline": "e69dd972ba64840955f46704ecce6241bf607c0f",
+  "builtin-baseline": "ae59b93af0c1dce4126e963fca5b330662495fa1",
   "dependencies": [
     "detours",
     "nethost",
@@ -13,11 +13,11 @@
     {
       "name": "detours",
       "version": "4.0.1",
-      "port-version": 5
+      "port-version": 8
     },
     {
       "name": "nethost",
-      "version": "7.0.2",
+      "version": "7.0.4",
       "port-version": 0
     },
     {
@@ -27,7 +27,7 @@
     },
     {
       "name": "plog",
-      "version": "1.1.8",
+      "version": "1.1.9",
       "port-version": 0
     },
     {
