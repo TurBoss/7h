@@ -416,11 +416,11 @@ end;
 procedure Dependency_AddDotNet70;
 begin
   // https://dotnet.microsoft.com/download/dotnet/7.0
-  if not Dependency_IsNetCoreInstalled('Microsoft.NETCore.App 7.0.5') then begin
+  if not Dependency_IsNetCoreInstalled('Microsoft.NETCore.App 7.0.8') then begin
     Dependency_Add('dotnet70' + Dependency_ArchSuffix + '.exe',
       '/lcid ' + IntToStr(GetUILanguage) + ' /passive /norestart',
-      '.NET Runtime 7.0.5' + Dependency_ArchTitle,
-      Dependency_String('https://download.visualstudio.microsoft.com/download/pr/da45af44-e437-41b5-a5de-be6698557272/e4aaf2eafc2e983c275189f4a4161bae/dotnet-runtime-7.0.5-win-x86.exe', 'https://download.visualstudio.microsoft.com/download/pr/4b99bbc8-917a-417c-907b-d408341726a5/78b225344fbb9b80d3da3681e1d20d68/dotnet-runtime-7.0.5-win-x64.exe'),
+      '.NET Runtime 7.0.8' + Dependency_ArchTitle,
+      Dependency_String('https://dotnetcli.azureedge.net/dotnet/Runtime/7.0.8/dotnet-runtime-7.0.8-win-x86.exe', 'https://dotnetcli.azureedge.net/dotnet/Runtime/7.0.8/dotnet-runtime-7.0.8-win-x64.exe'),
       '', False, False);
   end;
 end;
@@ -428,11 +428,11 @@ end;
 procedure Dependency_AddDotNet70Asp;
 begin
   // https://dotnet.microsoft.com/download/dotnet/7.0
-  if not Dependency_IsNetCoreInstalled('Microsoft.AspNetCore.App 7.0.5') then begin
+  if not Dependency_IsNetCoreInstalled('Microsoft.AspNetCore.App 7.0.8') then begin
     Dependency_Add('dotnet70asp' + Dependency_ArchSuffix + '.exe',
       '/lcid ' + IntToStr(GetUILanguage) + ' /passive /norestart',
-      'ASP.NET Core Runtime 7.0.5' + Dependency_ArchTitle,
-      Dependency_String('https://download.visualstudio.microsoft.com/download/pr/423272b5-615c-436b-a198-a10518b3e8a3/e7587e2c70e4db7f9c93d0e6dbbc21f5/aspnetcore-runtime-7.0.5-win-x86.exe', 'https://download.visualstudio.microsoft.com/download/pr/02d08d3a-c846-40a9-a75d-4dcfa12b2d8d/c9d48b7ce67ad4e1356d9f3630f51cf4/aspnetcore-runtime-7.0.5-win-x64.exe'),
+      'ASP.NET Core Runtime 7.0.8' + Dependency_ArchTitle,
+      Dependency_String('https://dotnetcli.azureedge.net/dotnet/aspnetcore/Runtime/7.0.8/aspnetcore-runtime-7.0.8-win-x86.exe', 'https://dotnetcli.azureedge.net/dotnet/aspnetcore/Runtime/7.0.8/aspnetcore-runtime-7.0.8-win-x64.exe'),
       '', False, False);
   end;
 end;
@@ -440,11 +440,11 @@ end;
 procedure Dependency_AddDotNet70Desktop;
 begin
   // https://dotnet.microsoft.com/download/dotnet/7.0
-  if not Dependency_IsNetCoreInstalled('Microsoft.WindowsDesktop.App 7.0.5') then begin
+  if not Dependency_IsNetCoreInstalled('Microsoft.WindowsDesktop.App 7.0.8') then begin
     Dependency_Add('dotnet70desktop' + Dependency_ArchSuffix + '.exe',
       '/lcid ' + IntToStr(GetUILanguage) + ' /passive /norestart',
-      '.NET Desktop Runtime 7.0.5' + Dependency_ArchTitle,
-      Dependency_String('https://download.visualstudio.microsoft.com/download/pr/eb64dcd1-d277-4798-ada1-600805c9e2dc/fc73c843d66f3996e7ef22468f4902e6/windowsdesktop-runtime-7.0.5-win-x86.exe', 'https://download.visualstudio.microsoft.com/download/pr/dffb1939-cef1-4db3-a579-5475a3061cdd/578b208733c914c7b7357f6baa4ecfd6/windowsdesktop-runtime-7.0.5-win-x64.exe'),
+      '.NET Desktop Runtime 7.0.8' + Dependency_ArchTitle,
+      Dependency_String('https://dotnetcli.azureedge.net/dotnet/WindowsDesktop/7.0.8/windowsdesktop-runtime-7.0.8-win-x86.exe', 'https://dotnetcli.azureedge.net/dotnet/WindowsDesktop/7.0.8/windowsdesktop-runtime-7.0.8-win-x64.exe'),
       '', False, False);
   end;
 end;
