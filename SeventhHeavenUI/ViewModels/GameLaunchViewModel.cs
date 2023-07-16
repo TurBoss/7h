@@ -1,4 +1,5 @@
-﻿using SeventhHeaven.Classes;
+﻿using Iros._7th.Workshop;
+using SeventhHeaven.Classes;
 using SeventhHeavenUI;
 using SeventhHeavenUI.ViewModels;
 using System;
@@ -76,10 +77,13 @@ namespace SeventhHeaven.ViewModels
         internal void AppendToStatusLog(string message)
         {
             // invoke on UI thread to show message asap to user
-            App.Current.Dispatcher.Invoke(() =>
+            if (Sys.Settings.GameLaunchSettings.ShowLauncherWindow)
             {
-                StatusLog += $"{message}\n";
-            }, DispatcherPriority.Background);
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    StatusLog += $"{message}\n";
+                }, DispatcherPriority.Background);
+            }
 
             App.ForceUpdateUI();
         }

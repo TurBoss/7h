@@ -39,7 +39,6 @@ namespace SeventhHeaven.Windows
 
             if (!Sys.Settings.GameLaunchSettings.ShowLauncherWindow)
             {
-                launchWindow.WindowState = WindowState.Minimized;
                 launchWindow.Visibility = Visibility.Hidden;
                 launchWindow.ShowInTaskbar = false;
                 
