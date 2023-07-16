@@ -1207,6 +1207,12 @@ Do you want to apply the setting and try again?</system:String>
 
     <system:String x:Key="MountOptionToolTip">Select how to mount the virtual FF7DISC1 game disc. Windows 7 can only use the 'Mount Disc With WinCDEmu' option.</system:String>
 
-  <system:String x:Key="ControlsMenuItemText">Controls...</system:String>
+    <system:String x:Key="ControlsMenuItemText">Controls...</system:String>
 
+    <system:String x:Key="CheckForSystemDEPStatus">Checking System DEP status...</system:String>
+    <system:String x:Key="DEPDetected">DEP Detected</system:String>
+    <system:String x:Key="DoYouWantToDisableDEP">7th Heaven needs DEP disabled to inject mods, would you like to disable it now?</system:String>
+    <system:String x:Key="SystemDEPDisabledPleaseReboot">DEP disabled successfully. Please reboot the PC for the change to take effect.</system:String>
+    <system:String x:Key="CannotContinueWithDEPEnabled">DEP enabled. Please disable it to continue. Follow steps described in here: https://7thheaven.rocks/help/dep.html</system:String>
+    <system:String x:Key="SomethingWentWrongWhileDisablingDEP">Something went wrong while trying to disable DEP. You can still disable it manually. Please follow steps described in here: https://7thheaven.rocks/help/dep.html</system:String>
 </ResourceDictionary>

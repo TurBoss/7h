@@ -641,6 +641,12 @@
         DoNotMount,
         CanaryWarningTitle,
         CanaryWarningMessage,
-        PleaseUpdateFFNx
+        PleaseUpdateFFNx,
+        CheckForSystemDEPStatus,
+        DEPDetected,
+        DoYouWantToDisableDEP,
+        SystemDEPDisabledPleaseReboot,
+        CannotContinueWithDEPEnabled,
+        SomethingWentWrongWhileDisablingDEP
     }
 }

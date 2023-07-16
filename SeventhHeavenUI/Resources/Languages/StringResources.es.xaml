@@ -1252,4 +1252,11 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="CanaryWarningMessage">Gracias por cambiar al canal Canary.\n\nEste canal se ha preparado para usuarios avanzados que estén dispuestos a dar soporte en el desarrollo y reportar errores. NO USES ESTE CANAL si quieres tener una experiencia del juego Estable.\n\nPor favor, ten en cuenta que pueden ocurrir saltos a escritorio y que NADIE lo ha probado. ¡Úsalo bajo tu propio RIESGO!</system:String>
 
     <system:String x:Key="PleaseUpdateFFNx">No se ha podido cargar la configuración del archivo FFNx.toml. Esto habitualmente sucede cuando tu versión actual de FFNx está desactualizada. Considera actualizar FFNx a la última versión disponible para tu Canal elegido y vuélvelo a intentar.</system:String>
+
+    <system:String x:Key="CheckForSystemDEPStatus">Checking System DEP status...</system:String>
+    <system:String x:Key="DEPDetected">DEP Detected</system:String>
+    <system:String x:Key="DoYouWantToDisableDEP">7th Heaven needs DEP disabled to inject mods, would you like to disable it now?</system:String>
+    <system:String x:Key="SystemDEPDisabledPleaseReboot">DEP disabled successfully. Please reboot the PC for the change to take effect.</system:String>
+    <system:String x:Key="CannotContinueWithDEPEnabled">DEP enabled. Please disable it to continue. Follow steps described in here: https://7thheaven.rocks/help/dep.html</system:String>
+    <system:String x:Key="SomethingWentWrongWhileDisablingDEP">Something went wrong while trying to disable DEP. You can still disable it manually. Please follow steps described in here: https://7thheaven.rocks/help/dep.html</system:String>
 </ResourceDictionary>

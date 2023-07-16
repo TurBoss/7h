@@ -12,6 +12,16 @@ using System.Text;
 
 namespace _7thWrapperLib {
     public static class Win32 {
+
+        public enum DEP_SYSTEM_POLICY_TYPE
+        {
+            DEPPolicyAlwaysOff = 0,
+            DEPPolicyAlwaysOn,
+            DEPPolicyOptIn,
+            DEPPolicyOptOut,
+            DEPTotalPolicyCount,
+        }
+
         public enum EMoveMethod : uint
         {
             Begin = 0,
@@ -103,6 +113,11 @@ namespace _7thWrapperLib {
         [DllImport("kernel32.dll", SetLastError = true)]
         static internal extern int WriteFile(IntPtr hFile, IntPtr lpBuffer, uint nNumberOfBytesToWrite,
             out uint lpNumberOfBytesWritten, [In] ref System.Threading.NativeOverlapped lpOverlapped);
+
+        [DllImport("kernel32", ExactSpelling = true)]
+        public static extern DEP_SYSTEM_POLICY_TYPE GetSystemDEPPolicy();
+
+
     }
 
 }

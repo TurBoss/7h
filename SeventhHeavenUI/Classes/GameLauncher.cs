@@ -95,6 +95,53 @@ namespace SeventhHeaven.Classes
             MainWindowViewModel.SaveActiveProfile();
             Sys.Save();
 
+            // Check for DEP
+            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CheckForSystemDEPStatus));
+            switch (_7thWrapperLib.Win32.GetSystemDEPPolicy())
+            {
+                case _7thWrapperLib.Win32.DEP_SYSTEM_POLICY_TYPE.DEPPolicyAlwaysOn:
+                case _7thWrapperLib.Win32.DEP_SYSTEM_POLICY_TYPE.DEPPolicyOptOut:
+                    if (MessageDialogWindow.Show(ResourceHelper.Get(StringKey.DoYouWantToDisableDEP), ResourceHelper.Get(StringKey.DEPDetected), MessageBoxButton.YesNo, MessageBoxImage.Warning).Result == MessageBoxResult.Yes)
+                    {
+                        string fileName = Path.Combine(Sys.PathToTempFolder, "fixdep.bat");
+
+                        System.IO.File.WriteAllText(
+                            fileName,
+                            $@"@echo off
+@bcdedit /set nx OptIn
+"
+                        );
+
+                        try
+                        {
+                            // Execute temp batch script with admin privileges
+                            ProcessStartInfo startInfo = new ProcessStartInfo(fileName)
+                            {
+                                CreateNoWindow = false,
+                                UseShellExecute = true,
+                                Verb = "runas"
+                            };
+
+                            // Launch process, wait and then save exit code
+                            using (Process temp = Process.Start(startInfo))
+                            {
+                                temp.WaitForExit();
+                            }
+
+                            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.SystemDEPDisabledPleaseReboot), NLog.LogLevel.Info);
+                        }
+                        catch (Exception e)
+                        {
+                            Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.SomethingWentWrongWhileDisablingDEP), NLog.LogLevel.Error);
+                        }
+                    }
+                    else
+                    {
+                        Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CannotContinueWithDEPEnabled), NLog.LogLevel.Warn);
+                    }
+                    return false;
+            }
+
             Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.CheckingFf7IsNotRunning));
             if (IsFF7Running())
             {

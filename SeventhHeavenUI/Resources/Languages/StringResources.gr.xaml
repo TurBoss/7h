@@ -1246,4 +1246,11 @@
     <system:String x:Key="CanaryWarningMessage">Thank you for switching to the Canary channel.\n\nThis channel is suggested only for advanced users who are willing to support the development and report bugs. DO NOT USE this channel if you're willing to have a Stable gameplay experience.\n\nPlease be aware it may be prone to crashing and is NOT tested by anyone. Use this build AT YOUR OWN RISK!</system:String>
 
     <system:String x:Key="PleaseUpdateFFNx">Could not load the settings from the FFNx.toml file. This likely happens when your current version of FFNx is outdated. Consider updating FFNx to the latest version available for your chosen Channel and try again.</system:String>
+
+    <system:String x:Key="CheckForSystemDEPStatus">Checking System DEP status...</system:String>
+    <system:String x:Key="DEPDetected">DEP Detected</system:String>
+    <system:String x:Key="DoYouWantToDisableDEP">7th Heaven needs DEP disabled to inject mods, would you like to disable it now?</system:String>
+    <system:String x:Key="SystemDEPDisabledPleaseReboot">DEP disabled successfully. Please reboot the PC for the change to take effect.</system:String>
+    <system:String x:Key="CannotContinueWithDEPEnabled">DEP enabled. Please disable it to continue. Follow steps described in here: https://7thheaven.rocks/help/dep.html</system:String>
+    <system:String x:Key="SomethingWentWrongWhileDisablingDEP">Something went wrong while trying to disable DEP. You can still disable it manually. Please follow steps described in here: https://7thheaven.rocks/help/dep.html</system:String>
 </ResourceDictionary>
