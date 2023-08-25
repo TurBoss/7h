@@ -1,10 +1,10 @@
-set(COMMIT_HASH v7.0.9)
+set(COMMIT_HASH v7.0.10)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dotnet/runtime
     REF ${COMMIT_HASH}
-    SHA512 96a24970501180e7f5b7b428eece2ebc1e1c81b1bc41a415fb23a55f1c40eec3bac45ee6864b103f3c28e03352018f9d3b4cc7b2c124f8e9c07d764801e3fcb3
+    SHA512 7fc3dd2ee758052a1ef96b18cece38a948a7c1b4c3fc65f6e36f80392db8f5577ea36eadae386e063a8b93cfe991ba601be6340881ef8c11c065e0c7a5ff5d09
     HEAD_REF master
     PATCHES
         0001-nethost-cmakelists.patch
