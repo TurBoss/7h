@@ -267,6 +267,7 @@ Dovresti utilizzare questa opzione solo mentre cerchi di individuare problemi in
 
     <system:String x:Key="AreYouSureYouWantToExitPendingDownloads">Sei sicuro di voler uscire? Ci sono dei download in sospeso.</system:String>
     <system:String x:Key="ConfirmExit">Conferma</system:String>
+    <system:String x:Key="Exit">Exit</system:String>
 
     <system:String x:Key="CannotExitWhileImporting">Your mods are currently being imported and closing 7th Heaven may lead to a serious corrupted state. Please wait for this process to finish and try again later.</system:String>
 

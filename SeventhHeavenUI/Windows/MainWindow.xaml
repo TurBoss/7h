@@ -182,6 +182,11 @@
                     </cls:ButtonWithImage.ContextMenu>
                 </cls:ButtonWithImage>
 
+                <cls:ButtonWithImage x:Name="btnExit"
+                   Margin="0,0,0,0" ContextMenuService.Placement="Bottom"
+                   Content="{DynamicResource Exit}" TemplateSource="{StaticResource iconStop}" VerticalAlignment="Center" Click="btnExit_Click">
+                </cls:ButtonWithImage>
+
             </WrapPanel>
         </Viewbox>
 
