@@ -59,6 +59,10 @@
     <OutputPath>bin\x64\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Windows\custom_bg.png" />
+    <None Remove="Windows\custom_logo.png" />
+  </ItemGroup>
+  <ItemGroup>
     <RuntimeHostConfigurationOption Include="System.Net.SocketsHttpHandler.Http3Support" Value="false" />
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +167,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Resource Include="7H.ico" />
+    <Resource Include="Windows\custom_bg.png" />
+    <Resource Include="Windows\custom_logo.png" />
     <None Update="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
