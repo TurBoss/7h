@@ -4,6 +4,11 @@
              xmlns:local="clr-namespace:SeventhLauncher"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Name="SharedStyles" Source="Resources/SharedStyles.xaml"/>
+                <ResourceDictionary x:Name="StringResources" Source="Resources/StringResources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
