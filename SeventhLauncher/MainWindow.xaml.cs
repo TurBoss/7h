@@ -14,26 +14,26 @@ using System.Text;
 using NLog;
 using System.IO;
 
-namespace SeventhHeavenUI
+namespace SeventhLauncher
 {
 
 
     /// <summary>
-    /// Lógica de interacción para ModLauncher.xaml
+    /// Lógica de interacción para MainWindow.xaml
     /// </summary>
-    public partial class ModLauncher : Window
+    public partial class MainWindow : Window
     {
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private static ModLauncher _instance;
+        private static MainWindow _instance;
 
-        public static ModLauncher Instance
+        public static MainWindow Instance
         {
             get
             {
                 if (_instance == null)
-                    _instance = new ModLauncher();
+                    _instance = new MainWindow();
 
                 return _instance;
             }
@@ -58,7 +58,7 @@ namespace SeventhHeavenUI
         public bool is_dev { get; private set; }
         public string download_msg { get; private set; }
 
-        public ModLauncher()
+        public MainWindow()
         {
 
             InitializeComponent();
