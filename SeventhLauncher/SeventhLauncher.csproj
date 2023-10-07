@@ -9,6 +9,7 @@
     <AssemblyName>7th Launcher</AssemblyName>
     <RootNamespace>SeventhLauncher</RootNamespace>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
+    <ApplicationIcon>Launcher\custom_icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -22,7 +23,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Launcher\custom_icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SeventhHeavenUI\SeventhHeavenUI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Launcher\custom_bg.png" />
+    <Resource Include="Launcher\custom_logo.png" />
   </ItemGroup>
 
 </Project>
