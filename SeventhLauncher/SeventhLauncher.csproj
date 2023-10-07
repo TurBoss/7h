@@ -13,6 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SeventhHeavenUI\SeventhHeavenUI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="custom_bg.png" />
     <Resource Include="custom_logo.png" />
   </ItemGroup>
