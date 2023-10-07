@@ -5,20 +5,25 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <UseWindowsForms>True</UseWindowsForms>
+    <StartupObject>SeventhLauncher.App</StartupObject>
+    <AssemblyName>7th Launcher</AssemblyName>
+    <RootNamespace>SeventhLauncher</RootNamespace>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <NoWarn>CA1416</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <NoWarn>CA1416</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="custom_bg.png" />
-    <None Remove="custom_logo.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SeventhHeavenUI\SeventhHeavenUI.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="custom_bg.png" />
-    <Resource Include="custom_logo.png" />
   </ItemGroup>
 
 </Project>

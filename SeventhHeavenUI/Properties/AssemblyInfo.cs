@@ -3,6 +3,7 @@ using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Markup;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
@@ -15,6 +16,10 @@ using System.Windows;
 [assembly: AssemblyCopyright("Tsunamods Team © 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+
+// See https://stackoverflow.com/a/13367579/1518095
+[assembly: XmlnsDefinition("https://7thheaven.rocks/SeventhHeavenUI/Classes", "SeventhHeaven.Classes")]
+[assembly: XmlnsDefinition("https://7thheaven.rocks/SeventhHeavenUI/UserControls", "SeventhHeaven.UserControls")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from

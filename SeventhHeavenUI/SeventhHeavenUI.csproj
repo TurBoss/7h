@@ -43,6 +43,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>7H.ico</ApplicationIcon>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <OutputPath>bin\x86\Debug\</OutputPath>
