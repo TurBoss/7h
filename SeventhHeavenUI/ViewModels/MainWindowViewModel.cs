@@ -1625,7 +1625,7 @@ namespace SeventhHeavenUI.ViewModels
             return AppHints[r.Next(0, AppHints.Count)];
         }
 
-        internal void LaunchGame(bool variableDump = false, bool debugLogging = false, bool noMods = false, bool noValidation = false)
+        public void LaunchGame(bool variableDump = false, bool debugLogging = false, bool noMods = false, bool noValidation = false)
         {
             IsGameLaunching = true;
             GameLauncher.Instance.LaunchCompleted += GameLauncher_LaunchCompleted;
@@ -1773,7 +1773,7 @@ namespace SeventhHeavenUI.ViewModels
         /// <summary>
         /// Opens the 'Profiles' window to manage and switch profiles
         /// </summary>
-        internal void ShowProfilesWindow()
+        public void ShowProfilesWindow()
         {
             SaveActiveProfile(); // ensure current profile is saved to disk so it shows in list of profiles
 
@@ -1795,7 +1795,7 @@ namespace SeventhHeavenUI.ViewModels
             toolWindow.ShowDialog();
         }
 
-        internal void ShowGeneralSettingsWindow()
+        public void ShowGeneralSettingsWindow()
         {
             GeneralSettingsWindow settingsWindow = new GeneralSettingsWindow()
             {
@@ -1854,7 +1854,7 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
-        internal void ShowGameLaunchSettingsWindow()
+        public void ShowGameLaunchSettingsWindow()
         {
             GameLaunchSettingsWindow launchSettingsWindow = new GameLaunchSettingsWindow();
             launchSettingsWindow.ShowDialog();

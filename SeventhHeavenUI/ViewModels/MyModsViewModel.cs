@@ -605,7 +605,7 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
-        internal void DeactivateAllActiveMods()
+        public void DeactivateAllActiveMods()
         {
             foreach (InstalledModViewModel installedMod in ModList.Where(m => m.IsActive).ToList())
             {
@@ -615,7 +615,7 @@ namespace SeventhHeavenUI.ViewModels
             ReloadModList();
         }
 
-        internal void ActivateAllMods()
+        public void ActivateAllMods()
         {
             foreach (InstalledModViewModel installedMod in ModList.Where(m => !m.IsActive).ToList())
             {
@@ -954,7 +954,7 @@ namespace SeventhHeavenUI.ViewModels
             ReloadModList(GetSelectedMod()?.InstallInfo?.ModID);
         }
 
-        internal void ScanForModUpdates()
+        public void ScanForModUpdates()
         {
             foreach (InstalledItem inst in Sys.Library.Items.ToList())
             {
