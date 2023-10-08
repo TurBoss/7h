@@ -10,10 +10,11 @@
         mc:Ignorable="d"
         Title="ModLauhcer"
         WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded"
         Height="623"
         Width="1014"
         MinHeight="520" MinWidth="870"
-        ResizeMode="NoResize" Icon="/Launcher/custom_logo.png">
+        ResizeMode="NoResize" Icon="/Launcher/custom_logo.png" Topmost="True">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
@@ -25,27 +26,24 @@
                     <ImageBrush Stretch="UniformToFill" ImageSource="/Launcher/custom_bg.png"/>
                 </Grid.Background>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="252*"/>
-                    <RowDefinition Height="407*"/>
+                    <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="171*"/>
-                    <ColumnDefinition Width="342*"/>
-                    <ColumnDefinition Width="505*"/>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="play_button" Content="Play" Height="38" Margin="0,203,0,0" Width="120" HorizontalAlignment="Center" VerticalAlignment="Top" Click="play_button_Click" Foreground="#FFE4AB0F" Grid.Row="1"/>
-                <Button x:Name="quit_button" Content="Quit" Height="38" Margin="0,299,0,0" Width="120" HorizontalAlignment="Center" VerticalAlignment="Top" Click="quit_button_Click" Foreground="#FFE4AB0F" Grid.Row="1"/>
-                <Button x:Name="launcher_button" Content="Launcher" Margin="292,248,0,120" Click="launcher_button_Click" HorizontalAlignment="Left" Width="82" Grid.Column="2" Foreground="#FFE4AB0F" Grid.Row="1"/>
-                <Button x:Name="ffnx_button" Content="FFnX" Margin="389,248,0,120" Click="ffnx_button_Click" HorizontalAlignment="Left" Width="82" Grid.Column="2" Foreground="#FFE4AB0F" Grid.Row="1"/>
-                <Button x:Name="controller_button" Content="Controller" Margin="292,303,0,65" Click="controller_button_Click" HorizontalAlignment="Left" Width="82" Grid.Column="2" Foreground="#FFE4AB0F" Grid.Row="1"/>
-                <Button x:Name="system_button" Content="System" Margin="390,303,0,65" Click="system_button_Click" HorizontalAlignment="Left" Width="82" Grid.Column="2" Foreground="#FFE4AB0F" Grid.Row="1"/>
-                <Button x:Name="profile_button" Content="Profile" Margin="292,196,0,172" Click="profile_button_Click" HorizontalAlignment="Left" Width="82" Grid.Column="2" Foreground="#FFE4AB0F" Grid.Row="1"/>
-                <Button x:Name="options_button" Content="Options" Height="38" Margin="0,251,0,0" Width="120" HorizontalAlignment="Center" VerticalAlignment="Top" Click="options_button_Click" Foreground="#FFE4AB0F" Grid.Row="1"/>
-                <Button x:Name="content_button" Content="hide tools" Height="38" Margin="335,0,0,0" Width="103" HorizontalAlignment="Left" VerticalAlignment="Center" Click="content_button_Click" Grid.Column="2" Foreground="#FFE4AB0F"/>
-                <ProgressBar x:Name="download_bar" HorizontalAlignment="Left" Height="32" Margin="38,68,0,0" VerticalAlignment="Top" Width="476" Grid.ColumnSpan="2" Foreground="#FF8A8315" Grid.Row="1" Grid.Column="1"/>
-                <TextBlock x:Name="download_text" HorizontalAlignment="Left" Margin="28,74,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="470" Grid.ColumnSpan="2" TextAlignment="Center" FontSize="18" Grid.Row="1" Grid.Column="1"/>
-                <Button x:Name="convert_button" Content="CONVERT&#xD;&#xA;" Margin="0,105,0,88" Click="convert_button_Click" HorizontalAlignment="Center" Width="140" Foreground="#FFE4AB0F" Grid.Column="2"/>
-                <Button x:Name="content_button_Copy" Content="show tools" Height="38" Margin="337,153,0,0" Width="103" HorizontalAlignment="Left" VerticalAlignment="Top" Click="content_button_Click" Grid.Column="2" Foreground="#FFE4AB0F"/>
+                <Button x:Name="play_button" Content="Play" Height="38" Margin="26,455,0,0" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" Click="play_button_Click" Foreground="#FFE4AB0F"/>
+                <Button x:Name="quit_button" Content="Quit" Height="38" Margin="26,551,0,0" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" Click="quit_button_Click" Foreground="#FFE4AB0F"/>
+                <Button x:Name="launcher_button" Content="Launcher" Margin="805,500,0,120" Click="launcher_button_Click" HorizontalAlignment="Left" Width="82" Foreground="#FFE4AB0F"/>
+                <Button x:Name="ffnx_button" Content="FFnX" Margin="902,500,0,120" Click="ffnx_button_Click" HorizontalAlignment="Left" Width="82" Foreground="#FFE4AB0F"/>
+                <Button x:Name="controller_button" Content="Controller" Margin="805,555,0,65" Click="controller_button_Click" HorizontalAlignment="Left" Width="82" Foreground="#FFE4AB0F"/>
+                <Button x:Name="system_button" Content="System" Margin="903,555,0,65" Click="system_button_Click" HorizontalAlignment="Left" Width="82" Foreground="#FFE4AB0F"/>
+                <Button x:Name="profile_button" Content="Profile" Margin="805,448,0,172" Click="profile_button_Click" HorizontalAlignment="Left" Width="82" Foreground="#FFE4AB0F"/>
+                <Button x:Name="options_button" Content="Options" Height="38" Margin="26,503,0,0" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" Click="options_button_Click" Foreground="#FFE4AB0F"/>
+                <Button x:Name="content_button" Content="hide tools" Height="38" Margin="848,107,0,0" Width="103" HorizontalAlignment="Left" VerticalAlignment="Top" Click="content_button_Click" Foreground="#FFE4AB0F"/>
+                <ProgressBar x:Name="download_bar" HorizontalAlignment="Left" Height="32" Margin="209,320,0,0" VerticalAlignment="Top" Width="476" Foreground="#FF8A8315"/>
+                <TextBlock x:Name="download_text" HorizontalAlignment="Left" Margin="210,321,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="470" TextAlignment="Center" FontSize="18"/>
+                <Button x:Name="convert_button" Content="CONVERT&#xD;&#xA;" Margin="696,105,0,495" Click="convert_button_Click" HorizontalAlignment="Left" Width="140" Foreground="#FFE4AB0F"/>
+                <Button x:Name="content_button_Copy" Content="show tools" Height="38" Margin="850,153,0,0" Width="103" HorizontalAlignment="Left" VerticalAlignment="Top" Click="content_button_Click" Foreground="#FFE4AB0F"/>
 
 
             </Grid>

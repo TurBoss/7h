@@ -65,13 +65,13 @@ namespace SeventhLauncher
 
             SettingsVM = new GeneralSettingsViewModel();
             MainWindowVM = new MainWindowViewModel();
-            ModsVM = new MyModsViewModel();
-            CatalogVM = new CatalogViewModel();
+            // ModsVM = new MyModsViewModel();
+            // CatalogVM = new CatalogViewModel();
 
             this.DataContext = MainWindowVM;
 
-            this.ctrlMyMods.SetDataContext(ModsVM);
-            this.ctrlCatalog.SetDataContext(CatalogVM);
+            this.ctrlMyMods.SetDataContext(MainWindowVM.MyMods);
+            this.ctrlCatalog.SetDataContext(MainWindowVM.CatalogMods);
 
 
 
@@ -178,7 +178,6 @@ namespace SeventhLauncher
 
         public void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("init done");
             MainWindowVM.InitViewModel();
             var main_loop = Main();
         }
