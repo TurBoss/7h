@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SeventhHeavenUI"
+        xmlns:local="clr-namespace:SeventhLauncher"
         xmlns:ctrl="https://7thheaven.rocks/SeventhHeavenUI/UserControls"
         xmlns:cls="https://7thheaven.rocks/SeventhHeavenUI/Classes"
         xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
@@ -11,17 +11,17 @@
         Title="ModLauhcer"
         WindowStartupLocation="CenterScreen"
         Loaded="Window_Loaded"
-        Height="623"
-        Width="1014"
-        MinHeight="520" MinWidth="870"
-        ResizeMode="NoResize" Icon="/Launcher/custom_logo.png" Topmost="True">
+        Height="640"
+        Width="1024"
+        MinHeight="640" MinWidth="1024"
+        ResizeMode="NoResize" Icon="/Launcher/custom_logo.png" Topmost="True" Background="#FF0F0F0F">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
 
-    <TabControl Grid.ColumnSpan="2" Margin="-3,-2,-5,-1" Grid.RowSpan="2">
-        <TabItem Header="TabItem">
-            <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="1018" Height="659">
+    <TabControl x:Name="main_control" Grid.ColumnSpan="2" Grid.RowSpan="2" Foreground="#FF0F0F0F">
+        <TabItem x:Name="main_tab" Header="Main">
+            <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="1018" Height="577">
                 <Grid.Background>
                     <ImageBrush Stretch="UniformToFill" ImageSource="/Launcher/custom_bg.png"/>
                 </Grid.Background>
@@ -31,29 +31,35 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="play_button" Content="Play" Height="38" Margin="26,455,0,0" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" Click="play_button_Click" Foreground="#FFE4AB0F"/>
-                <Button x:Name="quit_button" Content="Quit" Height="38" Margin="26,551,0,0" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" Click="quit_button_Click" Foreground="#FFE4AB0F"/>
-                <Button x:Name="launcher_button" Content="Launcher" Margin="805,500,0,120" Click="launcher_button_Click" HorizontalAlignment="Left" Width="82" Foreground="#FFE4AB0F"/>
-                <Button x:Name="ffnx_button" Content="FFnX" Margin="902,500,0,120" Click="ffnx_button_Click" HorizontalAlignment="Left" Width="82" Foreground="#FFE4AB0F"/>
-                <Button x:Name="controller_button" Content="Controller" Margin="805,555,0,65" Click="controller_button_Click" HorizontalAlignment="Left" Width="82" Foreground="#FFE4AB0F"/>
-                <Button x:Name="system_button" Content="System" Margin="903,555,0,65" Click="system_button_Click" HorizontalAlignment="Left" Width="82" Foreground="#FFE4AB0F"/>
-                <Button x:Name="profile_button" Content="Profile" Margin="805,448,0,172" Click="profile_button_Click" HorizontalAlignment="Left" Width="82" Foreground="#FFE4AB0F"/>
-                <Button x:Name="options_button" Content="Options" Height="38" Margin="26,503,0,0" Width="120" HorizontalAlignment="Left" VerticalAlignment="Top" Click="options_button_Click" Foreground="#FFE4AB0F"/>
-                <Button x:Name="content_button" Content="hide tools" Height="38" Margin="848,107,0,0" Width="103" HorizontalAlignment="Left" VerticalAlignment="Top" Click="content_button_Click" Foreground="#FFE4AB0F"/>
-                <ProgressBar x:Name="download_bar" HorizontalAlignment="Left" Height="32" Margin="209,320,0,0" VerticalAlignment="Top" Width="476" Foreground="#FF8A8315"/>
-                <TextBlock x:Name="download_text" HorizontalAlignment="Left" Margin="210,321,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="470" TextAlignment="Center" FontSize="18"/>
-                <Button x:Name="convert_button" Content="CONVERT&#xD;&#xA;" Margin="696,105,0,495" Click="convert_button_Click" HorizontalAlignment="Left" Width="140" Foreground="#FFE4AB0F"/>
-                <Button x:Name="content_button_Copy" Content="show tools" Height="38" Margin="850,153,0,0" Width="103" HorizontalAlignment="Left" VerticalAlignment="Top" Click="content_button_Click" Foreground="#FFE4AB0F"/>
+                <Button x:Name="play_button" Content="Play" Height="57" Margin="425,133,0,0" Width="156" HorizontalAlignment="Left" VerticalAlignment="Top" Click="play_button_Click" Foreground="#FFE4AB0F" FontSize="28"/>
+                <Button x:Name="quit_button" Content="Quit" Height="58" Margin="425,278,0,0" Width="156" HorizontalAlignment="Left" VerticalAlignment="Top" Click="quit_button_Click" Foreground="#FFE4AB0F" FontSize="28"/>
+                <Button x:Name="options_button" Content="Options" Height="57" Margin="425,205,0,0" Width="156" HorizontalAlignment="Left" VerticalAlignment="Top" Click="options_button_Click" Foreground="#FFE4AB0F" FontSize="28"/>
+                <ProgressBar x:Name="download_bar" HorizontalAlignment="Left" Height="32" Margin="262,412,0,0" VerticalAlignment="Top" Width="476" Foreground="#FF8A8315"/>
+                <TextBlock x:Name="download_text" HorizontalAlignment="Left" Margin="262,413,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="28" Width="470" TextAlignment="Center" FontSize="18"/>
+                <Button x:Name="convert_button" Content="CONVERT&#xD;&#xA;" Margin="591,151,0,449" Click="convert_button_Click" HorizontalAlignment="Center" Width="140" Foreground="#FFE4AB0F" Height="60" VerticalAlignment="Center" Visibility="Hidden"/>
+                <ToggleButton x:Name="develop_button" Content="Develop" Height="40" Margin="789,468,0,0" Width="152" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FFE4AB0F" Background="#FF1F1F1F" Checked="develop_button_Checked" Unchecked="develop_button_Unchecked" BorderBrush="#FF707070" BorderThickness="0,0,0,0" IsChecked="False"/>
+                <CheckBox x:Name="debug_log_checkbox" Content="Debug Log" HorizontalAlignment="Left" Margin="817,425,0,0" VerticalAlignment="Top" Checked="debug_log_checkbox_Checked" Unchecked="debug_log_checkbox_Unchecked"/>
+                <CheckBox x:Name="variable_dump_checkbox" Content="Variable Dump" HorizontalAlignment="Left" Margin="816,392,0,0" VerticalAlignment="Top" Checked="variable_dump_checkbox_Checked" Unchecked="variable_dump_checkbox_Unchecked"/>
 
 
             </Grid>
         </TabItem>
-        <TabItem Header="TabItem">
+        <TabItem x:Name="options_tab" HorizontalAlignment="Center" Height="25" Header="Options" VerticalAlignment="Center" Width="81">
+            <Grid Background="#FF0F0F0F" Width="1005" HorizontalAlignment="Stretch">
+                <Button x:Name="launcher_button" Content="Launcher" Click="launcher_button_Click" Foreground="#FFE4AB0F" Grid.IsSharedSizeScope="True" Margin="0,175,478,0" VerticalAlignment="Top" Width="100" Height="40" HorizontalAlignment="Right"/>
+                <Button x:Name="ffnx_button" Content="FFnX" Click="ffnx_button_Click" Foreground="#FFE4AB0F" Grid.IsSharedSizeScope="True" Margin="0,276,478,0" VerticalAlignment="Top" Width="100" Height="40" HorizontalAlignment="Right"/>
+                <Button x:Name="controller_button" Content="Controller" Click="controller_button_Click" Foreground="#FFE4AB0F" Grid.IsSharedSizeScope="True" Margin="0,225,478,0" VerticalAlignment="Top" Width="100" Height="40" HorizontalAlignment="Right"/>
+                <Button x:Name="system_button" Content="System" Click="system_button_Click" Foreground="#FFE4AB0F" Grid.IsSharedSizeScope="True" Margin="0,329,478,0" VerticalAlignment="Top" Width="100" Height="40" HorizontalAlignment="Right"/>
+                <Button x:Name="profile_button" Content="Profile" Click="profile_button_Click" Foreground="#FFE4AB0F" Grid.IsSharedSizeScope="True" Margin="0,125,478,0" VerticalAlignment="Top" Width="100" Height="40" HorizontalAlignment="Right"/>
+                <Button x:Name="back_button" Content="Back" Click="back_button_Click" Foreground="#FFE4AB0F" Grid.IsSharedSizeScope="True" Margin="0,449,478,0" VerticalAlignment="Top" Width="100" Height="40" HorizontalAlignment="Right"/>
+            </Grid>
+        </TabItem>
+        <TabItem x:Name="mods_tab" Header="Mods">
             <Grid Background="#FFE5E5E5">
                 <ctrl:MyModsUserControl x:Name="ctrlMyMods" Margin="0,-2,0,-1"/>
             </Grid>
         </TabItem>
-        <TabItem Header="TabItem" HorizontalAlignment="Right" Width="81">
+        <TabItem x:Name="catalog_tab" Header="Catlog" HorizontalAlignment="Right" Width="81">
             <Grid Background="#FFE5E5E5">
                 <ctrl:CatalogUserControl x:Name="ctrlCatalog" Margin="0,-3,0,-2"/>
             </Grid>

@@ -13,6 +13,7 @@ using System.Windows;
 using System.Text;
 using NLog;
 using System.IO;
+using System.Diagnostics;
 
 namespace SeventhLauncher
 {
@@ -56,6 +57,8 @@ namespace SeventhLauncher
         public bool show_content { get; private set; }
         public bool show_options { get; private set; }
         public bool is_dev { get; private set; }
+        public bool enable_var_dump { get; private set; }
+        public bool enable_debug_log { get; private set; }
         public string download_msg { get; private set; }
 
         public MainWindow()
@@ -77,18 +80,40 @@ namespace SeventhLauncher
 
             this.show_content = false;
             this.show_options = false;
+            // this.is_dev = false;
             this.is_dev = true;
+
+            this.enable_debug_log = false;
+            this.enable_var_dump = false;
+
             this.download_msg = "";
 
-            this.ctrlMyMods.Visibility = Visibility.Hidden;
-            this.ctrlCatalog.Visibility = Visibility.Hidden;
 
+            this.main_tab.Visibility = Visibility.Hidden;
+            this.mods_tab.Visibility = Visibility.Hidden;
+            this.catalog_tab.Visibility = Visibility.Hidden;
+            this.options_tab.Visibility = Visibility.Hidden;
+
+            if (this.is_dev == true)
+            {
+                this.develop_button.Visibility = Visibility.Visible;
+                this.variable_dump_checkbox.Visibility = Visibility.Visible;
+                this.debug_log_checkbox.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.develop_button.Visibility = Visibility.Hidden;
+                this.variable_dump_checkbox.Visibility = Visibility.Hidden;
+                this.debug_log_checkbox.Visibility = Visibility.Hidden;
+            }
+
+            /*
             this.profile_button.Visibility = Visibility.Hidden;
             this.launcher_button.Visibility = Visibility.Hidden;
             this.ffnx_button.Visibility = Visibility.Hidden;
             this.controller_button.Visibility = Visibility.Hidden;
             this.system_button.Visibility = Visibility.Hidden;
-            this.content_button.Visibility = Visibility.Hidden;
+            */
 
             this.download_bar.Visibility = Visibility.Hidden;
             this.download_text.Visibility = Visibility.Hidden;
@@ -210,7 +235,7 @@ namespace SeventhLauncher
                 int downloading_mods = MainWindowVM.CatalogMods.DownloadList.Count;
                 int installed_mods = Sys.ActiveProfile.Items.Count();
 
-                if (isOkToPlay())
+                if (this.isOkToPlay())
                 {
                     this.play_button.Content = "Play";
                     this.play_button.IsEnabled = true;
@@ -220,12 +245,14 @@ namespace SeventhLauncher
                 else if (downloading_mods > 0)
                 {
                     this.play_button.Content = "Downloading";
+                    this.play_button.IsEnabled = false;
                     this.download_bar.Visibility = Visibility.Visible;
                     this.download_text.Visibility = Visibility.Visible;
                 }
                 else
                 {
                     this.play_button.Content = "Install";
+                    this.play_button.IsEnabled = true;
                     this.download_bar.Visibility = Visibility.Hidden;
                     this.download_text.Visibility = Visibility.Hidden;
                 }
@@ -309,6 +336,9 @@ namespace SeventhLauncher
 
         public bool isOkToPlay()
         {
+
+            Debug.WriteLine("CHEK GAME");
+
             bool install_ok = true;
 
             Catalog catalog = Sys.Catalog;
@@ -317,10 +347,39 @@ namespace SeventhLauncher
             foreach (Mod mod in catalog.Mods)
             {
                 ProfileItem v = profile.GetItem(mod.ID);
-                Console.WriteLine(v);
+                //Console.WriteLine(v);
+
                 if (v == null)
                 {
                     install_ok = false;
+                }
+            }
+
+            foreach (ProfileItem profile_mod in profile.Items)
+            {
+                Mod catalog_mod = catalog.GetMod(profile_mod.ModID);
+                if (catalog_mod != null)
+                {
+                    
+                    
+
+                    Debug.Write("LOCAL MOD: ");
+                    Debug.Write(profile_mod.Name);
+                    Debug.Write(" ID: ");
+                    Debug.WriteLine(profile_mod.ModID);
+
+                    Debug.Write("REMOTE MOD: ");
+                    Debug.Write(catalog_mod.Name);
+                    Debug.Write(" ID: ");
+                    Debug.WriteLine(catalog_mod.ID);
+
+                }
+                else
+                {
+                    Debug.Write("Mod Pirata: ");
+                    Debug.WriteLine(profile_mod.Name);
+                    install_ok = false;
+
                 }
             }
 
@@ -330,6 +389,11 @@ namespace SeventhLauncher
 
         private void options_button_Click(object sender, RoutedEventArgs e)
         {
+
+            this.main_control.SelectedItem = this.options_tab;
+
+            /*
+
             this.show_options = !this.show_options;
 
 
@@ -341,7 +405,11 @@ namespace SeventhLauncher
                 this.ffnx_button.Visibility = Visibility.Visible;
                 this.controller_button.Visibility = Visibility.Visible;
                 this.system_button.Visibility = Visibility.Visible;
-                this.content_button.Visibility = Visibility.Visible;
+                 
+                if (this.is_dev == true)
+                {
+                    this.develop_button.Visibility = Visibility.Visible;
+                }
             }
             else
             {
@@ -350,16 +418,18 @@ namespace SeventhLauncher
                 this.ffnx_button.Visibility = Visibility.Hidden;
                 this.controller_button.Visibility = Visibility.Hidden;
                 this.system_button.Visibility = Visibility.Hidden;
-                this.content_button.Visibility = Visibility.Hidden;
 
-                if (this.is_dev)
+                if (this.is_dev == true)
                 {
-                    this.ctrlMyMods.Visibility = Visibility.Hidden;
+                    this.develop_button.Visibility = Visibility.Hidden;
+                    this.develop_button.IsChecked = false;
                 }
-                this.ctrlCatalog.Visibility = Visibility.Hidden;
 
                 this.show_content = this.show_options;
             }
+
+
+            */
 
 
         }
@@ -393,7 +463,8 @@ namespace SeventhLauncher
             }
             else
             {
-                MainWindowVM.LaunchGame(variableDump: false, debugLogging: false);
+                MainWindowVM.LaunchGame(variableDump: enable_var_dump, debugLogging: enable_var_dump);
+
                 if (!this.is_dev) quit_app();
 
             }
@@ -417,18 +488,19 @@ namespace SeventhLauncher
         private void quit_app()
         {
 
-            Sys.Settings.MainWindow = new SavedWindow()
-            {
-                X = (int)System.Windows.Application.Current.MainWindow.Left,
-                Y = (int)System.Windows.Application.Current.MainWindow.Top,
-                W = (int)ActualWidth,
-                H = (int)ActualHeight,
-                State = WindowState
-            };
+            // Sys.Settings.MainWindow = new SavedWindow()
+            //{
+            //     X = (int)System.Windows.Application.Current.MainWindow.Left,
+            //     Y = (int)System.Windows.Application.Current.MainWindow.Top,
+            //     W = (int)ActualWidth,
+            //     H = (int)ActualHeight,
+            //     State = WindowState
+            // };
 
             //  this.ctrlCatalog.SaveUsersColumnSettings();
 
             Sys.Save();
+            Environment.Exit(0);
 
         }
 
@@ -439,8 +511,8 @@ namespace SeventhLauncher
 
         private void convert_button_Click(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("HOLA?");
-            this.Convert98();
+            // Console.WriteLine("HOLA?");
+            // this.Convert98();
         }
         private void profile_button_Click(object sender, RoutedEventArgs e)
         {
@@ -460,9 +532,7 @@ namespace SeventhLauncher
 
         private void ffnx_button_Click(object sender, RoutedEventArgs e)
         {
-
-            // MessageDialogWindow.Show("HOLA", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
-
+            /*
             // Check if there are errors in the FFNx.toml file and show to the user the output
             Exception FFNxConfigError = Sys.FFNxConfig.GetLastError();
             if (FFNxConfigError != null)
@@ -476,11 +546,11 @@ namespace SeventhLauncher
 
                 try
                 {
-                    // CustomGLWindow gLWindow = new CustomGLWindow();
-                    // if (gLWindow.Init(Sys.PathToGameDriverUiXml(Sys.Settings.AppLanguage)))
-                    // {
-                    //     gLWindow.ShowDialog();
-                    // }
+                    CustomGLWindow gLWindow = new CustomGLWindow();
+                    if (gLWindow.Init(Sys.PathToGameDriverUiXml(Sys.Settings.AppLanguage)))
+                    { 
+                        gLWindow.ShowDialog();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -495,7 +565,8 @@ namespace SeventhLauncher
             }
 
 
-            //MainWindowVM.ShowGameDriverConfigWindow();
+            MainWindowVM.ShowGameDriverConfigWindow();
+            */
         }
 
         private void launcher_button_Click(object sender, RoutedEventArgs e)
@@ -503,7 +574,7 @@ namespace SeventhLauncher
             MainWindowVM.ShowGameLaunchSettingsWindow();
         }
 
-        private void content_button_Click(object sender, RoutedEventArgs e)
+        private void develop_button_Click(object sender, RoutedEventArgs e)
         {
 
 
@@ -528,6 +599,49 @@ namespace SeventhLauncher
                 }
                 this.ctrlCatalog.Visibility = Visibility.Hidden;
             }
+        }
+
+        private void develop_button_Checked(object sender, RoutedEventArgs e)
+        {
+            // Debug.WriteLine("CHECK");
+            this.main_tab.Visibility = Visibility.Visible;
+            this.mods_tab.Visibility = Visibility.Visible;
+            this.catalog_tab.Visibility = Visibility.Visible;
+            this.options_tab.Visibility = Visibility.Visible;
+        }
+        private void develop_button_Unchecked(object sender, RoutedEventArgs e)
+        {
+            // Debug.WriteLine("UN CHECK");
+            this.main_tab.Visibility = Visibility.Hidden;
+            this.mods_tab.Visibility = Visibility.Hidden;
+            this.catalog_tab.Visibility = Visibility.Hidden;
+            this.options_tab.Visibility = Visibility.Hidden;
+
+        }
+
+        private void back_button_Click(object sender, RoutedEventArgs e)
+        {
+            this.main_control.SelectedItem = this.main_tab;
+        }
+
+        private void variable_dump_checkbox_Checked(object sender, RoutedEventArgs e)
+        {
+            enable_var_dump = true;
+        }
+
+        private void debug_log_checkbox_Checked(object sender, RoutedEventArgs e)
+        {
+            enable_debug_log = true;
+        }
+
+        private void variable_dump_checkbox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            enable_var_dump = false;
+        }
+
+        private void debug_log_checkbox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            enable_debug_log = false;
         }
     }
 }

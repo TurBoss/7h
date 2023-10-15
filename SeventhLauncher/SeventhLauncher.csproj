@@ -10,17 +10,38 @@
     <RootNamespace>SeventhLauncher</RootNamespace>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
     <ApplicationIcon>Launcher\custom_icon.ico</ApplicationIcon>
+    <Configurations>Debug;Release;Private;Public</Configurations>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
     <NoWarn>CA1416</NoWarn>
+    <DebugType>portable</DebugType>
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Private|AnyCPU'">
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <NoWarn>CA1416</NoWarn>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
     <NoWarn>CA1416</NoWarn>
+    <DebugType>portable</DebugType>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Public|AnyCPU'">
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <NoWarn>CA1416</NoWarn>
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Launcher\7H.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Launcher\custom_icon.ico" />
@@ -31,8 +52,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Launcher\7H.ico" />
     <Resource Include="Launcher\custom_bg.png" />
     <Resource Include="Launcher\custom_logo.png" />
   </ItemGroup>
 
+	<Target Name="7thAfterBuild" AfterTargets="AfterBuild">
+		<Copy SourceFiles="../7thWrapperProxy/bin/$(Configuration)/$(TargetFramework)/7thWrapperProxy.runtimeconfig.json" DestinationFolder="$(OutputPath)" ContinueOnError="false" />
+	</Target>
 </Project>
