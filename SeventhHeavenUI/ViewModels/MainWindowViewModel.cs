@@ -1827,7 +1827,7 @@ namespace SeventhHeavenUI.ViewModels
             createWindow.ShowDialog();
         }
 
-        internal void ShowGameDriverConfigWindow()
+        public void ShowGameDriverConfigWindow()
         {
             if (File.Exists(Sys.PathToFFNxToml))
             {

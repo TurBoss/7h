@@ -36,6 +36,9 @@ namespace Iros._7th.Workshop.ConfigSettings
         {
             try
             {
+                // first launch the Sys Path was not setup correctly yet so _toml is null
+                if (_toml == null) _pathToFFNxToml = Sys.PathToFFNxToml;
+
                 if (File.Exists(_pathToFFNxToml)) _toml = Toml.Parse(File.ReadAllBytes(_pathToFFNxToml)).ToModel();
             }
             catch (Exception ex)
@@ -147,12 +150,12 @@ namespace Iros._7th.Workshop.ConfigSettings
                         {
                             case bool b:
                                 {
-                                    _write.Add($"{settingName} = { b.ToString().ToLower() }");
+                                    _write.Add($"{settingName} = {b.ToString().ToLower()}");
                                     break;
                                 }
                             case string s:
                                 {
-                                    _write.Add($"{settingName} = \"{ s.ToLower() }\"");
+                                    _write.Add($"{settingName} = \"{s.ToLower()}\"");
                                     break;
                                 }
                             case double d:
@@ -181,11 +184,11 @@ namespace Iros._7th.Workshop.ConfigSettings
                                     {
                                         if (node[0].GetType() == typeof(string))
                                         {
-                                            _write.Add($"{settingName} = [\"{ string.Join("\", \"", ta.Select(w => w.ToString())) }\"]");
+                                            _write.Add($"{settingName} = [\"{string.Join("\", \"", ta.Select(w => w.ToString()))}\"]");
                                         }
                                         else
                                         {
-                                            _write.Add($"{settingName} = [{ string.Join(", ", ta.Select(w => w.ToString())) }]");
+                                            _write.Add($"{settingName} = [{string.Join(", ", ta.Select(w => w.ToString()))}]");
                                         }
                                     }
                                     else
@@ -218,7 +221,7 @@ namespace Iros._7th.Workshop.ConfigSettings
         public void OverrideInternalKeys()
         {
             // first launch the Sys Path was not setup correctly yet so _toml is null
-            if(_toml == null)
+            if (_toml == null)
             {
                 _pathToFFNxToml = Sys.PathToFFNxToml;
                 Reload();
@@ -226,12 +229,14 @@ namespace Iros._7th.Workshop.ConfigSettings
             // Override known internal keys on save to preserve mod behavior override logic
             _toml["external_sfx_path"] = "sfx";
             _toml["external_sfx_ext"] = "ogg";
-            _toml["external_music_path"] = "music/vgmstream";
+            _toml["external_music_path"] = "data/music_ogg";
+            _toml["use_external_music"] = true;
             _toml["external_music_ext"] = "ogg";
             _toml["external_voice_path"] = "voice";
             _toml["external_voice_ext"] = "ogg";
             _toml["external_ambient_path"] = "ambient";
             _toml["external_ambient_ext"] = "ogg";
+            _toml["external_mesh_path"] = "mesh";
             _toml["ffmpeg_video_ext"] = "avi";
             _toml["mod_path"] = "mods/Textures";
             _toml["direct_mode_path"] = "direct";

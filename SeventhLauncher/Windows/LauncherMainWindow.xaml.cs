@@ -5,6 +5,8 @@ using SeventhHeaven.Classes;
 using SeventhHeaven.ViewModels;
 using SeventhHeaven.Windows;
 using SeventhHeavenUI.ViewModels;
+using SeventhLauncher.ViewModels;
+using SeventhLauncher.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,7 +51,7 @@ namespace SeventhLauncher
 
         private List<Mod> _missingMods;
         internal GeneralSettingsViewModel SettingsVM { get; set; }
-        internal MainWindowViewModel MainWindowVM { get; set; }
+        internal LauncherMainWindowViewModel LauncherMainWindowVM { get; set; }
         internal DownloadItemViewModel DownloadVM { get; set; }
         internal MyModsViewModel ModsVM { get; set; }
         public CatalogViewModel CatalogVM { get; set; }
@@ -67,20 +69,20 @@ namespace SeventhLauncher
             InitializeComponent();
 
             SettingsVM = new GeneralSettingsViewModel();
-            MainWindowVM = new MainWindowViewModel();
+            LauncherMainWindowVM = new LauncherMainWindowViewModel();
             // ModsVM = new MyModsViewModel();
             // CatalogVM = new CatalogViewModel();
 
-            this.DataContext = MainWindowVM;
+            this.DataContext = LauncherMainWindowVM;
 
-            this.ctrlMyMods.SetDataContext(MainWindowVM.MyMods);
-            this.ctrlCatalog.SetDataContext(MainWindowVM.CatalogMods);
+            this.ctrlMyMods.SetDataContext(LauncherMainWindowVM.MyMods);
+            this.ctrlCatalog.SetDataContext(LauncherMainWindowVM.CatalogMods);
 
 
 
             this.show_content = false;
             this.show_options = false;
-            // this.is_dev = false;
+            //this.is_dev = false;
             this.is_dev = true;
 
             this.enable_debug_log = false;
@@ -94,17 +96,17 @@ namespace SeventhLauncher
             this.catalog_tab.Visibility = Visibility.Hidden;
             this.options_tab.Visibility = Visibility.Hidden;
 
+            this.dev_install_button.Visibility = Visibility.Hidden;
+            this.develop_button.Visibility = Visibility.Hidden;
+            this.variable_dump_checkbox.Visibility = Visibility.Hidden;
+            this.debug_log_checkbox.Visibility = Visibility.Hidden;
+
             if (this.is_dev == true)
             {
+                this.dev_install_button.Visibility = Visibility.Visible;
                 this.develop_button.Visibility = Visibility.Visible;
-                this.variable_dump_checkbox.Visibility = Visibility.Visible;
-                this.debug_log_checkbox.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                this.develop_button.Visibility = Visibility.Hidden;
-                this.variable_dump_checkbox.Visibility = Visibility.Hidden;
-                this.debug_log_checkbox.Visibility = Visibility.Hidden;
+//                this.variable_dump_checkbox.Visibility = Visibility.Visible;
+//                this.debug_log_checkbox.Visibility = Visibility.Visible;
             }
 
             /*
@@ -177,7 +179,7 @@ namespace SeventhLauncher
 
                     SettingsVM.FF7ExePathInput = targetPathToFf7Exe;
 
-                    MessageDialogWindow.Show(string.Format(ResourceHelper.Get(StringKey.ThisExeIsUsedForSteamReleaseCopiedSelectedForYou), copyOrSelectMessage),
+                   LauncherMessageDialogWindow.Show(string.Format(ResourceHelper.Get(StringKey.ThisExeIsUsedForSteamReleaseCopiedSelectedForYou), copyOrSelectMessage),
                                              ResourceHelper.Get(StringKey.ErrorIncorrectExe),
                                              MessageBoxButton.OK,
                                              MessageBoxImage.Warning);
@@ -203,7 +205,9 @@ namespace SeventhLauncher
 
         public void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            MainWindowVM.InitViewModel();
+                        
+            LauncherMainWindowVM.InitViewModel();
+
             var main_loop = Main();
         }
 
@@ -224,15 +228,15 @@ namespace SeventhLauncher
 
                 GetGameContent();
 
-                if (!is_dev)
+                if (    this.is_dev == false)
                 {
-                    MainWindowVM.MyMods.AutoSortBasedOnCategory();
-                    MainWindowVM.MyMods.ActivateAllMods();
+                    LauncherMainWindowVM.MyMods.AutoSortBasedOnCategory();
+                    LauncherMainWindowVM.MyMods.ActivateAllMods();
                 }
 
 
                 int total_mods = Sys.Catalog.Mods.Count();
-                int downloading_mods = MainWindowVM.CatalogMods.DownloadList.Count;
+                int downloading_mods = LauncherMainWindowVM.CatalogMods.DownloadList.Count;
                 int installed_mods = Sys.ActiveProfile.Items.Count();
 
                 if (this.isOkToPlay())
@@ -242,6 +246,7 @@ namespace SeventhLauncher
                     this.download_bar.Visibility = Visibility.Hidden;
                     this.download_text.Visibility = Visibility.Hidden;
                 }
+                
                 else if (downloading_mods > 0)
                 {
                     this.play_button.Content = "Downloading";
@@ -258,7 +263,8 @@ namespace SeventhLauncher
                 }
 
                 DownloadItemViewModel viewModel = null;
-                viewModel = MainWindowVM.CatalogMods.DownloadList.FirstOrDefault();
+                viewModel = LauncherMainWindowVM.CatalogMods.DownloadList.FirstOrDefault();
+                
 
                 string download_name = "";
                 string download_speed = "";
@@ -279,7 +285,7 @@ namespace SeventhLauncher
                 this.download_bar.Value = download_percent;
                 this.download_text.Text = download_msg;
 
-                Console.WriteLine("LOOP");
+                //Console.WriteLine("LOOP");
                 await Task.Delay(1000);
             }
         }
@@ -330,8 +336,8 @@ namespace SeventhLauncher
                 }
             }
 
-            MainWindowVM.MyMods.AutoSortBasedOnCategory();
-            MainWindowVM.MyMods.ScanForModUpdates();
+            // LauncherMainWindowVM.MyMods.AutoSortBasedOnCategory();
+            LauncherMainWindowVM.MyMods.ScanForModUpdates();
         }
 
         public bool isOkToPlay()
@@ -341,9 +347,15 @@ namespace SeventhLauncher
 
             bool install_ok = true;
 
+            if (is_dev)
+            {
+                return install_ok;
+            }
+
             Catalog catalog = Sys.Catalog;
             Profile profile = Sys.ActiveProfile;
 
+            // check catalog mods vs profile mods
             foreach (Mod mod in catalog.Mods)
             {
                 ProfileItem v = profile.GetItem(mod.ID);
@@ -352,35 +364,49 @@ namespace SeventhLauncher
                 if (v == null)
                 {
                     install_ok = false;
+                    break;
                 }
             }
 
+            // check if there are more mods than the mod on the catalog
             foreach (ProfileItem profile_mod in profile.Items)
             {
                 Mod catalog_mod = catalog.GetMod(profile_mod.ModID);
                 if (catalog_mod != null)
                 {
-                    
-                    
-
-                    Debug.Write("LOCAL MOD: ");
-                    Debug.Write(profile_mod.Name);
-                    Debug.Write(" ID: ");
-                    Debug.WriteLine(profile_mod.ModID);
-
-                    Debug.Write("REMOTE MOD: ");
-                    Debug.Write(catalog_mod.Name);
-                    Debug.Write(" ID: ");
-                    Debug.WriteLine(catalog_mod.ID);
-
+                    if (this.is_dev == false)
+                    {
+                        profile_mod.IsModActive = true;
+                    }
                 }
                 else
                 {
-                    Debug.Write("Mod Pirata: ");
-                    Debug.WriteLine(profile_mod.Name);
-                    install_ok = false;
+                    if (this.is_dev == true)
+                    { 
+                        Debug.Write("DEVELOPER MODE ENABLED:Mod extra found: ");
+                        Debug.WriteLine(profile_mod.Name);
+                        install_ok = true;
+                    }
+                    else
+                    {
+                        if (profile_mod.IsModActive == true)
+                        {
+                            Debug.Write("Desactivando mod externo ");
+                            Debug.WriteLine(profile_mod.Name);
+
+                            LauncherMainWindowVM.MyMods.ToggleActivateMod(profile_mod.ModID, true);
+
+                            // profile_mod.IsModActive = false;
+
+                        }
+                    }
 
                 }
+            }
+
+            if (this.is_dev == false)
+            {
+                LauncherMainWindowVM.MyMods.ReloadModList();
             }
 
             return install_ok;
@@ -463,26 +489,62 @@ namespace SeventhLauncher
             }
             else
             {
-                MainWindowVM.LaunchGame(variableDump: enable_var_dump, debugLogging: enable_var_dump);
+                LauncherMainWindowVM.LaunchGame(variableDump: enable_var_dump, debugLogging: enable_var_dump);
 
-                if (!this.is_dev) quit_app();
+                 // if (!this.is_dev) quit_app();
 
             }
         }
-
+        private void dev_install_button_Click(object sender, RoutedEventArgs e)
+        {
+            if (is_dev) {
+                GetMissingContent();
+            }
+        }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (MainWindowVM.CatalogMods.DownloadList.Count > 0)
+
+
+            if (GameLauncher.IsFF7Running())
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            if (Sys.IsImporting)
+            {
+                MessageDialogWindow.Show(ResourceHelper.Get(StringKey.CannotExitWhileImporting), ResourceHelper.Get(StringKey.Warning), MessageBoxButton.OK, MessageBoxImage.Warning);
+                e.Cancel = true;
+                return;
+            }
+
+            if (LauncherMainWindowVM.CatalogMods.DownloadList.Count > 0)
             {
                 var result = MessageDialogWindow.Show(ResourceHelper.Get(StringKey.AreYouSureYouWantToExitPendingDownloads), ResourceHelper.Get(StringKey.ConfirmExit), MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
                 if (result.Result == MessageBoxResult.No)
                 {
                     e.Cancel = true;
                     return;
                 }
             }
-            quit_app();
+
+            Sys.Settings.MainWindow = new SavedWindow()
+            {
+                X = (int)System.Windows.Application.Current.MainWindow.Left,
+                Y = (int)System.Windows.Application.Current.MainWindow.Top,
+                W = (int)ActualWidth,
+                H = (int)ActualHeight,
+                State = WindowState
+            };
+
+            Sys.Settings.UserColumnSettings.MyModsColumns = ctrlMyMods.GetColumnSettings();
+            ctrlCatalog.SaveUsersColumnSettings();
+
+            LauncherMainWindowVM.CleanUp();
+
+
         }
 
         private void quit_app()
@@ -517,7 +579,7 @@ namespace SeventhLauncher
         private void profile_button_Click(object sender, RoutedEventArgs e)
         {
 
-            MainWindowVM.ShowProfilesWindow();
+            LauncherMainWindowVM.ShowProfilesWindow();
         }
 
         private void controller_button_Click(object sender, RoutedEventArgs e)
@@ -527,79 +589,34 @@ namespace SeventhLauncher
 
         private void system_button_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowVM.ShowGeneralSettingsWindow();
+            LauncherGeneralSettingsWindow settingsWindow = new LauncherGeneralSettingsWindow()
+            {
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+            bool? didSave = settingsWindow.ShowDialog();
+
+            //if (didSave.GetValueOrDefault(false))
+            //{
+            //    if (settingsWindow.ViewModel.SubscriptionsChanged)
+            //    {
+            //        CatalogMods.ForceCheckCatalogUpdateAsync();
+            //    }
+//
+            //    if (settingsWindow.ViewModel.HasChangedInstalledModUpdateTypes && SelectedTabIndex == (int)TabIndex.MyMods)
+            //    {
+            //        MyMods.ScanForModUpdates();
+            //        UpdateModPreviewInfo(MyMods.GetSelectedMod(), true);
+            //    }
+            //}
         }
 
-        private void ffnx_button_Click(object sender, RoutedEventArgs e)
-        {
-            /*
-            // Check if there are errors in the FFNx.toml file and show to the user the output
-            Exception FFNxConfigError = Sys.FFNxConfig.GetLastError();
-            if (FFNxConfigError != null)
-            {
-                MessageDialogWindow.Show("Something went wrong while parsing \"" + Sys.PathToFFNxToml + "\".\n\n" + Encoding.UTF8.GetString(Encoding.Default.GetBytes(FFNxConfigError.Message)), "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
-            }
-
-            if (File.Exists(Sys.PathToFFNxToml))
-            {
-                Sys.FFNxConfig.Reload();
-
-                try
-                {
-                    CustomGLWindow gLWindow = new CustomGLWindow();
-                    if (gLWindow.Init(Sys.PathToGameDriverUiXml(Sys.Settings.AppLanguage)))
-                    { 
-                        gLWindow.ShowDialog();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(ex);
-                    MessageDialogWindow.Show(ResourceHelper.Get(StringKey.PleaseUpdateFFNx), ResourceHelper.Get(StringKey.Error), MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-            else
-            {
-                MessageDialogWindow messageDialog = new MessageDialogWindow(ResourceHelper.Get(StringKey.MissingPath), $"FFNx.toml {ResourceHelper.Get(StringKey.FileNotFound)}\n\nPlease run the game at least once and try again.", MessageBoxButton.OK, MessageBoxImage.Warning);
-                messageDialog.ShowDialog();
-            }
-
-
-            MainWindowVM.ShowGameDriverConfigWindow();
-            */
-        }
+       
 
         private void launcher_button_Click(object sender, RoutedEventArgs e)
         {
-            MainWindowVM.ShowGameLaunchSettingsWindow();
+            LauncherMainWindowVM.ShowGameLaunchSettingsWindow();
         }
 
-        private void develop_button_Click(object sender, RoutedEventArgs e)
-        {
-
-
-
-            this.show_content = !this.show_content;
-
-
-            if (this.show_content)
-            {
-                if (this.is_dev)
-                {
-                    this.ctrlMyMods.Visibility = Visibility.Visible;
-                }
-
-                this.ctrlCatalog.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                if (this.is_dev)
-                {
-                    this.ctrlMyMods.Visibility = Visibility.Hidden;
-                }
-                this.ctrlCatalog.Visibility = Visibility.Hidden;
-            }
-        }
 
         private void develop_button_Checked(object sender, RoutedEventArgs e)
         {
@@ -608,6 +625,10 @@ namespace SeventhLauncher
             this.mods_tab.Visibility = Visibility.Visible;
             this.catalog_tab.Visibility = Visibility.Visible;
             this.options_tab.Visibility = Visibility.Visible;
+
+            // this.develop_button.Visibility = Visibility.Visible;
+            this.variable_dump_checkbox.Visibility = Visibility.Visible;
+            this.debug_log_checkbox.Visibility = Visibility.Visible;
         }
         private void develop_button_Unchecked(object sender, RoutedEventArgs e)
         {
@@ -616,6 +637,10 @@ namespace SeventhLauncher
             this.mods_tab.Visibility = Visibility.Hidden;
             this.catalog_tab.Visibility = Visibility.Hidden;
             this.options_tab.Visibility = Visibility.Hidden;
+
+            // this.develop_button.Visibility = Visibility.Hidden;
+            this.variable_dump_checkbox.Visibility = Visibility.Hidden;
+            this.debug_log_checkbox.Visibility = Visibility.Hidden;
 
         }
 
@@ -643,5 +668,6 @@ namespace SeventhLauncher
         {
             enable_debug_log = false;
         }
+
     }
 }

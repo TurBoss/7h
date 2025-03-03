@@ -257,7 +257,7 @@ namespace SeventhHeaven.ViewModels
         /// <summary>
         /// imports the theme.xml file and sets the app color brushes.
         /// </summary>
-        internal static void LoadThemeFromFile()
+        public static void LoadThemeFromFile()
         {
             string pathToThemeFile = Path.Combine(Sys.SysFolder, "theme.xml");
 
@@ -274,7 +274,7 @@ namespace SeventhHeaven.ViewModels
         /// <summary>
         /// Returns ITheme loaded from theme.xml file. Dark Theme w/ Background will be returned if theme.xml file does not exist or fail to deserialize.
         /// </summary>
-        internal static ITheme GetThemeSettingsFromFile()
+        public static ITheme GetThemeSettingsFromFile()
         {
             string pathToThemeFile = Path.Combine(Sys.SysFolder, "theme.xml");
 

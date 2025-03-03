@@ -8,7 +8,7 @@ using DS4Windows;
 
 namespace SeventhHeaven.Classes
 {
-    internal class DS4ControllerService
+    public class DS4ControllerService
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         private static DS4ControllerService instance;
@@ -20,7 +20,7 @@ namespace SeventhHeaven.Classes
         /// <summary>
         /// static instance that can be accessed from anywhere in app such as game launcher or controls window
         /// </summary>
-        internal static DS4ControllerService Instance
+        public static DS4ControllerService Instance
         {
             get
             {

@@ -272,7 +272,7 @@ namespace SeventhHeavenUI.ViewModels
             NotifyPropertyChanged(nameof(IsActive));
         }
 
-        internal void RaiseNotifyPropertyChangedForCategory()
+        public void RaiseNotifyPropertyChangedForCategory()
         {
             NotifyPropertyChanged(nameof(Category));
             CategoryList = null; // set to null will refresh translations since the list will be rebuilt

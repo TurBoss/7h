@@ -1,0 +1,63 @@
+﻿<Window x:Class="SeventhHeaven.Windows.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SeventhHeaven.Windows"
+        mc:Ignorable="d"
+        Style="{StaticResource MainWindowStyle}"
+        WindowStartupLocation="CenterScreen"
+        Topmost="True"
+        ResizeMode="NoResize"
+        Height="384"
+        Width="475"
+        MaxHeight="400" Title="Credits">
+    <Grid x:Name="gridMain">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="304.026666666667"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid Visibility="{Binding DetailsVisibility, FallbackValue='Collapsed'}" Margin="0,0,0,178">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="txtTitle"
+                       Margin="0,5,10,5"
+                       FontSize="14"
+                       TextWrapping="Wrap"
+                       Text="{Binding Message, FallbackValue='The following mods are incompatible:'}" Grid.ColumnSpan="2"/>
+
+            <TextBox x:Name="txtDetails"
+                     Style="{StaticResource PrimaryTextBoxStyle}"
+                     Grid.Row="1"
+                     Margin="0,0,10,0"
+                     TextWrapping="Wrap"
+                     FontSize="14"
+                     VerticalScrollBarVisibility="Auto"
+                     HorizontalScrollBarVisibility="Auto"
+                     IsReadOnly="True"
+                     Background="Transparent"
+                     VerticalAlignment="Stretch"
+                     Text="{Binding Details, FallbackValue='Here are alot of details about stuff. Here are alot of details about stuff. Here are alot of details  about stuff. Here are alot of de tails about stuff. Here are alot of details about stuff. Here are alot of details about stuff. Here are alot of details about stuff. '}" Grid.ColumnSpan="2"/>
+
+
+        </Grid>
+
+        <TextBlock x:Name="txtMessage"
+            ScrollViewer.VerticalScrollBarVisibility="Auto"
+            Padding="5,5,5,5"
+            FontSize="14"
+            TextWrapping="Wrap" Height="283" HorizontalAlignment="Center" VerticalAlignment="Center" Width="447" Foreground="#FFBAE2DB" TextAlignment="Center"
+        ><Run Text="Author"/><LineBreak/><Run Text="Cloudiar"/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><Run/><LineBreak/><LineBreak/><Run Text="Thanks"/><LineBreak/><Run Text="TurBoss"/><LineBreak/><Run Text="TrueOdin"/><LineBreak/><Run/><LineBreak/><Run Text="https://ff7ovaremake.com"/></TextBlock>
+
+        <Button x:Name="btnClose"
+            Click="btnClose_Click"
+            HorizontalAlignment="Left"
+                
+            Width="80"
+            Content="{DynamicResource Close}" Margin="384,0,0,0" Grid.Row="1" VerticalAlignment="Center" Height="35"/>
+    </Grid>
+</Window>

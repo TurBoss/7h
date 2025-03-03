@@ -205,7 +205,7 @@ namespace SeventhHeavenUI.ViewModels
             NotifyPropertyChanged(nameof(IsInstalled));
         }
 
-        internal void RaiseNotifyPropertyChangedForCategory()
+        public void RaiseNotifyPropertyChangedForCategory()
         {
             NotifyPropertyChanged(nameof(Category));
         }

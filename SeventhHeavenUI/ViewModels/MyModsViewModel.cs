@@ -99,7 +99,7 @@ namespace SeventhHeavenUI.ViewModels
             SelectedModChanged?.Invoke(this, selected);
         }
 
-        internal void ClearRememberedSearchTextAndCategories()
+        public void ClearRememberedSearchTextAndCategories()
         {
             _previousReloadOptions = new ReloadListOption();
         }
@@ -153,7 +153,7 @@ namespace SeventhHeavenUI.ViewModels
         /// <summary>
         /// Loads installed and active mods into <see cref="ModList"/> from <see cref="Sys.Library"/> and <see cref="Sys.ActiveProfile"/>
         /// </summary>
-        internal void ReloadModList(Guid? modToSelect = null, string searchText = "", IEnumerable<FilterItemViewModel> categories = null, IEnumerable<FilterItemViewModel> tags = null)
+        public void ReloadModList(Guid? modToSelect = null, string searchText = "", IEnumerable<FilterItemViewModel> categories = null, IEnumerable<FilterItemViewModel> tags = null)
         {
             // make sure to remove any deleted items and auto import mods first
             Sys.ActiveProfile.RemoveDeletedItems();
@@ -329,7 +329,7 @@ namespace SeventhHeavenUI.ViewModels
         /// <param name="searchText"></param>
         /// <param name="categories"></param>
         /// <param name="tags"></param>
-        internal void ReloadModListFromUIThread(Guid? modToSelect = null, string searchText = "", IEnumerable<FilterItemViewModel> categories = null, IEnumerable<FilterItemViewModel> tags = null)
+        public void ReloadModListFromUIThread(Guid? modToSelect = null, string searchText = "", IEnumerable<FilterItemViewModel> categories = null, IEnumerable<FilterItemViewModel> tags = null)
         {
             App.Current.Dispatcher.Invoke(() =>
             {
@@ -360,7 +360,7 @@ namespace SeventhHeavenUI.ViewModels
 
         }
 
-        internal void ClearModList()
+        public void ClearModList()
         {
             lock (listLock)
             {
@@ -422,7 +422,7 @@ namespace SeventhHeavenUI.ViewModels
             return selected;
         }
 
-        internal void ToggleActivateMod(Guid modID, bool reloadList = true)
+        public void ToggleActivateMod(Guid modID, bool reloadList = true)
         {
             if (String.IsNullOrWhiteSpace(Sys.Settings.CurrentProfile)) return;
 

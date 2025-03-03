@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net7.0-windows7.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
     <StartupObject>SeventhLauncher.App</StartupObject>
@@ -41,6 +41,8 @@
 
   <ItemGroup>
     <None Remove="Launcher\7H.ico" />
+    <None Remove="Windows\ova_bg.png" />
+    <None Remove="Windows\yuffie2.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,6 +57,14 @@
     <Resource Include="Launcher\7H.ico" />
     <Resource Include="Launcher\custom_bg.png" />
     <Resource Include="Launcher\custom_logo.png" />
+    <Resource Include="Windows\ova_bg.png" />
+    <Resource Include="Windows\yuffie2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Launcher\ova_bg.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 	<Target Name="7thAfterBuild" AfterTargets="AfterBuild">

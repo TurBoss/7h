@@ -22,13 +22,6 @@ using System.Xml;
 
 namespace SeventhHeaven.Classes
 {
-    public enum FF7Version
-    {
-        Unknown = -1,
-        Steam,
-        ReRelease,
-        Original98
-    }
 
     internal enum GraphicsRenderer
     {
@@ -1676,7 +1669,7 @@ namespace SeventhHeaven.Classes
                 }
 
                 // === FFNx files ===
-                archive.AddEntry("FFNx.log", Sys.PathToFFNxLog);
+                if (File.Exists(Sys.PathToFFNxLog)) archive.AddEntry("FFNx.log", Sys.PathToFFNxLog);
                 archive.AddEntry("FFNx.toml", Sys.PathToFFNxToml);
 
                 // === 7th files ===

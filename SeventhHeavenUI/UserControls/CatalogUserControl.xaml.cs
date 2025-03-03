@@ -370,7 +370,7 @@ namespace SeventhHeaven.UserControls
             }
         }
 
-        internal void SaveUsersColumnSettings()
+        public void SaveUsersColumnSettings()
         {
             Sys.Settings.UserColumnSettings.BrowseCatalogColumns = GetColumnSettings();
 

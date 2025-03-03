@@ -1,20 +1,23 @@
-set(COMMIT_HASH v7.0.11)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dotnet/runtime
-    REF ${COMMIT_HASH}
-    SHA512 65e5fb0cd8c94b42c7db2e7b612e9d6393b0665941e104c7ad49052372683dcaa7522c4aad3fdd41d8bb1ad049e84f28ee8c8b475f0d1176f56d46eef9eaadb4
+    REF "v${VERSION}"
+    SHA512 7fd2145567400b3d1050551cdb1eb3990e01186d8933f7f3f0e416b3c5cba95ec1017cc30179fe31f638ad2da98e1079724c673bc7949ca78d10162476fc2ad9
     HEAD_REF master
     PATCHES
         0001-nethost-cmakelists.patch
 )
 
-set(PRODUCT_VERSION "7.0.8")
-
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-  execute_process(COMMAND sh -c "mkdir -p ${SOURCE_PATH}/artifacts/obj && ${SOURCE_PATH}/eng/native/version/copy_version_files.sh")
+file(MAKE_DIRECTORY "${SOURCE_PATH}/artifacts/obj")
+set(copy_version_files  sh -c "${SOURCE_PATH}/eng/native/version/copy_version_files.sh")
+if(VCPKG_HOST_IS_WINDOWS)
+  set(copy_version_files  cmd /C "eng\\native\\version\\copy_version_files.cmd")
 endif()
+vcpkg_execute_required_process(
+  COMMAND ${copy_version_files}
+  WORKING_DIRECTORY "${SOURCE_PATH}"
+  LOGNAME "copy_version_files-${TARGET_TRIPLET}"
+)
 
 if(VCPKG_TARGET_IS_WINDOWS)
   set(RID_PLAT "win")
@@ -50,12 +53,9 @@ vcpkg_cmake_configure(
     NO_CHARSET_FLAG
     OPTIONS
         "-DSKIP_VERSIONING=1"
-        "-DCLI_CMAKE_HOST_POLICY_VER:STRING=${PRODUCT_VERSION}"
-        "-DCLI_CMAKE_HOST_FXR_VER:STRING=${PRODUCT_VERSION}"
-        "-DCLI_CMAKE_HOST_VER:STRING=${PRODUCT_VERSION}"
-        "-DCLI_CMAKE_COMMON_HOST_VER:STRING=${PRODUCT_VERSION}"
         "-DCLI_CMAKE_PKG_RID:STRING=${BASE_RID}"
-        "-DCLI_CMAKE_COMMIT_HASH:STRING=${COMMIT_HASH}"
+        "-DCLI_CMAKE_FALLBACK_OS:STRING=${RID_PLAT}"
+        "-DCLI_CMAKE_COMMIT_HASH:STRING=v${VERSION}"
         "-DCLR_CMAKE_TARGET_ARCH_${ARCH_NAME}=1"
         "-DCLR_CMAKE_TARGET_ARCH=${RID_ARCH}"
         "-DCLR_CMAKE_HOST_ARCH=${RID_ARCH}"
@@ -77,5 +77,5 @@ else()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/nethost.h" "#ifdef NETHOST_USE_AS_STATIC" "#if 0")
 endif()
 
-file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE.TXT")
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

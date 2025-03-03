@@ -201,7 +201,7 @@ namespace SeventhHeavenUI.ViewModels
         /// Ordered by Catalog Subscription, Category, Name
         /// </summary>
         /// <param name="searchText"> empty string returns all mods </param>
-        internal void ReloadModList(Guid? modToSelect = null, string searchText = "", IEnumerable<FilterItemViewModel> categories = null, IEnumerable<FilterItemViewModel> tags = null)
+        public void ReloadModList(Guid? modToSelect = null, string searchText = "", IEnumerable<FilterItemViewModel> categories = null, IEnumerable<FilterItemViewModel> tags = null)
         {
             // if there are no mods in the catalog then just clear the list and return since no extra filtering work needs to be done
             if (Sys.Catalog.Mods.Count == 0)
@@ -341,7 +341,7 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
-        internal void ClearRememberedSearchTextAndCategories()
+        public void ClearRememberedSearchTextAndCategories()
         {
             _previousReloadOptions = new ReloadListOption();
         }
@@ -385,7 +385,7 @@ namespace SeventhHeavenUI.ViewModels
             return selected;
         }
 
-        internal Task CheckForCatalogUpdatesAsync(bool forceCheck = false)
+        public Task CheckForCatalogUpdatesAsync(bool forceCheck = false)
         {
             object countLock = new object();
 
@@ -578,7 +578,7 @@ namespace SeventhHeavenUI.ViewModels
             UpdatePauseDownloadButtonUI();
         }
 
-        internal void ForceCheckCatalogUpdateAsync()
+        public void ForceCheckCatalogUpdateAsync()
         {
             Task t = CheckForCatalogUpdatesAsync(forceCheck: true);
 
@@ -1100,7 +1100,7 @@ namespace SeventhHeavenUI.ViewModels
             }
         }
 
-        internal void UpdateModDetails(Guid modID)
+        public void UpdateModDetails(Guid modID)
         {
             CatalogModItemViewModel foundMod = null;
 

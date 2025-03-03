@@ -320,7 +320,7 @@ namespace SeventhHeaven.UserControls
             RecalculateColumnWidths(lstMods.ActualWidth);
         }
 
-        internal List<ColumnInfo> GetColumnSettings()
+        public List<ColumnInfo> GetColumnSettings()
         {
             GridViewColumnCollection columns = (lstMods.View as GridView).Columns;
 

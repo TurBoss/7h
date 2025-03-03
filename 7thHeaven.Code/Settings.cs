@@ -14,6 +14,13 @@ using System.Windows;
 
 namespace Iros._7th.Workshop {
 
+    public enum FF7Version
+    {
+        Unknown = -1,
+        Steam,
+        ReRelease,
+        Original98
+    }
 
     public enum GeneralOptions {
         None = 0,
@@ -103,6 +110,7 @@ namespace Iros._7th.Workshop {
         public string FF7Exe { get; set; }
         [System.Xml.Serialization.XmlElement("AlsoLaunch")]
         public List<ProgramLaunchInfo> ProgramsToLaunchPrior { get; set; }
+        public FF7Version FF7InstalledVersion { get; set; }
         public FFNxUpdateChannelOptions FFNxUpdateChannel { get; set; }
         public AppUpdateChannelOptions AppUpdateChannel { get; set; }
         public DateTime LastUpdateCheck { get; set; }
@@ -162,8 +170,7 @@ namespace Iros._7th.Workshop {
             defaultSettings.Options.Add(GeneralOptions.OpenModFilesWith7H);
             defaultSettings.Options.Add(GeneralOptions.CheckForUpdates);
 
-            defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/https$github.com/tsunamods-codes/7th-Heaven-Catalogs/releases/download/canary/qhimm.xml", Name = "Qhimm Catalog" });
-            defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/https$github.com/tsunamods-codes/7th-Heaven-Catalogs/releases/download/canary/sega.xml", Name = "Sega Catalog" });
+            defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/https$ff7ovaremake.com/catalog/ova.xml", Name = "OVA Remake" });
 
             defaultSettings.ExtraFolders.Add("ambient");
             defaultSettings.ExtraFolders.Add("direct");
@@ -189,8 +196,8 @@ namespace Iros._7th.Workshop {
         /// <param name="pathToFf7Install"></param>
         public void SetPathsFromInstallationPath(string pathToFf7Install)
         {
-            FF7Exe = Path.Combine(pathToFf7Install, "FF7.exe");
-            LibraryLocation = Path.Combine(pathToFf7Install, "mods", @"7th Heaven");
+            FF7Exe = Sys.Settings.FF7InstalledVersion == FF7Version.Original98 ? Path.Combine(pathToFf7Install, "FF7.exe") : Path.Combine(pathToFf7Install, "ff7_en.exe");
+            if (LibraryLocation == string.Empty) LibraryLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"7th Heaven");
 
             LogAndCreateFolderIfNotExists(LibraryLocation);
 
@@ -199,6 +206,7 @@ namespace Iros._7th.Workshop {
                 LogAndCreateFolderIfNotExists(Path.Combine(pathToFf7Install, folder));
             }
         }
+        
 
         private static void LogAndCreateFolderIfNotExists(string pathToFolder)
         {

@@ -322,7 +322,7 @@ namespace SeventhHeavenUI
             return new Version(fileVersionInfo.ProductVersion);
         }
 
-        internal static string GetAppName()
+        public static string GetAppName()
         {
             foreach (object item in System.Reflection.Assembly.GetExecutingAssembly().GetCustomAttributes(false))
             {
