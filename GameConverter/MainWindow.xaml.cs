@@ -1,5 +1,7 @@
 ﻿using System.Windows;
+using System.IO;
 using Path = System.IO.Path;
+using Iros._7th.Workshop;
 
 namespace GameConverter
 {
@@ -15,19 +17,41 @@ namespace GameConverter
             string steam;
             string ff7or;
 
+            // Console.WriteLine(e.Args.Length);
+
+
+            // MessageBox.Show(e.Args[0].ToString());
+            // MessageBox.Show(e.Args[1].ToString());
+            // MessageBox.Show(e.Args[2].ToString());
 
             if (e.Args.Length == 3)
             {
+                Console.WriteLine(e.Args[0].ToString());
+                Console.WriteLine(e.Args[1].ToString());
+                Console.WriteLine(e.Args[2].ToString());
                 if (e.Args[0] == "run")
                 {
-
                     steam = e.Args[1];
                     ff7or = e.Args[2];
+
                     RunConvert(steam, ff7or);
+                    Console.WriteLine("Game converted");
+                    Environment.Exit(0);
+                }
+                else
+                {
+
+                    Console.WriteLine("Game not converted");
+                    Environment.Exit(1);
                 }
 
             }
-            System.Environment.Exit(0);
+            else
+            {
+
+                Console.WriteLine("Game not converted");
+                Environment.Exit(1);
+            }
 
         }
         
@@ -141,8 +165,8 @@ namespace GameConverter
             converter.CheckAndCopyOldGameConverterFiles(backupFolderPath);
 
             // MessageBox.Show("check OK");
-
-            /* if (new FileInfo(Sys.Settings.FF7Exe).Name.Equals("ff7.exe", StringComparison.InvariantCultureIgnoreCase))
+            /*
+            if (new FileInfo(Sys.Settings.FF7Exe).Name.Equals("ff7_en.exe", StringComparison.InvariantCultureIgnoreCase))
             {
                 // only compare exes are different if ff7.exe set in Settings (and not something like ff7_bc.exe)
                 if (converter.IsExeDifferent())
@@ -164,7 +188,8 @@ namespace GameConverter
                     }
                 }
             }
-
+            */
+            /* 
             if (converter.IsConfigExeDifferent())
             {
                 if (converter.BackupFF7ConfigExe(backupFolderPath))
@@ -182,8 +207,8 @@ namespace GameConverter
                 }
             }
             */
-            MessageBox.Show("OKEY!");
-            System.Environment.Exit(1);
+            Console.WriteLine("Game converted");
+            System.Environment.Exit(0);
         }
 
     }

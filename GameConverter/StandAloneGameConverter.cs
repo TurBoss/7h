@@ -7,6 +7,14 @@ using System.Windows;
 
 namespace GameConverter
 {
+    public enum FF7Version
+    {
+        Unknown = -1,
+        Steam,
+        ReRelease,
+        Original98
+    }
+
     /// <summary>
     /// An instance of <see cref="StandAloneGameConverter"/> is used to perform actions necessary to make FF7 compatible with mods.
     /// </summary>
