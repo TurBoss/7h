@@ -8,7 +8,7 @@
         xmlns:cls="https://7thheaven.rocks/SeventhHeavenUI/Classes"
         xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"
         mc:Ignorable="d"
-        Title="Final Fantasy VII OVA Remake"
+        Title="FF7OR v1.0"
         WindowStartupLocation="CenterScreen"
         Loaded="Window_Loaded"
         Closing="Window_Closing"

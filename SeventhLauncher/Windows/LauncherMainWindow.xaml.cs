@@ -1,6 +1,7 @@
 ﻿using _7thHeaven.Code;
 using Iros._7th;
 using Iros._7th.Workshop;
+using NLog;
 using SeventhHeaven.Classes;
 using SeventhHeaven.ViewModels;
 using SeventhHeaven.Windows;
@@ -9,13 +10,13 @@ using SeventhLauncher.ViewModels;
 using SeventhLauncher.Windows;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Text;
-using NLog;
-using System.IO;
-using System.Diagnostics;
 
 namespace SeventhLauncher
 {
@@ -26,6 +27,11 @@ namespace SeventhLauncher
     /// </summary>
     public partial class MainWindow : Window
     {
+        [DllImport("Kernel32.dll")]
+        private static extern IntPtr GetConsoleWindow();
+
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -66,6 +72,22 @@ namespace SeventhLauncher
         public MainWindow()
         {
 
+
+            String[] args = Environment.GetCommandLineArgs();
+
+            this.is_dev = false;
+
+            if (args.Length > 1)
+            {
+                if (args[1].Equals("devel", StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine("DEVELOPER MODE ENABLED!");
+                    this.is_dev = true;
+                }
+            }
+            
+
+
             InitializeComponent();
 
             SettingsVM = new GeneralSettingsViewModel();
@@ -82,8 +104,7 @@ namespace SeventhLauncher
 
             this.show_content = false;
             this.show_options = false;
-            //this.is_dev = false;
-            this.is_dev = true;
+
 
             this.enable_debug_log = false;
             this.enable_var_dump = false;
@@ -205,7 +226,14 @@ namespace SeventhLauncher
 
         public void Window_Loaded(object sender, RoutedEventArgs e)
         {
-                        
+
+            IntPtr hWnd = GetConsoleWindow();
+            if (hWnd != IntPtr.Zero)
+            {
+                // c# hide console window
+                ShowWindow(hWnd, 0);
+            }
+            
             LauncherMainWindowVM.InitViewModel();
 
             var main_loop = Main();

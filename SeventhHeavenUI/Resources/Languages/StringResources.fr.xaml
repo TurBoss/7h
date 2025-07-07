@@ -645,7 +645,7 @@ Cliquer sur 'Annuler' pour arrêter la copie.</system:String>
 
 
     <!--GameLaunchWindow.xaml.cs Strings-->
-    <system:String x:Key="LaunchingFinalFantasyVII">Lancement de Final Fantasy VII</system:String>
+    <system:String x:Key="LaunchingFinalFantasyVII">Lancement de FF7OR</system:String>
     <system:String x:Key="UnknownErrorWhenLaunchingGame">Erreur inconnue lors du lancement du jeu</system:String>
     <system:String x:Key="GameLaunchProcessCanceled">Annulation du processus de lancement du jeu</system:String>
     <system:String x:Key="FailedToLaunchFf7ViewLogForDetails">Échec du lancement de FF7. Voir le journal ci-dessus pour plus de détails.</system:String>
@@ -734,9 +734,9 @@ Cliquer sur Oui pour fermer toutes les instances actuelles de FF7. Cliquer sur N
     <system:String x:Key="ErrorCodeYarr">Code d'erreur : YARR ! Impossible de continuer. Cette version de FF7 semble être piratée. Merci d'utiliser une version authentique du jeu. Si cette version est authentique, veuillez signaler cette erreur sur les forums Qhimm.</system:String>
     <system:String x:Key="VerifyingGameIsNotInstalledInProtectedFolder">Vérification que le jeu ne soit pas installé dans un dossier système ou protégé...</system:String>
 
-    <system:String x:Key="Ff7IsCurrentlyInstalledInASystemFolder" xml:space="preserve">FF7 est actuellement installé dans un dossier système, ce qui peut empêcher les mods de fonctionner. Il est recommandé de l'installer dans C:\Games\Final Fantasy VII
+    <system:String x:Key="Ff7IsCurrentlyInstalledInASystemFolder" xml:space="preserve">FF7 est actuellement installé dans un dossier système, ce qui peut empêcher les mods de fonctionner. Il est recommandé de l'installer dans C:\Games\FF7OR
 
-Souhaitez-vous copier automatiquement votre installation dans C:\Games\Final Fantasy VII avant de continuer ?</system:String>
+Souhaitez-vous copier automatiquement votre installation dans C:\Games\FF7OR avant de continuer ?</system:String>
 
     <system:String x:Key="CanNotContinueDueToFf7nstalledInProtectedFolder">ne peut pas continuer parce que FF7 est installé dans un dossier système / protégé. Abandon...</system:String>
     <system:String x:Key="CannotContinue">Impossible de Continuer !</system:String>

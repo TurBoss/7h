@@ -195,7 +195,7 @@ namespace SeventhHeaven.Classes
 
 
                 // copy installation and update settings with new path
-                string newInstallationPath = @"C:\Games\Final Fantasy VII";
+                string newInstallationPath = @"C:\Games\FF7OR";
                 Instance.RaiseProgressChanged($"\t{ResourceHelper.Get(StringKey.CopyingGameFilesTo)} {newInstallationPath}");
                 bool didCopy = converter.CopyGame(newInstallationPath);
 
@@ -429,7 +429,7 @@ namespace SeventhHeaven.Classes
                 Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.LookingForGameDiscAfterMounting));
 
                 // when mounting with WinCDEmu it can take a few seconds (anywhere from 1 to 3 seconds from my experience) so add a fallback here to try mounting multiple times instead of once
-                int maxMountAttempts = 15;
+                int maxMountAttempts = 30;
                 int currentAttempt = 0;
 
                 do
@@ -1410,8 +1410,8 @@ namespace SeventhHeaven.Classes
 
             RegistryHelper.BeginTransaction();
 
-            string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII";
-            string virtualStorePath = $"{RegistryHelper.GetKeyPath(FF7RegKey.VirtualStoreKeyPath)}\\Final Fantasy VII";
+            string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\FF7OR";
+            string virtualStorePath = $"{RegistryHelper.GetKeyPath(FF7RegKey.VirtualStoreKeyPath)}\\FF7OR";
 
             string installPath = Path.GetDirectoryName(Sys.Settings.FF7Exe);
             string pathToData = Path.Combine(installPath, @"data\");

@@ -650,7 +650,7 @@
 
 
     <!--GameLaunchWindow.xaml.cs Strings-->
-    <system:String x:Key="LaunchingFinalFantasyVII">Εκκίνηση Final Fantasy VII</system:String>
+    <system:String x:Key="LaunchingFinalFantasyVII">Εκκίνηση FF7OR</system:String>
     <system:String x:Key="UnknownErrorWhenLaunchingGame">Αγνωστο σφάλμα κατά την εκκίνηση παιχνιδιού</system:String>
     <system:String x:Key="GameLaunchProcessCanceled">Ακυρώθηκε η διαδικασία εκκίνησης παιχνιδιού</system:String>
     <system:String x:Key="FailedToLaunchFf7ViewLogForDetails">Αποτυχία εκκίνησης FF7. Προβολή λεπτομερειών του παρακάτω αρχείου καταγραφής.</system:String>
@@ -738,9 +738,9 @@
     <system:String x:Key="ErrorCodeYarr">Κωδικός σφάλματος: YARR! Αδύνατον να συνεχιστεί η διαδικασία. Παρακαλώ αναφέρτε αυτό το σφάλμα στα φόρουμ του Qhimm.</system:String>
     <system:String x:Key="VerifyingGameIsNotInstalledInProtectedFolder">Επαληθεύεται αν το παιχνίδι είναι εγκατεστημένο σε έναν φάκελο συστήματος/προστατευμένο ...</system:String>
 
-    <system:String x:Key="Ff7IsCurrentlyInstalledInASystemFolder" xml:space="preserve">Το FF7 είναι εγκατεστημένο σε έναν φάκελο συστήματος που μπορεί να προκαλέσει αδυναμία λειτουργίας των τροποποιήσεων. Προτείνεται να γίνει εγκατάσταση στον φάκελο C:\Games\Final Fantasy VII
+    <system:String x:Key="Ff7IsCurrentlyInstalledInASystemFolder" xml:space="preserve">Το FF7 είναι εγκατεστημένο σε έναν φάκελο συστήματος που μπορεί να προκαλέσει αδυναμία λειτουργίας των τροποποιήσεων. Προτείνεται να γίνει εγκατάσταση στον φάκελο C:\Games\FF7OR
 
-Θα θέλατε να αντιγράψετε αυτόματα την εγκατάστασή σας στον φάκελο C:\Games\Final Fantasy VII για να συνεχίσετε;</system:String>
+Θα θέλατε να αντιγράψετε αυτόματα την εγκατάστασή σας στον φάκελο C:\Games\FF7OR για να συνεχίσετε;</system:String>
 
     <system:String x:Key="CanNotContinueDueToFf7nstalledInProtectedFolder">Η διαδικασία δεν μπορεί να συνεχιστεί λόγω εγκατάστασης του FF7 στον φάκελο System / Protected. Ματαίωση ...</system:String>
     <system:String x:Key="CannotContinue">Η διαδικασία δεν μπορεί να συνεχιστεί!</system:String>

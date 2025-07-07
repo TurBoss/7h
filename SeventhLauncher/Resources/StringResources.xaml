@@ -652,7 +652,7 @@ Click 'Cancel' to stop the process.</system:String>
     
     
     <!--GameLaunchWindow.xaml.cs Strings-->
-    <system:String x:Key="LaunchingFinalFantasyVII">Launching Final Fantasy VII</system:String>
+    <system:String x:Key="LaunchingFinalFantasyVII">Launching FF7OR</system:String>
     <system:String x:Key="UnknownErrorWhenLaunchingGame">Unknown error when launching the game</system:String>
     <system:String x:Key="GameLaunchProcessCanceled">game launch process canceled</system:String>
     <system:String x:Key="FailedToLaunchFf7ViewLogForDetails">Failed to launch FF7. View the above log for details.</system:String>
@@ -741,9 +741,9 @@ Click Yes to close all current instances of FF7. Click No to start another insta
     <system:String x:Key="ErrorCodeYarr">Error code: YARR! Unable to continue. This copy of FF7 appears to be pirated. Please purchase a genuine copy of the game. If this copy is genuine, please ask for help on the Qhimm forums.</system:String>
     <system:String x:Key="VerifyingGameIsNotInstalledInProtectedFolder">Verifying game is not installed in a System/Protected folder ...</system:String>
 
-    <system:String x:Key="Ff7IsCurrentlyInstalledInASystemFolder" xml:space="preserve">FF7 is currently installed in a System folder which can cause mods not to work. It is recommended you install it at C:\Games\Final Fantasy VII
+    <system:String x:Key="Ff7IsCurrentlyInstalledInASystemFolder" xml:space="preserve">FF7 is currently installed in a System folder which can cause mods not to work. It is recommended you install it at C:\Games\FF7OR
 
-Would you like to automatically copy your installation to C:\Games\Final Fantasy VII to continue?</system:String>
+Would you like to automatically copy your installation to C:\Games\FF7OR to continue?</system:String>
 
     <system:String x:Key="CanNotContinueDueToFf7nstalledInProtectedFolder">can not continue due to FF7 being installed in System/Protected folder. Aborting...</system:String>
     <system:String x:Key="CannotContinue">Cannot Continue!</system:String>

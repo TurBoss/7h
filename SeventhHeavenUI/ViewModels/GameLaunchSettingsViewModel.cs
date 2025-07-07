@@ -600,10 +600,10 @@ namespace SeventhHeaven.ViewModels
 
         private void SetMidiDeviceInRegistry()
         {
-            string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII";
+            string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\FF7OR";
             string midiKeyPath = $"{ff7KeyPath}\\1.00\\MIDI";
 
-            string virtualStorePath = $"{RegistryHelper.GetKeyPath(FF7RegKey.VirtualStoreKeyPath)}\\Final Fantasy VII";
+            string virtualStorePath = $"{RegistryHelper.GetKeyPath(FF7RegKey.VirtualStoreKeyPath)}\\FF7OR";
             string midiVirtualKeyPath = $"{virtualStorePath}\\1.00\\MIDI";
 
             RegistryHelper.SetValueIfChanged(midiKeyPath, "MIDI_DeviceID", MidiDeviceIDs[SelectedMidiDevice], RegistryValueKind.DWord);
@@ -612,7 +612,7 @@ namespace SeventhHeaven.ViewModels
 
         private int GetMidiDeviceInRegistry()
         {
-            string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII";
+            string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\FF7OR";
             string midiKeyPath = $"{ff7KeyPath}\\1.00\\MIDI";
 
             return (int)RegistryHelper.GetValue(midiKeyPath, "MIDI_DeviceID", 0);
@@ -620,7 +620,7 @@ namespace SeventhHeaven.ViewModels
 
         private void GetVolumesFromRegistry()
         {
-            string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII";
+            string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\FF7OR";
             string midiKeyPath = $"{ff7KeyPath}\\1.00\\MIDI";
             string soundKeyPath = $"{ff7KeyPath}\\1.00\\Sound";
             string ffnxKeyPath = $"{ff7KeyPath}\\1.00\\FFNx";
@@ -635,12 +635,12 @@ namespace SeventhHeaven.ViewModels
 
         private void SetVolumesInRegistry()
         {
-            string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII";
+            string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\FF7OR";
             string midiKeyPath = $"{ff7KeyPath}\\1.00\\MIDI";
             string soundKeyPath = $"{ff7KeyPath}\\1.00\\Sound";
             string ffnxKeyPath = $"{ff7KeyPath}\\1.00\\FFNx";
 
-            string virtualStorePath = $"{RegistryHelper.GetKeyPath(FF7RegKey.VirtualStoreKeyPath)}\\Final Fantasy VII";
+            string virtualStorePath = $"{RegistryHelper.GetKeyPath(FF7RegKey.VirtualStoreKeyPath)}\\FF7OR";
             string midiVirtualKeyPath = $"{virtualStorePath}\\1.00\\MIDI";
             string soundVirtualKeyPath = $"{virtualStorePath}\\1.00\\Sound";
             string ffnxVirtualKeyPath = $"{virtualStorePath}\\1.00\\FFNx";

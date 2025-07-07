@@ -170,11 +170,12 @@ namespace Iros._7th.Workshop {
             defaultSettings.Options.Add(GeneralOptions.OpenModFilesWith7H);
             defaultSettings.Options.Add(GeneralOptions.CheckForUpdates);
 
-            defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/https$ff7ovaremake.com/catalog/ova.xml", Name = "OVA Remake" });
+            defaultSettings.Subscriptions.Add(new Subscription() { Url = "iros://Url/https$ff7ovaremake.com/catalog/ff7or.xml", Name = "FF7OR" });
 
             defaultSettings.ExtraFolders.Add("ambient");
             defaultSettings.ExtraFolders.Add("direct");
             defaultSettings.ExtraFolders.Add("lighting");
+            defaultSettings.ExtraFolders.Add("mesh");
             defaultSettings.ExtraFolders.Add("music");
             defaultSettings.ExtraFolders.Add("sfx");
             defaultSettings.ExtraFolders.Add("time");

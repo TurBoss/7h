@@ -393,7 +393,7 @@ namespace SeventhHeaven.ViewModels
             AutoUpdateModsByDefault = settings.HasOption(GeneralOptions.AutoUpdateMods);
             ActivateInstalledModsAuto = settings.HasOption(GeneralOptions.AutoActiveNewMods);
             ImportLibraryFolderAuto = settings.HasOption(GeneralOptions.AutoImportMods);
-            CheckForUpdatesAuto = settings.HasOption(GeneralOptions.CheckForUpdates);
+            // CheckForUpdatesAuto = settings.HasOption(GeneralOptions.CheckForUpdates);
             BypassCompatibilityLocks = settings.HasOption(GeneralOptions.BypassCompatibility);
             OpenIrosLinks = settings.HasOption(GeneralOptions.OpenIrosLinksWith7H);
             OpenModFilesWith7H = settings.HasOption(GeneralOptions.OpenModFilesWith7H);
@@ -407,7 +407,7 @@ namespace SeventhHeaven.ViewModels
             {
                 Logger.Info("FF7 Exe path is empty or ff7.exe is missing. Auto detecting paths ...");
 
-                string registry_path = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII";
+                string registry_path = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\FF7OR";
                 string ff7 = null;
                 FF7Version foundVersion = FF7Version.Unknown;
 
@@ -627,8 +627,8 @@ namespace SeventhHeaven.ViewModels
             if (ImportLibraryFolderAuto)
                 newOptions.Add(GeneralOptions.AutoImportMods);
 
-            if (CheckForUpdatesAuto)
-                newOptions.Add(GeneralOptions.CheckForUpdates);
+            //if (CheckForUpdatesAuto)
+            //    newOptions.Add(GeneralOptions.CheckForUpdates);
 
             if (BypassCompatibilityLocks)
                 newOptions.Add(GeneralOptions.BypassCompatibility);

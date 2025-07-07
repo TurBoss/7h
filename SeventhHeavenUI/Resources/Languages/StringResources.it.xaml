@@ -649,7 +649,7 @@ Premi 'Annulla' per interrompere il processo.</system:String>
 
 
     <!--GameLaunchWindow.xaml.cs Strings-->
-    <system:String x:Key="LaunchingFinalFantasyVII">Avvio di Final Fantasy VII in Corso</system:String>
+    <system:String x:Key="LaunchingFinalFantasyVII">Avvio di FF7OR in Corso</system:String>
     <system:String x:Key="UnknownErrorWhenLaunchingGame">Errore sconosciuto all'avvio del gioco</system:String>
     <system:String x:Key="GameLaunchProcessCanceled">processo di avvio annullato</system:String>
     <system:String x:Key="FailedToLaunchFf7ViewLogForDetails">Impossibile eseguire FF7. Visualizza il log sovrastante per maggiori dettagli.</system:String>
@@ -738,9 +738,9 @@ Clicca Sì per chiudere tutti i processi legati a FF7. Clicca No per avviarne un
     <system:String x:Key="ErrorCodeYarr">Codice di Errore: AHRRR, CORPO DI MILLE BALENE! (YARR!) Impossibile continuare. Per favore riporta questo messaggio nei forum Qhimm.</system:String>
     <system:String x:Key="VerifyingGameIsNotInstalledInProtectedFolder">Controllo che il gioco non sia installato in una cartella di sistema/protetta ...</system:String>
 
-    <system:String x:Key="Ff7IsCurrentlyInstalledInASystemFolder" xml:space="preserve">FF7 è installato in una cartella di sistema e questo potrebbe portare al malfunzionamento di alcune mod. Si raccomanda di reinstallarlo in C:\Games\Final Fantasy VII.
+    <system:String x:Key="Ff7IsCurrentlyInstalledInASystemFolder" xml:space="preserve">FF7 è installato in una cartella di sistema e questo potrebbe portare al malfunzionamento di alcune mod. Si raccomanda di reinstallarlo in C:\Games\FF7OR.
 
-Vuoi copiare automaticamente la tua installazione in C:\Games\Final Fantasy VII per continuare?</system:String>
+Vuoi copiare automaticamente la tua installazione in C:\Games\FF7OR per continuare?</system:String>
 
     <system:String x:Key="CanNotContinueDueToFf7nstalledInProtectedFolder">impossibile continuare poiché FF7 è installato in una cartella di sistema/protetta. Annullo...</system:String>
     <system:String x:Key="CannotContinue">Impossibile Continuare!</system:String>

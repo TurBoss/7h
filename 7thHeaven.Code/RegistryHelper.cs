@@ -32,17 +32,17 @@ namespace _7thHeaven.Code
 
         public const string RereleaseKeyPath32Bit = @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{141B8BA9-BFFD-4635-AF64-078E31010EC3}_is1";
 
-        public const string SquareSoftKeyPath64Bit = @"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Square Soft, Inc.";
+        public const string SquareSoftKeyPath64Bit = @"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Cloudiar Inc.";
 
-        public const string SquareSoftKeyPath32Bit = @"HKEY_LOCAL_MACHINE\SOFTWARE\Square Soft, Inc.";
+        public const string SquareSoftKeyPath32Bit = @"HKEY_LOCAL_MACHINE\SOFTWARE\Cloudiar Inc.";
 
         public const string FF7AppKeyPath64Bit = @"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\App Paths\FF7app.exe";
 
         public const string FF7AppKeyPath32Bit = @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\FF7app.exe";
 
-        public const string VirtualStoreKeyPath64Bit = @"HKEY_CURRENT_USER\SOFTWARE\Classes\VirtualStore\MACHINE\SOFTWARE\Wow6432Node\Square Soft, Inc.";
+        public const string VirtualStoreKeyPath64Bit = @"HKEY_CURRENT_USER\SOFTWARE\Classes\VirtualStore\MACHINE\SOFTWARE\Wow6432Node\Cloudiar Inc.";
 
-        public const string VirtualStoreKeyPath32Bit = @"HKEY_CURRENT_USER\SOFTWARE\Classes\VirtualStore\MACHINE\SOFTWARE\Square Soft, Inc.";
+        public const string VirtualStoreKeyPath32Bit = @"HKEY_CURRENT_USER\SOFTWARE\Classes\VirtualStore\MACHINE\SOFTWARE\Cloudiar Inc.";
 
         /// <summary>
         /// Returns the path to the Registry Key associated with the given <paramref name="regKey"/> for the correct OS Bitness.

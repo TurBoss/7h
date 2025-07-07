@@ -196,7 +196,7 @@ namespace GameConverter
             return FileUtils.IsLocatedInSystemFolders(InstallPath);
         }
 
-        //public bool CopyGame(string targetPath = @"C:\Games\Final Fantasy VII")
+        //public bool CopyGame(string targetPath = @"C:\Games\FF7OR")
         public bool CopyGame(string targetPath = @"C:\Games\FF7OR")
         {
             if (!Directory.Exists(InstallPath))
@@ -288,7 +288,7 @@ namespace GameConverter
             RegistryHelper.ExportKey(RegistryHelper.GetKeyPath(FF7RegKey.RereleaseKeyPath), Path.Combine(pathToBackup, "FF7-02.reg"));
             RegistryHelper.ExportKey(RegistryHelper.GetKeyPath(FF7RegKey.FF7AppKeyPath), Path.Combine(pathToBackup, "FF7-03.reg"));
 
-            string oldGameConverterKeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII\\GameConverterkeys";
+            string oldGameConverterKeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\FF7OR\\GameConverterkeys";
             RegistryHelper.ExportKey(oldGameConverterKeyPath, Path.Combine(pathToBackup, "FF7-OldGC.reg"));
         }
 
@@ -775,7 +775,7 @@ namespace GameConverter
         /// <param name="pathToBackup"></param>
         internal void CheckAndCopyOldGameConverterFiles(string pathToBackup)
         {
-            string converterKeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII\\GameConverterkeys";
+            string converterKeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\FF7OR\\GameConverterkeys";
 
 
             string regValue = RegistryHelper.GetValue(converterKeyPath, "Manipulated_by_GameConverter", "") as string;

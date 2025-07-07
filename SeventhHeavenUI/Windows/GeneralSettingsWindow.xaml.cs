@@ -423,12 +423,12 @@ namespace SeventhHeaven.Windows
 
         private void btnFFNxCheckForUpdate_Click(object sender, RoutedEventArgs e)
         {
-            FFNxUpdater.CheckForUpdates(Sys.Settings.FFNxUpdateChannel, true);
+            // FFNxUpdater.CheckForUpdates(Sys.Settings.FFNxUpdateChannel, true);
         }
 
         private void btn7thCheckForUpdate_Click(object sender, RoutedEventArgs e)
         {
-            CoreUpdater.CheckForUpdates(Sys.Settings.AppUpdateChannel, true);
+            // CoreUpdater.CheckForUpdates(Sys.Settings.AppUpdateChannel, true);
         }
     }
 }

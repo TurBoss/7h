@@ -42,15 +42,16 @@ namespace SeventhHeaven.Classes
 
         private string GetUpdateChannel(FFNxUpdateChannelOptions channel)
         {
-            switch(channel)
-            {
-                case FFNxUpdateChannelOptions.Stable:
-                    return "https://api.github.com/repos/julianxhokaxhiu/FFNx/releases/latest";
-                case FFNxUpdateChannelOptions.Canary:
-                    return "https://api.github.com/repos/julianxhokaxhiu/FFNx/releases/tags/canary";
-                default:
-                    return "";
-            }
+            return "";
+//            switch (channel)
+//            {
+//                case FFNxUpdateChannelOptions.Stable:
+//                    return "https://api.github.com/repos/julianxhokaxhiu/FFNx/releases/latest";
+//                case FFNxUpdateChannelOptions.Canary:
+//                    return "https://api.github.com/repos/julianxhokaxhiu/FFNx/releases/tags/canary";
+//                default:
+//                    return "";
+//            }
         }
 
         private string GetUpdateVersion(string name)

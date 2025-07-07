@@ -650,7 +650,7 @@ Clique em 'Cancelar' para parar o processo.</system:String>
 
 
     <!--GameLaunchWindow.xaml.cs Strings-->
-    <system:String x:Key="LaunchingFinalFantasyVII">Inicializando Final Fantasy VII</system:String>
+    <system:String x:Key="LaunchingFinalFantasyVII">Inicializando FF7OR</system:String>
     <system:String x:Key="UnknownErrorWhenLaunchingGame">Erro desconhecido ao inicializar jogo</system:String>
     <system:String x:Key="GameLaunchProcessCanceled">Processo de inicialização do jogo cancelado</system:String>
     <system:String x:Key="FailedToLaunchFf7ViewLogForDetails">Não foi possível inicializar FF7. Veja o log acima para detalhes.</system:String>
@@ -739,9 +739,9 @@ Clique em Sim para fechar todas as instâncias atuais de FF7. Clique em Não par
     <system:String x:Key="ErrorCodeYarr">Código de erro: YARR! Impossível continuar. Favor informar este erro nos fórums Qhimm.</system:String>
     <system:String x:Key="VerifyingGameIsNotInstalledInProtectedFolder">Verificando se jogo não está instalado em pasta protegida ...</system:String>
 
-    <system:String x:Key="Ff7IsCurrentlyInstalledInASystemFolder" xml:space="preserve">FF7 está atualmente instalado numa pasta protegida que pode causar o mal funcionamento de mods. Recomenda-se reinstalá-lo em C:\Games\Final Fantasy VII
+    <system:String x:Key="Ff7IsCurrentlyInstalledInASystemFolder" xml:space="preserve">FF7 está atualmente instalado numa pasta protegida que pode causar o mal funcionamento de mods. Recomenda-se reinstalá-lo em C:\Games\FF7OR
 
-Gostaria de automaticamente copiar sua instalação para C:\Games\Final Fantasy VII to continue?</system:String>
+Gostaria de automaticamente copiar sua instalação para C:\Games\FF7OR to continue?</system:String>
 
     <system:String x:Key="CanNotContinueDueToFf7nstalledInProtectedFolder">Não foi possível continuar devido a FF7 ser instalado numa pasta protegida. Abortando...</system:String>
     <system:String x:Key="CannotContinue">Impossível Continuar!</system:String>

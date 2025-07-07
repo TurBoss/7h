@@ -651,7 +651,7 @@ Auf 'Abbrechen' klicken um den Vorgang zu unterbrechen.</system:String>
     
     
     <!--GameLaunchWindow.xaml.cs Strings-->
-    <system:String x:Key="LaunchingFinalFantasyVII">Starte Final Fantasy VII</system:String>
+    <system:String x:Key="LaunchingFinalFantasyVII">Starte FF7OR</system:String>
     <system:String x:Key="UnknownErrorWhenLaunchingGame">Unbekannter Fehler beim starten des Spiels</system:String>
     <system:String x:Key="GameLaunchProcessCanceled">Starten des Spiels wurde abgebrochen</system:String>
     <system:String x:Key="FailedToLaunchFf7ViewLogForDetails">Fehler beim starten des Spiels. Für Deteils den Log im Fenster einsehen.</system:String>
@@ -743,9 +743,9 @@ Klicke auf JA um alle aktiven Final Fantasy 7 zu beenden. Klicke Nein um ein wei
 
     <system:String x:Key="Ff7IsCurrentlyInstalledInASystemFolder" xml:space="preserve">Final Fantasy 7 ist derzeit in einem Systemordner installiert. Es könnte sein, dass Mods deshalb nicht funktionieren..
 
-Es wird empfohlen es in C:\Games\Final Fantasy VII zu installieren.
+Es wird empfohlen es in C:\Games\FF7OR zu installieren.
 
-Möchtest du eine Kopie des Spiels in C:\Games\Final Fantasy VII anlegen und fortfahren?</system:String>
+Möchtest du eine Kopie des Spiels in C:\Games\FF7OR anlegen und fortfahren?</system:String>
 
     <system:String x:Key="CanNotContinueDueToFf7nstalledInProtectedFolder">Kann nicht fortfahren, da sich Final Fantasy 7 i einem System/Geschützten befindet. Abbruch...</system:String>
     <system:String x:Key="CannotContinue">Kann nicht fortfahren!</system:String>

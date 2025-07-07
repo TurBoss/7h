@@ -69,7 +69,7 @@ namespace SeventhHeaven.Windows
             // Wait 1 second before starting actual launch process so the window is fully loaded
             var sleepTask = Task.Factory.StartNew(() =>
             {
-                Thread.Sleep(1000);
+                Thread.Sleep(3000);
             });
 
             sleepTask.ContinueWith((result) =>

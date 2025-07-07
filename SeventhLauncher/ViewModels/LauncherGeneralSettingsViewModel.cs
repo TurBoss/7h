@@ -408,7 +408,7 @@ namespace SeventhLauncher.ViewModels
             {
                 Logger.Info("FF7 Exe path is empty or ff7.exe is missing. Auto detecting paths ...");
 
-                string registry_path = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\Final Fantasy VII";
+                string registry_path = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\FF7OR";
                 string ff7 = null;
                 FF7Version foundVersion = FF7Version.Unknown;
 

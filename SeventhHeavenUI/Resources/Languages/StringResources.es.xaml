@@ -654,7 +654,7 @@ Haz clic en 'Cancelar' para detener el proceso.</system:String>
 
 
     <!--GameLaunchWindow.xaml.cs Strings-->
-    <system:String x:Key="LaunchingFinalFantasyVII">Iniciando Final Fantasy VII</system:String>
+    <system:String x:Key="LaunchingFinalFantasyVII">Iniciando FF7OR</system:String>
     <system:String x:Key="UnknownErrorWhenLaunchingGame">Ha ocurrido un error desconocido mientras se iniciaba el juego</system:String>
     <system:String x:Key="GameLaunchProcessCanceled">se ha cancelado el proceso de ejecución del juego</system:String>
     <system:String x:Key="FailedToLaunchFf7ViewLogForDetails">Error al iniciar FF7. Mira el registro superior para más detalles.</system:String>
@@ -743,9 +743,9 @@ Haz clic en 'Sí' para cerrar todas las instancias actuales de FF7. Haz clic en 
     <system:String x:Key="ErrorCodeYarr">Error código: ¡YARR! Imposible continuar. Esta copia de FF7 parece ser pirata. Por favor, adquiere una versión genuina del juego. Si esta copia es genuina, solicita ayuda en los foros de Qhimm.</system:String>
     <system:String x:Key="VerifyingGameIsNotInstalledInProtectedFolder">Verificando que el juego no está instalado en una carpeta del Sistema/Protegida ...</system:String>
 
-    <system:String x:Key="Ff7IsCurrentlyInstalledInASystemFolder" xml:space="preserve">FF7 está instalado actualmente en una carpeta del Sistema la cual puede causar que los Mods no funcionen. Se recomienda que lo instales en C:\Games\Final Fantasy VII.
+    <system:String x:Key="Ff7IsCurrentlyInstalledInASystemFolder" xml:space="preserve">FF7 está instalado actualmente en una carpeta del Sistema la cual puede causar que los Mods no funcionen. Se recomienda que lo instales en C:\Games\FF7OR.
 
-¿Quieres copiar automáticamente tu instalación en C:\Games\Final Fantasy VII para continuar?</system:String>
+¿Quieres copiar automáticamente tu instalación en C:\Games\FF7OR para continuar?</system:String>
 
     <system:String x:Key="CanNotContinueDueToFf7nstalledInProtectedFolder">no se ha podido continuar debido a que FF7 está instalado en una carpeta del Sistema/Protegida. Abortando...</system:String>
     <system:String x:Key="CannotContinue">¡No se ha podido continuar!</system:String>

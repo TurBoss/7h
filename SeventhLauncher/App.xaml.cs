@@ -25,7 +25,7 @@ namespace SeventhLauncher
     {
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public const string uniqueAppGuid = "CAFECAFE-CAFE-CAFE-CAFE-CAFECAFECAFE";
+        public const string uniqueAppGuid = "0ead971a-8d37-4a1d-8883-bee765abc2ad";
 
         public static Mutex uniqueMutex;
 
@@ -86,7 +86,7 @@ namespace SeventhLauncher
                 }
             }
 
-            return "7th Heaven"; // default if can't find for some reason
+            return "FF7OR Launcher"; // default if can't find for some reason
         }
 
         private void Application_Startup(object sender, StartupEventArgs e)
