@@ -123,7 +123,7 @@
                    TextWrapping="Wrap"
                    Margin="10,10,0,0"
                    MaxWidth="100"
-                   Text="{Binding StatusMessage, FallbackValue='FFNx v0.0.0.0'}" Grid.Row="1"/>
+                   Text="{Binding StatusMessage, FallbackValue='tnx3000 v0.0.0.0'}" Grid.Row="1"/>
 
         <Button Grid.Row="1"
                 Click="btnReset_Click"

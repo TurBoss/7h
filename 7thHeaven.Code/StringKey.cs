@@ -641,7 +641,7 @@
         DoNotMount,
         CanaryWarningTitle,
         CanaryWarningMessage,
-        PleaseUpdateFFNx,
+        PleaseUpdatetnx3000,
         CheckForSystemDEPStatus,
         DEPDetected,
         DoYouWantToDisableDEP,

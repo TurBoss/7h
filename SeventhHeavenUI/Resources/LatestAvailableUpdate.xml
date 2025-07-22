@@ -4,7 +4,7 @@
   <ReleaseDate>08/27/2020</ReleaseDate>
   <ReleaseNotes>
     - *WARNING*: Do NOT use Animations 3.0>60 fps!
-    --Because it crashes FFNx (therefore 7H 2.2+)
+    --Because it crashes tnx3000 (therefore 7H 2.2+)
     - Game is now made Large Address and DEP Aware
     - Multi-language support (game version and 7H UI)
     - Dpad support for DInput/XInput gamepads
@@ -13,7 +13,7 @@
     - Added Sega Chief catalog
     - Improved installer
     - Multitude of bug fixes
-    - FFNx game driver included, which adds:
+    - tnx3000 game driver included, which adds:
     -- DX11/OpenGL/high-DPI/better gamepad support
     -- Antialiasing, vertical centered fields
     -- Audio and game stability fixes/enhancements

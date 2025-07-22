@@ -636,7 +636,7 @@ Premi 'Annulla' per interrompere il processo.</system:String>
     <system:String x:Key="TextureCacheCleared">Cache texture svuotata!</system:String>
     <system:String x:Key="FailedToClearTextureCache">Svuotamento cache texture non riuscito</system:String>
     <system:String x:Key="GameDriverSettingsSaved">Impostazioni Driver di Gioco salvate!</system:String>
-    <system:String x:Key="CouldNotWriteTo7HGameDriverCfg">Impossibile scrivere il file FFNx.toml. Controlla che non sia impostato come Sola Lettura e che FF7 sia installato in una cartella su cui hai un controllo di scrittura totale.</system:String>
+    <system:String x:Key="CouldNotWriteTo7HGameDriverCfg">Impossibile scrivere il file tnx3000.toml. Controlla che non sia impostato come Sola Lettura e che FF7 sia installato in una cartella su cui hai un controllo di scrittura totale.</system:String>
     <system:String x:Key="UnknownErrorWhileSaving">Errore sconosciuto durante il salvataggio. L'errore è stato riportato nel log dell'applicazione.</system:String>
     <system:String x:Key="GameDriverSettingsResetToDefaults">Impostazioni del Driver di Gioco riportate ai valori predefiniti. Clicca 'Salva' per salvare i cambiamenti.</system:String>
 
@@ -930,10 +930,10 @@ Vuoi applicare questa modifica e riprovare?</system:String>
     <system:String x:Key="CopyingFileFrom">copia del file da</system:String>
 
     <system:String x:Key="CannotCheckIfLatestDriverIsInstalledDueToMissingFile">impossibile controllare se l'ultimo driver è installato a causa di un file mancante</system:String>
-    <system:String x:Key="GameDriverDllFileIsUpToDate">FFNx.dll è aggiornato.</system:String>
+    <system:String x:Key="GameDriverDllFileIsUpToDate">tnx3000.dll è aggiornato.</system:String>
     <system:String x:Key="BackingUpExistingGameDriverTo">backup del driver di gioco esistente in</system:String>
     <system:String x:Key="BackingUpExistingGameDriverCfgTo">backup del .cfg dei driver di gioco esistente in</system:String>
-    <system:String x:Key="GameDriverCfgFileMissingCopyingDefaultFrom">FFNx.toml mancante. Copia della versione predefinita da</system:String>
+    <system:String x:Key="GameDriverCfgFileMissingCopyingDefaultFrom">tnx3000.toml mancante. Copia della versione predefinita da</system:String>
     <system:String x:Key="CannotCreateDefaultCfgDueToMissingFile">impossibile creare file .cfg da copia predefinita a causa di un file mancante</system:String>
     <system:String x:Key="BackingUpExistingShadersFolderTo">backup della cartella 'shaders' esistente in</system:String>
     <system:String x:Key="CopyingContentsOf">copia dei contenuti di</system:String>
@@ -1242,7 +1242,7 @@ Vuoi applicare questa modifica e riprovare?</system:String>
     <system:String x:Key="CanaryWarningTitle">PLEASE READ THIS!</system:String>
     <system:String x:Key="CanaryWarningMessage">Thank you for switching to the Canary channel.\n\nThis channel is suggested only for advanced users who are willing to support the development and report bugs. DO NOT USE this channel if you're willing to have a Stable gameplay experience.\n\nPlease be aware it may be prone to crashing and is NOT tested by anyone. Use this build AT YOUR OWN RISK!</system:String>
 
-    <system:String x:Key="PleaseUpdateFFNx">Could not load the settings from the FFNx.toml file. This likely happens when your current version of FFNx is outdated. Consider updating FFNx to the latest version available for your chosen Channel and try again.</system:String>
+    <system:String x:Key="PleaseUpdatetnx3000">Could not load the settings from the tnx3000.toml file. This likely happens when your current version of tnx3000 is outdated. Consider updating tnx3000 to the latest version available for your chosen Channel and try again.</system:String>
 
     <system:String x:Key="CheckForSystemDEPStatus">Checking System DEP status...</system:String>
     <system:String x:Key="DEPDetected">DEP Detected</system:String>

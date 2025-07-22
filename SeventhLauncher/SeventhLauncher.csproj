@@ -13,6 +13,7 @@
     <Configurations>Debug;Release;Private;Public</Configurations>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <PackageIcon>custom_logo.png</PackageIcon>
+	<EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -51,6 +52,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\7thHeaven.Code\7thHeaven.Code.csproj" />
     <ProjectReference Include="..\SeventhHeavenUI\SeventhHeavenUI.csproj" />
   </ItemGroup>
 
@@ -72,7 +74,12 @@
     </None>
   </ItemGroup>
 
-	<Target Name="7thAfterBuild" AfterTargets="AfterBuild">
-		<Copy SourceFiles="../7thWrapperProxy/bin/$(Configuration)/$(TargetFramework)/7thWrapperProxy.runtimeconfig.json" DestinationFolder="$(OutputPath)" ContinueOnError="false" />
-	</Target>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+<!--
+  <Target Name="7thAfterBuild" AfterTargets="AfterBuild">
+    <Copy SourceFiles="../7thWrapperProxy/bin/$(Configuration)/$(TargetFramework)/7thWrapperProxy.runtimeconfig.json" DestinationFolder="$(OutputPath)" ContinueOnError="false" />
+  </Target>
+-->
 </Project>

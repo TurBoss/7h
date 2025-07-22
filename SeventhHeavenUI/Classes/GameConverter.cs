@@ -729,23 +729,23 @@ namespace SeventhHeaven.Classes
         }
 
         /// <summary>
-        /// Checks FFNx.dll is present in the current game directory.
+        /// Checks tnx3000.dll is present in the current game directory.
         /// If not present it will automatically download and install the latest stable version.
         /// </summary>
         /// <returns>returns false if error occurred</returns>
         internal bool InstallLatestGameDriver(string backupFolderPath)
         {
-            string pathToCurrentDriver = Path.Combine(InstallPath, "FFNx.dll");
+            string pathToCurrentDriver = Path.Combine(InstallPath, "tnx3000.dll");
             bool currentDriverExists = File.Exists(pathToCurrentDriver);
 
             if (!currentDriverExists)
             {
                 try
                 {
-                    FFNxDriverUpdater updater = new FFNxDriverUpdater();
+                    tnx3000DriverUpdater updater = new tnx3000DriverUpdater();
 
-                    SendMessage($"Download and extracting the latest FFNx Stable version to {Sys.InstallPath}...");
-                    updater.DownloadAndExtractLatestVersion(FFNxUpdateChannelOptions.Stable);
+                    SendMessage($"Download and extracting the latest tnx3000 Stable version to {Sys.InstallPath}...");
+                    updater.DownloadAndExtractLatestVersion(tnx3000UpdateChannelOptions.Stable);
                 }
                 catch (Exception ex)
                 {
@@ -755,7 +755,7 @@ namespace SeventhHeaven.Classes
             }
             else
             {
-                SendMessage($"FFNx seems to be present.");
+                SendMessage($"tnx3000 seems to be present.");
             }
 
             return true;

@@ -20,7 +20,7 @@ namespace SeventhHeaven.Windows
         
         private UpdateChecker CoreUpdater = new UpdateChecker();
 
-        private FFNxDriverUpdater FFNxUpdater = new FFNxDriverUpdater();
+        private tnx3000DriverUpdater tnx3000Updater = new tnx3000DriverUpdater();
 
         public GeneralSettingsWindow()
         {
@@ -387,17 +387,17 @@ namespace SeventhHeaven.Windows
             ViewModel.ResetToDefaults();
         }
 
-        private void cmbFFNxChannel_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void cmbtnx3000Channel_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (ViewModel != null)
             {
-                ViewModel.FFNxUpdateChannel = (FFNxUpdateChannelOptions)cmbFFNxChannel.SelectedIndex;
+                ViewModel.tnx3000UpdateChannel = (tnx3000UpdateChannelOptions)cmbtnx3000Channel.SelectedIndex;
 
                 // Bypass the default save button in order to make the Check for Updates button work instantly
-                Sys.Settings.FFNxUpdateChannel = ViewModel.FFNxUpdateChannel;
+                Sys.Settings.tnx3000UpdateChannel = ViewModel.tnx3000UpdateChannel;
 
                 // Inform the user about canary being unstable
-                if (Sys.Settings.FFNxUpdateChannel == FFNxUpdateChannelOptions.Canary)
+                if (Sys.Settings.tnx3000UpdateChannel == tnx3000UpdateChannelOptions.Canary)
                 {
                     MessageDialogWindow.Show(ResourceHelper.Get(StringKey.CanaryWarningMessage), ResourceHelper.Get(StringKey.CanaryWarningTitle), System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
                 }
@@ -421,9 +421,9 @@ namespace SeventhHeaven.Windows
             }
         }
 
-        private void btnFFNxCheckForUpdate_Click(object sender, RoutedEventArgs e)
+        private void btntnx3000CheckForUpdate_Click(object sender, RoutedEventArgs e)
         {
-            // FFNxUpdater.CheckForUpdates(Sys.Settings.FFNxUpdateChannel, true);
+            // tnx3000Updater.CheckForUpdates(Sys.Settings.tnx3000UpdateChannel, true);
         }
 
         private void btn7thCheckForUpdate_Click(object sender, RoutedEventArgs e)

@@ -111,8 +111,8 @@ namespace SeventhHeaven.Windows
                 }
 
                 // Update driver version label
-                FFNxDriverUpdater ffnxUpdater = new FFNxDriverUpdater();
-                txtDriverVersion.Text = $"FFNx v{ffnxUpdater.GetCurrentDriverVersion()}";
+                tnx3000DriverUpdater tnx3000Updater = new tnx3000DriverUpdater();
+                txtDriverVersion.Text = $"tnx3000 v{tnx3000Updater.GetCurrentDriverVersion()}";
 
                 scrollViewer.Content = stackPanel;
                 tab.Content = scrollViewer;
@@ -171,9 +171,9 @@ namespace SeventhHeaven.Windows
 
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
-            Sys.FFNxConfig.RestoreBackup();
-            Sys.FFNxConfig.ResetTo7thHeavenDefaults();
-            Sys.FFNxConfig.Save();
+            Sys.tnx3000Config.RestoreBackup();
+            Sys.tnx3000Config.ResetTo7thHeavenDefaults();
+            Sys.tnx3000Config.Save();
 
             foreach (var item in ViewModels)
             {

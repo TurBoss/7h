@@ -272,19 +272,19 @@ namespace Iros._7th.Workshop
                 return Path.Combine(PathToVBusDriver, "ScpDriver.exe");
             }
         }
-        public static string PathToFFNxToml
+        public static string PathTotnx3000Toml
         {
             get
             {
-                return Sys.InstallPath != null ? Path.Combine(Sys.InstallPath, "FFNx.toml") : null;
+                return Sys.InstallPath != null ? Path.Combine(Sys.InstallPath, "tnx3000.toml") : null;
             }
         }
 
-        public static string PathToFFNxLog
+        public static string PathTotnx3000Log
         {
             get
             {
-                return Sys.InstallPath != null ? Path.Combine(Sys.InstallPath, "FFNx.log") : null;
+                return Sys.InstallPath != null ? Path.Combine(Sys.InstallPath, "tnx3000.log") : null;
             }
         }
 
@@ -308,7 +308,7 @@ namespace Iros._7th.Workshop
         public static IDownloader Downloads { get; set; }
         public static Profile ActiveProfile { get; set; }
         public static Version AppVersion { get; set; }
-        public static FFNxConfigManager FFNxConfig { get; private set; }
+        public static tnx3000ConfigManager tnx3000Config { get; private set; }
 
 
         public static event EventHandler<ModStatusEventArgs> StatusChanged;
@@ -508,7 +508,7 @@ namespace Iros._7th.Workshop
 
             AppVersion = new Version();
 
-            FFNxConfig = new FFNxConfigManager();
+            tnx3000Config = new tnx3000ConfigManager();
 
             string pathToVersions = Path.Combine(SysFolder, "version.xml");
             if (File.Exists(pathToVersions))

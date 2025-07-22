@@ -9,16 +9,16 @@ using Tomlyn.Model;
 
 namespace Iros._7th.Workshop.ConfigSettings
 {
-    public class FFNxConfigManager
+    public class tnx3000ConfigManager
     {
-        private string _pathToFFNxToml = Sys.PathToFFNxToml;
-        private string _pathToFFNxTomlBak = Path.Combine(Sys.PathToGameDriverFolder, "FFNx.toml.bak");
-        private string _pathToFFNxTomlTmp = Path.Combine(Sys.PathToGameDriverFolder, "FFNx.toml.tmp");
+        private string _pathTotnx3000Toml = Sys.PathTotnx3000Toml;
+        private string _pathTotnx3000TomlBak = Path.Combine(Sys.PathToGameDriverFolder, "tnx3000.toml.bak");
+        private string _pathTotnx3000TomlTmp = Path.Combine(Sys.PathToGameDriverFolder, "tnx3000.toml.tmp");
         private Exception _lastException = null;
 
         private TomlTable _toml = null;
 
-        public FFNxConfigManager()
+        public tnx3000ConfigManager()
         {
             Reload();
         }
@@ -37,14 +37,14 @@ namespace Iros._7th.Workshop.ConfigSettings
             try
             {
                 // first launch the Sys Path was not setup correctly yet so _toml is null
-                if (_toml == null) _pathToFFNxToml = Sys.PathToFFNxToml;
+                if (_toml == null) _pathTotnx3000Toml = Sys.PathTotnx3000Toml;
 
-                if (File.Exists(_pathToFFNxToml)) _toml = Toml.Parse(File.ReadAllBytes(_pathToFFNxToml)).ToModel();
+                if (File.Exists(_pathTotnx3000Toml)) _toml = Toml.Parse(File.ReadAllBytes(_pathTotnx3000Toml)).ToModel();
             }
             catch (Exception ex)
             {
                 _lastException = ex;
-                Sys.Message(new WMessage() { Text = $"Something went wrong while parsing \"{_pathToFFNxToml}\"", LoggedException = _lastException, LogLevel = WMessageLogLevel.Error });
+                Sys.Message(new WMessage() { Text = $"Something went wrong while parsing \"{_pathTotnx3000Toml}\"", LoggedException = _lastException, LogLevel = WMessageLogLevel.Error });
             }
         }
 
@@ -132,7 +132,7 @@ namespace Iros._7th.Workshop.ConfigSettings
 
         public void Save()
         {
-            List<string> _read = File.ReadAllLines(_pathToFFNxToml).ToList();
+            List<string> _read = File.ReadAllLines(_pathTotnx3000Toml).ToList();
             List<string> _write = new List<string>();
 
             foreach (string line in _read)
@@ -215,7 +215,7 @@ namespace Iros._7th.Workshop.ConfigSettings
                 }
             }
 
-            File.WriteAllLines(_pathToFFNxToml, _write);
+            File.WriteAllLines(_pathTotnx3000Toml, _write);
         }
 
         public void OverrideInternalKeys()
@@ -223,7 +223,7 @@ namespace Iros._7th.Workshop.ConfigSettings
             // first launch the Sys Path was not setup correctly yet so _toml is null
             if (_toml == null)
             {
-                _pathToFFNxToml = Sys.PathToFFNxToml;
+                _pathTotnx3000Toml = Sys.PathTotnx3000Toml;
                 Reload();
             }
             // Override known internal keys on save to preserve mod behavior override logic
@@ -267,24 +267,24 @@ namespace Iros._7th.Workshop.ConfigSettings
 
         public void Backup(bool isTemporary = false)
         {
-            string _path = isTemporary ? _pathToFFNxTomlTmp : _pathToFFNxTomlBak;
+            string _path = isTemporary ? _pathTotnx3000TomlTmp : _pathTotnx3000TomlBak;
 
-            if (File.Exists(_pathToFFNxToml))
+            if (File.Exists(_pathTotnx3000Toml))
             {
                 if (File.Exists(_path)) File.Delete(_path);
 
-                File.Copy(_pathToFFNxToml, _path);
+                File.Copy(_pathTotnx3000Toml, _path);
             }
         }
 
         public void RestoreBackup(bool isTemporary = false)
         {
-            string _path = isTemporary ? _pathToFFNxTomlTmp : _pathToFFNxTomlBak;
+            string _path = isTemporary ? _pathTotnx3000TomlTmp : _pathTotnx3000TomlBak;
 
             if (File.Exists(_path))
             {
-                File.Delete(_pathToFFNxToml);
-                File.Copy(_path, _pathToFFNxToml);
+                File.Delete(_pathTotnx3000Toml);
+                File.Copy(_path, _pathTotnx3000Toml);
                 Reload();
             }
         }

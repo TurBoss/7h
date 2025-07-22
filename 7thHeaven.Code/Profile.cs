@@ -174,10 +174,10 @@ namespace Iros._7th.Workshop {
 
             var conf = new ProfileSetting();
 
-            if (parts[0].StartsWith("ffnx_", StringComparison.InvariantCultureIgnoreCase))
+            if (parts[0].StartsWith("tnx3000_", StringComparison.InvariantCultureIgnoreCase))
             {
                 var key = parts[0].Substring(5);
-                if (Sys.FFNxConfig.HasKey(key)) conf = new ProfileSetting() { ID = key, Value = int.Parse(Sys.FFNxConfig.Get(key)) };
+                if (Sys.tnx3000Config.HasKey(key)) conf = new ProfileSetting() { ID = key, Value = int.Parse(Sys.tnx3000Config.Get(key)) };
             }
             else
             {

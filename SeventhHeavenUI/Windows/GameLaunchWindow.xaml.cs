@@ -31,7 +31,7 @@ namespace SeventhHeaven.Windows
             txtLog.MaxLines = int.MaxValue;
         }
 
-        public static GameLaunchViewModel Show(bool variableDump, bool debugLogging, bool noMods = false, bool noValidation = false)
+        public static GameLaunchViewModel Show(bool variableDump, bool debugLogging = true, bool noMods = false, bool noValidation = false)
         {
             GameLaunchWindow launchWindow = new GameLaunchWindow(variableDump, debugLogging);
             launchWindow.ViewModel.IsLaunchingWithNoMods = noMods;
@@ -83,7 +83,10 @@ namespace SeventhHeaven.Windows
         /// </summary>
         private Task<bool> StartGameLaunchProcessAsync()
         {
-            Task<bool> task = ViewModel.BeginLaunchProcessAsync();
+
+
+            Task<bool> task = ViewModel.BeginLaunchProcessAsync();   // por aka LOL3
+
 
             // setup async task to closing window after completion or keeping window open after error
             task.ContinueWith((taskResult) =>

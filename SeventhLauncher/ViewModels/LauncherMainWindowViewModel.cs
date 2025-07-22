@@ -91,7 +91,7 @@ namespace SeventhLauncher.ViewModels
         private string _catFile;
         private string _statusMessage;
         private string _currentProfile;
-        private string _ffnxUpdateVersion;
+        private string _tnx3000UpdateVersion;
         private string _searchText;
         private int _selectedTabIndex;
         private List<FilterItemViewModel> _availableFilters;
@@ -128,7 +128,7 @@ namespace SeventhLauncher.ViewModels
         {
             get
             {
-                return $"{App.GetAppName()} v{App.GetAppVersion().ToString()} - {ResourceHelper.Get(StringKey.ModManagerForFinalFantasy7)} [{CurrentProfile}] {FFNxUpdateVersion}";
+                return $"{App.GetAppName()} v{App.GetAppVersion().ToString()} - {ResourceHelper.Get(StringKey.ModManagerForFinalFantasy7)} [{CurrentProfile}] {tnx3000UpdateVersion}";
             }
         }
 
@@ -215,15 +215,15 @@ namespace SeventhLauncher.ViewModels
             }
         }
 
-        public string FFNxUpdateVersion
+        public string tnx3000UpdateVersion
         {
             get
             {
-                return string.IsNullOrEmpty(_ffnxUpdateVersion) ? string.Empty : $"[{ResourceHelper.Get(StringKey.UpdateAvailable)}: FFNx v{_ffnxUpdateVersion}]";
+                return string.IsNullOrEmpty(_tnx3000UpdateVersion) ? string.Empty : $"[{ResourceHelper.Get(StringKey.UpdateAvailable)}: tnx3000 v{_tnx3000UpdateVersion}]";
             }
             set
             {
-                _ffnxUpdateVersion = value;
+                _tnx3000UpdateVersion = value;
                 NotifyPropertyChanged();
                 NotifyPropertyChanged(nameof(WindowTitle));
             }
@@ -647,7 +647,7 @@ namespace SeventhLauncher.ViewModels
         #endregion
 
         private UpdateChecker updater = new UpdateChecker();
-        // private FFNxDriverUpdater ffnxUpdater = new FFNxDriverUpdater();
+        // private tnx3000DriverUpdater tnx3000Updater = new tnx3000DriverUpdater();
         
         public LauncherMainWindowViewModel()
         {
@@ -782,15 +782,15 @@ namespace SeventhLauncher.ViewModels
             //        System.Threading.Thread.Sleep(5000); // wait 5 seconds after init before checking for update to let UI render
             //        Sys.Message(new WMessage(ResourceHelper.Get(StringKey.CheckingForUpdates), WMessageLogLevel.LogOnly));
             //        if (updater.GetCurrentAppVersion() != "0.0.0.0") updater.CheckForUpdates(Sys.Settings.AppUpdateChannel);
-            //        // if (ffnxUpdater.GetCurrentDriverVersion() != "0.0.0.0") ffnxUpdater.CheckForUpdates(Sys.Settings.FFNxUpdateChannel);
+            //        // if (tnx3000Updater.GetCurrentDriverVersion() != "0.0.0.0") tnx3000Updater.CheckForUpdates(Sys.Settings.tnx3000UpdateChannel);
             //    });
             //}
 
-            // Check if there are errors in the FFNx.toml file and show to the user the output
-            Exception FFNxConfigError = Sys.FFNxConfig.GetLastError();
-            if (FFNxConfigError != null)
+            // Check if there are errors in the tnx3000.toml file and show to the user the output
+            Exception tnx3000ConfigError = Sys.tnx3000Config.GetLastError();
+            if (tnx3000ConfigError != null)
             {
-                MessageDialogWindow.Show("Something went wrong while parsing \"" + Sys.PathToFFNxToml + "\".\n\n" + Encoding.UTF8.GetString(Encoding.Default.GetBytes(FFNxConfigError.Message)), "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                MessageDialogWindow.Show("Something went wrong while parsing \"" + Sys.PathTotnx3000Toml + "\".\n\n" + Encoding.UTF8.GetString(Encoding.Default.GetBytes(tnx3000ConfigError.Message)), "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
 
             // Cleanup the library temp folder if it exist
@@ -1832,9 +1832,9 @@ namespace SeventhLauncher.ViewModels
 
         public void ShowGameDriverConfigWindow()
         {
-            if (File.Exists(Sys.PathToFFNxToml))
+            if (File.Exists(Sys.PathTotnx3000Toml))
             {
-                Sys.FFNxConfig.Reload();
+                Sys.tnx3000Config.Reload();
 
                 try
                 {
@@ -1847,12 +1847,12 @@ namespace SeventhLauncher.ViewModels
                 catch (Exception e)
                 {
                     Logger.Error(e);
-                    MessageDialogWindow.Show(ResourceHelper.Get(StringKey.PleaseUpdateFFNx), ResourceHelper.Get(StringKey.Error), MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageDialogWindow.Show(ResourceHelper.Get(StringKey.PleaseUpdatetnx3000), ResourceHelper.Get(StringKey.Error), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             else
             {
-                MessageDialogWindow messageDialog = new MessageDialogWindow(ResourceHelper.Get(StringKey.MissingPath), $"FFNx.toml {ResourceHelper.Get(StringKey.FileNotFound)}\n\nPlease run the game at least once and try again.", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageDialogWindow messageDialog = new MessageDialogWindow(ResourceHelper.Get(StringKey.MissingPath), $"tnx3000.toml {ResourceHelper.Get(StringKey.FileNotFound)}\n\nPlease run the game at least once and try again.", MessageBoxButton.OK, MessageBoxImage.Warning);
                 messageDialog.ShowDialog();
             }
         }

@@ -86,14 +86,18 @@ namespace SeventhLauncher
                 }
             }
             
-
+            
 
             InitializeComponent();
 
             SettingsVM = new GeneralSettingsViewModel();
             LauncherMainWindowVM = new LauncherMainWindowViewModel();
+
             // ModsVM = new MyModsViewModel();
-            // CatalogVM = new CatalogViewModel();
+
+            CatalogVM = new CatalogViewModel();
+            // CatalogVM.ForceCheckCatalogUpdateAsync();
+
 
             this.DataContext = LauncherMainWindowVM;
 
@@ -133,7 +137,7 @@ namespace SeventhLauncher
             /*
             this.profile_button.Visibility = Visibility.Hidden;
             this.launcher_button.Visibility = Visibility.Hidden;
-            this.ffnx_button.Visibility = Visibility.Hidden;
+            this.tnx3000_button.Visibility = Visibility.Hidden;
             this.controller_button.Visibility = Visibility.Hidden;
             this.system_button.Visibility = Visibility.Hidden;
             */
@@ -243,6 +247,8 @@ namespace SeventhLauncher
 
         private async Task Main()
         {
+            CatalogVM.ForceCheckCatalogUpdateAsync();
+            GetGameContent();
             await LoopCheck();
         }
 
@@ -254,13 +260,15 @@ namespace SeventhLauncher
             {
 
 
+
                 GetGameContent();
 
-                if (    this.is_dev == false)
+                if (this.is_dev == false)
                 {
                     LauncherMainWindowVM.MyMods.AutoSortBasedOnCategory();
                     LauncherMainWindowVM.MyMods.ActivateAllMods();
                 }
+
 
 
                 int total_mods = Sys.Catalog.Mods.Count();
@@ -314,7 +322,7 @@ namespace SeventhLauncher
                 this.download_text.Text = download_msg;
 
                 //Console.WriteLine("LOOP");
-                await Task.Delay(1000);
+                await Task.Delay(5000);
             }
         }
 
@@ -322,8 +330,11 @@ namespace SeventhLauncher
         {
             //Console.WriteLine("Checking for missing content");
 
+
+
             Catalog catalog = Sys.Catalog;
             Profile profile = Sys.ActiveProfile;
+
 
             if (_missingMods == null)
             {
@@ -387,7 +398,7 @@ namespace SeventhLauncher
             foreach (Mod mod in catalog.Mods)
             {
                 ProfileItem v = profile.GetItem(mod.ID);
-                //Console.WriteLine(v);
+                Console.WriteLine(v);
 
                 if (v == null)
                 {
@@ -419,12 +430,12 @@ namespace SeventhLauncher
                     {
                         if (profile_mod.IsModActive == true)
                         {
+
                             Debug.Write("Desactivando mod externo ");
                             Debug.WriteLine(profile_mod.Name);
+                            Debug.WriteLine(profile_mod.ModID);
 
                             LauncherMainWindowVM.MyMods.ToggleActivateMod(profile_mod.ModID, true);
-
-                            // profile_mod.IsModActive = false;
 
                         }
                     }
@@ -456,7 +467,7 @@ namespace SeventhLauncher
 
                 this.profile_button.Visibility = Visibility.Visible;
                 this.launcher_button.Visibility = Visibility.Visible;
-                this.ffnx_button.Visibility = Visibility.Visible;
+                this.tnx3000_button.Visibility = Visibility.Visible;
                 this.controller_button.Visibility = Visibility.Visible;
                 this.system_button.Visibility = Visibility.Visible;
                  
@@ -469,7 +480,7 @@ namespace SeventhLauncher
             {
                 this.profile_button.Visibility = Visibility.Hidden;
                 this.launcher_button.Visibility = Visibility.Hidden;
-                this.ffnx_button.Visibility = Visibility.Hidden;
+                this.tnx3000_button.Visibility = Visibility.Hidden;
                 this.controller_button.Visibility = Visibility.Hidden;
                 this.system_button.Visibility = Visibility.Hidden;
 

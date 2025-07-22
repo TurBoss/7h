@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SeventhLauncher"
+        xmlns:local="clr-namespace:SeventhLauncher.Windows"
         xmlns:ctrl="https://7thheaven.rocks/SeventhHeavenUI/UserControls"
         xmlns:cls="https://7thheaven.rocks/SeventhHeavenUI/Classes"
         xmlns:gif="https://github.com/XamlAnimatedGif/XamlAnimatedGif"

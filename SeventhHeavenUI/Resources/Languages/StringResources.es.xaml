@@ -640,7 +640,7 @@ Haz clic en 'Cancelar' para detener el proceso.</system:String>
     <system:String x:Key="TextureCacheCleared">¡Caché de texturas vaciado!</system:String>
     <system:String x:Key="FailedToClearTextureCache">Error al intentar vaciar el caché de texturas</system:String>
     <system:String x:Key="GameDriverSettingsSaved">¡Se ha guardado la configuración del Controlador del Juego!</system:String>
-    <system:String x:Key="CouldNotWriteTo7HGameDriverCfg">No se ha podido escribir al archivo FFNx.toml. Revisa que no esté habilitado para solo lectura, y que FF7 está instalado en una carpeta en la que tengas acceso completo.</system:String>
+    <system:String x:Key="CouldNotWriteTo7HGameDriverCfg">No se ha podido escribir al archivo tnx3000.toml. Revisa que no esté habilitado para solo lectura, y que FF7 está instalado en una carpeta en la que tengas acceso completo.</system:String>
     <system:String x:Key="UnknownErrorWhileSaving">Ha ocurrido un error desconocido al guardar. El error se ha registrado.</system:String>
     <system:String x:Key="GameDriverSettingsResetToDefaults">Se ha restablecido la configuración del Controlador del Juego a los valores por defecto. Haz clic en 'Guardar' para aplicar los cambios.</system:String>
 
@@ -935,10 +935,10 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="CopyingFileFrom">copiando archivo desde</system:String>
 
     <system:String x:Key="CannotCheckIfLatestDriverIsInstalledDueToMissingFile">no se ha podido comprobar si está instalado el último controlador porque falta un archivo</system:String>
-    <system:String x:Key="GameDriverDllFileIsUpToDate">El archivo FFNx.dll está actualizado.</system:String>
+    <system:String x:Key="GameDriverDllFileIsUpToDate">El archivo tnx3000.dll está actualizado.</system:String>
     <system:String x:Key="BackingUpExistingGameDriverTo">realizando copia de seguridad del controlador del juego existente en</system:String>
     <system:String x:Key="BackingUpExistingGameDriverCfgTo">realizando copia de seguridad del controlador del juego .cfg existente en</system:String>
-    <system:String x:Key="GameDriverCfgFileMissingCopyingDefaultFrom">No se encuentra el archivo FFNx.toml. Copiando el de defecto desde</system:String>
+    <system:String x:Key="GameDriverCfgFileMissingCopyingDefaultFrom">No se encuentra el archivo tnx3000.toml. Copiando el de defecto desde</system:String>
     <system:String x:Key="CannotCreateDefaultCfgDueToMissingFile">no se ha podido crear el .cfg de defecto. porque falta un archivo</system:String>
     <system:String x:Key="BackingUpExistingShadersFolderTo">creando copia de seguridad de la carpeta 'shaders' existente en</system:String>
     <system:String x:Key="CopyingContentsOf">copiando el contenido de</system:String>
@@ -1252,7 +1252,7 @@ Por último, si quieres usar archivos .OGG de alta calidad, cambia la opción de
     <system:String x:Key="CanaryWarningTitle">¡LEER ESTO POR FAVOR!</system:String>
     <system:String x:Key="CanaryWarningMessage">Gracias por cambiar al canal Canary.\n\nEste canal se ha preparado para usuarios avanzados que estén dispuestos a dar soporte en el desarrollo y reportar errores. NO USES ESTE CANAL si quieres tener una experiencia del juego Estable.\n\nPor favor, ten en cuenta que pueden ocurrir saltos a escritorio y que NADIE lo ha probado. ¡Úsalo bajo tu propio RIESGO!</system:String>
 
-    <system:String x:Key="PleaseUpdateFFNx">No se ha podido cargar la configuración del archivo FFNx.toml. Esto habitualmente sucede cuando tu versión actual de FFNx está desactualizada. Considera actualizar FFNx a la última versión disponible para tu Canal elegido y vuélvelo a intentar.</system:String>
+    <system:String x:Key="PleaseUpdatetnx3000">No se ha podido cargar la configuración del archivo tnx3000.toml. Esto habitualmente sucede cuando tu versión actual de tnx3000 está desactualizada. Considera actualizar tnx3000 a la última versión disponible para tu Canal elegido y vuélvelo a intentar.</system:String>
 
     <system:String x:Key="CheckForSystemDEPStatus">Checking System DEP status...</system:String>
     <system:String x:Key="DEPDetected">DEP Detected</system:String>

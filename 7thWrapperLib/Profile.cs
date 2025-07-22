@@ -148,6 +148,8 @@ namespace _7thWrapperLib
     [Serializable]
     public class RuntimeMod
     {
+
+        public RuntimeMod() { }
         public string BaseFolder { get; private set; }
         public List<string> ExtraFolders { get; private set; }
         public List<ConditionalFolder> Conditionals { get; private set; }
@@ -155,7 +157,7 @@ namespace _7thWrapperLib
         public List<string> LoadAssemblies { get; private set; }
         public List<string> LoadPlugins { get; private set; }
         public List<ProgramInfo> LoadPrograms { get; private set; }
-        public List<FFNxFlag> FFNxConfig { get; private set; }
+        public List<tnx3000Flag> tnx3000Config { get; private set; }
         public List<Variable> Variables { get; private set; }
 
         [NonSerialized]
@@ -175,7 +177,7 @@ namespace _7thWrapperLib
             LoadAssemblies = modInfo.LoadAssemblies.ToList();
             LoadPlugins = modInfo.LoadPlugins.ToList();
             LoadPrograms = modInfo.LoadPrograms.ToList();
-            FFNxConfig = modInfo.FFNxConfig;
+            tnx3000Config = modInfo.tnx3000Config;
             Variables = modInfo.Variables;
 
         }
@@ -837,7 +839,7 @@ namespace _7thWrapperLib
             LoadAssemblies = new List<string>();
             LoadPlugins = new List<string>();
             LoadPrograms = new List<ProgramInfo>();
-            FFNxConfig = new List<FFNxFlag>();
+            tnx3000Config = new List<tnx3000Flag>();
             Variables = new List<Variable>();
 
             Guid.TryParse(doc.SelectSingleNode("/ModInfo/ID").NodeText(), out Guid parsedId);
@@ -873,11 +875,11 @@ namespace _7thWrapperLib
                 LoadAssemblies.Add(LA.InnerText);
             foreach (XmlNode LP in doc.SelectNodes("/ModInfo/LoadPlugin"))
                 LoadPlugins.Add(LP.InnerText);
-            foreach (XmlNode xmlNode in doc.SelectNodes("/ModInfo/FFNxConfig"))
+            foreach (XmlNode xmlNode in doc.SelectNodes("/ModInfo/tnx3000Config"))
             {
                 foreach(XmlNode child in xmlNode)
                 {
-                    var flag = new FFNxFlag();
+                    var flag = new tnx3000Flag();
 
                     flag.Key = child.Name;
                     if (child.ChildNodes.Count > 1)
@@ -897,7 +899,7 @@ namespace _7thWrapperLib
                     foreach (XmlAttribute attr in child.Attributes)
                         flag.Attributes.Add(attr.Name, int.Parse(attr.Value));
 
-                    FFNxConfig.Add(flag);
+                    tnx3000Config.Add(flag);
                 }
                     
             }
@@ -973,7 +975,7 @@ namespace _7thWrapperLib
             OrderAfter = new List<Guid>();
             OrderBefore = new List<Guid>();
             Compatibility = null;
-            FFNxConfig = new List<FFNxFlag>();
+            tnx3000Config = new List<tnx3000Flag>();
             Variables = new List<Variable>();
         }
 
@@ -1004,7 +1006,7 @@ namespace _7thWrapperLib
         public Compatibility Compatibility { get; set; }
         public List<Guid> OrderBefore { get; set; }
         public List<Guid> OrderAfter { get; set; }
-        public List<FFNxFlag> FFNxConfig { get; set; }
+        public List<tnx3000Flag> tnx3000Config { get; set; }
         public List<Variable> Variables { get; set; }
     }
 
@@ -1287,14 +1289,14 @@ namespace _7thWrapperLib
     }
 
     [Serializable]
-    public class FFNxFlag
+    public class tnx3000Flag
     {
         public string Key;
         public string Value;
         public List<string> Values;
         public SerializableDictionary<string, int> Attributes;
 
-        public FFNxFlag()
+        public tnx3000Flag()
         {
             Key = String.Empty;
             Value = String.Empty;

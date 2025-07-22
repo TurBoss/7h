@@ -12,7 +12,7 @@ namespace Iros._7th.Workshop.ConfigSettings {
 
     public class Settings {
         public string Get(string setting) {
-            return Sys.FFNxConfig.Get(setting);
+            return Sys.tnx3000Config.Get(setting);
         }
         public bool IsMatched(string spec) {
             string[] parts = spec.Split(',');
@@ -25,7 +25,7 @@ namespace Iros._7th.Workshop.ConfigSettings {
                     string trimmedName = set[0].Trim();
                     string trimmedVal = set[1].Trim();
 
-                    if (!Sys.FFNxConfig.IsSetWithValue(trimmedName, trimmedVal))
+                    if (!Sys.tnx3000Config.IsSetWithValue(trimmedName, trimmedVal))
                         return false;
                 }
             }
@@ -43,7 +43,7 @@ namespace Iros._7th.Workshop.ConfigSettings {
                     string trimmedName = set[0].Trim();
                     string trimmedVal = set[1].Trim();
 
-                    Sys.FFNxConfig.Set(trimmedName, trimmedVal);
+                    Sys.tnx3000Config.Set(trimmedName, trimmedVal);
                 }
             }
         }
@@ -63,7 +63,7 @@ namespace Iros._7th.Workshop.ConfigSettings {
                     string trimmedName = set[0].Trim();
                     string trimmedVal = set[1].Trim();
 
-                    exists.Add(Sys.FFNxConfig.HasKey(trimmedName));
+                    exists.Add(Sys.tnx3000Config.HasKey(trimmedName));
                 }
             }
 
@@ -86,8 +86,8 @@ namespace Iros._7th.Workshop.ConfigSettings {
 
         public void Save()
         {
-            Sys.FFNxConfig.OverrideInternalKeys();
-            Sys.FFNxConfig.Save();
+            Sys.tnx3000Config.OverrideInternalKeys();
+            Sys.tnx3000Config.Save();
         }
     }
 

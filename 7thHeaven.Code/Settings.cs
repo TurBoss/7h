@@ -42,7 +42,7 @@ namespace Iros._7th.Workshop {
         Canary
     }
 
-    public enum FFNxUpdateChannelOptions
+    public enum tnx3000UpdateChannelOptions
     {
         Stable = 0,
         Canary
@@ -111,7 +111,7 @@ namespace Iros._7th.Workshop {
         [System.Xml.Serialization.XmlElement("AlsoLaunch")]
         public List<ProgramLaunchInfo> ProgramsToLaunchPrior { get; set; }
         public FF7Version FF7InstalledVersion { get; set; }
-        public FFNxUpdateChannelOptions FFNxUpdateChannel { get; set; }
+        public tnx3000UpdateChannelOptions tnx3000UpdateChannel { get; set; }
         public AppUpdateChannelOptions AppUpdateChannel { get; set; }
         public DateTime LastUpdateCheck { get; set; }
         public List<GeneralOptions> Options { get; set; }
@@ -182,7 +182,7 @@ namespace Iros._7th.Workshop {
             defaultSettings.ExtraFolders.Add("voice");
             defaultSettings.ExtraFolders.Add("widescreen");
 
-            defaultSettings.FFNxUpdateChannel = FFNxUpdateChannelOptions.Stable;
+            defaultSettings.tnx3000UpdateChannel = tnx3000UpdateChannelOptions.Stable;
             defaultSettings.AppUpdateChannel = AppUpdateChannelOptions.Stable;
 
             defaultSettings.UserColumnSettings = ColumnSettings.GetDefaultSettings();

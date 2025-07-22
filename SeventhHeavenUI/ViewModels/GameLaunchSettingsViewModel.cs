@@ -623,14 +623,14 @@ namespace SeventhHeaven.ViewModels
             string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\FF7OR";
             string midiKeyPath = $"{ff7KeyPath}\\1.00\\MIDI";
             string soundKeyPath = $"{ff7KeyPath}\\1.00\\Sound";
-            string ffnxKeyPath = $"{ff7KeyPath}\\1.00\\FFNx";
+            string tnx3000KeyPath = $"{ff7KeyPath}\\1.00\\tnx3000";
 
             SfxVolumeValue = (int) RegistryHelper.GetValue(soundKeyPath, "SFXVolume", 100);
             MusicVolumeValue = (int)RegistryHelper.GetValue(midiKeyPath, "MusicVolume", 100);
             
-            VoiceVolumeValue = (int)RegistryHelper.GetValue(ffnxKeyPath, "VoiceVolume", 100);
-            AmbientVolumeValue = (int)RegistryHelper.GetValue(ffnxKeyPath, "AmbientVolume", 100);
-            MovieVolumeValue = (int)RegistryHelper.GetValue(ffnxKeyPath, "MovieVolume", 100);
+            VoiceVolumeValue = (int)RegistryHelper.GetValue(tnx3000KeyPath, "VoiceVolume", 100);
+            AmbientVolumeValue = (int)RegistryHelper.GetValue(tnx3000KeyPath, "AmbientVolume", 100);
+            MovieVolumeValue = (int)RegistryHelper.GetValue(tnx3000KeyPath, "MovieVolume", 100);
         }
 
         private void SetVolumesInRegistry()
@@ -638,12 +638,12 @@ namespace SeventhHeaven.ViewModels
             string ff7KeyPath = $"{RegistryHelper.GetKeyPath(FF7RegKey.SquareSoftKeyPath)}\\FF7OR";
             string midiKeyPath = $"{ff7KeyPath}\\1.00\\MIDI";
             string soundKeyPath = $"{ff7KeyPath}\\1.00\\Sound";
-            string ffnxKeyPath = $"{ff7KeyPath}\\1.00\\FFNx";
+            string tnx3000KeyPath = $"{ff7KeyPath}\\1.00\\tnx3000";
 
             string virtualStorePath = $"{RegistryHelper.GetKeyPath(FF7RegKey.VirtualStoreKeyPath)}\\FF7OR";
             string midiVirtualKeyPath = $"{virtualStorePath}\\1.00\\MIDI";
             string soundVirtualKeyPath = $"{virtualStorePath}\\1.00\\Sound";
-            string ffnxVirtualKeyPath = $"{virtualStorePath}\\1.00\\FFNx";
+            string tnx3000VirtualKeyPath = $"{virtualStorePath}\\1.00\\tnx3000";
 
             RegistryHelper.SetValueIfChanged(soundKeyPath, "SFXVolume", SfxVolumeValue, RegistryValueKind.DWord);
             RegistryHelper.SetValueIfChanged(soundVirtualKeyPath, "SFXVolume", SfxVolumeValue, RegistryValueKind.DWord);
@@ -651,14 +651,14 @@ namespace SeventhHeaven.ViewModels
             RegistryHelper.SetValueIfChanged(midiKeyPath, "MusicVolume", MusicVolumeValue, RegistryValueKind.DWord);
             RegistryHelper.SetValueIfChanged(midiVirtualKeyPath, "MusicVolume", MusicVolumeValue, RegistryValueKind.DWord);
 
-            RegistryHelper.SetValueIfChanged(ffnxKeyPath, "VoiceVolume", VoiceVolumeValue, RegistryValueKind.DWord);
-            RegistryHelper.SetValueIfChanged(ffnxVirtualKeyPath, "VoiceVolume", VoiceVolumeValue, RegistryValueKind.DWord);
+            RegistryHelper.SetValueIfChanged(tnx3000KeyPath, "VoiceVolume", VoiceVolumeValue, RegistryValueKind.DWord);
+            RegistryHelper.SetValueIfChanged(tnx3000VirtualKeyPath, "VoiceVolume", VoiceVolumeValue, RegistryValueKind.DWord);
 
-            RegistryHelper.SetValueIfChanged(ffnxKeyPath, "AmbientVolume", AmbientVolumeValue, RegistryValueKind.DWord);
-            RegistryHelper.SetValueIfChanged(ffnxVirtualKeyPath, "AmbientVolume", AmbientVolumeValue, RegistryValueKind.DWord);
+            RegistryHelper.SetValueIfChanged(tnx3000KeyPath, "AmbientVolume", AmbientVolumeValue, RegistryValueKind.DWord);
+            RegistryHelper.SetValueIfChanged(tnx3000VirtualKeyPath, "AmbientVolume", AmbientVolumeValue, RegistryValueKind.DWord);
 
-            RegistryHelper.SetValueIfChanged(ffnxKeyPath, "MovieVolume", MovieVolumeValue, RegistryValueKind.DWord);
-            RegistryHelper.SetValueIfChanged(ffnxVirtualKeyPath, "MovieVolume", MovieVolumeValue, RegistryValueKind.DWord);
+            RegistryHelper.SetValueIfChanged(tnx3000KeyPath, "MovieVolume", MovieVolumeValue, RegistryValueKind.DWord);
+            RegistryHelper.SetValueIfChanged(tnx3000VirtualKeyPath, "MovieVolume", MovieVolumeValue, RegistryValueKind.DWord);
         }
 
         private void SetSelectedSoundDeviceFromSettings(LaunchSettings launchSettings)

@@ -3,6 +3,7 @@ using SeventhHeaven.Classes;
 using SeventhHeavenUI;
 using SeventhHeavenUI.ViewModels;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 
@@ -39,28 +40,25 @@ namespace SeventhHeaven.ViewModels
         public bool IsLaunchingWithNoMods { get; internal set; }
         public bool IsLaunchingWithNoValidation { get; internal set; }
 
-        internal Task<bool> BeginLaunchProcessAsync()
+        internal async Task<bool> BeginLaunchProcessAsync()
         {
-            Task<bool> launchTask = Task.Factory.StartNew(() =>
-            {
-                bool didLaunch = false;
+            bool didLaunch = false;
 
-                try
+            try
+            {
+                await Task.Run(async () =>
                 {
                     GameLauncher.Instance.ProgressChanged += LaunchGame_ProgressChanged;
-
                     didLaunch = GameLauncher.LaunchGame(variableDump, debugLogging, IsLaunchingWithNoMods, IsLaunchingWithNoValidation);
-                }
-                finally
-                {
-                    GameLauncher.Instance.ProgressChanged -= LaunchGame_ProgressChanged;
-                    GameLauncher.Instance.RaiseLaunchCompleted(didLaunch);
-                }
+                });
+            }
+            finally
+            {
+                GameLauncher.Instance.ProgressChanged -= LaunchGame_ProgressChanged;
+                GameLauncher.Instance.RaiseLaunchCompleted(didLaunch);
+            }
 
-                return didLaunch;
-            });
-
-            return launchTask;
+            return didLaunch;
         }
 
         internal void LogStatus(string message)

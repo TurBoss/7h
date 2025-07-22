@@ -45,7 +45,7 @@ namespace SeventhLauncher.ViewModels
         private ObservableCollection<string> _extraFolderList;
         private string _statusMessage;
 
-        private FFNxUpdateChannelOptions _ffnxUpdateChannel;
+        private tnx3000UpdateChannelOptions _tnx3000UpdateChannel;
         private AppUpdateChannelOptions _appUpdateChannel;
 
         public delegate void OnListDataChanged();
@@ -94,15 +94,15 @@ namespace SeventhLauncher.ViewModels
             }
         }
 
-        public FFNxUpdateChannelOptions FFNxUpdateChannel
+        public tnx3000UpdateChannelOptions tnx3000UpdateChannel
         {
             get
             {
-                return _ffnxUpdateChannel;
+                return _tnx3000UpdateChannel;
             }
             set
             {
-                _ffnxUpdateChannel = value;
+                _tnx3000UpdateChannel = value;
                 NotifyPropertyChanged();
             }
         }
@@ -388,7 +388,7 @@ namespace SeventhLauncher.ViewModels
             FF7ExePathInput = settings.FF7Exe;
             LibraryPathInput = settings.LibraryLocation;
 
-            FFNxUpdateChannel = settings.FFNxUpdateChannel;
+            tnx3000UpdateChannel = settings.tnx3000UpdateChannel;
             AppUpdateChannel = settings.AppUpdateChannel;
 
             AutoUpdateModsByDefault = settings.HasOption(GeneralOptions.AutoUpdateMods);
@@ -530,7 +530,7 @@ namespace SeventhLauncher.ViewModels
 
             Sys.Settings.FF7Exe = FF7ExePathInput;
             Sys.Settings.LibraryLocation = LibraryPathInput;
-            Sys.Settings.FFNxUpdateChannel = FFNxUpdateChannel;
+            Sys.Settings.tnx3000UpdateChannel = tnx3000UpdateChannel;
             Sys.Settings.AppUpdateChannel = AppUpdateChannel;
 
 

@@ -21,9 +21,9 @@
             </Grid>
         </DataTemplate>
 
-        <DataTemplate x:Key="FFNxChannelDataTemplate">
-            <Grid x:Name="FFNxGd" DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContentControl}, Path=DataContext}" Background="Transparent">
-                <TextBlock Text="{Binding ElementName=FFNxGd, Path=DataContext.FFNxUpdateChannel, FallbackValue='Stable'}" Margin="0,0,15,0" TextWrapping="Wrap"/>
+        <DataTemplate x:Key="tnx3000ChannelDataTemplate">
+            <Grid x:Name="tnx3000Gd" DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContentControl}, Path=DataContext}" Background="Transparent">
+                <TextBlock Text="{Binding ElementName=tnx3000Gd, Path=DataContext.tnx3000UpdateChannel, FallbackValue='Stable'}" Margin="0,0,15,0" TextWrapping="Wrap"/>
             </Grid>
         </DataTemplate>
 
@@ -395,12 +395,12 @@
                 </ComboBox>
                 <Button x:Name="btn7thCheckForUpdate" Content="Check for Updates" HorizontalAlignment="Left" Margin="18,18,0,0" VerticalAlignment="Top" Width="130" Click="btn7thCheckForUpdate_Click" Height="38" Grid.Column="3" IsEnabled="False"/>
                 <!---->
-                <TextBlock HorizontalAlignment="Left" Margin="7,75,0,0" TextWrapping="Wrap" Text="FFNx:" VerticalAlignment="Top" Height="20" Width="36" Grid.ColumnSpan="2"/>
-                <ComboBox x:Name="cmbFFNxChannel" HorizontalAlignment="Left" Margin="67,70,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="cmbFFNxChannel_SelectionChanged" Height="32" ItemTemplate="{StaticResource FFNxChannelDataTemplate}" Grid.ColumnSpan="3" Grid.Column="1">
+                <TextBlock HorizontalAlignment="Left" Margin="7,75,0,0" TextWrapping="Wrap" Text="tnx3000:" VerticalAlignment="Top" Height="20" Width="36" Grid.ColumnSpan="2"/>
+                <ComboBox x:Name="cmbtnx3000Channel" HorizontalAlignment="Left" Margin="67,70,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="cmbtnx3000Channel_SelectionChanged" Height="32" ItemTemplate="{StaticResource tnx3000ChannelDataTemplate}" Grid.ColumnSpan="3" Grid.Column="1">
                     <ComboBoxItem Content="Stable"/>
                     <ComboBoxItem Content="Canary"/>
                 </ComboBox>
-                <Button x:Name="btnFFNxCheckForUpdate" Content="Check for Updates" HorizontalAlignment="Left" Margin="18,64,0,0" VerticalAlignment="Top" Width="130" Click="btnFFNxCheckForUpdate_Click" Height="38" Grid.Column="3" IsEnabled="False"/>
+                <Button x:Name="btntnx3000CheckForUpdate" Content="Check for Updates" HorizontalAlignment="Left" Margin="18,64,0,0" VerticalAlignment="Top" Width="130" Click="btntnx3000CheckForUpdate_Click" Height="38" Grid.Column="3" IsEnabled="False"/>
             </Grid>
         </GroupBox>
         <Button x:Name="btnOk" 

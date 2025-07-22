@@ -83,7 +83,7 @@ namespace SeventhHeaven.Classes
 
         private static Process ff7Proc;
 
-        public static bool LaunchGame(bool varDump, bool debug, bool launchWithNoMods = false, bool LaunchWithNoValidation = false)
+        public static bool LaunchGame(bool varDump = false, bool debug = false, bool launchWithNoMods = false, bool LaunchWithNoValidation = false)
         {
             MainWindowViewModel.SaveActiveProfile();
             Sys.Save();
@@ -101,7 +101,7 @@ namespace SeventhHeaven.Classes
                         System.IO.File.WriteAllText(
                             fileName,
                             $@"@echo off
-@bcdedit /set nx OptIn
+bcdedit /set nx OptIn
 "
                         );
 
@@ -171,7 +171,7 @@ namespace SeventhHeaven.Classes
             GameConverter converter = new GameConverter(Path.GetDirectoryName(Sys.Settings.FF7Exe));
             converter.MessageSent += GameConverter_MessageSent;
 
-            FFNxDriverUpdater.CleanupUnnecessaryFiles();
+            tnx3000DriverUpdater.CleanupUnnecessaryFiles();
 
             Instance.RaiseProgressChanged(ResourceHelper.Get(StringKey.VerifyingInstalledGameIsCompatible));
             if (converter.IsGamePirated())
@@ -457,7 +457,10 @@ namespace SeventhHeaven.Classes
             //
             // Update Registry with new launch settings
             //
-            Instance.SetRegistryValues();
+
+
+            // AKI PETA 1
+//            Instance.SetRegistryValues();
 
             //
             // Copy input.cfg to FF7
@@ -507,14 +510,14 @@ namespace SeventhHeaven.Classes
                 Copy7thWrapperDlls();
 
                 //
-                // Inherit FFNx Config keys from each mod
+                // Inherit tnx3000 Config keys from each mod
                 //
-                Sys.FFNxConfig.Reload();
-                Sys.FFNxConfig.Backup(true);
-                Sys.FFNxConfig.OverrideInternalKeys();
+                Sys.tnx3000Config.Reload();
+                Sys.tnx3000Config.Backup(true);
+                Sys.tnx3000Config.OverrideInternalKeys();
                 foreach (RuntimeMod mod in runtimeProfile.Mods)
                 {
-                    foreach(FFNxFlag flag in mod.FFNxConfig)
+                    foreach(tnx3000Flag flag in mod.tnx3000Config)
                     {
                         bool addConfig = true;
 
@@ -534,21 +537,21 @@ namespace SeventhHeaven.Classes
 
                         if (addConfig)
                         {
-                            if (Sys.FFNxConfig.HasKey(flag.Key))
+                            if (Sys.tnx3000Config.HasKey(flag.Key))
                             {
                                 if (flag.Values.Count > 0)
                                 {
-                                    Sys.FFNxConfig.Set(flag.Key, flag.Values);
+                                    Sys.tnx3000Config.Set(flag.Key, flag.Values);
                                 }
                                 else
                                 {
-                                    Sys.FFNxConfig.Set(flag.Key, flag.Value);
+                                    Sys.tnx3000Config.Set(flag.Key, flag.Value);
                                 }
                             }
                         }
                     }
                 }
-                Sys.FFNxConfig.Save();
+                Sys.tnx3000Config.Save();
             }
 
             //
@@ -647,7 +650,9 @@ namespace SeventhHeaven.Classes
                 Instance.RaiseProgressChanged($"{ResourceHelper.Get(StringKey.WritingTemporaryRuntimeProfileFileTo)} {parms.ProfileFile} ...");
 
                 using (FileStream fs = new FileStream(parms.ProfileFile, FileMode.Create))
+                {
                     Util.SerializeBinary(runtimeProfile, fs);
+                }
 
                 // attempt to launch the game a few times in the case of an ApplicationException that can be thrown by 7thWrapperLoader it seems randomly at times
                 // ... The error tends to go away the second time trying but we will try multiple times before failing
@@ -659,6 +664,7 @@ namespace SeventhHeaven.Classes
                 {
                     try
                     {
+                        
                         LaunchFF7Exe();
                         didInject = true;
                     }
@@ -797,8 +803,8 @@ namespace SeventhHeaven.Classes
                         Instance.CollectCrashReport();
                     }
 
-                    // Restore FFNx config after the game is closed
-                    Sys.FFNxConfig.RestoreBackup(true);
+                    // Restore tnx3000 config after the game is closed
+                    Sys.tnx3000Config.RestoreBackup(true);
                 };
             
 
@@ -930,7 +936,7 @@ namespace SeventhHeaven.Classes
             File.Copy(Path.Combine(src, "7thWrapperProxy.dll"), Path.Combine(dest, "7thWrapperProxy.dll"), true);
             File.Copy(Path.Combine(src, "SharpCompress.dll"), Path.Combine(dest, "SharpCompress.dll"), true);
             File.Copy(Path.Combine(src, "7thWrapperLib.dll"), Path.Combine(dest, "7thWrapperLib.dll"), true);
-            File.Copy(Path.Combine(src, "7thWrapperLoader.dll"), Path.Combine(dest, "dinput.dll"), true);
+            File.Copy(Path.Combine(src, "7thWrapperLoader.dll"), Path.Combine(dest, "7thWrapperLoader.dll"), true);
             File.Copy(Path.Combine(src, "7thWrapperLoader.pdb"), Path.Combine(dest, "7thWrapperLoader.pdb"), true);
         }
 
@@ -945,7 +951,7 @@ namespace SeventhHeaven.Classes
             File.Delete(Path.Combine(dest, "7thWrapperProxy.dll"));
             File.Delete(Path.Combine(dest, "SharpCompress.dll"));
             File.Delete(Path.Combine(dest, "7thWrapperLib.dll"));
-            File.Delete(Path.Combine(dest, "dinput.dll"));
+            File.Delete(Path.Combine(dest, "7thWrapperLoader.dll"));
             File.Delete(Path.Combine(dest, "7thWrapperLoader.pdb"));
         }
 
@@ -1462,8 +1468,8 @@ namespace SeventhHeaven.Classes
             SetValueIfChanged(graphicsKeyPath, "Driver", (int)GraphicsRenderer.CustomDriver, RegistryValueKind.DWord);
             SetValueIfChanged(graphicsVirtualKeyPath, "Driver", (int)GraphicsRenderer.CustomDriver, RegistryValueKind.DWord);
 
-            SetValueIfChanged(graphicsKeyPath, "DriverPath", "FFNx.dll");
-            SetValueIfChanged(graphicsVirtualKeyPath, "DriverPath", "FFNx.dll");
+            SetValueIfChanged(graphicsKeyPath, "DriverPath", "tnx3000.dll");
+            SetValueIfChanged(graphicsVirtualKeyPath, "DriverPath", "tnx3000.dll");
 
             SetValueIfChanged(graphicsKeyPath, "Mode", 2, RegistryValueKind.DWord);
             SetValueIfChanged(graphicsVirtualKeyPath, "Mode", 2, RegistryValueKind.DWord);
@@ -1668,16 +1674,16 @@ namespace SeventhHeaven.Classes
                     }
                 }
 
-                // === FFNx files ===
-                if (File.Exists(Sys.PathToFFNxLog)) archive.AddEntry("FFNx.log", Sys.PathToFFNxLog);
-                archive.AddEntry("FFNx.toml", Sys.PathToFFNxToml);
+                // === tnx3000 files ===
+                if (File.Exists(Sys.PathTotnx3000Log)) archive.AddEntry("tnx3000.log", Sys.PathTotnx3000Log);
+                archive.AddEntry("tnx3000.toml", Sys.PathTotnx3000Toml);
 
                 // === 7th files ===
                 archive.AddEntry("7thWrapperLoader.log", Path.Combine(Sys.InstallPath, "7thWrapperLoader.log"));
                 archive.AddEntry("applog.txt", File.Open(Sys.PathToApplog, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
                 archive.AddEntry("profile.xml", Sys.PathToCurrentProfileFile);
                 archive.AddEntry("settings.xml", Sys.PathToSettings);
-                archive.AddEntry("registry_transaction.bat", Path.Combine(Sys.PathToTempFolder, "registry_transaction.bat"));
+                // archive.AddEntry("registry_transaction.bat", Path.Combine(Sys.PathToTempFolder, "registry_transaction.bat"));
 
                 // =================================================================================================
 
